@@ -1,0 +1,2590 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yFiles for Java 2.8-->
+  <key for="graphml" id="d0" yfiles.type="resources"/>
+  <key for="port" id="d1" yfiles.type="portgraphics"/>
+  <key for="port" id="d2" yfiles.type="portgeometry"/>
+  <key for="port" id="d3" yfiles.type="portuserdata"/>
+  <key attr.name="url" attr.type="string" for="node" id="d4"/>
+  <key attr.name="description" attr.type="string" for="node" id="d5"/>
+  <key for="node" id="d6" yfiles.type="nodegraphics"/>
+  <key attr.name="Description" attr.type="string" for="graph" id="d7"/>
+  <key attr.name="url" attr.type="string" for="edge" id="d8"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d9"/>
+  <key for="edge" id="d10" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <data key="d7"/>
+    <node id="n0" yfiles.foldertype="group">
+      <data key="d4"/>
+      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Geometry height="426.3500071853141" width="733.4791822159068" x="8711.368897536271" y="-8342.702026492378"/>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="22.37646484375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="733.4791822159068" x="0.0" y="0.0">Relations description:</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="101" bottomF="101.3500071853141" left="0" leftF="0.0" right="101" rightF="101.30635748455916" top="3" topF="2.6235351562509095"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Geometry height="50.0" width="176.76501598579057" x="4042.260559074197" y="7101.991042179014"/>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="22.37646484375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="176.76501598579057" x="0.0" y="0.0">Relations description:</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="true" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="n0:">
+        <node id="n0::n0">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="51.51163907637647" x="8768.614126812083" y="-8302.702026492372"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="31.3515625" x="10.080038288188007" y="5.6494140625">Base</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n1">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="57.65782166962663" x="8765.541035515458" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="45.349609375" x="6.154106147312632" y="5.6494140625">Derived</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n2">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="49.975093428064156" x="8983.301876597283" y="-8302.702026492372"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="39.34375" x="5.315671714031851" y="5.6494140625">Owner</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n3">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="49.975093428064156" x="8983.301876597283" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="42.021484375" x="3.9768045265318506" y="5.6494140625">Owned</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n4">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="58.27243992895228" x="9165.113501748261" y="-8302.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="53.359375" x="2.4565324644754583" y="5.6494140625">Instancer</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n5">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="58.27243992895228" x="9165.113501748261" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="56.037109375" x="1.1176652769754583" y="5.6494140625">Instanced</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n6">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="37.02213001776204" x="9255.751109989824" y="-8302.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="35.341796875" x="0.8401665713809052" y="5.6494140625">Caller</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n7">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="39.83098202486667" x="9254.346683986269" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="38.01953125" x="0.9057253874325397" y="5.6494140625">Called</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n8">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="121.35025790408531" x="8765.541035515458" y="-8122.702026492377"/>
+              <y:Fill color="#00CCFF" transparent="false"/>
+              <y:BorderStyle color="#FF0000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="108.73046875" x="6.309894577043451" y="5.6494140625">Singleton (Phoenix)</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n9">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="121.35025790408531" x="8765.541035515454" y="-8062.702026492377"/>
+              <y:Fill color="#3366FF" transparent="false"/>
+              <y:BorderStyle color="#FF0000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="125.3828125" x="-2.016277297956549" y="5.6494140625">Singleton (No Destroy)</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n10">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="90.33542706927142" x="8931.072005320073" y="-8122.702026492377"/>
+              <y:Fill color="#CC99FF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="81.35546875" x="4.4899791596362775" y="5.6494140625">Abstract Class</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n11">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="90.33542706927142" x="8931.072005320073" y="-8062.702026492377"/>
+              <y:Fill color="#999999" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="86.03125" x="2.1520885346362775" y="5.6494140625">Concrete Class</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n12">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="83.42485407602123" x="9165.113501748261" y="-8122.702026492377"/>
+              <y:Fill color="#00FF00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="55.33984375" x="14.042505163009992" y="5.6494140625">Far Class</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n13">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="42.459541353037366" x="8735.596158109753" y="-8250.622741632696"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="23.6015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="60.9140625" x="-9.227260573481544" y="-3.880066109681138">Inheritance
+(Generalization)</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n14">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="42.459541353037366" x="9281.9682015911" y="-8250.472014812092"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="13.80078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="50.6875" x="-4.113979323481544" y="1.0203245153188618">Function Call</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n15">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="30.0" x="8965.697775963827" y="-8250.472014812092"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="13.80078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="47.14453125" x="-8.572265625" y="1.0203245153188618">Aggregation</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n16">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="27.734628844902545" x="9159.237268426767" y="-8250.472014812092"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="13.80078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="34.23828125" x="-3.251826202549637" y="1.0203245153188618">Creation</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n17">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="90.33542706927142" x="9047.952145892717" y="-8062.702026492377"/>
+              <y:Fill color="#FF6600" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="67.3515625" x="11.491932284636277" y="5.6494140625">Static Class</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n18">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="83.42485407602123" x="9051.407432389346" y="-8122.702026492377"/>
+              <y:Fill color="#FFFF00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="71.353515625" x="6.0356692255099915" y="5.6494140625">Virtual Class</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n19">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="49.975093428064156" x="9079.262174998703" y="-8302.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="39.34375" x="5.315671714031851" y="5.6494140625">Owner</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n20">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="49.975093428064156" x="9079.262174998703" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="42.021484375" x="3.9768045265318506" y="5.6494140625">Owned</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n21">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="30.0" x="9058.409384438432" y="-8250.622741632696"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="23.6015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="54.6875" x="-12.34375" y="-3.880066109681138">Composition
+(Containment)</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n22">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="83.42485407602123" x="9168.28757296199" y="-8062.702026492377"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="30.009765625" x="26.70754422550999" y="5.6494140625">Main</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n23">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="51.51163907637647" x="8880.896536487884" y="-8302.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="31.3515625" x="10.080038288188007" y="5.6494140625">Base</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n24">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="57.65782166962663" x="8877.82344519126" y="-8212.702026492376"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="45.349609375" x="6.154106147312632" y="5.6494140625">Derived</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n0::n25">
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="15.841430280639543" width="42.459541353037366" x="8847.878567785554" y="-8250.622741632696"/>
+              <y:Fill hasColor="false" transparent="false"/>
+              <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="8" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="23.6015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="76.93359375" x="-17.237026198481544" y="-3.880066109681138">Disabled Inheritance
+(Generalization)</y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="n1">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="1744.199527930226" width="735.5387943622018" x="5962.2306028189" y="-6272.099763965113"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1753.439453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="-4.619962597386802">&lt;&lt;PSBaseCar.h&gt;&gt;
+
+PSBaseCar
+
+public:
+
+virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, StaticMeshProcesser&amp; processer, bool isRaceStarted) = 0
+virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt)
+
+virtual void initModel( lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            GameCars gameCar,
+                            const Ogre::Matrix4&amp; transform,
+                            bool isAI)
+
+// for multiplayer
+void setModelPositionOnGrid(const Ogre::Matrix4&amp; transform)
+void getWheelsPositions(Ogre::Vector3&amp; wheel0, Ogre::Vector3&amp; wheel1, Ogre::Vector3&amp; wheel2, Ogre::Vector3&amp; wheel3)
+
+void initSounds(lua_State * pipeline)
+void deinitSounds()
+
+Ogre::Vector3 getLinearVelocity()const
+Ogre::Vector3 getAngularVelocity()const
+Ogre::Real getAlignedVelocity()const
+Ogre::Real getLateralVelocity()const
+Ogre::Vector3 getForwardAxis()const
+
+Ogre::SceneNode* getModelNode()
+
+void clear()
+
+std::string getFrontLWheelColliderString()
+std::string getFrontRWheelColliderString()
+std::string getBackLWheelColliderString()
+std::string getBackRWheelColliderString()
+
+unsigned char getFrontLWheelColliderIndex()
+unsigned char getFrontRWheelColliderIndex()
+unsigned char getBackLWheelColliderIndex()
+unsigned char getBackRWheelColliderIndex()
+unsigned char getChassisColliderIndex()
+
+const OgreBulletDynamics::RigidBody&amp; getChassis()const
+
+virtual size_t getCurrentLap() const = 0
+virtual Ogre::Real getLapPosition() const = 0
+
+GameCars getCarType() const
+void setCarType(GameCars&amp; car)
+
+protected:
+
+virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
+
+void stopSounds()
+
+bool mIsAI
+
+OgreBulletDynamics::DynamicsWorld * mWorld
+
+Ogre::SceneNode* mModelNode
+Ogre::Entity* mModelEntity
+
+std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionData
+std::vector&lt;std::vector&lt;size_t&gt; &gt; mSuspensionIndices
+std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionPointOriginalPos
+Ogre::Vector3 mFrontLOriginalPos
+Ogre::Vector3 mFrontROriginalPos
+Ogre::Vector3 mBackLOriginalPos
+Ogre::Vector3 mBackROriginalPos
+
+
+Ogre::Entity * mWheelEntitys[4]
+Ogre::SceneNode *mWheelNodes[4]
+
+OgreBulletDynamics::RigidBody *mCarChassis
+CustomRigidBodyWheel *mCarWheelFrontL
+CustomRigidBodyWheel *mCarWheelFrontR
+CustomRigidBodyWheel *mCarWheelBackL
+CustomRigidBodyWheel *mCarWheelBackR
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR
+
+Ogre::Real mWheelRadiusFront
+Ogre::Real mWheelRadiusBack
+
+
+std::string mWheelFrontLColliderString
+std::string mWheelFrontRColliderString
+std::string mWheelBackLColliderString
+std::string mWheelBackRColliderString
+
+unsigned char mWheelFrontLColliderIndex
+unsigned char mWheelFrontRColliderIndex
+unsigned char mWheelBackLColliderIndex
+unsigned char mWheelBackRColliderIndex
+unsigned char mChassisColliderIndex
+
+static Ogre::NameGenerator nameGenNodes
+
+// for multiplayer
+GameCars mGameCarType
+
+//sounds
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngLow
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngMid
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngHigh
+
+private:
+
+void initSuspension(lua_State * pipeline)
+
+static Ogre::NameGenerator nameGenMaterials</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="182.88009597644475" width="1073.6288138589966" x="7203.185593070501" y="-8641.440047988222"/>
+          <y:Fill color="#FF0000" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="120" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1031.20703125" x="21.210891304498546" y="15.934188613222432">Powerslide Rebuild</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="232.04078247193968" x="5613.97960876403" y="-5415.0"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="27.34375" x="102.34851623597024" y="5.6494140625">LUA</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n4">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="292.1770197871474" width="1290.9126354392424" x="6254.543682280379" y="-6776.088509893574"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1256.142578125" x="17.38502865712144" y="11.777963018574155">&lt;&lt;XMLParsing.h&gt;&gt;
+
+XMLParsing
+
+public:
+
+protected:
+
+TiXmlElement* parseDotScene(CommonIncludes::shared_ptr&lt;TiXmlDocument&gt;&amp; xml, const Ogre::String &amp;SceneName, const Ogre::String &amp;groupName = Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)
+
+Ogre::String getAttrib(TiXmlElement *XMLNode, const Ogre::String &amp;parameter, const Ogre::String &amp;defaultValue = "")
+Ogre::Real getAttribReal(TiXmlElement *XMLNode, const Ogre::String &amp;parameter, Ogre::Real defaultValue = 0)
+int getAttribInt(TiXmlElement *XMLNode, const Ogre::String &amp;parameter, int defaultValue = 0)
+bool getAttribBool(TiXmlElement *XMLNode, const Ogre::String &amp;parameter, bool defaultValue = false)
+
+Ogre::Matrix4 parseMatrix43(TiXmlElement *XMLNode)
+Ogre::Vector3 parseVector3(TiXmlElement *XMLNode)
+Ogre::ColourValue parseColour(TiXmlElement *XMLNode)</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n5">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="750.1752970021525" width="635.251943847235" x="7212.374028076382" y="-6315.087648501076"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="463.5625" x="85.84472192361773" y="27.61010943857582">&lt;&lt;XMLLoader.h&gt;&gt;
+
+XMLLoader
+
+public:
+
+void initSceneLLT(  lua_State * pipeline, 
+                        Ogre::SceneManager* sceneMgr,
+                        GameState&amp; gameState)
+
+void initSceneExclusion(lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr,
+                            GameState&amp; gameState)
+
+void initScenePositions(lua_State * pipeline, 
+                            GameState&amp; gameState)
+
+void initSceneAI(lua_State * pipeline, 
+                     Ogre::SceneManager* sceneMgr,
+                     GameState&amp; gameState)
+
+void initSceneMultiplayer(lua_State * pipeline, 
+                     Ogre::SceneManager* sceneMgr,
+                     GameState&amp; gameState)
+
+void initSceneHierarchy(lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr,
+                            GameState&amp; gameState)
+
+void initSceneParticles(lua_State * pipeline, 
+                            GameState&amp; gameState)
+
+
+
+void initLights(lua_State * pipeline,
+                    Ogre::SceneManager* sceneMgr,
+                    GameState&amp; gameState)
+
+private :
+
+Ogre::NameGenerator mNameGenNodes
+
+void readNodeHierarchy(TiXmlElement *pElementNode, HierarchyNode&amp; node)
+void buildNodeHierarchyBox(HierarchyNode&amp; node, Ogre::SceneManager* sceneMgr)
+
+void processLightRange(TiXmlElement *XMLNode, Ogre::Light *pLight)
+void processLightAttenuation(TiXmlElement *XMLNode, Ogre::Light *pLight)</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n6">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="2147.889618372409" width="1178.2932695893192" x="9820.853365205341" y="-7013.944809186205"/>
+          <y:Fill color="#FF00FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1149.19140625" x="14.550931669658894" y="-1.2407376887949795">&lt;&lt;BaseApp.h&gt;&gt;
+
+BaseApp
+
+public:
+
+virtual void go(void)
+
+void scriptsReload()
+void quickScriptsReload()
+
+void initScene()
+void clearScene()
+void preloadResource(const Ogre::String&amp; fileName, const Ogre::String&amp; fileType)
+void initTerrain()
+void initModel()
+void initLights()
+void initMisc()
+void parseFile(const std::string&amp; fileName)
+
+void setShutdown(bool shutdown)
+
+void keyDown(OIS::KeyCode key)
+void keyUp(OIS::KeyCode key)
+
+void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+
+GameState&amp; getGameState()
+
+//multiplayer
+void onPlayerEjected(const std::string&amp; player)override
+void onPlayerJoined(const std::string&amp; player)override
+void onPlayerLeft(const std::string&amp; player)override
+void onNewHost(const std::string&amp; player)override
+void onRoomClosed(const std::string&amp; player)override
+void onPlayerReady(const std::string&amp; player)override
+void onPlayerAddedToSession(const std::string&amp; player)override
+void onPlayerQuitSession(const std::string&amp; player, bool isHost)override
+void onSessionStart(uint32_t aiAmount, const std::vector&lt;std::string&gt;&amp; players, size_t playerIndex, bool isHost, const std::vector&lt;GameCars&gt;&amp; aiSkins, const std::map&lt;std::string, GameCars&gt;&amp; playersSkins)override
+void onSessionUpdate(const MultiplayerController::playerToData&amp; otherPlayersSessionData, const std::vector&lt;MultiplayerSessionData&gt;&amp; aiPlayersSessionData, bool isHost)override
+void onError(const std::string&amp; message)override
+
+void onLapFinished()override
+
+#if defined(__ANDROID__)
+Ogre::DataStreamPtr openAPKFile(const Ogre::String&amp; fileName)
+
+void touchDown(int id, float x, float y)
+void touchUp(int id, float x, float y)
+
+void androidCreate(JNIEnv * env, jobject obj, jobject assetManager)
+void androidDestroy()
+void androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
+void androidTerminateWindow()
+void androidRenderOneFrame(JNIEnv * env)
+
+void androidPause(JNIEnv * env)
+
+AAssetManager* mAssetMgr
+JavaVM* gVM
+
+int mTouchLeftID
+int mTouchRightID
+int mTouchDownID
+#endif
+
+protected:
+
+virtual bool setup()
+virtual bool configure(void)
+virtual void createFrameListener(void)
+virtual void setupResources(void)
+virtual void loadResources(void)
+virtual void unloadResources(void)
+
+virtual bool frameStarted(const Ogre::FrameEvent &amp;evt)
+virtual bool frameEnded(const Ogre::FrameEvent &amp;evt)
+
+virtual bool frameRenderingQueued(const Ogre::FrameEvent&amp; evt)
+
+virtual void windowResized(Ogre::RenderWindow* rw)
+virtual void windowClosed(Ogre::RenderWindow* rw)
+
+
+CommonIncludes::shared_ptr&lt;InputHandler&gt; mInputHandler
+
+CommonIncludes::shared_ptr&lt;Ogre::Root&gt; mRoot
+CommonIncludes::shared_ptr&lt;CustomOverlaySystem&gt; mOverlaySystem
+Ogre::Camera* mCamera
+Ogre::Camera* mRearCamera
+Ogre::SceneManager* mSceneMgr
+Ogre::RenderWindow* mWindow
+Ogre::String mResourcesCfg
+
+// OgreBites
+CustomTrayManager* mTrayMgr
+CommonIncludes::shared_ptr&lt;CameraMan&gt; mCameraMan
+OgreBites::ParamsPanel* mDetailsPanel
+bool mCursorWasVisible
+bool mShutDown
+
+//sounds
+SoundsProcesser mSoundsProcesser
+
+private:
+
+Ogre::SceneNode* mMainNode
+bool mIsGlobalReset
+bool mIsDisableMouse
+
+DMLuaManager mLuaManager
+int mLuaError
+
+CommonIncludes::shared_ptr&lt;CustomSceneManagerFactory&gt; mSMFactory
+
+
+StaticMeshProcesser mStaticMeshProcesser
+
+ModelsPool mModelsPool
+    
+LapController mLapController
+
+XMLLoader mXMLLoader
+GameState mGameState
+PFLoader mPFLoader
+
+Graphics2D mGraphics2D
+
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::DynamicsWorld&gt; mWorld
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::DebugDrawer&gt; mDebugDrawer
+
+CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
+
+
+void initWorld(const Ogre::Vector3 &amp;gravityVector = Ogre::Vector3(0.0f, -59.81f, 0.0f),
+                   const Ogre::AxisAlignedBox &amp;bounds = Ogre::AxisAlignedBox(   Ogre::Vector3 (-10000.0f, -10000.0f, -10000.0f),
+                                                                                Ogre::Vector3 (10000.0f,  10000.0f,  10000.0f)))
+
+void deInitWorld()
+
+void initLua()
+void doLuaMainFile()
+void registerLuaFunctions()
+void deInitLua()
+
+void initLightLists()</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n7">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="85.29148043919304" width="182.67338922266129" x="10318.663305388669" y="-7152.6457402195965"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="157.392578125" x="12.64040554883104" y="3.8928105320965187">Ogre::FrameListener
+Ogre::WindowEventListener
+OgreBites::SdkTrayListener
+MultiplayerController::Events
+LapUtils::Events</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n8">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="2115.749750025006" width="701.7915528832027" x="5979.104223558399" y="-4387.874875012503"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2091.56640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="12.091671887503253">&lt;&lt;PSControllableCar.h&gt;&gt;
+
+PSControllableCar
+
+public:
+
+virtual void initModel( lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            GameCars gameCar,
+                            const Ogre::Matrix4&amp; transform,
+                            const std::vector&lt;Particle&gt;&amp; particles,
+                            bool isPossesCamera,
+                            bool isAI = true);
+
+virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, StaticMeshProcesser&amp; processer, bool isRaceStarted)
+virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
+
+virtual void processWheelsCollision(    btManifoldPoint&amp; cp, 
+                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
+                                    StaticMeshProcesser&amp; processer,
+                                    int triIndex)
+
+virtual void processChassisCollision(    btManifoldPoint&amp; cp, 
+                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
+                                    StaticMeshProcesser&amp; processer,
+                                    int triIndex)
+
+void setAcceleration(bool isEnable)
+bool getAcceleration() const
+
+void setBrake(bool isEnable)
+bool getBrake() const
+
+void setSteerLeft(bool isEnable)
+bool getSteerLeft()const
+
+void setSteerRight(bool isEnable)
+bool getSteerRight() const
+
+bool getAcceleration()
+bool getBrake()
+
+LapUtils&amp; getLapUtils()
+
+const PSCarEngine&amp; getCarEngine()const
+
+bool checkRearCollision(bool isBoth = false)
+bool checkFrontCollision()
+bool checkChassisCollision()const
+
+size_t getCurrentLap() const override
+Ogre::Real getLapPosition() const override
+
+protected:
+
+virtual void processSounds(const Ogre::FrameEvent &amp;evt)
+
+LinearController&lt;float&gt; mPitchValue
+
+PSCarEngine mCarEngine
+
+
+private:
+
+LapUtils mLapUtils
+
+bool mIsDisableMouse
+bool mIsPossesCamera
+
+bool mWheelCollisionFrontL
+bool mWheelCollisionFrontR
+bool mWheelCollisionBackL
+bool mWheelCollisionBackR
+bool mChassisCollision
+
+Ogre::Timer mTimerJumpHappenFrontL
+Ogre::Timer mTimerJumpHappenFrontR
+Ogre::Timer mTimerJumpHappenRearL
+Ogre::Timer mTimerJumpHappenRearR
+
+Ogre::Timer mTimerCollisionHappenFront
+Ogre::Timer mTimerCollisionHappenRear
+
+LinearController&lt;float&gt; mDriveImpulse
+LinearController&lt;float&gt; mWheelsRotationByEngineAddition
+
+Ogre::Real mWheelRotationalAngle
+
+protected:
+
+Ogre::ParticleSystem* mWheelBackLParticle
+Ogre::ParticleSystem* mWheelBackRParticle
+
+Ogre::SceneNode* mParticleNodeWheelBackL
+Ogre::SceneNode* mParticleNodeWheelBackR
+
+private:
+
+std::vector&lt;Particle&gt; mParticles
+
+Ogre::String mParticleMaterialName
+
+static Ogre::NameGenerator nameGenMaterialsParticles
+
+virtual void adjustWheelsFriction(StaticMeshProcesser&amp; processer)
+void adjustWheelsParticles(const Ogre::Quaternion&amp; rot, Ogre::Real rotAngleAddition)
+
+bool isRollOver()
+void restoreRollOver()
+bool checkCollisionReadyToRestoreRollOverSide()
+bool checkCollisionReadyToRestoreRollOverFront()
+Ogre::Timer mTimerRestoreRollOver
+
+protected:
+
+float mSteering
+bool mSteeringLeft
+bool mSteeringRight
+bool mBrakeEnabled
+bool mAccelEnabled
+
+float mSteeringMin
+float mSteeringMinRad
+float mSteeringMax
+float mSteeringMaxRad
+float mSteeringIncrement
+
+Ogre::Real mLateralStabilizationCoeff
+
+CameraMan * mCameraMan
+
+void cleanWheelsCollisionsFlags()
+
+void setWheelCollisionHappenFrontL()
+void setWheelCollisionHappenFrontR()
+void setWheelCollisionHappenBackL()
+void setWheelCollisionHappenBackR()
+
+virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted) = 0</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="997.0122632485554" width="561.972219492834" x="5209.013890253583" y="-3828.5061316242777"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="974.27734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="515.546875" x="23.21267224641724" y="11.367459749277714">&lt;&lt;LapUtils.h&gt;&gt;
+
+LapUtils
+
+public:
+
+void checkCheckPoints(const Ogre::Vector3&amp; carPos);
+
+Ogre::Quaternion getArrowOrientation(const Ogre::Vector3&amp; carPos, Ogre::Vector3 carDir)const
+
+Ogre::Real getLastLapTime()const
+Ogre::Real getLapTime()const
+Ogre::Real getLapPosition()const
+size_t getCurrentLap()const
+
+void setData(   const std::vector&lt;Ogre::Vector3&gt;&amp; pos, 
+                    const std::vector&lt;Ogre::Vector3&gt;&amp; dirs, 
+                    const std::vector&lt;Ogre::Real&gt;&amp; weights, 
+                    const std::vector&lt;bool&gt;&amp; ischecks,
+                    Ogre::SceneManager* sceneMgr,
+                    bool isDebug)
+
+void resetLapTimer()
+void pauseLapTimer()
+void resumeLapTimer()
+
+Ogre::Real getAfterFinishLinePassTime()
+
+void setEvents(Events* events)
+
+private:
+
+bool mIsDebugLLT
+Ogre::SceneNode * mDebugSphereNode
+
+void calcLapTime(size_t minIndex)
+
+size_t getClosestSegment(const Ogre::Vector3&amp; carPos, Ogre::Vector3&amp; pointInLineRes)
+
+PausedTimer mLapTimer
+
+Ogre::Timer mAfterFinishLinePassTimer
+
+Ogre::Real mLastLapTime
+Ogre::Real mLapTime
+Ogre::Real mLapPosition
+bool mIsLapPosInited
+
+size_t mCurrentLap
+
+std::vector&lt;Ogre::Vector3&gt; mPositions
+std::vector&lt;Ogre::Vector3&gt; mDirs
+std::vector&lt;Ogre::Real&gt; mWeights
+std::vector&lt;bool&gt; mIsCheckpoints
+
+bool mPrevClosestSegmentInited
+size_t mPrevClosestSegmentIndex
+std::vector&lt;LLTDataSegment&gt; mLLTDataSegments
+
+std::vector&lt;bool&gt; mIsPassed
+
+Ogre::SimpleSpline mSpline
+Ogre::Vector3 mAheadPointForArrow
+Ogre::SceneNode * mDebugSphereArrowNode
+
+Events* mEvents</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n10">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="104.44979330156366" width="214.6417533633644" x="4932.679123318318" y="-3382.224896650782"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="148.087890625" x="33.27693136918242" y="6.1213810257818295">&lt;&lt;LapUtils.h&gt;&gt;
+
+LLTDataSegment
+
+Ogre::Vector3 posA, posB
+Ogre::Real segmentLength</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n11">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="294.29827496582675" width="324.39163948067244" x="6977.804180259664" y="-4167.149137482913"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="271.45703125" x="26.467304115336447" y="34.89034842041292">&lt;&lt;LinearController.h&gt;&gt;
+
+template &lt;typename T&gt;
+LinearController
+
+public:
+
+void addPoint(const T&amp; controlPoint, const T&amp; val)
+
+T getVal(const T&amp; point) const
+
+private:
+
+std::vector&lt;T&gt; mControlPoints
+std::vector&lt;T&gt; mValues</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n12">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="465.38591301053384" width="634.8664667849475" x="6822.566766607526" y="-3562.692956505267"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="611.599609375" x="11.633428704973994" y="24.87655025526692">&lt;&lt;PSCarEngine.h&gt;&gt;
+
+PSCarEngine
+
+public:
+
+void init(lua_State * pipeline)
+
+void process(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, const Ogre::FrameEvent &amp;evt)
+
+int getCurrentGear()const
+Ogre::Real getEngineRPM()const
+
+private:
+
+static const int mGearCount = 4
+
+Ogre::Real mGearRatioMain
+Ogre::Real mGearRatio[mGearCount]
+Ogre::Real mChangeUp[mGearCount]
+Ogre::Real mChangeDown[mGearCount]
+
+int mCurrentGear
+Ogre::Real mEngineRPM
+Ogre::Real mEngineMinRPM
+Ogre::Real mEngineMaxRPM
+
+void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, Ogre::Real spf)</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n13">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="570.4779855747715" width="814.9492552746156" x="5442.525372362692" y="-1845.2389927873858"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="18.61789903738577">&lt;&lt;PSPlayerCar.h&gt;&gt;
+
+PSPlayerCar
+
+public:
+
+virtual void initModel( lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            GameCars gameCar,
+                            const Ogre::Matrix4&amp; transform,
+                            const std::vector&lt;Particle&gt;&amp; particles,
+                            bool isPossesCamera)
+
+void keyDown(OIS::KeyCode key)
+void keyUp(OIS::KeyCode key)
+
+bool isCollideChassis(const PSBaseCar&amp; otherCar, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap)const
+
+protected:
+
+virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
+
+private:
+
+LinearController&lt;float&gt; mSteeringImpulse
+LinearController&lt;float&gt; mOverSteeringImpulseLength
+
+Ogre::Real mSideImpulse
+Ogre::Timer mSteerTimer
+unsigned long mLastSteerLength
+bool mIsTimerFirstTime
+bool mIsLastTurnLeft
+Ogre::Real mSmoothSideImpulse</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n14">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="232.04078247193968" x="5133.97960876403" y="-1575.0"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="89.376953125" x="71.33191467347024" y="5.6494140625">LinearController</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n15">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1867.4543197495618"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="11.430882249561819">&lt;&lt;PSAICar.h&gt;&gt;
+
+PSAICar
+
+public:
+
+virtual void initModel( lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            GameCars gameCar,
+                            const Ogre::Matrix4&amp; transform,
+                            const std::vector&lt;Particle&gt;&amp; particles,
+                            bool isPossesCamera)
+
+void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff)
+void setSpeedCoeff(Ogre::Real speedCoeff)
+
+void setSteeringUmpulse(Ogre::Real impulse)
+
+virtual void processWheelsCollision(    btManifoldPoint&amp; cp, 
+                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
+                                    StaticMeshProcesser&amp; processer,
+                                    int triIndex)
+
+void performAICorrection(bool isGamePaused)
+void clearAIData()
+void setAIData(const std::vector&lt;AIData&gt;&amp; aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void raceStarted()
+
+protected:
+
+virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
+
+private:
+
+AIUtils mAIUtils
+
+Ogre::Real mSteeringImpulse</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n16">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="547.7689846801022" width="559.2261582433434" x="7370.386920878328" y="-1833.884492340051"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="544.275390625" x="7.4753838091719444" y="7.263398590051111">&lt;&lt;AIUtils.h&gt;&gt;
+
+AIUtils
+
+public:
+
+void setAIData(const std::vector&lt;AIData&gt;&amp; aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void clear()
+
+void performAICorrection(PSAICar* aiCar, bool isGamePaused)
+
+void setSpeedCoeff(Ogre::Real speedCoeff)
+
+void raceStarted()
+
+private:
+
+bool mIsDebugAI
+Ogre::SceneNode * mDebugSphereNode
+
+Ogre::Real mSpeedCoeff
+
+Ogre::SimpleSpline mSpline
+
+bool mPrevClosestSegmentInited
+size_t mPrevClosestSegmentIndex
+std::vector&lt;AIDataSegment&gt; mAIDataSegments
+
+Ogre::Vector3 getTowardPoint(const Ogre::Vector3&amp; carPos, Ogre::Vector3&amp; towardDir)
+size_t getClosestSegment(const Ogre::Vector3&amp; carPos, Ogre::Vector3&amp; pointInLineRes)
+
+Ogre::Timer mTimerAIStuck
+Ogre::Timer mTimerReverse
+Ogre::Real mAIDistanceLength
+Ogre::Vector3 mPrevPos
+bool mIsReverseEnabled</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n17">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8003.848496040967" y="-1802.1600845421992"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="148.087890625" x="22.107558646533107" y="8.705982979699229">&lt;&lt;AIUtils.h&gt;&gt;
+
+AIDataSegment
+
+Ogre::Vector3 posA, posB
+Ogre::Vector3 dirA, dirB
+Ogre::Real segmentLength</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n18">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="99.6364724597579" width="125.65702703153647" x="8037.171486484232" y="-1609.818236229879"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="101.3828125" x="12.137107265768464" y="3.7147206048789485">&lt;&lt;Tools.h&gt;&gt;
+
+AIData
+
+Ogre::Vector3 pos
+Ogre::Vector3 dir</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n19">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="369.8097463881825" width="1097.166186683005" x="6291.416906658497" y="-1144.9048731940911"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="6.490810694091124">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+
+PSMultiplayerCar
+
+public:
+
+void setModelPosition(const Ogre::Vector3&amp; pos, const Ogre::Quaternion&amp; rot, const Ogre::Vector3&amp; wheel0, const Ogre::Vector3&amp; wheel1, const Ogre::Vector3&amp; wheel2, const Ogre::Vector3&amp; wheel3)
+void setModelRotationOnly(const Ogre::Quaternion&amp; rot)
+void setModelVelocity(const Ogre::Vector3&amp; linear, const Ogre::Vector3&amp; angular)
+
+void removeFromScene(Ogre::SceneManager* sceneMgr)
+
+void setCurrentLap(size_t currentLap)
+size_t getCurrentLap()const override
+
+void setLapPosition(Ogre::Real lapPosition)
+Ogre::Real getLapPosition()const override
+
+private:
+
+void removeFromPhysicsSimulation()
+
+size_t mCurrentLap
+Ogre::Real mLapPosition</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n20">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="2352.631239804802" width="444.2534847542861" x="11417.873257622858" y="-7776.3156199024015"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2370.888671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="409.48046875" x="17.386508002142364" y="-9.128716035098478">&lt;&lt;GameState.h&gt;&gt;
+
+GameState
+
+public:
+
+void setPSOriginalPath(const std::string&amp; path)
+std::string getPSOriginalPath() const
+
+void setTrackName(const std::string&amp; name)
+std::string getTrackName() const
+
+PSAICar&amp; getAICar(size_t index)
+PSPlayerCar&amp; getPlayerCar()
+
+int getMaxAI()const
+
+void setAICount(size_t opponentsAmount)
+size_t getAICount()const
+
+Ogre::Vector3 getPLayerCarPrevVel()const
+void setPLayerCarPrevVel(const Ogre::Vector3&amp; vel)
+
+void setLLTObject(Ogre::ManualObject* lltObject)
+Ogre::ManualObject* getLLTObject()
+
+std::vector&lt;LightEclusion&gt;&amp; getExclusions()
+const std::vector&lt;LightEclusion&gt;&amp; getExclusions()const
+
+std::vector&lt;Ogre::Matrix4&gt;&amp; getTrackPositions()
+
+HierarchyNode&amp; getHierarchyNode()
+
+std::vector&lt;Particle&gt;&amp; getParticles()
+const std::vector&lt;Particle&gt;&amp; getParticles()const
+
+void setGlobalLight(Ogre::Light* light)
+Ogre::Light* getGlobalLight()
+
+void setShadowLight(Ogre::Light* light)
+Ogre::Light* getShadowLight()
+
+void setRaceStarted(bool isStarted)
+bool getRaceStarted()const
+
+unsigned long getBeforeStartTimerTime()
+void resetBeforeStartTimer()
+
+Ogre::SceneNode* getArrowNode()
+void setArrowNode(Ogre::SceneNode* node)
+
+void setBackgroundColor(Ogre::ColourValue backgroundColor)
+Ogre::ColourValue getBackgroundColor()const
+
+void setMirrorEnabled(bool enabled)
+bool getMirrorEnabled()const
+
+void setLapsCount(size_t laps)
+size_t getLapsCount()const
+
+static std::string getSkinByCarEnum(GameCars carEnum)
+static std::string getDashSkinByCarEnum(GameCars carEnum)
+
+void setListenerGain(Ogre::Real gain)
+Ogre::Real getListenerGain()const
+
+void setGamePaused()
+void resetGamePaused()
+bool isGamePaused()const
+
+//multiplayer
+void setMultiplayerEnabled(bool option)
+bool isMultiplayerEnabled()const
+
+void setMultiplayerMaster(bool option)
+bool isMultiplayerMaster()const
+
+void setMultiplayerRoomName(std::string option)
+std::string getMultiplayerRoomName()const
+
+void setMultiplayerUserName(std::string option)
+std::string getMultiplayerUserName()const
+
+void setMultiplayerServerIP(std::string option)
+std::string getMultiplayerServerIP()const
+
+void setMultiplayerServerPort(size_t option)
+size_t getMultiplayerServerPort()const
+
+void setMultiplayerPlayersLimits(size_t option)
+size_t getMultiplayerPlayersLimits()const
+
+void setMultiplayerBroadcastInterval(size_t option)
+size_t getMultiplayerBroadcastInterval()const
+
+PSMultiplayerCar&amp; getMultiplayerCarAI(size_t index)
+void setMultiplayerCountAI(size_t multiplayerAmountAI)
+size_t getMultiplayerCountAI()const
+
+std::vector&lt;std::string&gt; getMultiplayerCarHumanNames() const
+PSMultiplayerCar&amp; getMultiplayerCarHuman(const std::string&amp; playerName)
+void addMultiplayerCarHuman(const std::string&amp; playerName)
+void clearMultiplayerCarsHuman()
+void removeMultiplayerCarHuman(const std::string&amp; playerName)
+
+private:
+
+std::string mPSOriginalPath
+std::string mTrackName
+
+static const int mAIMax = 11
+
+PSPlayerCar mPSPlayerCar
+size_t mAiOpponentsAmount
+PSAICar mPSCar[mAIMax]
+Ogre::Vector3 mPlayerCarPrevVel
+
+Ogre::ManualObject* mLLTObject
+
+std::vector&lt;LightEclusion&gt; mLightExclusions
+
+std::vector&lt;Ogre::Matrix4&gt; mTrackPositions
+
+HierarchyNode mBaseHierarchyNode
+
+std::vector&lt;Particle&gt; mParticles
+
+Ogre::Light* mGlobalLight
+Ogre::Light* mShadowLight
+
+bool mIsRaceStarted
+PausedTimer mBeforeStartTimer
+
+Ogre::SceneNode* mArrowNode
+
+Ogre::ColourValue mBackgroundColor
+
+bool mIsMirrorEnabled
+
+size_t mLapsCount
+
+Ogre::Real mListenerGain; //master volume
+
+bool mIsGamePaused
+
+//multiplayer
+bool mIsMultiplayerEnabled
+bool mIsMultiplayerMaster
+std::string mMultiplayerRoomName
+std::string mMultiplayerUserName
+std::string mMultiplayerServerIP
+size_t mMultiplayerServerPort
+size_t mMultiplayerPlayersLimits
+size_t mMultiplayerBroadcastInterval
+
+static const int mMultiplayerMaxAI = 11
+
+size_t mMultiplayerAmountAI
+PSMultiplayerCar mMultiplayerCarAI[mMultiplayerMaxAI]
+
+std::map&lt;std::string, PSMultiplayerCar&gt; mMultiplayerCarHuman</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n21">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="267.00008119470385" width="237.44183709857998" x="12001.27908145071" y="-7063.5000405973515"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.810546875" x="6.315645111790218" y="-0.8105062776485283">&lt;&lt;PausedTimer.h&gt;&gt;
+
+PausedTimer
+
+public:
+
+void pause()
+void resume()
+
+unsigned long getMilliseconds()
+void reset()
+
+private:
+
+Ogre::Timer mTimer
+unsigned long mTimeLengthBeforePause
+unsigned long mPauseLength
+bool mIsPaused</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n22">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="85.29148043919304" width="182.67338922266129" x="12028.663305388669" y="-6642.6457402195965"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="97.36328125" x="42.65505398633104" y="18.59398240709652">PSPlayerCar
+PSAICar
+PSMultiplayerCar</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n23">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="325.5948367660958" width="282.9321891114173" x="9368.533905444292" y="-5772.797418383048"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="-0.9333195067920315" y="6.4351136955483526">&lt;&lt;LapController.h&gt;&gt;
+
+LapController
+
+public:
+
+void addCar(PSBaseCar * car)
+void removeCar(PSBaseCar * car)
+
+size_t getTotalCars() const
+
+void calculateLapPositions()
+
+size_t getTotalPosition(size_t index)const;//0 - player
+
+void clear()
+
+private:
+
+std::vector&lt;size_t&gt; mLapPositions
+std::vector&lt;PSBaseCar *&gt; mCars</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n24">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="31.579756583974813" width="133.7009351193766" x="9083.149532440311" y="-5625.789878291987"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="66.6953125" x="33.502811309688695" y="6.4392923544874066">PSBaseCar</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n25">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="316.81597721165326" width="367.92133847822106" x="9326.039330760888" y="-5408.407988605826"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.80859375" x="4.556372364109848" y="9.396269855826176">&lt;&lt;ModelsPool.h&gt;&gt;
+
+ModelsPool
+
+public:
+
+void initModels(Ogre::SceneManager* sceneMgr)
+
+Ogre::Entity* getCopyOfWarthog(const Ogre::String&amp; modelName)
+
+Ogre::Entity* getArrow()
+
+private:
+
+Ogre::SceneManager* mSceneMgr
+
+Ogre::Entity* mWarthogModel
+Ogre::Entity* mArrowModel
+
+static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n26">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="1674.4192915668673" width="869.3089261662258" x="8595.345536916888" y="-7707.209645783434"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1694.634765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="784.955078125" x="42.176924020612205" y="-10.107737029065902">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+
+StaticMeshProcesser
+
+public:
+
+void initParts( lua_State * pipeline, 
+                    Ogre::SceneManager* sceneMgr, 
+                    Ogre::SceneNode* mainNode,
+                    bool isGlobalReset,
+                    GameState&amp; gameState, 
+                    PFLoader&amp; pfloader,
+                    OgreBulletDynamics::DynamicsWorld * world)
+
+void queryLights()
+
+bool isRigidBodyStatic(const btCollisionObject * object, std::pair&lt;int, int&gt;&amp; address) const
+
+void deinit()
+
+void checkIsVertexArraySupported()
+
+void loadTerrainMaps()
+
+const DE2SingleBatch&amp; getBatchByAddress(std::pair&lt;int, int&gt; address)const
+const DE2Part&amp; getPartAddress(std::pair&lt;int, int&gt; address)const
+
+unsigned char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
+
+Ogre::Real getLatitudeFriction(unsigned char terrainType)
+Ogre::Real getLongtitudeFriction(unsigned char terrainType)
+
+void setFrictionRemapArray(const std::vector&lt;size_t&gt;&amp; remap)
+void setLatutuideFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
+void setLongtitudeFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
+
+private:
+
+void loadTextures(const std::vector&lt;MSHData&gt;&amp; mergedMSH, const PFLoader&amp; pfloader, const std::string&amp; trackName)
+
+void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File&amp; de2, GameState&amp; gameState)
+
+void addStaticTrimesh(   OgreBulletDynamics::DynamicsWorld * world,
+                                                        const Ogre::Vector3&amp; offset,
+                                                        const Ogre::Real bodyRestitution, 
+                                                        const Ogre::Real bodyFriction,
+                                                        const Ogre::Real bodyRollingFriction,
+                                                        const MSHData&amp; mshData)
+
+void initPart(  lua_State * pipeline, 
+                    Ogre::SceneManager* sceneMgr, 
+                    Ogre::SceneNode* mainNode,
+                    bool isGlobalReset,
+                    GameState&amp; gameState,
+                    Ogre::Entity* terrain,
+                    Ogre::SceneNode*&amp; terrainNode,
+                    const Ogre::Vector3&amp; centroid)
+
+void mergeMSH(const MSHData&amp; mshData, std::map&lt;std::string, size_t&gt;&amp; mapTexturesToMSHIndex, std::vector&lt;MSHData&gt;&amp; mergedMSH)const
+
+Ogre::Vector2 getTextureCoordinateInTriangle(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
+
+std::vector&lt;Ogre::Entity*&gt; mTerrainNodes
+Ogre::NameGenerator mNameGenMaterials
+Ogre::NameGenerator mNameGenNodes
+Ogre::NameGenerator mNameGenTextures
+bool mIsMaskLight
+
+Ogre::Entity* createMesh(   lua_State * pipeline, 
+                                Ogre::SceneManager* sceneMgr, 
+                                const Ogre::String&amp; entityName, 
+                                const Ogre::Vector3&amp; centroid,
+                                const Ogre::Vector3&amp; min, 
+                                const Ogre::Vector3&amp; max,
+                                MSHData&amp; mshData)
+
+std::vector&lt;std::string&gt; loadWithVertexArray(   lua_State * pipeline,
+                                                    bool isOverrideDefault, 
+                                                    std::string defaultTextureName, 
+                                                    const std::vector&lt;std::string&gt;&amp; noLightTextures,
+                                                    const Ogre::String&amp; ovverideMaterialName,
+                                                    const Ogre::String&amp; ovverideMaterialArrayName,
+                                                    MSHData&amp; mshData)
+
+std::vector&lt;std::string&gt; loadWithoutVertexArray(    lua_State * pipeline,
+                                                        bool isOverrideDefault, 
+                                                        std::string defaultTextureName, 
+                                                        const std::vector&lt;std::string&gt;&amp; noLightTextures,
+                                                        const Ogre::String&amp; ovverideMaterialName,
+                                                        MSHData&amp; mshData)
+
+typedef std::map&lt;const btCollisionObject *, std::pair&lt;int, int&gt; &gt; bodies
+bodies mBodies
+
+static Ogre::NameGenerator nameGenRigidBodies
+
+size_t mPlainIndices
+
+std::vector&lt;DE2Part&gt; mParts
+std::set&lt;std::string&gt; mTerrainMapsNames
+std::map&lt;std::string, CommonIncludes::shared_ptr&lt;Ogre::Image&gt; &gt; mTerrainMaps
+
+void prepareBuffers(const MSHData&amp; mshData)
+
+OgreBulletCollisions::TriangleMeshCollisionShape * createTrimesh(DE2Part&amp; part, DE2SingleBatch&amp; batch)
+
+btVoronoiSimplexSolver mSimplexSolver
+
+Ogre::Vector3 getBarycentric(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
+
+std::vector&lt;size_t&gt; mFrictionRemap
+std::vector&lt;float&gt; mLatitudeFrictions
+std::vector&lt;float&gt; mLongtitudeFrictions
+
+bool mIsVertexArraySupported</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n27">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="121.5123985933451" width="252.8089192692164" x="8183.595540365392" y="-7200.756199296673"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.787109375" x="20.01090494710843" y="14.652683671673003">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+
+DE2SingleBatch
+
+std::vector&lt;unsigned int&gt; mIndexBuffer
+std::string mTerrainMap</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n28">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="170.4848526966316" width="262.28745877307983" x="8178.85627061346" y="-6955.242426348315"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="252.103515625" x="5.091971574040144" y="9.736566973315348">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+
+DE2Part
+
+std::vector&lt;DE2SingleBatch&gt; mBatches;
+
+std::vector&lt;Ogre::Vector3&gt; mVertexBuffer
+std::vector&lt;Ogre::Vector3&gt; mTexCoordsBuffer
+
+Ogre::Vector3 offset</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n29">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="8553.030019461887" y="-4896.479197446333"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1591.7265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="20.615916196333274">&lt;&lt;Graphics2D.h&gt;&gt;
+
+Graphics2D
+
+public:
+
+void load(CustomTrayManager* trayMgr)
+
+void showBeforeStart1()
+void showBeforeStart2()
+void showBeforeStart3()
+void hideAllStart()
+
+void setEngineRPM(Ogre::Real rpm)
+void setCarSpeed(Ogre::Real speed)
+
+void setCurrentLap(unsigned short lap, unsigned short totallap)
+void setCarGear(unsigned char gear)
+
+void setCarPos(unsigned char pos, unsigned char totalcars)
+
+void hideAIDashboardCars()
+void setPlayerDashBoardSkin(GameCars carEnum)
+void setAIDashBoardSkin(size_t aiDashIndex, GameCars carEnum)
+void setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos)
+
+void setRaceTime(const std::string&amp; time)
+
+void setShowPausedPanel(bool isShow)
+
+void setShowMiscText(bool isShow)
+void setMiscText(const std::string&amp; text)
+void addMiscPanelText(const std::string&amp; text, const Ogre::ColourValue&amp; col = Ogre::ColourValue::White)
+
+void destroy()
+
+void createRearViewMirrorPanelTexture(Ogre::Root * root, int width, int height)
+void rearViewMirrorPanelTextureRemoveAllViewports()
+Ogre::Viewport * rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera)
+
+void createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelEnabled)
+void setRearViewMirrorPanelMaterial(const Ogre::String&amp; material)
+void setRearViewMirrorPanelShow(bool isShow)
+
+static Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String&amp; material)
+static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
+
+void reloadTextures()
+
+private:
+
+bool mLoaded
+
+void loadDashboardCars()
+void loadMisc()
+
+Ogre::PanelOverlayElement* mBeforeStartPanel1
+Ogre::PanelOverlayElement* mBeforeStartPanel2
+Ogre::PanelOverlayElement* mBeforeStartPanel3
+
+Ogre::PanelOverlayElement* mPlayerDashboardCar
+static const int mDashboardCarsCount = 11
+Ogre::PanelOverlayElement* mDashboardCars[mDashboardCarsCount]
+
+Ogre::Overlay* mNeedleLayer
+LinearController&lt;float&gt; mEngineRPMToRotation
+LinearController&lt;float&gt; mNeedleScaleCorrection
+
+Ogre::PanelOverlayElement* mTachoLamps
+
+Ogre::PanelOverlayElement* mTachoSpeedDigit1
+Ogre::PanelOverlayElement* mTachoSpeedDigit2
+Ogre::PanelOverlayElement* mTachoSpeedDigit3
+
+Ogre::PanelOverlayElement* mTachoTotalCarsDigit1
+Ogre::PanelOverlayElement* mTachoTotalCarsDigit2
+Ogre::PanelOverlayElement* mTachoPosDigit1
+Ogre::PanelOverlayElement* mTachoPosDigit2
+Ogre::Real mDashDigitLeftTotalCars1
+
+Ogre::PanelOverlayElement* mDashLap1
+Ogre::PanelOverlayElement* mDashLap2
+Ogre::PanelOverlayElement* mDashTotalLap1
+Ogre::PanelOverlayElement* mDashTotalLap2
+Ogre::Real mDashDigitLeftTotalLap1
+
+Ogre::PanelOverlayElement* mDashLapTime1
+Ogre::PanelOverlayElement* mDashLapTime2
+Ogre::PanelOverlayElement* mDashLapTime3
+Ogre::PanelOverlayElement* mDashLapTime4
+Ogre::PanelOverlayElement* mDashLapTime5
+Ogre::PanelOverlayElement* mDashLapTime6
+
+Ogre::PanelOverlayElement* mDashGear
+    
+
+std::pair&lt;Ogre::Real, Ogre::Real&gt; getTachoDigitOffset(unsigned char digit)const
+std::pair&lt;Ogre::Real, Ogre::Real&gt; getDashDigitOffsetX(unsigned char digit)const
+std::pair&lt;Ogre::Real, Ogre::Real&gt; getDashDigitOffsetY(unsigned char digit)const
+
+Ogre::RenderTexture *mRearCamTexture
+Ogre::PanelOverlayElement* mRearViewMirrorPanel
+
+Ogre::PanelOverlayElement* mPausedPanel
+
+Ogre::TextAreaOverlayElement * mMiscText
+static const int mMiscTextArraySize = 5
+Ogre::TextAreaOverlayElement * mMiscTextArray[mMiscTextArraySize]</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n30">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="914.6242548396594" width="680.3243738838223" x="11149.83781305809" y="-5257.312127419829"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="886.0703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="604.9609375" x="37.68171819191048" y="14.276971169829267">&lt;&lt;SoundsProcesser.h&gt;&gt;
+
+SoundsProcesser
+
+public:
+
+void initSoundSystem();
+void deInitSoundSystem()
+
+void setListenerPos(const Ogre::Vector3&amp; pos)
+void setListenerGain(ALfloat gain)
+
+void setRemappers(const std::vector&lt;size_t&gt;&amp; remapSounds, const std::vector&lt;size_t&gt;&amp; remapSoundsCollision)
+
+void initSounds()
+void deinitSounds()
+void stopSounds()
+void stopSoundSurfaces()
+
+void playCrash1()
+void playCrash2()
+
+void playBeforeStart1()
+void playBeforeStart2()
+void playBeforeStart3()
+
+void playSurface(size_t surfaceNumber, Ogre::Real lateralVel)
+void playSurfaceCrash(size_t surfaceNumber)
+
+private:
+
+
+void updatePosition(const Ogre::Vector3&amp; pos)
+
+void resetInternalStatus()
+
+OpenALState mState
+
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mCrash1
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mCrash2
+
+static const int mSurfacesCount = 7
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mSurface[mSurfacesCount]
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mSurfaceCrash[mSurfacesCount]
+
+std::vector&lt;size_t&gt; mRemapSounds
+std::vector&lt;size_t&gt; mRemapSoundsCollision
+
+size_t mPrevSurface
+
+LinearController&lt;float&gt; mSurfaceSoundGain
+
+
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mBeforeStart1
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mBeforeStart2
+CommonIncludes::shared_ptr&lt;OpenALSource&gt; mBeforeStart3
+
+bool mBeforeStartPlayedOnce1
+bool mBeforeStartPlayedOnce2
+bool mBeforeStartPlayedOnce3</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n31">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="1126.7497727076616" width="1162.427823583826" x="10698.786088208088" y="-4193.374886353831"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1047.783203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="39.48328479133124">&lt;&lt;MultiplayerController.h&gt;&gt;
+
+MultiplayerController
+
+public:
+
+typedef std::map&lt;std::string, MultiplayerSessionData&gt; playerToData
+
+Events* mEvents
+
+private:
+
+// Lobby callback
+void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room)override
+void onBroadcast(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; playerName, const std::string &amp; message, uint8_t flags)override
+void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, multislider::SessionPtr session, const std::string &amp; sessionData)override
+void onLeft(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, uint8_t flags)override
+
+// Session callback
+void onStart(multislider::Session* session)override
+void onUpdate(multislider::Session* session, const multislider::SessionData &amp; data, const multislider::PlayerData &amp; sharedData)override
+void onQuit(multislider::Session* session, const std::string &amp; playerName, bool byTimeout) throw ()override
+
+void addReadyPlayer(const std::string&amp; playerName, const GameCars&amp; playerSkin)
+void removePlayerFromLobby(const std::string&amp; playerName)
+bool checkAllPlayersReady()const
+
+static bool parseLobbyReadyMessage(const std::string&amp; message, GameCars&amp; playerSkin)
+static jsonxx::Object fillLobbyReadyMessage(const GameCars&amp; playerSkin)
+
+static void parseDataPacket(MultiplayerSessionData&amp; data, const jsonxx::Object&amp; jsonObject)
+static jsonxx::Object fillDataPacket(const MultiplayerSessionData&amp; data)
+
+
+multislider::shared_ptr&lt;multislider::Lobby&gt; mLobby
+multislider::SessionPtr mSession
+
+uint32_t mPlayersLimits
+std::map&lt;std::string, GameCars&gt; mReadyPlayers;//used: write in master, read in slaves
+bool mReadySent
+bool mSessionStarted
+bool mStartHappened;//to synchronize race events
+bool mGameFinished
+
+playerToData mOtherPlayersSessionData
+
+std::vector&lt;MultiplayerSessionData&gt; mAIPlayersSessionData
+uint64_t mAIDataTimestamp
+
+Ogre::Timer mBroadcastTimer
+
+std::vector&lt;GameCars&gt; mAISkins
+
+size_t mBroadcastInterval
+
+public:
+
+void clearSessionAndLobby();
+
+bool startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector&lt;GameCars&gt;&amp; aiSkins, const GameCars&amp; playerSkin)
+bool startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const GameCars&amp; playerSkin)
+
+void receiveSessionData()
+
+void updateSessionData(const MultiplayerSessionData&amp; dataHuman, const std::vector&lt;MultiplayerSessionData&gt;&amp; dataAI, float spf)
+
+bool getReadySent()const
+
+bool getStartHappen()const
+
+size_t getSessionPing()const</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n32">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="55.671044489625274" width="204.88871618483893" x="11177.55564190758" y="-4287.835522244813"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="153.390625" x="25.74904559241986" y="11.134350369812637">multislider::Lobby::Callback
+multislider::SessionCallback</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n33">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="283.17811702534755" width="1188.7160370802058" x="11975.641981459898" y="-3771.5890585126735"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1161.53125" x="13.592393540102421" y="14.629097575173546">&lt;&lt;MultiplayerController.h&gt;&gt;
+
+MultiplayerController::class Events
+
+public:
+
+virtual void onPlayerEjected(const std::string&amp; player) = 0
+virtual void onPlayerJoined(const std::string&amp; player) = 0
+virtual void onPlayerLeft(const std::string&amp; player) = 0
+virtual void onNewHost(const std::string&amp; player) = 0
+virtual void onRoomClosed(const std::string&amp; player) = 0
+virtual void onPlayerReady(const std::string&amp; player) = 0
+virtual void onPlayerAddedToSession(const std::string&amp; player) = 0
+virtual void onPlayerQuitSession(const std::string&amp; player, bool isHost) = 0
+virtual void onSessionStart(uint32_t aiAmount, const std::vector&lt;std::string&gt;&amp; players, size_t playerIndex, bool isHost, const std::vector&lt;GameCars&gt;&amp; aiSkins, const std::map&lt;std::string, GameCars&gt;&amp; playersSkins) = 0
+virtual void onSessionUpdate(const playerToData&amp; otherPlayersSessionData, const std::vector&lt;MultiplayerSessionData&gt;&amp; aiPlayersSessionData, bool isHost) = 0
+virtual void onError(const std::string&amp; message) = 0</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n34">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="281.27145407217085" width="273.1359434396013" x="12013.4320282802" y="-4193.374886353831"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="266.125" x="3.5054717197999707" y="6.325180161085882">&lt;&lt;MultiplayerController.h&gt;&gt;
+
+MultiplayerSessionData
+
+Ogre::Vector3 pos
+Ogre::Quaternion rot
+Ogre::Vector3 vel
+Ogre::Vector3 velang
+Ogre::Vector3 wheelpos[4]
+bool isAcc
+bool isBrake
+bool isLeft
+bool isRight
+
+uint64_t dataUpdateTimestamp;//server side time
+
+size_t currentLap
+Ogre::Real lapPosition</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n35">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="153.58870974598676" width="196.10560797422204" x="4941.9471960128885" y="-3196.7943548729936"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="171.759765625" x="12.172921174611474" y="23.34025331049361">&lt;&lt;LapUtils.h&gt;&gt;
+
+LapUtils::class Events
+
+public:
+
+virtual void onLapFinished() = 0</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n36">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="112.75813126190315" width="370.7611527875665" x="8124.6194236062165" y="-7526.379065630952"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="351.501953125" x="9.629599831283485" y="2.9249640684520273">&lt;&lt;DE2Loader.h&gt;&gt;
+
+DE2Loader
+
+public:
+
+bool load(std::vector&lt;MSHData&gt;&amp; parts, FILE * fileToLoad) const</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n37">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="31.579756583974813" width="133.7009351193766" x="9563.149532440311" y="-6885.789878291987"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="56.69921875" x="38.500858184688695" y="6.4392923544874066">PFLoader</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n38">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="439.001597538464" width="571.0431467421781" x="9854.478426628912" y="-4809.500798769232"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="490.861328125" x="40.09090930858838" y="11.684392519231551">&lt;&lt;PFLoader.h&gt;&gt;
+
+PFLoader
+
+public:
+
+void init(const std::string&amp; path, const std::string&amp; file)
+
+FILE * getFile(const std::string&amp; relativeDir, const std::string&amp; file) const
+
+size_t getFileSize(const std::string&amp; relativeDir, const std::string&amp; file) const
+
+private:
+
+typedef unsigned int DWORD
+
+std::string mPath
+std::string mFileName
+bool mIsPathCorrect
+
+std::vector&lt;PackedFileItem&gt; mFileSystem
+
+bool checkPathCorrect(const std::string&amp; path, const std::string&amp; file) const
+
+size_t findFile(const std::string&amp; relativeDir, const std::string&amp; file, size_t&amp; fileSize) const
+
+static std::string readString(FILE * f, DWORD&amp; FilePos)
+static std::vector&lt;std::string&gt; splitpath(const std::string&amp; str, const std::set&lt;char&gt; delimiters)</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n39">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="186.04934675105778" width="178.4833695639113" x="10050.758315218045" y="-4353.024673375528"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="164.740234375" x="6.871567594454973" y="10.168228063028437">&lt;&lt;PFLoader.h&gt;&gt;
+
+PackedFileItem
+
+typedef unsigned int DWORD;
+
+std::string Name
+DWORD Next
+DWORD FileFolder
+DWORD Offset
+DWORD Length</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="n0::e0" source="n0::n0" target="n0::n1">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="white_delta" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e1" source="n0::n2" target="n0::n3">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="white_diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e2" source="n0::n4" target="n0::n5">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e3" source="n0::n6" target="n0::n7">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e4" source="n0::n19" target="n0::n20">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e5" source="n0::n23" target="n0::n24">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed" width="1.0"/>
+          <y:Arrows source="white_delta" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e0" source="n1" target="n4">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e1" source="n1" target="n3">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n5" target="n4">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e3" source="n6" target="n5">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e4" source="n6" target="n7">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e5" source="n8" target="n1">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e6" source="n8" target="n9">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e7" source="n9" target="n10">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e8" source="n8" target="n11">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e9" source="n8" target="n12">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n13" target="n8">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e11" source="n13" target="n14">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e12" source="n15" target="n8">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e13" source="n15" target="n16">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e14" source="n16" target="n17">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e15" source="n16" target="n18">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e16" source="n19" target="n15">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e17" source="n6" target="n20">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e18" source="n20" target="n21">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e19" source="n20" target="n22">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e20" source="n6" target="n23">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e21" source="n23" target="n24">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="white_diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e22" source="n6" target="n25">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e23" source="n6" target="n26">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e24" source="n26" target="n28">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e25" source="n26" target="n27">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e26" source="n6" target="n29">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e27" source="n6" target="n30">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e28" source="n6" target="n31">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e29" source="n31" target="n32">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e30" source="n31" target="n33">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e31" source="n31" target="n34">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e32" source="n9" target="n35">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e33" source="n26" target="n36">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e34" source="n26" target="n37">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e35" source="n6" target="n38">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="diamond" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e36" source="n38" target="n39">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+  <data key="d0">
+    <y:Resources/>
+  </data>
+</graphml>

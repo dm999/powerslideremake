@@ -1,0 +1,29 @@
+fragment_program Test/ShadowCasterFrag glsl
+{
+    source ShadowCasterFrag.glsl
+}
+
+vertex_program Test/ShadowCasterVert glsl
+{
+	source ShadowCasterVert.glsl
+}
+
+material Test/ShadowCaster
+{
+	technique
+	{
+		pass
+		{
+
+			fragment_program_ref Test/ShadowCasterFrag
+			{
+			}
+            
+			vertex_program_ref Test/ShadowCasterVert
+			{
+                param_named_auto texelOffsets texel_offsets
+                param_named_auto modelviewproj worldviewproj_matrix
+			}
+		}
+	}
+}

@@ -1,0 +1,39 @@
+particle_system Particle/Wheel
+{
+    material        Test/Particle
+    particle_width  6
+    particle_height 6
+    cull_each       false
+    quota           200
+    billboard_type  point
+ 
+    // Area emitter
+    emitter Point
+    {
+        angle           90
+        emission_rate   20
+        time_to_live    1.0
+        direction       0 1 0
+        velocity       20.0
+        colour 0.5 0.3 0.0 1.0
+    }
+ 
+    // Fader
+    affector ColourFader
+    {
+        alpha -1.0
+    }
+    
+    // Gravity
+    affector LinearForce
+    {
+        force_vector 0.0 -100.0 0.0
+    }
+    
+    // Rot
+    //affector Rotator
+    //{
+        //rotation_speed_range_start 0
+        //rotation_speed_range_end 720
+    //}
+}

@@ -1,0 +1,98 @@
+cmake_minimum_required(VERSION 2.8)
+
+
+project(UT)
+
+if(ANDROID)
+    set(CMAKE_MODULE_PATH "$ENV{OGRE_ANDROID_HOME}/CMake/;${CMAKE_MODULE_PATH}")
+else()
+    set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
+endif()
+set(OGRE_STATIC true)
+
+find_package(OGRE REQUIRED)
+find_package(OIS REQUIRED)
+
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+file(GLOB sources_main src/gtest/src/gtest-all.cc src/*.cpp ../ogre/src/Tools.cpp ../ogre/src/OgreTools.cpp  ../ogre/src/KochanekBartelsSpline.cpp)
+file(GLOB sources_main_h include/gtest/*.h)
+
+list(APPEND sources ${sources_main})
+list(APPEND sources ${sources_main_h})
+
+include_directories(include)
+include_directories(src/gtest)
+include_directories(../ogre/src)
+#include_directories(../boost)
+
+if(ANDROID)
+
+    add_definitions(-std=c++11)
+
+    include_directories( 
+            ${OIS_INCLUDE_DIRS}
+            ${OGRE_INCLUDE_DIRS}
+            $ENV{OGRE_ANDROID_HOME}/include/OGRE/RenderSystems/GLES2
+            $ENV{OGRE_HOME}/include/OGRE/Overlay
+    )
+            
+    link_directories ($ENV{OGRE_ANDROID_HOME}/lib)
+    link_directories ($ENV{OGRE_ANDROID_HOME}/lib/OGRE)
+
+else()
+    include_directories( 
+            ${OIS_INCLUDE_DIRS}
+            ${OGRE_INCLUDE_DIRS}
+            $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
+            $ENV{OGRE_HOME}/include/OGRE/Overlay
+    )
+            
+    link_directories ($ENV{OGRE_HOME}/lib/Debug)
+    link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
+    link_directories ($ENV{OGRE_HOME}/lib/Release)
+    link_directories ($ENV{OGRE_HOME}/lib/Release/opt)
+endif()
+
+add_executable(UT ${sources})
+
+
+if(ANDROID)
+    
+    target_link_libraries(UT RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl stdc++)
+    target_link_libraries(UT Plugin_ParticleFXStatic)
+    target_link_libraries(UT Plugin_OctreeSceneManagerStatic)
+    target_link_libraries(UT freetype)
+    target_link_libraries(UT FreeImage)
+    target_link_libraries(UT zlib)
+    target_link_libraries(UT zziplib)
+else()
+    target_link_libraries(UT general opengl32)
+    target_link_libraries(UT general glu32)
+    
+    target_link_libraries(UT debug OgreMainStatic_d)
+    target_link_libraries(UT debug OgreOverlayStatic_d)
+    target_link_libraries(UT debug RenderSystem_GLStatic_d)
+    target_link_libraries(UT debug Plugin_ParticleFXStatic_d)
+    target_link_libraries(UT debug Plugin_OctreeSceneManagerStatic_d)
+    target_link_libraries(UT debug freetype2311_d)
+    target_link_libraries(UT debug FreeImaged)
+    target_link_libraries(UT debug zlibd)
+    target_link_libraries(UT debug zziplibd)
+
+    target_link_libraries(UT optimized OgreMainStatic)
+    target_link_libraries(UT optimized OgreOverlayStatic)
+    target_link_libraries(UT optimized RenderSystem_GLStatic)
+    target_link_libraries(UT optimized Plugin_ParticleFXStatic)
+    target_link_libraries(UT optimized Plugin_OctreeSceneManagerStatic)
+    target_link_libraries(UT optimized freetype2311)
+    target_link_libraries(UT optimized FreeImage)
+    target_link_libraries(UT optimized zlib)
+    target_link_libraries(UT optimized zziplib)
+    
+    #target_link_libraries(UT BoostThread)
+    
+endif()
+
+

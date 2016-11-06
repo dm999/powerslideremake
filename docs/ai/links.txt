@@ -1,0 +1,4 @@
+https://www.youtube.com/watch?v=_XKphuYviE0
+http://gamedev.stackexchange.com/questions/414/patterns-for-racing-ai-behaviour
+http://www.red3d.com/cwr/steer/
+http://aigamedev.com/open/coverage/paris10-report/#session9

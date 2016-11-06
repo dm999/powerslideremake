@@ -1,0 +1,4 @@
+http://www.gamedev.ru/code/articles/Racing_Simulator
+http://www.solarflare.org.uk/car_demo/index.html
+http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
+http://www.gamedev.net/topic/462784-simplified-pacejka-magic-formula/?forum_id=20

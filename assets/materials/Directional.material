@@ -1,0 +1,47 @@
+fragment_program Test/FPDir_1 glsl
+{
+    source DirFrag.glsl
+}
+
+vertex_program Test/VPDir_1 glsl
+{
+    source DirVert.glsl
+}
+
+material Test/Directional
+{
+	technique
+	{
+		pass
+		{
+            ambient 0.0 0.0 0.0 1.0
+            diffuse 0.7 0.7 0.7 1.0
+            specular 1.0 1.0 1.0 1.0 32.0
+
+			fragment_program_ref Test/FPDir_1
+			{
+                param_named diffuseMap int 0
+                param_named_auto lightAmbient AMBIENT_LIGHT_COLOUR 0
+                param_named_auto lightDiffuse LIGHT_DIFFUSE_COLOUR 0
+                param_named_auto lightSpecular LIGHT_SPECULAR_COLOUR 0
+                
+                param_named_auto lightSpotDirection LIGHT_DIRECTION_VIEW_SPACE 0
+                
+                param_named_auto matAmbient surface_ambient_colour
+                param_named_auto matSpecular surface_specular_colour
+                param_named_auto matSpecPower surface_shininess
+			}
+			vertex_program_ref Test/VPDir_1
+			{
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto modelview worldview_matrix
+                param_named_auto normalmatrix inverse_transpose_worldview_matrix
+			}
+			
+			texture_unit
+			{
+                tex_address_mode clamp
+			}
+		}
+	}
+}

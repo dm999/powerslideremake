@@ -1,0 +1,75 @@
+fragment_program Test/FPSpotNormalShadowSmoothReciever glsl
+{
+    source SpotFragNormalShadowSmoothReciever.glsl
+}
+
+vertex_program Test/VPSpotNormalShadowReciever glsl
+{
+    source SpotVertNormalShadowReciever.glsl
+}
+
+material Test/SpotNormalShadowSmoothReciever
+{
+    technique
+    {
+        pass
+        {
+            
+            ambient 0.4 0.4 0.4 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 10.0
+
+            fragment_program_ref Test/FPSpotNormalShadowSmoothReciever
+            {
+                param_named diffuseMap int 0
+                param_named normalMap int 1
+                param_named shadowMap int 2
+                param_named_auto lightAmbient AMBIENT_LIGHT_COLOUR 0
+                param_named_auto lightDiffuse LIGHT_DIFFUSE_COLOUR 0
+                param_named_auto lightSpecular LIGHT_SPECULAR_COLOUR 0
+                param_named_auto lightAttenuation LIGHT_ATTENUATION 0
+                
+                param_named_auto lightSpotDirection LIGHT_DIRECTION_VIEW_SPACE 0
+                param_named_auto lightSpot SPOTLIGHT_PARAMS 0
+                
+                param_named_auto matAmbient surface_ambient_colour
+                param_named_auto matSpecular surface_specular_colour
+                param_named_auto matSpecPower surface_shininess
+                
+                param_named_auto textureSize texture_size 2
+            }
+            vertex_program_ref Test/VPSpotNormalShadowReciever
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto modelview worldview_matrix
+                param_named_auto model world_matrix
+                param_named_auto normalmatrix inverse_transpose_worldview_matrix
+                param_named_auto texturematrix texture_matrix 0
+                param_named_auto lightPosition light_position_view_space 0
+                param_named_auto texviewproj texture_viewproj_matrix 0
+
+            }
+            
+            texture_unit
+            {
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+            
+            texture_unit
+            {
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+            
+            texture_unit
+            {
+                content_type shadow
+                tex_address_mode clamp
+                filtering none
+            }
+        }
+    }
+}
