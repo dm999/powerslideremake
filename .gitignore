@@ -1,15 +1,12 @@
 /build
 /Ogre.log
-/OIS.dll
-/OIS_d.dll
+/*.dll
+/**/*.lib
 /*.exe
-/assets/data/*.log
 /*.bat
 /android/bin
 /android/gen
 /android/libs
 /android/jni
 /android/obj
-/tools/engsound/bin
-/*.7z
 /android/*.bat

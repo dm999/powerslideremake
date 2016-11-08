@@ -52,20 +52,6 @@ namespace
 {
     lua_State * mPipeline = NULL;
     BaseApp * baseApp = NULL;
-
-    static float gMaxEngineForce = -100.f;
-    static float gBreakingForce = 10.f;
-
-    static float gWheelFriction = 10.5f;//1e30f;//1000;//1e30f;
-    static float gSuspensionStiffness = 5.8f;
-    static float gSuspensionDamping = 0.88f;
-    static float gSuspensionCompression = 0.83f;
-
-    static float gRollInfluence = 0.1f;//1.0f;
-    static float gSuspensionRestLength = 0.6f;
-    static float gMaxSuspensionTravelCm = 500.0f;
-    static float gMaxSuspensionForce = 6000.0f;
-    static float gFrictionSlip = 10.5f;
 }
 
 extern ContactAddedCallback gContactAddedCallback;

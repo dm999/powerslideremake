@@ -6,15 +6,11 @@
 
 ### Build ###
 To build the project you need:  
-- C++ compiler  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org)  
-- [Enet](http://enet.bespin.org/)  
-- [Raknet](http://www.jenkinssoftware.com/)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 
 Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Multislider.  
-There are prebuild versions of OpenAL & Multislider (MSVC 2008) are included into project.
 
 To build project you need set environment variables:  
 - OGRE_HOME - path to Ogre includes & binaries  
@@ -27,6 +23,8 @@ To build project you need set environment variables:
 - TinyXML  
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
+- [Enet](http://enet.bespin.org/)  
+- [Raknet](http://www.jenkinssoftware.com/)  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
