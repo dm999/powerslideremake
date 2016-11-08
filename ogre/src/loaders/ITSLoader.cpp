@@ -46,16 +46,11 @@ size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, c
 
         for(size_t q = 0; q < head.length; ++q)
         {
-            char val_a = buf[q];
-            int val_new_a = static_cast<int>(val_a);
-            val_new_a <<= 21;
-            val_new_a >>= 0x16;
-            val_new_a += 128;
-
-            if(val_new_a >= 256) val_new_a = 255;
-            if(val_new_a < 0) val_new_a = 0;
-
-            rawData[q] = (BYTE)val_new_a;
+            //-128 ... 127 maps to 64 ... 191
+            short tmpval = static_cast<char>(buf[q]);
+            tmpval >>= 0x1;
+            tmpval += 128;
+            rawData[q] = static_cast<BYTE>(tmpval);
         }
 
         fclose(fileToLoad);
