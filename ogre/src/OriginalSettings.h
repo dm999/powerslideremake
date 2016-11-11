@@ -24,6 +24,7 @@ public:
      * extract value from string {a, b, c, d}
      */
     Ogre::Vector4 getArray4Value(const std::string& section, const std::string& key, bool& isFound) const;
+    Ogre::Vector4 getArray4Value(const std::string& section, const std::string& key) const;
 
     /**
      * extract value from string {a, b, c}
@@ -36,6 +37,7 @@ public:
     Ogre::Vector2 getArray2Value(const std::string& section, const std::string& key) const;
 
     float getFloatValue(const std::string& section, const std::string& key, bool& isFound) const;
+    float getFloatValue(const std::string& section, const std::string& key) const;
 
 
 protected:
@@ -45,17 +47,18 @@ protected:
 };
 
 /**
- * Parser of original Powerslide.str
+ * Parser of original powerslide.str
  */
-class OriginalSettings : public STRSettings
+class STRPowerslide : public STRSettings
 {
 public:
-    OriginalSettings();
+    STRPowerslide();
 
     void parse(const PFLoader& pfLoaderStore);
 
     Ogre::ColourValue getTrackSkyColor(const std::string& trackDE2FileName) const;
     Ogre::ColourValue getTrackAmbientColor(const std::string& trackDE2FileName) const;
+    Ogre::ColourValue getTrackTimeTrialColor(const std::string& trackDE2FileName) const;
     Ogre::ColourValue getCharacterSpecularColor(const std::string& trackDE2FileName, const std::string& characterName) const;
     std::string getExclusionFile(const std::string& trackDE2FileName) const;
     size_t getLapsCount(const std::string& trackDE2FileName) const;
@@ -65,6 +68,19 @@ private:
     std::map<std::string, std::string> mCustomToOriginalSections;
 
     Ogre::ColourValue parseColor(const std::string& val) const;
+};
+
+/**
+ * Parser of original racecrud.str
+ */
+class STRRacecrud : public STRSettings
+{
+public:
+    STRRacecrud(){}
+
+    void parse(const PFLoader& pfLoaderStore);
+
+private:
 };
 
 #endif

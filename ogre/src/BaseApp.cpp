@@ -270,7 +270,7 @@ void BaseApp::createFrameListener(void)
 
 
     mGraphics2D.createRearViewMirrorPanel(mTrayMgr, mGameState.getMirrorEnabled());
-    mGraphics2D.load(mTrayMgr, mPFLoaderData, mPFLoaderGameshell);
+    mGraphics2D.load(mTrayMgr, mPFLoaderData, mPFLoaderGameshell, mSTRRacecrud);
 
 
 
@@ -628,7 +628,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > 1000 && !mGameState.isGamePaused())
+    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "ready left start") * 1000.0f && !mGameState.isGamePaused())
     {
         mGraphics2D.setRearViewMirrorPanelShow(false);
         mGraphics2D.hideAllStart();
@@ -636,14 +636,14 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mSoundsProcesser.playBeforeStart1();
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > 3000 && !mGameState.isGamePaused())
+    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "set left start") * 1000.0f && !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
         mGraphics2D.showBeforeStart2();
         mSoundsProcesser.playBeforeStart2();
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > 6000 && !mGameState.isGamePaused())
+    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "go left start") * 1000.0f && !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
         mGraphics2D.showBeforeStart3();
@@ -675,7 +675,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mGameState.setRaceStarted(true);
     }
 
-    if(mGameState.getBeforeStartTimerTime() > 8000 && !mGameState.isGamePaused())
+    if(mGameState.getBeforeStartTimerTime() > (mSTRRacecrud.getFloatValue("on-grid parameters", "go left start") * 1000.0f + mSTRRacecrud.getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
 
@@ -873,7 +873,8 @@ void BaseApp::initScene()
     mPFLoaderData.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "data.pf");
     mPFLoaderGameshell.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "gameshell.pf");
     mPFLoaderStore.init(mLuaManager.ReadScalarString("Main.OriginalPathCommon", mPipeline), "store.pf");
-    mOriginalSettings.parse(mPFLoaderStore);
+    mSTRPowerslide.parse(mPFLoaderStore);
+    mSTRRacecrud.parse(mPFLoaderStore);
 
     mSoundsProcesser.initSounds(mPFLoaderData);
 
@@ -892,7 +893,7 @@ void BaseApp::initScene()
     mCamera = mSceneMgr->createCamera("PlayerCam");
     mCamera->setNearClipDistance(0.5f);
     Ogre::Viewport * mViewPort = mWindow->addViewport(mCamera);
-    mGameState.setBackgroundColor(mOriginalSettings.getTrackSkyColor(mGameState.getDE2FileName()));
+    mGameState.setBackgroundColor(mSTRPowerslide.getTrackSkyColor(mGameState.getDE2FileName()));
 
     mViewPort->setBackgroundColour(mGameState.getBackgroundColor());
     mCamera->setAspectRatio(mLuaManager.ReadScalarFloat("Scene.Camera.AspectRatio", mPipeline));
@@ -904,7 +905,7 @@ void BaseApp::initScene()
     mCameraMan.reset(new CameraMan(mCamera, mWorld.get(), mSceneMgr));
     mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
-    mGameState.setLapsCount(mOriginalSettings.getLapsCount(mGameState.getDE2FileName()));
+    mGameState.setLapsCount(mSTRPowerslide.getLapsCount(mGameState.getDE2FileName()));
 
     //load data
     {
@@ -915,7 +916,7 @@ void BaseApp::initScene()
 
     {
         bool isDebugExclusion = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugExclusion", mPipeline);
-        std::string exclusionFile = mOriginalSettings.getExclusionFile(mGameState.getDE2FileName());
+        std::string exclusionFile = mSTRPowerslide.getExclusionFile(mGameState.getDE2FileName());
 
         ExclusionLoader().load(mPFLoaderData, mGameState, exclusionFile, mSceneMgr, isDebugExclusion);
     }
@@ -1030,6 +1031,8 @@ void BaseApp::initLightLists()
 void BaseApp::clearScene()
 {
 
+    mGraphics2D.clearMiscPanelText();
+
     if(mMultiplayerController.get())
         mMultiplayerController->clearSessionAndLobby();
     mMultiplayerController.reset();
@@ -1091,7 +1094,7 @@ void BaseApp::initTerrain()
 {
     mStaticMeshProcesser.initParts( mPipeline, mSceneMgr, mMainNode, mIsGlobalReset, 
                                     mGameState, mPFLoaderData, mWorld.get(),
-                                    mOriginalSettings.getTrackAmbientColor(mGameState.getDE2FileName()));
+                                    mSTRPowerslide.getTrackAmbientColor(mGameState.getDE2FileName()));
     mStaticMeshProcesser.loadTerrainMaps(mPFLoaderData, mGameState);
 
     //load terrain params
@@ -1105,7 +1108,8 @@ void BaseApp::initTerrain()
 
     //particle (before loading cars)
     {
-        Ogre::TexturePtr particle = TextureLoader().load(mPFLoaderData, "data/deii", "particle.tga", "OriginalParticle");
+        //Ogre::TexturePtr particle = TextureLoader().load(mPFLoaderData, "data/deii", "particle.tga", "OriginalParticle");
+        Ogre::TexturePtr particle = TEXLoader().load(mPFLoaderData, "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
     }
@@ -1596,7 +1600,7 @@ void BaseApp::onLapFinished()
     size_t lap = mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
     std::string time = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getLastLapTime());
     std::string lapS = Conversions::DMToString(lap);
-    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]");
+    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mSTRPowerslide.getTrackTimeTrialColor(mGameState.getDE2FileName()));
 }
 
 void BaseApp::parseFile(const std::string& fileName)

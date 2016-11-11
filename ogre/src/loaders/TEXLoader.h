@@ -12,8 +12,8 @@ class TEXLoader
 public:
     TEXLoader(){}
 
-    bool load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group = TEMP_RESOURCE_GROUP_NAME) const;
-    bool load(FILE * fileToLoad, const std::string& texturename, const Ogre::String& group = TEMP_RESOURCE_GROUP_NAME) const;
+    Ogre::TexturePtr load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group = TEMP_RESOURCE_GROUP_NAME) const;
+    Ogre::TexturePtr load(FILE * fileToLoad, const std::string& texturename, const Ogre::String& group = TEMP_RESOURCE_GROUP_NAME) const;
 
 private:
 };

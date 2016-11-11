@@ -173,7 +173,8 @@ private:
     PFLoader mPFLoaderData;
     PFLoader mPFLoaderGameshell;
     PFLoader mPFLoaderStore;
-    OriginalSettings mOriginalSettings;
+    STRPowerslide mSTRPowerslide;
+    STRRacecrud mSTRRacecrud;
 
     Graphics2D mGraphics2D;
 

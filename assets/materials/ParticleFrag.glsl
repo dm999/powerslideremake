@@ -8,5 +8,5 @@ varying vec4 C;
 
 void main()
 {
-    gl_FragColor = vec4(C.rgb, texture2D(diffuseMap, T).a * 5.0);
+    gl_FragColor = vec4(C.rgb, texture2D(diffuseMap, T).a);
 }

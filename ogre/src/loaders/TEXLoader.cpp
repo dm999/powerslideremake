@@ -16,9 +16,9 @@ namespace
     };
 }
 
-bool TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Ogre::String& group) const
 {
-    bool res = false;
+    Ogre::TexturePtr res;
 
     typedef unsigned char BYTE;
     typedef unsigned short WORD;
@@ -33,7 +33,7 @@ bool TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Og
 
         Ogre::PixelFormat targetFormat = head.depth == 16 ? Ogre::PF_R5G6B5 : Ogre::PF_BYTE_BGRA;
 
-        Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().createManual(
+        res = Ogre::TextureManager::getSingleton().createManual(
             texturename,
             group,
             Ogre::TEX_TYPE_2D,
@@ -42,7 +42,7 @@ bool TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Og
             targetFormat,
             Ogre::TU_DEFAULT);
 
-        Ogre::HardwarePixelBufferSharedPtr pixelBuffer = texture->getBuffer();
+        Ogre::HardwarePixelBufferSharedPtr pixelBuffer = res->getBuffer();
         pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL);
         const Ogre::PixelBox& pixelBox = pixelBuffer->getCurrentLock();
         BYTE* pDest = static_cast<BYTE*>(pixelBox.data);
@@ -51,16 +51,14 @@ bool TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Og
 
         fread(pDest, sizeofformat * sizeOfBuffer, 1, fileToLoad);
         pixelBuffer->unlock();
-
-        res = true;
     }
 
     return res;
 }
 
-bool TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
 {
-    bool res = false;
+    Ogre::TexturePtr res;
     FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad)
     {

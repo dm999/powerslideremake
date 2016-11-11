@@ -184,8 +184,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     STRSettings defaultSettings;
     defaultSettings.parse(pfLoaderStore, "data/cars/global/data/default", "params.str");
 
-    bool isFoundVal;
-
     //load wheels offsets
     {
         mBackROriginalPos = carSettings.getArray3Value("", "wheelbase back");
@@ -230,15 +228,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     //if(!isAI)
     {
-        float roofBackRadius = carSettings.getFloatValue("", "roof back radius", isFoundVal);
+        float roofBackRadius = carSettings.getFloatValue("", "roof back radius");
         Ogre::Vector3 roofBack = carSettings.getArray3Value("", "roof back");
         roofBack.z = -roofBack.z;
 
-        float roofFrontRadius = carSettings.getFloatValue("", "roof front radius", isFoundVal);
+        float roofFrontRadius = carSettings.getFloatValue("", "roof front radius");
         Ogre::Vector3 roofFront = carSettings.getArray3Value("", "roof front");
         roofFront.z = -roofFront.z;
 
-        float bodyRadius = carSettings.getFloatValue("", "body radius", isFoundVal);
+        float bodyRadius = carSettings.getFloatValue("", "body radius");
         Ogre::Vector3 bodyBase = carSettings.getArray3Value("", "body base 0");
         bodyBase.z = -bodyBase.z;
 

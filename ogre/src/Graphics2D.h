@@ -11,6 +11,7 @@
 #include "GameCars.h"
 
 #include "loaders/PFLoader.h"
+#include "OriginalSettings.h"
 
 class CustomTrayManager;
 
@@ -20,7 +21,9 @@ public:
     Graphics2D();
     ~Graphics2D(){}
 
-    void load(CustomTrayManager* trayMgr, const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+    void load(  CustomTrayManager* trayMgr, 
+                const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell,
+                const STRRacecrud& mSTRRacecrud);
 
     void showBeforeStart1();
     void showBeforeStart2();
@@ -47,6 +50,7 @@ public:
     void setShowMiscText(bool isShow);
     void setMiscText(const std::string& text);
     void addMiscPanelText(const std::string& text, const Ogre::ColourValue& col = Ogre::ColourValue::White);
+    void clearMiscPanelText();
 
     void destroy();
 

@@ -68,6 +68,12 @@ Ogre::Vector4 STRSettings::getArray4Value(const std::string& section, const std:
     return res;
 }
 
+Ogre::Vector4 STRSettings::getArray4Value(const std::string& section, const std::string& key) const
+{
+    bool isFound;
+    return getArray4Value(section, key, isFound);
+}
+
 Ogre::Vector3 STRSettings::getArray3Value(const std::string& section, const std::string& key) const
 {
     Ogre::Vector3 res = Ogre::Vector3::ZERO;
@@ -120,7 +126,13 @@ float STRSettings::getFloatValue(const std::string& section, const std::string& 
     return res;
 }
 
-OriginalSettings::OriginalSettings()
+float STRSettings::getFloatValue(const std::string& section, const std::string& key) const
+{
+    bool isFound;
+    return getFloatValue(section, key, isFound);
+}
+
+STRPowerslide::STRPowerslide()
 {
     mCustomToOriginalSections.insert(std::make_pair("deserttrack.de2", "desert track parameters"));
     mCustomToOriginalSections.insert(std::make_pair("speedway.de2", "speedway track parameters"));
@@ -137,12 +149,12 @@ OriginalSettings::OriginalSettings()
     mCustomToOriginalSections.insert(std::make_pair("fnh2.de2", "Foxnhound2 track parameters"));
 }
 
-void OriginalSettings::parse(const PFLoader& pfLoaderStore)
+void STRPowerslide::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "", "powerslide.str");
 }
 
-Ogre::ColourValue OriginalSettings::getTrackSkyColor(const std::string& trackDE2FileName) const
+Ogre::ColourValue STRPowerslide::getTrackSkyColor(const std::string& trackDE2FileName) const
 {
     Ogre::ColourValue ret;
 
@@ -159,7 +171,7 @@ Ogre::ColourValue OriginalSettings::getTrackSkyColor(const std::string& trackDE2
     return ret;
 }
 
-Ogre::ColourValue OriginalSettings::getTrackAmbientColor(const std::string& trackDE2FileName) const
+Ogre::ColourValue STRPowerslide::getTrackAmbientColor(const std::string& trackDE2FileName) const
 {
     Ogre::ColourValue ret(0.25f, 0.25f, 0.25f, 1.0f);//from game
 
@@ -196,7 +208,25 @@ Ogre::ColourValue OriginalSettings::getTrackAmbientColor(const std::string& trac
     return ret;
 }
 
-Ogre::ColourValue OriginalSettings::getCharacterSpecularColor(const std::string& trackDE2FileName, const std::string& characterName) const
+Ogre::ColourValue STRPowerslide::getTrackTimeTrialColor(const std::string& trackDE2FileName) const
+{
+    Ogre::ColourValue ret(0.0f, 0.0f, 0.0f, 1.0f);//from game
+
+    if(mIsSTRLoaded)
+    {
+        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
+        if(found != mCustomToOriginalSections.end())
+        {
+            std::string value = mSTR.GetValue((*found).second.c_str(), "timetrial lap colour", "");
+            if(!value.empty())
+                ret = parseColor(value);
+        }
+    }
+
+    return ret;
+}
+
+Ogre::ColourValue STRPowerslide::getCharacterSpecularColor(const std::string& trackDE2FileName, const std::string& characterName) const
 {
     Ogre::ColourValue ret(0.5f, 0.5f, 0.5f, 1.0f);//from game
 
@@ -205,7 +235,7 @@ Ogre::ColourValue OriginalSettings::getCharacterSpecularColor(const std::string&
     return ret;
 }
 
-Ogre::ColourValue OriginalSettings::parseColor(const std::string& val) const
+Ogre::ColourValue STRPowerslide::parseColor(const std::string& val) const
 {
     Ogre::ColourValue ret;
 
@@ -222,7 +252,7 @@ Ogre::ColourValue OriginalSettings::parseColor(const std::string& val) const
     return ret;
 }
 
-std::string OriginalSettings::getExclusionFile(const std::string& trackDE2FileName) const
+std::string STRPowerslide::getExclusionFile(const std::string& trackDE2FileName) const
 {
     std::string ret = "exclusion.txt";
 
@@ -239,7 +269,7 @@ std::string OriginalSettings::getExclusionFile(const std::string& trackDE2FileNa
     return ret;
 }
 
-size_t OriginalSettings::getLapsCount(const std::string& trackDE2FileName) const
+size_t STRPowerslide::getLapsCount(const std::string& trackDE2FileName) const
 {
     size_t ret = 10;
 
@@ -254,4 +284,9 @@ size_t OriginalSettings::getLapsCount(const std::string& trackDE2FileName) const
     }
 
     return ret;
+}
+
+void STRRacecrud::parse(const PFLoader& pfLoaderStore)
+{
+    STRSettings::parse(pfLoaderStore, "data/misc", "racecrud.str");
 }

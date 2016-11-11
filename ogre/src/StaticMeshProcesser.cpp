@@ -239,7 +239,6 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
         }
     }
 
-    TEXLoader texLoader;
     for(std::set<std::string>::const_iterator i = texturesNames.begin(), j = texturesNames.end();
         i != j; ++i)
     {
@@ -262,7 +261,7 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
 
         if(fileToLoad)
         {
-            texLoader.load(fileToLoad, (*i));
+            TEXLoader().load(fileToLoad, (*i));
             fclose(fileToLoad);
         }
     }

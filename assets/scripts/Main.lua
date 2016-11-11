@@ -1,6 +1,6 @@
 Main = {}
-Main.OriginalPathData = "F:/Data/";
-Main.OriginalPathCommon = "F:/Common/";
+Main.OriginalPathData = "./";
+Main.OriginalPathCommon = "./";
 
 Window = {}
 Window.IsFullScreen = "No";
