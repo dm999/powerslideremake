@@ -21,7 +21,7 @@ class AILoader
 public:
     AILoader();
 
-    void load(const PFLoader& pfLoader, GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI, AIStrength aiStrength) const;
+    void load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI, AIStrength aiStrength) const;
 
 private:
 

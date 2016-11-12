@@ -4,13 +4,13 @@
 
 #include "../Conversions.h"
 
-void PHYLoader::load(const PFLoader& pfLoader, GameState& gameState) const
+void PHYLoader::load(GameState& gameState) const
 {
     gameState.getTrackPositions().clear();
 
     for(int q = 0; q < (gameState.getMaxAI() + 1); ++q)
     {
-        FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName() + "/record", "car" + Conversions::DMToString(q) + ".phy");
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/record", "car" + Conversions::DMToString(q) + ".phy");
         if(fileToLoad)
         {
             typedef unsigned int DWORD;

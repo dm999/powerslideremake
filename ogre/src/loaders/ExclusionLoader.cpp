@@ -5,9 +5,14 @@
 ExclusionLoader::ExclusionLoader() : mNameGenNodes("Scene/Node/Exclusion/Name")
 {}
 
-void ExclusionLoader::load(const PFLoader& pfLoader, GameState& gameState, const std::string& excludeFile, Ogre::SceneManager* sceneMgr, bool isDebugExclusion) const
+void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugExclusion) const
 {
-    FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName(), excludeFile);
+    std::string excludeFile = gameState.getSTRPowerslide().getExclusionFile(gameState.getDE2FileName());
+
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile(
+        "data/tracks/" + gameState.getTrackName(), 
+        excludeFile);
+
     if(fileToLoad)
     {
         gameState.getExclusions().clear();

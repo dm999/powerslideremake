@@ -13,7 +13,7 @@ class ParticlesLoader
 public:
     ParticlesLoader(){}
 
-    void load(const PFLoader& pfLoader, GameState& gameState) const;
+    void load(GameState& gameState) const;
 
 private:
 

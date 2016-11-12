@@ -320,8 +320,6 @@ void BaseApp::loadResources(void)
     //http://ogre3d.org/forums/viewtopic.php?f=2&t=54469
     mTrayMgr->showLoadingBar(2, 2);
     //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-    //Ogre::ResourceGroupManager::getSingleton().declareResource("AM_102_062_diffuse.jpg", "Texture", "Popular");
-    //Ogre::TextureManager::getSingleton().load("AM_102_062_diffuse.jpg", "Popular");
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
 
@@ -912,17 +910,15 @@ void BaseApp::initScene()
     {
         bool isDebugLLT = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugLLT", mPipeline);
 
-        LLTLoader().load(mGameState.getPFLoaderData(), mGameState, mSceneMgr, isDebugLLT);
+        LLTLoader().load(mGameState, mSceneMgr, isDebugLLT);
     }
 
     {
         bool isDebugExclusion = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugExclusion", mPipeline);
-        std::string exclusionFile = mGameState.getSTRPowerslide().getExclusionFile(mGameState.getDE2FileName());
-
-        ExclusionLoader().load(mGameState.getPFLoaderData(), mGameState, exclusionFile, mSceneMgr, isDebugExclusion);
+        ExclusionLoader().load(mGameState, mSceneMgr, isDebugExclusion);
     }
 
-    PHYLoader().load(mGameState.getPFLoaderData(), mGameState);
+    PHYLoader().load(mGameState);
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mPipeline);
@@ -973,7 +969,7 @@ void BaseApp::initScene()
             mGameState.getAICar(w).setSpeedCoeff(Randomizer::GetInstance().GetRandomFloat(speedCoeffMinLimit, speedCoeff));
         }
 
-        AILoader().load(mGameState.getPFLoaderData(), mGameState, mSceneMgr, isDebugAI, aiStrength);
+        AILoader().load(mGameState, mSceneMgr, isDebugAI, aiStrength);
     }
 
     //init multiplayer
@@ -993,7 +989,7 @@ void BaseApp::initScene()
         }
     }
 
-    ParticlesLoader().load(mGameState.getPFLoaderData(), mGameState);
+    ParticlesLoader().load(mGameState);
 }
 
 void BaseApp::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::AxisAlignedBox &bounds)

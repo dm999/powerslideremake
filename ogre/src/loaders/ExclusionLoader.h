@@ -13,7 +13,7 @@ class ExclusionLoader
 public:
     ExclusionLoader();
 
-    void load(const PFLoader& pfLoader, GameState& gameState, const std::string& excludeFile, Ogre::SceneManager* sceneMgr, bool isDebugExclusion) const;
+    void load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugExclusion) const;
 
 private:
 

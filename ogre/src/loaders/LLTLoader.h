@@ -13,7 +13,7 @@ class LLTLoader
 public:
     LLTLoader();
 
-    void load(const PFLoader& pfLoader, GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugLLT) const;
+    void load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugLLT) const;
 
 private:
     mutable Ogre::NameGenerator mNameGenNodes;

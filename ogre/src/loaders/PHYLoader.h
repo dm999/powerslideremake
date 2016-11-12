@@ -13,7 +13,7 @@ class PHYLoader
 public:
     PHYLoader(){}
 
-    void load(const PFLoader& pfLoader, GameState& gameState) const;
+    void load(GameState& gameState) const;
 
 private:
 

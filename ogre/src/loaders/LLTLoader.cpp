@@ -20,10 +20,10 @@ namespace
 LLTLoader::LLTLoader() : mNameGenNodes("Scene/Node/LLT/Name")
 {}
 
-void LLTLoader::load(const PFLoader& pfLoader, GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugLLT) const
+void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugLLT) const
 {
     typedef unsigned int DWORD;
-    FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "laptrack.lpf");
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "laptrack.lpf");
     if(fileToLoad)
     {
         bool endendFound = false;

@@ -7,7 +7,7 @@
 AILoader::AILoader() : mNameGenNodes("Scene/Node/AI/Name")
 {}
 
-void AILoader::load(const PFLoader& pfLoader, GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI, AIStrength aiStrength) const
+void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI, AIStrength aiStrength) const
 {
     std::string folderWithData = "chareasy";
 
@@ -27,7 +27,7 @@ void AILoader::load(const PFLoader& pfLoader, GameState& gameState, Ogre::SceneM
     for(size_t w = 0; w < gameState.getAICount(); ++w)
     {
 
-        FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName() + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
 
         if(fileToLoad)
         {

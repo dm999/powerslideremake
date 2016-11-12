@@ -14,9 +14,9 @@ namespace
     };
 }//anonymous namespace
 
-void ParticlesLoader::load(const PFLoader& pfLoader, GameState& gameState) const
+void ParticlesLoader::load(GameState& gameState) const
 {
-    FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "partgraph.txt");
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "partgraph.txt");
     if(fileToLoad)
     {
         gameState.getParticles().clear();
