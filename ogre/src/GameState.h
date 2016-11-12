@@ -7,7 +7,6 @@
 #include "PSPlayerCar.h"
 #include "PSAICar.h"
 #include "PSMultiplayerCar.h"
-#include "GameCars.h"
 #include "Tools.h"
 #include "PausedTimer.h"
 
@@ -40,7 +39,9 @@ public:
     void setPlayerCharacterName(const std::string& name){mPlayerCharacterName = name;}
     std::string getPlayerCharacterName() const {return mPlayerCharacterName;}
 
+    const PSAICar& getAICar(size_t index) const;
     PSAICar& getAICar(size_t index);
+    const PSPlayerCar& getPlayerCar() const;
     PSPlayerCar& getPlayerCar();
 
     int getMaxAI()const{return mAIMax;}
@@ -83,9 +84,6 @@ public:
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
     size_t getLapsCount()const{return mLapsCount;}
-
-    static std::string getSkinByCarEnum(GameCars carEnum);
-    static std::string getDashSkinByCarEnum(GameCars carEnum);
 
     void setListenerGain(Ogre::Real gain){mListenerGain = gain;}
     Ogre::Real getListenerGain()const{return mListenerGain;}

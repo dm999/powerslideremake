@@ -707,10 +707,10 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mGraphics2D.hideAIDashboardCars();
         size_t currentPlayerLap = mGameState.getPlayerCar().getLapUtils().getCurrentLap();
         Ogre::Real currentPlayerLapPos = mGameState.getPlayerCar().getLapUtils().getLapPosition();
-        mGraphics2D.setPlayerDashBoardSkin(mGameState.getPlayerCar().getCarType());
+        mGraphics2D.setPlayerDashBoardSkin(mGameState);
         for(size_t q = 0; q < mGameState.getAICount(); ++q)
         {
-            mGraphics2D.setAIDashBoardSkin(q, mGameState.getAICar(q).getCarType());
+            mGraphics2D.setAIDashBoardSkin(mGameState, q, mGameState.getAICar(q).getCharacterName());
             mGraphics2D.setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mGameState.getAICar(q).getLapUtils().getCurrentLap(), mGameState.getAICar(q).getLapUtils().getLapPosition());
         }
 
@@ -719,7 +719,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
             //AI
             for(size_t q = 0; q < mGameState.getMultiplayerCountAI(); ++q)
             {
-                mGraphics2D.setAIDashBoardSkin(mGameState.getAICount() + q, mGameState.getMultiplayerCarAI(q).getCarType());
+                mGraphics2D.setAIDashBoardSkin(mGameState, mGameState.getAICount() + q, mGameState.getMultiplayerCarAI(q).getCharacterName());
                 mGraphics2D.setDashCarPos(mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mGameState.getMultiplayerCarAI(q).getCurrentLap(), mGameState.getMultiplayerCarAI(q).getLapPosition());
             }
 
@@ -727,7 +727,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
             std::vector<std::string> playerNames = mGameState.getMultiplayerCarHumanNames();
             for(size_t q = 0; q < playerNames.size(); ++q)
             {
-                mGraphics2D.setAIDashBoardSkin(mGameState.getAICount() + mGameState.getMultiplayerCountAI() + q, mGameState.getMultiplayerCarHuman(playerNames[q]).getCarType());
+                mGraphics2D.setAIDashBoardSkin(mGameState, mGameState.getAICount() + mGameState.getMultiplayerCountAI() + q, mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
                 mGraphics2D.setDashCarPos(mGameState.getAICount() + mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mGameState.getMultiplayerCarHuman(playerNames[q]).getLapPosition());
             }
         }
@@ -1127,21 +1127,19 @@ void BaseApp::initModel()
     mLapController.addCar(&mGameState.getPlayerCar());//should be first
     mGameState.getPlayerCar().getLapUtils().setEvents(this);
 
-    const GameCars playerCarType = Warthog_0;
+    mModelsPool.initModels(mSceneMgr, mGameState);
 
-    mModelsPool.initModels(mSceneMgr, mGameState.getPFLoaderData());
-
-    mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), playerCarType, mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
+    mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mGameState.getPlayerCharacterName(), mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
     mGameState.getPlayerCar().initSounds(mPipeline, mGameState.getPFLoaderData());
 
-    GameCars cars[] = {Warthog_1, Warthog_5, Warthog_0, Warthog_2, Warthog_6, Warthog_3, Warthog_4, Warthog_1, Warthog_5, Warthog_0, Warthog_2};
+    std::string aiCharacters[] = {"cyber", "beryl", "frantic", "radiation", "stig", "frantic", "cyber", "radiation", "zig", "zag", "beryl"};
 
     for(size_t q = 0; q < mGameState.getAICount(); ++q)
     {
         bool isCam = (q == (mGameState.getAICount() - 1));
         if(!isCamToAI)
             isCam = false;
-        mGameState.getAICar(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), cars[q], mGameState.getTrackPositions()[q], isCam);
+        mGameState.getAICar(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacters[q], mGameState.getTrackPositions()[q], isCam);
         mGameState.getAICar(q).initSounds(mPipeline, mGameState.getPFLoaderData());
 
         mLapController.addCar(&mGameState.getAICar(q));
@@ -1212,12 +1210,12 @@ void BaseApp::initMisc()
 
         if(mGameState.isMultiplayerMaster())
         {
-            std::vector<GameCars> gameCars;
+            std::vector<std::string> gameCars;
             for(size_t q = 0; q < mGameState.getAICount(); ++q)
             {
-                gameCars.push_back(mGameState.getAICar(q).getCarType());
+                gameCars.push_back(mGameState.getAICar(q).getCharacterName());
             }
-            bool success = mMultiplayerController->startSessionMaster(mGameState.getMultiplayerServerIP(), mGameState.getMultiplayerServerPort(), mGameState.getMultiplayerUserName(), mGameState.getMultiplayerRoomName(), mGameState.getMultiplayerPlayersLimits(), mGameState.getAICount(), gameCars, mGameState.getPlayerCar().getCarType());
+            bool success = mMultiplayerController->startSessionMaster(mGameState.getMultiplayerServerIP(), mGameState.getMultiplayerServerPort(), mGameState.getMultiplayerUserName(), mGameState.getMultiplayerRoomName(), mGameState.getMultiplayerPlayersLimits(), mGameState.getAICount(), gameCars, mGameState.getPlayerCar().getCharacterName());
 
             if(!success)
             {
@@ -1227,7 +1225,7 @@ void BaseApp::initMisc()
         }
         else
         {
-            bool success = mMultiplayerController->startSessionSlave(mGameState.getMultiplayerServerIP(), mGameState.getMultiplayerServerPort(), mGameState.getMultiplayerUserName(), mGameState.getMultiplayerRoomName(), mGameState.getPlayerCar().getCarType());
+            bool success = mMultiplayerController->startSessionSlave(mGameState.getMultiplayerServerIP(), mGameState.getMultiplayerServerPort(), mGameState.getMultiplayerUserName(), mGameState.getMultiplayerRoomName(), mGameState.getPlayerCar().getCharacterName());
 
             if(!success)
             {
@@ -1413,7 +1411,7 @@ void BaseApp::onPlayerQuitSession(const std::string& player, bool isHost)
     }
 }
 
-void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<GameCars>& aiSkins, const std::map<std::string, GameCars>& playersSkins)
+void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins)
 {
     //playerIndex should start from 0
     mGameState.getPlayerCar().setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + playerIndex]);
@@ -1428,20 +1426,20 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
         {
             if(q != playerIndex)// minus self
             {
-                GameCars humanCarType = Warthog_0;
-                std::map<std::string, GameCars>::const_iterator foundPlayerSkin = playersSkins.find(players[q]);
+                std::string humanCharacter = "frantic";
+                std::map<std::string, std::string>::const_iterator foundPlayerSkin = playersSkins.find(players[q]);
                 if(foundPlayerSkin != playersSkins.end())
                 {
-                    humanCarType = (*foundPlayerSkin).second;
+                    humanCharacter = (*foundPlayerSkin).second;
                 }
 
                 mGameState.addMultiplayerCarHuman(players[q]);
 
                 PSMultiplayerCar& humanCar = mGameState.getMultiplayerCarHuman(players[q]);
 
-                humanCar.setCarType(humanCarType);
+                humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
+                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mGameState.getTrackPositions()[q], false);
                 humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
@@ -1457,20 +1455,20 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
         {
             if(q != playerIndex)// minus self
             {
-                GameCars humanCarType = Warthog_0;
-                std::map<std::string, GameCars>::const_iterator foundPlayerSkin = playersSkins.find(players[q]);
+                std::string humanCharacter = "frantic";
+                std::map<std::string, std::string>::const_iterator foundPlayerSkin = playersSkins.find(players[q]);
                 if(foundPlayerSkin != playersSkins.end())
                 {
-                    humanCarType = (*foundPlayerSkin).second;
+                    humanCharacter = (*foundPlayerSkin).second;
                 }
 
                 mGameState.addMultiplayerCarHuman(players[q]);
 
                 PSMultiplayerCar& humanCar = mGameState.getMultiplayerCarHuman(players[q]);
 
-                humanCar.setCarType(humanCarType);
+                humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
+                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mGameState.getTrackPositions()[q], false);
                 humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
@@ -1484,15 +1482,15 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
 
         for(size_t q = 0; q < aiAmount; ++q)
         {
-            GameCars aiCarType = Warthog_0;
+            std::string aiCharacter = "frantic";
             if(aiSkins.size() > q)
             {
-                aiCarType = aiSkins[q];
+                aiCharacter = aiSkins[q];
             }
 
-            mGameState.getMultiplayerCarAI(q).setCarType(aiCarType);
+            mGameState.getMultiplayerCarAI(q).setCharacterName(aiCharacter);
 
-            mGameState.getMultiplayerCarAI(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCarType, mGameState.getTrackPositions()[q], false);
+            mGameState.getMultiplayerCarAI(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mGameState.getTrackPositions()[q], false);
 
             mGameState.getMultiplayerCarAI(q).initSounds(mPipeline, mGameState.getPFLoaderData());
             mGameState.getMultiplayerCarAI(q).setModelPositionOnGrid(mGameState.getTrackPositions()[q]);

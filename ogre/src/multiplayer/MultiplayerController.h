@@ -6,7 +6,6 @@
 #include "multislider/CommonIncludes.h"
 
 #include "../OgreInclude.h"
-#include "../GameCars.h"
 
 struct MultiplayerSessionData
 {
@@ -57,7 +56,7 @@ public:
         virtual void onPlayerReady(const std::string& player) = 0;
         virtual void onPlayerAddedToSession(const std::string& player) = 0;
         virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
-        virtual void onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<GameCars>& aiSkins, const std::map<std::string, GameCars>& playersSkins) = 0;
+        virtual void onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins) = 0;
         virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
         virtual void onError(const std::string& message) = 0;
     };
@@ -81,12 +80,12 @@ private:
     void onUpdate(multislider::Session* session, const multislider::SessionData & data, const multislider::PlayerData & sharedData)override;
     void onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()override;
 
-    void addReadyPlayer(const std::string& playerName, const GameCars& playerSkin);
+    void addReadyPlayer(const std::string& playerName, const std::string& characterName);
     void removePlayerFromLobby(const std::string& playerName);
     bool checkAllPlayersReady()const;
 
-    static bool parseLobbyReadyMessage(const std::string& message, GameCars& playerSkin);
-    static jsonxx::Object fillLobbyReadyMessage(const GameCars& playerSkin);
+    static bool parseLobbyReadyMessage(const std::string& message, std::string& characterName);
+    static jsonxx::Object fillLobbyReadyMessage(const std::string& characterName);
 
     static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
     static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
@@ -96,7 +95,7 @@ private:
     multislider::SessionPtr mSession;
 
     uint32_t mPlayersLimits;
-    std::map<std::string, GameCars> mReadyPlayers;//used: write in master, read in slaves
+    std::map<std::string, std::string> mReadyPlayers;//used: write in master, read in slaves
     bool mReadySent;
     bool mSessionStarted;
     bool mStartHappened;//to synchronize race events
@@ -109,7 +108,7 @@ private:
 
     Ogre::Timer mBroadcastTimer;
 
-    std::vector<GameCars> mAISkins;
+    std::vector<std::string> mAISkins;
 
     size_t mBroadcastInterval; // ms
 
@@ -120,8 +119,8 @@ public:
 
     void clearSessionAndLobby();
 
-    bool startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<GameCars>& aiSkins, const GameCars& playerSkin);
-    bool startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const GameCars& playerSkin);
+    bool startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
+    bool startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const std::string& playerCharacter);
 
     void receiveSessionData();
 

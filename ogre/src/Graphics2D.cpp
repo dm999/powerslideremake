@@ -293,17 +293,16 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard cars
     {
-        loadDashboardCars(gameState.getPFLoaderGameshell());
+        loadDashboardCars(gameState);
 
-        for ( int carsEnum = Warthog_0; carsEnum <= Pickup_2; carsEnum++ )
+        std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
+        for (size_t q = 0; q < availableCharacters.size(); ++q)
         {
-            GameCars carEnum = static_cast<GameCars>(carsEnum);
-
-            std::string fileName = GameState::getDashSkinByCarEnum(carEnum);
+            std::string iconName = gameState.getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
 
             std::vector<Ogre::String> texName;
-            texName.push_back("chroma_" + fileName);
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/" + fileName, 
+            texName.push_back("chroma_" + iconName);
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/" + iconName, 
                                 "Test/DiffuseTransparent", 
                                 texName, 
                                 1.0f,
@@ -752,26 +751,25 @@ Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& nam
 
 void Graphics2D::reloadTextures(const GameState& gameState)
 {
-    loadDashboardCars(gameState.getPFLoaderGameshell());
+    loadDashboardCars(gameState);
     loadMisc(gameState.getPFLoaderData());
 }
 
-void Graphics2D::loadDashboardCars(const PFLoader& pfLoaderGameshell)
+void Graphics2D::loadDashboardCars(const GameState& gameState)
 {
-    for ( int carsEnum = Warthog_0; carsEnum <= Pickup_2; carsEnum++ )
+    std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
+    for (size_t q = 0; q < availableCharacters.size(); ++q)
     {
-        GameCars carEnum = static_cast<GameCars>(carsEnum);
-
-        std::string fileName = GameState::getDashSkinByCarEnum(carEnum);
+        std::string iconName = gameState.getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
 
         //too small - should be resized to work on mobile
         //d.polubotko(TODO): consider atlas usage
-        Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( pfLoaderGameshell, 
-                                    "data/gameshell", fileName, 
-                                    "chroma_" + fileName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+        Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( gameState.getPFLoaderGameshell(), 
+                                    "data/gameshell", iconName, 
+                                    "chroma_" + iconName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
                                     Ogre::ColourValue::Black, 0.003f, true, 64);
 
-        Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName("Test/" + fileName);
+        Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName("Test/" + iconName);
         if(!mat.isNull())
         {
             Ogre::TextureUnitState *state = mat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
@@ -1142,18 +1140,18 @@ void Graphics2D::hideAIDashboardCars()
     }
 }
 
-void Graphics2D::setPlayerDashBoardSkin(GameCars carEnum)
+void Graphics2D::setPlayerDashBoardSkin(const GameState& gameState)
 {
-    std::string fileName = GameState::getDashSkinByCarEnum(carEnum);
-    std::string matName = "Test/" + fileName;
+    std::string iconName = gameState.getSTRPowerslide().getValue(gameState.getPlayerCharacterName() + " parameters", "icon", "car0_0s.bmp");
+    std::string matName = "Test/" + iconName;
     if(matName != mPlayerDashboardCar->getMaterialName())
         mPlayerDashboardCar->setMaterialName(matName);
 }
 
-void Graphics2D::setAIDashBoardSkin(size_t aiDashIndex, GameCars carEnum)
+void Graphics2D::setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName)
 {
-    std::string fileName = GameState::getDashSkinByCarEnum(carEnum);
-    std::string matName = "Test/" + fileName;
+    std::string iconName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "icon", "car0_0s.bmp");
+    std::string matName = "Test/" + iconName;
 
     if(aiDashIndex < mDashboardCarsCount)
     {

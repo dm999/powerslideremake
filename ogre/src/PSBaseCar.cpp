@@ -58,12 +58,12 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                             CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
-                            GameCars gameCar,
+                            const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             bool isAI)
 {
 
-    mGameCarType = gameCar;
+    mCharacterName = characterName;
 
     mIsAI = isAI;
 
@@ -71,14 +71,16 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     DMLuaManager luaManager;
 
-    modelsPool->getCopyOfWarthog(mModelEntity);
+    modelsPool->getCopyOfVehicle(mModelEntity);
 
     std::string genTextureName = nameGenTextures.generate();
-    std::string texturePath = GameState::getSkinByCarEnum(mGameCarType);
+
     //load car texture
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
-        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/feral max/textures/default/" + texturePath, "feral max texture_m_1.tex", genTextureName);
+        std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
+        std::string carSkinName = gameState.getSTRPowerslide().getValue(carName + " parameters", "texture name", "feral max texture");
+        carSkinName += "_m_1.tex";
+        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carName + "/textures/default/" + mCharacterName, carSkinName, genTextureName);
     }
 
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))

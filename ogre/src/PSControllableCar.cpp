@@ -63,7 +63,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     CameraMan * cameraMan,
                                     ModelsPool* modelsPool,
                                     OgreBulletDynamics::DynamicsWorld * world,
-                                    GameCars gameCar,
+                                    const std::string& characterName,
                                     const Ogre::Matrix4& transform,
                                     bool isPossesCamera,
                                     bool isAI)
@@ -88,7 +88,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mCameraMan = cameraMan;
 
-    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isAI);
+    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isAI);
 
     {
         //d.polubotko(TODO): refactor (remove absolute path)

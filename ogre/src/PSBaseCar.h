@@ -4,7 +4,6 @@
 
 #include "OgreInclude.h"
 #include "OgreBulletInclude.h"
-#include "GameCars.h"
 #include "CommonIncludes.h"
 #include "XMLParsing.h"
 #include "loaders/PFLoader.h"
@@ -37,7 +36,7 @@ public:
                             CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
-                            GameCars gameCar,
+                            const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             bool isAI);
 
@@ -73,9 +72,9 @@ public:
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;
 
-    GameCars getCarType() const {return mGameCarType;}
+    std::string getCharacterName() const {return mCharacterName;}
     //for multiplayer
-    void setCarType(GameCars& car) {mGameCarType = car;}
+    void setCharacterName(std::string& character) {mCharacterName = character;}
 
 protected:
 
@@ -135,7 +134,7 @@ protected:
 
     static Ogre::NameGenerator nameGenNodes;
 
-    GameCars mGameCarType; // for multiplayer
+    std::string mCharacterName; // for multiplayer
 
     //sounds
     CommonIncludes::shared_ptr<OpenALSource> mEngLow;

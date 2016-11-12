@@ -11,6 +11,7 @@
 
 #include "loaders/DE2Loader.h"
 
+
 #include "StaticMeshProcesser.h"
 
 Ogre::NameGenerator ModelsPool::nameGenMeshes("Scene/MeshesVehicles/Name");
@@ -19,12 +20,18 @@ ModelsPool::ModelsPool()
 {
 }
 
-void ModelsPool::initModels(Ogre::SceneManager* sceneMgr, const PFLoader& pfloader)
+void ModelsPool::initModels(Ogre::SceneManager* sceneMgr, const GameState& gameState)
 {
     mSceneMgr = sceneMgr;
 
-    loadVehicles(pfloader);
-    loadArrow(pfloader);
+    mVehicles.clear();
+
+    vehicleModel model;
+    loadVehicle(gameState.getPFLoaderData(), model, "data/cars/feral max", "car.de2");
+    mVehicles.push_back(model);
+
+
+    loadArrow(gameState.getPFLoaderData());
 }
 
 void ModelsPool::loadArrow(const PFLoader& pfloader)
@@ -59,10 +66,9 @@ void ModelsPool::loadArrow(const PFLoader& pfloader)
     else {assert(false && "No arrow DE2 file");}
 }
 
-void ModelsPool::loadVehicles(const PFLoader& pfloader)
+void ModelsPool::loadVehicle(const PFLoader& pfloader, vehicleModel& vehicle, const std::string& path, const std::string& fileName)
 {
-    //d.polubotko(TODO): refactor (remove absolute path)
-    FILE * fileToLoad = pfloader.getFile("data/cars/feral max", "car.de2");
+    FILE * fileToLoad = pfloader.getFile(path, fileName);
     if(fileToLoad)
     {
         std::vector<MSHData> vehicleParts;
@@ -73,8 +79,8 @@ void ModelsPool::loadVehicles(const PFLoader& pfloader)
             for(size_t q = 0; q < vehicleParts.size(); ++q)
             {
                 //revert order to make cockpit 0
-                mWarthogModel[4 - q] = createEntityFromMSH(vehicleParts[q], "Test/Diffuse", "WathogBasicModel" + Conversions::DMToString(q));
-                AddjustNormals(mWarthogModel[4 - q], Ogre::Math::Cos(Ogre::Degree(80.0f).valueRadians()));
+                vehicle.mVehicleModel[4 - q] = createEntityFromMSH(vehicleParts[q], "Test/Diffuse", "WathogBasicModel" + Conversions::DMToString(q));
+                AddjustNormals(vehicle.mVehicleModel[4 - q], Ogre::Math::Cos(Ogre::Degree(80.0f).valueRadians()));
             }
         }
         fclose(fileToLoad);
@@ -160,13 +166,13 @@ Ogre::Entity * ModelsPool::createEntityFromMSH(MSHData& source, const std::strin
     return ret;
 }
 
-void ModelsPool::getCopyOfWarthog(Ogre::Entity* warthogModel[5])
+void ModelsPool::getCopyOfVehicle(Ogre::Entity* vehicleModel[5])
 {
     for(size_t q = 0; q < 5; ++q)
     {
-        Ogre::MeshPtr msh = mWarthogModel[q]->getMesh();
+        Ogre::MeshPtr msh = mVehicles[0].mVehicleModel[q]->getMesh();
         Ogre::String newMeshName = nameGenMeshes.generate();
         Ogre::MeshPtr cloned = msh->clone(newMeshName, TEMP_RESOURCE_GROUP_NAME);
-        warthogModel[q] = mSceneMgr->createEntity(newMeshName, newMeshName, TEMP_RESOURCE_GROUP_NAME);
+        vehicleModel[q] = mSceneMgr->createEntity(newMeshName, newMeshName, TEMP_RESOURCE_GROUP_NAME);
     }
 }

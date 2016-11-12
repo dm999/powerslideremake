@@ -42,7 +42,7 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
                                 CameraMan * cameraMan,
                                 ModelsPool* modelsPool,
                                 OgreBulletDynamics::DynamicsWorld * world,
-                                GameCars gameCar,
+                                const std::string& characterName,
                                 const Ogre::Matrix4& transform,
                                 bool isPossesCamera)
 {
@@ -51,7 +51,7 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     mIsLastTurnLeft = false;
     mSmoothSideImpulse = 0.0f;
 
-    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isPossesCamera, false);
+    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera, false);
 
 
     DMLuaManager luaManager;

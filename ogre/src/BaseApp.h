@@ -84,7 +84,7 @@ public:
     void onPlayerReady(const std::string& player)override;
     void onPlayerAddedToSession(const std::string& player)override;
     void onPlayerQuitSession(const std::string& player, bool isHost)override;
-    void onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<GameCars>& aiSkins, const std::map<std::string, GameCars>& playersSkins)override;
+    void onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins)override;
     void onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)override;
     void onError(const std::string& message)override;
 

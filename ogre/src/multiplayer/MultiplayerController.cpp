@@ -33,11 +33,11 @@ void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislide
 {
 }
 
-void MultiplayerController::addReadyPlayer(const std::string& playerName, const GameCars& playerSkin)
+void MultiplayerController::addReadyPlayer(const std::string& playerName, const std::string& characterName)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::addReadyPlayer]");
 
-    mReadyPlayers.insert(std::make_pair(playerName, playerSkin));
+    mReadyPlayers.insert(std::make_pair(playerName, characterName));
 }
 
 void MultiplayerController::removePlayerFromLobby(const std::string& playerName)
@@ -110,12 +110,12 @@ void MultiplayerController::onMessage(multislider::Lobby* lobby, const multislid
 
         if (isHost)
         {
-            GameCars playerSkin;
-            bool isReady = parseLobbyReadyMessage(message, playerSkin);
+            std::string playerCharacter;
+            bool isReady = parseLobbyReadyMessage(message, playerCharacter);
 
             if(isReady)
             {
-                addReadyPlayer(sender, playerSkin);
+                addReadyPlayer(sender, playerCharacter);
 
                 if(mEvents)
                 {
@@ -130,12 +130,12 @@ void MultiplayerController::onMessage(multislider::Lobby* lobby, const multislid
                 //humandata
                 {
                     jsonxx::Array jsonArray;
-                    for(std::map<std::string, GameCars>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end();
+                    for(std::map<std::string, std::string>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end();
                         i != j; ++i)
                     {
                         jsonxx::Object jsonObjectHuman;
                         jsonObjectHuman << "name" << (*i).first;
-                        jsonObjectHuman << "cartype" << static_cast<int>((*i).second);
+                        jsonObjectHuman << "cartype" << (*i).second;
                         jsonArray << jsonObjectHuman;
                     }
                     jsonObject << "humandata" << jsonArray;
@@ -147,7 +147,7 @@ void MultiplayerController::onMessage(multislider::Lobby* lobby, const multislid
                     for(size_t q = 0; q < mAISkins.size(); ++q)
                     {
                         jsonxx::Object jsonObjectAI;
-                        jsonObjectAI << "cartype" << static_cast<int>(mAISkins[q]);
+                        jsonObjectAI << "cartype" << mAISkins[q];
                         jsonArray << jsonObjectAI;
                     }
                     jsonObject << "aidata" << jsonArray;
@@ -199,9 +199,9 @@ void MultiplayerController::onSessionStart(multislider::Lobby* lobby, const mult
                 for(size_t q = 0; q < jsonArray.size(); ++q)
                 {
                     jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
-                    if(jsonObject.has<jsonxx::String>("name") && jsonObject.has<jsonxx::Number>("cartype"))
+                    if(jsonObject.has<jsonxx::String>("name") && jsonObject.has<jsonxx::String>("cartype"))
                     {
-                        mReadyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), static_cast<GameCars>((int)jsonObject.get<jsonxx::Number>("cartype"))));
+                        mReadyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), jsonObject.get<jsonxx::String>("cartype")));
                     }
                 }
             }
@@ -213,9 +213,9 @@ void MultiplayerController::onSessionStart(multislider::Lobby* lobby, const mult
                 for(size_t q = 0; q < jsonArray.size(); ++q)
                 {
                     jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
-                    if(jsonObject.has<jsonxx::Number>("cartype"))
+                    if(jsonObject.has<jsonxx::String>("cartype"))
                     {
-                        mAISkins.push_back(static_cast<GameCars>((int)jsonObject.get<jsonxx::Number>("cartype")));
+                        mAISkins.push_back(jsonObject.get<jsonxx::String>("cartype"));
                     }
                 }
             }
@@ -337,7 +337,7 @@ void MultiplayerController::onQuit(multislider::Session* session, const std::str
     }
 }
 
-bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<GameCars>& aiSkins, const GameCars& playerSkin)
+bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<std::string>& aiSkins, const std::string& playerCharacter)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]");
 
@@ -359,7 +359,7 @@ bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, st
         {
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]: room created [" + Ogre::String(roomName) + "]");
 
-            mLobby->say(fillLobbyReadyMessage(playerSkin).json(), true);
+            mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), true);
 
             mReadySent = true;
         }
@@ -381,7 +381,7 @@ bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, st
     return res;
 }
 
-bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const GameCars& playerSkin)
+bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const std::string& playerCharacter)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]");
 
@@ -416,7 +416,7 @@ bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std
             {
                 Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]: room joined [" + Ogre::String(rooms[index].getName()) + "]");
 
-                mLobby->say(fillLobbyReadyMessage(playerSkin).json(), false);
+                mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), false);
 
                 mReadySent = true;
             }
@@ -604,10 +604,10 @@ jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionDat
     return jsonObject;
 }
 
-bool MultiplayerController::parseLobbyReadyMessage(const std::string& message, GameCars& playerSkin)
+bool MultiplayerController::parseLobbyReadyMessage(const std::string& message, std::string& characterName)
 {
     bool res = false;
-    playerSkin = Warthog_0;
+    characterName = "frantic";
 
     jsonxx::Object jsonObject;
     jsonObject.parse(message);
@@ -616,20 +616,20 @@ bool MultiplayerController::parseLobbyReadyMessage(const std::string& message, G
         res = jsonObject.get<jsonxx::Boolean>("status");
     }
 
-    if(jsonObject.has<jsonxx::Number>("cartype"))
+    if(jsonObject.has<jsonxx::String>("cartype"))
     {
-        playerSkin = static_cast<GameCars>((int)jsonObject.get<jsonxx::Number>("cartype"));
+        characterName = jsonObject.get<jsonxx::String>("cartype");
     }
 
     return res;
 }
 
-jsonxx::Object MultiplayerController::fillLobbyReadyMessage(const GameCars& playerSkin)
+jsonxx::Object MultiplayerController::fillLobbyReadyMessage(const std::string& characterName)
 {
     jsonxx::Object jsonObject;
 
     jsonObject << "status" << true;
-    jsonObject << "cartype" << static_cast<int>(playerSkin);
+    jsonObject << "cartype" << characterName;
 
     return jsonObject;
 }

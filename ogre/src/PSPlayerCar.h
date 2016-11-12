@@ -23,7 +23,7 @@ public:
                             CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
-                            GameCars gameCar,
+                            const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera);
 

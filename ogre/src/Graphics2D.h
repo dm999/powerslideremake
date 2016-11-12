@@ -10,8 +10,6 @@
 
 #include "LinearController.h"
 
-#include "GameCars.h"
-
 #include "loaders/PFLoader.h"
 #include "OriginalSettings.h"
 #include "GameState.h"
@@ -24,7 +22,7 @@ public:
     Graphics2D();
     ~Graphics2D(){}
 
-    void load(  CustomTrayManager* trayMgr, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, const GameState& gameState);
 
     void showBeforeStart1();
     void showBeforeStart2();
@@ -40,8 +38,8 @@ public:
     void setCarPos(unsigned char pos, unsigned char totalcars);
 
     void hideAIDashboardCars();
-    void setPlayerDashBoardSkin(GameCars carEnum);
-    void setAIDashBoardSkin(size_t aiDashIndex, GameCars carEnum);
+    void setPlayerDashBoardSkin(const GameState& gameState);
+    void setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName);
     void setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos);
 
     void setRaceTime(const std::string& time);
@@ -73,7 +71,7 @@ private:
 
     bool mLoaded;
 
-    void loadDashboardCars(const PFLoader& pfLoaderGameshell);
+    void loadDashboardCars(const GameState& gameState);
     void loadMisc(const PFLoader& pfLoaderData);
 
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyL;
