@@ -45,9 +45,7 @@ public :
                     Ogre::SceneNode* mainNode,
                     bool isGlobalReset,
                     GameState& gameState, 
-                    const PFLoader& pfloader,
-                    OgreBulletDynamics::DynamicsWorld * world,
-                    const Ogre::ColourValue& ambient);
+                    OgreBulletDynamics::DynamicsWorld * world);
 
     void queryLights();
 
@@ -57,7 +55,7 @@ public :
 
     void checkIsVertexArraySupported();
 
-    void loadTerrainMaps(PFLoader& pfloader, GameState& gameState);
+    void loadTerrainMaps(GameState& gameState);
 
     const DE2SingleBatch& getBatchByAddress(std::pair<int, int> address)const {return mParts[address.first].mBatches[address.second];}
     const DE2Part& getPartAddress(std::pair<int, int> address)const {return mParts[address.first];}

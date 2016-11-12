@@ -7,9 +7,9 @@ TerrainLoader::TerrainLoader()
     latitudeFriction(16, 0.0f), longtitudeFriction(16, 0.0f)
 {}
 
-void TerrainLoader::load(const PFLoader& pfLoader, GameState& gameState)
+void TerrainLoader::load(GameState& gameState)
 {
-    FILE * fileToLoad = pfLoader.getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "terrain.txt");
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/graphst", "terrain.txt");
     if(fileToLoad)
     {
         for(size_t q = 0; q < 16; ++q) fscanf(fileToLoad, " %d", &remapFriction[q]);

@@ -4,6 +4,7 @@
 #include "GameState.h"
 
 GameState::GameState() :
+    mOriginalDataInited(false),
     mLLTObject(NULL),
     mGlobalLight(NULL),
     mShadowLight(NULL),
@@ -26,6 +27,56 @@ GameState::GameState() :
 
 GameState::~GameState()
 {
+}
+
+void GameState::initOriginalData(   const std::string& trackName, 
+                                    const std::string& de2FileName, 
+                                    const std::string& originalPathData, 
+                                    const std::string& originalPathCommon)
+{
+    mTrackName = trackName;
+    mDE2FileName = de2FileName;
+
+    mPFLoaderData.init(originalPathData, "data.pf");
+    mPFLoaderGameshell.init(originalPathData, "gameshell.pf");
+    mPFLoaderStore.init(originalPathCommon, "store.pf");
+    mSTRPowerslide.parse(mPFLoaderStore);
+    mSTRRacecrud.parse(mPFLoaderStore);
+
+    mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mDE2FileName);
+    mLapsCount = mSTRPowerslide.getLapsCount(mDE2FileName);
+
+    mOriginalDataInited = true;
+}
+
+const PFLoader& GameState::getPFLoaderData() const
+{
+    assert(mOriginalDataInited);
+    return mPFLoaderData;
+}
+
+const PFLoader& GameState::getPFLoaderGameshell() const
+{
+    assert(mOriginalDataInited);
+    return mPFLoaderGameshell;
+}
+
+const PFLoader& GameState::getPFLoaderStore() const
+{
+    assert(mOriginalDataInited);
+    return mPFLoaderStore;
+}
+
+const STRPowerslide& GameState::getSTRPowerslide() const
+{
+    assert(mOriginalDataInited);
+    return mSTRPowerslide;
+}
+
+const STRRacecrud& GameState::getSTRRacecrud() const
+{
+    assert(mOriginalDataInited);
+    return mSTRRacecrud;
 }
 
 PSAICar& GameState::getAICar(size_t index)

@@ -170,11 +170,6 @@ private:
     LapController mLapController;
 
     GameState mGameState;
-    PFLoader mPFLoaderData;
-    PFLoader mPFLoaderGameshell;
-    PFLoader mPFLoaderStore;
-    STRPowerslide mSTRPowerslide;
-    STRRacecrud mSTRRacecrud;
 
     Graphics2D mGraphics2D;
 

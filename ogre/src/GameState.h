@@ -18,10 +18,23 @@ public:
     GameState();
     ~GameState();
 
-    void setTrackName(const std::string& name){mTrackName = name;}
-    std::string getTrackName() const {return mTrackName;}
+    /**
+     * init data to read from *.pf and *.str files
+     * originalPathData - should contain data.pf, gameshell.pf
+     * originalPathCommon - should contain store.pf
+     */
+    void initOriginalData(  const std::string& trackName, 
+                            const std::string& de2FileName, 
+                            const std::string& originalPathData, 
+                            const std::string& originalPathCommon);
 
-    void setDE2FileName(const std::string& name){mDE2FileName = name;}
+    const PFLoader& getPFLoaderData() const;
+    const PFLoader& getPFLoaderGameshell() const;
+    const PFLoader& getPFLoaderStore() const;
+    const STRPowerslide& getSTRPowerslide() const;
+    const STRRacecrud& getSTRRacecrud() const;
+
+    std::string getTrackName() const {return mTrackName;}
     std::string getDE2FileName() const {return mDE2FileName;}
 
     void setPlayerCharacterName(const std::string& name){mPlayerCharacterName = name;}
@@ -64,13 +77,11 @@ public:
     Ogre::SceneNode* getArrowNode(){return mArrowNode;}
     void setArrowNode(Ogre::SceneNode* node){mArrowNode = node;}
 
-    void setBackgroundColor(Ogre::ColourValue backgroundColor){mBackgroundColor = backgroundColor;}
     Ogre::ColourValue getBackgroundColor()const{return mBackgroundColor;}
 
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
-    void setLapsCount(size_t laps){mLapsCount = laps;}
     size_t getLapsCount()const{return mLapsCount;}
 
     static std::string getSkinByCarEnum(GameCars carEnum);
@@ -125,6 +136,13 @@ private:
     std::string mTrackName;
     std::string mDE2FileName;
     std::string mPlayerCharacterName;
+
+    bool mOriginalDataInited;
+    PFLoader mPFLoaderData;
+    PFLoader mPFLoaderGameshell;
+    PFLoader mPFLoaderStore;
+    STRPowerslide mSTRPowerslide;
+    STRRacecrud mSTRRacecrud;
 
     static const int mAIMax = 11;
 

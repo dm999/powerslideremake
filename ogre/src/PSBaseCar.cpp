@@ -53,8 +53,6 @@ void PSBaseCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt)
 }
 
 void PSBaseCar::initModel(  lua_State * pipeline, 
-                            const PFLoader& pfLoaderData,
-                            const PFLoader& pfLoaderStore,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             CameraMan * cameraMan,
@@ -80,7 +78,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     //load car texture
     {
         //d.polubotko(TODO): refactor (remove absolute path)
-        TEXLoader().load(pfLoaderData, "data/cars/feral max/textures/default/" + texturePath, "feral max texture_m_1.tex", genTextureName);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/feral max/textures/default/" + texturePath, "feral max texture_m_1.tex", genTextureName);
     }
 
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
@@ -160,7 +158,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         }
     }
 
-    initSuspension(pfLoaderData);
+    initSuspension(gameState.getPFLoaderData());
 
     //use shadow buffer & HBU_WRITE_ONLY for cockpit & get suspension points
     AdjustBufferToUseShadow(mModelEntity[0], mSuspensionData, mSuspensionIndices, mSuspensionPointOriginalPos);
@@ -176,13 +174,13 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     //d.polubotko(TODO): refactor (remove absolute path)
     STRSettings carSettings;
-    carSettings.parse(pfLoaderStore, "data/cars/feral max/data/default", "params.str");
+    carSettings.parse(gameState.getPFLoaderStore(), "data/cars/feral max/data/default", "params.str");
 
     STRSettings trackSettings;
-    trackSettings.parse(pfLoaderStore, "data/cars/global/data/" + gameState.getTrackName(), "params.str");
+    trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getTrackName(), "params.str");
 
     STRSettings defaultSettings;
-    defaultSettings.parse(pfLoaderStore, "data/cars/global/data/default", "params.str");
+    defaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");
 
     //load wheels offsets
     {

@@ -24,11 +24,7 @@ public:
     Graphics2D();
     ~Graphics2D(){}
 
-    void load(  CustomTrayManager* trayMgr, 
-                const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell,
-                const STRPowerslide& strPowerslide,
-                const STRRacecrud& strRacecrud,
-                const GameState& gameState);
+    void load(  CustomTrayManager* trayMgr, const GameState& gameState);
 
     void showBeforeStart1();
     void showBeforeStart2();
@@ -71,7 +67,7 @@ public:
     static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
     static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
-    void reloadTextures(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+    void reloadTextures(const GameState& gameState);
 
 private:
 

@@ -29,18 +29,14 @@ Graphics2D::Graphics2D() :
     mNeedleScaleCorrection.addPoint(90.0f, 1.0f);
 }
 
-void Graphics2D::load(  CustomTrayManager* trayMgr, 
-                        const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell,
-                        const STRPowerslide& strPowerslide,
-                        const STRRacecrud& strRacecrud,
-                        const GameState& gameState)
+void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 {
 
     //startlight
     {
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         {
             std::vector<Ogre::String> texName;
@@ -74,9 +70,9 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     }
 
     {
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         {
             std::vector<Ogre::String> texName;
@@ -110,9 +106,9 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     }
 
     {
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-        TEXLoader().load(pfLoaderData, "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         {
             std::vector<Ogre::String> texName;
@@ -162,73 +158,73 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         0.0f,                           0.0f,                           0.0f,                           viewportHeight / 480.0f / 2.0f);
     Ogre::Vector4 screenShift(viewportWidth / 4.0f, 0.0f, viewportWidth / 4.0f, 0.0f);
 
-    Ogre::Vector4 readyL = strRacecrud.getArray4Value("on-grid parameters", "ready left texture region");
+    Ogre::Vector4 readyL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready left texture region");
     readyL /= 255.0f;
-    Ogre::Vector4 readySL = strRacecrud.getArray4Value("on-grid parameters", "ready left screen region");
+    Ogre::Vector4 readySL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready left screen region");
     readySL = screenAdaption * readySL + screenShift;
     mBeforeStartPanelReadyL = createPanel("BeforeStartReadyL", readySL, "Test/BeforeStartReadyL");
     mBeforeStartPanelReadyL->setUV(readyL.x, readyL.y, readyL.z, readyL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyL);
 
-    Ogre::Vector4 readyC = strRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
+    Ogre::Vector4 readyC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready centre texture region");
     readyC /= 255.0f;
-    Ogre::Vector4 readySC = strRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    Ogre::Vector4 readySC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready centre screen region");
     readySC = screenAdaption * readySC + screenShift;
     mBeforeStartPanelReadyC = createPanel("BeforeStartReadyC", readySC, "Test/BeforeStartReadyC");
     mBeforeStartPanelReadyC->setUV(readyC.x, readyC.y, readyC.z, readyC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyC);
 
-    Ogre::Vector4 readyR = strRacecrud.getArray4Value("on-grid parameters", "ready right texture region");
+    Ogre::Vector4 readyR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready right texture region");
     readyR /= 255.0f;
-    Ogre::Vector4 readySR = strRacecrud.getArray4Value("on-grid parameters", "ready right screen region");
+    Ogre::Vector4 readySR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready right screen region");
     readySR = screenAdaption * readySR + screenShift;
     mBeforeStartPanelReadyR = createPanel("BeforeStartReadyR", readySR, "Test/BeforeStartReadyR");
     mBeforeStartPanelReadyR->setUV(readyR.x, readyR.y, readyR.z, readyR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyR);
 
-    Ogre::Vector4 setL = strRacecrud.getArray4Value("on-grid parameters", "set left texture region");
+    Ogre::Vector4 setL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "set left texture region");
     setL /= 255.0f;
-    Ogre::Vector4 setSL = strRacecrud.getArray4Value("on-grid parameters", "set left screen region");
+    Ogre::Vector4 setSL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "set left screen region");
     setSL = screenAdaption * setSL + screenShift;
     mBeforeStartPanelSetL = createPanel("BeforeStartSetL", setSL, "Test/BeforeStartSetL");
     mBeforeStartPanelSetL->setUV(setL.x, setL.y, setL.z, setL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetL);
 
-    Ogre::Vector4 setC = strRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
+    Ogre::Vector4 setC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready centre texture region");
     setC /= 255.0f;
-    Ogre::Vector4 setSC = strRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    Ogre::Vector4 setSC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "ready centre screen region");
     setSC = screenAdaption * setSC + screenShift;
     mBeforeStartPanelSetC = createPanel("BeforeStartSetC", setSC, "Test/BeforeStartSetC");
     mBeforeStartPanelSetC->setUV(setC.x, setC.y, setC.z, setC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetC);
 
-    Ogre::Vector4 setR = strRacecrud.getArray4Value("on-grid parameters", "set right texture region");
+    Ogre::Vector4 setR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "set right texture region");
     setR /= 255.0f;
-    Ogre::Vector4 setSR = strRacecrud.getArray4Value("on-grid parameters", "set right screen region");
+    Ogre::Vector4 setSR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "set right screen region");
     setSR = screenAdaption * setSR + screenShift;
     mBeforeStartPanelSetR = createPanel("BeforeStartSetR", setSR, "Test/BeforeStartSetR");
     mBeforeStartPanelSetR->setUV(setR.x, setR.y, setR.z, setR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetR);
 
-    Ogre::Vector4 goL = strRacecrud.getArray4Value("on-grid parameters", "go left texture region");
+    Ogre::Vector4 goL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go left texture region");
     goL /= 255.0f;
-    Ogre::Vector4 goSL = strRacecrud.getArray4Value("on-grid parameters", "go left screen region");
+    Ogre::Vector4 goSL = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go left screen region");
     goSL = screenAdaption * goSL + screenShift;
     mBeforeStartPanelGoL = createPanel("BeforeStartGoL", goSL, "Test/BeforeStartGoL");
     mBeforeStartPanelGoL->setUV(goL.x, goL.y, goL.z, goL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoL);
 
-    Ogre::Vector4 goC = strRacecrud.getArray4Value("on-grid parameters", "go centre texture region");
+    Ogre::Vector4 goC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go centre texture region");
     goC /= 255.0f;
-    Ogre::Vector4 goSC = strRacecrud.getArray4Value("on-grid parameters", "go centre screen region");
+    Ogre::Vector4 goSC = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go centre screen region");
     goSC = screenAdaption * goSC + screenShift;
     mBeforeStartPanelGoC = createPanel("BeforeStartGoC", goSC, "Test/BeforeStartGoC");
     mBeforeStartPanelGoC->setUV(goC.x, goC.y, goC.z, goC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoC);
 
-    Ogre::Vector4 goR = strRacecrud.getArray4Value("on-grid parameters", "go right texture region");
+    Ogre::Vector4 goR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go right texture region");
     goR /= 255.0f;
-    Ogre::Vector4 goSR = strRacecrud.getArray4Value("on-grid parameters", "go right screen region");
+    Ogre::Vector4 goSR = gameState.getSTRRacecrud().getArray4Value("on-grid parameters", "go right screen region");
     goSR = screenAdaption * goSR + screenShift;
     mBeforeStartPanelGoR = createPanel("BeforeStartGoR", goSR, "Test/BeforeStartGoR");
     mBeforeStartPanelGoR->setUV(goR.x, goR.y, goR.z, goR.w);
@@ -243,9 +239,9 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //dashboard
     {
-        std::string dashTexture = strRacecrud.getValue(gameState.getPlayerCharacterName() + " dash parameters", "dash file", "max_dash.tga");
+        std::string dashTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCharacterName() + " dash parameters", "dash file", "max_dash.tga");
         std::transform(dashTexture.begin(), dashTexture.end(), dashTexture.begin(), ::tolower);
-        TextureLoader().load(pfLoaderData, "data/misc/dashes", dashTexture, "OriginalDash", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TextureLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashTexture, "OriginalDash", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalDash");
@@ -259,10 +255,10 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //dashboard position
     {
-        std::string dashPositionTexture = strPowerslide.getValue(gameState.getPlayerCharacterName() + " parameters", "dash texture", "max_m_3.tex");
+        std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCharacterName() + " parameters", "dash texture", "max_m_3.tex");
         std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
         dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
-        TEXLoader().load(pfLoaderData, "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalDashPosition");
@@ -297,7 +293,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //dashboard cars
     {
-        loadDashboardCars(pfLoaderGameshell);
+        loadDashboardCars(gameState.getPFLoaderGameshell());
 
         for ( int carsEnum = Warthog_0; carsEnum <= Pickup_2; carsEnum++ )
         {
@@ -345,10 +341,10 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //tacho
     {
-        std::string tachoTexture = strRacecrud.getValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
+        std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
         std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
         tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
-        TEXLoader().load(pfLoaderData, "data/misc/tachos", tachoTexture, "OriginalTacho", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalTacho");
@@ -363,7 +359,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     Ogre::Real tachoTop = viewportHeight - tachoHeight;
 
     {
-        Ogre::Vector4 tachoRegion = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho texture region 1");
+        Ogre::Vector4 tachoRegion = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho texture region 1");
         tachoRegion /= 255.0f;
 
         Ogre::PanelOverlayElement* tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
@@ -376,7 +372,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         const Ogre::Real needleWidth = tachoWidth * 0.047f;
         const Ogre::Real needleHeight = tachoHeight * 0.283f;
 
-        std::vector<std::string> tachoNeedleStr = strRacecrud.getArrayValue(gameState.getPlayerCharacterName() + " dash parameters", "needle texture region 1");
+        std::vector<std::string> tachoNeedleStr = gameState.getSTRRacecrud().getArrayValue(gameState.getPlayerCharacterName() + " dash parameters", "needle texture region 1");
         Ogre::Vector4 tachoNeedle;
         Conversions::DMFromString(tachoNeedleStr[0], tachoNeedle.x);
         Conversions::DMFromString(tachoNeedleStr[1], tachoNeedle.y);
@@ -405,10 +401,10 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 0.0f);
 
         mIsPickup = false;
-        if(strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "pickup hack"))
+        if(gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "pickup hack"))
             mIsPickup = true;
 
-        size_t lampsCount = strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "num tacho lights");
+        size_t lampsCount = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "num tacho lights");
         mTachoRange.resize(lampsCount);
 
         if(mIsPickup) ++lampsCount;
@@ -416,15 +412,15 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
         for(size_t q = 0; q < lampsCount; ++q)
         {
-            Ogre::Vector4 tachoLightsScreen = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
+            Ogre::Vector4 tachoLightsScreen = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
             tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
             tachoLightsScreen -= screenShiftDigits;
 
-            Ogre::Vector4 tachoLightsTexture = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
+            Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
             tachoLightsTexture /= 255.0f;
 
             if(!mIsPickup || q < 1)
-                mTachoRange[q] = strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho rev range " + Conversions::DMToString(q));
+                mTachoRange[q] = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho rev range " + Conversions::DMToString(q));
 
             mTachoLamps[q] = createPanel("TachoLamps" + Conversions::DMToString(q), tachoLightsScreen, "Test/TachoFrantic");
             mTachoLamps[q]->setUV(tachoLightsTexture.x, tachoLightsTexture.y, tachoLightsTexture.z, tachoLightsTexture.w);
@@ -437,9 +433,9 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     {
         Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 6.0f);
 
-        Ogre::Vector4 tachoDigitsScreen100 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit hundreds 1");
-        Ogre::Vector4 tachoDigitsScreen10 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit tens 1");
-        Ogre::Vector4 tachoDigitsScreen1 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit units 1");
+        Ogre::Vector4 tachoDigitsScreen100 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit hundreds 1");
+        Ogre::Vector4 tachoDigitsScreen10 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit tens 1");
+        Ogre::Vector4 tachoDigitsScreen1 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit units 1");
 
         tachoDigitsScreen1 = screenAdaptionRelative * tachoDigitsScreen1;
         tachoDigitsScreen1 -= screenShiftDigits;
@@ -448,7 +444,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         tachoDigitsScreen100 = screenAdaptionRelative * tachoDigitsScreen100;
         tachoDigitsScreen100 -= screenShiftDigits;
 
-        mTachoDigitsTexture = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit texture 1");
+        mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit texture 1");
         mTachoDigitsTexture /= 255.0f;
 
         std::vector<Ogre::String> texName;
@@ -490,7 +486,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //font
     {
-        TEXLoader().load(pfLoaderData, "data/misc", "font_set_1_m_1.tex", "OriginalFont", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalFont");
@@ -624,7 +620,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //paused
     {
-        loadMisc(pfLoaderData);
+        loadMisc(gameState.getPFLoaderData());
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalPaused");
@@ -754,10 +750,10 @@ Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& nam
     return res;
 }
 
-void Graphics2D::reloadTextures(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
+void Graphics2D::reloadTextures(const GameState& gameState)
 {
-    loadDashboardCars(pfLoaderGameshell);
-    loadMisc(pfLoaderData);
+    loadDashboardCars(gameState.getPFLoaderGameshell());
+    loadMisc(gameState.getPFLoaderData());
 }
 
 void Graphics2D::loadDashboardCars(const PFLoader& pfLoaderGameshell)

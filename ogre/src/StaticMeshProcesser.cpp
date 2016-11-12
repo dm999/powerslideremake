@@ -39,9 +39,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                     Ogre::SceneNode* mainNode,
                                     bool isGlobalReset,
                                     GameState& gameState,
-                                    const PFLoader& pfloader,
-                                    OgreBulletDynamics::DynamicsWorld * world,
-                                    const Ogre::ColourValue& ambient)
+                                    OgreBulletDynamics::DynamicsWorld * world)
 {
     checkIsVertexArraySupported();
 
@@ -56,7 +54,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
     DE2Loader de2Loader;
     std::vector<MSHData> originalParts;
     std::string pfFolderName = gameState.getTrackName();
-    FILE * fileToLoad = pfloader.getFile("data/tracks/" + pfFolderName, gameState.getDE2FileName());
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName, gameState.getDE2FileName());
     bool loadResult = false;
     if(fileToLoad)
     {
@@ -107,7 +105,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         }
 
         //create textures
-        loadTextures(mergedMSH, pfloader, pfFolderName);
+        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName);
 
 
         for(size_t q = 0; q < mergedMSH.size(); ++q)
@@ -126,7 +124,11 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             if(isGlobalReset)
             {
                 mergedMSH[q].preallocatePlainBuffer();
-                terrain = createMesh( pipeline, sceneMgr, nodeName, centroid, min, max, mergedMSH[q], ambient);
+                terrain = createMesh(   pipeline, 
+                                        sceneMgr, nodeName, 
+                                        centroid, min, max, 
+                                        mergedMSH[q], 
+                                        gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getDE2FileName()));
             }
             else
             {
@@ -950,7 +952,7 @@ Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int,
     return res;
 }
 
-void StaticMeshProcesser::loadTerrainMaps(PFLoader& pfloader, GameState& gameState)
+void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
 {
     std::string pfFolderName = gameState.getTrackName();
 
@@ -960,7 +962,7 @@ void StaticMeshProcesser::loadTerrainMaps(PFLoader& pfloader, GameState& gameSta
     {
         std::string mapName = (*i);
 
-        FILE * fileToLoad = pfloader.getFile("data/tracks/" + pfFolderName +"/terrains", mapName);
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName +"/terrains", mapName);
 
         if(fileToLoad)
         {

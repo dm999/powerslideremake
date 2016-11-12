@@ -12,8 +12,6 @@ PSAICar::PSAICar() :
 }
 
 void PSAICar::initModel(    lua_State * pipeline, 
-                            const PFLoader& pfLoaderData,
-                            const PFLoader& pfLoaderStore,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             CameraMan * cameraMan,
@@ -25,7 +23,7 @@ void PSAICar::initModel(    lua_State * pipeline,
 {
     mSteeringImpulse = 0.0f;
 
-    PSControllableCar::initModel(pipeline, pfLoaderData, pfLoaderStore, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isPossesCamera);
+    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isPossesCamera);
 }
 
 void PSAICar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)

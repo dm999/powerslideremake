@@ -20,8 +20,6 @@ public:
     virtual ~PSControllableCar(){}
 
     virtual void initModel( lua_State * pipeline, 
-                            const PFLoader& pfLoaderData,
-                            const PFLoader& pfLoaderStore,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             CameraMan * cameraMan,

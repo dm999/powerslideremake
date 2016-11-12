@@ -15,7 +15,7 @@ class TerrainLoader
 public:
     TerrainLoader();
 
-    void load(const PFLoader& pfLoader, GameState& gameState);
+    void load(GameState& gameState);
 
     const std::vector<size_t>& getRemapFriction() const {return remapFriction;}
     const std::vector<size_t>& getRemapSounds() const {return remapSounds;}

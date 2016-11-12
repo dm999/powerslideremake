@@ -270,7 +270,7 @@ void BaseApp::createFrameListener(void)
 
 
     mGraphics2D.createRearViewMirrorPanel(mTrayMgr, mGameState.getMirrorEnabled());
-    mGraphics2D.load(mTrayMgr, mPFLoaderData, mPFLoaderGameshell, mSTRPowerslide, mSTRRacecrud, mGameState);
+    mGraphics2D.load(mTrayMgr, mGameState);
 
 
 
@@ -628,7 +628,9 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "ready left start") * 1000.0f && !mGameState.isGamePaused())
+    if( !mGameState.getRaceStarted() && 
+        mGameState.getBeforeStartTimerTime() > mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
+        !mGameState.isGamePaused())
     {
         mGraphics2D.setRearViewMirrorPanelShow(false);
         mGraphics2D.hideAllStart();
@@ -636,14 +638,18 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mSoundsProcesser.playBeforeStart1();
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "set left start") * 1000.0f && !mGameState.isGamePaused())
+    if(!mGameState.getRaceStarted() && 
+        mGameState.getBeforeStartTimerTime() > mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
+        !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
         mGraphics2D.showBeforeStart2();
         mSoundsProcesser.playBeforeStart2();
     }
 
-    if(!mGameState.getRaceStarted() && mGameState.getBeforeStartTimerTime() > mSTRRacecrud.getFloatValue("on-grid parameters", "go left start") * 1000.0f && !mGameState.isGamePaused())
+    if(!mGameState.getRaceStarted() && 
+        mGameState.getBeforeStartTimerTime() > mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
+        !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
         mGraphics2D.showBeforeStart3();
@@ -675,7 +681,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mGameState.setRaceStarted(true);
     }
 
-    if(mGameState.getBeforeStartTimerTime() > (mSTRRacecrud.getFloatValue("on-grid parameters", "go left start") * 1000.0f + mSTRRacecrud.getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mGameState.isGamePaused())
+    if(mGameState.getBeforeStartTimerTime() > (mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mGameState.isGamePaused())
     {
         mGraphics2D.hideAllStart();
 
@@ -867,17 +873,14 @@ void BaseApp::initScene()
 {
     mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
 
-    mGameState.setTrackName(mLuaManager.ReadScalarString("Terrain.Mesh.TrackName", mPipeline));
-    mGameState.setDE2FileName(mLuaManager.ReadScalarString("Terrain.Mesh.FileName", mPipeline));
     mGameState.setPlayerCharacterName(mLuaManager.ReadScalarString("Main.Character", mPipeline));
 
-    mPFLoaderData.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "data.pf");
-    mPFLoaderGameshell.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "gameshell.pf");
-    mPFLoaderStore.init(mLuaManager.ReadScalarString("Main.OriginalPathCommon", mPipeline), "store.pf");
-    mSTRPowerslide.parse(mPFLoaderStore);
-    mSTRRacecrud.parse(mPFLoaderStore);
+    mGameState.initOriginalData(mLuaManager.ReadScalarString("Terrain.Mesh.TrackName", mPipeline),
+                                mLuaManager.ReadScalarString("Terrain.Mesh.FileName", mPipeline),
+                                mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline),
+                                mLuaManager.ReadScalarString("Main.OriginalPathCommon", mPipeline));
 
-    mSoundsProcesser.initSounds(mPFLoaderData);
+    mSoundsProcesser.initSounds(mGameState.getPFLoaderData());
 
     //migration from 1.8.1 to 1.9.0
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=78278
@@ -894,7 +897,6 @@ void BaseApp::initScene()
     mCamera = mSceneMgr->createCamera("PlayerCam");
     mCamera->setNearClipDistance(0.5f);
     Ogre::Viewport * mViewPort = mWindow->addViewport(mCamera);
-    mGameState.setBackgroundColor(mSTRPowerslide.getTrackSkyColor(mGameState.getDE2FileName()));
 
     mViewPort->setBackgroundColour(mGameState.getBackgroundColor());
     mCamera->setAspectRatio(mLuaManager.ReadScalarFloat("Scene.Camera.AspectRatio", mPipeline));
@@ -906,23 +908,21 @@ void BaseApp::initScene()
     mCameraMan.reset(new CameraMan(mCamera, mWorld.get(), mSceneMgr));
     mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
-    mGameState.setLapsCount(mSTRPowerslide.getLapsCount(mGameState.getDE2FileName()));
-
     //load data
     {
         bool isDebugLLT = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugLLT", mPipeline);
 
-        LLTLoader().load(mPFLoaderData, mGameState, mSceneMgr, isDebugLLT);
+        LLTLoader().load(mGameState.getPFLoaderData(), mGameState, mSceneMgr, isDebugLLT);
     }
 
     {
         bool isDebugExclusion = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugExclusion", mPipeline);
-        std::string exclusionFile = mSTRPowerslide.getExclusionFile(mGameState.getDE2FileName());
+        std::string exclusionFile = mGameState.getSTRPowerslide().getExclusionFile(mGameState.getDE2FileName());
 
-        ExclusionLoader().load(mPFLoaderData, mGameState, exclusionFile, mSceneMgr, isDebugExclusion);
+        ExclusionLoader().load(mGameState.getPFLoaderData(), mGameState, exclusionFile, mSceneMgr, isDebugExclusion);
     }
 
-    PHYLoader().load(mPFLoaderData, mGameState);
+    PHYLoader().load(mGameState.getPFLoaderData(), mGameState);
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mPipeline);
@@ -973,7 +973,7 @@ void BaseApp::initScene()
             mGameState.getAICar(w).setSpeedCoeff(Randomizer::GetInstance().GetRandomFloat(speedCoeffMinLimit, speedCoeff));
         }
 
-        AILoader().load(mPFLoaderData, mGameState, mSceneMgr, isDebugAI, aiStrength);
+        AILoader().load(mGameState.getPFLoaderData(), mGameState, mSceneMgr, isDebugAI, aiStrength);
     }
 
     //init multiplayer
@@ -993,7 +993,7 @@ void BaseApp::initScene()
         }
     }
 
-    ParticlesLoader().load(mPFLoaderData, mGameState);
+    ParticlesLoader().load(mGameState.getPFLoaderData(), mGameState);
 }
 
 void BaseApp::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::AxisAlignedBox &bounds)
@@ -1094,13 +1094,12 @@ void BaseApp::preloadResource(const Ogre::String& fileName, const Ogre::String& 
 void BaseApp::initTerrain()
 {
     mStaticMeshProcesser.initParts( mPipeline, mSceneMgr, mMainNode, mIsGlobalReset, 
-                                    mGameState, mPFLoaderData, mWorld.get(),
-                                    mSTRPowerslide.getTrackAmbientColor(mGameState.getDE2FileName()));
-    mStaticMeshProcesser.loadTerrainMaps(mPFLoaderData, mGameState);
+                                    mGameState, mWorld.get());
+    mStaticMeshProcesser.loadTerrainMaps(mGameState);
 
     //load terrain params
     TerrainLoader terrainLoader;
-    terrainLoader.load(mPFLoaderData, mGameState);
+    terrainLoader.load(mGameState);
 
     mStaticMeshProcesser.setFrictionRemapArray(terrainLoader.getRemapFriction());
     mStaticMeshProcesser.setLatutuideFrictionArray(terrainLoader.getLatitudeFriction());
@@ -1109,8 +1108,8 @@ void BaseApp::initTerrain()
 
     //particle (before loading cars)
     {
-        //Ogre::TexturePtr particle = TextureLoader().load(mPFLoaderData, "data/deii", "particle.tga", "OriginalParticle");
-        Ogre::TexturePtr particle = TEXLoader().load(mPFLoaderData, "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
+        //Ogre::TexturePtr particle = TextureLoader().load(mGameState.getPFLoaderData(), "data/deii", "particle.tga", "OriginalParticle");
+        Ogre::TexturePtr particle = TEXLoader().load(mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
     }
@@ -1121,7 +1120,7 @@ void BaseApp::initModel()
 
     //arrow (before loading models)
     {
-        TEXLoader().load(mPFLoaderData, "data/misc", "arrow_m_3.tex", "OriginalArrow");
+        TEXLoader().load(mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow");
     }
 
     mGameState.setPLayerCarPrevVel(Ogre::Vector3::ZERO);
@@ -1134,10 +1133,10 @@ void BaseApp::initModel()
 
     const GameCars playerCarType = Warthog_0;
 
-    mModelsPool.initModels(mSceneMgr, mPFLoaderData);
+    mModelsPool.initModels(mSceneMgr, mGameState.getPFLoaderData());
 
-    mGameState.getPlayerCar().initModel(mPipeline, mPFLoaderData, mPFLoaderStore, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), playerCarType, mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
-    mGameState.getPlayerCar().initSounds(mPipeline, mPFLoaderData);
+    mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), playerCarType, mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
+    mGameState.getPlayerCar().initSounds(mPipeline, mGameState.getPFLoaderData());
 
     GameCars cars[] = {Warthog_1, Warthog_5, Warthog_0, Warthog_2, Warthog_6, Warthog_3, Warthog_4, Warthog_1, Warthog_5, Warthog_0, Warthog_2};
 
@@ -1146,8 +1145,8 @@ void BaseApp::initModel()
         bool isCam = (q == (mGameState.getAICount() - 1));
         if(!isCamToAI)
             isCam = false;
-        mGameState.getAICar(q).initModel(mPipeline, mPFLoaderData, mPFLoaderStore, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), cars[q], mGameState.getTrackPositions()[q], isCam);
-        mGameState.getAICar(q).initSounds(mPipeline, mPFLoaderData);
+        mGameState.getAICar(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), cars[q], mGameState.getTrackPositions()[q], isCam);
+        mGameState.getAICar(q).initSounds(mPipeline, mGameState.getPFLoaderData());
 
         mLapController.addCar(&mGameState.getAICar(q));
     }
@@ -1446,8 +1445,8 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
 
                 humanCar.setCarType(humanCarType);
 
-                humanCar.initModel(mPipeline, mPFLoaderData, mPFLoaderStore, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
-                humanCar.initSounds(mPipeline, mPFLoaderData);
+                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
+                humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
 
@@ -1475,8 +1474,8 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
 
                 humanCar.setCarType(humanCarType);
 
-                humanCar.initModel(mPipeline, mPFLoaderData, mPFLoaderStore, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
-                humanCar.initSounds(mPipeline, mPFLoaderData);
+                humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCarType, mGameState.getTrackPositions()[q], false);
+                humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
 
@@ -1497,9 +1496,9 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
 
             mGameState.getMultiplayerCarAI(q).setCarType(aiCarType);
 
-            mGameState.getMultiplayerCarAI(q).initModel(mPipeline, mPFLoaderData, mPFLoaderStore, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCarType, mGameState.getTrackPositions()[q], false);
+            mGameState.getMultiplayerCarAI(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCarType, mGameState.getTrackPositions()[q], false);
 
-            mGameState.getMultiplayerCarAI(q).initSounds(mPipeline, mPFLoaderData);
+            mGameState.getMultiplayerCarAI(q).initSounds(mPipeline, mGameState.getPFLoaderData());
             mGameState.getMultiplayerCarAI(q).setModelPositionOnGrid(mGameState.getTrackPositions()[q]);
 
             mLapController.addCar(&mGameState.getMultiplayerCarAI(q));
@@ -1601,7 +1600,7 @@ void BaseApp::onLapFinished()
     size_t lap = mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
     std::string time = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getLastLapTime());
     std::string lapS = Conversions::DMToString(lap);
-    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mSTRPowerslide.getTrackTimeTrialColor(mGameState.getDE2FileName()));
+    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getDE2FileName()));
 }
 
 void BaseApp::parseFile(const std::string& fileName)
@@ -1924,7 +1923,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             //initLightLists();
 
             static_cast<Ogre::AndroidEGLWindow*>(mWindow)->_createInternalResources(nativeWnd, NULL);
-            mGraphics2D.reloadTextures(mPFLoaderData, mPFLoaderGameshell);
+            mGraphics2D.reloadTextures(mGameState);
         }
     }
 

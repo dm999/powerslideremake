@@ -58,8 +58,6 @@ PSControllableCar::PSControllableCar() :
 }
 
 void PSControllableCar::initModel(  lua_State * pipeline, 
-                                    const PFLoader& pfLoaderData,
-                                    const PFLoader& pfLoaderStore,
                                     const GameState& gameState,
                                     Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                                     CameraMan * cameraMan,
@@ -90,18 +88,18 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mCameraMan = cameraMan;
 
-    PSBaseCar::initModel(pipeline, pfLoaderData, pfLoaderStore, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isAI);
+    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, gameCar, transform, isAI);
 
     {
         //d.polubotko(TODO): refactor (remove absolute path)
         STRSettings carSettings;
-        carSettings.parse(pfLoaderStore, "data/cars/feral max/data/default", "params.str");
+        carSettings.parse(gameState.getPFLoaderStore(), "data/cars/feral max/data/default", "params.str");
 
         STRSettings trackSettings;
-        trackSettings.parse(pfLoaderStore, "data/cars/global/data/" + gameState.getTrackName(), "params.str");
+        trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getTrackName(), "params.str");
 
         STRSettings defaultSettings;
-        defaultSettings.parse(pfLoaderStore, "data/cars/global/data/default", "params.str");
+        defaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");
 
         float gearRevRatio = getCarParameter(carSettings, trackSettings, defaultSettings, "", "gear rev ratio");
         Ogre::Vector4 revRatio = getCarArray4Parameter(carSettings, trackSettings, defaultSettings, "", "rev ratio");
