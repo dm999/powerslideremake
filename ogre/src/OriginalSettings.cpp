@@ -165,6 +165,30 @@ float STRSettings::getFloatValue(const std::string& section, const std::string& 
     return getFloatValue(section, key, isFound);
 }
 
+int STRSettings::getIntValue(const std::string& section, const std::string& key, bool& isFound) const
+{
+    int res = 0;
+    isFound = false;
+
+    if(mIsSTRLoaded)
+    {
+        std::string val = mSTR.GetValue(section.c_str(), key.c_str(), "");
+        if(!val.empty())
+        {
+            isFound = Conversions::DMFromString(val, res);
+        }
+        //else {assert(false && "STRSettings::getIntValue: not found");}
+    }
+
+    return res;
+}
+
+int STRSettings::getIntValue(const std::string& section, const std::string& key) const
+{
+    bool isFound;
+    return getIntValue(section, key, isFound);
+}
+
 STRPowerslide::STRPowerslide()
 {
     mCustomToOriginalSections.insert(std::make_pair("deserttrack.de2", "desert track parameters"));

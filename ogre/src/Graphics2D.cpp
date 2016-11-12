@@ -7,7 +7,6 @@
 #include "CustomTrayManager.h"
 
 #include "Conversions.h"
-#include "GameState.h"
 
 #include "loaders/TextureLoader.h"
 #include "loaders/TEXLoader.h"
@@ -32,7 +31,9 @@ Graphics2D::Graphics2D() :
 
 void Graphics2D::load(  CustomTrayManager* trayMgr, 
                         const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell,
-                        const STRRacecrud& mSTRRacecrud)
+                        const STRPowerslide& strPowerslide,
+                        const STRRacecrud& strRacecrud,
+                        const GameState& gameState)
 {
 
     //startlight
@@ -148,79 +149,86 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
 
-    Ogre::Matrix4 screenAdaption(  viewportWidth / 640.0f / 2.0f,  0.0f,                           0.0f,                           0.0f,
-                                    0.0f,                           viewportHeight / 480.0f / 2.0f, 0.0f,                           0.0f,
-                                    0.0f,                           0.0f,                           viewportWidth / 640.0f / 2.0f,  0.0f,
-                                    0.0f,                           0.0f,                           0.0f,                           viewportHeight / 480.0f / 2.0f);
+    Ogre::Matrix4 screenAdaptionRelative(
+        viewportWidth / 640.0f, 0.0f,                       0.0f,                   0.0f,
+        0.0f,                   viewportHeight / 480.0f,    0.0f,                   0.0f,
+        0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
+        0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
+
+    Ogre::Matrix4 screenAdaption(
+        viewportWidth / 640.0f / 2.0f,  0.0f,                           0.0f,                           0.0f,
+        0.0f,                           viewportHeight / 480.0f / 2.0f, 0.0f,                           0.0f,
+        0.0f,                           0.0f,                           viewportWidth / 640.0f / 2.0f,  0.0f,
+        0.0f,                           0.0f,                           0.0f,                           viewportHeight / 480.0f / 2.0f);
     Ogre::Vector4 screenShift(viewportWidth / 4.0f, 0.0f, viewportWidth / 4.0f, 0.0f);
 
-    Ogre::Vector4 readyL = mSTRRacecrud.getArray4Value("on-grid parameters", "ready left texture region");
+    Ogre::Vector4 readyL = strRacecrud.getArray4Value("on-grid parameters", "ready left texture region");
     readyL /= 255.0f;
-    Ogre::Vector4 readySL = mSTRRacecrud.getArray4Value("on-grid parameters", "ready left screen region");
+    Ogre::Vector4 readySL = strRacecrud.getArray4Value("on-grid parameters", "ready left screen region");
     readySL = screenAdaption * readySL + screenShift;
     mBeforeStartPanelReadyL = createPanel("BeforeStartReadyL", readySL, "Test/BeforeStartReadyL");
     mBeforeStartPanelReadyL->setUV(readyL.x, readyL.y, readyL.z, readyL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyL);
 
-    Ogre::Vector4 readyC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
+    Ogre::Vector4 readyC = strRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
     readyC /= 255.0f;
-    Ogre::Vector4 readySC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    Ogre::Vector4 readySC = strRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
     readySC = screenAdaption * readySC + screenShift;
     mBeforeStartPanelReadyC = createPanel("BeforeStartReadyC", readySC, "Test/BeforeStartReadyC");
     mBeforeStartPanelReadyC->setUV(readyC.x, readyC.y, readyC.z, readyC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyC);
 
-    Ogre::Vector4 readyR = mSTRRacecrud.getArray4Value("on-grid parameters", "ready right texture region");
+    Ogre::Vector4 readyR = strRacecrud.getArray4Value("on-grid parameters", "ready right texture region");
     readyR /= 255.0f;
-    Ogre::Vector4 readySR = mSTRRacecrud.getArray4Value("on-grid parameters", "ready right screen region");
+    Ogre::Vector4 readySR = strRacecrud.getArray4Value("on-grid parameters", "ready right screen region");
     readySR = screenAdaption * readySR + screenShift;
     mBeforeStartPanelReadyR = createPanel("BeforeStartReadyR", readySR, "Test/BeforeStartReadyR");
     mBeforeStartPanelReadyR->setUV(readyR.x, readyR.y, readyR.z, readyR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyR);
 
-    Ogre::Vector4 setL = mSTRRacecrud.getArray4Value("on-grid parameters", "set left texture region");
+    Ogre::Vector4 setL = strRacecrud.getArray4Value("on-grid parameters", "set left texture region");
     setL /= 255.0f;
-    Ogre::Vector4 setSL = mSTRRacecrud.getArray4Value("on-grid parameters", "set left screen region");
+    Ogre::Vector4 setSL = strRacecrud.getArray4Value("on-grid parameters", "set left screen region");
     setSL = screenAdaption * setSL + screenShift;
     mBeforeStartPanelSetL = createPanel("BeforeStartSetL", setSL, "Test/BeforeStartSetL");
     mBeforeStartPanelSetL->setUV(setL.x, setL.y, setL.z, setL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetL);
 
-    Ogre::Vector4 setC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
+    Ogre::Vector4 setC = strRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
     setC /= 255.0f;
-    Ogre::Vector4 setSC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    Ogre::Vector4 setSC = strRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
     setSC = screenAdaption * setSC + screenShift;
     mBeforeStartPanelSetC = createPanel("BeforeStartSetC", setSC, "Test/BeforeStartSetC");
     mBeforeStartPanelSetC->setUV(setC.x, setC.y, setC.z, setC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetC);
 
-    Ogre::Vector4 setR = mSTRRacecrud.getArray4Value("on-grid parameters", "set right texture region");
+    Ogre::Vector4 setR = strRacecrud.getArray4Value("on-grid parameters", "set right texture region");
     setR /= 255.0f;
-    Ogre::Vector4 setSR = mSTRRacecrud.getArray4Value("on-grid parameters", "set right screen region");
+    Ogre::Vector4 setSR = strRacecrud.getArray4Value("on-grid parameters", "set right screen region");
     setSR = screenAdaption * setSR + screenShift;
     mBeforeStartPanelSetR = createPanel("BeforeStartSetR", setSR, "Test/BeforeStartSetR");
     mBeforeStartPanelSetR->setUV(setR.x, setR.y, setR.z, setR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetR);
 
-    Ogre::Vector4 goL = mSTRRacecrud.getArray4Value("on-grid parameters", "go left texture region");
+    Ogre::Vector4 goL = strRacecrud.getArray4Value("on-grid parameters", "go left texture region");
     goL /= 255.0f;
-    Ogre::Vector4 goSL = mSTRRacecrud.getArray4Value("on-grid parameters", "go left screen region");
+    Ogre::Vector4 goSL = strRacecrud.getArray4Value("on-grid parameters", "go left screen region");
     goSL = screenAdaption * goSL + screenShift;
     mBeforeStartPanelGoL = createPanel("BeforeStartGoL", goSL, "Test/BeforeStartGoL");
     mBeforeStartPanelGoL->setUV(goL.x, goL.y, goL.z, goL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoL);
 
-    Ogre::Vector4 goC = mSTRRacecrud.getArray4Value("on-grid parameters", "go centre texture region");
+    Ogre::Vector4 goC = strRacecrud.getArray4Value("on-grid parameters", "go centre texture region");
     goC /= 255.0f;
-    Ogre::Vector4 goSC = mSTRRacecrud.getArray4Value("on-grid parameters", "go centre screen region");
+    Ogre::Vector4 goSC = strRacecrud.getArray4Value("on-grid parameters", "go centre screen region");
     goSC = screenAdaption * goSC + screenShift;
     mBeforeStartPanelGoC = createPanel("BeforeStartGoC", goSC, "Test/BeforeStartGoC");
     mBeforeStartPanelGoC->setUV(goC.x, goC.y, goC.z, goC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoC);
 
-    Ogre::Vector4 goR = mSTRRacecrud.getArray4Value("on-grid parameters", "go right texture region");
+    Ogre::Vector4 goR = strRacecrud.getArray4Value("on-grid parameters", "go right texture region");
     goR /= 255.0f;
-    Ogre::Vector4 goSR = mSTRRacecrud.getArray4Value("on-grid parameters", "go right screen region");
+    Ogre::Vector4 goSR = strRacecrud.getArray4Value("on-grid parameters", "go right screen region");
     goSR = screenAdaption * goSR + screenShift;
     mBeforeStartPanelGoR = createPanel("BeforeStartGoR", goSR, "Test/BeforeStartGoR");
     mBeforeStartPanelGoR->setUV(goR.x, goR.y, goR.z, goR.w);
@@ -235,16 +243,35 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //dashboard
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
-        TextureLoader().load(pfLoaderData, "data/misc/dashes", "max_dash.tga", "OriginalDash", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        std::string dashTexture = strRacecrud.getValue(gameState.getPlayerCharacterName() + " dash parameters", "dash file", "max_dash.tga");
+        std::transform(dashTexture.begin(), dashTexture.end(), dashTexture.begin(), ::tolower);
+        TextureLoader().load(pfLoaderData, "data/misc/dashes", dashTexture, "OriginalDash", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalDash");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/DashboardWarthog", 
+                            //"Test/Diffuse", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+    }
+
+    //dashboard position
+    {
+        std::string dashPositionTexture = strPowerslide.getValue(gameState.getPlayerCharacterName() + " parameters", "dash texture", "max_m_3.tex");
+        std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
+        dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
+        TEXLoader().load(pfLoaderData, "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalDashPosition");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/DashboardWarthogPosition", 
                             "Test/Diffuse", 
                             texName, 
                             1.0f,
                             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
     }
 
 
@@ -252,6 +279,14 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     Ogre::Real dashHeight = tachoHeight / 1.7f;
 
     Ogre::Real dashTop = viewportHeight - dashHeight;
+
+    {
+        Ogre::Real dashPositionHeight = dashHeight / 1.8f;
+
+        Ogre::PanelOverlayElement* dashboardPosition = createPanel("DashboardPosition", dashWidth, dashPositionHeight, 0.0f, dashTop, "Test/DashboardWarthogPosition");
+        dashboardPosition->setUV(0.0f, 0.0f, 10.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(dashboardPosition);
+    }
 
     {
         Ogre::PanelOverlayElement* dashboard = createPanel("Dashboard", dashWidth, dashHeight, 0.0f, dashTop, "Test/DashboardWarthog");
@@ -310,8 +345,10 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //tacho
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
-        TEXLoader().load(pfLoaderData, "data/misc/tachos", "frantic_1024x768_m_1.tex", "OriginalTacho", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        std::string tachoTexture = strRacecrud.getValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
+        std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
+        tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
+        TEXLoader().load(pfLoaderData, "data/misc/tachos", tachoTexture, "OriginalTacho", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalTacho");
@@ -326,8 +363,11 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     Ogre::Real tachoTop = viewportHeight - tachoHeight;
 
     {
+        Ogre::Vector4 tachoRegion = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho texture region 1");
+        tachoRegion /= 255.0f;
+
         Ogre::PanelOverlayElement* tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
-        tacho->setUV(0.0f, 0.008f, 0.703f, 0.649f);
+        tacho->setUV(tachoRegion.x, tachoRegion.y, tachoRegion.z, tachoRegion.w);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(tacho);
     }
 
@@ -335,6 +375,14 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     {
         const Ogre::Real needleWidth = tachoWidth * 0.047f;
         const Ogre::Real needleHeight = tachoHeight * 0.283f;
+
+        std::vector<std::string> tachoNeedleStr = strRacecrud.getArrayValue(gameState.getPlayerCharacterName() + " dash parameters", "needle texture region 1");
+        Ogre::Vector4 tachoNeedle;
+        Conversions::DMFromString(tachoNeedleStr[0], tachoNeedle.x);
+        Conversions::DMFromString(tachoNeedleStr[1], tachoNeedle.y);
+        Conversions::DMFromString(tachoNeedleStr[6], tachoNeedle.z);
+        Conversions::DMFromString(tachoNeedleStr[7], tachoNeedle.w);
+        tachoNeedle /= 255.0f;
 
         mNeedleLayer = om.create("TachoNeedle");
         mNeedleLayer->setZOrder(201);
@@ -345,7 +393,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         pContainer->setTop(viewportHeight / 2.0f - needleHeight * 0.79f);
         pContainer->setWidth(needleWidth);
         pContainer->setHeight(needleHeight);
-        static_cast<Ogre::PanelOverlayElement*>(pContainer)->setUV(0.796f, 0.15f, 0.82f, 0.38f);
+        static_cast<Ogre::PanelOverlayElement*>(pContainer)->setUV(tachoNeedle.x, tachoNeedle.y, tachoNeedle.z, tachoNeedle.w);
         mNeedleLayer->add2D(pContainer);
         mNeedleLayer->show();
         mNeedleLayer->setScroll((tachoLeft + needleWidth * 2.0f) / viewportWidth, -(tachoTop)/ viewportHeight);
@@ -353,18 +401,56 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
 
     //tacho lamps
     {
-        Ogre::Real tachoLampWidth = tachoWidth * 0.364f;
-        Ogre::Real tachoLampHeight = tachoHeight * 0.233f;
-        Ogre::Real tachoLampLeft = viewportWidth - tachoLampWidth - tachoLampWidth * 0.157f;
-        Ogre::Real tachoLampTop = viewportHeight - tachoHeight / 2.0f - tachoLampHeight / 2.0f + tachoLampHeight * 0.02f;
-        mTachoLamps = createPanel("TachoLamps", tachoLampWidth, tachoLampHeight, tachoLampLeft, tachoLampTop, "Test/TachoFrantic");
-        mTachoLamps->setUV(0.0f, 0.66f, 0.257f, 0.81f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoLamps);
-        mTachoLamps->hide();
+        //Ogre::Vector4 screenShiftDigits(0.0f, 8.0f, 0.0f, 4.0f);
+        Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 0.0f);
+
+        mIsPickup = false;
+        if(strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "pickup hack"))
+            mIsPickup = true;
+
+        size_t lampsCount = strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "num tacho lights");
+        mTachoRange.resize(lampsCount);
+
+        if(mIsPickup) ++lampsCount;
+        mTachoLamps.resize(lampsCount);
+
+        for(size_t q = 0; q < lampsCount; ++q)
+        {
+            Ogre::Vector4 tachoLightsScreen = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
+            tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
+            tachoLightsScreen -= screenShiftDigits;
+
+            Ogre::Vector4 tachoLightsTexture = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
+            tachoLightsTexture /= 255.0f;
+
+            if(!mIsPickup || q < 1)
+                mTachoRange[q] = strRacecrud.getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho rev range " + Conversions::DMToString(q));
+
+            mTachoLamps[q] = createPanel("TachoLamps" + Conversions::DMToString(q), tachoLightsScreen, "Test/TachoFrantic");
+            mTachoLamps[q]->setUV(tachoLightsTexture.x, tachoLightsTexture.y, tachoLightsTexture.z, tachoLightsTexture.w);
+            trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoLamps[q]);
+            mTachoLamps[q]->hide();
+        }
     }
 
     //tacho digits
     {
+        Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 6.0f);
+
+        Ogre::Vector4 tachoDigitsScreen100 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit hundreds 1");
+        Ogre::Vector4 tachoDigitsScreen10 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit tens 1");
+        Ogre::Vector4 tachoDigitsScreen1 = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit units 1");
+
+        tachoDigitsScreen1 = screenAdaptionRelative * tachoDigitsScreen1;
+        tachoDigitsScreen1 -= screenShiftDigits;
+        tachoDigitsScreen10 = screenAdaptionRelative * tachoDigitsScreen10;
+        tachoDigitsScreen10 -= screenShiftDigits;
+        tachoDigitsScreen100 = screenAdaptionRelative * tachoDigitsScreen100;
+        tachoDigitsScreen100 -= screenShiftDigits;
+
+        mTachoDigitsTexture = strRacecrud.getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit texture 1");
+        mTachoDigitsTexture /= 255.0f;
+
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalTacho");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/TachoFranticDigits", 
@@ -380,19 +466,19 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
         Ogre::Real tachoDigitHeight = tachoHeight * 0.1f;
         Ogre::Real tachoDigitLeft1 = viewportWidth - tachoWidth / 2.0f + tachoDigitWidth * 1.4f;
         Ogre::Real tachoDigitTop = viewportHeight - tachoHeight / 2.0f + tachoDigitHeight * 0.9f;
-        mTachoSpeedDigit1 = createPanel("TachoDigit1", tachoDigitWidth, tachoDigitHeight, tachoDigitLeft1, tachoDigitTop, "Test/TachoFranticDigits");
+        mTachoSpeedDigit1 = createPanel("TachoDigit1", tachoDigitsScreen1, "Test/TachoFranticDigits");
         std::pair<Ogre::Real, Ogre::Real> texCoords = getTachoDigitOffset(0);
-        mTachoSpeedDigit1->setUV(texCoords.first, 0.216f, texCoords.second, 0.298f);
+        mTachoSpeedDigit1->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit1);
 
         Ogre::Real tachoDigitLeft2 = viewportWidth - tachoWidth / 2.0f + tachoDigitWidth / 2.0f;
-        mTachoSpeedDigit2 = createPanel("TachoDigit2", tachoDigitWidth, tachoDigitHeight, tachoDigitLeft2, tachoDigitTop, "Test/TachoFranticDigits");
-        mTachoSpeedDigit2->setUV(texCoords.first, 0.216f, texCoords.second, 0.298f);
+        mTachoSpeedDigit2 = createPanel("TachoDigit2", tachoDigitsScreen10, "Test/TachoFranticDigits");
+        mTachoSpeedDigit2->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit2);
 
         Ogre::Real tachoDigitLeft3 = viewportWidth - tachoWidth / 2.0f - tachoDigitWidth * 0.4f;
-        mTachoSpeedDigit3 = createPanel("TachoDigit3", tachoDigitWidth, tachoDigitHeight, tachoDigitLeft3, tachoDigitTop, "Test/TachoFranticDigits");
-        mTachoSpeedDigit3->setUV(texCoords.first, 0.216f, texCoords.second, 0.298f);
+        mTachoSpeedDigit3 = createPanel("TachoDigit3", tachoDigitsScreen100, "Test/TachoFranticDigits");
+        mTachoSpeedDigit3->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit3);
 
 
@@ -768,29 +854,26 @@ void Graphics2D::setEngineRPM(Ogre::Real rpm)
     mNeedleLayer->setRotate(Ogre::Degree(rotationDegree));
     mNeedleLayer->setScale(1.0f, 1.0f * (1.0f - mNeedleScaleCorrection.getVal(rotationDegree)) + heightWidthRelation * mNeedleScaleCorrection.getVal(rotationDegree));
 
-    if(rpm < 3000.0f)
-    {
-        mTachoLamps->hide();
-    }
-    else
-    {
-        mTachoLamps->show();
+    for(size_t q = 0; q < mTachoLamps.size(); ++q)
+        mTachoLamps[q]->hide();
 
-        if(rpm < 7000.0f)       // green
+    size_t indexToShow = 0;
+    bool isVisible = false;
+
+    for(size_t q = 0; q < mTachoRange.size(); ++q)
+    {
+        if(rpm > mTachoRange[q])
         {
-            mTachoLamps->setUV(0.259f, 0.66f, 0.514f, 0.81f);
+            indexToShow = q;
+            isVisible = true;
         }
-        else
-        {
-            if(rpm < 8500.0f)   // yellow
-            {
-                mTachoLamps->setUV(0.0f, 0.66f, 0.257f, 0.81f);
-            }
-            else                // red
-            {
-                mTachoLamps->setUV(0.518f, 0.66f, 0.771f, 0.81f);
-            }
-        }
+    }
+
+    if(isVisible)
+    {
+        mTachoLamps[indexToShow]->show();
+        if(mIsPickup)
+            mTachoLamps[indexToShow + 1]->show();
     }
 }
 
@@ -806,13 +889,8 @@ std::pair<Ogre::Real, Ogre::Real> Graphics2D::getTachoDigitOffset(unsigned char 
 
     std::pair<Ogre::Real, Ogre::Real> res = std::make_pair(0.0f, 0.0f);
 
-    Ogre::Real charNumber = digit;
-    const Ogre::Real charWidth = 14.0f;
-    const Ogre::Real texWidth = 255.0f;
-    const Ogre::Real charOffset = 1.0f / texWidth;
-
-    res.first = charOffset + (charWidth * charNumber) / texWidth;
-    res.second = charOffset + (charWidth * (charNumber + 1.0f)) / texWidth;
+    res.first = mTachoDigitsTexture.y + mTachoDigitsTexture.w * static_cast<float>(digit);
+    res.second = mTachoDigitsTexture.y + mTachoDigitsTexture.w * (static_cast<float>(digit) + 1.0f);
 
     return res;
 }
@@ -829,23 +907,20 @@ void Graphics2D::setCarSpeed(Ogre::Real speed)
     mTachoSpeedDigit2->hide();
     mTachoSpeedDigit3->hide();
 
-    const Ogre::Real charTop = 0.218f;
-    const Ogre::Real charBottom = 0.296f;
-
     std::pair<Ogre::Real, Ogre::Real> texCoords = getTachoDigitOffset(digit1);
-    mTachoSpeedDigit1->setUV(texCoords.first, charTop, texCoords.second, charBottom);
+    mTachoSpeedDigit1->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
 
     if(speed >= 10.0f)
     {
         texCoords = getTachoDigitOffset(digit2);
-        mTachoSpeedDigit2->setUV(texCoords.first, charTop, texCoords.second, charBottom);
+        mTachoSpeedDigit2->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         mTachoSpeedDigit2->show();
     }
 
     if(speed >= 100.0f)
     {
         texCoords = getTachoDigitOffset(digit3);
-        mTachoSpeedDigit3->setUV(texCoords.first, charTop, texCoords.second, charBottom);
+        mTachoSpeedDigit3->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         mTachoSpeedDigit3->show();
     }
 }

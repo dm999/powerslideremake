@@ -24,6 +24,9 @@ public:
     void setDE2FileName(const std::string& name){mDE2FileName = name;}
     std::string getDE2FileName() const {return mDE2FileName;}
 
+    void setPlayerCharacterName(const std::string& name){mPlayerCharacterName = name;}
+    std::string getPlayerCharacterName() const {return mPlayerCharacterName;}
+
     PSAICar& getAICar(size_t index);
     PSPlayerCar& getPlayerCar();
 
@@ -121,6 +124,7 @@ private:
 
     std::string mTrackName;
     std::string mDE2FileName;
+    std::string mPlayerCharacterName;
 
     static const int mAIMax = 11;
 

@@ -270,7 +270,7 @@ void BaseApp::createFrameListener(void)
 
 
     mGraphics2D.createRearViewMirrorPanel(mTrayMgr, mGameState.getMirrorEnabled());
-    mGraphics2D.load(mTrayMgr, mPFLoaderData, mPFLoaderGameshell, mSTRRacecrud);
+    mGraphics2D.load(mTrayMgr, mPFLoaderData, mPFLoaderGameshell, mSTRPowerslide, mSTRRacecrud, mGameState);
 
 
 
@@ -869,6 +869,7 @@ void BaseApp::initScene()
 
     mGameState.setTrackName(mLuaManager.ReadScalarString("Terrain.Mesh.TrackName", mPipeline));
     mGameState.setDE2FileName(mLuaManager.ReadScalarString("Terrain.Mesh.FileName", mPipeline));
+    mGameState.setPlayerCharacterName(mLuaManager.ReadScalarString("Main.Character", mPipeline));
 
     mPFLoaderData.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "data.pf");
     mPFLoaderGameshell.init(mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline), "gameshell.pf");

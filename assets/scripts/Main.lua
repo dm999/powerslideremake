@@ -12,7 +12,7 @@ Window.VSyncInterval = "1"
 -- executed from native code
 function main()
 
-    parseFile("warthog.lua");
+    parseFile("vehicle.lua");
     parseFile("Speedway.lua");
     parseFile("Dam.lua");
     parseFile("Citytrack.lua");
@@ -23,8 +23,16 @@ function main()
     Terrain = createDam();
 --~     Terrain = createCitytrack();
 --~     Terrain = createNutopia();
-    Model = createWarthog();
+    Model = createVehicle();
     Scene = createScene();
+    
+    Main.Character = "beryl";
+--~     Main.Character = "dodgy";
+--~     Main.Character = "hemp";
+--~     Main.Character = "marl";
+--~     Main.Character = "crayz";
+--~     Main.Character = "driverx";
+--~     Main.Character = "armadillo";
     
     initScene();
 end

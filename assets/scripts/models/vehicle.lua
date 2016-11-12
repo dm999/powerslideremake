@@ -1,4 +1,4 @@
-function createWarthog()
+function createVehicle()
 
     local Model = {}
 

@@ -2,6 +2,8 @@
 #ifndef GRAPHICS2D_H
 #define GRAPHICS2D_H
 
+#include <vector>
+
 #include "OgreInclude.h"
 
 #include "SdkTrays.h"
@@ -12,6 +14,7 @@
 
 #include "loaders/PFLoader.h"
 #include "OriginalSettings.h"
+#include "GameState.h"
 
 class CustomTrayManager;
 
@@ -23,7 +26,9 @@ public:
 
     void load(  CustomTrayManager* trayMgr, 
                 const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell,
-                const STRRacecrud& mSTRRacecrud);
+                const STRPowerslide& strPowerslide,
+                const STRRacecrud& strRacecrud,
+                const GameState& gameState);
 
     void showBeforeStart1();
     void showBeforeStart2();
@@ -93,7 +98,9 @@ private:
     LinearController<float> mEngineRPMToRotation;
     LinearController<float> mNeedleScaleCorrection;
 
-    Ogre::PanelOverlayElement* mTachoLamps;
+    std::vector<Ogre::PanelOverlayElement*> mTachoLamps;
+    std::vector<size_t> mTachoRange;
+    bool mIsPickup;
 
     Ogre::PanelOverlayElement* mTachoSpeedDigit1;
     Ogre::PanelOverlayElement* mTachoSpeedDigit2;
@@ -124,6 +131,7 @@ private:
     std::pair<Ogre::Real, Ogre::Real> getTachoDigitOffset(unsigned char digit)const;
     std::pair<Ogre::Real, Ogre::Real> getDashDigitOffsetX(unsigned char digit)const;
     std::pair<Ogre::Real, Ogre::Real> getDashDigitOffsetY(unsigned char digit)const;
+    Ogre::Vector4 mTachoDigitsTexture;
 
     Ogre::RenderTexture *mRearCamTexture;
     Ogre::PanelOverlayElement* mRearViewMirrorPanel;

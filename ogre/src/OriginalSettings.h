@@ -45,6 +45,9 @@ public:
     float getFloatValue(const std::string& section, const std::string& key, bool& isFound) const;
     float getFloatValue(const std::string& section, const std::string& key) const;
 
+    int getIntValue(const std::string& section, const std::string& key, bool& isFound) const;
+    int getIntValue(const std::string& section, const std::string& key) const;
+
 
 protected:
 
