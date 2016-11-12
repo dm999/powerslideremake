@@ -410,7 +410,10 @@ void AdjustBufferToUseShadow(   Ogre::Entity* entity,
     for(size_t q = 0; q < suspensionData.size(); ++q)
     {
         //assert(suspensionData[q].size() == suspensionIndices[q].size() && "AdjustBufferToUseShadow not all suspension points found");
-        assert(0 != suspensionIndices[q].size() && "AdjustBufferToUseShadow not all suspension points found");
+        if(suspensionData[q].size() != 0)
+        {
+            assert(0 != suspensionIndices[q].size() && "AdjustBufferToUseShadow not all suspension points found");
+        }
     }
 }
 

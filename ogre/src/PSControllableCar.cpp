@@ -91,9 +91,15 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isAI);
 
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
+        std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
+        std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
+        std::set<char> delim;
+        delim.insert('\\');
+        std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+        std::string carPath = pathComponents[pathComponents.size() - 1];
+
         STRSettings carSettings;
-        carSettings.parse(gameState.getPFLoaderStore(), "data/cars/feral max/data/default", "params.str");
+        carSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
 
         STRSettings trackSettings;
         trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getTrackName(), "params.str");

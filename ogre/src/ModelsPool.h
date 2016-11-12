@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "OgreInclude.h"
 
@@ -21,7 +22,7 @@ public:
 
     void initModels(Ogre::SceneManager* sceneMgr, const GameState& gameState);
 
-    void getCopyOfVehicle(Ogre::Entity* vehicleModel[5]);
+    void getCopyOfVehicle(const std::string& vehicleName, Ogre::Entity* vehicleModel[5]);
 
     Ogre::Entity* getArrow(){return mArrowModel;}
 
@@ -39,7 +40,7 @@ private:
 
     Ogre::SceneManager* mSceneMgr;
 
-    std::vector<vehicleModel> mVehicles;
+    std::map<std::string, vehicleModel> mVehicles;
     Ogre::Entity* mArrowModel;
 
     static Ogre::NameGenerator nameGenMeshes;

@@ -43,7 +43,7 @@ public:
     void setModelPositionOnGrid(const Ogre::Matrix4& transform); // for multiplayer
     void getWheelsPositions(Ogre::Vector3& wheel0, Ogre::Vector3& wheel1, Ogre::Vector3& wheel2, Ogre::Vector3& wheel3) const; // for multiplayer
 
-    void initSounds(lua_State * pipeline, const PFLoader& mPFLoaderData);
+    void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();
 
     Ogre::Vector3 getLinearVelocity()const{return mCarChassis->getLinearVelocity();}
@@ -143,7 +143,7 @@ protected:
 
 private:
 
-    void initSuspension(const PFLoader& pfLoaderData);
+    void initSuspension(const GameState& gameState);
 
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenTextures;

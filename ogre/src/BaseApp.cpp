@@ -1130,9 +1130,20 @@ void BaseApp::initModel()
     mModelsPool.initModels(mSceneMgr, mGameState);
 
     mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mGameState.getPlayerCharacterName(), mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
-    mGameState.getPlayerCar().initSounds(mPipeline, mGameState.getPFLoaderData());
+    mGameState.getPlayerCar().initSounds(mPipeline, mGameState);
 
-    std::string aiCharacters[] = {"cyber", "beryl", "frantic", "radiation", "stig", "frantic", "cyber", "radiation", "zig", "zag", "beryl"};
+    std::vector<std::string> availableCharacters = mGameState.getSTRPowerslide().getArrayValue("", "available characters");
+    std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "easy racin characters ids");
+    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "medium racin characters ids");
+    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "hard racin characters ids");
+    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "evolve racin characters ids");
+    std::vector<std::string> aiCharacters;
+    for(size_t q = 0; q < aiIndexes.size(); ++q)
+    {
+        size_t index;
+        Conversions::DMFromString(aiIndexes[q], index);
+        aiCharacters.push_back(availableCharacters[index]);
+    }
 
     for(size_t q = 0; q < mGameState.getAICount(); ++q)
     {
@@ -1140,7 +1151,7 @@ void BaseApp::initModel()
         if(!isCamToAI)
             isCam = false;
         mGameState.getAICar(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacters[q], mGameState.getTrackPositions()[q], isCam);
-        mGameState.getAICar(q).initSounds(mPipeline, mGameState.getPFLoaderData());
+        mGameState.getAICar(q).initSounds(mPipeline, mGameState);
 
         mLapController.addCar(&mGameState.getAICar(q));
     }
@@ -1440,7 +1451,7 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
                 humanCar.setCharacterName(humanCharacter);
 
                 humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mGameState.getTrackPositions()[q], false);
-                humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
+                humanCar.initSounds(mPipeline, mGameState);
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
 
@@ -1469,7 +1480,7 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
                 humanCar.setCharacterName(humanCharacter);
 
                 humanCar.initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mGameState.getTrackPositions()[q], false);
-                humanCar.initSounds(mPipeline, mGameState.getPFLoaderData());
+                humanCar.initSounds(mPipeline, mGameState);
 
                 humanCar.setModelPositionOnGrid(mGameState.getTrackPositions()[aiAmount + q]);
 
@@ -1492,7 +1503,7 @@ void BaseApp::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& 
 
             mGameState.getMultiplayerCarAI(q).initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mGameState.getTrackPositions()[q], false);
 
-            mGameState.getMultiplayerCarAI(q).initSounds(mPipeline, mGameState.getPFLoaderData());
+            mGameState.getMultiplayerCarAI(q).initSounds(mPipeline, mGameState);
             mGameState.getMultiplayerCarAI(q).setModelPositionOnGrid(mGameState.getTrackPositions()[q]);
 
             mLapController.addCar(&mGameState.getMultiplayerCarAI(q));

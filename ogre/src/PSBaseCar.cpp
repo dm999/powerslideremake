@@ -71,16 +71,23 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     DMLuaManager luaManager;
 
-    modelsPool->getCopyOfVehicle(mModelEntity);
+    std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
+
+    std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
+    std::set<char> delim;
+    delim.insert('\\');
+    std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+    std::string carPath = pathComponents[pathComponents.size() - 1];
+
+    modelsPool->getCopyOfVehicle(carName, mModelEntity);
 
     std::string genTextureName = nameGenTextures.generate();
 
     //load car texture
     {
-        std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
         std::string carSkinName = gameState.getSTRPowerslide().getValue(carName + " parameters", "texture name", "feral max texture");
         carSkinName += "_m_1.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carName + "/textures/default/" + mCharacterName, carSkinName, genTextureName);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, genTextureName);
     }
 
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
@@ -160,7 +167,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         }
     }
 
-    initSuspension(gameState.getPFLoaderData());
+    initSuspension(gameState);
 
     //use shadow buffer & HBU_WRITE_ONLY for cockpit & get suspension points
     AdjustBufferToUseShadow(mModelEntity[0], mSuspensionData, mSuspensionIndices, mSuspensionPointOriginalPos);
@@ -174,9 +181,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mModelNode->setPosition(transform.getTrans() + gridShift);
 
 
-    //d.polubotko(TODO): refactor (remove absolute path)
     STRSettings carSettings;
-    carSettings.parse(gameState.getPFLoaderStore(), "data/cars/feral max/data/default", "params.str");
+    carSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
 
     STRSettings trackSettings;
     trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getTrackName(), "params.str");
@@ -558,16 +564,25 @@ Ogre::Vector3 PSBaseCar::getForwardAxis()const
     return rot * Ogre::Vector3::NEGATIVE_UNIT_Z;
 }
 
-void PSBaseCar::initSuspension(const PFLoader& pfLoaderData)
+void PSBaseCar::initSuspension(const GameState& gameState)
 {
 
-    //d.polubotko(TODO): refactor (remove absolute path)
-    SUSLoader().load(pfLoaderData, "feral max", "car.sus", mSuspensionData);
+    std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
+
+    std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
+    std::set<char> delim;
+    delim.insert('\\');
+    std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+
+    std::string de2Name = gameState.getSTRPowerslide().getValue(carName + " parameters", "de2 filename", "car.de2");
+    std::string susName = de2Name.substr(0, de2Name.length() - 3) + "sus";
+
+    SUSLoader().load(gameState.getPFLoaderData(), pathComponents[pathComponents.size() - 1], susName, mSuspensionData);
 
     assert(mSuspensionData.size() == 4 && "BaseApp:initSuspension incorrect number of wheels");
 }
 
-void PSBaseCar::initSounds(lua_State * pipeline, const PFLoader& mPFLoaderData)
+void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
 {
     DMLuaManager luaManager;
 
@@ -576,12 +591,19 @@ void PSBaseCar::initSounds(lua_State * pipeline, const PFLoader& mPFLoaderData)
 
     stopSounds();
 
+    std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
+
+    std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
+    std::set<char> delim;
+    delim.insert('\\');
+    std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+    std::string carPath = pathComponents[pathComponents.size() - 1];
+
     if(!mIsAI)
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
-        mEngLow.reset(new OpenALSource("data/cars/feral max/sfx/enggears", "eng_low.its", mPFLoaderData));
-        mEngMid.reset(new OpenALSource("data/cars/feral max/sfx/enggears", "eng_mid.its", mPFLoaderData));
-        mEngHigh.reset(new OpenALSource("data/cars/feral max/sfx/enggears", "eng_high.its", mPFLoaderData));
+        mEngLow.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData()));
+        mEngMid.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_mid.its", gameState.getPFLoaderData()));
+        mEngHigh.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
 
         mEngLow->setReferenceDistance(referenceDist);
         mEngMid->setReferenceDistance(referenceDist);
@@ -597,8 +619,7 @@ void PSBaseCar::initSounds(lua_State * pipeline, const PFLoader& mPFLoaderData)
     }
     else
     {
-        //d.polubotko(TODO): refactor (remove absolute path)
-        mEngHigh.reset(new OpenALSource("data/cars/feral max/sfx/enggears", "eng_high.its", mPFLoaderData, 1.0f));
+        mEngHigh.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData(), 1.0f));
 
         mEngHigh->setReferenceDistance(referenceDist);
 

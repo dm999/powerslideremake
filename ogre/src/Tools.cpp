@@ -82,7 +82,7 @@ std::string Tools::SecondsToString(Ogre::Real timeSeconds)
     return res;
 }
 
-std::vector<std::string> Tools::splitpath(const std::string& str, const std::set<char> delimiters)
+std::vector<std::string> Tools::splitpath(const std::string& str, const std::set<char> delimiters, bool insertEmpty)
 {
     //http://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
 
@@ -97,16 +97,30 @@ std::vector<std::string> Tools::splitpath(const std::string& str, const std::set
             if (start != pch)
             {
                 std::string str(start, pch);
-                result.push_back(str);
+
+                if(str.empty())
+                {
+                    if(insertEmpty)
+                        result.push_back(str);
+                }
+                else result.push_back(str);
+
             }
             else
             {
-                result.push_back("");
+                if(insertEmpty) result.push_back("");
             }
             start = pch + 1;
         }
     }
-    result.push_back(start);
+
+    std::string final = start;
+    if(final.empty())
+    {
+        if(insertEmpty)
+            result.push_back(final);
+    }
+    else result.push_back(final);
 
     return result;
 }
