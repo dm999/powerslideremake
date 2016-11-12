@@ -95,6 +95,8 @@ public:
 
     static std::string SecondsToString(Ogre::Real timeSeconds);
 
+    static std::vector<std::string> splitpath(const std::string& str, const std::set<char> delimiters);
+
     static void Sleep(size_t milliseconds)
     {
 #ifdef _MSC_VER

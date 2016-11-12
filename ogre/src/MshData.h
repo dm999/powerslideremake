@@ -99,7 +99,7 @@ struct MSHData
             Ogre::RGBA colour;
             Ogre::Root::getSingleton().convertColourValue(Ogre::ColourValue(), &colour);
 
-            plainBuffer[q * 10 + 9] = static_cast<Ogre::RGBA>(colour);
+            plainBuffer[q * 10 + 9] = static_cast<float>(colour);
         }
     }
 

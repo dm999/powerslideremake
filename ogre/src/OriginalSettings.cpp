@@ -5,6 +5,7 @@
 #include "loaders/STRLoader.h"
 
 #include "Conversions.h"
+#include "Tools.h"
 
 void STRSettings::parse(const PFLoader& pfLoaderStore, const std::string& relativeDir, const std::string& fileName)
 {
@@ -47,6 +48,38 @@ std::string STRSettings::getValue(const std::string& section, const std::string&
     }
 
     return res;
+}
+
+std::vector<std::string> STRSettings::getArrayValue(const std::string& section, const std::string& key, bool& isFound) const
+{
+    std::vector<std::string> res;
+    isFound = false;
+
+    if(mIsSTRLoaded)
+    {
+        std::string val = mSTR.GetValue(section.c_str(), key.c_str(), "");
+        if(!val.empty() && val.length() > 2)
+        {
+            std::string::iterator begin = val.begin();
+            std::string::iterator end = val.end();
+            if(val[0] == '{') begin = val.begin() + 1;
+            if(val[val.length() - 1] == '}') end = val.end() - 1;
+            std::string buffer(begin, end);
+            std::set<char> delims;
+            delims.insert(',');
+            res = Tools::splitpath(buffer, delims);
+            isFound = true;
+        }
+        else {assert(false && "STRSettings::getArrayValue: not found");}
+    }
+
+    return res;
+}
+
+std::vector<std::string> STRSettings::getArrayValue(const std::string& section, const std::string& key) const
+{
+    bool isFound;
+    return getArrayValue(section, key, isFound);
 }
 
 Ogre::Vector4 STRSettings::getArray4Value(const std::string& section, const std::string& key, bool& isFound) const

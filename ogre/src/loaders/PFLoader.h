@@ -81,7 +81,6 @@ private:
     size_t findFile(const std::string& relativeDir, const std::string& file, size_t& fileSize) const;
 
     static std::string readString(FILE * f, DWORD& FilePos);
-    static std::vector<std::string> splitpath(const std::string& str, const std::set<char> delimiters);
 };
 
 #endif

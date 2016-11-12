@@ -63,6 +63,7 @@ public:
     void setRearViewMirrorPanelShow(bool isShow);
 
     static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material);
+    static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
     static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
     void reloadTextures(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);

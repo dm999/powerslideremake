@@ -148,61 +148,81 @@ void Graphics2D::load(  CustomTrayManager* trayMgr,
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
 
-    Ogre::Real startPanelWidth = viewportWidth / 9.0f;
-    Ogre::Real startPanelHeight = viewportHeight / 7.0f;
-    Ogre::Real startPanelLeft = viewportWidth / 2.0f - startPanelWidth * 3.0f / 2.0f;
+    Ogre::Matrix4 screenAdaption(  viewportWidth / 640.0f / 2.0f,  0.0f,                           0.0f,                           0.0f,
+                                    0.0f,                           viewportHeight / 480.0f / 2.0f, 0.0f,                           0.0f,
+                                    0.0f,                           0.0f,                           viewportWidth / 640.0f / 2.0f,  0.0f,
+                                    0.0f,                           0.0f,                           0.0f,                           viewportHeight / 480.0f / 2.0f);
+    Ogre::Vector4 screenShift(viewportWidth / 4.0f, 0.0f, viewportWidth / 4.0f, 0.0f);
 
     Ogre::Vector4 readyL = mSTRRacecrud.getArray4Value("on-grid parameters", "ready left texture region");
     readyL /= 255.0f;
-    mBeforeStartPanelReadyL = createPanel("BeforeStartReadyL", startPanelWidth, startPanelHeight, startPanelLeft, 0.0f, "Test/BeforeStartReadyL");
+    Ogre::Vector4 readySL = mSTRRacecrud.getArray4Value("on-grid parameters", "ready left screen region");
+    readySL = screenAdaption * readySL + screenShift;
+    mBeforeStartPanelReadyL = createPanel("BeforeStartReadyL", readySL, "Test/BeforeStartReadyL");
     mBeforeStartPanelReadyL->setUV(readyL.x, readyL.y, readyL.z, readyL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyL);
 
     Ogre::Vector4 readyC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
     readyC /= 255.0f;
-    mBeforeStartPanelReadyC = createPanel("BeforeStartReadyC", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth, 0.0f, "Test/BeforeStartReadyC");
+    Ogre::Vector4 readySC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    readySC = screenAdaption * readySC + screenShift;
+    mBeforeStartPanelReadyC = createPanel("BeforeStartReadyC", readySC, "Test/BeforeStartReadyC");
     mBeforeStartPanelReadyC->setUV(readyC.x, readyC.y, readyC.z, readyC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyC);
 
     Ogre::Vector4 readyR = mSTRRacecrud.getArray4Value("on-grid parameters", "ready right texture region");
     readyR /= 255.0f;
-    mBeforeStartPanelReadyR = createPanel("BeforeStartReadyR", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth * 2.0f, 0.0f, "Test/BeforeStartReadyR");
+    Ogre::Vector4 readySR = mSTRRacecrud.getArray4Value("on-grid parameters", "ready right screen region");
+    readySR = screenAdaption * readySR + screenShift;
+    mBeforeStartPanelReadyR = createPanel("BeforeStartReadyR", readySR, "Test/BeforeStartReadyR");
     mBeforeStartPanelReadyR->setUV(readyR.x, readyR.y, readyR.z, readyR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelReadyR);
 
     Ogre::Vector4 setL = mSTRRacecrud.getArray4Value("on-grid parameters", "set left texture region");
     setL /= 255.0f;
-    mBeforeStartPanelSetL = createPanel("BeforeStartSetL", startPanelWidth, startPanelHeight, startPanelLeft, 0.0f, "Test/BeforeStartSetL");
+    Ogre::Vector4 setSL = mSTRRacecrud.getArray4Value("on-grid parameters", "set left screen region");
+    setSL = screenAdaption * setSL + screenShift;
+    mBeforeStartPanelSetL = createPanel("BeforeStartSetL", setSL, "Test/BeforeStartSetL");
     mBeforeStartPanelSetL->setUV(setL.x, setL.y, setL.z, setL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetL);
 
     Ogre::Vector4 setC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre texture region");
     setC /= 255.0f;
-    mBeforeStartPanelSetC = createPanel("BeforeStartSetC", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth, 0.0f, "Test/BeforeStartSetC");
+    Ogre::Vector4 setSC = mSTRRacecrud.getArray4Value("on-grid parameters", "ready centre screen region");
+    setSC = screenAdaption * setSC + screenShift;
+    mBeforeStartPanelSetC = createPanel("BeforeStartSetC", setSC, "Test/BeforeStartSetC");
     mBeforeStartPanelSetC->setUV(setC.x, setC.y, setC.z, setC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetC);
 
     Ogre::Vector4 setR = mSTRRacecrud.getArray4Value("on-grid parameters", "set right texture region");
     setR /= 255.0f;
-    mBeforeStartPanelSetR = createPanel("BeforeStartSetR", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth * 2.0f, 0.0f, "Test/BeforeStartSetR");
+    Ogre::Vector4 setSR = mSTRRacecrud.getArray4Value("on-grid parameters", "set right screen region");
+    setSR = screenAdaption * setSR + screenShift;
+    mBeforeStartPanelSetR = createPanel("BeforeStartSetR", setSR, "Test/BeforeStartSetR");
     mBeforeStartPanelSetR->setUV(setR.x, setR.y, setR.z, setR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelSetR);
 
     Ogre::Vector4 goL = mSTRRacecrud.getArray4Value("on-grid parameters", "go left texture region");
     goL /= 255.0f;
-    mBeforeStartPanelGoL = createPanel("BeforeStartGoL", startPanelWidth, startPanelHeight, startPanelLeft, 0.0f, "Test/BeforeStartGoL");
+    Ogre::Vector4 goSL = mSTRRacecrud.getArray4Value("on-grid parameters", "go left screen region");
+    goSL = screenAdaption * goSL + screenShift;
+    mBeforeStartPanelGoL = createPanel("BeforeStartGoL", goSL, "Test/BeforeStartGoL");
     mBeforeStartPanelGoL->setUV(goL.x, goL.y, goL.z, goL.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoL);
 
     Ogre::Vector4 goC = mSTRRacecrud.getArray4Value("on-grid parameters", "go centre texture region");
     goC /= 255.0f;
-    mBeforeStartPanelGoC = createPanel("BeforeStartGoC", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth, 0.0f, "Test/BeforeStartGoC");
+    Ogre::Vector4 goSC = mSTRRacecrud.getArray4Value("on-grid parameters", "go centre screen region");
+    goSC = screenAdaption * goSC + screenShift;
+    mBeforeStartPanelGoC = createPanel("BeforeStartGoC", goSC, "Test/BeforeStartGoC");
     mBeforeStartPanelGoC->setUV(goC.x, goC.y, goC.z, goC.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoC);
 
     Ogre::Vector4 goR = mSTRRacecrud.getArray4Value("on-grid parameters", "go right texture region");
     goR /= 255.0f;
-    mBeforeStartPanelGoR = createPanel("BeforeStartGoR", startPanelWidth, startPanelHeight, startPanelLeft + startPanelWidth * 2.0f, 0.0f, "Test/BeforeStartGoR");
+    Ogre::Vector4 goSR = mSTRRacecrud.getArray4Value("on-grid parameters", "go right screen region");
+    goSR = screenAdaption * goSR + screenShift;
+    mBeforeStartPanelGoR = createPanel("BeforeStartGoR", goSR, "Test/BeforeStartGoR");
     mBeforeStartPanelGoR->setUV(goR.x, goR.y, goR.z, goR.w);
     trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBeforeStartPanelGoR);
 
@@ -622,6 +642,11 @@ Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, Ogr
     res->show();
 
     return res;
+}
+
+Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material)
+{
+    return createPanel(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y, material);
 }
 
 Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)

@@ -21,6 +21,12 @@ public:
     std::string getValue(const std::string& section, const std::string& key, const std::string& defaultVal = "") const;
 
     /**
+     * extract value from string {a, b, c, d, ..., n}
+     */
+    std::vector<std::string> getArrayValue(const std::string& section, const std::string& key, bool& isFound) const;
+    std::vector<std::string> getArrayValue(const std::string& section, const std::string& key) const;
+
+    /**
      * extract value from string {a, b, c, d}
      */
     Ogre::Vector4 getArray4Value(const std::string& section, const std::string& key, bool& isFound) const;
