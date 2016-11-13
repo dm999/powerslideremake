@@ -131,6 +131,7 @@ void PlayerVehicleSceneObjectListener::doCPUVertexColor()
     const Ogre::Entity * ent = dynamic_cast<const Ogre::Entity *>(mMovableObj);
 
     Ogre::Vector3 derivedPos = mParentNode->_getDerivedPosition();
+    Ogre::Quaternion derivedRot = mParentNode->_getDerivedOrientation();
 
     Ogre::Mesh* mesh = ent->getMesh().get();
 
@@ -170,14 +171,16 @@ void PlayerVehicleSceneObjectListener::doCPUVertexColor()
             }
         }
 
-        Ogre::ColourValue diffuse(1.0f, 1.0f, 1.0f, 1.0f);
+        float finalAttenuation = 1.0f;
 
-        Ogre::Vector3 ptGlobal = pt + derivedPos;
+        Ogre::Vector3 ptGlobal = derivedRot * pt + derivedPos;
 
         //light iteration
         for (size_t lightIndex = 0; lightIndex < mLights.size(); ++lightIndex)
         {
             Ogre::Light* curLight = mLights[lightIndex];
+
+            size_t de2LightIndex = getDE2LightIndex(curLight->getName());
 
             Ogre::Vector3 lightPosition = curLight->getPosition();
             Ogre::Real lightOutRange = curLight->getAttenuationRange();
@@ -185,9 +188,9 @@ void PlayerVehicleSceneObjectListener::doCPUVertexColor()
 
             if(distance < lightOutRange)
             {
-                if(lightIndex < mLightExclusions.size() && lightIndex >= 0 && !mLightExclusions[lightIndex].exclusions.empty())
+                if(!mLightExclusions[de2LightIndex].exclusions.empty())
                 {
-                    LightEclusion excl = mLightExclusions[lightIndex];
+                    LightEclusion excl = mLightExclusions[de2LightIndex];
 
                     bool isInAnyBox = false;
                     Ogre::Real finalBright = 1.0f;
@@ -266,24 +269,15 @@ void PlayerVehicleSceneObjectListener::doCPUVertexColor()
 
                     if(isInAnyBox)
                     {
-                        diffuse *= finalBright;
+                        if(finalBright < finalAttenuation)
+                            finalAttenuation  = finalBright;
                     }
                 }
 
             }
         }
 
-        //color normalization
-        if(diffuse.r > 1.0f || diffuse.g > 1.0f || diffuse.b > 1.0f)
-        {
-            Ogre::Vector3 normColor(diffuse.r, diffuse.g, diffuse.b);
-            normColor.normalise();
-            diffuse.r = normColor.x;
-            diffuse.g = normColor.y;
-            diffuse.b = normColor.z;
-        }
-
-        (*pRGBA) = diffuse.getAsABGR();
+        (*pRGBA) = Ogre::ColourValue(finalAttenuation, finalAttenuation, finalAttenuation, 1.0f).getAsABGR();
     }
 
     vbuf->unlock();

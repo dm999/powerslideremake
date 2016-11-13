@@ -40,6 +40,25 @@ bool ExclusionBoxesObjectListener::isBoxFalloff(const Ogre::Vector3& min, const 
     return res;
 }
 
+size_t ExclusionBoxesObjectListener::getDE2LightIndex(const std::string& lightName)
+{
+    size_t res = 0;
+
+    std::map<std::string, size_t>::const_iterator found = mLightNameToDE2Name.find(lightName);
+    if(found == mLightNameToDE2Name.end())
+    {
+        sscanf(lightName.c_str(), "Lamp_%d", &res);
+        --res;
+        mLightNameToDE2Name.insert(std::make_pair(lightName, res));
+    }
+    else
+    {
+        res = (*found).second;
+    }
+
+    return res;
+}
+
 TerrainSceneObjectListener::TerrainSceneObjectListener(const Ogre::MovableObject *movableObj, 
                                                        Ogre::SceneManager *sceneManager,
                                                        const std::vector<LightEclusion>& excl)
@@ -278,6 +297,9 @@ void TerrainSceneObjectListener::doCPUVertexColor()
 
             if(distance < lightOutRange)
             {
+
+                size_t de2LightIndex = getDE2LightIndex(curLight->getName());
+
                 Ogre::Real lightInRange = curLight->getAttenuationConstant();
                 Ogre::ColourValue lightColor = curLight->getDiffuseColour();
 
@@ -293,9 +315,9 @@ void TerrainSceneObjectListener::doCPUVertexColor()
 
                 Ogre::ColourValue lightAffect = lightColor * attenuation;
 
-                if(lightIndex < mLightExclusions.size() && lightIndex >= 0 && !mLightExclusions[lightIndex].exclusions.empty())
+                if(!mLightExclusions[de2LightIndex].exclusions.empty())
                 {
-                    LightEclusion excl = mLightExclusions[lightIndex];
+                    LightEclusion excl = mLightExclusions[de2LightIndex];
 
                     bool isInAnyBox = false;
                     Ogre::Real finalBright = 1.0f;
