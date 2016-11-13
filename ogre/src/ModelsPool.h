@@ -22,7 +22,7 @@ public:
 
     void initModels(Ogre::SceneManager* sceneMgr, const GameState& gameState);
 
-    void getCopyOfVehicle(const std::string& vehicleName, Ogre::Entity* vehicleModel[5]);
+    void getCopyOfVehicle(const GameState& gameState, const std::string& vehicleName, Ogre::Entity* vehicleModel[5]);
 
     Ogre::Entity* getArrow(){return mArrowModel;}
 

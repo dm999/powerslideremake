@@ -25,24 +25,7 @@ void ModelsPool::initModels(Ogre::SceneManager* sceneMgr, const GameState& gameS
     mSceneMgr = sceneMgr;
 
     mVehicles.clear();
-
-    std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
-    for(size_t q = 0; q < availableCharacters.size(); ++q)
-    {
-        std::string carName = gameState.getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "car", "feral max");
-        if(mVehicles.find(carName) == mVehicles.end())
-        {
-            std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
-            std::set<char> delim;
-            delim.insert('\\');
-            std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
-            std::string de2Name = gameState.getSTRPowerslide().getValue(carName + " parameters", "de2 filename", "car.de2");
-            vehicleModel model;
-            loadVehicle(gameState.getPFLoaderData(), model, "data/cars/" + pathComponents[pathComponents.size() - 1], de2Name);
-            mVehicles.insert(std::make_pair(carName, model));
-        }
-    }
-
+    //vehicles will load on request
 
     loadArrow(gameState.getPFLoaderData());
 }
@@ -179,18 +162,34 @@ Ogre::Entity * ModelsPool::createEntityFromMSH(MSHData& source, const std::strin
     return ret;
 }
 
-void ModelsPool::getCopyOfVehicle(const std::string& vehicleName, Ogre::Entity* vehicleModel[5])
+void ModelsPool::getCopyOfVehicle(const GameState& gameState, const std::string& vehicleName, Ogre::Entity* vehicleModel[5])
 {
     std::map<std::string, ModelsPool::vehicleModel>::iterator found = mVehicles.find(vehicleName);
 
+    ModelsPool::vehicleModel model;
+
     if(found != mVehicles.end())
     {
-        for(size_t q = 0; q < 5; ++q)
-        {
-            Ogre::MeshPtr msh = (*found).second.mVehicleModel[q]->getMesh();
-            Ogre::String newMeshName = nameGenMeshes.generate();
-            Ogre::MeshPtr cloned = msh->clone(newMeshName, TEMP_RESOURCE_GROUP_NAME);
-            vehicleModel[q] = mSceneMgr->createEntity(newMeshName, newMeshName, TEMP_RESOURCE_GROUP_NAME);
-        }
+        model = (*found).second;
+    }
+    else
+    {
+        std::string de2Path = gameState.getSTRPowerslide().getValue(vehicleName + " parameters", "base directory", "feral max");
+        std::set<char> delim;
+        delim.insert('\\');
+        std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+        std::string de2Name = gameState.getSTRPowerslide().getValue(vehicleName + " parameters", "de2 filename", "car.de2");
+        ModelsPool::vehicleModel loadedModel;
+        loadVehicle(gameState.getPFLoaderData(), loadedModel, "data/cars/" + pathComponents[pathComponents.size() - 1], de2Name);
+        mVehicles.insert(std::make_pair(vehicleName, loadedModel));
+        model = loadedModel;
+    }
+
+    for(size_t q = 0; q < 5; ++q)
+    {
+        Ogre::MeshPtr msh = model.mVehicleModel[q]->getMesh();
+        Ogre::String newMeshName = nameGenMeshes.generate();
+        Ogre::MeshPtr cloned = msh->clone(newMeshName, TEMP_RESOURCE_GROUP_NAME);
+        vehicleModel[q] = mSceneMgr->createEntity(newMeshName, newMeshName, TEMP_RESOURCE_GROUP_NAME);
     }
 }

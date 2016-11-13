@@ -79,7 +79,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
     std::string carPath = pathComponents[pathComponents.size() - 1];
 
-    modelsPool->getCopyOfVehicle(carName, mModelEntity);
+    modelsPool->getCopyOfVehicle(gameState, carName, mModelEntity);
 
     std::string genTextureName = nameGenTextures.generate();
 
