@@ -923,7 +923,7 @@ void BaseApp::initScene()
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mPipeline);
 
-        AIStrength aiStrength = static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mPipeline));
+        mGameState.setAIStrength(static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mPipeline)));
 
         Ogre::Real speedCoeffEasy = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Easy.SpeedCoeff", mPipeline);
         Ogre::Real speedCoeffMedium = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Medium.SpeedCoeff", mPipeline);
@@ -940,7 +940,7 @@ void BaseApp::initScene()
         Ogre::Real speedCoeff;
         Ogre::Real lateralStabilizationCoeff;
 
-        switch(aiStrength)
+        switch(mGameState.getAIStrength())
         {
         case Medium :
             speedCoeff = speedCoeffMedium;
@@ -969,7 +969,7 @@ void BaseApp::initScene()
             mGameState.getAICar(w).setSpeedCoeff(Randomizer::GetInstance().GetRandomFloat(speedCoeffMinLimit, speedCoeff));
         }
 
-        AILoader().load(mGameState, mSceneMgr, isDebugAI, aiStrength);
+        AILoader().load(mGameState, mSceneMgr, isDebugAI);
     }
 
     //init multiplayer
@@ -1132,11 +1132,23 @@ void BaseApp::initModel()
     mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mGameState.getPlayerCharacterName(), mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
     mGameState.getPlayerCar().initSounds(mPipeline, mGameState);
 
+    std::vector<std::string> aiIndexes;
+
+    switch(mGameState.getAIStrength())
+    {
+    case Medium :
+        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "medium racin characters ids");
+        break;
+    case Hard :
+        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "hard racin characters ids");
+        break;
+    case Insane :
+        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "evolve racin characters ids");
+        break;
+    default:
+        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "easy racin characters ids");
+    }
     std::vector<std::string> availableCharacters = mGameState.getSTRPowerslide().getArrayValue("", "available characters");
-    std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "easy racin characters ids");
-    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "medium racin characters ids");
-    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "hard racin characters ids");
-    //std::vector<std::string> aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "evolve racin characters ids");
     std::vector<std::string> aiCharacters;
     for(size_t q = 0; q < aiIndexes.size(); ++q)
     {

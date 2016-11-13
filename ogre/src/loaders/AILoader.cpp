@@ -7,11 +7,11 @@
 AILoader::AILoader() : mNameGenNodes("Scene/Node/AI/Name")
 {}
 
-void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI, AIStrength aiStrength) const
+void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugAI) const
 {
     std::string folderWithData = "chareasy";
 
-    switch(aiStrength)
+    switch(gameState.getAIStrength())
     {
     case Medium :
         folderWithData = "charmedium";

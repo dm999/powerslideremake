@@ -10,6 +10,15 @@
 #include "Tools.h"
 #include "PausedTimer.h"
 
+enum AIStrength
+{
+    Easy    = 0,
+    Medium  = 1,
+    Hard    = 2,
+    Insane  = 3
+};
+
+
 class GameState
 {
 public:
@@ -48,6 +57,9 @@ public:
 
     void setAICount(size_t opponentsAmount);
     size_t getAICount()const{return mAiOpponentsAmount;}
+
+    void setAIStrength(AIStrength aiStrength) {mAIStrength = aiStrength;}
+    AIStrength getAIStrength()const{return mAIStrength;}
 
     Ogre::Vector3 getPLayerCarPrevVel()const{return mPlayerCarPrevVel;}
     void setPLayerCarPrevVel(const Ogre::Vector3& vel){mPlayerCarPrevVel = vel;}
@@ -146,6 +158,7 @@ private:
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;
+    AIStrength mAIStrength;
     PSAICar mPSCar[mAIMax];
     Ogre::Vector3 mPlayerCarPrevVel;
 
