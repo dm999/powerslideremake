@@ -1165,7 +1165,7 @@ void BaseApp::initMisc()
             int mirrorSizeW = mLuaManager.ReadScalarInt("Scene.Mirror.RTTSize.w", mPipeline);
             int mirrorSizeH = mLuaManager.ReadScalarInt("Scene.Mirror.RTTSize.h", mPipeline);
 
-            mGraphics2D.createRearViewMirrorPanelTexture(mRoot.get(), mirrorSizeW, mirrorSizeH);
+            mGraphics2D.createRearViewMirrorPanelTexture(this, mRoot.get(), mirrorSizeW, mirrorSizeH);
             mGraphics2D.setRearViewMirrorPanelMaterial("Test/RearViewMirror");
         }
         else
@@ -1342,6 +1342,17 @@ void BaseApp::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapp
             
         }
     }
+}
+
+void BaseApp::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
+{
+    //http://www.ogre3d.org/forums/viewtopic.php?t=45499
+    mGameState.getPlayerCar().setVisibility(false);
+}
+
+void BaseApp::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
+{
+    mGameState.getPlayerCar().setVisibility(true);
 }
 
 void BaseApp::onPlayerEjected(const std::string& player)

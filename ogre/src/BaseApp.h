@@ -45,7 +45,13 @@ class InputHandler;
 class CameraMan;
 
 //https://github.com/synasius/ogre-basic-tutorials
-class BaseApp : public Ogre::FrameListener, public Ogre::WindowEventListener, OgreBites::SdkTrayListener, public MultiplayerController::Events, public LapUtils::Events
+class BaseApp : 
+    public Ogre::FrameListener, 
+    public Ogre::RenderTargetListener, // for rear camera
+    public Ogre::WindowEventListener, 
+    OgreBites::SdkTrayListener, 
+    public MultiplayerController::Events, 
+    public LapUtils::Events
 {
 public:
     BaseApp(void);
@@ -74,6 +80,10 @@ public:
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
     GameState& getGameState(){return mGameState;}
+
+    //rear camera listener
+    void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
+    void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
 
     //multiplayer
     void onPlayerEjected(const std::string& player)override;

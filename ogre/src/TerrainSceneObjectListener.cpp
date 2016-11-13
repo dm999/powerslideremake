@@ -6,14 +6,48 @@
 #include "BulletInclude.h"
 #include "CustomSceneManager.h"
 
+ExclusionBoxesObjectListener::ExclusionBoxesObjectListener(const std::vector<LightEclusion>& excl)
+    : mLightExclusions(excl)
+{}
+
+bool ExclusionBoxesObjectListener::isBoxContainsPoint(const Ogre::Vector3& min, const Ogre::Vector3& max, const Ogre::Vector3& point, Ogre::Real margin)
+{
+    bool res = false;
+
+        if(
+            point.x > (min.x + margin) && point.x < (max.x - margin) &&
+            point.y > (min.y + margin) && point.y < (max.y - margin) &&
+            point.z > (min.z + margin) && point.z < (max.z - margin))
+    {
+        res = true;
+    }
+
+    return res;
+}
+
+bool ExclusionBoxesObjectListener::isBoxFalloff(const Ogre::Vector3& min, const Ogre::Vector3& max, const Ogre::Vector3& point, Ogre::Real margin)
+{
+    bool res = false;
+
+        if(
+            point.x <= (min.x + margin) || point.x >= (max.x - margin) ||
+            point.y <= (min.y + margin) || point.y >= (max.y - margin) ||
+            point.z <= (min.z + margin) || point.z >= (max.z - margin))
+    {
+        res = true;
+    }
+
+    return res;
+}
+
 TerrainSceneObjectListener::TerrainSceneObjectListener(const Ogre::MovableObject *movableObj, 
                                                        Ogre::SceneManager *sceneManager,
                                                        const std::vector<LightEclusion>& excl)
-    : mMovableObj(movableObj),
+    : ExclusionBoxesObjectListener(excl),
+      mMovableObj(movableObj),
       mSceneMgr(sceneManager),
       mParentNode(movableObj->getParentSceneNode()),
-      mIsLightListCreated(false),
-      mLightExclusions(excl)
+      mIsLightListCreated(false)
 {
 }
 
@@ -696,36 +730,6 @@ void TerrainSceneObjectListener::adjustVertexColors(size_t lightIndex)
             vbuf->unlock();
         }
     }
-}
-
-bool TerrainSceneObjectListener::isBoxContainsPoint(const Ogre::Vector3& min, const Ogre::Vector3& max, const Ogre::Vector3& point, Ogre::Real margin)
-{
-    bool res = false;
-
-        if(
-            point.x > (min.x + margin) && point.x < (max.x - margin) &&
-            point.y > (min.y + margin) && point.y < (max.y - margin) &&
-            point.z > (min.z + margin) && point.z < (max.z - margin))
-    {
-        res = true;
-    }
-
-    return res;
-}
-
-bool TerrainSceneObjectListener::isBoxFalloff(const Ogre::Vector3& min, const Ogre::Vector3& max, const Ogre::Vector3& point, Ogre::Real margin)
-{
-    bool res = false;
-
-        if(
-            point.x <= (min.x + margin) || point.x >= (max.x - margin) ||
-            point.y <= (min.y + margin) || point.y >= (max.y - margin) ||
-            point.z <= (min.z + margin) || point.z >= (max.z - margin))
-    {
-        res = true;
-    }
-
-    return res;
 }
 
 bool TerrainSceneObjectListener::checkSphereAndTriangleIntersectionBullet(const Ogre::Vector3& sphereCenter, Ogre::Real radius)

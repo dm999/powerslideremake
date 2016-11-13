@@ -3,6 +3,7 @@ function createVehicle()
     local Model = {}
 
     Model.IsCastShadows = true;
+    Model.IsAttenuateExcludeBox = true;
     
     Model.Sfx = {}
     Model.Sfx.ReferenceDist = 30.0;
@@ -20,6 +21,7 @@ function createVehicle()
 --~     Model.Material.SingleSubMaterial = "Test/SpotDiffuse";
 --~     Model.Material.SingleSubMaterial = "Test/PointDiffuseLR";
     Model.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLR";
+    Model.Material.SingleSubMaterialExclude = "Test/Multi_2/PointDiffuseLRExclude";
     Model.Material.SingleSubMaterialAI = "Test/PointDiffuseSimple";
 --~     Model.Material.SingleSubMaterial = "Test/NormalDebug";
 
@@ -35,7 +37,6 @@ function createVehicle()
     Model.Material.SingleSpecular.r = 1.0;
     Model.Material.SingleSpecular.g = 1.0;
     Model.Material.SingleSpecular.b = 1.0;
-    Model.Material.SingleSpecular.power = 100.0;
     
     Model.Physics = {}
     Model.Physics.Chassis = {}

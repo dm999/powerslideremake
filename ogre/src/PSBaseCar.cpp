@@ -7,6 +7,7 @@
 #include "lua/DMLuaManager.h"
 
 #include "VehicleSceneObjectListener.h"
+#include "PlayerVehicleSceneObjectListener.h"
 
 #include "CustomRigidBodyWheel.h"
 
@@ -90,6 +91,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, genTextureName);
     }
 
+    bool isAttenuateExcludeBox = luaManager.ReadScalarBool("Model.IsAttenuateExcludeBox", pipeline);
+
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
     {
         for(size_t q = 0; q < 5; ++q)
@@ -108,8 +111,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                 Ogre::MaterialPtr newMat;
                 if(!isAI)
                 {
+                    std::string playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterial", pipeline);
+
+                    if(isAttenuateExcludeBox)
+                    {
+                        playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterialExclude", pipeline);
+                    }
+
                     newMat = CloneMaterial(  nameSub, 
-                            luaManager.ReadScalarString("Model.Material.SingleSubMaterial", pipeline), 
+                            playerMaterial, 
                             texturesSubMat, 
                             1.0f,
                             TEMP_RESOURCE_GROUP_NAME);
@@ -134,6 +144,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                                     luaManager.ReadScalarFloat("Model.Material.SingleSpecular.b", pipeline), 1.0f);
                 newMat->setShininess(luaManager.ReadScalarFloat("Model.Material.SingleSpecular.power", pipeline));
 
+                newMat->setShininess(100.0f);
+                //wheel smoother
+                if(q > 0) newMat->setShininess(10.0f);
+
                 Ogre::TextureUnitState * stateNewMat = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
                 stateNewMat->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
 
@@ -153,7 +167,16 @@ void PSBaseCar::initModel(  lua_State * pipeline,
             modelNode->showBoundingBox(true);
         }
 
-        mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
+        if(mIsAI)
+            mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
+        else
+        {
+            if(isAttenuateExcludeBox)
+                mModelEntity[q]->setListener(new PlayerVehicleSceneObjectListener(mModelEntity[q], sceneMgr, gameState.getExclusions()));
+            else
+                mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
+        }
+
         mModelEntity[q]->setCastShadows(false);
 
         if(q > 0)
@@ -691,4 +714,12 @@ Ogre::Vector4 PSBaseCar::getCarArray4Parameter(const STRSettings& carSettings, c
     }
 
     return res;
+}
+
+void PSBaseCar::setVisibility(bool isVisible)
+{
+    for(size_t q = 0; q < 5; ++q)
+    {
+        mModelEntity[q]->setVisible(isVisible);
+    }
 }

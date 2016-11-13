@@ -76,6 +76,8 @@ public:
     //for multiplayer
     void setCharacterName(std::string& character) {mCharacterName = character;}
 
+    void setVisibility(bool isVisible);
+
 protected:
 
     virtual void processSounds(const Ogre::FrameEvent &evt) = 0;
