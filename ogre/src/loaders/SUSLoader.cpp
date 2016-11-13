@@ -23,11 +23,11 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
     {
         suspensionData.clear();
 
-        PartSuspension parts[4];
+        PartSuspension parts[5];
 
         size_t firstPartIndex = 0;
 
-        for(size_t q = 0; q < 4; ++q)
+        for(size_t q = 0; q < 5; ++q)
         {
             char partName[256];
             fscanf(fileToLoad, "%s\n", partName);
