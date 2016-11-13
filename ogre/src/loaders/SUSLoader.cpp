@@ -25,14 +25,12 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
 
         PartSuspension parts[4];
 
-        size_t maxAmount = 0;
-
-        size_t maxAmountPartIndex = 0;
+        size_t firstPartIndex = 0;
 
         for(size_t q = 0; q < 4; ++q)
         {
             char partName[256];
-            fgets(partName, 256, fileToLoad);
+            fscanf(fileToLoad, "%s\n", partName);
 
             parts[q].name = partName;
 
@@ -48,17 +46,16 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
             //BackRight
             parts[q].backRight = readWheelSuspension(fileToLoad);
 
-            if(parts[q].frontLeft.size() > maxAmount)
+            if(parts[q].name[parts[q].name.length() - 1] == '0')
             {
-                maxAmount = parts[q].frontLeft.size();
-                maxAmountPartIndex = q;
+                firstPartIndex = q;
             }
         }
 
-        suspensionData.push_back(parts[maxAmountPartIndex].frontLeft);
-        suspensionData.push_back(parts[maxAmountPartIndex].frontRight);
-        suspensionData.push_back(parts[maxAmountPartIndex].backLeft);
-        suspensionData.push_back(parts[maxAmountPartIndex].backRight);
+        suspensionData.push_back(parts[firstPartIndex].frontLeft);
+        suspensionData.push_back(parts[firstPartIndex].frontRight);
+        suspensionData.push_back(parts[firstPartIndex].backLeft);
+        suspensionData.push_back(parts[firstPartIndex].backRight);
 
         fclose(fileToLoad);
     }
