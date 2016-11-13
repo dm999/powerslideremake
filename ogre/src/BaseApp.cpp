@@ -23,6 +23,8 @@
 #include "loaders/TEXLoader.h"
 #include "loaders/TextureLoader.h"
 
+#include "gamelogic/RacingGridGeneration.h"
+
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -1132,30 +1134,7 @@ void BaseApp::initModel()
     mGameState.getPlayerCar().initModel(mPipeline, mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mGameState.getPlayerCharacterName(), mGameState.getTrackPositions()[mGameState.getAICount()], !isCamToAI);
     mGameState.getPlayerCar().initSounds(mPipeline, mGameState);
 
-    std::vector<std::string> aiIndexes;
-
-    switch(mGameState.getAIStrength())
-    {
-    case Medium :
-        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "medium racin characters ids");
-        break;
-    case Hard :
-        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "hard racin characters ids");
-        break;
-    case Insane :
-        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "evolve racin characters ids");
-        break;
-    default:
-        aiIndexes = mGameState.getSTRPowerslide().getArrayValue("", "easy racin characters ids");
-    }
-    std::vector<std::string> availableCharacters = mGameState.getSTRPowerslide().getArrayValue("", "available characters");
-    std::vector<std::string> aiCharacters;
-    for(size_t q = 0; q < aiIndexes.size(); ++q)
-    {
-        size_t index;
-        Conversions::DMFromString(aiIndexes[q], index);
-        aiCharacters.push_back(availableCharacters[index]);
-    }
+    std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mGameState);
 
     for(size_t q = 0; q < mGameState.getAICount(); ++q)
     {
