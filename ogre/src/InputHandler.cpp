@@ -84,6 +84,15 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->setShutdown(true);
 
+    }else if (arg.key == OIS::KC_F4)
+    {
+        
+        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+        {
+            PSPlayerCar& playerCar = baseApp->getGameState().getPlayerCar();
+            playerCar.setDisableMouse(!playerCar.getDisableMouse());
+        }
+
     }else if (arg.key == OIS::KC_F5)
     {
         baseApp->quickScriptsReload();

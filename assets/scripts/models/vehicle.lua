@@ -35,7 +35,7 @@ function createVehicle()
     Model.Material.SingleSpecular.r = 1.0;
     Model.Material.SingleSpecular.g = 1.0;
     Model.Material.SingleSpecular.b = 1.0;
-    Model.Material.SingleSpecular.power = 10.0;
+    Model.Material.SingleSpecular.power = 100.0;
     
     Model.Physics = {}
     Model.Physics.Chassis = {}

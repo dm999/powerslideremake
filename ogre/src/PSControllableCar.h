@@ -69,6 +69,9 @@ public:
     size_t getCurrentLap() const override {return mLapUtils.getCurrentLap();}
     Ogre::Real getLapPosition() const override {return mLapUtils.getLapPosition();}
 
+    bool getDisableMouse() const {return mIsDisableMouse;}
+    void setDisableMouse(bool disableMouse) {mIsDisableMouse = disableMouse ;}
+
 protected:
 
     virtual void processSounds(const Ogre::FrameEvent &evt);
