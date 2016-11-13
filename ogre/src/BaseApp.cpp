@@ -1347,12 +1347,14 @@ void BaseApp::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapp
 void BaseApp::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     //http://www.ogre3d.org/forums/viewtopic.php?t=45499
-    mGameState.getPlayerCar().setVisibility(false);
+    if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+        mGameState.getPlayerCar().setVisibility(false);
 }
 
 void BaseApp::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
-    mGameState.getPlayerCar().setVisibility(true);
+    if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+        mGameState.getPlayerCar().setVisibility(true);
 }
 
 void BaseApp::onPlayerEjected(const std::string& player)

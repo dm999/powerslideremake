@@ -444,23 +444,15 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
     {
         if(mCameraMan->getCameraPositionType() == CameraPosition_Bumper)
         {
-            mModelNode->setVisible(false);
-            mWheelEntitys[0]->setVisible(false);
-            mWheelEntitys[1]->setVisible(false);
-            mWheelEntitys[2]->setVisible(false);
-            mWheelEntitys[3]->setVisible(false);
-            mParticleNodeWheelBackL->setVisible(false);
-            mParticleNodeWheelBackR->setVisible(false);
+            setVisibility(false);
+            //mParticleNodeWheelBackL->setVisible(false);
+            //mParticleNodeWheelBackR->setVisible(false);
         }
         else
         {
-            mModelNode->setVisible(true);
-            mWheelEntitys[0]->setVisible(true);
-            mWheelEntitys[1]->setVisible(true);
-            mWheelEntitys[2]->setVisible(true);
-            mWheelEntitys[3]->setVisible(true);
-            mParticleNodeWheelBackL->setVisible(true);
-            mParticleNodeWheelBackR->setVisible(true);
+            setVisibility(true);
+            //mParticleNodeWheelBackL->setVisible(true);
+            //mParticleNodeWheelBackR->setVisible(true);
         }
 
         if(mIsDisableMouse){
