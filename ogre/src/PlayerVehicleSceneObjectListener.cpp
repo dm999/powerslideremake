@@ -265,17 +265,29 @@ void PlayerVehicleSceneObjectListener::doCPUVertexColor()
                                     }
                                 }
                             }
-                    }
+                    }//all exclusions
 
                     if(isInAnyBox)
                     {
                         if(finalBright < finalAttenuation)
-                            finalAttenuation  = finalBright;
+                            finalAttenuation = finalBright;
                     }
+                    else//not in box but light affects
+                    {
+                        finalAttenuation = 1.0f;
+                        break;
+                    }
+                }//exclusions non empty
+                else//no exclusions but light affect
+                {
+                    finalAttenuation = 1.0f;
+                    break;
                 }
 
-            }
-        }
+            }//light affect point
+        }//all lights
+
+        finalAttenuation = Ogre::Math::Clamp(finalAttenuation, 0.2f, 1.0f);
 
         (*pRGBA) = Ogre::ColourValue(finalAttenuation, finalAttenuation, finalAttenuation, 1.0f).getAsABGR();
     }
