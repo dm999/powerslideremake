@@ -236,8 +236,8 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard and tacho
 
-    Ogre::Real tachoWidth = viewportWidth / 5.7f;
-    Ogre::Real tachoHeight = tachoWidth;
+    Ogre::Real tachoWidth = viewportWidth / 5.73f;
+    Ogre::Real tachoHeight = viewportHeight / 4.73f;
 
     //dashboard
     {
@@ -398,9 +398,6 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //tacho lamps
     {
-        //Ogre::Vector4 screenShiftDigits(0.0f, 8.0f, 0.0f, 4.0f);
-        Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 0.0f);
-
         mIsPickup = false;
         if(gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "pickup hack"))
             mIsPickup = true;
@@ -415,7 +412,6 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         {
             Ogre::Vector4 tachoLightsScreen = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
             tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
-            tachoLightsScreen -= screenShiftDigits;
 
             Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
             tachoLightsTexture /= 255.0f;
@@ -432,18 +428,13 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //tacho digits
     {
-        Ogre::Vector4 screenShiftDigits(0.0f, 6.0f, 0.0f, 6.0f);
-
         Ogre::Vector4 tachoDigitsScreen100 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit hundreds 1");
         Ogre::Vector4 tachoDigitsScreen10 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit tens 1");
         Ogre::Vector4 tachoDigitsScreen1 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit units 1");
 
         tachoDigitsScreen1 = screenAdaptionRelative * tachoDigitsScreen1;
-        tachoDigitsScreen1 -= screenShiftDigits;
         tachoDigitsScreen10 = screenAdaptionRelative * tachoDigitsScreen10;
-        tachoDigitsScreen10 -= screenShiftDigits;
         tachoDigitsScreen100 = screenAdaptionRelative * tachoDigitsScreen100;
-        tachoDigitsScreen100 -= screenShiftDigits;
 
         mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit texture 1");
         mTachoDigitsTexture /= 255.0f;
@@ -459,21 +450,15 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureRotate(Ogre::Degree(90.0f));
 
-        Ogre::Real tachoDigitWidth = tachoWidth * 0.08f;
-        Ogre::Real tachoDigitHeight = tachoHeight * 0.1f;
-        Ogre::Real tachoDigitLeft1 = viewportWidth - tachoWidth / 2.0f + tachoDigitWidth * 1.4f;
-        Ogre::Real tachoDigitTop = viewportHeight - tachoHeight / 2.0f + tachoDigitHeight * 0.9f;
         mTachoSpeedDigit1 = createPanel("TachoDigit1", tachoDigitsScreen1, "Test/TachoFranticDigits");
         std::pair<Ogre::Real, Ogre::Real> texCoords = getTachoDigitOffset(0);
         mTachoSpeedDigit1->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit1);
 
-        Ogre::Real tachoDigitLeft2 = viewportWidth - tachoWidth / 2.0f + tachoDigitWidth / 2.0f;
         mTachoSpeedDigit2 = createPanel("TachoDigit2", tachoDigitsScreen10, "Test/TachoFranticDigits");
         mTachoSpeedDigit2->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit2);
 
-        Ogre::Real tachoDigitLeft3 = viewportWidth - tachoWidth / 2.0f - tachoDigitWidth * 0.4f;
         mTachoSpeedDigit3 = createPanel("TachoDigit3", tachoDigitsScreen100, "Test/TachoFranticDigits");
         mTachoSpeedDigit3->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit3);
