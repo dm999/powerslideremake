@@ -10,6 +10,12 @@ class LinearController
 {
 public:
 
+    void clear()
+    {
+        mControlPoints.clear();
+        mValues.clear();
+    }
+
     void addPoint(const T& controlPoint, const T& val)
     {
         mControlPoints.push_back(controlPoint);

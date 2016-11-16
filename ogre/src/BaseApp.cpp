@@ -1173,6 +1173,8 @@ void BaseApp::initMisc()
             mGraphics2D.rearViewMirrorPanelTextureRemoveAllViewports();
         }
 
+        mGraphics2D.initTachoNeedle(mSceneMgr, mGameState);
+
 
         mRearCamera = mSceneMgr->createCamera("RearViewCamera");
         mRearCamera->setNearClipDistance(0.5f);
@@ -1349,12 +1351,16 @@ void BaseApp::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
     //http://www.ogre3d.org/forums/viewtopic.php?t=45499
     if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
         mGameState.getPlayerCar().setVisibility(false);
+
+    mGraphics2D.setVisibleTachoNeedle(false);
 }
 
 void BaseApp::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
         mGameState.getPlayerCar().setVisibility(true);
+
+    mGraphics2D.setVisibleTachoNeedle(true);
 }
 
 void BaseApp::onPlayerEjected(const std::string& player)

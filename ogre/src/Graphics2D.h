@@ -68,6 +68,9 @@ public:
 
     void reloadTextures(const GameState& gameState);
 
+    void setVisibleTachoNeedle(bool isVisible);
+    void initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState);
+
 private:
 
     bool mLoaded;
@@ -89,9 +92,10 @@ private:
     static const int mDashboardCarsCount = 11;
     Ogre::PanelOverlayElement* mDashboardCars[mDashboardCarsCount];
 
-    Ogre::Overlay* mNeedleLayer;
+    Ogre::SceneNode * mChildNeedle;
+    Ogre::ManualObject* mNeedle;
+    Ogre::Vector3 mNeedleOffset;
     LinearController<float> mEngineRPMToRotation;
-    LinearController<float> mNeedleScaleCorrection;
 
     std::vector<Ogre::PanelOverlayElement*> mTachoLamps;
     std::vector<size_t> mTachoRange;
