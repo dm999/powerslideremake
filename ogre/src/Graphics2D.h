@@ -94,7 +94,6 @@ private:
 
     Ogre::SceneNode * mChildNeedle;
     Ogre::ManualObject* mNeedle;
-    Ogre::Vector3 mNeedleOffset;
     LinearController<float> mEngineRPMToRotation;
 
     std::vector<Ogre::PanelOverlayElement*> mTachoLamps;

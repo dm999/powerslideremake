@@ -672,19 +672,14 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
 
-    float needleCenterX = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 x") / 640.0f;
-    float needleCenterY = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 y") / 480.0f;
+    float needleCenterX = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 x") / 640.0f * viewportWidth;
+    float needleCenterY = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 y") / 480.0f * viewportHeight;
 
-    float needleOffset = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle offset 1") / 480.0f;
+    float needleOffset = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle offset 1") / 480.0f * viewportHeight;
 
-    float needleWidthTop = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width top 1") / 640.0f;
-    float needleWidthBottom = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width bottom 1") / 640.0f;
-    float needleHeight = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle size 1") / 480.0f;
-
-    needleWidthTop *= 2.0f;
-    needleWidthBottom *= 2.0f;
-    needleHeight *= 2.0f;
-    needleOffset *= 2.0f;
+    float needleWidthTop = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width top 1") / 640.0f * viewportWidth;
+    float needleWidthBottom = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width bottom 1") / 640.0f * viewportWidth;
+    float needleHeight = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle size 1") / 480.0f * viewportHeight;
 
     std::vector<std::string> tachoNeedleStr = gameState.getSTRRacecrud().getArrayValue(gameState.getPlayerCharacterName() + " dash parameters", "needle texture region 1");
     Ogre::Vector4 tachoNeedle;
@@ -697,20 +692,16 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
     //http://www.ogre3d.org/tikiwiki/tiki-index.php?page=ManualObject+2D
 
     mNeedle = sceneManager->createManualObject("ManualTachoNeedle");
-    
-    // Use identity view/projection matrices
-    mNeedle->setUseIdentityProjection(true);
-    mNeedle->setUseIdentityView(true);
-    
+
     mNeedle->begin("Test/TachoFrantic", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
-     
-    mNeedle->position(-needleWidthBottom / 2.0f, -needleHeight / 2.0f, 0.0f);
+
+    mNeedle->position(-needleWidthBottom / 2.0f, needleOffset, 0.0f);
     mNeedle->textureCoord(tachoNeedle.x, tachoNeedle.w);
-    mNeedle->position(needleWidthBottom / 2.0f, -needleHeight / 2.0f, 0.0f);
+    mNeedle->position(needleWidthBottom / 2.0f, needleOffset, 0.0f);
     mNeedle->textureCoord(tachoNeedle.z, tachoNeedle.w);
-    mNeedle->position(needleWidthTop / 2.0f, needleHeight / 2.0f, 0.0f);
+    mNeedle->position(needleWidthTop / 2.0f, needleHeight + needleOffset, 0.0f);
     mNeedle->textureCoord(tachoNeedle.z, tachoNeedle.y);
-    mNeedle->position(-needleWidthTop / 2.0f, needleHeight / 2.0f, 0.0f);
+    mNeedle->position(-needleWidthTop / 2.0f, needleHeight + needleOffset, 0.0f);
     mNeedle->textureCoord(tachoNeedle.x, tachoNeedle.y);
      
     mNeedle->index(0);
@@ -729,8 +720,6 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
     // Render just before overlays
     mNeedle->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY + 1);
 
-    mNeedleOffset = Ogre::Vector3(0.0f, needleHeight / 2.0f + needleOffset, 0.0f);
-
      float angleMin = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs zero angle");
      float angle10K = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs 10k delta angle");
      //float angleMax = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs max delta angle");
@@ -745,7 +734,7 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
 
     // Attach to scene
     Ogre::SceneNode * baseNeedle = sceneManager->getRootSceneNode()->createChildSceneNode();
-    baseNeedle->setPosition(needleCenterX * 2.0f - 1.0f, -needleCenterY * 2.0f + 1.0f, 0.0f);
+    baseNeedle->setPosition(needleCenterX - viewportWidth / 2.0f, -needleCenterY + viewportHeight / 2.0f, 0.0f);
     mChildNeedle = baseNeedle->createChildSceneNode();
     mChildNeedle->attachObject(mNeedle);
 }
@@ -893,9 +882,7 @@ void Graphics2D::setEngineRPM(Ogre::Real rpm)
     Ogre::Real rotationDegree = mEngineRPMToRotation.getVal(rpm);
     Ogre::Quaternion needleRot(Ogre::Degree(rotationDegree), Ogre::Vector3::UNIT_Z);
     mChildNeedle->setOrientation(needleRot);
-    mChildNeedle->setPosition(needleRot * mNeedleOffset);
     //mChildNeedle->setScale(1.0f, 1.0f - reciprocalAspect * Ogre::Math::Abs(Ogre::Math::Sin(Ogre::Degree(rotationDegree))), 1.0f);
-    //mChildNeedle->setPosition(mNeedleOffset);
 
     for(size_t q = 0; q < mTachoLamps.size(); ++q)
         mTachoLamps[q]->hide();

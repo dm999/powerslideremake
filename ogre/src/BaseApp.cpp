@@ -899,9 +899,8 @@ void BaseApp::initScene()
     Ogre::Viewport * mViewPort = mWindow->addViewport(mCamera);
 
     mViewPort->setBackgroundColour(mGameState.getBackgroundColor());
-    mCamera->setAspectRatio(mLuaManager.ReadScalarFloat("Scene.Camera.AspectRatio", mPipeline));
-    //mCamera->setAspectRatio(Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()));
-    mCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Camera.FOV", mPipeline)));
+    mCamera->setAspectRatio(Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
+    mCamera->setFOVy(Ogre::Degree(95.0f));
 
     initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mPipeline), 0.0f));
 
@@ -992,6 +991,23 @@ void BaseApp::initScene()
     }
 
     ParticlesLoader().load(mGameState);
+
+    //http://www.ogre3d.org/forums/viewtopic.php?p=331138
+    //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79581
+    mSceneMgrCarUI = mRoot->createSceneManager(Ogre::ST_GENERIC);
+    Ogre::Camera * cameraCarUI = mSceneMgrCarUI->createCamera("PlayerCam");
+    cameraCarUI->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+    cameraCarUI->setOrthoWindow(static_cast<float>(mViewPort->getActualWidth()), static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setNearClipDistance(0.5f);
+    cameraCarUI->setFarClipDistance(10000.0f);
+    Ogre::Viewport * viewPortCarUI = mWindow->addViewport(cameraCarUI, 1);
+    viewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
+    viewPortCarUI->setOverlaysEnabled(false);
+    viewPortCarUI->setSkiesEnabled(false);
+    cameraCarUI->setAspectRatio(static_cast<float>(mViewPort->getActualWidth()) / static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setFOVy(Ogre::Degree(45.0f));
+    cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
+    cameraCarUI->lookAt(Ogre::Vector3::ZERO);
 }
 
 void BaseApp::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::AxisAlignedBox &bounds)
@@ -1081,6 +1097,8 @@ void BaseApp::clearScene()
 
     mSceneMgr->clearScene();
     mRoot->destroySceneManager(mSceneMgr);
+    mSceneMgrCarUI->clearScene();
+    mRoot->destroySceneManager(mSceneMgrCarUI);
     mWindow->removeAllViewports();
 }
 
@@ -1173,7 +1191,7 @@ void BaseApp::initMisc()
             mGraphics2D.rearViewMirrorPanelTextureRemoveAllViewports();
         }
 
-        mGraphics2D.initTachoNeedle(mSceneMgr, mGameState);
+        mGraphics2D.initTachoNeedle(mSceneMgrCarUI, mGameState);
 
 
         mRearCamera = mSceneMgr->createCamera("RearViewCamera");
@@ -1705,29 +1723,6 @@ static int parseFileInternal(lua_State * St){
     if(baseApp) baseApp->parseFile(fileName);
     return 0;
 }
-
-/*
-static int rotateMainNode(lua_State * St){
-
-    Ogre::SceneManager* mSceneMgr = (Ogre::SceneManager*)lua_touserdata(St,1);
-    Ogre::SceneNode* mMainNode = (Ogre::SceneNode*)lua_touserdata(St,2);
-
-    float angle = static_cast<float>(lua_tonumber(St,3));
-    float x = static_cast<float>(lua_tonumber(St,4));
-    float y = static_cast<float>(lua_tonumber(St,5));
-    float z = static_cast<float>(lua_tonumber(St,6));
-
-    Ogre::Quaternion rot;
-    rot.FromAngleAxis(  Ogre::Degree(angle), 
-                        Ogre::Vector3(x, y, z));
-
-    mMainNode->setOrientation(rot);
-    //mMainNode->rotate(Ogre::Vector3(x, y, z), Ogre::Degree(angle));
-
-    //mSceneMgr->getSkyBoxNode()->setOrientation(rot);
-
-    return 0;
-}*/
 
 void BaseApp::registerLuaFunctions()
 {

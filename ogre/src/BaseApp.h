@@ -148,6 +148,7 @@ protected:
     Ogre::Camera* mCamera;
     Ogre::Camera* mRearCamera;
     Ogre::SceneManager* mSceneMgr;
+    Ogre::SceneManager* mSceneMgrCarUI;
     Ogre::RenderWindow* mWindow;
     Ogre::String mResourcesCfg;
 

@@ -4,10 +4,6 @@ function createScene()
 
     Scene.ShadowMapSize = 1024;
 
-    Scene.Camera = {}
-    Scene.Camera.AspectRatio = 3.0 / 3.0;
-    Scene.Camera.FOV = 95.0;
-
     Scene.Lights = Terrain.Lights;
     Scene.TerrainScene = Terrain.Scene;
     Scene.Gravity = 59.81;
