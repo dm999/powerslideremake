@@ -2,6 +2,7 @@
 /Ogre.log
 /*.dll
 /**/*.lib
+/**/*.so
 /*.exe
 /*.bat
 /*.pf
