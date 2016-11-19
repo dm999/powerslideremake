@@ -52,9 +52,6 @@ PSControllableCar::PSControllableCar() :
     mWheelsRotationByEngineAddition.addPoint(0.0f, 200.0f);
     mWheelsRotationByEngineAddition.addPoint(50.0f, 20.0f);
     mWheelsRotationByEngineAddition.addPoint(100.0f, 0.0f);
-
-    mPitchValue.addPoint(1500.0f, defaultHighPitch);
-    mPitchValue.addPoint(10000.0f, 1.0f);
 }
 
 void PSControllableCar::initModel(  lua_State * pipeline, 
@@ -113,6 +110,55 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         Ogre::Vector4 changeUp = getCarArray4Parameter(carSettings, trackSettings, defaultSettings, "", "change up");
 
         mCarEngine.init(gearRevRatio, revRatio, changeDown, changeUp);
+
+        //sound params
+        STRSettings soundSettings;
+        soundSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "graphs.str");
+        std::vector<std::string> freqLow = soundSettings.getArrayValue("", "frequency 0");
+        std::vector<std::string> freqMid = soundSettings.getArrayValue("", "frequency 1");
+        std::vector<std::string> freqHigh = soundSettings.getArrayValue("", "frequency 2");
+        std::vector<std::string> volLow = soundSettings.getArrayValue("", "volume 0");
+        std::vector<std::string> volMid = soundSettings.getArrayValue("", "volume 1");
+        std::vector<std::string> volHigh = soundSettings.getArrayValue("", "volume 2");
+        assert(freqLow.size() == 11);
+        assert(freqMid.size() == 11);
+        assert(freqHigh.size() == 11);
+        assert(volLow.size() == 11);
+        assert(volMid.size() == 11);
+        assert(volHigh.size() == 11);
+
+        float hscale0 = soundSettings.getFloatValue("", "frequency 0 hscale");
+        float hscale1 = soundSettings.getFloatValue("", "frequency 1 hscale");
+        float hscale2 = soundSettings.getFloatValue("", "frequency 2 hscale");
+
+        mPitchValueLow.clear();
+        mPitchValueMid.clear();
+        mPitchValueHigh.clear();
+        mGainValueLow.clear();
+        mGainValueMid.clear();
+        mGainValueHigh.clear();
+
+        for(size_t q = 0; q < 11; ++q)
+        {
+            float val;
+            Conversions::DMFromString(freqLow[q], val);
+            mPitchValueLow.addPoint(static_cast<float>(q) * 1000.0f, val * hscale0);
+
+            Conversions::DMFromString(freqMid[q], val);
+            mPitchValueMid.addPoint(static_cast<float>(q) * 1000.0f, val * hscale1);
+
+            Conversions::DMFromString(freqHigh[q], val);
+            mPitchValueHigh.addPoint(static_cast<float>(q) * 1000.0f, val * hscale2);
+
+            Conversions::DMFromString(volLow[q], val);
+            mGainValueLow.addPoint(static_cast<float>(q) * 1000.0f, val);
+
+            Conversions::DMFromString(volMid[q], val);
+            mGainValueMid.addPoint(static_cast<float>(q) * 1000.0f, val);
+
+            Conversions::DMFromString(volHigh[q], val);
+            mGainValueHigh.addPoint(static_cast<float>(q) * 1000.0f, val);
+        }
     }
 
     DMLuaManager luaManager;
@@ -658,26 +704,19 @@ void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
         mEngMid->setPosition(pos.x, pos.y, pos.z);
         mEngHigh->setPosition(pos.x, pos.y, pos.z);
 
-        if(engineRPM > 1500.0f)
-        {
-            mEngHigh->setPitch(mPitchValue.getVal(engineRPM));
-            mEngHigh->setGain(1.0f);
-            
-            mEngLow->setGain(0.0f);
-            mEngMid->setGain(0.0f);
-        }
-        else
-        {
-            mEngHigh->setGain(0.0f);
+        mEngLow->setPitch(mPitchValueLow.getVal(engineRPM) * 0.5f);
+        mEngLow->setGain(mGainValueLow.getVal(engineRPM));
 
-            mEngLow->setGain(1.0f);
-            mEngMid->setGain(1.0f);
-        }
+        mEngMid->setPitch(mPitchValueMid.getVal(engineRPM) * 0.5f);
+        mEngMid->setGain(mGainValueMid.getVal(engineRPM));
+
+        mEngHigh->setPitch(mPitchValueHigh.getVal(engineRPM));
+        mEngHigh->setGain(mGainValueHigh.getVal(engineRPM));
     }
     else
     {
         mEngHigh->setPosition(pos.x, pos.y, pos.z);
-        mEngHigh->setPitch(mPitchValue.getVal(engineRPM));
+        mEngHigh->setPitch(mPitchValueHigh.getVal(engineRPM));
     }
 
 

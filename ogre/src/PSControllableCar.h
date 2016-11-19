@@ -76,7 +76,12 @@ protected:
 
     virtual void processSounds(const Ogre::FrameEvent &evt);
 
-    LinearController<float> mPitchValue;
+    LinearController<float> mPitchValueLow;
+    LinearController<float> mPitchValueMid;
+    LinearController<float> mPitchValueHigh;
+    LinearController<float> mGainValueLow;
+    LinearController<float> mGainValueMid;
+    LinearController<float> mGainValueHigh;
 
     PSCarEngine mCarEngine;
 

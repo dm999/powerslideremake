@@ -4,8 +4,8 @@
 
 PSCarEngine::PSCarEngine() :
     mCurrentGear(1),
-    mEngineRPM(1000.0f),
-    mEngineMinRPM(1000.0f),
+    mEngineRPM(0.0f),
+    mEngineMinRPM(0.0f),
     mEngineMaxRPM(10000.0f)
 {
 }
@@ -35,7 +35,7 @@ void PSCarEngine::init(float gearRevRatio, Ogre::Vector4 revRatio, Ogre::Vector4
     mChangeDown[3] = changeDown.w;
 
     mCurrentGear = 1;
-    mEngineRPM = 1000.0f;
+    mEngineRPM = 0.0f;
 }
 
 void PSCarEngine::process(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, const Ogre::FrameEvent &evt)
@@ -101,7 +101,7 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
     {
         if(isThrottle || isBrake)
         {
-            Ogre::Real accel = mEngineMaxRPM / mEngineRPM;
+            Ogre::Real accel = mEngineMaxRPM / Ogre::Math::Clamp(mEngineRPM, 1000.0f, mEngineMaxRPM);
             mEngineRPM += accel * 5000.0f * spf; 
             
         }
