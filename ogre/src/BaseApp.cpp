@@ -875,10 +875,10 @@ void BaseApp::initScene()
 
     mGameState.setPlayerCharacterName(mLuaManager.ReadScalarString("Main.Character", mPipeline));
 
-    mGameState.initOriginalData(mLuaManager.ReadScalarString("Terrain.Mesh.TrackName", mPipeline),
-                                mLuaManager.ReadScalarString("Terrain.Mesh.FileName", mPipeline),
+    mGameState.initOriginalData(mLuaManager.ReadScalarString("Main.Track", mPipeline),
                                 mLuaManager.ReadScalarString("Main.OriginalPathData", mPipeline),
-                                mLuaManager.ReadScalarString("Main.OriginalPathCommon", mPipeline));
+                                mLuaManager.ReadScalarString("Main.OriginalPathCommon", mPipeline),
+                                static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mPipeline)));
 
     mSoundsProcesser.initSounds(mGameState.getPFLoaderData());
 
@@ -923,8 +923,6 @@ void BaseApp::initScene()
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mPipeline);
-
-        mGameState.setAIStrength(static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mPipeline)));
 
         Ogre::Real speedCoeffEasy = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Easy.SpeedCoeff", mPipeline);
         Ogre::Real speedCoeffMedium = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Medium.SpeedCoeff", mPipeline);
@@ -1633,7 +1631,7 @@ void BaseApp::onLapFinished()
     size_t lap = mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
     std::string time = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getLastLapTime());
     std::string lapS = Conversions::DMToString(lap);
-    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getDE2FileName()));
+    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getTrackName()));
 }
 
 void BaseApp::parseFile(const std::string& fileName)

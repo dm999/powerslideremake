@@ -23,9 +23,6 @@ function createCitytrack()
     Terrain.Mesh.IsTangents = false;
     Terrain.Mesh.IsBB = false;
     
-    Terrain.Mesh.TrackName = "citytrack";
-    Terrain.Mesh.FileName = "citytrack.de2";
-    
     Terrain.Material = {}
     Terrain.Material.IsOverrideMaterial = false;
     Terrain.Material.Scale = 1.0;

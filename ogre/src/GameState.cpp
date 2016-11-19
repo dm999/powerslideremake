@@ -30,12 +30,18 @@ GameState::~GameState()
 }
 
 void GameState::initOriginalData(   const std::string& trackName, 
-                                    const std::string& de2FileName, 
                                     const std::string& originalPathData, 
-                                    const std::string& originalPathCommon)
+                                    const std::string& originalPathCommon,
+                                    AIStrength aiStrength)
 {
     mTrackName = trackName;
-    mDE2FileName = de2FileName;
+
+    mAIStrength = aiStrength;
+
+    if(mAIStrength > Easy && mTrackName == "speedway track")
+    {
+        mTrackName = "speedway night track";
+    }
 
     mPFLoaderData.init(originalPathData, "data.pf");
     mPFLoaderGameshell.init(originalPathData, "gameshell.pf");
@@ -43,8 +49,8 @@ void GameState::initOriginalData(   const std::string& trackName,
     mSTRPowerslide.parse(mPFLoaderStore);
     mSTRRacecrud.parse(mPFLoaderStore);
 
-    mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mDE2FileName);
-    mLapsCount = mSTRPowerslide.getLapsCount(mDE2FileName);
+    mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
+    mLapsCount = mSTRPowerslide.getLapsCount(mTrackName);
 
     mOriginalDataInited = true;
 }

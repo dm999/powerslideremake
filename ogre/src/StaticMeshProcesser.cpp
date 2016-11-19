@@ -53,8 +53,8 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
 
     DE2Loader de2Loader;
     std::vector<MSHData> originalParts;
-    std::string pfFolderName = gameState.getTrackName();
-    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName, gameState.getDE2FileName());
+    std::string pfFolderName = gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName());
+    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName, gameState.getSTRPowerslide().getValue(gameState.getTrackName() + " parameters", "de2 filename", ""));
     bool loadResult = false;
     if(fileToLoad)
     {
@@ -113,7 +113,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             Ogre::Entity* terrain;
             Ogre::SceneNode* terrainNode;
 
-            std::string groupName = gameState.getTrackName();
+            std::string groupName = gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName());
             std::string nodeName = groupName + Conversions::DMToString(q);
 
             Ogre::Vector3 min, max;
@@ -128,7 +128,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                         sceneMgr, nodeName, 
                                         centroid, min, max, 
                                         mergedMSH[q], 
-                                        gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getDE2FileName()));
+                                        gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getTrackName()));
             }
             else
             {
@@ -954,15 +954,13 @@ Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int,
 
 void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
 {
-    std::string pfFolderName = gameState.getTrackName();
-
     typedef std::set<std::string> maps;
     for(maps::iterator i = mTerrainMapsNames.begin(), j = mTerrainMapsNames.end();
         i !=j; ++i)
     {
         std::string mapName = (*i);
 
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName +"/terrains", mapName);
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) +"/terrains", mapName);
 
         if(fileToLoad)
         {

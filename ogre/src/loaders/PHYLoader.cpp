@@ -10,7 +10,7 @@ void PHYLoader::load(GameState& gameState) const
 
     for(int q = 0; q < (gameState.getMaxAI() + 1); ++q)
     {
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/record", "car" + Conversions::DMToString(q) + ".phy");
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
         if(fileToLoad)
         {
             typedef unsigned int DWORD;

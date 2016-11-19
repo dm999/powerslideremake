@@ -32,9 +32,9 @@ public:
      * originalPathCommon - should contain store.pf
      */
     void initOriginalData(  const std::string& trackName, 
-                            const std::string& de2FileName, 
                             const std::string& originalPathData, 
-                            const std::string& originalPathCommon);
+                            const std::string& originalPathCommon,
+                            AIStrength aiStrength);
 
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;
@@ -43,7 +43,6 @@ public:
     const STRRacecrud& getSTRRacecrud() const;
 
     std::string getTrackName() const {return mTrackName;}
-    std::string getDE2FileName() const {return mDE2FileName;}
 
     void setPlayerCharacterName(const std::string& name){mPlayerCharacterName = name;}
     std::string getPlayerCharacterName() const {return mPlayerCharacterName;}
@@ -58,7 +57,6 @@ public:
     void setAICount(size_t opponentsAmount);
     size_t getAICount()const{return mAiOpponentsAmount;}
 
-    void setAIStrength(AIStrength aiStrength) {mAIStrength = aiStrength;}
     AIStrength getAIStrength()const{return mAIStrength;}
 
     Ogre::Vector3 getPLayerCarPrevVel()const{return mPlayerCarPrevVel;}
@@ -144,7 +142,6 @@ public:
 private:
 
     std::string mTrackName;
-    std::string mDE2FileName;
     std::string mPlayerCharacterName;
 
     bool mOriginalDataInited;

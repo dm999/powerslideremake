@@ -189,101 +189,72 @@ int STRSettings::getIntValue(const std::string& section, const std::string& key)
     return getIntValue(section, key, isFound);
 }
 
-STRPowerslide::STRPowerslide()
-{
-    mCustomToOriginalSections.insert(std::make_pair("deserttrack.de2", "desert track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("speedway.de2", "speedway track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("speedway_night.de2", "speedway night track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("dam.de2", "dam parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("mf.de2", "mountain forest track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("mineshaft.de2", "mineshaft parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("alpine.de2", "alpine track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("citytrack.de2", "city track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("nutopia.de2", "nutopia track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("luge.de2", "luge track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("stunt.de2", "stunt track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("fnh.de2", "Foxnhound1 track parameters"));
-    mCustomToOriginalSections.insert(std::make_pair("fnh2.de2", "Foxnhound2 track parameters"));
-}
-
 void STRPowerslide::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "", "powerslide.str");
 }
 
-Ogre::ColourValue STRPowerslide::getTrackSkyColor(const std::string& trackDE2FileName) const
+Ogre::ColourValue STRPowerslide::getTrackSkyColor(const std::string& trackName) const
 {
     Ogre::ColourValue ret;
 
     if(mIsSTRLoaded)
     {
-        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
-        if(found != mCustomToOriginalSections.end())
-        {
-            std::string value = mSTR.GetValue((*found).second.c_str(), "sky colour", "");
-            ret = parseColor(value);
-        }
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "sky colour", "");
+        ret = parseColor(value);
     }
 
     return ret;
 }
 
-Ogre::ColourValue STRPowerslide::getTrackAmbientColor(const std::string& trackDE2FileName) const
+Ogre::ColourValue STRPowerslide::getTrackAmbientColor(const std::string& trackName) const
 {
     Ogre::ColourValue ret(0.25f, 0.25f, 0.25f, 1.0f);//from game
 
     if(mIsSTRLoaded)
     {
-        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
-        if(found != mCustomToOriginalSections.end())
+        float val;
+
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "ambient red", "");
+        if(value != "")
         {
-            float val;
+            Conversions::DMFromString(value, val);
+            ret.r = val;
+        }
 
-            std::string value = mSTR.GetValue((*found).second.c_str(), "ambient red", "");
-            if(value != "")
-            {
-                Conversions::DMFromString(value, val);
-                ret.r = val;
-            }
+        value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "ambient green", "");
+        if(value != "")
+        {
+            Conversions::DMFromString(value, val);
+            ret.g = val;
+        }
 
-            value = mSTR.GetValue((*found).second.c_str(), "ambient green", "");
-            if(value != "")
-            {
-                Conversions::DMFromString(value, val);
-                ret.g = val;
-            }
-
-            value = mSTR.GetValue((*found).second.c_str(), "ambient blue", "");
-            if(value != "")
-            {
-                Conversions::DMFromString(value, val);
-                ret.b = val;
-            }
+        value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "ambient blue", "");
+        if(value != "")
+        {
+            Conversions::DMFromString(value, val);
+            ret.b = val;
         }
     }
 
     return ret;
 }
 
-Ogre::ColourValue STRPowerslide::getTrackTimeTrialColor(const std::string& trackDE2FileName) const
+Ogre::ColourValue STRPowerslide::getTrackTimeTrialColor(const std::string& trackName) const
 {
     Ogre::ColourValue ret(0.0f, 0.0f, 0.0f, 1.0f);//from game
 
     if(mIsSTRLoaded)
     {
-        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
-        if(found != mCustomToOriginalSections.end())
-        {
-            std::string value = mSTR.GetValue((*found).second.c_str(), "timetrial lap colour", "");
-            if(!value.empty())
-                ret = parseColor(value);
-        }
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "timetrial lap colour", "");
+        if(!value.empty())
+            ret = parseColor(value);
     }
 
     return ret;
 }
 
-Ogre::ColourValue STRPowerslide::getCharacterSpecularColor(const std::string& trackDE2FileName, const std::string& characterName) const
+Ogre::ColourValue STRPowerslide::getCharacterSpecularColor(const std::string& trackName, const std::string& characterName) const
 {
     Ogre::ColourValue ret(0.5f, 0.5f, 0.5f, 1.0f);//from game
 
@@ -309,35 +280,65 @@ Ogre::ColourValue STRPowerslide::parseColor(const std::string& val) const
     return ret;
 }
 
-std::string STRPowerslide::getExclusionFile(const std::string& trackDE2FileName) const
+std::string STRPowerslide::getExclusionFile(const std::string& trackName) const
 {
     std::string ret = "exclusion.txt";
 
     if(mIsSTRLoaded)
     {
-        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
-        if(found != mCustomToOriginalSections.end())
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "exclusion file", "");
+        if(value != "") ret = value;
+    }
+
+    return ret;
+}
+
+std::string STRPowerslide::getBaseDir(const std::string& trackName) const
+{
+    std::string ret = "";
+
+    if(mIsSTRLoaded)
+    {
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "base directory", "");
+        if(value != "")
         {
-            std::string value = mSTR.GetValue((*found).second.c_str(), "exclusion file", "");
-            if(value != "") ret = value;
+            std::set<char> delim;
+            delim.insert('\\');
+            std::vector<std::string> pathComponents = Tools::splitpath(value, delim, false);
+            ret = pathComponents[pathComponents.size() - 1];
         }
     }
 
     return ret;
 }
 
-size_t STRPowerslide::getLapsCount(const std::string& trackDE2FileName) const
+std::string STRPowerslide::getDataSubDir(const std::string& trackName) const
+{
+    std::string ret = "";
+
+    if(mIsSTRLoaded)
+    {
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "data subdirectory", "");
+        if(value != "")
+        {
+            std::set<char> delim;
+            delim.insert('\\');
+            std::vector<std::string> pathComponents = Tools::splitpath(value, delim, false);
+            ret = pathComponents[pathComponents.size() - 1];
+        }
+    }
+
+    return ret;
+}
+
+size_t STRPowerslide::getLapsCount(const std::string& trackName) const
 {
     size_t ret = 10;
 
     if(mIsSTRLoaded)
     {
-        std::map<std::string, std::string>::const_iterator found = mCustomToOriginalSections.find(trackDE2FileName);
-        if(found != mCustomToOriginalSections.end())
-        {
-            std::string value = mSTR.GetValue((*found).second.c_str(), "num laps", "");
-            if(value != "") Conversions::DMFromString(value, ret);
-        }
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "num laps", "");
+        if(value != "") Conversions::DMFromString(value, ret);
     }
 
     return ret;

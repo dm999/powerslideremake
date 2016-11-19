@@ -61,20 +61,20 @@ protected:
 class STRPowerslide : public STRSettings
 {
 public:
-    STRPowerslide();
+    STRPowerslide(){}
 
     void parse(const PFLoader& pfLoaderStore);
 
-    Ogre::ColourValue getTrackSkyColor(const std::string& trackDE2FileName) const;
-    Ogre::ColourValue getTrackAmbientColor(const std::string& trackDE2FileName) const;
-    Ogre::ColourValue getTrackTimeTrialColor(const std::string& trackDE2FileName) const;
-    Ogre::ColourValue getCharacterSpecularColor(const std::string& trackDE2FileName, const std::string& characterName) const;
-    std::string getExclusionFile(const std::string& trackDE2FileName) const;
-    size_t getLapsCount(const std::string& trackDE2FileName) const;
+    Ogre::ColourValue getTrackSkyColor(const std::string& trackName) const;
+    Ogre::ColourValue getTrackAmbientColor(const std::string& trackName) const;
+    Ogre::ColourValue getTrackTimeTrialColor(const std::string& trackName) const;
+    Ogre::ColourValue getCharacterSpecularColor(const std::string& trackName, const std::string& characterName) const;
+    std::string getExclusionFile(const std::string& trackName) const;
+    std::string getBaseDir(const std::string& trackName) const;
+    std::string getDataSubDir(const std::string& trackName) const;
+    size_t getLapsCount(const std::string& trackName) const;
 
 private:
-
-    std::map<std::string, std::string> mCustomToOriginalSections;
 
     Ogre::ColourValue parseColor(const std::string& val) const;
 };

@@ -23,25 +23,6 @@ function createDam()
     Terrain.Mesh.IsTangents = false;
     Terrain.Mesh.IsBB = false;
 
-    Terrain.Mesh.TrackName = "dam";
-    Terrain.Mesh.FileName = "dam.de2";
---~     Terrain.Mesh.TrackName = "desert";
---~     Terrain.Mesh.FileName = "deserttrack.de2";
---~     Terrain.Mesh.TrackName = "mf";
---~     Terrain.Mesh.FileName = "mf.de2";
---~     Terrain.Mesh.TrackName = "mineshaft";
---~     Terrain.Mesh.FileName = "mineshaft.de2";
---~     Terrain.Mesh.TrackName = "stunt";
---~     Terrain.Mesh.FileName = "stunt.de2";
---~     Terrain.Mesh.TrackName = "alpine";
---~     Terrain.Mesh.FileName = "alpine.de2";
---~     Terrain.Mesh.TrackName = "luge";
---~     Terrain.Mesh.FileName = "luge.de2";
---~     Terrain.Mesh.TrackName = "foxnhound1";
---~     Terrain.Mesh.FileName = "fnh.de2";
---~     Terrain.Mesh.TrackName = "foxnhound2";
---~     Terrain.Mesh.FileName = "fnh2.de2";
-    
     Terrain.Material = {}
     Terrain.Material.IsOverrideMaterial = false;
     Terrain.Material.Scale = 1.0;

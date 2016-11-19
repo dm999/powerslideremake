@@ -27,7 +27,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
     for(size_t w = 0; w < gameState.getAICount(); ++w)
     {
 
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getTrackName() + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
+        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
 
         if(fileToLoad)
         {

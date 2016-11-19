@@ -26,6 +26,20 @@ function main()
     Model = createVehicle();
     Scene = createScene();
     
+--~     Main.Track = "desert track";
+--~     Main.Track = "speedway track";
+    Main.Track = "dam";
+--~     Main.Track = "mountain forest track";
+--~     Main.Track = "mineshaft";
+--~     Main.Track = "alpine track";
+--~     Main.Track = "city track";
+--~     Main.Track = "nutopia track";
+--~     Main.Track = "stunt track";
+--~     Main.Track = "luge track";
+--~     Main.Track = "Foxnhound2 track";
+--~     Main.Track = "Foxnhound1 track";
+
+    
     Main.Character = "frantic";
 --~     Main.Character = "cyber";
 --~     Main.Character = "radiation";

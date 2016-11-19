@@ -99,7 +99,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         carSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
 
         STRSettings trackSettings;
-        trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getTrackName(), "params.str");
+        trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "params.str");
 
         STRSettings defaultSettings;
         defaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");

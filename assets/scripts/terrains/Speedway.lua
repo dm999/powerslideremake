@@ -27,10 +27,6 @@ function createSpeedway()
     Terrain.Mesh.IsTangents = false;
     Terrain.Mesh.IsBB = false;
     
-    Terrain.Mesh.TrackName = "speedway";
-    Terrain.Mesh.FileName = "speedway.de2";
-    Terrain.Mesh.FileName = "speedway_night.de2";
-    
     Terrain.Material = {}
     Terrain.Material.IsOverrideMaterial = false;
     Terrain.Material.Scale = 1.0;
