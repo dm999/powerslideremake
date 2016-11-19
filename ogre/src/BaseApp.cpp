@@ -924,16 +924,6 @@ void BaseApp::initScene()
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mPipeline);
 
-        Ogre::Real speedCoeffEasy = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Easy.SpeedCoeff", mPipeline);
-        Ogre::Real speedCoeffMedium = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Medium.SpeedCoeff", mPipeline);
-        Ogre::Real speedCoeffHard = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Hard.SpeedCoeff", mPipeline);
-        Ogre::Real speedCoeffInsane = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Insane.SpeedCoeff", mPipeline);
-
-        Ogre::Real lateralStabilizationCoeffEasy = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Easy.LateralStabilization", mPipeline);
-        Ogre::Real lateralStabilizationCoeffMedium = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Medium.LateralStabilization", mPipeline);
-        Ogre::Real lateralStabilizationCoeffHard = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Hard.LateralStabilization", mPipeline);
-        Ogre::Real lateralStabilizationCoeffInsane = mLuaManager.ReadScalarFloat("Terrain.Scene.AI.Insane.LateralStabilization", mPipeline);
-
         mGameState.setAICount(mLuaManager.ReadScalarInt("Scene.AIOpponents", mPipeline));
 
         Ogre::Real speedCoeff;
@@ -942,20 +932,56 @@ void BaseApp::initScene()
         switch(mGameState.getAIStrength())
         {
         case Medium :
-            speedCoeff = speedCoeffMedium;
-            lateralStabilizationCoeff = lateralStabilizationCoeffMedium;
+            speedCoeff = 0.7f;
+            lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.7f;
+            if(mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.4f;
+            if(mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         case Hard :
-            speedCoeff = speedCoeffHard;
-            lateralStabilizationCoeff = lateralStabilizationCoeffHard;
+            speedCoeff = 0.9f;
+            lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.8f;
+            if(mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.6f;
+            if(mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         case Insane :
-            speedCoeff = speedCoeffInsane;
-            lateralStabilizationCoeff = lateralStabilizationCoeffInsane;
+            speedCoeff = 1.0f;
+            lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 1.0f;
+            if(mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.6f;
+            if(mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         default:
-            speedCoeff = speedCoeffEasy;
-            lateralStabilizationCoeff = lateralStabilizationCoeffEasy;
+            speedCoeff = 0.6f;
+            lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.2f;
+            if(mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.2f;
+            if(mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
         }
 
         Ogre::Real speedCoeffMinLimit = speedCoeff - 0.1f;

@@ -13,16 +13,22 @@ Window.VSyncInterval = "1"
 function main()
 
     parseFile("vehicle.lua");
-    parseFile("Speedway.lua");
-    parseFile("Dam.lua");
-    parseFile("Citytrack.lua");
-    parseFile("Nutopia.lua");
     parseFile("Scene.lua");
-
---~     Terrain = createSpeedway();
-    Terrain = createDam();
---~     Terrain = createCitytrack();
---~     Terrain = createNutopia();
+    
+    Terrain = {}
+    Terrain.Mesh = {}
+    Terrain.Mesh.IsTangents = false;
+    Terrain.Mesh.IsBB = false;
+    
+    Terrain.Material = {}
+    Terrain.Material.IsMaskLights = false;
+    Terrain.Material.SingleSubMaterial = "Test/DiffuseSimpleShadowSoft";
+    Terrain.Material.SingleSubMaterialArray = "Test/DiffuseSimpleShadowSoftArray";
+    Terrain.Material.IsOverrideDefaultTextureWithTransparentForSubMaterials = true;
+    Terrain.Material.DefaultTextureName = "defaulttexture.tex";
+    
+    Terrain.Scene = {}
+    
     Model = createVehicle();
     Scene = createScene();
     
