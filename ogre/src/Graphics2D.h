@@ -71,6 +71,8 @@ public:
     void setVisibleTachoNeedle(bool isVisible);
     void initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState);
 
+    void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
+
 private:
 
     bool mLoaded;
@@ -139,6 +141,8 @@ private:
     Ogre::TextAreaOverlayElement * mMiscText;
     static const int mMiscTextArraySize = 5;
     Ogre::TextAreaOverlayElement * mMiscTextArray[mMiscTextArraySize];
+
+    Ogre::PanelOverlayElement* mFinishSignPanel;
 
 };
 

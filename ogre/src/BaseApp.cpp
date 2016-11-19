@@ -459,7 +459,9 @@ bool BaseApp::frameStarted(const Ogre::FrameEvent &evt)
     else
         mSoundsProcesser.setListenerGain(0.0f);
 
-    mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
+    if(!mGameState.getRaceFinished())
+        mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
+
     mGameState.getArrowNode()->setOrientation(mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
 
     if(!mGameState.isGamePaused())
@@ -468,7 +470,9 @@ bool BaseApp::frameStarted(const Ogre::FrameEvent &evt)
 
         for(size_t q = 0; q < mGameState.getAICount(); ++q)
         {
-            mGameState.getAICar(q).getLapUtils().checkCheckPoints(mGameState.getAICar(q).getModelNode()->getPosition());
+            if(!mGameState.getRaceFinished())
+                mGameState.getAICar(q).getLapUtils().checkCheckPoints(mGameState.getAICar(q).getModelNode()->getPosition());
+
             if(mGameState.getRaceStarted())
             {
                 mGameState.getAICar(q).performAICorrection(mGameState.isGamePaused());
@@ -685,7 +689,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         mGraphics2D.hideAllStart();
 
-        if(mGameState.getMirrorEnabled())
+        if(mGameState.getMirrorEnabled() && !mGameState.getRaceFinished())
         {
             mGraphics2D.setRearViewMirrorPanelShow(true);
         }
@@ -1071,6 +1075,7 @@ void BaseApp::clearScene()
 {
 
     mGraphics2D.clearMiscPanelText();
+    mGraphics2D.setVisibleFinishSign(false);
 
     if(mMultiplayerController.get())
         mMultiplayerController->clearSessionAndLobby();
@@ -1078,6 +1083,7 @@ void BaseApp::clearScene()
 
     mGameState.resetGamePaused();
     mGameState.setRaceStarted(false);
+    mGameState.setRaceFinished(false);
 
     deInitWorld();
 
@@ -1655,9 +1661,26 @@ void BaseApp::onError(const std::string& message)
 void BaseApp::onLapFinished()
 {
     size_t lap = mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
-    std::string time = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getLastLapTime());
-    std::string lapS = Conversions::DMToString(lap);
-    mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getTrackName()));
+
+    if(lap <= mGameState.getLapsCount())
+    {
+        std::string time = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getLastLapTime());
+        std::string lapS = Conversions::DMToString(lap);
+        mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getTrackName()));
+    }
+
+    //race finished
+    if(lap == mGameState.getLapsCount())
+    {
+        std::string totalTime = Tools::SecondsToString(mGameState.getPlayerCar().getLapUtils().getTotalTime());
+        mGraphics2D.addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mGameState.getSTRPowerslide().getTrackTimeTrialColor(mGameState.getTrackName()));
+
+        mGameState.getPlayerCar().setDisableMouse(false);
+        mCamera->setPosition(mGameState.getSTRPowerslide().getFinishCameraPos(mGameState.getTrackName()));
+        mGraphics2D.setRearViewMirrorPanelShow(false);
+        mGraphics2D.setVisibleFinishSign(true, mLapController.getTotalPosition(0));
+        mGameState.setRaceFinished(true);
+    }
 }
 
 void BaseApp::parseFile(const std::string& fileName)

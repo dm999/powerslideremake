@@ -9,6 +9,7 @@ GameState::GameState() :
     mGlobalLight(NULL),
     mShadowLight(NULL),
     mIsRaceStarted(false),
+    mIsRaceFinished(false),
     mIsMirrorEnabled(false),
     mLapsCount(1),
     mListenerGain(1.0f),

@@ -344,6 +344,19 @@ size_t STRPowerslide::getLapsCount(const std::string& trackName) const
     return ret;
 }
 
+Ogre::Vector3 STRPowerslide::getFinishCameraPos(const std::string& trackName) const
+{
+    Ogre::Vector3 ret(0.0f, 0.0f, 0.0f);
+
+    if(mIsSTRLoaded)
+    {
+        ret = getArray3Value(trackName + " parameters", "finish camera pos");
+        ret.z = -ret.z;
+    }
+
+    return ret;
+}
+
 void STRRacecrud::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "data/misc", "racecrud.str");

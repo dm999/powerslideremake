@@ -87,7 +87,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     }else if (arg.key == OIS::KC_F4)
     {
         
-        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper && !baseApp->getGameState().getRaceFinished())
         {
             PSPlayerCar& playerCar = baseApp->getGameState().getPlayerCar();
             playerCar.setDisableMouse(!playerCar.getDisableMouse());

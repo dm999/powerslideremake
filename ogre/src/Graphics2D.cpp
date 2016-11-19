@@ -571,11 +571,10 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime6);
     }
 
+    loadMisc(gameState.getPFLoaderData());
 
     //paused
     {
-        loadMisc(gameState.getPFLoaderData());
-
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalPaused");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Paused", 
@@ -617,6 +616,76 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             mPausedPanel->addChild(pauseText);
         }
 
+    }
+
+    //finish sign
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalFinished1");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/FinishSign1", 
+                            "Test/DiffuseTransparentAnimated", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+
+
+
+        texName.clear();
+        texName.push_back("OriginalFinished2");
+        newMat = CloneMaterial(  "Test/FinishSign2", 
+                            "Test/DiffuseTransparentAnimated", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+
+
+        texName.clear();
+        texName.push_back("OriginalFinished3");
+        newMat = CloneMaterial(  "Test/FinishSign3", 
+                            "Test/DiffuseTransparentAnimated", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+
+        texName.clear();
+        texName.push_back("OriginalFinished4");
+        newMat = CloneMaterial(  "Test/FinishSign4", 
+                            "Test/DiffuseTransparentAnimated", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+
+
+
+        Ogre::Real pausedPanelWidth = viewportWidth / 10.0f;
+        Ogre::Real pausedPanelHeight = pausedPanelWidth;
+        Ogre::Real pausedPanelLeft = viewportWidth / 3.0f;
+        Ogre::Real pausedPanelTop = viewportHeight / 2.0f - pausedPanelHeight / 2.0f;;
+
+        mFinishSignPanel = createPanel("FinishSignPanel", pausedPanelWidth, pausedPanelHeight, pausedPanelLeft, pausedPanelTop, "Test/FinishSign1");
+        mFinishSignPanel->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mFinishSignPanel);
+        mFinishSignPanel->hide();
     }
 
     //misc text
@@ -739,6 +808,31 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
     mChildNeedle->attachObject(mNeedle);
 }
 
+void Graphics2D::setVisibleFinishSign(bool isVisible, size_t finishPos)
+{
+    if(isVisible)
+    {
+        switch(finishPos)
+        {
+        case 1:
+            mFinishSignPanel->setMaterialName("Test/FinishSign1");
+            break;
+        case 2:
+            mFinishSignPanel->setMaterialName("Test/FinishSign2");
+            break;
+        case 3:
+            mFinishSignPanel->setMaterialName("Test/FinishSign3");
+            break;
+        default:
+            mFinishSignPanel->setMaterialName("Test/FinishSign4");
+            break;
+        }
+        mFinishSignPanel->show();
+    }
+    else
+        mFinishSignPanel->hide();
+}
+
 Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material)
 {
     Ogre::PanelOverlayElement* res = NULL;
@@ -829,6 +923,22 @@ void Graphics2D::loadMisc(const PFLoader& pfLoaderData)
         Ogre::TextureUnitState *state = mat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTexture(chromaTexture);
     }
+
+    chromaTexture = TEXLoader().load( pfLoaderData, 
+                                "data/misc", "1_m_1.tex", 
+                                "OriginalFinished1", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    chromaTexture = TEXLoader().load( pfLoaderData, 
+                                "data/misc", "2_m_1.tex", 
+                                "OriginalFinished2", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    chromaTexture = TEXLoader().load( pfLoaderData, 
+                                "data/misc", "3_m_1.tex", 
+                                "OriginalFinished3", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    chromaTexture = TEXLoader().load( pfLoaderData, 
+                                "data/misc", "4_m_1.tex", 
+                                "OriginalFinished4", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 #if defined(__ANDROID__)
         LOGI("Graphics2D[loadMisc]: End"); 

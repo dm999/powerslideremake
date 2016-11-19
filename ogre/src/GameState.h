@@ -82,6 +82,9 @@ public:
     void setRaceStarted(bool isStarted){mIsRaceStarted = isStarted;}
     bool getRaceStarted()const{return mIsRaceStarted;}
 
+    void setRaceFinished(bool isFinished){mIsRaceFinished= isFinished;}
+    bool getRaceFinished()const{return mIsRaceFinished;}
+
     unsigned long getBeforeStartTimerTime(){return mBeforeStartTimer.getMilliseconds();}
     void resetBeforeStartTimer(){mBeforeStartTimer.reset();}
 
@@ -172,6 +175,8 @@ private:
 
     bool mIsRaceStarted;
     PausedTimer mBeforeStartTimer;
+
+    bool mIsRaceFinished;
 
     Ogre::SceneNode* mArrowNode;
 

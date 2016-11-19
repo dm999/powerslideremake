@@ -27,6 +27,7 @@ public:
 
     Ogre::Quaternion getArrowOrientation(const Ogre::Vector3& carPos, Ogre::Vector3 carDir)const;
 
+    Ogre::Real getTotalTime()const {return mTotalTime;}
     Ogre::Real getLastLapTime()const {return mLastLapTime;}
     Ogre::Real getLapTime()const {return mLapTime;}
     Ogre::Real getLapPosition()const {return mLapPosition;}
@@ -61,6 +62,7 @@ private:
 
     Ogre::Timer mAfterFinishLinePassTimer;
 
+    Ogre::Real mTotalTime;
     Ogre::Real mLastLapTime;
     Ogre::Real mLapTime;
     Ogre::Real mLapPosition;
