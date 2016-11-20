@@ -103,7 +103,7 @@ static bool CustomMaterialCombinerCallback(btManifoldPoint& cp,	const btCollisio
    return true;
 }
 
-BaseApp::BaseApp(void) :
+BaseApp::BaseApp() :
     mCamera(0),
     mRearCamera(0),
     mSceneMgr(0),
@@ -111,7 +111,6 @@ BaseApp::BaseApp(void) :
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mTrayMgr(0),
     mDetailsPanel(0),
-    mCursorWasVisible(false),
     mShutDown(false),
     mIsGlobalReset(true),
     mIsDisableMouse(true),
@@ -129,7 +128,7 @@ BaseApp::BaseApp(void) :
 #endif
 }
 
-BaseApp::~BaseApp(void)
+BaseApp::~BaseApp()
 {
     //to execute onQuit
     if(mMultiplayerController.get())
@@ -161,7 +160,7 @@ BaseApp::~BaseApp(void)
     mSoundsProcesser.deInitSoundSystem();
 }
 
-bool BaseApp::configure(void)
+bool BaseApp::configure()
 {
 #if defined(__ANDROID__)
     Ogre::Root::getSingleton().installPlugin(new Ogre::GLES2Plugin());
@@ -214,7 +213,7 @@ bool BaseApp::configure(void)
     }*/
 }
 
-void BaseApp::createFrameListener(void)
+void BaseApp::createFrameListener()
 {
 
     //Set initial mouse clipping size
@@ -266,20 +265,13 @@ void BaseApp::createFrameListener(void)
     //mDetailsPanel->hide();
 #endif
 
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
-    Ogre::Real viewportWidth = om.getViewportWidth(); 
-    Ogre::Real viewportHeight = om.getViewportHeight(); 
-
-
     mGraphics2D.createRearViewMirrorPanel(mTrayMgr, mGameState.getMirrorEnabled());
     mGraphics2D.load(mTrayMgr, mGameState);
-
-
 
     mRoot->addFrameListener(this);
 }
 
-void BaseApp::setupResources(void)
+void BaseApp::setupResources()
 {
     // Load resource paths from config file
     Ogre::ConfigFile cf;
@@ -311,7 +303,7 @@ void BaseApp::setupResources(void)
     doLuaMainFile();
 }
 
-void BaseApp::loadResources(void)
+void BaseApp::loadResources()
 {
 #if defined(__ANDROID__)
     LOGI("BaseApp[loadResources]: Begin"); 
@@ -332,7 +324,7 @@ void BaseApp::loadResources(void)
 #endif
 }
 
-void BaseApp::unloadResources(void)
+void BaseApp::unloadResources()
 {
 
     mGraphics2D.setRearViewMirrorPanelMaterial("BaseWhite");
@@ -370,7 +362,7 @@ void BaseApp::unloadResources(void)
     //Ogre::MaterialManager::getSingleton().initialise();
 }
 
-void BaseApp::go(void)
+void BaseApp::go()
 {
     if (!setup())
         return;
@@ -381,7 +373,7 @@ void BaseApp::go(void)
     //destroyScene();
 }
 
-bool BaseApp::setup(void)
+bool BaseApp::setup()
 {
     mSoundsProcesser.initSoundSystem();
 
@@ -420,23 +412,21 @@ bool BaseApp::setup(void)
 
     //create scene
     mLuaManager.CallFunction_0_0("main", mPipeline);
+    initScene();
 
-    // Create any resource listeners (for loading screens)
-    //createResourceListener();
-    // Load resources
     loadResources();
 
-    mLuaManager.CallFunction_0_0("create", mPipeline);
+    initTerrain();
+    initModel();
+    initMisc();
 
     initLightLists();
 
-    // Create the scene
-    //createScene();
-    
-
-    
-
     createFrameListener();
+
+    //mTrayMgr->showCursor("Test/Cursor");
+    //Ogre::OverlayContainer* cursor = mTrayMgr->getCursorContainer();
+    //cursor->setWidth(0.0001f);
 
     return true;
 }
@@ -851,24 +841,37 @@ void BaseApp::windowClosed(Ogre::RenderWindow* rw)
     }
 }
 
+void BaseApp::windowFocusChange(Ogre::RenderWindow* rw)
+{
+    (void) rw;
+}
+
 void BaseApp::scriptsReload()
 {
     mIsGlobalReset = true;
-    mLuaManager.CallFunction_0_0("clear", mPipeline);
+    clearScene();
     unloadResources();
     doLuaMainFile();
     mLuaManager.CallFunction_0_0("main", mPipeline);
+    initScene();
     loadResources();
-    mLuaManager.CallFunction_0_0("create", mPipeline);
+
+    initTerrain();
+    initModel();
+    initMisc();
+
 
     initLightLists();
 }
 
 void BaseApp::quickScriptsReload()
 {
-    mLuaManager.CallFunction_0_0("clear", mPipeline);
+    clearScene();
     mLuaManager.CallFunction_0_0("main", mPipeline);
-    mLuaManager.CallFunction_0_0("create", mPipeline);
+    initScene();
+    initTerrain();
+    initModel();
+    initMisc();
 
     initLightLists();
 }
@@ -1132,11 +1135,6 @@ void BaseApp::clearScene()
     mWindow->removeAllViewports();
 }
 
-void BaseApp::preloadResource(const Ogre::String& fileName, const Ogre::String& fileType)
-{
-    Ogre::ResourceGroupManager::getSingleton().declareResource(fileName, fileType, "Popular");
-}
-
 void BaseApp::initTerrain()
 {
     mStaticMeshProcesser.initParts( mPipeline, mSceneMgr, mMainNode, mIsGlobalReset, 
@@ -1298,6 +1296,21 @@ void BaseApp::keyUp(OIS::KeyCode key)
 {
     mGameState.getPlayerCar().keyUp(key);
 }
+
+#if !defined(__ANDROID__)
+void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
+{
+    mTrayMgr->injectMouseMove(arg);
+}
+void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+    mTrayMgr->injectMouseDown(arg, id);
+}
+void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+    mTrayMgr->injectMouseUp(arg, id);
+}
+#endif
 
 void BaseApp::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 {
@@ -1731,40 +1744,6 @@ void BaseApp::doLuaMainFile()
     }
 }
 
-static int initSceneInternal(lua_State * St){
-    if(baseApp) baseApp->initScene();
-    return 0;
-}
-
-static int clearSceneInternal(lua_State * St){
-    if(baseApp) baseApp->clearScene();
-    return 0;
-}
-
-static int preloadResourceInternal(lua_State * St){
-
-    std::string fileName = lua_tostring(St,1);
-    std::string type = lua_tostring(St,2);
-
-    if(baseApp) baseApp->preloadResource(fileName, type);
-    return 0;
-}
-
-static int initTerrainInternal(lua_State * St){
-    if(baseApp) baseApp->initTerrain();
-    return 0;
-}
-
-static int initModelInternal(lua_State * St){
-    if(baseApp) baseApp->initModel();
-    return 0;
-}
-
-static int initMiscInternal(lua_State * St){
-    if(baseApp) baseApp->initMisc();
-    return 0;
-}
-
 static int parseFileInternal(lua_State * St){
     std::string fileName = lua_tostring(St,1);
     if(baseApp) baseApp->parseFile(fileName);
@@ -1773,15 +1752,6 @@ static int parseFileInternal(lua_State * St){
 
 void BaseApp::registerLuaFunctions()
 {
-    lua_register(mPipeline,"initScene", initSceneInternal);
-    lua_register(mPipeline,"clearScene", clearSceneInternal);
-
-    lua_register(mPipeline,"preloadResource", preloadResourceInternal);
-
-    lua_register(mPipeline,"initTerrain", initTerrainInternal);
-    lua_register(mPipeline,"initModel", initModelInternal);
-    lua_register(mPipeline,"initMisc", initMiscInternal);
-
     lua_register(mPipeline,"parseFile", parseFileInternal);
 }
 
@@ -1954,6 +1924,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             //create scene
             mLuaManager.CallFunction_0_0("main", mPipeline);
+            initScene();
 
             // Create any resource listeners (for loading screens)
             //createResourceListener();
@@ -1962,7 +1933,9 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             loadResources();
 
             LOGI("BaseApp[androidInitWindow]: Before create"); 
-            mLuaManager.CallFunction_0_0("create", mPipeline);
+            initTerrain();
+            initModel();
+            initMisc();
 
             LOGI("BaseApp[androidInitWindow]: Before initLightLists"); 
             initLightLists();
@@ -1995,7 +1968,6 @@ void BaseApp::androidTerminateWindow()
     {
 
         LOGI("BaseApp[androidTerminateWindow]: before pause"); 
-        //mLuaManager.CallFunction_0_0("clear", mPipeline);
 
         static_cast<Ogre::AndroidEGLWindow*>(mWindow)->_destroyInternalResources();
     }

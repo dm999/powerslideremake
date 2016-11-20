@@ -93,18 +93,4 @@ function main()
 --~     Main.Character = "razer";
 --~     Main.Character = "argon";
     
-    initScene();
-end
-
--- executed from native code
-function create()
-    initTerrain();
-    initModel();
-    
-    initMisc();
-end
-
--- executed from native code
-function clear()
-    clearScene();
 end

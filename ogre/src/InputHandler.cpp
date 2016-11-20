@@ -185,6 +185,7 @@ bool InputHandler::keyReleased( const OIS::KeyEvent &arg )
 #if !defined(__ANDROID__)
 bool InputHandler::mouseMoved( const OIS::MouseEvent &arg )
 {
+    baseApp->mouseMoved(arg);
     //if(mCameraMan)
         //mCameraMan->injectMouseMove(arg);
 
@@ -193,6 +194,7 @@ bool InputHandler::mouseMoved( const OIS::MouseEvent &arg )
 
 bool InputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+    baseApp->mousePressed(arg, id);
     //if(mCameraMan)
         //mCameraMan->injectMouseDown(arg, id);
 
@@ -201,6 +203,7 @@ bool InputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 bool InputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+    baseApp->mouseReleased(arg, id);
     //if(mCameraMan)
         //mCameraMan->injectMouseUp(arg, id);
 

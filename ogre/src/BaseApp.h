@@ -54,10 +54,10 @@ class BaseApp :
     public LapUtils::Events
 {
 public:
-    BaseApp(void);
-    virtual ~BaseApp(void);
+    BaseApp();
+    virtual ~BaseApp();
 
-    virtual void go(void);
+    void go();
 
     void scriptsReload();       // full reload of scene
     void quickScriptsReload();  // reread main params only
@@ -65,7 +65,6 @@ public:
     // scripting functions
     void initScene();
     void clearScene();
-    void preloadResource(const Ogre::String& fileName, const Ogre::String& fileType);
     void initTerrain();
     void initModel();
     void initMisc();
@@ -76,6 +75,12 @@ public:
     //car control
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
+
+#if !defined(__ANDROID__)
+    void mouseMoved(const OIS::MouseEvent &arg);
+    void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+    void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+#endif
 
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
@@ -125,20 +130,22 @@ public:
 
 protected:
 
-    virtual bool setup();
-    virtual bool configure(void);
-    virtual void createFrameListener(void);
-    virtual void setupResources(void);
-    virtual void loadResources(void);
-    virtual void unloadResources(void);
+    bool setup();
+    bool configure();
+    void createFrameListener();
+    void setupResources();
+    void loadResources();
+    void unloadResources();
 
-    virtual bool frameStarted(const Ogre::FrameEvent &evt);
-    virtual bool frameEnded(const Ogre::FrameEvent &evt);
+    //frame listener
+    virtual bool frameStarted(const Ogre::FrameEvent &evt)override;
+    virtual bool frameEnded(const Ogre::FrameEvent &evt)override;
+    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
-    virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
-
-    virtual void windowResized(Ogre::RenderWindow* rw);
-    virtual void windowClosed(Ogre::RenderWindow* rw);
+    //window event listener
+    virtual void windowResized(Ogre::RenderWindow* rw)override;
+    virtual void windowClosed(Ogre::RenderWindow* rw)override;
+    virtual void windowFocusChange(Ogre::RenderWindow* rw)override;
 
 
     CommonIncludes::shared_ptr<InputHandler> mInputHandler;
@@ -156,7 +163,6 @@ protected:
     CustomTrayManager* mTrayMgr;
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
     OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
-    bool mCursorWasVisible;                    // was cursor visible before dialog appeared
     bool mShutDown;
 
     //sounds

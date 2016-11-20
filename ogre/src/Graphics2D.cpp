@@ -571,7 +571,7 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime6);
     }
 
-    loadMisc(gameState.getPFLoaderData());
+    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
     //paused
     {
@@ -686,6 +686,22 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mFinishSignPanel->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mFinishSignPanel);
         mFinishSignPanel->hide();
+    }
+
+    //cursor
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalCursor");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
     }
 
     //misc text
@@ -880,7 +896,7 @@ Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& nam
 void Graphics2D::reloadTextures(const GameState& gameState)
 {
     loadDashboardCars(gameState);
-    loadMisc(gameState.getPFLoaderData());
+    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
 
 void Graphics2D::loadDashboardCars(const GameState& gameState)
@@ -906,7 +922,7 @@ void Graphics2D::loadDashboardCars(const GameState& gameState)
     }
 }
 
-void Graphics2D::loadMisc(const PFLoader& pfLoaderData)
+void Graphics2D::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
 #if defined(__ANDROID__)
         LOGI("Graphics2D[loadMisc]: Begin"); 
@@ -917,6 +933,11 @@ void Graphics2D::loadMisc(const PFLoader& pfLoaderData)
                                 "OriginalPaused", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
                                 Ogre::ColourValue::Black, 0.1f);
 
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "cursor.bmp", 
+                                "OriginalCursor", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+                                Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
+
     Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName("Test/Paused");
     if(!mat.isNull())
     {
@@ -924,19 +945,19 @@ void Graphics2D::loadMisc(const PFLoader& pfLoaderData)
         state->setTexture(chromaTexture);
     }
 
-    chromaTexture = TEXLoader().load( pfLoaderData, 
+    TEXLoader().load( pfLoaderData, 
                                 "data/misc", "1_m_1.tex", 
                                 "OriginalFinished1", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    chromaTexture = TEXLoader().load( pfLoaderData, 
+    TEXLoader().load( pfLoaderData, 
                                 "data/misc", "2_m_1.tex", 
                                 "OriginalFinished2", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    chromaTexture = TEXLoader().load( pfLoaderData, 
+    TEXLoader().load( pfLoaderData, 
                                 "data/misc", "3_m_1.tex", 
                                 "OriginalFinished3", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    chromaTexture = TEXLoader().load( pfLoaderData, 
+    TEXLoader().load( pfLoaderData, 
                                 "data/misc", "4_m_1.tex", 
                                 "OriginalFinished4", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
