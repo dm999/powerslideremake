@@ -5,7 +5,7 @@
 
 #include "multislider/CommonIncludes.h"
 
-#include "../OgreInclude.h"
+#include "../includes/OgreInclude.h"
 
 struct MultiplayerSessionData
 {

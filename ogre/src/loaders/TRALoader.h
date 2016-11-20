@@ -1,7 +1,7 @@
 #ifndef TRALOADER_H
 #define TRALOADER_H
 
-#include "../CommonIncludes.h"
+#include "../includes/CommonIncludes.h"
 
 /**
  * Loader of terrain (surface mappings)[*.tra] files

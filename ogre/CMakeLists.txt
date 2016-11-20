@@ -42,6 +42,23 @@ file(GLOB sources_loaders_main_h src/loaders/*.h)
 file(GLOB sources_logic_main src/gamelogic/*.cpp)
 file(GLOB sources_logic_main_h src/gamelogic/*.h)
 
+file(GLOB sources_customs_main src/customs/*.cpp)
+file(GLOB sources_customs_main_h src/customs/*.h)
+
+file(GLOB sources_pscar_main src/pscar/*.cpp)
+file(GLOB sources_pscar_main_h src/pscar/*.h)
+
+file(GLOB sources_listeners_main src/listeners/*.cpp)
+file(GLOB sources_listeners_main_h src/listeners/*.h)
+
+file(GLOB sources_tools_main src/tools/*.cpp)
+file(GLOB sources_tools_main_h src/tools/*.h)
+
+file(GLOB sources_mesh_main src/mesh/*.cpp)
+file(GLOB sources_mesh_main_h src/mesh/*.h)
+
+file(GLOB sources_includes_main_h src/includes/*.h)
+
 if(WIN32)
     foreach( src_file ${sources_main} )
         message(STATUS ${src_file})
@@ -66,12 +83,24 @@ list(APPEND sources ${sources_openal_main})
 list(APPEND sources ${sources_multiplayer_main})
 list(APPEND sources ${sources_loaders_main})
 list(APPEND sources ${sources_logic_main})
+list(APPEND sources ${sources_customs_main})
+list(APPEND sources ${sources_pscar_main})
+list(APPEND sources ${sources_listeners_main})
+list(APPEND sources ${sources_tools_main})
+list(APPEND sources ${sources_mesh_main})
 list(APPEND sources ${sources_main_h})
 list(APPEND sources ${sources_lua_main_h})
 list(APPEND sources ${sources_openal_main_h})
 list(APPEND sources ${sources_multiplayer_main_h})
 list(APPEND sources ${sources_loaders_main_h})
 list(APPEND sources ${sources_logic_main_h})
+list(APPEND sources ${sources_customs_main_h})
+list(APPEND sources ${sources_pscar_main_h})
+list(APPEND sources ${sources_listeners_main_h})
+list(APPEND sources ${sources_tools_main_h})
+list(APPEND sources ${sources_mesh_main_h})
+list(APPEND sources ${sources_includes_main_h})
+
 
 if(ANDROID)
     add_definitions(-std=c++11)
@@ -98,7 +127,6 @@ else()
 endif()
 
 include_directories ("../lua/src")
-include_directories ("../tinyxml/src")
 include_directories ("../simpleini/src")
 
 include_directories(../bullet ../bulletextras)
@@ -178,7 +206,7 @@ if(ANDROID)
     target_link_libraries(PowerslideHD_Engine zlib)
     target_link_libraries(PowerslideHD_Engine zziplib)
     
-    target_link_libraries(PowerslideHD_Engine Lua TinyXML ${OIS_LIBRARIES})
+    target_link_libraries(PowerslideHD_Engine Lua ${OIS_LIBRARIES})
 
     target_link_libraries(PowerslideHD_Engine OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
 else()
@@ -211,7 +239,7 @@ else()
     target_link_libraries(PowerslideHD_Engine optimized zlib)
     target_link_libraries(PowerslideHD_Engine optimized zziplib)
     
-    target_link_libraries(PowerslideHD_Engine Lua TinyXML ${OIS_LIBRARIES})
+    target_link_libraries(PowerslideHD_Engine Lua ${OIS_LIBRARIES})
 
     target_link_libraries(PowerslideHD_Engine LinearMath)
     target_link_libraries(PowerslideHD_Engine BulletCollision)

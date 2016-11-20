@@ -1,8 +1,8 @@
 #ifndef CAMERAMAN_H
 #define CAMERAMAN_H
 
-#include "OgreInclude.h"
-#include "OISInclude.h"
+#include "includes/OgreInclude.h"
+#include "includes/OISInclude.h"
 #include "SdkCameraMan.h"
 
 class BaseApp;

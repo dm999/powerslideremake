@@ -4,11 +4,11 @@
 
 #include <vector>
 
-#include "OgreInclude.h"
+#include "includes/OgreInclude.h"
 
 #include "SdkTrays.h"
 
-#include "LinearController.h"
+#include "tools/LinearController.h"
 
 #include "loaders/PFLoader.h"
 #include "OriginalSettings.h"

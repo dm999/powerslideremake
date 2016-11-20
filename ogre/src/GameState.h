@@ -2,13 +2,13 @@
 #ifndef GAMESTATE
 #define GAMESTATE
 
-#include "OgreInclude.h"
+#include "includes/OgreInclude.h"
 
-#include "PSPlayerCar.h"
-#include "PSAICar.h"
-#include "PSMultiplayerCar.h"
-#include "Tools.h"
-#include "PausedTimer.h"
+#include "pscar/PSPlayerCar.h"
+#include "pscar/PSAICar.h"
+#include "pscar/PSMultiplayerCar.h"
+#include "tools/Tools.h"
+#include "tools/PausedTimer.h"
 
 enum AIStrength
 {

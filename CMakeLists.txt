@@ -7,7 +7,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 add_subdirectory (lua)
-add_subdirectory (tinyxml)
+#add_subdirectory (tinyxml)
 add_subdirectory (simpleini)
 add_subdirectory (tools/jsonxx)
 add_subdirectory (ogre)

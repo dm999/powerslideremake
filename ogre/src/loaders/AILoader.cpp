@@ -2,7 +2,7 @@
 
 #include "AILoader.h"
 
-#include "../Conversions.h"
+#include "../tools/Conversions.h"
 
 AILoader::AILoader() : mNameGenNodes("Scene/Node/AI/Name")
 {}

@@ -2,11 +2,11 @@
 
 #include "Graphics2D.h"
 
-#include "OgreTools.h"
+#include "tools/OgreTools.h"
 
-#include "CustomTrayManager.h"
+#include "customs/CustomTrayManager.h"
 
-#include "Conversions.h"
+#include "tools/Conversions.h"
 
 #include "BaseApp.h"
 

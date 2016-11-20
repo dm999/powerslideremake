@@ -13,7 +13,7 @@ extern "C"{
 #include <cstdlib>
 #include <vector>
 
-#include "../Conversions.h"
+#include "../tools/Conversions.h"
 //---------------------------------------------------------------------------
 enum DMLuaManagerParamsType{
 DataII=0,

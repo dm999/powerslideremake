@@ -4,7 +4,7 @@
 #include <map>
 
 #include "DE2Loader.h"
-#include "../Conversions.h"
+#include "../tools/Conversions.h"
 
 namespace DE2
 {

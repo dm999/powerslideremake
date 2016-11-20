@@ -3,16 +3,16 @@
 #include "BaseApp.h"
 
 #include "InputHandler.h"
-#include "OgreTools.h"
-#include "Conversions.h"
+#include "tools/OgreTools.h"
+#include "tools/Conversions.h"
 
 #include "lua/Lua_Include.h"
 
-#include "CustomOverlaySystem.h"
+#include "customs/CustomOverlaySystem.h"
 
 #include "CameraMan.h"
 
-#include "Randomizer.h"
+#include "tools/Randomizer.h"
 
 #include "loaders/ExclusionLoader.h"
 #include "loaders/LLTLoader.h"

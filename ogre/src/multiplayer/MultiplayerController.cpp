@@ -4,9 +4,9 @@
 
 #include "jsonxx.h"
 
-#include "../Tools.h"
+#include "../tools/Tools.h"
 
-#include "../Conversions.h"
+#include "../tools/Conversions.h"
 
 namespace{
     Ogre::NameGenerator nameGenNodes("Scene/Mutiplayer/Node/Name");

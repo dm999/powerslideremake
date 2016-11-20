@@ -3,26 +3,26 @@
 
 #include <memory>
 
-#include "OgreInclude.h"
-#include "OISInclude.h"
-#include "OgreBulletInclude.h"
+#include "includes/OgreInclude.h"
+#include "includes/OISInclude.h"
+#include "includes/OgreBulletInclude.h"
 #include "SdkTrays.h"
 
 #include "lua/DMLuaManager.h"
 
-#include "CommonIncludes.h"
+#include "includes/CommonIncludes.h"
 
-#include "CustomSceneManager.h"
+#include "customs/CustomSceneManager.h"
 
-#include "CustomTrayManager.h"
+#include "customs/CustomTrayManager.h"
 
-#include "StaticMeshProcesser.h"
+#include "mesh/StaticMeshProcesser.h"
 
-#include "Tools.h"
+#include "tools/Tools.h"
 
-#include "LapController.h"
+#include "gamelogic/LapController.h"
 
-#include "ModelsPool.h"
+#include "mesh/ModelsPool.h"
 
 #include "GameState.h"
 #include "OriginalSettings.h"

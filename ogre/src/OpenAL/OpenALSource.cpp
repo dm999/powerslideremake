@@ -1,6 +1,6 @@
 #include "OpenALSource.h"
 
-#include "../OgreInclude.h"
+#include "../includes/OgreInclude.h"
 
 #include "../loaders/ITSLoader.h"
 

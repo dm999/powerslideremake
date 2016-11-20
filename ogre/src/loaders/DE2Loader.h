@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../MshData.h"
+#include "../mesh/MshData.h"
 #include "DE2.h"
 
 class DE2Loader

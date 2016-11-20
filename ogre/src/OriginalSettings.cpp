@@ -4,8 +4,8 @@
 
 #include "loaders/STRLoader.h"
 
-#include "Conversions.h"
-#include "Tools.h"
+#include "tools/Conversions.h"
+#include "tools/Tools.h"
 
 void STRSettings::parse(const PFLoader& pfLoaderStore, const std::string& relativeDir, const std::string& fileName)
 {

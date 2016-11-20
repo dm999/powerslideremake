@@ -1,7 +1,7 @@
 #ifndef TEXLOADER_H
 #define TEXLOADER_H
 
-#include "../CommonIncludes.h"
+#include "../includes/CommonIncludes.h"
 
 #include "PFLoader.h"
 /**

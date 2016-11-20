@@ -1,8 +1,8 @@
 #include "pcheader.h"
 
 #include "CameraMan.h"
-#include "Conversions.h"
-#include "Tools.h"
+#include "tools/Conversions.h"
+#include "tools/Tools.h"
 #include "BaseApp.h"
 
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"

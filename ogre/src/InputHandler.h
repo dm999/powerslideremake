@@ -2,8 +2,8 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
-#include "OgreInclude.h"
-#include "OISInclude.h"
+#include "includes/OgreInclude.h"
+#include "includes/OISInclude.h"
 #include "SdkTrays.h"
 
 class BaseApp;

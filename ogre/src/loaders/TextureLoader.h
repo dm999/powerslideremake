@@ -3,7 +3,7 @@
 
 #include "PFLoader.h"
 
-#include "../CommonIncludes.h"
+#include "../includes/CommonIncludes.h"
 
 /**
  * Load texture from arbitrary format standard (non *.tex)

@@ -6,11 +6,11 @@
 
 #include "OpenAL/OpenALState.h"
 
-#include "OgreInclude.h"
+#include "includes/OgreInclude.h"
 
-#include "CommonIncludes.h"
+#include "includes/CommonIncludes.h"
 
-#include "LinearController.h"
+#include "tools/LinearController.h"
 
 #include "lua/DMLuaManager.h"
 
