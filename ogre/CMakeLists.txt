@@ -57,6 +57,9 @@ file(GLOB sources_tools_main_h src/tools/*.h)
 file(GLOB sources_mesh_main src/mesh/*.cpp)
 file(GLOB sources_mesh_main_h src/mesh/*.h)
 
+file(GLOB sources_modes_main src/gamemodes/*.cpp)
+file(GLOB sources_modes_main_h src/gamemodes/*.h)
+
 file(GLOB sources_includes_main_h src/includes/*.h)
 
 if(WIN32)
@@ -88,6 +91,7 @@ list(APPEND sources ${sources_pscar_main})
 list(APPEND sources ${sources_listeners_main})
 list(APPEND sources ${sources_tools_main})
 list(APPEND sources ${sources_mesh_main})
+list(APPEND sources ${sources_modes_main})
 list(APPEND sources ${sources_main_h})
 list(APPEND sources ${sources_lua_main_h})
 list(APPEND sources ${sources_openal_main_h})
@@ -99,6 +103,7 @@ list(APPEND sources ${sources_pscar_main_h})
 list(APPEND sources ${sources_listeners_main_h})
 list(APPEND sources ${sources_tools_main_h})
 list(APPEND sources ${sources_mesh_main_h})
+list(APPEND sources ${sources_modes_main_h})
 list(APPEND sources ${sources_includes_main_h})
 
 

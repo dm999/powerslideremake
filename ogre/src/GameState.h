@@ -10,6 +10,10 @@
 #include "tools/Tools.h"
 #include "tools/PausedTimer.h"
 
+#include "loaders/PFLoader.h"
+
+#include "OriginalSettings.h"
+
 enum AIStrength
 {
     Easy    = 0,

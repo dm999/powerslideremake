@@ -24,7 +24,6 @@ function createScene()
     Terrain.Scene.AdjustNormalsAngleThreshold = math.cos(math.rad(80.0));--average lower than
     
     
-    Scene.IsDisableMouse = true;
     Scene.IsCamToAI = false;
     
     Scene.SoundMasterGain = 0.0;

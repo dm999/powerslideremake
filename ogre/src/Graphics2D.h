@@ -15,7 +15,7 @@
 #include "GameState.h"
 
 class CustomTrayManager;
-class BaseApp;
+class BaseMode;
 
 class Graphics2D
 {
@@ -54,7 +54,7 @@ public:
 
     void destroy();
 
-    void createRearViewMirrorPanelTexture(BaseApp* baseApp, Ogre::Root * root, int width, int height);
+    void createRearViewMirrorPanelTexture(BaseMode* baseMode, Ogre::Root * root, int width, int height);
     void rearViewMirrorPanelTextureRemoveAllViewports();
     Ogre::Viewport * rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera);
 
@@ -66,7 +66,9 @@ public:
     static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
     static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
+#if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
+#endif
 
     void setVisibleTachoNeedle(bool isVisible);
     void initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState);

@@ -167,8 +167,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mSteeringMax = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.MaxSteer", pipeline);
     mSteeringMaxRad = Ogre::Degree(mSteeringMax).valueRadians();
 
-    mIsDisableMouse = luaManager.ReadScalarBool("Scene.IsDisableMouse", pipeline);
-
     mIsPossesCamera = isPossesCamera;
     if(mIsPossesCamera)
     {

@@ -8,7 +8,7 @@
 
 #include "tools/Conversions.h"
 
-#include "BaseApp.h"
+#include "gamemodes/BaseMode.h"
 
 #include "loaders/TextureLoader.h"
 #include "loaders/TEXLoader.h"
@@ -893,11 +893,13 @@ Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& nam
     return res;
 }
 
+#if defined(__ANDROID__)
 void Graphics2D::reloadTextures(const GameState& gameState)
 {
     loadDashboardCars(gameState);
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
+#endif
 
 void Graphics2D::loadDashboardCars(const GameState& gameState)
 {
@@ -1414,7 +1416,7 @@ void Graphics2D::setRaceTime(const std::string& time)
     }
 }
 
-void Graphics2D::createRearViewMirrorPanelTexture(BaseApp* baseApp, Ogre::Root * root, int width, int height)
+void Graphics2D::createRearViewMirrorPanelTexture(BaseMode* baseMode, Ogre::Root * root, int width, int height)
 {
     Ogre::TexturePtr tex = root->getTextureManager()->createManual(
         "RearViewMirrorTex",
@@ -1426,7 +1428,7 @@ void Graphics2D::createRearViewMirrorPanelTexture(BaseApp* baseApp, Ogre::Root *
         Ogre::PF_R8G8B8,
         Ogre::TU_RENDERTARGET);
     mRearCamTexture = tex->getBuffer()->getRenderTarget();
-    mRearCamTexture->addListener(baseApp);
+    mRearCamTexture->addListener(baseMode);
     
     std::vector<Ogre::String> texName;
     texName.push_back("RearViewMirrorTex");
