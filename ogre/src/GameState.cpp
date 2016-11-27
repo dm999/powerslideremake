@@ -30,10 +30,41 @@ GameState::~GameState()
 {
 }
 
-void GameState::initOriginalData(   const std::string& trackName, 
-                                    const std::string& originalPathData, 
-                                    const std::string& originalPathCommon,
-                                    AIStrength aiStrength)
+void GameState::initOriginalData(const std::string& originalPathData, const std::string& originalPathCommon)
+{
+    bool isLoaded = mPFLoaderData.init(originalPathData, "data.pf");
+
+    if(isLoaded)
+    {
+        isLoaded = mPFLoaderGameshell.init(originalPathData, "gameshell.pf");
+
+        if(isLoaded)
+        {
+            isLoaded = mPFLoaderStore.init(originalPathCommon, "store.pf");
+
+            if(isLoaded)
+            {
+                mSTRPowerslide.parse(mPFLoaderStore);
+                mSTRRacecrud.parse(mPFLoaderStore);
+
+                mOriginalDataInited = true;
+            }
+            {
+                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[CRITICAL]: Unable to locate store.pf file");
+            }
+        }
+        else
+        {
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[CRITICAL]: Unable to locate gameshell.pf file");
+        }
+    }
+    else
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[CRITICAL]: Unable to locate data.pf file");
+    }
+}
+
+void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStrength)
 {
     mTrackName = trackName;
 
@@ -44,16 +75,8 @@ void GameState::initOriginalData(   const std::string& trackName,
         mTrackName = "speedway night track";
     }
 
-    mPFLoaderData.init(originalPathData, "data.pf");
-    mPFLoaderGameshell.init(originalPathData, "gameshell.pf");
-    mPFLoaderStore.init(originalPathCommon, "store.pf");
-    mSTRPowerslide.parse(mPFLoaderStore);
-    mSTRRacecrud.parse(mPFLoaderStore);
-
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
     mLapsCount = mSTRPowerslide.getLapsCount(mTrackName);
-
-    mOriginalDataInited = true;
 }
 
 const PFLoader& GameState::getPFLoaderData() const

@@ -140,9 +140,7 @@ void BaseMode::initScene()
 
     mModeContext.mGameState.setPlayerCharacterName(mLuaManager.ReadScalarString("Main.Character", mModeContext.mPipeline));
 
-    mModeContext.mGameState.initOriginalData(mLuaManager.ReadScalarString("Main.Track", mModeContext.mPipeline),
-                                mLuaManager.ReadScalarString("Main.OriginalPathData", mModeContext.mPipeline),
-                                mLuaManager.ReadScalarString("Main.OriginalPathCommon", mModeContext.mPipeline),
+    mModeContext.mGameState.setRaceParameters(mLuaManager.ReadScalarString("Main.Track", mModeContext.mPipeline),
                                 static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mModeContext.mPipeline)));
 
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());

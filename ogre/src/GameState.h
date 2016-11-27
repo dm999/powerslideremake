@@ -35,10 +35,11 @@ public:
      * originalPathData - should contain data.pf, gameshell.pf
      * originalPathCommon - should contain store.pf
      */
-    void initOriginalData(  const std::string& trackName, 
-                            const std::string& originalPathData, 
-                            const std::string& originalPathCommon,
-                            AIStrength aiStrength);
+    void initOriginalData(const std::string& originalPathData, const std::string& originalPathCommon);
+
+    bool isOriginalDataInited()const {return mOriginalDataInited;}
+
+    void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
 
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;

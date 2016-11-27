@@ -275,6 +275,12 @@ bool BaseApp::setup()
     mTrayMgr->hideCursor();
     //mTrayMgr->toggleAdvancedFrameStats();
 
+    mGameState.initOriginalData("./", "./");
+    if(!mGameState.isOriginalDataInited())
+    {
+        return false;
+    }
+
     mPlayerMode.reset(new SinglePlayerMode(ModeContext(
         mRoot.get(), mWindow,
         mInputHandler.get(),

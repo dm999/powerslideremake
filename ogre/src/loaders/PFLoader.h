@@ -56,7 +56,7 @@ public:
     /**
      * file - data.pf
      */
-    void init(const std::string& path, const std::string& file);
+    bool init(const std::string& path, const std::string& file);
 
     /**
      * opens packed file and offsets to proper location

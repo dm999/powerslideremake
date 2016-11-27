@@ -1,6 +1,4 @@
 Main = {}
-Main.OriginalPathData = "./";
-Main.OriginalPathCommon = "./";
 
 Window = {}
 Window.IsFullScreen = "No";

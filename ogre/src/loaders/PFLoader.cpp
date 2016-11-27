@@ -12,8 +12,10 @@ PFLoader::PFLoader()
     mIsPathCorrect = checkPathCorrect(mPath, mFileName);
 }
 
-void PFLoader::init(const std::string& path, const std::string& file)
+bool PFLoader::init(const std::string& path, const std::string& file)
 {
+    bool res = false;
+
     mPath = path;
     mFileName = file;
     mIsPathCorrect = checkPathCorrect(path, file);
@@ -27,6 +29,8 @@ void PFLoader::init(const std::string& path, const std::string& file)
         FILE * f = fopen(dataPF.c_str(), "rb");
         if(f)
         {
+            res = true;
+
             DWORD Size,From;
             DWORD ElemCount;
 
@@ -69,6 +73,8 @@ void PFLoader::init(const std::string& path, const std::string& file)
             fclose(f);
         }
     }
+
+    return res;
 }
 
 bool PFLoader::checkPathCorrect(const std::string& path, const std::string& file) const
