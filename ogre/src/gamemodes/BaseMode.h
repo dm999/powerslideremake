@@ -3,98 +3,29 @@
 
 #include "ModeContext.h"
 
-#include "../lua/DMLuaManager.h"
-
-#include "../includes/OgreBulletInclude.h"
-#include "../includes/CommonIncludes.h"
-
-#include "../mesh/StaticMeshProcesser.h"
-#include "../mesh/ModelsPool.h"
-
-#include "../gamelogic/LapController.h"
-
-class CameraMan;
-
-#define SHOW_DETAILS_PANEL 0
-
-class BaseMode : 
-    public LapUtils::Events,
-    public Ogre::RenderTargetListener // for rear camera
+class BaseMode
 {
 public:
 
     BaseMode(const ModeContext& modeContext);
     virtual ~BaseMode(){}
 
-    void initData();
-    virtual void clearData();
-
-    void restart();
-    void reload();
-
-    void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+    virtual void initData() = 0;
+    virtual void clearData() = 0;
 
     virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;
     virtual void frameRenderingQueued(const Ogre::FrameEvent& evt) = 0;
-
-    //LapUtils
-    void onLapFinished()override;
-
-    //rear camera listener
-    void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
-    void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
 
 protected:
 
     ModeContext mModeContext;
 
-    StaticMeshProcesser mStaticMeshProcesser;
-    ModelsPool mModelsPool;
-
-    LapController mLapController;
-
-    CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
-
-    CommonIncludes::shared_ptr<OgreBulletDynamics::DynamicsWorld> mWorld;
-
     Ogre::SceneManager* mSceneMgr;
     Ogre::SceneNode* mMainNode;
     Ogre::Camera* mCamera;
 
-#if SHOW_DETAILS_PANEL
-    OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
-#endif
-
-    virtual void clearScene();
-    virtual void initMisc();
-
 private:
 
-    bool mIsGlobalReset;
-
-    DMLuaManager mLuaManager;
-
-    Ogre::Camera* mRearCamera;
-
-    Ogre::SceneManager* mSceneMgrCarUI;
-
-    CommonIncludes::shared_ptr<OgreBulletCollisions::DebugDrawer> mDebugDrawer;
-
-    void initScene();
-    void initTerrain();
-    void initModel();
-
-    void initLightLists();
-
-
-    void initWorld(const Ogre::Vector3 &gravityVector = Ogre::Vector3(0.0f, -59.81f, 0.0f),
-                   const Ogre::AxisAlignedBox &bounds = Ogre::AxisAlignedBox(   Ogre::Vector3 (-10000.0f, -10000.0f, -10000.0f),
-                                                                                Ogre::Vector3 (10000.0f,  10000.0f,  10000.0f)));
-
-    void deInitWorld();
-
-    void loadResources();
-    void unloadResources();
 };
 
 #endif

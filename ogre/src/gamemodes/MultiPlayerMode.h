@@ -1,11 +1,11 @@
 #ifndef MULTIPLAYERMODE_H
 #define MULTIPLAYERMODE_H
 
-#include "BaseMode.h"
+#include "BaseRaceMode.h"
 
 #include "../multiplayer/MultiplayerController.h"
 
-class MiltiPlayerMode : public BaseMode,
+class MiltiPlayerMode : public BaseRaceMode,
     public MultiplayerController::Events
 {
 public:

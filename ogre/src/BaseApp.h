@@ -23,7 +23,8 @@
     class AAssetManager;
 #endif
 
-class BaseMode;
+class BaseMenuMode;
+class BaseRaceMode;
 class CustomSceneManagerFactory;
 class CustomTrayManager;
 class CustomOverlaySystem;
@@ -126,7 +127,11 @@ private:
     GameState mGameState;
     Graphics2D mGraphics2D;
 
-    CommonIncludes::shared_ptr<BaseMode> mPlayerMode;
+    GameMode mGameMode;
+    bool mIsSwitchMode;
+
+    CommonIncludes::shared_ptr<BaseMenuMode> mMenuMode;
+    CommonIncludes::shared_ptr<BaseRaceMode> mPlayerMode;
 
 
     void initLua();

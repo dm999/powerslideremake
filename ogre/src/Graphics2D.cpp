@@ -8,7 +8,7 @@
 
 #include "tools/Conversions.h"
 
-#include "gamemodes/BaseMode.h"
+#include "gamemodes/BaseRaceMode.h"
 
 #include "loaders/TextureLoader.h"
 #include "loaders/TEXLoader.h"
@@ -1416,7 +1416,7 @@ void Graphics2D::setRaceTime(const std::string& time)
     }
 }
 
-void Graphics2D::createRearViewMirrorPanelTexture(BaseMode* baseMode, Ogre::Root * root, int width, int height)
+void Graphics2D::createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Ogre::Root * root, int width, int height)
 {
     Ogre::TexturePtr tex = root->getTextureManager()->createManual(
         "RearViewMirrorTex",
@@ -1428,7 +1428,7 @@ void Graphics2D::createRearViewMirrorPanelTexture(BaseMode* baseMode, Ogre::Root
         Ogre::PF_R8G8B8,
         Ogre::TU_RENDERTARGET);
     mRearCamTexture = tex->getBuffer()->getRenderTarget();
-    mRearCamTexture->addListener(baseMode);
+    mRearCamTexture->addListener(baseRaceMode);
     
     std::vector<Ogre::String> texName;
     texName.push_back("RearViewMirrorTex");

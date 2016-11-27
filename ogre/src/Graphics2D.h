@@ -15,7 +15,7 @@
 #include "GameState.h"
 
 class CustomTrayManager;
-class BaseMode;
+class BaseRaceMode;
 
 class Graphics2D
 {
@@ -54,7 +54,7 @@ public:
 
     void destroy();
 
-    void createRearViewMirrorPanelTexture(BaseMode* baseMode, Ogre::Root * root, int width, int height);
+    void createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Ogre::Root * root, int width, int height);
     void rearViewMirrorPanelTextureRemoveAllViewports();
     Ogre::Viewport * rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera);
 

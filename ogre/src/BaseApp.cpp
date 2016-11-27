@@ -12,6 +12,7 @@
 #include "customs/CustomTrayManager.h"
 #include "customs/CustomOverlaySystem.h"
 
+#include "gamemodes/BaseMenuMode.h"
 #include "gamemodes/SinglePlayerMode.h"
 #include "gamemodes/MultiPlayerMode.h"
 
@@ -96,7 +97,9 @@ BaseApp::BaseApp() :
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mShutDown(false),
     mLuaError(0),
-    mSMFactory(new CustomSceneManagerFactory())
+    mSMFactory(new CustomSceneManagerFactory()),
+    mGameMode(ModeMenu),
+    mIsSwitchMode(false)
 {
 #if defined(__ANDROID__)
     LOGI("BaseApp[BaseApp]: Begin"); 
@@ -111,6 +114,10 @@ BaseApp::BaseApp() :
 
 BaseApp::~BaseApp()
 {
+    if(mMenuMode.get())
+        mMenuMode->clearData();
+    mMenuMode.reset();
+
     if(mPlayerMode.get())
         mPlayerMode->clearData();
     mPlayerMode.reset();
@@ -281,6 +288,20 @@ bool BaseApp::setup()
         return false;
     }
 
+    mGameState.setPlayerCharacterName("frantic");
+
+
+    //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
+    //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
+#if 1
+    mMenuMode.reset(new BaseMenuMode(ModeContext(
+        mRoot.get(), mWindow,
+        mInputHandler.get(),
+        mTrayMgr.get(), mOverlaySystem.get(),
+        mPipeline,
+        mGameState, mSoundsProcesser, mGraphics2D
+        )));
+#else
     mPlayerMode.reset(new SinglePlayerMode(ModeContext(
         mRoot.get(), mWindow,
         mInputHandler.get(),
@@ -288,13 +309,17 @@ bool BaseApp::setup()
         mPipeline,
         mGameState, mSoundsProcesser, mGraphics2D
         )));
+#endif
+
+    if(mMenuMode.get())
+        mMenuMode->initData();
 
     if(mPlayerMode.get())
         mPlayerMode->initData();
 
     createFrameListener();
 
-    //mTrayMgr->showCursor("Test/Cursor");
+    mTrayMgr->showCursor("Test/Cursor");
     //Ogre::OverlayContainer* cursor = mTrayMgr->getCursorContainer();
     //cursor->setWidth(0.0001f);
 
@@ -308,6 +333,9 @@ bool BaseApp::frameStarted(const Ogre::FrameEvent &evt)
 
     if(mShutDown)
         return false;
+
+    if(mMenuMode.get())
+        mMenuMode->frameStarted(evt);
 
     if(mPlayerMode.get())
         mPlayerMode->frameStarted(evt);
@@ -323,7 +351,58 @@ bool BaseApp::frameEnded(const Ogre::FrameEvent &evt)
     if(mShutDown)
         return false;
 
-    //mVehicle->debugDraw(mDebugDrawer.get());
+    if(mIsSwitchMode)
+    {
+        if(mMenuMode.get())
+            mMenuMode->clearData();
+        mMenuMode.reset();
+
+        if(mPlayerMode.get())
+            mPlayerMode->clearData();
+        mPlayerMode.reset();
+
+        if(mGameMode == ModeRace && mIsSwitchMode)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = ModeMenu;
+
+            mTrayMgr->showCursor();
+
+            mMenuMode.reset(new BaseMenuMode(ModeContext(
+                mRoot.get(), mWindow,
+                mInputHandler.get(),
+                mTrayMgr.get(), mOverlaySystem.get(),
+                mPipeline,
+                mGameState, mSoundsProcesser, mGraphics2D
+                )));
+
+
+            if(mMenuMode.get())
+                mMenuMode->initData();
+        }
+
+        if(mGameMode == ModeMenu && mIsSwitchMode)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = ModeRace;
+
+            mTrayMgr->hideCursor();
+
+            mPlayerMode.reset(new SinglePlayerMode(ModeContext(
+                mRoot.get(), mWindow,
+                mInputHandler.get(),
+                mTrayMgr.get(), mOverlaySystem.get(),
+                mPipeline,
+                mGameState, mSoundsProcesser, mGraphics2D
+                )));
+
+            if(mPlayerMode.get())
+                mPlayerMode->initData();
+        }
+
+    }
 
     return true;
 }
@@ -335,6 +414,9 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     if(mShutDown)
         return false;
+
+    if(mMenuMode.get())
+        mMenuMode->frameRenderingQueued(evt);
 
     if(mPlayerMode.get())
         mPlayerMode->frameRenderingQueued(evt);
@@ -407,6 +489,8 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     mTrayMgr->injectMouseDown(arg, id);
+
+    mIsSwitchMode = true;
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {

@@ -33,7 +33,8 @@ public:
 
     ~ModeContext(){}
 
-    friend class BaseMode;
+    friend class BaseMenuMode;
+    friend class BaseRaceMode;
     friend class SinglePlayerMode;
     friend class MiltiPlayerMode;
 

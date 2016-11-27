@@ -1,9 +1,9 @@
 #ifndef SINGLEPLAYERMODE_H
 #define SINGLEPLAYERMODE_H
 
-#include "BaseMode.h"
+#include "BaseRaceMode.h"
 
-class SinglePlayerMode : public BaseMode
+class SinglePlayerMode : public BaseRaceMode
 {
 public:
 

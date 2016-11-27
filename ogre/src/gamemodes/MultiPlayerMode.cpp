@@ -7,7 +7,7 @@
 #include "../customs/CustomTrayManager.h"
 
 MiltiPlayerMode::MiltiPlayerMode(const ModeContext& modeContext) :
-    BaseMode(modeContext)
+    BaseRaceMode(modeContext)
 {}
 
 void MiltiPlayerMode::clearData()
@@ -18,7 +18,7 @@ void MiltiPlayerMode::clearData()
     mMultiplayerController.reset();
 
 
-    BaseMode::clearData();
+    BaseRaceMode::clearData();
 }
 
 void MiltiPlayerMode::clearScene()
@@ -27,12 +27,12 @@ void MiltiPlayerMode::clearScene()
         mMultiplayerController->clearSessionAndLobby();
     mMultiplayerController.reset();
 
-    BaseMode::clearScene();
+    BaseRaceMode::clearScene();
 }
 
 void MiltiPlayerMode::initMisc()
 {
-    BaseMode::initMisc();
+    BaseRaceMode::initMisc();
 
     if(mModeContext.mGameState.isMultiplayerEnabled())
     {

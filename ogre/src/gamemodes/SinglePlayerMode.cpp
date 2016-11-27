@@ -9,7 +9,7 @@
 #include "../tools/Conversions.h"
 
 SinglePlayerMode::SinglePlayerMode(const ModeContext& modeContext) :
-    BaseMode(modeContext)
+    BaseRaceMode(modeContext)
 {}
 
 void SinglePlayerMode::frameStarted(const Ogre::FrameEvent &evt)

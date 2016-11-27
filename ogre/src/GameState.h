@@ -14,6 +14,12 @@
 
 #include "OriginalSettings.h"
 
+enum GameMode
+{
+    ModeMenu,
+    ModeRace
+};
+
 enum AIStrength
 {
     Easy    = 0,
