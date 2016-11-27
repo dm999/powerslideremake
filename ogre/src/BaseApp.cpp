@@ -351,7 +351,12 @@ bool BaseApp::frameEnded(const Ogre::FrameEvent &evt)
     if(mShutDown)
         return false;
 
-    if(mIsSwitchMode)
+    const unsigned long afterFinishTimeThreshold = 10000; // ms
+    bool raceOverAndReadyToQuit =   mGameMode == ModeRace           &&
+                                    mGameState.getRaceFinished()    &&
+                                    mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold;
+
+    if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
         if(mMenuMode.get())
             mMenuMode->clearData();
@@ -361,7 +366,7 @@ bool BaseApp::frameEnded(const Ogre::FrameEvent &evt)
             mPlayerMode->clearData();
         mPlayerMode.reset();
 
-        if(mGameMode == ModeRace && mIsSwitchMode)
+        if(mGameMode == ModeRace && mIsSwitchMode || raceOverAndReadyToQuit)
         {
             mIsSwitchMode = false;
 

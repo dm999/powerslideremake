@@ -676,6 +676,8 @@ void BaseRaceMode::onLapFinished()
     //race finished
     if(lap == mModeContext.mGameState.getLapsCount())
     {
+        mModeContext.mGameState.resetAfterFinishTimer();
+
         std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
         mModeContext.mGraphics2D.addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
 

@@ -65,6 +65,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     bool isPossesCamera,
                                     bool isAI)
 {
+    mIsDisableMouse = true;
     mWheelCollisionFrontL = false;
     mWheelCollisionFrontR = false;
     mWheelCollisionBackL = false;

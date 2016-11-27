@@ -96,6 +96,9 @@ public:
     void setRaceFinished(bool isFinished){mIsRaceFinished= isFinished;}
     bool getRaceFinished()const{return mIsRaceFinished;}
 
+    unsigned long getAfterFinishTimerTime(){return mTimerAfterFinish.getMilliseconds();}
+    void resetAfterFinishTimer(){mTimerAfterFinish.reset();}
+
     unsigned long getBeforeStartTimerTime(){return mBeforeStartTimer.getMilliseconds();}
     void resetBeforeStartTimer(){mBeforeStartTimer.reset();}
 
@@ -188,6 +191,8 @@ private:
     PausedTimer mBeforeStartTimer;
 
     bool mIsRaceFinished;
+
+    Ogre::Timer mTimerAfterFinish;
 
     Ogre::SceneNode* mArrowNode;
 
