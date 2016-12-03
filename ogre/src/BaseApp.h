@@ -17,18 +17,19 @@
 #include "Graphics2D.h"
 #include "SoundsProcesser.h"
 
+#include "gamemodes/ModeContext.h"
+
 #if defined(__ANDROID__)
     #include <jni.h>
 
     class AAssetManager;
 #endif
 
-class BaseMenuMode;
-class BaseRaceMode;
 class CustomSceneManagerFactory;
 class CustomTrayManager;
 class CustomOverlaySystem;
 class InputHandler;
+class GameModeSwitcher;
 
 //https://github.com/synasius/ogre-basic-tutorials
 class BaseApp : 
@@ -127,17 +128,15 @@ private:
     GameState mGameState;
     Graphics2D mGraphics2D;
 
-    GameMode mGameMode;
-    bool mIsSwitchMode;
-
-    CommonIncludes::shared_ptr<BaseMenuMode> mMenuMode;
-    CommonIncludes::shared_ptr<BaseRaceMode> mPlayerMode;
+    CommonIncludes::shared_ptr<GameModeSwitcher> mGameModeSwitcher;
 
 
     void initLua();
     void doLuaMainFile();
     void registerLuaFunctions();
     void deInitLua();
+
+    ModeContext createModeContext();
 };
 
 #endif

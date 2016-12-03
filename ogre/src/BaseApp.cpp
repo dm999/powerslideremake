@@ -11,10 +11,7 @@
 #include "customs/CustomSceneManager.h"
 #include "customs/CustomTrayManager.h"
 #include "customs/CustomOverlaySystem.h"
-
-#include "gamemodes/BaseMenuMode.h"
-#include "gamemodes/SinglePlayerMode.h"
-#include "gamemodes/MultiPlayerMode.h"
+#include "gamelogic/GameModeSwitcher.h"
 
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 
@@ -97,9 +94,7 @@ BaseApp::BaseApp() :
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mShutDown(false),
     mLuaError(0),
-    mSMFactory(new CustomSceneManagerFactory()),
-    mGameMode(ModeMenu),
-    mIsSwitchMode(false)
+    mSMFactory(new CustomSceneManagerFactory())
 {
 #if defined(__ANDROID__)
     LOGI("BaseApp[BaseApp]: Begin"); 
@@ -114,13 +109,7 @@ BaseApp::BaseApp() :
 
 BaseApp::~BaseApp()
 {
-    if(mMenuMode.get())
-        mMenuMode->clearData();
-    mMenuMode.reset();
-
-    if(mPlayerMode.get())
-        mPlayerMode->clearData();
-    mPlayerMode.reset();
+    mGameModeSwitcher.reset();
 
     baseApp = NULL;
     deInitLua();
@@ -293,29 +282,8 @@ bool BaseApp::setup()
 
     //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
     //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
-#if 1
-    mMenuMode.reset(new BaseMenuMode(ModeContext(
-        mRoot.get(), mWindow,
-        mInputHandler.get(),
-        mTrayMgr.get(), mOverlaySystem.get(),
-        mPipeline,
-        mGameState, mSoundsProcesser, mGraphics2D
-        )));
-#else
-    mPlayerMode.reset(new SinglePlayerMode(ModeContext(
-        mRoot.get(), mWindow,
-        mInputHandler.get(),
-        mTrayMgr.get(), mOverlaySystem.get(),
-        mPipeline,
-        mGameState, mSoundsProcesser, mGraphics2D
-        )));
-#endif
 
-    if(mMenuMode.get())
-        mMenuMode->initData();
-
-    if(mPlayerMode.get())
-        mPlayerMode->initData();
+    mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 
     createFrameListener();
 
@@ -334,11 +302,7 @@ bool BaseApp::frameStarted(const Ogre::FrameEvent &evt)
     if(mShutDown)
         return false;
 
-    if(mMenuMode.get())
-        mMenuMode->frameStarted(evt);
-
-    if(mPlayerMode.get())
-        mPlayerMode->frameStarted(evt);
+    mGameModeSwitcher->frameStarted(evt);
 
     return true;
 }
@@ -351,63 +315,7 @@ bool BaseApp::frameEnded(const Ogre::FrameEvent &evt)
     if(mShutDown)
         return false;
 
-    const unsigned long afterFinishTimeThreshold = 10000; // ms
-    bool raceOverAndReadyToQuit =   mGameMode == ModeRace           &&
-                                    mGameState.getRaceFinished()    &&
-                                    mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold;
-
-    if(mIsSwitchMode || raceOverAndReadyToQuit)
-    {
-        if(mMenuMode.get())
-            mMenuMode->clearData();
-        mMenuMode.reset();
-
-        if(mPlayerMode.get())
-            mPlayerMode->clearData();
-        mPlayerMode.reset();
-
-        if(mGameMode == ModeRace && mIsSwitchMode || raceOverAndReadyToQuit)
-        {
-            mIsSwitchMode = false;
-
-            mGameMode = ModeMenu;
-
-            mTrayMgr->showCursor();
-
-            mMenuMode.reset(new BaseMenuMode(ModeContext(
-                mRoot.get(), mWindow,
-                mInputHandler.get(),
-                mTrayMgr.get(), mOverlaySystem.get(),
-                mPipeline,
-                mGameState, mSoundsProcesser, mGraphics2D
-                )));
-
-
-            if(mMenuMode.get())
-                mMenuMode->initData();
-        }
-
-        if(mGameMode == ModeMenu && mIsSwitchMode)
-        {
-            mIsSwitchMode = false;
-
-            mGameMode = ModeRace;
-
-            mTrayMgr->hideCursor();
-
-            mPlayerMode.reset(new SinglePlayerMode(ModeContext(
-                mRoot.get(), mWindow,
-                mInputHandler.get(),
-                mTrayMgr.get(), mOverlaySystem.get(),
-                mPipeline,
-                mGameState, mSoundsProcesser, mGraphics2D
-                )));
-
-            if(mPlayerMode.get())
-                mPlayerMode->initData();
-        }
-
-    }
+    mGameModeSwitcher->frameEnded();
 
     return true;
 }
@@ -420,11 +328,7 @@ bool BaseApp::frameRenderingQueued(const Ogre::FrameEvent& evt)
     if(mShutDown)
         return false;
 
-    if(mMenuMode.get())
-        mMenuMode->frameRenderingQueued(evt);
-
-    if(mPlayerMode.get())
-        mPlayerMode->frameRenderingQueued(evt);
+    mGameModeSwitcher->frameRenderingQueued(evt);
 
     return true;
 }
@@ -463,14 +367,13 @@ void BaseApp::windowFocusChange(Ogre::RenderWindow* rw)
 void BaseApp::scriptsReload()
 {
     doLuaMainFile();
-    if(mPlayerMode.get())
-        mPlayerMode->reload();
+
+    mGameModeSwitcher->reloadRace();
 }
 
 void BaseApp::quickScriptsReload()
 {
-    if(mPlayerMode.get())
-        mPlayerMode->restart();
+    mGameModeSwitcher->restartRace();
 }
 
 
@@ -495,7 +398,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     mTrayMgr->injectMouseDown(arg, id);
 
-    mIsSwitchMode = true;
+    mGameModeSwitcher->switchMode();
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
@@ -519,8 +422,7 @@ void BaseApp::parseFile(const std::string& fileName)
 
 void BaseApp::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 {
-    if(mPlayerMode.get())
-        mPlayerMode->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
+    mGameModeSwitcher->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
 }
 
 static int LuaPanic(lua_State * St)
@@ -573,6 +475,17 @@ void BaseApp::deInitLua()
         lua_close(mPipeline);
         mPipeline = NULL;
     }
+}
+
+ModeContext BaseApp::createModeContext()
+{
+    return ModeContext(
+        mRoot.get(), mWindow,
+        mInputHandler.get(),
+        mTrayMgr.get(), mOverlaySystem.get(),
+        mPipeline,
+        mGameState, mSoundsProcesser, mGraphics2D
+    );
 }
 
 #if defined(__ANDROID__)
@@ -733,8 +646,18 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before create scene"); 
 
-            if(mPlayerMode.get())
-                mPlayerMode->initData();
+            mGameState.initOriginalData("./", "./");
+            if(!mGameState.isOriginalDataInited())
+            {
+                return false;
+            }
+
+            mGameState.setPlayerCharacterName("frantic");
+
+            //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
+            //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
+
+            mGameModeSwitcher->init();
 
             LOGI("BaseApp[androidInitWindow]: Before createFrameListener"); 
             createFrameListener();
