@@ -1,17 +1,17 @@
-#include "pcheader.h"
+#include "../pcheader.h"
 
-#include "Graphics2D.h"
+#include "UIRace.h"
 
-#include "tools/OgreTools.h"
+#include "../tools/OgreTools.h"
 
-#include "customs/CustomTrayManager.h"
+#include "../customs/CustomTrayManager.h"
 
-#include "tools/Conversions.h"
+#include "../tools/Conversions.h"
 
-#include "gamemodes/BaseRaceMode.h"
+#include "../gamemodes/BaseRaceMode.h"
 
-#include "loaders/TextureLoader.h"
-#include "loaders/TEXLoader.h"
+#include "../loaders/TextureLoader.h"
+#include "../loaders/TEXLoader.h"
 
 #if defined(__ANDROID__)
     #include <android/log.h>
@@ -20,14 +20,14 @@
     #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 #endif
 
-Graphics2D::Graphics2D() :
+UIRace::UIRace() :
     mLoaded(false), mRearViewMirrorPanel(NULL)
 {
     mEngineRPMToRotation.addPoint(1000.0f, 155.0f);
     mEngineRPMToRotation.addPoint(10000.0f, -70.0f);
 }
 
-void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
+void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 {
 
     //startlight
@@ -688,22 +688,6 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mFinishSignPanel->hide();
     }
 
-    //cursor
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCursor");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
-                            "Test/DiffuseTransparent", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
-    }
-
     //misc text
     {
 
@@ -745,12 +729,12 @@ void Graphics2D::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
 }
 
-void Graphics2D::setVisibleTachoNeedle(bool isVisible)
+void UIRace::setVisibleTachoNeedle(bool isVisible)
 {
     mNeedle->setVisible(isVisible);
 }
 
-void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState)
+void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState)
 {
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
@@ -824,7 +808,7 @@ void Graphics2D::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameSt
     mChildNeedle->attachObject(mNeedle);
 }
 
-void Graphics2D::setVisibleFinishSign(bool isVisible, size_t finishPos)
+void UIRace::setVisibleFinishSign(bool isVisible, size_t finishPos)
 {
     if(isVisible)
     {
@@ -849,7 +833,7 @@ void Graphics2D::setVisibleFinishSign(bool isVisible, size_t finishPos)
         mFinishSignPanel->hide();
 }
 
-Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material)
+Ogre::PanelOverlayElement* UIRace::createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material)
 {
     Ogre::PanelOverlayElement* res = NULL;
 
@@ -869,12 +853,12 @@ Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, Ogr
     return res;
 }
 
-Ogre::PanelOverlayElement* Graphics2D::createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material)
+Ogre::PanelOverlayElement* UIRace::createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material)
 {
     return createPanel(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y, material);
 }
 
-Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
+Ogre::TextAreaOverlayElement* UIRace::createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 {
     Ogre::TextAreaOverlayElement* res = NULL;
 
@@ -894,14 +878,14 @@ Ogre::TextAreaOverlayElement* Graphics2D::createTextArea(const Ogre::String& nam
 }
 
 #if defined(__ANDROID__)
-void Graphics2D::reloadTextures(const GameState& gameState)
+void UIRace::reloadTextures(const GameState& gameState)
 {
     loadDashboardCars(gameState);
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
 #endif
 
-void Graphics2D::loadDashboardCars(const GameState& gameState)
+void UIRace::loadDashboardCars(const GameState& gameState)
 {
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
     for (size_t q = 0; q < availableCharacters.size(); ++q)
@@ -924,21 +908,16 @@ void Graphics2D::loadDashboardCars(const GameState& gameState)
     }
 }
 
-void Graphics2D::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
+void UIRace::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
 #if defined(__ANDROID__)
-        LOGI("Graphics2D[loadMisc]: Begin"); 
+        LOGI("UIRace[loadMisc]: Begin"); 
 #endif
 
     Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( pfLoaderData, 
                                 "data/misc", "paused_bg.tga", 
                                 "OriginalPaused", TEMP_RESOURCE_GROUP_NAME, 
                                 Ogre::ColourValue::Black, 0.1f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "cursor.bmp", 
-                                "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
 
     Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName("Test/Paused");
     if(!mat.isNull())
@@ -964,32 +943,32 @@ void Graphics2D::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalFinished4", TEMP_RESOURCE_GROUP_NAME);
 
 #if defined(__ANDROID__)
-        LOGI("Graphics2D[loadMisc]: End"); 
+        LOGI("UIRace[loadMisc]: End"); 
 #endif
 }
 
-void Graphics2D::showBeforeStart1()
+void UIRace::showBeforeStart1()
 {
     mBeforeStartPanelReadyL->show();
     mBeforeStartPanelReadyC->show();
     mBeforeStartPanelReadyR->show();
 }
 
-void Graphics2D::showBeforeStart2()
+void UIRace::showBeforeStart2()
 {
     mBeforeStartPanelSetL->show();
     mBeforeStartPanelSetC->show();
     mBeforeStartPanelSetR->show();
 }
 
-void Graphics2D::showBeforeStart3()
+void UIRace::showBeforeStart3()
 {
     mBeforeStartPanelGoL->show();
     mBeforeStartPanelGoC->show();
     mBeforeStartPanelGoR->show();
 }
 
-void Graphics2D::hideAllStart()
+void UIRace::hideAllStart()
 {
     mBeforeStartPanelReadyL->hide();
     mBeforeStartPanelReadyC->hide();
@@ -1004,7 +983,7 @@ void Graphics2D::hideAllStart()
     mBeforeStartPanelGoR->hide();
 }
 
-void Graphics2D::setEngineRPM(Ogre::Real rpm)
+void UIRace::setEngineRPM(Ogre::Real rpm)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -1040,7 +1019,7 @@ void Graphics2D::setEngineRPM(Ogre::Real rpm)
     }
 }
 
-void Graphics2D::destroy()
+void UIRace::destroy()
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
     if(mRearViewMirrorPanel)
@@ -1091,7 +1070,7 @@ void Graphics2D::destroy()
     //om.destroy(mNeedleLayer);
 }
 
-std::pair<Ogre::Real, Ogre::Real> Graphics2D::getTachoDigitOffset(unsigned char digit)const
+std::pair<Ogre::Real, Ogre::Real> UIRace::getTachoDigitOffset(unsigned char digit)const
 {
     if(digit > 9) digit = 9;
 
@@ -1103,7 +1082,7 @@ std::pair<Ogre::Real, Ogre::Real> Graphics2D::getTachoDigitOffset(unsigned char 
     return res;
 }
 
-void Graphics2D::setCarSpeed(Ogre::Real speed)
+void UIRace::setCarSpeed(Ogre::Real speed)
 {
     speed = Ogre::Math::Abs(speed);
 
@@ -1133,7 +1112,7 @@ void Graphics2D::setCarSpeed(Ogre::Real speed)
     }
 }
 
-std::pair<Ogre::Real, Ogre::Real> Graphics2D::getDashDigitOffsetX(unsigned char digit)const
+std::pair<Ogre::Real, Ogre::Real> UIRace::getDashDigitOffsetX(unsigned char digit)const
 {
     std::pair<Ogre::Real, Ogre::Real> res = std::make_pair(0.0f, 0.0f);
 
@@ -1193,7 +1172,7 @@ std::pair<Ogre::Real, Ogre::Real> Graphics2D::getDashDigitOffsetX(unsigned char 
     return res;
 }
 
-std::pair<Ogre::Real, Ogre::Real> Graphics2D::getDashDigitOffsetY(unsigned char digit)const
+std::pair<Ogre::Real, Ogre::Real> UIRace::getDashDigitOffsetY(unsigned char digit)const
 {
     std::pair<Ogre::Real, Ogre::Real> res = std::make_pair(0.0f, 0.0f);
 
@@ -1243,7 +1222,7 @@ std::pair<Ogre::Real, Ogre::Real> Graphics2D::getDashDigitOffsetY(unsigned char 
     return res;
 }
 
-void Graphics2D::setCurrentLap(unsigned short lap, unsigned short totallap)
+void UIRace::setCurrentLap(unsigned short lap, unsigned short totallap)
 {
     if(lap < 1) lap = 1;
     if(lap > totallap) lap = totallap;
@@ -1292,7 +1271,7 @@ void Graphics2D::setCurrentLap(unsigned short lap, unsigned short totallap)
 
 }
 
-void Graphics2D::setCarGear(unsigned char gear)
+void UIRace::setCarGear(unsigned char gear)
 {
     if(gear == 255) gear = 'r';
 
@@ -1301,7 +1280,7 @@ void Graphics2D::setCarGear(unsigned char gear)
     mDashGear->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
 }
 
-void Graphics2D::setCarPos(unsigned char pos, unsigned char totalcars)
+void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
 {
     mTachoTotalCarsDigit2->hide();
     mTachoPosDigit2->hide();
@@ -1346,7 +1325,7 @@ void Graphics2D::setCarPos(unsigned char pos, unsigned char totalcars)
     }
 }
 
-void Graphics2D::hideAIDashboardCars()
+void UIRace::hideAIDashboardCars()
 {
     for(size_t q = 0; q < mDashboardCarsCount; ++q)
     {
@@ -1354,7 +1333,7 @@ void Graphics2D::hideAIDashboardCars()
     }
 }
 
-void Graphics2D::setPlayerDashBoardSkin(const GameState& gameState)
+void UIRace::setPlayerDashBoardSkin(const GameState& gameState)
 {
     std::string iconName = gameState.getSTRPowerslide().getValue(gameState.getPlayerCharacterName() + " parameters", "icon", "car0_0s.bmp");
     std::string matName = "Test/" + iconName;
@@ -1362,7 +1341,7 @@ void Graphics2D::setPlayerDashBoardSkin(const GameState& gameState)
         mPlayerDashboardCar->setMaterialName(matName);
 }
 
-void Graphics2D::setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName)
+void UIRace::setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName)
 {
     std::string iconName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "icon", "car0_0s.bmp");
     std::string matName = "Test/" + iconName;
@@ -1374,7 +1353,7 @@ void Graphics2D::setAIDashBoardSkin(const GameState& gameState, size_t aiDashInd
     }
 }
 
-void Graphics2D::setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos)
+void UIRace::setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos)
 {
     if(aiDashIndex < mDashboardCarsCount)
     {
@@ -1414,7 +1393,7 @@ void Graphics2D::setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real 
     }
 }
 
-void Graphics2D::setRaceTime(const std::string& time)
+void UIRace::setRaceTime(const std::string& time)
 {
     mDashLapTime6->hide();
 
@@ -1461,7 +1440,7 @@ void Graphics2D::setRaceTime(const std::string& time)
     }
 }
 
-void Graphics2D::createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Ogre::Root * root, int width, int height)
+void UIRace::createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Ogre::Root * root, int width, int height)
 {
     Ogre::TexturePtr tex = root->getTextureManager()->createManual(
         "RearViewMirrorTex",
@@ -1487,17 +1466,17 @@ void Graphics2D::createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Og
     state->setTextureScale(-1.0f, 1.0f);
 }
 
-void Graphics2D::rearViewMirrorPanelTextureRemoveAllViewports()
+void UIRace::rearViewMirrorPanelTextureRemoveAllViewports()
 {
     mRearCamTexture->removeAllViewports();
 }
 
-Ogre::Viewport * Graphics2D::rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera)
+Ogre::Viewport * UIRace::rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera)
 {
     return mRearCamTexture->addViewport(camera);
 }
 
-void Graphics2D::createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelEnabled)
+void UIRace::createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelEnabled)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth();
@@ -1524,7 +1503,7 @@ void Graphics2D::createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPa
     }
 }
 
-void Graphics2D::setRearViewMirrorPanelMaterial(const Ogre::String& material)
+void UIRace::setRearViewMirrorPanelMaterial(const Ogre::String& material)
 {
     if(mRearViewMirrorPanel)
     {
@@ -1533,7 +1512,7 @@ void Graphics2D::setRearViewMirrorPanelMaterial(const Ogre::String& material)
     }
 }
 
-void Graphics2D::setRearViewMirrorPanelShow(bool isShow)
+void UIRace::setRearViewMirrorPanelShow(bool isShow)
 {
     if(mRearViewMirrorPanel && isShow)
     {
@@ -1546,7 +1525,7 @@ void Graphics2D::setRearViewMirrorPanelShow(bool isShow)
     }
 }
 
-void Graphics2D::setShowPausedPanel(bool isShow)
+void UIRace::setShowPausedPanel(bool isShow)
 {
     if(isShow)
     {
@@ -1558,7 +1537,7 @@ void Graphics2D::setShowPausedPanel(bool isShow)
     }
 }
 
-void Graphics2D::setShowMiscText(bool isShow)
+void UIRace::setShowMiscText(bool isShow)
 {
     if(isShow)
     {
@@ -1570,12 +1549,12 @@ void Graphics2D::setShowMiscText(bool isShow)
     }
 }
 
-void Graphics2D::setMiscText(const std::string& text)
+void UIRace::setMiscText(const std::string& text)
 {
     mMiscText->setCaption(text);
 }
 
-void Graphics2D::addMiscPanelText(const std::string& text, const Ogre::ColourValue& col)
+void UIRace::addMiscPanelText(const std::string& text, const Ogre::ColourValue& col)
 {
     if(mLoaded)
     {
@@ -1595,7 +1574,7 @@ void Graphics2D::addMiscPanelText(const std::string& text, const Ogre::ColourVal
     }
 }
 
-void Graphics2D::clearMiscPanelText()
+void UIRace::clearMiscPanelText()
 {
     for(int q = 0; q < mMiscTextArraySize; ++q)
     {

@@ -41,6 +41,8 @@ public:
 
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
+    GameMode getMode()const{return mGameMode;}
+
 private:
 
     ModeContext mContext;

@@ -48,11 +48,10 @@ public:
     // scripting functions
     void parseFile(const std::string& fileName);
 
-    void setShutdown(bool shutdown){mShutDown = shutdown;}
-
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
-    //car control
+    //controls
+    void setShutdown(bool shutdown);
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 

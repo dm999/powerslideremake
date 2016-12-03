@@ -13,9 +13,8 @@
 
 #include "../gamelogic/LapController.h"
 
-#include "../Graphics2D.h"
-
 class CameraMan;
+class UIRace;
 
 #define SHOW_DETAILS_PANEL 0
 
@@ -63,7 +62,7 @@ protected:
 
     CommonIncludes::shared_ptr<OgreBulletDynamics::DynamicsWorld> mWorld;
 
-    Graphics2D mGraphics2D;
+    CommonIncludes::shared_ptr<UIRace> mUIRace;
 
 #if SHOW_DETAILS_PANEL
     OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel

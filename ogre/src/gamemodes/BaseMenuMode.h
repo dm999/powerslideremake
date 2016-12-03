@@ -3,6 +3,10 @@
 
 #include "BaseMode.h"
 
+#include "../includes/CommonIncludes.h"
+
+class UIMainMenu;
+
 class BaseMenuMode : 
     public BaseMode
 {
@@ -19,10 +23,12 @@ public:
 
 #if defined(__ANDROID__)
     //for UI only
-    void reloadTextures()override{}
+    void reloadTextures()override;
 #endif
 
 private:
+
+    CommonIncludes::shared_ptr<UIMainMenu> mUIMainMenu;
 
 };
 

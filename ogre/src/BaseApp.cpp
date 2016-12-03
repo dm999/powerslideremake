@@ -272,17 +272,9 @@ bool BaseApp::setup()
         return false;
     }
 
-    //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
-    //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
-
     mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 
     createFrameListener();
-
-    mTrayMgr->showCursor();
-    //mTrayMgr->showCursor("Test/Cursor");
-    //Ogre::OverlayContainer* cursor = mTrayMgr->getCursorContainer();
-    //cursor->setWidth(0.0001f);
 
     return true;
 }
@@ -369,7 +361,17 @@ void BaseApp::quickScriptsReload()
     mGameModeSwitcher->restartRace();
 }
 
-
+void BaseApp::setShutdown(bool shutdown)
+{
+    if(mGameModeSwitcher->getMode() == ModeRace)
+    {
+        mGameModeSwitcher->switchMode();
+    }
+    if(mGameModeSwitcher->getMode() == ModeMenu)
+    {
+        mShutDown = true;
+    }
+}
 
 void BaseApp::keyDown(OIS::KeyCode key)
 {
@@ -644,9 +646,6 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             {
                 return false;
             }
-
-            //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
-            //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
 
             mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 

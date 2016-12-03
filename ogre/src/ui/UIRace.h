@@ -1,27 +1,26 @@
-
-#ifndef GRAPHICS2D_H
-#define GRAPHICS2D_H
+#ifndef UIRACE_H
+#define UIRACE_H
 
 #include <vector>
 
-#include "includes/OgreInclude.h"
+#include "../includes/OgreInclude.h"
 
 #include "SdkTrays.h"
 
-#include "tools/LinearController.h"
+#include "../tools/LinearController.h"
 
-#include "loaders/PFLoader.h"
-#include "OriginalSettings.h"
-#include "GameState.h"
+#include "../loaders/PFLoader.h"
+#include "../OriginalSettings.h"
+#include "../GameState.h"
 
 class CustomTrayManager;
 class BaseRaceMode;
 
-class Graphics2D
+class UIRace
 {
 public:
-    Graphics2D();
-    ~Graphics2D(){}
+    UIRace();
+    ~UIRace(){}
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState);
 

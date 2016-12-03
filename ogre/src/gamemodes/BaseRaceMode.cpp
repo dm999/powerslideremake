@@ -21,6 +21,8 @@
 
 #include "../gamelogic/RacingGridGeneration.h"
 
+#include "../ui/UIRace.h"
+
 #if defined(__ANDROID__)
     #include <android/log.h>
 
@@ -31,7 +33,8 @@
 BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
     mIsGlobalReset(true),
-    mRearCamera(0)
+    mRearCamera(0),
+    mUIRace(new UIRace())
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
 #endif
@@ -90,8 +93,8 @@ void BaseRaceMode::initData()
     //mDetailsPanel->hide();
 #endif
 
-    mGraphics2D.createRearViewMirrorPanel(mModeContext.mTrayMgr, mModeContext.mGameState.getMirrorEnabled());
-    mGraphics2D.load(mModeContext.mTrayMgr, mModeContext.mGameState);
+    mUIRace->createRearViewMirrorPanel(mModeContext.mTrayMgr, mModeContext.mGameState.getMirrorEnabled());
+    mUIRace->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 }
 
 void BaseRaceMode::clearData()
@@ -103,7 +106,7 @@ void BaseRaceMode::clearData()
     mModeContext.mInputHandler->resetCameraMenPointer(NULL);
     mCameraMan.reset();
 
-    mGraphics2D.destroy();
+    mUIRace->destroy();
 }
 
 void BaseRaceMode::restart()
@@ -296,8 +299,8 @@ void BaseRaceMode::initScene()
 
 void BaseRaceMode::clearScene()
 {
-    mGraphics2D.clearMiscPanelText();
-    mGraphics2D.setVisibleFinishSign(false);
+    mUIRace->clearMiscPanelText();
+    mUIRace->setVisibleFinishSign(false);
 
     mModeContext.mGameState.resetGamePaused();
     mModeContext.mGameState.setRaceStarted(false);
@@ -418,31 +421,31 @@ void BaseRaceMode::initMisc()
             int mirrorSizeH = mLuaManager.ReadScalarInt("Scene.Mirror.RTTSize.h", mModeContext.mPipeline);
 
             //add this as listener
-            mGraphics2D.createRearViewMirrorPanelTexture(this, mModeContext.mRoot, mirrorSizeW, mirrorSizeH);
-            mGraphics2D.setRearViewMirrorPanelMaterial("Test/RearViewMirror");
+            mUIRace->createRearViewMirrorPanelTexture(this, mModeContext.mRoot, mirrorSizeW, mirrorSizeH);
+            mUIRace->setRearViewMirrorPanelMaterial("Test/RearViewMirror");
         }
         else
         {
-            mGraphics2D.rearViewMirrorPanelTextureRemoveAllViewports();
+            mUIRace->rearViewMirrorPanelTextureRemoveAllViewports();
         }
 
-        mGraphics2D.initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
+        mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
 
 
         mRearCamera = mSceneMgr->createCamera("RearViewCamera");
         mRearCamera->setNearClipDistance(0.5f);
-        Ogre::Viewport *v = mGraphics2D.rearViewMirrorPanelTextureAddViewport(mRearCamera);
+        Ogre::Viewport *v = mUIRace->rearViewMirrorPanelTextureAddViewport(mRearCamera);
         v->setOverlaysEnabled(false);
         v->setClearEveryFrame(true);
         v->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
         mRearCamera->setAspectRatio(1.0f);
         mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
 
-        mGraphics2D.setRearViewMirrorPanelShow(true);
+        mUIRace->setRearViewMirrorPanelShow(true);
     }
     else
     {
-        mGraphics2D.setRearViewMirrorPanelShow(false);
+        mUIRace->setRearViewMirrorPanelShow(false);
     }
     mCameraMan->setRearCamera(mRearCamera);
 
@@ -547,9 +550,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
         !mModeContext.mGameState.isGamePaused())
     {
-        mGraphics2D.setRearViewMirrorPanelShow(false);
-        mGraphics2D.hideAllStart();
-        mGraphics2D.showBeforeStart1();
+        mUIRace->setRearViewMirrorPanelShow(false);
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart1();
         mModeContext.mSoundsProcesser.playBeforeStart1();
     }
 
@@ -557,8 +560,8 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
         !mModeContext.mGameState.isGamePaused())
     {
-        mGraphics2D.hideAllStart();
-        mGraphics2D.showBeforeStart2();
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart2();
         mModeContext.mSoundsProcesser.playBeforeStart2();
     }
 
@@ -566,8 +569,8 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
         !mModeContext.mGameState.isGamePaused())
     {
-        mGraphics2D.hideAllStart();
-        mGraphics2D.showBeforeStart3();
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart3();
         mModeContext.mSoundsProcesser.playBeforeStart3();
 
         for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
@@ -584,11 +587,11 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
     {
-        mGraphics2D.hideAllStart();
+        mUIRace->hideAllStart();
 
         if(mModeContext.mGameState.getMirrorEnabled() && !mModeContext.mGameState.getRaceFinished())
         {
-            mGraphics2D.setRearViewMirrorPanelShow(true);
+            mUIRace->setRearViewMirrorPanelShow(true);
         }
     }
 
@@ -596,25 +599,25 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
 
-    mGraphics2D.setShowPausedPanel(mModeContext.mGameState.isGamePaused());
+    mUIRace->setShowPausedPanel(mModeContext.mGameState.isGamePaused());
 
     if (!mModeContext.mTrayMgr->isDialogVisible())
     {
         if(!mModeContext.mGameState.isGamePaused())
-            mGraphics2D.setEngineRPM(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM());
-        mGraphics2D.setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
-        mGraphics2D.setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
-        mGraphics2D.setCarGear(static_cast<unsigned char>(mModeContext.mGameState.getPlayerCar().getCarEngine().getCurrentGear()));
-        mGraphics2D.setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
+            mUIRace->setEngineRPM(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM());
+        mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
+        mUIRace->setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
+        mUIRace->setCarGear(static_cast<unsigned char>(mModeContext.mGameState.getPlayerCar().getCarEngine().getCurrentGear()));
+        mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
 
-        mGraphics2D.hideAIDashboardCars();
+        mUIRace->hideAIDashboardCars();
         size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
         Ogre::Real currentPlayerLapPos = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
-        mGraphics2D.setPlayerDashBoardSkin(mModeContext.mGameState);
+        mUIRace->setPlayerDashBoardSkin(mModeContext.mGameState);
         for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
         {
-            mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, q, mModeContext.mGameState.getAICar(q).getCharacterName());
-            mGraphics2D.setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap(), mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition());
+            mUIRace->setAIDashBoardSkin(mModeContext.mGameState, q, mModeContext.mGameState.getAICar(q).getCharacterName());
+            mUIRace->setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap(), mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition());
         }
 
         customFrameRenderingQueuedDo2DUI();
@@ -623,16 +626,16 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         {
             if(mModeContext.mGameState.getPlayerCar().getLapUtils().getAfterFinishLinePassTime() < 3.0f && mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() > 1)
             {
-                mGraphics2D.setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime()));
+                mUIRace->setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime()));
             }
             else
             {
-                mGraphics2D.setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime()));
+                mUIRace->setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime()));
             }
         }
         else
         {
-            mGraphics2D.setRaceTime("00:00:00");
+            mUIRace->setRaceTime("00:00:00");
         }
 
 
@@ -698,7 +701,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 #if defined(__ANDROID__)
 void BaseRaceMode::reloadTextures()
 {
-    mGraphics2D.reloadTextures(mModeContext.mGameState);
+    mUIRace->reloadTextures(mModeContext.mGameState);
 }
 #endif
 
@@ -809,8 +812,8 @@ void BaseRaceMode::loadResources()
 void BaseRaceMode::unloadResources()
 {
 
-    mGraphics2D.setRearViewMirrorPanelMaterial("BaseWhite");
-    mGraphics2D.setRearViewMirrorPanelShow(false);
+    mUIRace->setRearViewMirrorPanelMaterial("BaseWhite");
+    mUIRace->setRearViewMirrorPanelShow(false);
 
     //deinit sounds of system
 
@@ -841,7 +844,7 @@ void BaseRaceMode::onLapFinished()
     {
         std::string time = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime());
         std::string lapS = Conversions::DMToString(lap);
-        mGraphics2D.addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+        mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
     }
 
     //race finished
@@ -850,12 +853,12 @@ void BaseRaceMode::onLapFinished()
         mModeContext.mGameState.resetAfterFinishTimer();
 
         std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
-        mGraphics2D.addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+        mUIRace->addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
 
         mModeContext.mGameState.getPlayerCar().setDisableMouse(false);
         mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(mModeContext.mGameState.getTrackName()));
-        mGraphics2D.setRearViewMirrorPanelShow(false);
-        mGraphics2D.setVisibleFinishSign(true, mLapController.getTotalPosition(0));
+        mUIRace->setRearViewMirrorPanelShow(false);
+        mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
         mModeContext.mGameState.setRaceFinished(true);
     }
 }
@@ -866,7 +869,7 @@ void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
     if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
         mModeContext.mGameState.getPlayerCar().setVisibility(false);
 
-    mGraphics2D.setVisibleTachoNeedle(false);
+    mUIRace->setVisibleTachoNeedle(false);
 }
 
 void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
@@ -874,5 +877,5 @@ void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
     if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
         mModeContext.mGameState.getPlayerCar().setVisibility(true);
 
-    mGraphics2D.setVisibleTachoNeedle(true);
+    mUIRace->setVisibleTachoNeedle(true);
 }
