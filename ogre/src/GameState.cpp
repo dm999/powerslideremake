@@ -14,7 +14,6 @@ GameState::GameState() :
     mLapsCount(1),
     mListenerGain(1.0f),
     mIsGamePaused(false),
-    mIsMultiplayerEnabled(false),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
     mMultiplayerUserName("Rasputin"),

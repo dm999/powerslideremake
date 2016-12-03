@@ -5,18 +5,15 @@
 
 #include "../multiplayer/MultiplayerController.h"
 
-class MiltiPlayerMode : public BaseRaceMode,
+class MultiPlayerMode : public BaseRaceMode,
     public MultiplayerController::Events
 {
 public:
 
-    MiltiPlayerMode(const ModeContext& modeContext);
-    virtual ~MiltiPlayerMode(){}
+    MultiPlayerMode(const ModeContext& modeContext);
+    virtual ~MultiPlayerMode(){}
 
     virtual void clearData()override;
-
-    virtual void frameStarted(const Ogre::FrameEvent &evt)override;
-    virtual void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
     //multiplayer
     void onPlayerEjected(const std::string& player)override;
@@ -35,6 +32,16 @@ protected:
 
     virtual void clearScene()override;
     virtual void initMisc()override;
+
+    virtual void customInitScene()override;
+    virtual void customClearScene()override;
+    virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)override;
+    virtual void customUnloadResources()override;
+    virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)override;
+    virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)override;
+    virtual void customFrameRenderingQueuedDoBegining()override;
+    virtual void customFrameRenderingQueuedDoRaceStarted()override;
+    virtual void customFrameRenderingQueuedDo2DUI()override;
 
 private:
 

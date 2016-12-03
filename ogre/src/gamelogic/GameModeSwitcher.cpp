@@ -57,13 +57,7 @@ void GameModeSwitcher::frameEnded()
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
-        if(mMenuMode.get())
-            mMenuMode->clearData();
-        mMenuMode.reset();
-
-        if(mPlayerMode.get())
-            mPlayerMode->clearData();
-        mPlayerMode.reset();
+        clear();
 
         if(mGameMode == ModeRace && mIsSwitchMode || raceOverAndReadyToQuit)
         {
@@ -75,9 +69,7 @@ void GameModeSwitcher::frameEnded()
 
             mMenuMode.reset(new BaseMenuMode(mContext));
 
-
-            if(mMenuMode.get())
-                mMenuMode->initData();
+            mMenuMode->initData();
         }
 
         if(mGameMode == ModeMenu && mIsSwitchMode)
@@ -88,10 +80,13 @@ void GameModeSwitcher::frameEnded()
 
             mContext.mTrayMgr->hideCursor();
 
+#if 1
             mPlayerMode.reset(new SinglePlayerMode(mContext));
+#else
+            mPlayerMode.reset(new MultiPlayerMode(mContext));
+#endif
 
-            if(mPlayerMode.get())
-                mPlayerMode->initData();
+            mPlayerMode->initData();
         }
 
     }

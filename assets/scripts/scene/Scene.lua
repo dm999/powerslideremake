@@ -36,7 +36,6 @@ function createScene()
     Scene.Mirror.FOV = 90.0;
     
     Scene.Multiplayer = {}
-    Scene.Multiplayer.Enabled = false;
     Scene.Multiplayer.IsMaster = true;
 --~     Scene.Multiplayer.IsMaster = false;
     Scene.Multiplayer.RoomName = "Powerslide";
@@ -44,7 +43,7 @@ function createScene()
 --~     Scene.Multiplayer.UserName = "DM2";
     Scene.Multiplayer.ServerIP = "95.213.199.37";
 --~     Scene.Multiplayer.ServerIP = "127.0.0.1";
-    Scene.Multiplayer.ServerIP = "195.19.158.25";
+    Scene.Multiplayer.ServerIP = "78.47.85.155";
     Scene.Multiplayer.ServerPort = 8800;
     Scene.Multiplayer.PlayersLimits = 2; -- for master only
     Scene.Multiplayer.BroadcastInterval = 150; --in ms; 50 for fast; 150 for slow

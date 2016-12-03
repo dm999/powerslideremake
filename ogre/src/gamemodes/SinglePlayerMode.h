@@ -9,9 +9,6 @@ public:
 
     SinglePlayerMode(const ModeContext& modeContext);
     virtual ~SinglePlayerMode(){}
-
-    virtual void frameStarted(const Ogre::FrameEvent &evt)override;
-    virtual void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 };
 
 

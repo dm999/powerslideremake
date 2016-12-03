@@ -6,11 +6,11 @@
 
 #include "../customs/CustomTrayManager.h"
 
-MiltiPlayerMode::MiltiPlayerMode(const ModeContext& modeContext) :
+MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext) :
     BaseRaceMode(modeContext)
 {}
 
-void MiltiPlayerMode::clearData()
+void MultiPlayerMode::clearData()
 {
     //to execute onQuit
     if(mMultiplayerController.get())
@@ -21,7 +21,7 @@ void MiltiPlayerMode::clearData()
     BaseRaceMode::clearData();
 }
 
-void MiltiPlayerMode::clearScene()
+void MultiPlayerMode::clearScene()
 {
     if(mMultiplayerController.get())
         mMultiplayerController->clearSessionAndLobby();
@@ -30,11 +30,11 @@ void MiltiPlayerMode::clearScene()
     BaseRaceMode::clearScene();
 }
 
-void MiltiPlayerMode::initMisc()
+void MultiPlayerMode::initMisc()
 {
     BaseRaceMode::initMisc();
 
-    if(mModeContext.mGameState.isMultiplayerEnabled())
+    //multiplayer specific
     {
         mMultiplayerController.reset(new MultiplayerController(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
 
@@ -49,7 +49,6 @@ void MiltiPlayerMode::initMisc()
 
             if(!success)
             {
-                mModeContext.mGameState.setMultiplayerEnabled(false);
                 mMultiplayerController.reset();
             }
         }
@@ -59,89 +58,100 @@ void MiltiPlayerMode::initMisc()
 
             if(!success)
             {
-                mModeContext.mGameState.setMultiplayerEnabled(false);
                 mMultiplayerController.reset();
             }
         }
     }
 }
 
-void MiltiPlayerMode::frameStarted(const Ogre::FrameEvent &evt)
+void MultiPlayerMode::customInitScene()
 {
-    Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
-
-    Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
-
-    mModeContext.mSoundsProcesser.setListenerPos(playerPos);
-    if(!mModeContext.mGameState.isGamePaused())
-        mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
-    else
-        mModeContext.mSoundsProcesser.setListenerGain(0.0f);
-
-    if(!mModeContext.mGameState.getRaceFinished())
-        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
-
-    mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
-
-    if(!mModeContext.mGameState.isGamePaused())
+    if(!mModeContext.mGameState.isMultiplayerMaster())
     {
-        mModeContext.mGameState.getPlayerCar().processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+        mModeContext.mGameState.setAICount(0);
+    }
+}
 
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        {
-            if(!mModeContext.mGameState.getRaceFinished())
-                mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
-
-            if(mModeContext.mGameState.getRaceStarted())
-            {
-                mModeContext.mGameState.getAICar(q).performAICorrection(mModeContext.mGameState.isGamePaused());
-            }
-            mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-        }
-
-        if(mModeContext.mGameState.isMultiplayerEnabled())
-        {
-            //AI
-            for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-            {
-                mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-            }
-
-            //human
-            std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-            for(size_t q = 0; q < playerNames.size(); ++q)
-            {
-                mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-            }
-        }
+void MultiPlayerMode::customClearScene()
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarAI(q).clear();
+        mModeContext.mGameState.getMultiplayerCarAI(q).deinitSounds();
     }
 
-    mLapController.calculateLapPositions();
-
-    if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
-        mWorld->stepSimulation(evt.timeSinceLastFrame, 7);
-
-    mModeContext.mGameState.getPlayerCar().processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        mModeContext.mGameState.getAICar(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
-    if(mModeContext.mGameState.isMultiplayerEnabled())
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
     {
-        //AI
-        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).clear();
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).deinitSounds();
+    }
+}
 
-        //human
-        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-        for(size_t q = 0; q < playerNames.size(); ++q)
-        {
-            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-        }
+void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
     }
 
-    if(mModeContext.mGameState.isMultiplayerEnabled())
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
     {
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+    }
+}
+
+void MultiPlayerMode::customUnloadResources()
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+        mModeContext.mGameState.getMultiplayerCarAI(q).deinitSounds();
+
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).deinitSounds();
+    }
+}
+
+void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+    }
+
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+    }
+}
+
+void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+        mModeContext.mGameState.getMultiplayerCarAI(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+    }
+
+    {
+        Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+
         Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocity();
         Ogre::Vector3 playerAngVel = mModeContext.mGameState.getPlayerCar().getAngularVelocity();
         Ogre::Quaternion playerRot = mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation();
@@ -214,191 +224,96 @@ void MiltiPlayerMode::frameStarted(const Ogre::FrameEvent &evt)
     }
 }
 
-void MiltiPlayerMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
+void MultiPlayerMode::customFrameRenderingQueuedDoBegining()
 {
-    if(mModeContext.mGameState.isMultiplayerEnabled())
+    if(mMultiplayerController.get())
     {
-        if(mMultiplayerController.get())
+        if(mMultiplayerController->getReadySent()) // make sure room is connected
         {
-            if(mMultiplayerController->getReadySent()) // make sure room is connected
+            if(!mMultiplayerController->getStartHappen())
             {
-                if(!mMultiplayerController->getStartHappen())
-                {
-                    mModeContext.mGameState.resetBeforeStartTimer();
-                }
-            }
-        }
-    }
-
-    if( !mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGraphics2D.setRearViewMirrorPanelShow(false);
-        mModeContext.mGraphics2D.hideAllStart();
-        mModeContext.mGraphics2D.showBeforeStart1();
-        mModeContext.mSoundsProcesser.playBeforeStart1();
-    }
-
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGraphics2D.hideAllStart();
-        mModeContext.mGraphics2D.showBeforeStart2();
-        mModeContext.mSoundsProcesser.playBeforeStart2();
-    }
-
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGraphics2D.hideAllStart();
-        mModeContext.mGraphics2D.showBeforeStart3();
-        mModeContext.mSoundsProcesser.playBeforeStart3();
-
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        {
-            mModeContext.mGameState.getAICar(q).raceStarted();
-        }
-
-        if(mModeContext.mGameState.isMultiplayerEnabled())
-        {
-            //AI
-            for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-            {
-                mModeContext.mGameState.getMultiplayerCarAI(q).raceStarted();
-            }
-
-            //human
-            std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-            for(size_t q = 0; q < playerNames.size(); ++q)
-            {
-                mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).raceStarted();
+                mModeContext.mGameState.resetBeforeStartTimer();
             }
         }
 
-        mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
-
-        mModeContext.mGameState.setRaceStarted(true);
-    }
-
-    if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGraphics2D.hideAllStart();
-
-        if(mModeContext.mGameState.getMirrorEnabled() && !mModeContext.mGameState.getRaceFinished())
-        {
-            mModeContext.mGraphics2D.setRearViewMirrorPanelShow(true);
-        }
-    }
-
-    mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), true);
-
-    mModeContext.mTrayMgr->frameRenderingQueued(evt);
-
-    mModeContext.mGraphics2D.setShowPausedPanel(mModeContext.mGameState.isGamePaused());
-
-    if (!mModeContext.mTrayMgr->isDialogVisible())
-    {
-        if(!mModeContext.mGameState.isGamePaused())
-            mModeContext.mGraphics2D.setEngineRPM(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM());
-        mModeContext.mGraphics2D.setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
-        mModeContext.mGraphics2D.setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
-        mModeContext.mGraphics2D.setCarGear(static_cast<unsigned char>(mModeContext.mGameState.getPlayerCar().getCarEngine().getCurrentGear()));
-        mModeContext.mGraphics2D.setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
-
-        mModeContext.mGraphics2D.hideAIDashboardCars();
-        size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
-        Ogre::Real currentPlayerLapPos = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
-        mModeContext.mGraphics2D.setPlayerDashBoardSkin(mModeContext.mGameState);
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        {
-            mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, q, mModeContext.mGameState.getAICar(q).getCharacterName());
-            mModeContext.mGraphics2D.setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap(), mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition());
-        }
-
-        if(mModeContext.mGameState.isMultiplayerEnabled())
-        {
-            //AI
-            for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-            {
-                mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
-                mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapPosition());
-            }
-
-            //human
-            std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-            for(size_t q = 0; q < playerNames.size(); ++q)
-            {
-                mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
-                mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapPosition());
-            }
-        }
-
-        if(mModeContext.mGameState.getRaceStarted())
-        {
-            if(mModeContext.mGameState.getPlayerCar().getLapUtils().getAfterFinishLinePassTime() < 3.0f && mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() > 1)
-            {
-                mModeContext.mGraphics2D.setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime()));
-            }
-            else
-            {
-                mModeContext.mGraphics2D.setRaceTime(Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime()));
-            }
-        }
-        else
-        {
-            mModeContext.mGraphics2D.setRaceTime("00:00:00");
-        }
-
-        if(mModeContext.mGameState.isMultiplayerEnabled())
-        {
-            mModeContext.mGraphics2D.setShowMiscText(true);
-            if(mMultiplayerController.get())
-            {
-                mModeContext.mGraphics2D.setMiscText(Conversions::DMToString(mMultiplayerController->getSessionPing()));
-            }
-        }
+        mModeContext.mGraphics2D.setShowMiscText(true);
+        mModeContext.mGraphics2D.setMiscText(Conversions::DMToString(mMultiplayerController->getSessionPing()));
     }
 }
 
-void MiltiPlayerMode::onPlayerEjected(const std::string& player)
+void MultiPlayerMode::customFrameRenderingQueuedDoRaceStarted()
+{
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarAI(q).raceStarted();
+    }
+
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).raceStarted();
+    }
+}
+
+void MultiPlayerMode::customFrameRenderingQueuedDo2DUI()
+{
+    size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
+    Ogre::Real currentPlayerLapPos = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
+
+    //AI
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
+        mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapPosition());
+    }
+
+    //human
+    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+    for(size_t q = 0; q < playerNames.size(); ++q)
+    {
+        mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
+        mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapPosition());
+    }
+}
+
+void MultiPlayerMode::onPlayerEjected(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Player ejected: [" + player + "]", Ogre::ColourValue::Red);
 }
 
-void MiltiPlayerMode::onPlayerJoined(const std::string& player)
+void MultiPlayerMode::onPlayerJoined(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Player joined lobby: [" + player + "]", Ogre::ColourValue::Blue);
 }
 
-void MiltiPlayerMode::onPlayerLeft(const std::string& player)
+void MultiPlayerMode::onPlayerLeft(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Player left lobby: [" + player + "]", Ogre::ColourValue::Red);
 }
 
-void MiltiPlayerMode::onNewHost(const std::string& player)
+void MultiPlayerMode::onNewHost(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("New host: [" + player + "]", Ogre::ColourValue::Red);
 }
 
-void MiltiPlayerMode::onRoomClosed(const std::string& player)
+void MultiPlayerMode::onRoomClosed(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Room closed: [" + player + "]", Ogre::ColourValue::Red);
 }
 
-void MiltiPlayerMode::onPlayerReady(const std::string& player)
+void MultiPlayerMode::onPlayerReady(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Player ready for session: [" + player + "]", Ogre::ColourValue::Green);
 }
 
-void MiltiPlayerMode::onPlayerAddedToSession(const std::string& player)
+void MultiPlayerMode::onPlayerAddedToSession(const std::string& player)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Player added to session: [" + player + "]");
 }
 
-void MiltiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost)
+void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost)
 {
     //isHost - true if remote player was host (not current host!!!)
 
@@ -432,7 +347,7 @@ void MiltiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
     }
 }
 
-void MiltiPlayerMode::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins)
+void MultiPlayerMode::onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins)
 {
     //playerIndex should start from 0
     mModeContext.mGameState.getPlayerCar().setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiAmount + playerIndex]);
@@ -521,7 +436,7 @@ void MiltiPlayerMode::onSessionStart(uint32_t aiAmount, const std::vector<std::s
     }
 }
 
-void MiltiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
+void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
 {
     const float posDiffMax = 30.0f;
 
@@ -605,7 +520,7 @@ void MiltiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData&
     }
 }
 
-void MiltiPlayerMode::onError(const std::string& message)
+void MultiPlayerMode::onError(const std::string& message)
 {
     mModeContext.mGraphics2D.addMiscPanelText("Error: [" + message + "]");
 }

@@ -33,6 +33,9 @@ public:
     void restart();
     void reload();
 
+    void frameStarted(const Ogre::FrameEvent &evt)override;
+    void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
+
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
     //LapUtils
@@ -59,6 +62,17 @@ protected:
 
     virtual void clearScene();
     virtual void initMisc();
+
+    //used in multiplayer mode
+    virtual void customInitScene(){}
+    virtual void customClearScene(){}
+    virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex){}
+    virtual void customUnloadResources(){}
+    virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt){}
+    virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt){}
+    virtual void customFrameRenderingQueuedDoBegining(){}
+    virtual void customFrameRenderingQueuedDoRaceStarted(){}
+    virtual void customFrameRenderingQueuedDo2DUI(){}
 
 private:
 

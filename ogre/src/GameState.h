@@ -119,10 +119,6 @@ public:
     void resetGamePaused();
     bool isGamePaused()const{return mIsGamePaused;}
 
-    //multiplayer
-    void setMultiplayerEnabled(bool option){mIsMultiplayerEnabled = option;}
-    bool isMultiplayerEnabled()const{return mIsMultiplayerEnabled;}
-
     void setMultiplayerMaster(bool option){mIsMultiplayerMaster = option;}
     bool isMultiplayerMaster()const{return mIsMultiplayerMaster;}
 
@@ -207,7 +203,6 @@ private:
     bool mIsGamePaused;
 
     //multiplayer
-    bool mIsMultiplayerEnabled;
     bool mIsMultiplayerMaster;
     std::string mMultiplayerRoomName;
     std::string mMultiplayerUserName;
