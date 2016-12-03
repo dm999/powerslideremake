@@ -3,7 +3,6 @@
 
 #include "../GameState.h"
 #include "../SoundsProcesser.h"
-#include "../Graphics2D.h"
 
 namespace Ogre
 {
@@ -26,7 +25,7 @@ public:
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState, SoundsProcesser& soundsProcesser, Graphics2D& graphics2D
+        GameState& gameState, SoundsProcesser& soundsProcesser
     );
 
     ModeContext(const ModeContext& other);
@@ -55,7 +54,6 @@ private:
 
     GameState& mGameState;
     SoundsProcesser& mSoundsProcesser;
-    Graphics2D& mGraphics2D;
 };
 
 #endif

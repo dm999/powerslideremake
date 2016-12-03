@@ -7,13 +7,13 @@ ModeContext::ModeContext(
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState, SoundsProcesser& soundsProcesser, Graphics2D& graphics2D
+        GameState& gameState, SoundsProcesser& soundsProcesser
     )
     : mRoot(root), mWindow(window),
     mInputHandler(inputHandler),
     mTrayMgr(trayMgr), mOverlaySystem(overlaySystem),
     mPipeline(pipeline),
-    mGameState(gameState), mSoundsProcesser(soundsProcesser), mGraphics2D(graphics2D)
+    mGameState(gameState), mSoundsProcesser(soundsProcesser)
 {}
 
 ModeContext::ModeContext(const ModeContext& other)
@@ -21,5 +21,5 @@ ModeContext::ModeContext(const ModeContext& other)
         mInputHandler(other.mInputHandler),
         mTrayMgr(other.mTrayMgr), mOverlaySystem(other.mOverlaySystem),
         mPipeline(other.mPipeline),
-        mGameState(other.mGameState), mSoundsProcesser(other.mSoundsProcesser), mGraphics2D(other.mGraphics2D)
+        mGameState(other.mGameState), mSoundsProcesser(other.mSoundsProcesser)
 {}

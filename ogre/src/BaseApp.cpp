@@ -114,8 +114,6 @@ BaseApp::~BaseApp()
     baseApp = NULL;
     deInitLua();
 
-    mGraphics2D.destroy();
-
     mTrayMgr.reset();
 
     //Remove ourself as a Window listener
@@ -194,9 +192,6 @@ void BaseApp::createFrameListener()
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 #endif
 
-
-    mGraphics2D.createRearViewMirrorPanel(mTrayMgr.get(), mGameState.getMirrorEnabled());
-    mGraphics2D.load(mTrayMgr.get(), mGameState);
 
     mRoot->addFrameListener(this);
 }
@@ -277,9 +272,6 @@ bool BaseApp::setup()
         return false;
     }
 
-    mGameState.setPlayerCharacterName("frantic");
-
-
     //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
     //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
 
@@ -287,7 +279,8 @@ bool BaseApp::setup()
 
     createFrameListener();
 
-    mTrayMgr->showCursor("Test/Cursor");
+    mTrayMgr->showCursor();
+    //mTrayMgr->showCursor("Test/Cursor");
     //Ogre::OverlayContainer* cursor = mTrayMgr->getCursorContainer();
     //cursor->setWidth(0.0001f);
 
@@ -484,7 +477,7 @@ ModeContext BaseApp::createModeContext()
         mInputHandler.get(),
         mTrayMgr.get(), mOverlaySystem.get(),
         mPipeline,
-        mGameState, mSoundsProcesser, mGraphics2D
+        mGameState, mSoundsProcesser
     );
 }
 
@@ -652,12 +645,10 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
                 return false;
             }
 
-            mGameState.setPlayerCharacterName("frantic");
-
             //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
             //Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
 
-            mGameModeSwitcher->init();
+            mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 
             LOGI("BaseApp[androidInitWindow]: Before createFrameListener"); 
             createFrameListener();
@@ -672,7 +663,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             //initLightLists();
 
             static_cast<Ogre::AndroidEGLWindow*>(mWindow)->_createInternalResources(nativeWnd, NULL);
-            mGraphics2D.reloadTextures(mGameState);
+            mGameModeSwitcher->reloadTextures();
         }
     }
 

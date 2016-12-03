@@ -104,6 +104,17 @@ void GameModeSwitcher::reloadRace()
         mPlayerMode->reload();
 }
 
+#if defined(__ANDROID__)
+void GameModeSwitcher::reloadTextures()
+{
+    if(mMenuMode.get())
+        mMenuMode->reloadTextures();
+
+    if(mPlayerMode.get())
+        mPlayerMode->reloadTextures();
+}
+#endif
+
 void GameModeSwitcher::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 {
     if(mPlayerMode.get())

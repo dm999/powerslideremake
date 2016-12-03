@@ -14,7 +14,6 @@
 #include "tools/Tools.h"
 
 #include "GameState.h"
-#include "Graphics2D.h"
 #include "SoundsProcesser.h"
 
 #include "gamemodes/ModeContext.h"
@@ -126,7 +125,6 @@ private:
 
     SoundsProcesser mSoundsProcesser;
     GameState mGameState;
-    Graphics2D mGraphics2D;
 
     CommonIncludes::shared_ptr<GameModeSwitcher> mGameModeSwitcher;
 

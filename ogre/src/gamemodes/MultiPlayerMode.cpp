@@ -236,8 +236,8 @@ void MultiPlayerMode::customFrameRenderingQueuedDoBegining()
             }
         }
 
-        mModeContext.mGraphics2D.setShowMiscText(true);
-        mModeContext.mGraphics2D.setMiscText(Conversions::DMToString(mMultiplayerController->getSessionPing()));
+        mGraphics2D.setShowMiscText(true);
+        mGraphics2D.setMiscText(Conversions::DMToString(mMultiplayerController->getSessionPing()));
     }
 }
 
@@ -265,52 +265,52 @@ void MultiPlayerMode::customFrameRenderingQueuedDo2DUI()
     //AI
     for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
     {
-        mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
-        mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapPosition());
+        mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
+        mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapPosition());
     }
 
     //human
     std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
     for(size_t q = 0; q < playerNames.size(); ++q)
     {
-        mModeContext.mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
-        mModeContext.mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapPosition());
+        mGraphics2D.setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
+        mGraphics2D.setDashCarPos(mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapPosition());
     }
 }
 
 void MultiPlayerMode::onPlayerEjected(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Player ejected: [" + player + "]", Ogre::ColourValue::Red);
+    mGraphics2D.addMiscPanelText("Player ejected: [" + player + "]", Ogre::ColourValue::Red);
 }
 
 void MultiPlayerMode::onPlayerJoined(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Player joined lobby: [" + player + "]", Ogre::ColourValue::Blue);
+    mGraphics2D.addMiscPanelText("Player joined lobby: [" + player + "]", Ogre::ColourValue::Blue);
 }
 
 void MultiPlayerMode::onPlayerLeft(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Player left lobby: [" + player + "]", Ogre::ColourValue::Red);
+    mGraphics2D.addMiscPanelText("Player left lobby: [" + player + "]", Ogre::ColourValue::Red);
 }
 
 void MultiPlayerMode::onNewHost(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("New host: [" + player + "]", Ogre::ColourValue::Red);
+    mGraphics2D.addMiscPanelText("New host: [" + player + "]", Ogre::ColourValue::Red);
 }
 
 void MultiPlayerMode::onRoomClosed(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Room closed: [" + player + "]", Ogre::ColourValue::Red);
+    mGraphics2D.addMiscPanelText("Room closed: [" + player + "]", Ogre::ColourValue::Red);
 }
 
 void MultiPlayerMode::onPlayerReady(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Player ready for session: [" + player + "]", Ogre::ColourValue::Green);
+    mGraphics2D.addMiscPanelText("Player ready for session: [" + player + "]", Ogre::ColourValue::Green);
 }
 
 void MultiPlayerMode::onPlayerAddedToSession(const std::string& player)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Player added to session: [" + player + "]");
+    mGraphics2D.addMiscPanelText("Player added to session: [" + player + "]");
 }
 
 void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost)
@@ -318,9 +318,9 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
     //isHost - true if remote player was host (not current host!!!)
 
     if(!isHost)
-        mModeContext.mGraphics2D.addMiscPanelText("Player quit session: [" + player + "]", Ogre::ColourValue::Red);
+        mGraphics2D.addMiscPanelText("Player quit session: [" + player + "]", Ogre::ColourValue::Red);
     else
-        mModeContext.mGraphics2D.addMiscPanelText("Host player quit session: [" + player + "]", Ogre::ColourValue::Red);
+        mGraphics2D.addMiscPanelText("Host player quit session: [" + player + "]", Ogre::ColourValue::Red);
     
     //remove human
     std::vector<std::string>multiplayerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
@@ -522,5 +522,5 @@ void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData&
 
 void MultiPlayerMode::onError(const std::string& message)
 {
-    mModeContext.mGraphics2D.addMiscPanelText("Error: [" + message + "]");
+    mGraphics2D.addMiscPanelText("Error: [" + message + "]");
 }

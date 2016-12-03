@@ -34,6 +34,11 @@ public:
     void restartRace();
     void reloadRace();
 
+#if defined(__ANDROID__)
+    //for UI only
+    void reloadTextures();
+#endif
+
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
 private:

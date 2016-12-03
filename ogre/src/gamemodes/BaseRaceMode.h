@@ -13,6 +13,8 @@
 
 #include "../gamelogic/LapController.h"
 
+#include "../Graphics2D.h"
+
 class CameraMan;
 
 #define SHOW_DETAILS_PANEL 0
@@ -36,6 +38,11 @@ public:
     void frameStarted(const Ogre::FrameEvent &evt)override;
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
+#if defined(__ANDROID__)
+    //for UI only
+    void reloadTextures()override;
+#endif
+
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
     //LapUtils
@@ -55,6 +62,8 @@ protected:
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
     CommonIncludes::shared_ptr<OgreBulletDynamics::DynamicsWorld> mWorld;
+
+    Graphics2D mGraphics2D;
 
 #if SHOW_DETAILS_PANEL
     OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel

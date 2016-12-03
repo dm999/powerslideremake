@@ -16,6 +16,11 @@ public:
     virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;
     virtual void frameRenderingQueued(const Ogre::FrameEvent& evt) = 0;
 
+#if defined(__ANDROID__)
+    //for UI only
+    virtual void reloadTextures() = 0;
+#endif
+
 protected:
 
     ModeContext mModeContext;

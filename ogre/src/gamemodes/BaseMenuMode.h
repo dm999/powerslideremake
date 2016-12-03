@@ -17,6 +17,11 @@ public:
     virtual void frameStarted(const Ogre::FrameEvent &evt)override;
     virtual void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
+#if defined(__ANDROID__)
+    //for UI only
+    void reloadTextures()override{}
+#endif
+
 private:
 
 };
