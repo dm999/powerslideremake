@@ -109,6 +109,8 @@ BaseApp::BaseApp() :
 
 BaseApp::~BaseApp()
 {
+    mTrayMgr->setListener(NULL);
+
     mGameModeSwitcher.reset();
 
     baseApp = NULL;
@@ -260,7 +262,7 @@ bool BaseApp::setup()
 
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
 
-    mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext(), this));
+    mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
     mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
@@ -364,9 +366,9 @@ void BaseApp::quickScriptsReload()
 
 void BaseApp::setShutdown(bool shutdown)
 {
-    if(mGameModeSwitcher->getMode() == ModeRace)
+    if(mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
     {
-        mGameModeSwitcher->switchMode();
+        mGameModeSwitcher->switchMode(ModeMenu);
     }
     if(mGameModeSwitcher->getMode() == ModeMenu)
     {
@@ -393,8 +395,6 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     mTrayMgr->injectMouseDown(arg, id);
-
-    mGameModeSwitcher->switchMode();
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
@@ -634,7 +634,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before CustomTrayManager"); 
 
-            mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext(), this));
+            mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
             mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
             //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
             mTrayMgr->hideCursor();

@@ -1,6 +1,8 @@
 #ifndef GAMEMODESWITCHER_H
 #define GAMEMODESWITCHER_H
 
+#include "SdkTrays.h"
+
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
 
@@ -18,18 +20,21 @@ struct lua_State;
 class SoundsProcesser;
 class Graphics2D;
 
-class GameModeSwitcher
+class GameModeSwitcher : public OgreBites::SdkTrayListener
 {
 public:
 
     GameModeSwitcher(const ModeContext& modeContext);
     ~GameModeSwitcher();
 
+    //SdkTrayListener
+    virtual void buttonHit(OgreBites::Button* button)override;
+
     void frameStarted(const Ogre::FrameEvent &evt);
     void frameRenderingQueued(const Ogre::FrameEvent &evt);
     void frameEnded();
 
-    void switchMode(){mIsSwitchMode = true;}
+    void switchMode(GameMode nextMode);
 
     void restartRace();
     void reloadRace();
@@ -47,7 +52,8 @@ private:
 
     ModeContext mContext;
 
-    GameMode mGameMode;
+    GameMode mGameMode;//current
+    GameMode mGameModeNext;//next
     bool mIsSwitchMode;
 
 

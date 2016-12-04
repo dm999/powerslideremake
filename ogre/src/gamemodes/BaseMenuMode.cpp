@@ -43,7 +43,7 @@ void BaseMenuMode::initData()
 
     //mModeContext.mTrayMgr->showCursor();
     mModeContext.mTrayMgr->showCursor("Test/Cursor");
-    mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
+    //mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
     mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
 }
 
@@ -56,7 +56,7 @@ void BaseMenuMode::clearData()
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
     mModeContext.mWindow->removeAllViewports();
 
-    mUIMainMenu->destroy();
+    mUIMainMenu->destroy(mModeContext.mTrayMgr);
 
     Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 }

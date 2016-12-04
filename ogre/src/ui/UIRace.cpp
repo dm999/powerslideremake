@@ -975,9 +975,9 @@ void UIRace::setEngineRPM(Ogre::Real rpm)
     }
 }
 
-void UIRace::destroy()
+void UIRace::destroy(CustomTrayManager* trayMgr)
 {
-    UIBase::destroy();
+    UIBase::destroy(trayMgr);
 
     mRearViewMirrorPanel = NULL;
     //om.destroy(mNeedleLayer);

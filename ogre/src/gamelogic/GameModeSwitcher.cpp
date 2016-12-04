@@ -12,6 +12,9 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
     mGameMode(ModeMenu), mIsSwitchMode(false)
 {
+
+    mContext.mTrayMgr->setListener(this);
+
 #if 1
     mMenuMode.reset(new BaseMenuMode(mContext));
 #else
@@ -28,6 +31,19 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
 GameModeSwitcher::~GameModeSwitcher()
 {
     clear();
+}
+
+void GameModeSwitcher::buttonHit(OgreBites::Button* button)
+{
+    if (button->getName() == "SinglePlayer")
+    {
+        switchMode(ModeRaceSingle);
+    }
+
+    if (button->getName() == "MultiPlayer")
+    {
+        switchMode(ModeRaceMulti);
+    }
 }
 
 void GameModeSwitcher::frameStarted(const Ogre::FrameEvent &evt)
@@ -50,16 +66,18 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
 
 void GameModeSwitcher::frameEnded()
 {
+    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
+
     const unsigned long afterFinishTimeThreshold = 10000; // ms
-    bool raceOverAndReadyToQuit =   mGameMode == ModeRace                       &&
-                                    mContext.mGameState.getRaceFinished()       &&
+    bool raceOverAndReadyToQuit =   modeRace                                &&
+                                    mContext.mGameState.getRaceFinished()   &&
                                     mContext.mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold;
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
         clear();
 
-        if(mGameMode == ModeRace && mIsSwitchMode || raceOverAndReadyToQuit)
+        if(modeRace && mIsSwitchMode || raceOverAndReadyToQuit)
         {
             mIsSwitchMode = false;
 
@@ -76,20 +94,27 @@ void GameModeSwitcher::frameEnded()
         {
             mIsSwitchMode = false;
 
-            mGameMode = ModeRace;
+            mGameMode = mGameModeNext;
 
             mContext.mTrayMgr->hideCursor();
 
-#if 1
-            mPlayerMode.reset(new SinglePlayerMode(mContext));
-#else
-            mPlayerMode.reset(new MultiPlayerMode(mContext));
-#endif
+            if(mGameMode == ModeRaceSingle)
+                mPlayerMode.reset(new SinglePlayerMode(mContext));
+
+            if(mGameMode == ModeRaceMulti)
+                mPlayerMode.reset(new MultiPlayerMode(mContext));
+
 
             mPlayerMode->initData();
         }
 
     }
+}
+
+void GameModeSwitcher::switchMode(GameMode nextMode)
+{
+    mGameModeNext = nextMode;
+    mIsSwitchMode = true;
 }
 
 void GameModeSwitcher::restartRace()

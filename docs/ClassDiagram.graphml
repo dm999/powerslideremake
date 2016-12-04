@@ -570,9 +570,8 @@ ModeContext createModeContext()</y:NodeLabel>
           <y:Geometry height="85.29148043919304" width="182.67338922266129" x="10318.663305388669" y="-7152.6457402195965"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="153.40234375" x="14.63552273633104" y="18.59398240709652">Ogre::FrameListener
-Ogre::WindowEventListener
-OgreBites::SdkTrayListener</y:NodeLabel>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="153.40234375" x="14.63552273633104" y="25.94456834459652">Ogre::FrameListener
+Ogre::WindowEventListener</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -1322,7 +1321,7 @@ PSMultiplayerCar</y:NodeLabel>
           <y:Geometry height="325.5948367660958" width="282.9321891114173" x="13658.533905444292" y="-3912.797418383049"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="-0.9333195067920315" y="6.4351136955483526">&lt;&lt;LapController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="-0.9333195067920315" y="6.435113695547898">&lt;&lt;LapController.h&gt;&gt;
 
 LapController
 
@@ -1364,7 +1363,7 @@ std::vector&lt;PSBaseCar *&gt; mCars</y:NodeLabel>
           <y:Geometry height="316.81597721165326" width="367.92133847822106" x="13616.03933076089" y="-3518.4079886058266"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.80859375" x="4.556372364109848" y="9.396269855826176">&lt;&lt;ModelsPool.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.80859375" x="4.556372364109848" y="9.396269855826631">&lt;&lt;ModelsPool.h&gt;&gt;
 
 ModelsPool
 
@@ -1519,7 +1518,7 @@ bool mIsVertexArraySupported</y:NodeLabel>
           <y:Geometry height="121.5123985933451" width="252.8089192692164" x="10973.595540365392" y="-3817.533688187334"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.787109375" x="20.01090494710843" y="14.652683671673003">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.787109375" x="20.01090494710843" y="14.652683671672548">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 DE2SingleBatch
 
@@ -1535,7 +1534,7 @@ std::string mTerrainMap</y:NodeLabel>
           <y:Geometry height="170.4848526966316" width="262.28745877307983" x="10968.85627061346" y="-3572.0199152389764"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="252.103515625" x="5.091971574040144" y="9.736566973315348">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="252.103515625" x="5.091971574040144" y="9.736566973315803">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 DE2Part
 
@@ -1589,7 +1588,7 @@ void setShowMiscText(bool isShow)
 void setMiscText(const std::string&amp; text)
 void addMiscPanelText(const std::string&amp; text, const Ogre::ColourValue&amp; col = Ogre::ColourValue::White)
 
-void destroy()
+void destroy(CustomTrayManager* trayMgr)
 
 void createRearViewMirrorPanelTexture(Ogre::Root * root, int width, int height)
 void rearViewMirrorPanelTextureRemoveAllViewports()
@@ -1743,7 +1742,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1126.7497727076616" width="1162.427823583826" x="13848.786088208084" y="-2573.3748863538303"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1047.783203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="39.48328479133124">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1047.783203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="39.48328479133079">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1863,7 +1862,7 @@ virtual void onError(const std::string&amp; message) = 0</y:NodeLabel>
           <y:Geometry height="281.27145407217085" width="273.1359434396013" x="15163.432028280196" y="-2573.3748863538303"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="266.125" x="3.5054717197999707" y="6.325180161085882">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="266.125" x="3.5054717197999707" y="6.325180161085427">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerSessionData
 
@@ -1936,7 +1935,7 @@ bool load(std::vector&lt;MSHData&gt;&amp; parts, FILE * fileToLoad) const</y:Nod
           <y:Geometry height="439.001597538464" width="571.0431467421781" x="12194.478426628912" y="-6403.500040597352"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="490.861328125" x="40.09090930858838" y="11.684392519231551">&lt;&lt;PFLoader.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="490.861328125" x="40.09090930858838" y="11.68439251923246">&lt;&lt;PFLoader.h&gt;&gt;
 
 PFLoader
 
@@ -1974,7 +1973,7 @@ static std::vector&lt;std::string&gt; splitpath(const std::string&amp; str, cons
           <y:Geometry height="186.04934675105778" width="178.4833695639113" x="12390.758315218045" y="-5947.023915203649"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="164.740234375" x="6.871567594454973" y="10.168228063028437">&lt;&lt;PFLoader.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="164.740234375" x="6.871567594454973" y="10.168228063029346">&lt;&lt;PFLoader.h&gt;&gt;
 
 PackedFileItem
 
@@ -1992,7 +1991,7 @@ DWORD Length</y:NodeLabel>
     <node id="n38">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="494.2050784013636" width="807.9384596111427" x="11236.03077019443" y="-5347.102539200684"/>
+          <y:Geometry height="494.2050784013636" width="807.9384596111427" x="11236.03077019443" y="-5257.102539200682"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="9.883789200682259">&lt;&lt;GameModeSwitcher.h&gt;&gt;
@@ -2064,7 +2063,7 @@ Ogre::Camera* mCamera</y:NodeLabel>
     <node id="n40">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12259.536455428877" y="-5223.987134674098"/>
+          <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12259.536455428877" y="-5133.9871346740965"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="11.728345611596524">&lt;&lt;BaseMenuMode.h&gt;&gt;
@@ -2219,7 +2218,7 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
     <node id="n44">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="26.610244263811182" width="114.85085494960651" x="11582.574572525196" y="-4783.305122131906"/>
+          <y:Geometry height="26.610244263811182" width="114.85085494960651" x="11582.574572525196" y="-4693.305122131904"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="75.373046875" x="19.738904037303655" y="3.9545361944055912">ModeContext</y:NodeLabel>
@@ -2319,7 +2318,7 @@ Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, Ogre::Real 
 Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, const Ogre::Vector4&amp; pos, const Ogre::String&amp; material)
 Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 
-void destroy()
+void destroy(CustomTrayManager* trayMgr)
 
 private:
 
@@ -2356,7 +2355,7 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
     <node id="n50">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="25.135841344832443" width="107.47884035471282" x="12786.260579822643" y="-5112.567920672418"/>
+          <y:Geometry height="25.135841344832443" width="107.47884035471282" x="12786.260579822643" y="-5022.567920672416"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="72.02734375" x="17.725748302356806" y="3.2173347349162214">UIMainMenu</y:NodeLabel>
@@ -2371,6 +2370,17 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="44.013671875" x="31.732584239856806" y="3.2173347349162214">UIRace</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n52">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="26.610244263811182" width="173.38367984003628" x="11553.308160079981" y="-5345.405065361787"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="10.995550857518538" y="3.9545361944055912">OgreBites::SdkTrayListener</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2911,6 +2921,16 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e48" source="n38" target="n52">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

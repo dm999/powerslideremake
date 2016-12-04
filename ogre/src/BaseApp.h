@@ -33,8 +33,7 @@ class GameModeSwitcher;
 //https://github.com/synasius/ogre-basic-tutorials
 class BaseApp : 
     public Ogre::FrameListener, 
-    public Ogre::WindowEventListener, 
-    OgreBites::SdkTrayListener
+    public Ogre::WindowEventListener
 {
 public:
     BaseApp();

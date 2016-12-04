@@ -67,7 +67,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
         mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
         mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
-        //mMainBackground->show();
+        //mMainBackground->hide();
     }
 
     //additional background (feryl)
@@ -128,6 +128,18 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+    }
+
+    //buttons
+    {
+        {
+            createButton(trayMgr, OgreBites::TL_NONE, "SinglePlayer", "Single", 120);
+        }
+
+        {
+            OgreBites::Button* button = createButton(trayMgr, OgreBites::TL_NONE, "MultiPlayer", "Multi", 120);
+            button->getOverlayElement()->setLeft(200.0f);
+        }
     }
 }
 

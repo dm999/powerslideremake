@@ -17,7 +17,8 @@
 enum GameMode
 {
     ModeMenu,
-    ModeRace
+    ModeRaceSingle,
+    ModeRaceMulti,
 };
 
 enum AIStrength

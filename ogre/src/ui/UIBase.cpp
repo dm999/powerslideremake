@@ -2,6 +2,8 @@
 
 #include "UIBase.h"
 
+#include "../customs/CustomTrayManager.h"
+
 Ogre::PanelOverlayElement* UIBase::createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material)
 {
     Ogre::PanelOverlayElement* res = NULL;
@@ -50,10 +52,25 @@ Ogre::TextAreaOverlayElement* UIBase::createTextArea(const Ogre::String& name, O
     return res;
 }
 
-void UIBase::destroy()
+OgreBites::Button* UIBase::createButton(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width)
+{
+    OgreBites::Button* res = trayMgr->createButton(trayLoc, name, caption, width);
+
+    mCreatedWidgets.push_back(res);
+
+    return res;
+}
+
+void UIBase::destroy(CustomTrayManager* trayMgr)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
 
     for(size_t q = 0; q < mCreatedElements.size(); ++q)
         om.destroyOverlayElement(mCreatedElements[q]);
+
+    for(size_t q = 0; q < mCreatedWidgets.size(); ++q)
+        trayMgr->destroyWidget(mCreatedWidgets[q]);
+
+    mCreatedElements.clear();
+    mCreatedWidgets.clear();
 }

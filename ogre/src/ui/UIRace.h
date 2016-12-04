@@ -49,7 +49,7 @@ public:
     void addMiscPanelText(const std::string& text, const Ogre::ColourValue& col = Ogre::ColourValue::White);
     void clearMiscPanelText();
 
-    void destroy();
+    void destroy(CustomTrayManager* trayMgr);
 
     void createRearViewMirrorPanelTexture(BaseRaceMode* baseRaceMode, Ogre::Root * root, int width, int height);
     void rearViewMirrorPanelTextureRemoveAllViewports();

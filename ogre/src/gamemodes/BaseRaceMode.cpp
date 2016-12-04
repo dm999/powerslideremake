@@ -106,7 +106,7 @@ void BaseRaceMode::clearData()
     mModeContext.mInputHandler->resetCameraMenPointer(NULL);
     mCameraMan.reset();
 
-    mUIRace->destroy();
+    mUIRace->destroy(mModeContext.mTrayMgr);
 }
 
 void BaseRaceMode::restart()
