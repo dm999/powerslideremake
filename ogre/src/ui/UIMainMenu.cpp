@@ -1,7 +1,6 @@
 #include "../pcheader.h"
 
 #include "UIMainMenu.h"
-#include "UIRace.h"
 
 #include "../tools/OgreTools.h"
 
@@ -65,7 +64,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
 
-        mMainBackground = UIRace::createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
+        mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
         mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
         //mMainBackground->show();
@@ -106,11 +105,11 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
         Ogre::Vector4 backgroundB = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 197.0f + 102.0f, 217.0f);
 
-        mBackgroundA = UIRace::createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
+        mBackgroundA = createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
         mBackgroundA->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBackgroundA);
 
-        mBackgroundB = UIRace::createPanel("BackgroundB", backgroundB, "Test/BackgroundB");
+        mBackgroundB = createPanel("BackgroundB", backgroundB, "Test/BackgroundB");
         mBackgroundB->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBackgroundB);
     }
@@ -138,11 +137,3 @@ void UIMainMenu::reloadTextures(const GameState& gameState)
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
 #endif
-
-void UIMainMenu::destroy()
-{
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
-    om.destroyOverlayElement(mMainBackground);
-    om.destroyOverlayElement(mBackgroundA);
-    om.destroyOverlayElement(mBackgroundB);
-}

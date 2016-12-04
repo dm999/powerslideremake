@@ -3,9 +3,7 @@
 
 #include <vector>
 
-#include "../includes/OgreInclude.h"
-
-#include "SdkTrays.h"
+#include "UIBase.h"
 
 #include "../tools/LinearController.h"
 
@@ -16,7 +14,7 @@
 class CustomTrayManager;
 class BaseRaceMode;
 
-class UIRace
+class UIRace : public UIBase
 {
 public:
     UIRace();
@@ -60,10 +58,6 @@ public:
     void createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelEnabled);
     void setRearViewMirrorPanelMaterial(const Ogre::String& material);
     void setRearViewMirrorPanelShow(bool isShow);
-
-    static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material);
-    static Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
-    static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);

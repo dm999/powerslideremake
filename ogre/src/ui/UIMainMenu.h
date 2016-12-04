@@ -1,15 +1,13 @@
 #ifndef UIMAINMENU_H
 #define UIMAINMENU_H
 
-#include "../includes/OgreInclude.h"
-
-#include "SdkTrays.h"
+#include "UIBase.h"
 
 #include "../GameState.h"
 
 class CustomTrayManager;
 
-class UIMainMenu
+class UIMainMenu : public UIBase
 {
 public:
 
@@ -17,8 +15,6 @@ public:
     ~UIMainMenu();
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState);
-
-    void destroy();
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);

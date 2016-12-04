@@ -269,6 +269,7 @@ bool BaseApp::setup()
     mGameState.initOriginalData("./", "./");
     if(!mGameState.isOriginalDataInited())
     {
+        OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
         return false;
     }
 

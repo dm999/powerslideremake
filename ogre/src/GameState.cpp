@@ -48,6 +48,7 @@ void GameState::initOriginalData(const std::string& originalPathData, const std:
 
                 mOriginalDataInited = true;
             }
+            else
             {
                 Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[CRITICAL]: Unable to locate store.pf file");
             }

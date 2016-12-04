@@ -833,50 +833,6 @@ void UIRace::setVisibleFinishSign(bool isVisible, size_t finishPos)
         mFinishSignPanel->hide();
 }
 
-Ogre::PanelOverlayElement* UIRace::createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material)
-{
-    Ogre::PanelOverlayElement* res = NULL;
-
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
-
-    res = (Ogre::PanelOverlayElement*)om.createOverlayElement("Panel", name);
-    res->setMetricsMode(Ogre::GMM_PIXELS);
-    res->setWidth(width);
-    res->setHeight(height);
-    res->setMaterialName(material);
-    res->setTop(top);
-    res->setLeft(left);
-    res->setHorizontalAlignment(Ogre::GHA_LEFT);
-    res->setVerticalAlignment(Ogre::GVA_TOP);
-    res->show();
-
-    return res;
-}
-
-Ogre::PanelOverlayElement* UIRace::createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material)
-{
-    return createPanel(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y, material);
-}
-
-Ogre::TextAreaOverlayElement* UIRace::createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
-{
-    Ogre::TextAreaOverlayElement* res = NULL;
-
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
-
-    res = (Ogre::TextAreaOverlayElement*)om.createOverlayElement("TextArea", name);
-    res->setMetricsMode(Ogre::GMM_PIXELS);
-    res->setWidth(width);
-    res->setHeight(height);
-    res->setTop(top);
-    res->setLeft(left);
-    res->setHorizontalAlignment(Ogre::GHA_LEFT);
-    res->setVerticalAlignment(Ogre::GVA_TOP);
-    res->show();
-
-    return res;
-}
-
 #if defined(__ANDROID__)
 void UIRace::reloadTextures(const GameState& gameState)
 {
@@ -1021,52 +977,9 @@ void UIRace::setEngineRPM(Ogre::Real rpm)
 
 void UIRace::destroy()
 {
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
-    if(mRearViewMirrorPanel)
-    {
-        om.destroyOverlayElement(mRearViewMirrorPanel);
-        mRearViewMirrorPanel = NULL;
-    }
-    om.destroyOverlayElement(mBeforeStartPanelReadyL);
-    om.destroyOverlayElement(mBeforeStartPanelReadyC);
-    om.destroyOverlayElement(mBeforeStartPanelReadyR);
-    om.destroyOverlayElement(mBeforeStartPanelSetL);
-    om.destroyOverlayElement(mBeforeStartPanelSetC);
-    om.destroyOverlayElement(mBeforeStartPanelSetR);
-    om.destroyOverlayElement(mBeforeStartPanelGoL);
-    om.destroyOverlayElement(mBeforeStartPanelGoC);
-    om.destroyOverlayElement(mBeforeStartPanelGoR);
-    om.destroyOverlayElement("DashboardPosition");
-    om.destroyOverlayElement("Dashboard");
-    om.destroyOverlayElement(mPlayerDashboardCar);
-    for(size_t q = 0; q < mDashboardCarsCount; ++q)om.destroyOverlayElement(mDashboardCars[q]);
-    om.destroyOverlayElement("TachoFrantic");
-    for(size_t q = 0; q < mTachoLamps.size(); ++q)om.destroyOverlayElement(mTachoLamps[q]);
-    om.destroyOverlayElement(mTachoSpeedDigit1);
-    om.destroyOverlayElement(mTachoSpeedDigit2);
-    om.destroyOverlayElement(mTachoSpeedDigit3);
-    om.destroyOverlayElement(mDashGear);
-    om.destroyOverlayElement(mDashLap1);
-    om.destroyOverlayElement(mDashLap2);
-    om.destroyOverlayElement("DashDigitLapDiv");
-    om.destroyOverlayElement(mDashTotalLap1);
-    om.destroyOverlayElement(mDashTotalLap2);
-    om.destroyOverlayElement(mTachoTotalCarsDigit1);
-    om.destroyOverlayElement(mTachoTotalCarsDigit2);
-    om.destroyOverlayElement("DashDigitTotalCarsDiv");
-    om.destroyOverlayElement(mTachoPosDigit1);
-    om.destroyOverlayElement(mTachoPosDigit2);
-    om.destroyOverlayElement(mDashLapTime1);
-    om.destroyOverlayElement(mDashLapTime2);
-    om.destroyOverlayElement(mDashLapTime3);
-    om.destroyOverlayElement(mDashLapTime4);
-    om.destroyOverlayElement(mDashLapTime5);
-    om.destroyOverlayElement(mDashLapTime6);
-    om.destroyOverlayElement(mPausedPanel);
-    om.destroyOverlayElement(mFinishSignPanel);
-    om.destroyOverlayElement("PausedTextBox");
-    om.destroyOverlayElement(mMiscText);
-    for(int q = 0; q < mMiscTextArraySize; ++q)om.destroyOverlayElement(mMiscTextArray[q]);
+    UIBase::destroy();
+
+    mRearViewMirrorPanel = NULL;
     //om.destroy(mNeedleLayer);
 }
 
