@@ -119,7 +119,8 @@ public:
     MultiplayerController(Events* events, size_t broadcastInterval);
     ~MultiplayerController();
 
-    void clearSessionAndLobby();
+    void clearSession();
+    void clearLobby();
 
     bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount);
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName);

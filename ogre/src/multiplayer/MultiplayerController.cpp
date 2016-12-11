@@ -20,12 +20,21 @@ MultiplayerController::MultiplayerController(Events* events, size_t broadcastInt
 
 MultiplayerController::~MultiplayerController()
 {
-    clearSessionAndLobby();
+    clearSession();
+    clearLobby();
 }
 
-void MultiplayerController::clearSessionAndLobby()
+void MultiplayerController::clearSession()
 {
     mSession.reset();
+    mReadySent = false;
+    mSessionStarted = false;
+    mStartHappened = false;
+    mGameFinished = false;
+}
+
+void MultiplayerController::clearLobby()
+{
     mLobby.reset();
 }
 

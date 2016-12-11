@@ -42,7 +42,10 @@ void MenuMultiMode::clearMultiplayerController()
 {
     //to execute onQuit
     if(mMultiplayerController.get())
-        mMultiplayerController->clearSessionAndLobby();
+    {
+        mMultiplayerController->clearSession();
+        mMultiplayerController->clearLobby();
+    }
     mMultiplayerController.reset();
 }
 

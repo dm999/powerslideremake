@@ -1739,10 +1739,10 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
     <node id="n29">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1126.7497727076616" width="1162.427823583826" x="13848.786088208084" y="-2573.3748863538303"/>
+          <y:Geometry height="1198.2009749664849" width="983.7998179367692" x="13938.100091031612" y="-2609.100487483242"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1077.185546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="24.78211291633079">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1135.990234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="867.05078125" x="58.3745183433839" y="31.105370295742432">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1801,10 +1801,14 @@ size_t mBroadcastInterval
 
 public:
 
-void clearSessionAndLobby();
+void clearSession()
+void clearLobby()
 
-bool startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector&lt;GameCars&gt;&amp; aiSkins, const GameCars&amp; playerSkin)
-bool startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const GameCars&amp; playerSkin)
+bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)
+bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)
+
+bool startSessionMaster(const std::vector&lt;std::string&gt;&amp; aiSkins, const std::string&amp; playerCharacter)
+bool startSessionSlave(const std::string&amp; playerCharacter)
 
 void receiveSessionData()
 
