@@ -15,7 +15,36 @@
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
     mUIMainMenuMulti(new UIMainMenuMulti(modeContext))
-{}
+{
+    mMultiplayerController.reset(new MultiplayerController(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
+
+    if(mModeContext.mGameState.isMultiplayerMaster())
+    {
+        bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getMultiplayerPlayersLimits(), mModeContext.mGameState.getAICount());
+    }
+    else
+    {
+        bool success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
+    }
+}
+
+MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
+    BaseMode(modeContext),
+    mUIMainMenuMulti(new UIMainMenuMulti(modeContext))
+{
+    assert(controller.get());
+    mMultiplayerController = controller;
+    if(mMultiplayerController.get())
+        mMultiplayerController->setEvents(this);
+}
+
+void MenuMultiMode::clearMultiplayerController()
+{
+    //to execute onQuit
+    if(mMultiplayerController.get())
+        mMultiplayerController->clearSessionAndLobby();
+    mMultiplayerController.reset();
+}
 
 void MenuMultiMode::initData()
 {

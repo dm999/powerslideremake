@@ -63,6 +63,8 @@ public:
 
     Events* mEvents;
 
+    void setEvents(Events* events){mEvents = events;}
+
 private:
     //-------------------------------------------------------
     // Lobby callback
@@ -119,8 +121,11 @@ public:
 
     void clearSessionAndLobby();
 
-    bool startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
-    bool startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const std::string& playerCharacter);
+    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount);
+    bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName);
+
+    bool startSessionMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
+    bool startSessionSlave(const std::string& playerCharacter);
 
     void receiveSessionData();
 

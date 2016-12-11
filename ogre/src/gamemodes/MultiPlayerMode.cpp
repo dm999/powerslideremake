@@ -8,29 +8,15 @@
 
 #include "../ui/UIRace.h"
 
-MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext) :
+MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
     BaseRaceMode(modeContext),
     mIsSessionStarted(false)
-{}
-
-void MultiPlayerMode::clearData()
 {
-    //to execute onQuit
+    assert(controller.get());
+
+    mMultiplayerController = controller;
     if(mMultiplayerController.get())
-        mMultiplayerController->clearSessionAndLobby();
-    mMultiplayerController.reset();
-
-
-    BaseRaceMode::clearData();
-}
-
-void MultiPlayerMode::clearScene()
-{
-    if(mMultiplayerController.get())
-        mMultiplayerController->clearSessionAndLobby();
-    mMultiplayerController.reset();
-
-    BaseRaceMode::clearScene();
+        mMultiplayerController->setEvents(this);
 }
 
 void MultiPlayerMode::initMisc()
@@ -39,8 +25,6 @@ void MultiPlayerMode::initMisc()
 
     //multiplayer specific
     {
-        mMultiplayerController.reset(new MultiplayerController(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
-
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
             std::vector<std::string> gameCars;
@@ -48,7 +32,7 @@ void MultiPlayerMode::initMisc()
             {
                 gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
             }
-            bool success = mMultiplayerController->startSessionMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getMultiplayerPlayersLimits(), mModeContext.mGameState.getAICount(), gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName());
+            bool success = mMultiplayerController->startSessionMaster(gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName());
 
             if(!success)
             {
@@ -57,7 +41,7 @@ void MultiPlayerMode::initMisc()
         }
         else
         {
-            bool success = mMultiplayerController->startSessionSlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getPlayerCar().getCharacterName());
+            bool success = mMultiplayerController->startSessionSlave(mModeContext.mGameState.getPlayerCar().getCharacterName());
 
             if(!success)
             {
@@ -331,33 +315,36 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
 {
     //isHost - true if remote player was host (not current host!!!)
 
-    if(!isHost)
-        mUIRace->addMiscPanelText("Player quit session: [" + player + "]", Ogre::ColourValue::Red);
-    else
-        mUIRace->addMiscPanelText("Host player quit session: [" + player + "]", Ogre::ColourValue::Red);
-    
-    //remove human
-    std::vector<std::string>multiplayerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-    if(std::find(multiplayerNames.begin(), multiplayerNames.end(), player) != multiplayerNames.end())
+    //if(player != mModeContext.mGameState.getMultiplayerUserName())//if not self
     {
-        PSMultiplayerCar& carHuman = mModeContext.mGameState.getMultiplayerCarHuman(player);
-        mLapController.removeCar(&carHuman);
-        carHuman.removeFromScene(mSceneMgr);
-
-        //remove PSMultiplayerCar object
-        mModeContext.mGameState.removeMultiplayerCarHuman(player);
-    }
-
-    //remove ai
-    if(isHost)
-    {
-        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+        if(!isHost)
+            mUIRace->addMiscPanelText("Player quit session: [" + player + "]", Ogre::ColourValue::Red);
+        else
+            mUIRace->addMiscPanelText("Host player quit session: [" + player + "]", Ogre::ColourValue::Red);
+        
+        //remove human
+        std::vector<std::string>multiplayerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+        if(std::find(multiplayerNames.begin(), multiplayerNames.end(), player) != multiplayerNames.end())
         {
-            PSMultiplayerCar& carAI = mModeContext.mGameState.getMultiplayerCarAI(q);
-            mLapController.removeCar(&carAI);
-            carAI.removeFromScene(mSceneMgr);
+            PSMultiplayerCar& carHuman = mModeContext.mGameState.getMultiplayerCarHuman(player);
+            mLapController.removeCar(&carHuman);
+            carHuman.removeFromScene(mSceneMgr);
+
+            //remove PSMultiplayerCar object
+            mModeContext.mGameState.removeMultiplayerCarHuman(player);
         }
-        mModeContext.mGameState.setMultiplayerCountAI(0);
+
+        //remove ai
+        if(isHost)
+        {
+            for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+            {
+                PSMultiplayerCar& carAI = mModeContext.mGameState.getMultiplayerCarAI(q);
+                mLapController.removeCar(&carAI);
+                carAI.removeFromScene(mSceneMgr);
+            }
+            mModeContext.mGameState.setMultiplayerCountAI(0);
+        }
     }
 }
 

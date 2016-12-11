@@ -5,6 +5,7 @@
 
 GameState::GameState() :
     mOriginalDataInited(false),
+    mAiOpponentsAmount(1),
     mLLTObject(NULL),
     mGlobalLight(NULL),
     mShadowLight(NULL),

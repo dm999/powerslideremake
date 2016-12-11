@@ -337,31 +337,23 @@ void MultiplayerController::onQuit(multislider::Session* session, const std::str
     }
 }
 
-bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::vector<std::string>& aiSkins, const std::string& playerCharacter)
+bool MultiplayerController::startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]");
 
     bool res = true;
 
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startLobbyMaster]");
+
     try{
 
-        mAISkins = aiSkins;
-
-        mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
-
-        mReadyPlayers.clear();
         mPlayersLimits = playersLimits;
 
-        //std::vector<multislider::RoomInfo> rooms = mLobby->getRooms();
+        mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
 
         multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, "", mPlayersLimits + aiAmount, aiAmount, this);
         if(status == multislider::Lobby::SUCCESS)
         {
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]: room created [" + Ogre::String(roomName) + "]");
-
-            mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), true);
-
-            mReadySent = true;
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startLobbyMaster]: room created [" + Ogre::String(roomName) + "]");
         }
         else
         {
@@ -370,27 +362,24 @@ bool MultiplayerController::startSessionMaster(std::string ip, uint16_t port, st
             {
                 mEvents->onError("room not created");
             }
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]: room not created");
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startLobbyMaster]: room not created");
         }
     }catch(const std::runtime_error& err)
     {
         res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionMaster]: " + Ogre::String(err.what()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startLobbyMaster]: " + Ogre::String(err.what()));
     }
 
     return res;
 }
 
-bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std::string userName, std::string roomName, const std::string& playerCharacter)
+bool MultiplayerController::startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]");
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startLobbySlave]");
 
     bool res = true;
 
     try{
-
-        mAISkins.clear();
-
         mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
 
         typedef std::vector<multislider::RoomInfo> roomV;
@@ -414,11 +403,8 @@ bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std
 
             if(status == multislider::Lobby::SUCCESS)
             {
-                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]: room joined [" + Ogre::String(rooms[index].getName()) + "]");
+                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startLobbySlave]: room joined [" + Ogre::String(rooms[index].getName()) + "]");
 
-                mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), false);
-
-                mReadySent = true;
             }
             else
             {
@@ -427,7 +413,7 @@ bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std
                 {
                     mEvents->onError("room not joined");
                 }
-                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionSlave]: room not joined");
+                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startLobbySlave]: room not joined");
             }
         }
         else
@@ -437,9 +423,55 @@ bool MultiplayerController::startSessionSlave(std::string ip, uint16_t port, std
             {
                 mEvents->onError("room not found");
             }
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionSlave]: room not found");
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startLobbySlave]: room not found");
         }
 
+    }catch(const std::runtime_error& err)
+    {
+        res = false;
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startLobbySlave]: " + Ogre::String(err.what()));
+    }
+
+    return res;
+}
+
+bool MultiplayerController::startSessionMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]");
+
+    bool res = true;
+
+    try{
+
+        mAISkins = aiSkins;
+
+        mReadyPlayers.clear();
+
+        mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), true);
+
+        mReadySent = true;
+    }catch(const std::runtime_error& err)
+    {
+        res = false;
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionMaster]: " + Ogre::String(err.what()));
+    }
+
+    return res;
+}
+
+bool MultiplayerController::startSessionSlave(const std::string& playerCharacter)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]");
+
+    bool res = true;
+
+    try{
+
+        mAISkins.clear();
+
+        mLobby->say(fillLobbyReadyMessage(playerCharacter).json(), false);
+
+        mReadySent = true;
     }catch(const std::runtime_error& err)
     {
         res = false;

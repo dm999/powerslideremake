@@ -10,10 +10,10 @@ class MultiPlayerMode : public BaseRaceMode,
 {
 public:
 
-    MultiPlayerMode(const ModeContext& modeContext);
+    MultiPlayerMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller);
     virtual ~MultiPlayerMode(){}
 
-    virtual void clearData()override;
+    CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
 
     //multiplayer
     void onPlayerEjected(const std::string& player)override;
@@ -30,7 +30,6 @@ public:
 
 protected:
 
-    virtual void clearScene()override;
     virtual void initMisc()override;
 
     virtual void customInitScene()override;

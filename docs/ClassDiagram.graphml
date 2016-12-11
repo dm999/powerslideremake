@@ -1742,7 +1742,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1126.7497727076616" width="1162.427823583826" x="13848.786088208084" y="-2573.3748863538303"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1047.783203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="39.48328479133079">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1077.185546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1123.814453125" x="19.306685229412324" y="24.78211291633079">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1751,6 +1751,8 @@ public:
 typedef std::map&lt;std::string, MultiplayerSessionData&gt; playerToData
 
 Events* mEvents
+
+void setEvents(Events* events)
 
 private:
 
@@ -2237,13 +2239,13 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
           <y:Geometry height="626.6089300907411" width="1182.673064464992" x="12458.663467767503" y="-2323.3044650453703"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1137.203125" x="22.7349697324953" y="31.982199420370307">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1137.203125" x="22.7349697324953" y="39.33278535787031">&lt;&lt;MultiPlayerMode.h&gt;&gt;
 
 MultiPlayerMode
 
 public:
 
-virtual void clearData()override
+CommonIncludes::shared_ptr&lt;MultiplayerController&gt; getMultiplayerController()
 
 void onPlayerEjected(const std::string&amp; player)override
 void onPlayerJoined(const std::string&amp; player)override
@@ -2259,7 +2261,6 @@ void onError(const std::string&amp; message)override
 
 protected:
 
-virtual void clearScene()override
 virtual void initMisc()override
 
 virtual void customInitScene()override
@@ -2420,7 +2421,7 @@ ModeContext mModeContext
           <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12481.765270633017" y="-4773.987134674096"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="11.728345611597433">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="239.21875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="408.8359375" x="16.04557582112284" y="4.377759674097433">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -2434,6 +2435,7 @@ virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
 
 private:
 
+CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
 CommonIncludes::shared_ptr&lt;UIMainMenuMulti&gt; mUIMainMenuMulti</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>

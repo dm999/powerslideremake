@@ -9,6 +9,8 @@
 
 #include "../customs/CustomTrayManager.h"
 
+#include "../multiplayer/MultiplayerController.h"
+
 GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
     mGameMode(ModeMenu), mIsSwitchMode(false)
@@ -61,6 +63,41 @@ void GameModeSwitcher::frameEnded()
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
+        CommonIncludes::shared_ptr<MultiplayerController> controller;
+
+        //store multiplayer controller
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
+        {
+            if(mPlayerMode.get())
+            {
+                MultiPlayerMode * mode = static_cast<MultiPlayerMode *>(mPlayerMode.get());
+                controller = mode->getMultiplayerController();
+                assert(controller.get());
+                controller->setEvents(NULL);
+            }
+        }
+
+        //store multiplayer controller
+        if(mGameMode == ModeMenuMulti && mGameModeNext == ModeRaceMulti)
+        {
+            if(mMenuMultiMode.get())
+            {
+                controller = mMenuMultiMode->getMultiplayerController();
+                assert(controller.get());
+                controller->setEvents(NULL);
+            }
+        }
+
+        //clean up multiplayer lobby
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
+        {
+            if(mMenuMultiMode.get())
+            {
+                mMenuMultiMode->clearMultiplayerController();
+            }
+        }
+
+        //clean all modes
         clear();
 
         //from race to main menu (single or multi)
@@ -84,7 +121,7 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMultiMode.reset(new MenuMultiMode(mContext));
+                mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
                 mMenuMultiMode->initData();
             }
         }
@@ -111,7 +148,7 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
-            mPlayerMode.reset(new MultiPlayerMode(mContext));
+            mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
             mPlayerMode->initData();
         }
 
