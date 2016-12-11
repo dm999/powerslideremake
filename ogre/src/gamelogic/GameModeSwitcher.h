@@ -1,8 +1,6 @@
 #ifndef GAMEMODESWITCHER_H
 #define GAMEMODESWITCHER_H
 
-#include "SdkTrays.h"
-
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
 
@@ -10,7 +8,8 @@
 
 #include "../gamemodes/ModeContext.h"
 
-class BaseMenuMode;
+class MenuMode;
+class MenuMultiMode;
 class BaseRaceMode;
 
 class InputHandler;
@@ -20,15 +19,12 @@ struct lua_State;
 class SoundsProcesser;
 class Graphics2D;
 
-class GameModeSwitcher : public OgreBites::SdkTrayListener
+class GameModeSwitcher
 {
 public:
 
     GameModeSwitcher(const ModeContext& modeContext);
     ~GameModeSwitcher();
-
-    //SdkTrayListener
-    virtual void buttonHit(OgreBites::Button* button)override;
 
     void frameStarted(const Ogre::FrameEvent &evt);
     void frameRenderingQueued(const Ogre::FrameEvent &evt);
@@ -57,7 +53,8 @@ private:
     bool mIsSwitchMode;
 
 
-    CommonIncludes::shared_ptr<BaseMenuMode> mMenuMode;
+    CommonIncludes::shared_ptr<MenuMode> mMenuMode;
+    CommonIncludes::shared_ptr<MenuMultiMode> mMenuMultiMode;
     CommonIncludes::shared_ptr<BaseRaceMode> mPlayerMode;
 
     void clear();

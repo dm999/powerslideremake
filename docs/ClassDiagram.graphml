@@ -2066,9 +2066,9 @@ Ogre::Camera* mCamera</y:NodeLabel>
           <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12259.536455428877" y="-5133.9871346740965"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="11.728345611596524">&lt;&lt;BaseMenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="11.728345611596524">&lt;&lt;MenuMode.h&gt;&gt;
 
-BaseMenuMode
+MenuMode
 
 public:
 
@@ -2186,14 +2186,17 @@ Ogre::RenderTargetListener</y:NodeLabel>
     <node id="n43">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="349.7080707577743" width="317.07724394797833" x="13401.461378026012" y="-5604.854035378887"/>
+          <y:Geometry height="408.24089564820224" width="399.02319879457855" x="13360.488400602711" y="-5634.120447824102"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="327.42578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="257.798828125" x="29.639207911488484" y="11.141144753886692">&lt;&lt;ModeContext.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="400.931640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="3.654627511601575">&lt;&lt;ModeContext.h&gt;&gt;
 
 ModeContext
 
 public:
+
+void setGameModeSwitcher(GameModeSwitcher* gameModeSwitcher)
+GameModeSwitcher* getGameModeSwitcher()const
 
 private:
 
@@ -2208,6 +2211,8 @@ CustomTrayManager* mTrayMgr
 CustomOverlaySystem* mOverlaySystem
 
 lua_State * mPipeline
+
+GameModeSwitcher* mGameModeSwitcher
 
 GameState&amp; mGameState
 SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
@@ -2330,10 +2335,10 @@ std::vector&lt;Ogre::OverlayElement*&gt; mCreatedElements</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="243.1594223159018" width="492.73852921701246" x="13943.630735391494" y="-5281.57971115795"/>
+          <y:Geometry height="262.1825904052903" width="476.64200237214163" x="13891.67899881393" y="-5291.091295202645"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="15.912233358505546" y="9.320922095450442">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="7.863969936070134" y="4.131334265144687">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2342,6 +2347,8 @@ public:
 void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
 
 private:
+
+ModeContext mModeContext
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
 
@@ -2355,7 +2362,7 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
     <node id="n50">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="25.135841344832443" width="107.47884035471282" x="12786.260579822643" y="-5022.567920672416"/>
+          <y:Geometry height="25.135841344832443" width="107.47884035471282" x="12426.260579822643" y="-5202.567920672416"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="72.02734375" x="17.725748302356806" y="3.2173347349162214">UIMainMenu</y:NodeLabel>
@@ -2381,6 +2388,65 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="10.995550857518538" y="3.9545361944055912">OgreBites::SdkTrayListener</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n53">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="262.1825904052903" width="476.64200237214163" x="14131.67899881393" y="-4961.091295202645"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="390.162109375" x="43.239946498570134" y="48.23484989014469">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+
+UIMainMenuMulti
+
+public:
+
+void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
+
+private:
+
+ModeContext mModeContext
+</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n54">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12481.765270633017" y="-4773.987134674096"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="11.728345611597433">&lt;&lt;MenuMultiMode.h&gt;&gt;
+
+MenuMultiMode
+
+public:
+
+virtual void initData()override
+virtual void clearData()override
+
+virtual void frameStarted(const Ogre::FrameEvent &amp;evt)override
+virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
+
+private:
+
+CommonIncludes::shared_ptr&lt;UIMainMenuMulti&gt; mUIMainMenuMulti</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n55">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="39.18371931853653" width="116.844092337181" x="12643.80676903555" y="-4849.591859659267"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="114.0390625" x="1.4025149185908958" y="2.890687784268266">MultiplayerController
+UIMainMenuMulti</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2931,6 +2997,46 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e49" source="n53" target="n48">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e50" source="n55" target="n54">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e51" source="n54" target="n39">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e52" source="n54" target="n38">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

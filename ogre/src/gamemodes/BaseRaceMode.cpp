@@ -266,10 +266,10 @@ void BaseRaceMode::initScene()
 
     //init multiplayer
     {
-        mModeContext.mGameState.setMultiplayerMaster(mLuaManager.ReadScalarBool("Scene.Multiplayer.IsMaster", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerRoomName(mLuaManager.ReadScalarString("Scene.Multiplayer.RoomName", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerUserName(mLuaManager.ReadScalarString("Scene.Multiplayer.UserName", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerServerIP(mLuaManager.ReadScalarString("Scene.Multiplayer.ServerIP", mModeContext.mPipeline));
+        //mModeContext.mGameState.setMultiplayerMaster(mLuaManager.ReadScalarBool("Scene.Multiplayer.IsMaster", mModeContext.mPipeline));
+        //mModeContext.mGameState.setMultiplayerRoomName(mLuaManager.ReadScalarString("Scene.Multiplayer.RoomName", mModeContext.mPipeline));
+        //mModeContext.mGameState.setMultiplayerUserName(mLuaManager.ReadScalarString("Scene.Multiplayer.UserName", mModeContext.mPipeline));
+        //mModeContext.mGameState.setMultiplayerServerIP(mLuaManager.ReadScalarString("Scene.Multiplayer.ServerIP", mModeContext.mPipeline));
         mModeContext.mGameState.setMultiplayerServerPort(mLuaManager.ReadScalarInt("Scene.Multiplayer.ServerPort", mModeContext.mPipeline));
         mModeContext.mGameState.setMultiplayerPlayersLimits(mLuaManager.ReadScalarInt("Scene.Multiplayer.PlayersLimits", mModeContext.mPipeline));
         mModeContext.mGameState.setMultiplayerBroadcastInterval(mLuaManager.ReadScalarInt("Scene.Multiplayer.BroadcastInterval", mModeContext.mPipeline));

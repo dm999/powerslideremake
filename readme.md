@@ -7,6 +7,7 @@
 ### Build ###
 To build the project you need:  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
+- [MyGUI](https://github.com/MyGUI/mygui)  
 - [OpenAL](https://www.openal.org)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 
@@ -14,6 +15,7 @@ Initial steps before building project is preparation of dependencies: you need t
 
 To build project you need set environment variables:  
 - OGRE_HOME - path to Ogre includes & binaries  
+- MYGUI_HOME - path to MyGUI includes & binaries  
 - OPENAL - path to OpenAL includes & binaries  
 
 ### Sources ###

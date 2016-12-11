@@ -10,11 +10,18 @@ namespace Ogre
     class RenderWindow;
 }
 
+namespace MyGUI
+{
+    class Gui;
+    class OgrePlatform;
+}
+
 struct lua_State;
 
 class InputHandler;
 class CustomTrayManager;
 class CustomOverlaySystem;
+class GameModeSwitcher;
 
 class ModeContext
 {
@@ -25,15 +32,23 @@ public:
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState, SoundsProcesser& soundsProcesser
+        GameState& gameState, SoundsProcesser& soundsProcesser,
+        MyGUI::Gui* gui, MyGUI::OgrePlatform* platform
     );
 
     ModeContext(const ModeContext& other);
 
     ~ModeContext(){}
 
+    void setGameModeSwitcher(GameModeSwitcher* gameModeSwitcher){mGameModeSwitcher = gameModeSwitcher;}
+    GameModeSwitcher * getGameModeSwitcher() const{return mGameModeSwitcher;}
+
+
     friend class GameModeSwitcher;
-    friend class BaseMenuMode;
+    friend class MenuMode;
+    friend class MenuMultiMode;
+    friend class UIMainMenu;
+    friend class UIMainMenuMulti;
     friend class BaseRaceMode;
     friend class SinglePlayerMode;
     friend class MultiPlayerMode;
@@ -52,8 +67,13 @@ private:
 
     lua_State * mPipeline;
 
+    GameModeSwitcher* mGameModeSwitcher;
+
     GameState& mGameState;
     SoundsProcesser& mSoundsProcesser;
+
+    MyGUI::Gui* mGUI;
+    MyGUI::OgrePlatform* mPlatform;
 };
 
 #endif

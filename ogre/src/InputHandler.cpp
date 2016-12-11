@@ -161,7 +161,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         }
     }
 
-    baseApp->keyDown(arg.key);
+    baseApp->keyDown(arg);
 
     //if(mCameraMan)
         //mCameraMan->injectKeyDown(arg);
@@ -177,7 +177,7 @@ bool InputHandler::keyReleased( const OIS::KeyEvent &arg )
     //if(mCameraMan)
         //mCameraMan->injectKeyUp(arg);
 
-    baseApp->keyUp(arg.key);
+    baseApp->keyUp(arg);
 
     return true;
 }

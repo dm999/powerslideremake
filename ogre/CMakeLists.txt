@@ -1,6 +1,7 @@
 # set env variables
 # OGRE_HOME
 # OPENAL
+# MYGUI_HOME
 #
 # make sure debug & release versions of libs available (/MDd, /MD compilled for MSVC)
 # sample of naming
@@ -130,6 +131,7 @@ else()
             ${OGRE_INCLUDE_DIRS}
             $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
             $ENV{OGRE_HOME}/include/OGRE/Overlay
+            $ENV{MYGUI_HOME}/include/MYGUI
             #${OGRE_RenderSystem_GL_INCLUDE_DIR}
             #${OGRE_SAMPLES_INCLUDEPATH}
             #${OGRE_Overlay_INCLUDE_DIRS}
@@ -159,6 +161,8 @@ else()
     link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
     link_directories ($ENV{OGRE_HOME}/lib/Release)
     link_directories ($ENV{OGRE_HOME}/lib/Release/opt)
+    link_directories ($ENV{MYGUI_HOME}/lib/Debug)
+    link_directories ($ENV{MYGUI_HOME}/lib/Release)
 endif()
 
 if(WIN32)
@@ -223,6 +227,11 @@ else()
     target_link_libraries(PowerslideHD_Engine debug MultiSlider_d)
     target_link_libraries(PowerslideHD_Engine optimized MultiSlider)
     
+    target_link_libraries(PowerslideHD_Engine debug MyGUI.OgrePlatform_d)
+    target_link_libraries(PowerslideHD_Engine debug MyGUIEngine_d)
+    target_link_libraries(PowerslideHD_Engine optimized MyGUI.OgrePlatform)
+    target_link_libraries(PowerslideHD_Engine optimized MyGUIEngine)
+    
     target_link_libraries(PowerslideHD_Engine Jsonxx)
     
     target_link_libraries(PowerslideHD_Engine openal32)
@@ -238,6 +247,8 @@ else()
     target_link_libraries(PowerslideHD_Engine debug FreeImaged)
     target_link_libraries(PowerslideHD_Engine debug zlibd)
     target_link_libraries(PowerslideHD_Engine debug zziplibd)
+    
+    
 
     target_link_libraries(PowerslideHD_Engine optimized OgreMainStatic)
     target_link_libraries(PowerslideHD_Engine optimized OgreOverlayStatic)

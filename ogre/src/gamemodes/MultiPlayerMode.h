@@ -45,6 +45,8 @@ protected:
 
 private:
 
+    bool mIsSessionStarted;
+
     CommonIncludes::shared_ptr<MultiplayerController> mMultiplayerController;
 };
 

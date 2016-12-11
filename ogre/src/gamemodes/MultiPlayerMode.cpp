@@ -9,7 +9,8 @@
 #include "../ui/UIRace.h"
 
 MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext) :
-    BaseRaceMode(modeContext)
+    BaseRaceMode(modeContext),
+    mIsSessionStarted(false)
 {}
 
 void MultiPlayerMode::clearData()
@@ -94,17 +95,20 @@ void MultiPlayerMode::customClearScene()
 
 void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 {
-    //AI
-    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    if(mIsSessionStarted)
     {
-        mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
-    }
+        //AI
+        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+        }
 
-    //human
-    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-    for(size_t q = 0; q < playerNames.size(); ++q)
-    {
-        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+        //human
+        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+        for(size_t q = 0; q < playerNames.size(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+        }
     }
 }
 
@@ -124,31 +128,37 @@ void MultiPlayerMode::customUnloadResources()
 
 void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)
 {
-    //AI
-    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    if(mIsSessionStarted)
     {
-        mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-    }
+        //AI
+        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+        }
 
-    //human
-    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-    for(size_t q = 0; q < playerNames.size(); ++q)
-    {
-        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+        //human
+        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+        for(size_t q = 0; q < playerNames.size(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+        }
     }
 }
 
 void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)
 {
-    //AI
-    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-        mModeContext.mGameState.getMultiplayerCarAI(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
-    //human
-    std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-    for(size_t q = 0; q < playerNames.size(); ++q)
+    if(mIsSessionStarted)
     {
-        mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+        //AI
+        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+
+        //human
+        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
+        for(size_t q = 0; q < playerNames.size(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
+        }
     }
 
     {
@@ -436,6 +446,8 @@ void MultiPlayerMode::onSessionStart(uint32_t aiAmount, const std::vector<std::s
             mLapController.addCar(&mModeContext.mGameState.getMultiplayerCarAI(q));
         }
     }
+
+    mIsSessionStarted = true;
 }
 
 void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)

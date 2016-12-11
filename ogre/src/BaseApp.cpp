@@ -2,6 +2,9 @@
 
 #include "BaseApp.h"
 
+#include "MyGUI.h"
+#include "MyGUI_OgrePlatform.h"
+
 #include "InputHandler.h"
 #include "tools/OgreTools.h"
 #include "tools/Conversions.h"
@@ -115,6 +118,9 @@ BaseApp::~BaseApp()
 
     baseApp = NULL;
     deInitLua();
+
+    mGUI.reset();
+    mPlatform.reset();
 
     mTrayMgr.reset();
 
@@ -268,6 +274,9 @@ bool BaseApp::setup()
     mTrayMgr->hideCursor();
     //mTrayMgr->toggleAdvancedFrameStats();
 
+    mPlatform.reset(new MyGUI::OgrePlatform());
+    mGUI.reset(new MyGUI::Gui());
+
     mGameState.initOriginalData("./", "./");
     if(!mGameState.isOriginalDataInited())
     {
@@ -366,7 +375,11 @@ void BaseApp::quickScriptsReload()
 
 void BaseApp::setShutdown(bool shutdown)
 {
-    if(mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeMenuMulti   ||
+        mGameModeSwitcher->getMode() == ModeRaceMulti
+    )
     {
         mGameModeSwitcher->switchMode(ModeMenu);
     }
@@ -376,29 +389,44 @@ void BaseApp::setShutdown(bool shutdown)
     }
 }
 
-void BaseApp::keyDown(OIS::KeyCode key)
+void BaseApp::keyDown(const OIS::KeyEvent &arg )
 {
     if(!mGameState.isGamePaused())
-        mGameState.getPlayerCar().keyDown(key);
+        mGameState.getPlayerCar().keyDown(arg.key);
+
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
 }
 
-void BaseApp::keyUp(OIS::KeyCode key)
+void BaseApp::keyUp(const OIS::KeyEvent &arg )
 {
-    mGameState.getPlayerCar().keyUp(key);
+    mGameState.getPlayerCar().keyUp(arg.key);
+
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
 }
 
 #if !defined(__ANDROID__)
 void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
 {
     mTrayMgr->injectMouseMove(arg);
+
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
 }
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     mTrayMgr->injectMouseDown(arg, id);
+
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     mTrayMgr->injectMouseUp(arg, id);
+
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
 }
 #endif
 
@@ -480,7 +508,8 @@ ModeContext BaseApp::createModeContext()
         mInputHandler.get(),
         mTrayMgr.get(), mOverlaySystem.get(),
         mPipeline,
-        mGameState, mSoundsProcesser
+        mGameState, mSoundsProcesser,
+        mGUI.get(), mPlatform.get()
     );
 }
 
@@ -639,6 +668,9 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
             mTrayMgr->hideCursor();
             //mTrayMgr->toggleAdvancedFrameStats();
+
+            mPlatform.reset(new MyGUI::OgrePlatform());
+            mGUI.reset(new MyGUI::Gui());
 
             LOGI("BaseApp[androidInitWindow]: Before create scene"); 
 

@@ -1,6 +1,9 @@
 #include "../pcheader.h"
 
-#include "BaseMenuMode.h"
+#include "MenuMode.h"
+
+#include "MyGUI.h"
+#include "MyGUI_OgrePlatform.h"
 
 #include "../customs/CustomTrayManager.h"
 #include "../customs/CustomOverlaySystem.h"
@@ -9,12 +12,12 @@
 
 #include "../ui/UIMainMenu.h"
 
-BaseMenuMode::BaseMenuMode(const ModeContext& modeContext) :
+MenuMode::MenuMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
-    mUIMainMenu(new UIMainMenu())
+    mUIMainMenu(new UIMainMenu(modeContext))
 {}
 
-void BaseMenuMode::initData()
+void MenuMode::initData()
 {
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
@@ -39,18 +42,24 @@ void BaseMenuMode::initData()
 
     mModeContext.mTrayMgr->hideLoadingBar();
 
-    mUIMainMenu->load(mModeContext.mTrayMgr, mModeContext.mGameState);
+    mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
+    mModeContext.mGUI->initialise();
+
+    mUIMainMenu->load(mModeContext.mGUI, mModeContext.mGameState);
 
     //mModeContext.mTrayMgr->showCursor();
-    mModeContext.mTrayMgr->showCursor("Test/Cursor");
+    //mModeContext.mTrayMgr->showCursor("Test/Cursor");
     //mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
-    mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
+    //mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
 }
 
-void BaseMenuMode::clearData()
+void MenuMode::clearData()
 {
     Ogre::ParticleSystemManager::getSingleton().removeAllTemplates();
     Ogre::ResourceGroupManager::getSingleton().clearResourceGroup("Popular");
+
+    mModeContext.mGUI->shutdown();
+    mModeContext.mPlatform->shutdown();
 
     mSceneMgr->clearScene();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
@@ -61,18 +70,18 @@ void BaseMenuMode::clearData()
     Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 }
 
-void BaseMenuMode::frameStarted(const Ogre::FrameEvent &evt)
+void MenuMode::frameStarted(const Ogre::FrameEvent &evt)
 {
 }
 
-void BaseMenuMode::frameRenderingQueued(const Ogre::FrameEvent &evt)
+void MenuMode::frameRenderingQueued(const Ogre::FrameEvent &evt)
 {
     mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), true);
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
 }
 
 #if defined(__ANDROID__)
-void BaseMenuMode::reloadTextures()
+void MenuMode::reloadTextures()
 {
     mUIMainMenu->reloadTextures(mModeContext.mGameState);
 }

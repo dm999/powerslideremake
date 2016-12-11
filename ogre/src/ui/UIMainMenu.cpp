@@ -2,13 +2,20 @@
 
 #include "UIMainMenu.h"
 
+#include "MyGUI.h"
+
+#include "../gamelogic/GameModeSwitcher.h"
+
 #include "../tools/OgreTools.h"
 
 #include "../customs/CustomTrayManager.h"
 
 #include "../loaders/TextureLoader.h"
 
-UIMainMenu::UIMainMenu()
+#include "../multiplayer/MultiplayerRoomInfo.h"
+
+UIMainMenu::UIMainMenu(const ModeContext& modeContext)
+: mModeContext(modeContext)
 {}
 
 UIMainMenu::~UIMainMenu()
@@ -34,7 +41,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 }
 
-void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
+void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -49,6 +56,71 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
 
+    {
+        Ogre::Vector4 backgroundAPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
+        Ogre::Vector4 backgroundBPos = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 102.0f, 217.0f);
+
+        MyGUI::ImageBox * mainBackground = gui->createWidget<MyGUI::ImageBox>("ImageBox", 0, 0, viewportWidth, viewportHeight, MyGUI::Align::Default, "Wallpaper");
+        mainBackground->setImageTexture("OriginalMainBackground");
+
+        MyGUI::ImageBox * backgroundA = gui->createWidget<MyGUI::ImageBox>("ImageBox", backgroundAPos.x, backgroundAPos.y, backgroundAPos.z, backgroundAPos.w, MyGUI::Align::Default, "Back");
+        backgroundA->setImageTexture("OriginalBackgroundA");
+
+        MyGUI::ImageBox * backgroundB = gui->createWidget<MyGUI::ImageBox>("ImageBox", backgroundBPos.x, backgroundBPos.y, backgroundBPos.z, backgroundBPos.w, MyGUI::Align::Default, "Back");
+        backgroundB->setImageTexture("OriginalBackgroundB");
+    }
+
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(320.0f, 50.0f, 40.0f, 8.0f);
+
+        MyGUI::ButtonPtr widget = gui->createWidget<MyGUI::Button>("Button", pos.x, pos.y, pos.z, pos.w, MyGUI::Align::Default, "Middle");
+        widget->setCaption("Single");
+        widget->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
+    }
+
+    {
+        Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 8.0f);
+        MyGUI::ButtonPtr widgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
+        widgetJoin->setCaption("Multi Join");
+        widgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
+
+        Ogre::Vector4 posHost = screenAdaptionRelative * Ogre::Vector4(380.0f, 80.0f, 40.0f, 8.0f);
+        MyGUI::ButtonPtr widgetHost = gui->createWidget<MyGUI::Button>("Button", posHost.x, posHost.y, posHost.z, posHost.w, MyGUI::Align::Default, "Middle");
+        widgetHost->setCaption("Multi Host");
+        widgetHost->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
+
+        Ogre::Vector4 posIP = screenAdaptionRelative * Ogre::Vector4(320.0f, 100.0f, 100.0f, 8.0f);
+        mWidgetIP = gui->createWidget<MyGUI::EditBox>("EditBox", posIP.x, posIP.y, posIP.z, posIP.w, MyGUI::Align::Default, "Middle");
+        mWidgetIP->setCaption("78.47.85.155");
+        mWidgetIP->eventKeyButtonPressed += MyGUI::newDelegate(this, &UIMainMenu::processKeyPress);
+        mWidgetIP->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+        mWidgetIP->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
+
+        Ogre::Vector4 posRoom = screenAdaptionRelative * Ogre::Vector4(320.0f, 110.0f, 100.0f, 8.0f);
+        mWidgetRoom = gui->createWidget<MyGUI::EditBox>("EditBox", posRoom.x, posRoom.y, posRoom.z, posRoom.w, MyGUI::Align::Default, "Middle");
+        mWidgetRoom->setCaption("Powerslide");
+        mWidgetRoom->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+        mWidgetRoom->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
+
+        Ogre::Vector4 posUserName = screenAdaptionRelative * Ogre::Vector4(320.0f, 120.0f, 100.0f, 8.0f);
+        mWidgetUserName = gui->createWidget<MyGUI::EditBox>("EditBox", posUserName.x, posUserName.y, posUserName.z, posUserName.w, MyGUI::Align::Default, "Middle");
+        mWidgetUserName->setCaption("DM");
+        mWidgetUserName->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+        mWidgetUserName->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
+
+        Ogre::Vector4 posRooms = screenAdaptionRelative * Ogre::Vector4(320.0f, 130.0f, 90.0f, 50.0f);
+        mWidgetRooms = gui->createWidget<MyGUI::ListBox>("ListBox", posRooms.x, posRooms.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
+        mWidgetRooms->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+        mWidgetRooms->eventListSelectAccept += MyGUI::newDelegate(this, &UIMainMenu::processItemSelected);
+
+        Ogre::Vector4 posRoomPlayers = screenAdaptionRelative * Ogre::Vector4(420.0f, 130.0f, 90.0f, 50.0f);
+        mWidgetRoomPlayers = gui->createWidget<MyGUI::ListBox>("ListBox", posRoomPlayers.x, posRoomPlayers.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
+        mWidgetRoomPlayers->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+    }
+
+    //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
+
+#if 0
     //main background
     {
         std::vector<Ogre::String> texName;
@@ -137,10 +209,38 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState)
         }
 
         {
-            OgreBites::Button* button = createButton(trayMgr, OgreBites::TL_NONE, "MultiPlayer", "Multi", 120);
-            button->getOverlayElement()->setLeft(200.0f);
+            OgreBites::Button* widget = createButton(trayMgr, OgreBites::TL_NONE, "MultiPlayer", "Multi", 120);
+            widget->getOverlayElement()->setLeft(200.0f);
+        }
+
+        {
+            OgreBites::TextBox* widget = createTextBox(trayMgr, OgreBites::TL_NONE, "RoomList", "Rooms", 120, 200);
+            widget->getOverlayElement()->setLeft(200.0f);
+            widget->getOverlayElement()->setTop(200.0f);
+            widget->appendText("OK1\n");
+            widget->appendText("OK2\n");
+            widget->appendText("OK3\n");
+            widget->appendText("OK4\n");
+            widget->appendText("OK5\n");
+            widget->appendText("OK6\n");
+            widget->appendText("OK7\n");
+            widget->appendText("OK8\n");
+            widget->appendText("OK9\n");
+            widget->appendText("OK10\n");
+        }
+
+        {
+            Ogre::StringVector items;
+            items.push_back("room1");
+            items.push_back("room2");
+            items.push_back("room3");
+            items.push_back("room4");
+            OgreBites::SelectMenu* widget = createSelectMenu(trayMgr, OgreBites::TL_NONE, "RoomList2", "Rooms2", 120, 20, items);
+            widget->getOverlayElement()->setLeft(400.0f);
+            widget->getOverlayElement()->setTop(200.0f);
         }
     }
+#endif
 }
 
 #if defined(__ANDROID__)
@@ -149,3 +249,76 @@ void UIMainMenu::reloadTextures(const GameState& gameState)
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
 #endif
+
+void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
+{
+    MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
+
+    if(senderButton->getCaption() == "Single")
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+
+    if(senderButton->getCaption() == "Multi Join")
+    {
+        if(mWidgetRooms->getIndexSelected() == MyGUI::ITEM_NONE)
+        {
+            mWidgetRooms->deleteAllItems();
+            std::string ip = mWidgetIP->getCaption();
+            if(!ip.empty())
+            {
+                std::vector<std::string> rooms;
+                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, mPlayersInServerRooms);
+                if(isConnected)
+                {
+                    for(size_t q = 0; q < rooms.size(); ++q)
+                    {
+                        mWidgetRooms->addItem(rooms[q]);
+                    }
+                }
+                else
+                {
+                    mWidgetIP->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+                }
+            }
+        }
+        else
+        {
+            mModeContext.mGameState.setMultiplayerMaster(false);
+            mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
+            mModeContext.mGameState.setMultiplayerRoomName(mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected()));
+            mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
+            mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+        }
+    }
+
+    if(senderButton->getCaption() == "Multi Host")
+    {
+        mModeContext.mGameState.setMultiplayerMaster(true);
+        mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
+        mModeContext.mGameState.setMultiplayerRoomName(mWidgetRoom->getCaption());
+        mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
+        mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+    }
+}
+
+void UIMainMenu::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+{
+    if(sender == mWidgetIP)
+    {
+        mWidgetIP->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+    }
+}
+
+void UIMainMenu::processItemSelected(MyGUI::Widget* sender, size_t index)
+{
+    if(sender == mWidgetRooms)
+    {
+        mWidgetRoomPlayers->deleteAllItems();
+        if(index != MyGUI::ITEM_NONE)
+        {
+            for(size_t q = 0; q < mPlayersInServerRooms[index].size(); ++q)
+            {
+                mWidgetRooms->addItem(mPlayersInServerRooms[index][q]);
+            }
+        }
+    }
+}

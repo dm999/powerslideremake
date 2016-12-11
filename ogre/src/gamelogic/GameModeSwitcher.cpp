@@ -2,7 +2,8 @@
 
 #include "GameModeSwitcher.h"
 
-#include "../gamemodes/BaseMenuMode.h"
+#include "../gamemodes/MenuMode.h"
+#include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
 #include "../gamemodes/MultiPlayerMode.h"
 
@@ -13,19 +14,10 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     mGameMode(ModeMenu), mIsSwitchMode(false)
 {
 
-    mContext.mTrayMgr->setListener(this);
+    mContext.setGameModeSwitcher(this);
 
-#if 1
-    mMenuMode.reset(new BaseMenuMode(mContext));
-#else
-    mPlayerMode.reset(new SinglePlayerMode(mContext));
-#endif
-
-    if(mMenuMode.get())
-        mMenuMode->initData();
-
-    if(mPlayerMode.get())
-        mPlayerMode->initData();
+    mMenuMode.reset(new MenuMode(mContext));
+    mMenuMode->initData();
 }
 
 GameModeSwitcher::~GameModeSwitcher()
@@ -33,23 +25,13 @@ GameModeSwitcher::~GameModeSwitcher()
     clear();
 }
 
-void GameModeSwitcher::buttonHit(OgreBites::Button* button)
-{
-    if (button->getName() == "SinglePlayer")
-    {
-        switchMode(ModeRaceSingle);
-    }
-
-    if (button->getName() == "MultiPlayer")
-    {
-        switchMode(ModeRaceMulti);
-    }
-}
-
 void GameModeSwitcher::frameStarted(const Ogre::FrameEvent &evt)
 {
     if(mMenuMode.get())
         mMenuMode->frameStarted(evt);
+
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->frameStarted(evt);
 
     if(mPlayerMode.get())
         mPlayerMode->frameStarted(evt);
@@ -60,6 +42,9 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
     if(mMenuMode.get())
         mMenuMode->frameRenderingQueued(evt);
 
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->frameRenderingQueued(evt);
+
     if(mPlayerMode.get())
         mPlayerMode->frameRenderingQueued(evt);
 }
@@ -67,6 +52,7 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
 void GameModeSwitcher::frameEnded()
 {
     bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
+    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceMulti;
 
     const unsigned long afterFinishTimeThreshold = 10000; // ms
     bool raceOverAndReadyToQuit =   modeRace                                &&
@@ -77,35 +63,80 @@ void GameModeSwitcher::frameEnded()
     {
         clear();
 
+        //from race to main menu (single or multi)
         if(modeRace && mIsSwitchMode || raceOverAndReadyToQuit)
+        {
+            mIsSwitchMode = false;
+
+            if(mGameMode == ModeRaceSingle)
+            {
+                mGameMode = ModeMenu;
+
+                //mContext.mTrayMgr->showCursor();
+
+                mMenuMode.reset(new MenuMode(mContext));
+                mMenuMode->initData();
+            }
+
+            if(mGameMode == ModeRaceMulti)
+            {
+                mGameMode = ModeMenuMulti;
+
+                //mContext.mTrayMgr->showCursor();
+
+                mMenuMultiMode.reset(new MenuMultiMode(mContext));
+                mMenuMultiMode->initData();
+            }
+        }
+
+        //from main menu single to race
+        if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceSingle)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = ModeRaceSingle;
+
+            //mContext.mTrayMgr->hideCursor();
+
+            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mPlayerMode->initData();
+        }
+
+        //from main menu multi to race
+        if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeRaceMulti)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = ModeRaceMulti;
+
+            //mContext.mTrayMgr->hideCursor();
+
+            mPlayerMode.reset(new MultiPlayerMode(mContext));
+            mPlayerMode->initData();
+        }
+
+        //from main menu multi to main menu single
+        if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeMenu)
         {
             mIsSwitchMode = false;
 
             mGameMode = ModeMenu;
 
-            mContext.mTrayMgr->showCursor();
+            //mContext.mTrayMgr->hideCursor();
 
-            mMenuMode.reset(new BaseMenuMode(mContext));
-
+            mMenuMode.reset(new MenuMode(mContext));
             mMenuMode->initData();
         }
 
-        if(mGameMode == ModeMenu && mIsSwitchMode)
+        //from main menu single to multi main menu
+        if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeMenuMulti)
         {
             mIsSwitchMode = false;
 
             mGameMode = mGameModeNext;
 
-            mContext.mTrayMgr->hideCursor();
-
-            if(mGameMode == ModeRaceSingle)
-                mPlayerMode.reset(new SinglePlayerMode(mContext));
-
-            if(mGameMode == ModeRaceMulti)
-                mPlayerMode.reset(new MultiPlayerMode(mContext));
-
-
-            mPlayerMode->initData();
+            mMenuMultiMode.reset(new MenuMultiMode(mContext));
+            mMenuMultiMode->initData();
         }
 
     }
@@ -135,6 +166,9 @@ void GameModeSwitcher::reloadTextures()
     if(mMenuMode.get())
         mMenuMode->reloadTextures();
 
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->reloadTextures();
+
     if(mPlayerMode.get())
         mPlayerMode->reloadTextures();
 }
@@ -151,6 +185,10 @@ void GameModeSwitcher::clear()
     if(mMenuMode.get())
         mMenuMode->clearData();
     mMenuMode.reset();
+
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->clearData();
+    mMenuMultiMode.reset();
 
     if(mPlayerMode.get())
         mPlayerMode->clearData();

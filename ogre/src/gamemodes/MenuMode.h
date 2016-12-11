@@ -1,5 +1,5 @@
-#ifndef BASEMENUMODE_H
-#define BASEMENUMODE_H
+#ifndef MENUMODE_H
+#define MENUMODE_H
 
 #include "BaseMode.h"
 
@@ -7,13 +7,18 @@
 
 class UIMainMenu;
 
-class BaseMenuMode : 
+namespace MyGUI
+{
+    class Widget;
+}
+
+class MenuMode : 
     public BaseMode
 {
 public:
 
-    BaseMenuMode(const ModeContext& modeContext);
-    virtual ~BaseMenuMode(){}
+    MenuMode(const ModeContext& modeContext);
+    virtual ~MenuMode(){}
 
     virtual void initData()override;
     virtual void clearData()override;

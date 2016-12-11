@@ -24,6 +24,12 @@
     class AAssetManager;
 #endif
 
+namespace MyGUI
+{
+    class Gui;
+    class OgrePlatform;
+}
+
 class CustomSceneManagerFactory;
 class CustomTrayManager;
 class CustomOverlaySystem;
@@ -51,8 +57,8 @@ public:
 
     //controls
     void setShutdown(bool shutdown);
-    void keyDown(OIS::KeyCode key);
-    void keyUp(OIS::KeyCode key);
+    void keyDown(const OIS::KeyEvent &arg );
+    void keyUp(const OIS::KeyEvent &arg );
 
 #if !defined(__ANDROID__)
     void mouseMoved(const OIS::MouseEvent &arg);
@@ -113,6 +119,9 @@ protected:
     // OgreBites
     CommonIncludes::shared_ptr<CustomTrayManager> mTrayMgr;
     bool mShutDown;
+
+    CommonIncludes::shared_ptr<MyGUI::Gui> mGUI;
+    CommonIncludes::shared_ptr<MyGUI::OgrePlatform> mPlatform;
 
 private:
 
