@@ -161,78 +161,80 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::F
         }
     }
 
+
+    if(mMultiplayerController.get())
     {
-        Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+        mMultiplayerController->receiveSessionData();
 
-        Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocity();
-        Ogre::Vector3 playerAngVel = mModeContext.mGameState.getPlayerCar().getAngularVelocity();
-        Ogre::Quaternion playerRot = mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation();
-
-        Ogre::Vector3 wheel0;
-        Ogre::Vector3 wheel1;
-        Ogre::Vector3 wheel2;
-        Ogre::Vector3 wheel3;
-        mModeContext.mGameState.getPlayerCar().getWheelsPositions(wheel0, wheel1, wheel2, wheel3);
-        
-        MultiplayerSessionData data;
-        data.pos = playerPos;
-        data.rot = playerRot;
-        data.vel = playerVel;
-        data.velang = playerAngVel;
-        data.wheelpos[0] = wheel0;
-        data.wheelpos[1] = wheel1;
-        data.wheelpos[2] = wheel2;
-        data.wheelpos[3] = wheel3;
-        data.isAcc = mModeContext.mGameState.getPlayerCar().getAcceleration();
-        data.isBrake = mModeContext.mGameState.getPlayerCar().getBrake();
-        data.isLeft = mModeContext.mGameState.getPlayerCar().getSteerLeft();
-        data.isRight = mModeContext.mGameState.getPlayerCar().getSteerRight();
-        data.currentLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
-        data.lapPosition = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
-
-        std::vector<MultiplayerSessionData> dataAI;
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        if(mIsSessionStarted)
         {
-            Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearVelocity();
-            Ogre::Vector3 aiAngVel = mModeContext.mGameState.getAICar(q).getAngularVelocity();
-            Ogre::Quaternion aiRot = mModeContext.mGameState.getAICar(q).getModelNode()->getOrientation();
-            Ogre::Vector3 aiPos = mModeContext.mGameState.getAICar(q).getModelNode()->getPosition();
 
-            Ogre::Vector3 aiWheel0;
-            Ogre::Vector3 aiWheel1;
-            Ogre::Vector3 aiWheel2;
-            Ogre::Vector3 aiWheel3;
-            mModeContext.mGameState.getAICar(q).getWheelsPositions(aiWheel0, aiWheel1, aiWheel2, aiWheel3);
+            Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
 
-            MultiplayerSessionData aiData;
-            aiData.pos = aiPos;
-            aiData.rot = aiRot;
-            aiData.vel = aiVel;
-            aiData.velang = aiAngVel;
+            Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocity();
+            Ogre::Vector3 playerAngVel = mModeContext.mGameState.getPlayerCar().getAngularVelocity();
+            Ogre::Quaternion playerRot = mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation();
 
-            aiData.wheelpos[0] = aiWheel0;
-            aiData.wheelpos[1] = aiWheel1;
-            aiData.wheelpos[2] = aiWheel2;
-            aiData.wheelpos[3] = aiWheel3;
+            Ogre::Vector3 wheel0;
+            Ogre::Vector3 wheel1;
+            Ogre::Vector3 wheel2;
+            Ogre::Vector3 wheel3;
+            mModeContext.mGameState.getPlayerCar().getWheelsPositions(wheel0, wheel1, wheel2, wheel3);
+            
+            MultiplayerSessionData data;
+            data.pos = playerPos;
+            data.rot = playerRot;
+            data.vel = playerVel;
+            data.velang = playerAngVel;
+            data.wheelpos[0] = wheel0;
+            data.wheelpos[1] = wheel1;
+            data.wheelpos[2] = wheel2;
+            data.wheelpos[3] = wheel3;
+            data.isAcc = mModeContext.mGameState.getPlayerCar().getAcceleration();
+            data.isBrake = mModeContext.mGameState.getPlayerCar().getBrake();
+            data.isLeft = mModeContext.mGameState.getPlayerCar().getSteerLeft();
+            data.isRight = mModeContext.mGameState.getPlayerCar().getSteerRight();
+            data.currentLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
+            data.lapPosition = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
 
-            aiData.isAcc = mModeContext.mGameState.getAICar(q).getAcceleration();
-            aiData.isBrake = mModeContext.mGameState.getAICar(q).getBrake();
-            aiData.isLeft = mModeContext.mGameState.getAICar(q).getSteerLeft();
-            aiData.isRight = mModeContext.mGameState.getAICar(q).getSteerRight();
+            std::vector<MultiplayerSessionData> dataAI;
+            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            {
+                Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearVelocity();
+                Ogre::Vector3 aiAngVel = mModeContext.mGameState.getAICar(q).getAngularVelocity();
+                Ogre::Quaternion aiRot = mModeContext.mGameState.getAICar(q).getModelNode()->getOrientation();
+                Ogre::Vector3 aiPos = mModeContext.mGameState.getAICar(q).getModelNode()->getPosition();
 
-            aiData.currentLap = mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap();
-            aiData.lapPosition = mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition();
+                Ogre::Vector3 aiWheel0;
+                Ogre::Vector3 aiWheel1;
+                Ogre::Vector3 aiWheel2;
+                Ogre::Vector3 aiWheel3;
+                mModeContext.mGameState.getAICar(q).getWheelsPositions(aiWheel0, aiWheel1, aiWheel2, aiWheel3);
 
-            dataAI.push_back(aiData);
-        }
+                MultiplayerSessionData aiData;
+                aiData.pos = aiPos;
+                aiData.rot = aiRot;
+                aiData.vel = aiVel;
+                aiData.velang = aiAngVel;
 
-        if(mMultiplayerController.get())
-        {
-            mMultiplayerController->receiveSessionData();
+                aiData.wheelpos[0] = aiWheel0;
+                aiData.wheelpos[1] = aiWheel1;
+                aiData.wheelpos[2] = aiWheel2;
+                aiData.wheelpos[3] = aiWheel3;
+
+                aiData.isAcc = mModeContext.mGameState.getAICar(q).getAcceleration();
+                aiData.isBrake = mModeContext.mGameState.getAICar(q).getBrake();
+                aiData.isLeft = mModeContext.mGameState.getAICar(q).getSteerLeft();
+                aiData.isRight = mModeContext.mGameState.getAICar(q).getSteerRight();
+
+                aiData.currentLap = mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap();
+                aiData.lapPosition = mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition();
+
+                dataAI.push_back(aiData);
+            }
+
             mMultiplayerController->updateSessionData(data, dataAI, evt.timeSinceLastFrame);
         }
-
-        //mModeContext.mGameState.getPlayerCar().getModelNode()->setOrientation(rot);
     }
 }
 
