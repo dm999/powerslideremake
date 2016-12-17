@@ -12,10 +12,13 @@
 
 #include "../ui/UIMainMenuMulti.h"
 
+#include "../gamelogic/GameModeSwitcher.h"
+
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
-    BaseMode(modeContext),
-    mUIMainMenuMulti(new UIMainMenuMulti(modeContext))
+    BaseMenuMode(modeContext)
 {
+    mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
+
     mMultiplayerController.reset(new MultiplayerController(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
 
     if(mModeContext.mGameState.isMultiplayerMaster())
@@ -29,9 +32,10 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
 }
 
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
-    BaseMode(modeContext),
-    mUIMainMenuMulti(new UIMainMenuMulti(modeContext))
+    BaseMenuMode(modeContext)
 {
+    mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
+
     assert(controller.get());
     mMultiplayerController = controller;
     if(mMultiplayerController.get())
@@ -104,12 +108,29 @@ void MenuMultiMode::clearData()
 
 void MenuMultiMode::frameStarted(const Ogre::FrameEvent &evt)
 {
+    if(mMultiplayerController.get())
+    {
+        mMultiplayerController->receiveSessionData();
+    }
 }
 
 void MenuMultiMode::frameRenderingQueued(const Ogre::FrameEvent &evt)
 {
     mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), true);
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
+}
+
+void MenuMultiMode::onSessionReadyToStart()
+{
+    if(mModeContext.mGameState.isMultiplayerMaster())
+        mUIMainMenuMulti->onStartPossible();
+}
+
+void MenuMultiMode::onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo)
+{
+    mMultiplayerSessionStartInfo = multiplayerSessionStartInfo;
+
+    mModeContext.getGameModeSwitcher()->switchMode(ModeRaceMulti);
 }
 
 #if defined(__ANDROID__)

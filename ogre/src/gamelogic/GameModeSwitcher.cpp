@@ -63,10 +63,11 @@ void GameModeSwitcher::frameEnded()
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
+        MultiplayerSessionStartInfo multiplayerSessionStartInfo;
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
         //store multiplayer controller (switch from multiplayer race to main menu multi)
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
         {
             if(mPlayerMode.get())
             {
@@ -86,11 +87,12 @@ void GameModeSwitcher::frameEnded()
                 controller = mMenuMultiMode->getMultiplayerController();
                 assert(controller.get());
                 controller->setEvents(NULL);
+                multiplayerSessionStartInfo = mMenuMultiMode->getMultiplayerSessionStartInfo();
             }
         }
 
         //clean up multiplayer lobby
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
         {
             if(mMenuMultiMode.get())
             {
@@ -151,6 +153,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
             mPlayerMode->initData();
+            static_cast<MultiPlayerMode *>(mPlayerMode.get())->prepareDataForSession(multiplayerSessionStartInfo);
         }
 
         //from main menu multi to main menu single

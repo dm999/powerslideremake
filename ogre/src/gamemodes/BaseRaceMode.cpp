@@ -19,8 +19,6 @@
 #include "../loaders/TEXLoader.h"
 #include "../loaders/TextureLoader.h"
 
-#include "../gamelogic/RacingGridGeneration.h"
-
 #include "../ui/UIRace.h"
 
 #if defined(__ANDROID__)
@@ -144,11 +142,6 @@ void BaseRaceMode::initScene()
 {
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
 
-    mModeContext.mGameState.setPlayerCharacterName(mLuaManager.ReadScalarString("Main.Character", mModeContext.mPipeline));
-
-    mModeContext.mGameState.setRaceParameters(mLuaManager.ReadScalarString("Main.Track", mModeContext.mPipeline),
-                                static_cast<AIStrength>(mLuaManager.ReadScalarInt("Scene.AIStrength", mModeContext.mPipeline)));
-
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());
 
     //migration from 1.8.1 to 1.9.0
@@ -158,8 +151,6 @@ void BaseRaceMode::initScene()
     mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
 
     mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-
-    mModeContext.mGameState.setListenerGain(mLuaManager.ReadScalarFloat("Scene.SoundMasterGain", mModeContext.mPipeline));
 
     mCamera = mSceneMgr->createCamera("PlayerCam");
     mCamera->setNearClipDistance(0.5f);
@@ -190,8 +181,6 @@ void BaseRaceMode::initScene()
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mModeContext.mPipeline);
-
-        mModeContext.mGameState.setAICount(mLuaManager.ReadScalarInt("Scene.AIOpponents", mModeContext.mPipeline));
 
         Ogre::Real speedCoeff;
         Ogre::Real lateralStabilizationCoeff;
@@ -266,14 +255,6 @@ void BaseRaceMode::initScene()
 
     //init multiplayer
     {
-        //mModeContext.mGameState.setMultiplayerMaster(mLuaManager.ReadScalarBool("Scene.Multiplayer.IsMaster", mModeContext.mPipeline));
-        //mModeContext.mGameState.setMultiplayerRoomName(mLuaManager.ReadScalarString("Scene.Multiplayer.RoomName", mModeContext.mPipeline));
-        //mModeContext.mGameState.setMultiplayerUserName(mLuaManager.ReadScalarString("Scene.Multiplayer.UserName", mModeContext.mPipeline));
-        //mModeContext.mGameState.setMultiplayerServerIP(mLuaManager.ReadScalarString("Scene.Multiplayer.ServerIP", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerServerPort(mLuaManager.ReadScalarInt("Scene.Multiplayer.ServerPort", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerPlayersLimits(mLuaManager.ReadScalarInt("Scene.Multiplayer.PlayersLimits", mModeContext.mPipeline));
-        mModeContext.mGameState.setMultiplayerBroadcastInterval(mLuaManager.ReadScalarInt("Scene.Multiplayer.BroadcastInterval", mModeContext.mPipeline));
-
         customInitScene();
     }
 
@@ -386,10 +367,10 @@ void BaseRaceMode::initModel()
 
     mModelsPool.initModels(mSceneMgr, mModeContext.mGameState);
 
-    mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCharacterName(), mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], !isCamToAI);
+    mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-    std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mModeContext.mGameState);
+    std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
 
     for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
     {

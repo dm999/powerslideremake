@@ -134,40 +134,10 @@ void MultiplayerController::onMessage(multislider::Lobby* lobby, const multislid
 
             if (checkAllPlayersReady())
             {
-                jsonxx::Object jsonObject;
-
-                //humandata
+                if(mEvents)
                 {
-                    jsonxx::Array jsonArray;
-                    for(std::map<std::string, std::string>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end();
-                        i != j; ++i)
-                    {
-                        jsonxx::Object jsonObjectHuman;
-                        jsonObjectHuman << "name" << (*i).first;
-                        jsonObjectHuman << "cartype" << (*i).second;
-                        jsonArray << jsonObjectHuman;
-                    }
-                    jsonObject << "humandata" << jsonArray;
+                    mEvents->onSessionReadyToStart();
                 }
-
-                //aidata
-                {
-                    jsonxx::Array jsonArray;
-                    for(size_t q = 0; q < mAISkins.size(); ++q)
-                    {
-                        jsonxx::Object jsonObjectAI;
-                        jsonObjectAI << "cartype" << mAISkins[q];
-                        jsonArray << jsonObjectAI;
-                    }
-                    jsonObject << "aidata" << jsonArray;
-                }
-
-                //host info
-                {
-                }
-
-                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onMessage]: start session");
-                lobby->startSession(jsonObject.json());
             }
         }
     }
@@ -251,11 +221,11 @@ void MultiplayerController::onSessionStart(multislider::Lobby* lobby, const mult
 
                 Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onSessionStart]: player added to list [" + Ogre::String(players[q] + "]"));
             }
-            else
+            else//execute event for current player
             {
                 if(mEvents)
                 {
-                    mEvents->onSessionStart(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), mAISkins, mReadyPlayers);
+                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), mAISkins, mReadyPlayers));
                 }
             }
         }
@@ -444,9 +414,9 @@ bool MultiplayerController::startLobbySlave(std::string ip, uint16_t port, std::
     return res;
 }
 
-bool MultiplayerController::startSessionMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter)
+bool MultiplayerController::saySessionReadyMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionMaster]");
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::saySessionReadyMaster]");
 
     bool res = true;
 
@@ -462,15 +432,15 @@ bool MultiplayerController::startSessionMaster(const std::vector<std::string>& a
     }catch(const std::runtime_error& err)
     {
         res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionMaster]: " + Ogre::String(err.what()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::saySessionReadyMaster]: " + Ogre::String(err.what()));
     }
 
     return res;
 }
 
-bool MultiplayerController::startSessionSlave(const std::string& playerCharacter)
+bool MultiplayerController::saySessionReadySlave(const std::string& playerCharacter)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSessionSlave]");
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::saySessionReadySlave]");
 
     bool res = true;
 
@@ -484,10 +454,56 @@ bool MultiplayerController::startSessionSlave(const std::string& playerCharacter
     }catch(const std::runtime_error& err)
     {
         res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::startSessionSlave]: " + Ogre::String(err.what()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::saySessionReadySlave]: " + Ogre::String(err.what()));
     }
 
     return res;
+}
+
+void MultiplayerController::startSession()
+{
+    const bool isHost = mLobby->isHost();
+
+    if (isHost)
+    {
+        if (checkAllPlayersReady())
+        {
+            jsonxx::Object jsonObject;
+
+            //humandata
+            {
+                jsonxx::Array jsonArray;
+                for(std::map<std::string, std::string>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end();
+                    i != j; ++i)
+                {
+                    jsonxx::Object jsonObjectHuman;
+                    jsonObjectHuman << "name" << (*i).first;
+                    jsonObjectHuman << "cartype" << (*i).second;
+                    jsonArray << jsonObjectHuman;
+                }
+                jsonObject << "humandata" << jsonArray;
+            }
+
+            //aidata
+            {
+                jsonxx::Array jsonArray;
+                for(size_t q = 0; q < mAISkins.size(); ++q)
+                {
+                    jsonxx::Object jsonObjectAI;
+                    jsonObjectAI << "cartype" << mAISkins[q];
+                    jsonArray << jsonObjectAI;
+                }
+                jsonObject << "aidata" << jsonArray;
+            }
+
+            //host info
+            {
+            }
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::startSession]: start session");
+            mLobby->startSession(jsonObject.json());
+        }
+    }
 }
 
 void MultiplayerController::receiveSessionData()

@@ -237,7 +237,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard
     {
-        std::string dashTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCharacterName() + " dash parameters", "dash file", "max_dash.tga");
+        std::string dashTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "dash file", "max_dash.tga");
         std::transform(dashTexture.begin(), dashTexture.end(), dashTexture.begin(), ::tolower);
         TextureLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashTexture, "OriginalDash", TEMP_RESOURCE_GROUP_NAME);
 
@@ -253,7 +253,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard position
     {
-        std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCharacterName() + " parameters", "dash texture", "max_m_3.tex");
+        std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCar().getCharacterName() + " parameters", "dash texture", "max_m_3.tex");
         std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
         dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
         TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", TEMP_RESOURCE_GROUP_NAME);
@@ -338,7 +338,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //tacho
     {
-        std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
+        std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
         std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
         tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
         TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME);
@@ -356,7 +356,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     Ogre::Real tachoTop = viewportHeight - tachoHeight;
 
     {
-        Ogre::Vector4 tachoRegion = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho texture region 1");
+        Ogre::Vector4 tachoRegion = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho texture region 1");
         tachoRegion /= 255.0f;
 
         Ogre::PanelOverlayElement* tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
@@ -367,10 +367,10 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     //tacho lamps
     {
         mIsPickup = false;
-        if(gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "pickup hack"))
+        if(gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "pickup hack"))
             mIsPickup = true;
 
-        size_t lampsCount = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "num tacho lights");
+        size_t lampsCount = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "num tacho lights");
         mTachoRange.resize(lampsCount);
 
         if(mIsPickup) ++lampsCount;
@@ -378,14 +378,14 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         for(size_t q = 0; q < lampsCount; ++q)
         {
-            Ogre::Vector4 tachoLightsScreen = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
+            Ogre::Vector4 tachoLightsScreen = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
             tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
 
-            Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
+            Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
             tachoLightsTexture /= 255.0f;
 
             if(!mIsPickup || q < 1)
-                mTachoRange[q] = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCharacterName() + " dash parameters", "tacho rev range " + Conversions::DMToString(q));
+                mTachoRange[q] = gameState.getSTRRacecrud().getIntValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho rev range " + Conversions::DMToString(q));
 
             mTachoLamps[q] = createPanel("TachoLamps" + Conversions::DMToString(q), tachoLightsScreen, "Test/TachoFrantic");
             mTachoLamps[q]->setUV(tachoLightsTexture.x, tachoLightsTexture.y, tachoLightsTexture.z, tachoLightsTexture.w);
@@ -396,15 +396,15 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //tacho digits
     {
-        Ogre::Vector4 tachoDigitsScreen100 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit hundreds 1");
-        Ogre::Vector4 tachoDigitsScreen10 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit tens 1");
-        Ogre::Vector4 tachoDigitsScreen1 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit units 1");
+        Ogre::Vector4 tachoDigitsScreen100 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit hundreds 1");
+        Ogre::Vector4 tachoDigitsScreen10 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit tens 1");
+        Ogre::Vector4 tachoDigitsScreen1 = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit units 1");
 
         tachoDigitsScreen1 = screenAdaptionRelative * tachoDigitsScreen1;
         tachoDigitsScreen10 = screenAdaptionRelative * tachoDigitsScreen10;
         tachoDigitsScreen100 = screenAdaptionRelative * tachoDigitsScreen100;
 
-        mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCharacterName() + " dash parameters", "speed digit texture 1");
+        mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit texture 1");
         mTachoDigitsTexture /= 255.0f;
 
         std::vector<Ogre::String> texName;
@@ -741,16 +741,16 @@ void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState&
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
 
-    float needleCenterX = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 x") / 640.0f * viewportWidth;
-    float needleCenterY = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle centre 1 y") / 480.0f * viewportHeight;
+    float needleCenterX = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle centre 1 x") / 640.0f * viewportWidth;
+    float needleCenterY = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle centre 1 y") / 480.0f * viewportHeight;
 
-    float needleOffset = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle offset 1") / 480.0f * viewportHeight;
+    float needleOffset = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle offset 1") / 480.0f * viewportHeight;
 
-    float needleWidthTop = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width top 1") / 640.0f * viewportWidth;
-    float needleWidthBottom = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle width bottom 1") / 640.0f * viewportWidth;
-    float needleHeight = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "needle size 1") / 480.0f * viewportHeight;
+    float needleWidthTop = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle width top 1") / 640.0f * viewportWidth;
+    float needleWidthBottom = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle width bottom 1") / 640.0f * viewportWidth;
+    float needleHeight = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle size 1") / 480.0f * viewportHeight;
 
-    std::vector<std::string> tachoNeedleStr = gameState.getSTRRacecrud().getArrayValue(gameState.getPlayerCharacterName() + " dash parameters", "needle texture region 1");
+    std::vector<std::string> tachoNeedleStr = gameState.getSTRRacecrud().getArrayValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "needle texture region 1");
     Ogre::Vector4 tachoNeedle;
     Conversions::DMFromString(tachoNeedleStr[0], tachoNeedle.x);
     Conversions::DMFromString(tachoNeedleStr[1], tachoNeedle.y);
@@ -789,9 +789,9 @@ void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState&
     // Render just before overlays
     mNeedle->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY + 1);
 
-     float angleMin = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs zero angle");
-     float angle10K = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs 10k delta angle");
-     //float angleMax = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCharacterName() + " dash parameters", "revs max delta angle");
+     float angleMin = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "revs zero angle");
+     float angle10K = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "revs 10k delta angle");
+     //float angleMax = gameState.getSTRRacecrud().getFloatValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "revs max delta angle");
      angleMin = angleMin - 90.0f;
      angle10K = angleMin + angle10K;
      //angleMax = angleMin + angleMax;
@@ -1248,7 +1248,7 @@ void UIRace::hideAIDashboardCars()
 
 void UIRace::setPlayerDashBoardSkin(const GameState& gameState)
 {
-    std::string iconName = gameState.getSTRPowerslide().getValue(gameState.getPlayerCharacterName() + " parameters", "icon", "car0_0s.bmp");
+    std::string iconName = gameState.getSTRPowerslide().getValue(gameState.getPlayerCar().getCharacterName() + " parameters", "icon", "car0_0s.bmp");
     std::string matName = "Test/" + iconName;
     if(matName != mPlayerDashboardCar->getMaterialName())
         mPlayerDashboardCar->setMaterialName(matName);

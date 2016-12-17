@@ -13,7 +13,7 @@
 #include "../ui/UIMainMenu.h"
 
 MenuMode::MenuMode(const ModeContext& modeContext) :
-    BaseMode(modeContext),
+    BaseMenuMode(modeContext),
     mUIMainMenu(new UIMainMenu(modeContext))
 {}
 

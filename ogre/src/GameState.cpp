@@ -118,6 +118,11 @@ PSAICar& GameState::getAICar(size_t index)
     return mPSCar[index];
 }
 
+const PSPlayerCar& GameState::getPlayerCar()const
+{
+    return mPSPlayerCar;
+}
+
 PSPlayerCar& GameState::getPlayerCar()
 {
     return mPSPlayerCar;

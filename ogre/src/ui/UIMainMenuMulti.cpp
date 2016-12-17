@@ -4,16 +4,19 @@
 
 #include "MyGUI.h"
 
-#include "../gamelogic/GameModeSwitcher.h"
-
 #include "../tools/OgreTools.h"
 
 #include "../customs/CustomTrayManager.h"
 
 #include "../loaders/TextureLoader.h"
 
-UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext)
-: mModeContext(modeContext)
+#include "../gamemodes/MenuMultiMode.h"
+
+#include "../multiplayer/MultiplayerController.h"
+
+UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
+    : mModeContext(modeContext),
+    mMenuMultiMode(menuMultiMode)
 {}
 
 UIMainMenuMulti::~UIMainMenuMulti()
@@ -52,17 +55,33 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
     }
 
     {
-        Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
-        MyGUI::ButtonPtr widgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, 60, 26, MyGUI::Align::Default, "Middle");
-        widgetJoin->setCaption("Multi");
-        widgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            Ogre::Vector4 posReady = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
+            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posReady.x, posReady.y, 60, 26, MyGUI::Align::Default, "Middle");
+            mWidgetJoin->setCaption("Ready");
+            mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
 
-        Ogre::Vector4 posIP = screenAdaptionRelative * Ogre::Vector4(320.0f, 100.0f, 0.0f, 0.0f);
-        MyGUI::EditPtr widgetIP = gui->createWidget<MyGUI::EditBox>("EditBox", posIP.x, posIP.y, 300, 26, MyGUI::Align::Default, "Middle");
-        widgetIP->setCaption("78.47.85.155");
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 0.0f, 0.0f);
+            mWidgetStart = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, 60, 26, MyGUI::Align::Default, "Middle");
+            mWidgetStart->setCaption("Start");
+            mWidgetStart->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+            mWidgetStart->setEnabled(false);
+        }
+        else
+        {
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
+            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, 60, 26, MyGUI::Align::Default, "Middle");
+            mWidgetJoin->setCaption("Ready");
+            mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+        }
 
-        Ogre::Vector4 posRooms = screenAdaptionRelative * Ogre::Vector4(320.0f, 120.0f, 0.0f, 0.0f);
-        MyGUI::ListPtr widgetRooms = gui->createWidget<MyGUI::ListBox>("ListBox", posRooms.x, posRooms.y, 300, 200, MyGUI::Align::Default, "Middle");
+        //Ogre::Vector4 posIP = screenAdaptionRelative * Ogre::Vector4(320.0f, 100.0f, 0.0f, 0.0f);
+        //MyGUI::EditPtr widgetIP = gui->createWidget<MyGUI::EditBox>("EditBox", posIP.x, posIP.y, 300, 26, MyGUI::Align::Default, "Middle");
+        //widgetIP->setCaption("78.47.85.155");
+
+        //Ogre::Vector4 posRooms = screenAdaptionRelative * Ogre::Vector4(320.0f, 120.0f, 0.0f, 0.0f);
+        //MyGUI::ListPtr widgetRooms = gui->createWidget<MyGUI::ListBox>("ListBox", posRooms.x, posRooms.y, 300, 200, MyGUI::Align::Default, "Middle");
     }
 
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
@@ -78,8 +97,34 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 
 void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 {
-    MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
+    if(sender == mWidgetStart)
+    {
+        mWidgetStart->setEnabled(false);
 
-    if(senderButton->getCaption() == "Multi")
-        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceMulti);
+        mMenuMultiMode->getMultiplayerController()->startSession();
+    }
+
+    if(sender == mWidgetJoin)
+    {
+        mWidgetJoin->setEnabled(false);
+
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            std::vector<std::string> gameCars;
+            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            {
+                gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
+            }
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadyMaster(gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName());
+        }
+        else
+        {
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadySlave(mModeContext.mGameState.getPlayerCar().getCharacterName());
+        }
+    }
+}
+
+void UIMainMenuMulti::onStartPossible()
+{
+    mWidgetStart->setEnabled(true);
 }

@@ -57,8 +57,8 @@ public:
 
     std::string getTrackName() const {return mTrackName;}
 
-    void setPlayerCharacterName(const std::string& name){mPlayerCharacterName = name;}
-    std::string getPlayerCharacterName() const {return mPlayerCharacterName;}
+    void setAICharacters(const std::vector<std::string>& aiCharacters){mAICharacters = aiCharacters;}
+    std::vector<std::string> getAICharacters()const{return mAICharacters;}
 
     const PSAICar& getAICar(size_t index) const;
     PSAICar& getAICar(size_t index);
@@ -157,7 +157,6 @@ public:
 private:
 
     std::string mTrackName;
-    std::string mPlayerCharacterName;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;
@@ -170,6 +169,7 @@ private:
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;
+    std::vector<std::string> mAICharacters;
     AIStrength mAIStrength;
     PSAICar mPSCar[mAIMax];
     Ogre::Vector3 mPlayerCarPrevVel;

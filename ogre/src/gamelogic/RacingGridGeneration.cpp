@@ -27,7 +27,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState) co
         aiIndexes = getEasyIndexes();
     }
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
-    std::string playerCharacter = gameState.getPlayerCharacterName();
+    std::string playerCharacter = gameState.getPlayerCar().getCharacterName();
 
     for(size_t q = 0; q < gameState.getAICount(); ++q)
     {

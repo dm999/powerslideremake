@@ -43,6 +43,7 @@ public:
     void setGameModeSwitcher(GameModeSwitcher* gameModeSwitcher){mGameModeSwitcher = gameModeSwitcher;}
     GameModeSwitcher * getGameModeSwitcher() const{return mGameModeSwitcher;}
 
+    GameState& getGameState(){return mGameState;}
 
     friend class GameModeSwitcher;
     friend class MenuMode;

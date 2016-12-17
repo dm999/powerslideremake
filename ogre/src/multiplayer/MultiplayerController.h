@@ -39,6 +39,29 @@ struct MultiplayerSessionData
     }
 };
 
+struct MultiplayerSessionStartInfo
+{
+    MultiplayerSessionStartInfo(){}
+
+    MultiplayerSessionStartInfo(
+        uint32_t aiAmount,
+        const std::vector<std::string>& players,
+        size_t playerIndex, bool isHost,
+        const std::vector<std::string>& aiSkins,
+        const std::map<std::string,
+        std::string>& playersSkins) :
+        mAIAmount(aiAmount), mPlayers(players), mPlayerIndex(playerIndex),
+        mIsHost(isHost), mAISkins(aiSkins), mPlayersSkins(playersSkins)
+    {}
+
+    uint32_t mAIAmount;
+    std::vector<std::string> mPlayers;
+    size_t mPlayerIndex;
+    bool mIsHost;
+    std::vector<std::string> mAISkins;
+    std::map<std::string, std::string> mPlayersSkins;
+};
+
 class MultiplayerController : public multislider::Lobby::Callback, public multislider::SessionCallback
 {
 public:
@@ -56,7 +79,8 @@ public:
         virtual void onPlayerReady(const std::string& player) = 0;
         virtual void onPlayerAddedToSession(const std::string& player) = 0;
         virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
-        virtual void onSessionStart(uint32_t aiAmount, const std::vector<std::string>& players, size_t playerIndex, bool isHost, const std::vector<std::string>& aiSkins, const std::map<std::string, std::string>& playersSkins) = 0;
+        virtual void onSessionReadyToStart() = 0;
+        virtual void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo) = 0;
         virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
         virtual void onError(const std::string& message) = 0;
     };
@@ -125,8 +149,10 @@ public:
     bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount);
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName);
 
-    bool startSessionMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
-    bool startSessionSlave(const std::string& playerCharacter);
+    bool saySessionReadyMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
+    bool saySessionReadySlave(const std::string& playerCharacter);
+
+    void startSession();
 
     void receiveSessionData();
 

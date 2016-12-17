@@ -72,8 +72,7 @@ public:
     virtual Ogre::Real getLapPosition() const = 0;
 
     std::string getCharacterName() const {return mCharacterName;}
-    //for multiplayer
-    void setCharacterName(std::string& character) {mCharacterName = character;}
+    void setCharacterName(const std::string& character) {mCharacterName = character;}
 
     void setVisibility(bool isVisible);
 
@@ -135,7 +134,7 @@ protected:
 
     static Ogre::NameGenerator nameGenNodes;
 
-    std::string mCharacterName; // for multiplayer
+    std::string mCharacterName;
 
     //sounds
     CommonIncludes::shared_ptr<OpenALSource> mEngLow;

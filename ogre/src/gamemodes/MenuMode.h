@@ -1,7 +1,7 @@
 #ifndef MENUMODE_H
 #define MENUMODE_H
 
-#include "BaseMode.h"
+#include "BaseMenuMode.h"
 
 #include "../includes/CommonIncludes.h"
 
@@ -13,7 +13,7 @@ namespace MyGUI
 }
 
 class MenuMode : 
-    public BaseMode
+    public BaseMenuMode
 {
 public:
 

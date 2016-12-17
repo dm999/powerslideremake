@@ -32,7 +32,7 @@ function main()
     
 --~     Main.Track = "desert track";
 --~     Main.Track = "speedway track";
-    Main.Track = "dam";
+--~     Main.Track = "dam";
 --~     Main.Track = "mountain forest track";
 --~     Main.Track = "mineshaft";
 --~     Main.Track = "alpine track";
@@ -44,7 +44,7 @@ function main()
 --~     Main.Track = "Foxnhound1 track";
 
     
-    Main.Character = "frantic";
+--~     Main.Character = "frantic";
 --~     Main.Character = "cyber";
 --~     Main.Character = "radiation";
 --~     Main.Character = "zig";

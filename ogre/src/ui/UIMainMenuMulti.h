@@ -11,13 +11,16 @@ namespace MyGUI
 {
     class Gui;
     class Widget;
+    class Button;
 }
+
+class MenuMultiMode;
 
 class UIMainMenuMulti : public UIBase
 {
 public:
 
-    UIMainMenuMulti(const ModeContext& modeContext);
+    UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode);
     ~UIMainMenuMulti();
 
     void load(MyGUI::Gui* gui, const GameState& gameState);
@@ -28,11 +31,19 @@ public:
     void reloadTextures(const GameState& gameState);
 #endif
 
+    //master ready to press start race
+    void onStartPossible();
+
 private:
 
     ModeContext mModeContext;
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+
+    MenuMultiMode * mMenuMultiMode;
+
+    MyGUI::Button* mWidgetJoin;
+    MyGUI::Button* mWidgetStart;
 };
 
 #endif
