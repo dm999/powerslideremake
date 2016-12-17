@@ -145,3 +145,43 @@ void MenuMultiMode::reloadTextures()
     mUIMainMenuMulti->reloadTextures(mModeContext.mGameState);
 }
 #endif
+
+void MenuMultiMode::onPlayerEjected(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("Player ejected: " + player);
+}
+
+void MenuMultiMode::onPlayerJoined(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("Player joined: " + player);
+}
+
+void MenuMultiMode::onPlayerLeft(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("Player left: " + player);
+}
+
+void MenuMultiMode::onNewHost(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("New host: " + player);
+}
+
+void MenuMultiMode::onRoomClosed(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("room closed: " + player);
+}
+
+void MenuMultiMode::onPlayerReady(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("player ready: " + player);
+}
+
+void MenuMultiMode::onPlayerNotReady(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("player NOT ready: " + player);
+}
+
+void MenuMultiMode::onError(const std::string& message)
+{
+    mUIMainMenuMulti->addEvent("Error: " + message);
+}

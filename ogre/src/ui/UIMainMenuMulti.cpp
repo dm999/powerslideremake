@@ -76,6 +76,12 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
         }
 
+        {
+            Ogre::Vector4 posEvents = screenAdaptionRelative * Ogre::Vector4(20.0f, 130.0f, 600.0f, 300.0f);
+            mWidgetEvents = gui->createWidget<MyGUI::ListBox>("ListBox", posEvents.x, posEvents.y, posEvents.z, posEvents.w, MyGUI::Align::Default, "Middle");
+            //mWidgetEvents->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+        }
+
         //Ogre::Vector4 posIP = screenAdaptionRelative * Ogre::Vector4(320.0f, 100.0f, 0.0f, 0.0f);
         //MyGUI::EditPtr widgetIP = gui->createWidget<MyGUI::EditBox>("EditBox", posIP.x, posIP.y, 300, 26, MyGUI::Align::Default, "Middle");
         //widgetIP->setCaption("78.47.85.155");
@@ -141,4 +147,9 @@ void UIMainMenuMulti::onStartPossible()
 void UIMainMenuMulti::onStartNotPossible()
 {
     mWidgetStart->setEnabled(false);
+}
+
+void UIMainMenuMulti::addEvent(const std::string& eventItem)
+{
+    mWidgetEvents->insertItem(0, eventItem);
 }

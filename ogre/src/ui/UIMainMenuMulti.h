@@ -1,6 +1,8 @@
 #ifndef UIMAINMENU_H
 #define UIMAINMENU_H
 
+#include <string>
+
 #include "UIBase.h"
 
 #include "../gamemodes/ModeContext.h"
@@ -12,6 +14,7 @@ namespace MyGUI
     class Gui;
     class Widget;
     class Button;
+    class ListBox;
 }
 
 class MenuMultiMode;
@@ -35,6 +38,8 @@ public:
     void onStartPossible();
     void onStartNotPossible();
 
+    void addEvent(const std::string& eventItem);
+
 private:
 
     ModeContext mModeContext;
@@ -45,6 +50,8 @@ private:
 
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
+
+    MyGUI::ListBox* mWidgetEvents;
 };
 
 #endif

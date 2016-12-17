@@ -269,11 +269,6 @@ void MultiPlayerMode::onRoomClosed(const std::string& player)
     mUIRace->addMiscPanelText("Room closed: [" + player + "]", Ogre::ColourValue::Red);
 }
 
-void MultiPlayerMode::onPlayerReady(const std::string& player)
-{
-    mUIRace->addMiscPanelText("Player ready for session: [" + player + "]", Ogre::ColourValue::Green);
-}
-
 void MultiPlayerMode::onPlayerAddedToSession(const std::string& player)
 {
     mUIRace->addMiscPanelText("Player added to session: [" + player + "]");

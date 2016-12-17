@@ -38,10 +38,6 @@ void MultiplayerController::clearLobby()
     mLobby.reset();
 }
 
-void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)
-{
-}
-
 void MultiplayerController::addReadyPlayer(const std::string& playerName, const std::string& characterName)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::addReadyPlayer]");
@@ -53,6 +49,11 @@ void MultiplayerController::removeReadyPlayer(const std::string& playerName)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::removeReadyPlayer]");
     mReadyPlayers.erase(playerName);
+
+    if(mEvents)
+    {
+        mEvents->onPlayerNotReady(playerName);
+    }
 }
 
 bool MultiplayerController::checkAllPlayersReady()const
@@ -75,6 +76,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
             //consider changes (remove from lobby!)
             removeReadyPlayer(sender);
             mEvents->onPlayerEjected(sender);
+            checkAllPlayersReadyOrNot();
         }
 
         if(flags & FLAG_JOINED)
@@ -87,6 +89,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
             //consider changes (remove from lobby!)
             removeReadyPlayer(sender);
             mEvents->onPlayerLeft(sender);
+            checkAllPlayersReadyOrNot();
         }
 
         if(flags & FLAG_NEW_HOST)
@@ -105,6 +108,24 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
         if(flags & FLAG_ROOM_CLOSED_BY_HOST)
         {
             mEvents->onRoomClosed(sender);
+        }
+    }
+}
+
+void MultiplayerController::checkAllPlayersReadyOrNot()const
+{
+    if (checkAllPlayersReady())
+    {
+        if(mEvents)
+        {
+            mEvents->onSessionReadyToStart();
+        }
+    }
+    else
+    {
+        if(mEvents)
+        {
+            mEvents->onSessionNotReadyToStart();
         }
     }
 }
@@ -138,26 +159,10 @@ void MultiplayerController::onMessage(multislider::Lobby* lobby, const multislid
                 removeReadyPlayer(sender);
             }
 
-            if (checkAllPlayersReady())
-            {
-                if(mEvents)
-                {
-                    mEvents->onSessionReadyToStart();
-                }
-            }
-            else
-            {
-                if(mEvents)
-                {
-                    mEvents->onSessionNotReadyToStart();
-                }
-            }
+            checkAllPlayersReadyOrNot();
+
         }
     }
-}
-
-void MultiplayerController::onLeft(multislider::Lobby* lobby, const multislider::RoomInfo & room, uint8_t flags)
-{
 }
 
 void MultiplayerController::onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)
@@ -321,6 +326,8 @@ void MultiplayerController::onQuit(multislider::Session* session, const std::str
     {
         mEvents->onPlayerQuitSession(playerName, isHost);
     }
+
+    checkAllPlayersReadyOrNot();
 
     mOtherPlayersSessionData.erase(playerName);
 

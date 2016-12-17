@@ -21,7 +21,8 @@ public:
     void onPlayerLeft(const std::string& player)override;
     void onNewHost(const std::string& player)override;
     void onRoomClosed(const std::string& player)override;
-    void onPlayerReady(const std::string& player)override;
+    void onPlayerReady(const std::string& player)override{}
+    void onPlayerNotReady(const std::string& player)override{}
     void onPlayerAddedToSession(const std::string& player)override;
     void onPlayerQuitSession(const std::string& player, bool isHost)override;
     void onSessionReadyToStart()override{};

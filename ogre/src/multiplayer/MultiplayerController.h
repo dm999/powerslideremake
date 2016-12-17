@@ -77,6 +77,7 @@ public:
         virtual void onNewHost(const std::string& player) = 0;
         virtual void onRoomClosed(const std::string& player) = 0;
         virtual void onPlayerReady(const std::string& player) = 0;
+        virtual void onPlayerNotReady(const std::string& player) = 0;
         virtual void onPlayerAddedToSession(const std::string& player) = 0;
         virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
         virtual void onSessionReadyToStart() = 0;
@@ -94,11 +95,11 @@ private:
     //-------------------------------------------------------
     // Lobby callback
 
-    void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)override;
+    void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)override{}
     void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)override;
     void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)override;
     void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)override;
-    void onLeft(multislider::Lobby* lobby, const multislider::RoomInfo & room, uint8_t flags)override;
+    void onLeft(multislider::Lobby* lobby, const multislider::RoomInfo & room, uint8_t flags)override{}
 
     //-------------------------------------------------------
     // Session callback
@@ -116,6 +117,8 @@ private:
 
     static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
     static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
+
+    void checkAllPlayersReadyOrNot()const;
 
 
     multislider::shared_ptr<multislider::Lobby> mLobby;
