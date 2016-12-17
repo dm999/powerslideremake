@@ -110,7 +110,7 @@ void MenuMultiMode::frameStarted(const Ogre::FrameEvent &evt)
 {
     if(mMultiplayerController.get())
     {
-        mMultiplayerController->receiveSessionData();
+        mMultiplayerController->receiveData();
     }
 }
 
@@ -124,6 +124,12 @@ void MenuMultiMode::onSessionReadyToStart()
 {
     if(mModeContext.mGameState.isMultiplayerMaster())
         mUIMainMenuMulti->onStartPossible();
+}
+
+void MenuMultiMode::onSessionNotReadyToStart()
+{
+    if(mModeContext.mGameState.isMultiplayerMaster())
+        mUIMainMenuMulti->onStartNotPossible();
 }
 
 void MenuMultiMode::onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo)

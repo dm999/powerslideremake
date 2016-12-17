@@ -80,6 +80,7 @@ public:
         virtual void onPlayerAddedToSession(const std::string& player) = 0;
         virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
         virtual void onSessionReadyToStart() = 0;
+        virtual void onSessionNotReadyToStart() = 0;
         virtual void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo) = 0;
         virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
         virtual void onError(const std::string& message) = 0;
@@ -107,11 +108,11 @@ private:
     void onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()override;
 
     void addReadyPlayer(const std::string& playerName, const std::string& characterName);
-    void removePlayerFromLobby(const std::string& playerName);
+    void removeReadyPlayer(const std::string& playerName);
     bool checkAllPlayersReady()const;
 
     static bool parseLobbyReadyMessage(const std::string& message, std::string& characterName);
-    static jsonxx::Object fillLobbyReadyMessage(const std::string& characterName);
+    static jsonxx::Object fillLobbyReadyMessage(const std::string& characterName, bool isReady);
 
     static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
     static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
@@ -151,12 +152,12 @@ public:
     bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount);
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName);
 
-    bool saySessionReadyMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter);
-    bool saySessionReadySlave(const std::string& playerCharacter);
+    bool saySessionReadyMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter, bool isReady);
+    bool saySessionReadySlave(const std::string& playerCharacter, bool isReady);
 
     void startSession();
 
-    void receiveSessionData();
+    void receiveData();
 
     void updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI, float spf);
 

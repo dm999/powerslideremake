@@ -33,6 +33,7 @@ public:
 
     //master ready to press start race
     void onStartPossible();
+    void onStartNotPossible();
 
 private:
 

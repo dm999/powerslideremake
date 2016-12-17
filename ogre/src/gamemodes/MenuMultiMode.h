@@ -38,6 +38,7 @@ public:
     void onPlayerAddedToSession(const std::string& player)override{}
     void onPlayerQuitSession(const std::string& player, bool isHost)override{}
     void onSessionReadyToStart()override;
+    void onSessionNotReadyToStart()override;
     void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo)override;
     void onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)override{}
     void onError(const std::string& message)override{}

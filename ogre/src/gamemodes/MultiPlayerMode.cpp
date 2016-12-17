@@ -116,7 +116,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::F
 
     if(mMultiplayerController.get())
     {
-        mMultiplayerController->receiveSessionData();
+        mMultiplayerController->receiveData();
 
         if(mIsSessionStarted)
         {

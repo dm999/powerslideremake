@@ -106,7 +106,16 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 
     if(sender == mWidgetJoin)
     {
-        mWidgetJoin->setEnabled(false);
+        bool changeToReady = true;
+        if(mWidgetJoin->getCaption() == "Ready")
+        {
+            mWidgetJoin->setCaption("Not ready");
+        }
+        else
+        {
+            changeToReady = false;
+            mWidgetJoin->setCaption("Ready");
+        }
 
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
@@ -115,11 +124,11 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             {
                 gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
             }
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadyMaster(gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName());
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadyMaster(gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
         }
         else
         {
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadySlave(mModeContext.mGameState.getPlayerCar().getCharacterName());
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadySlave(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
         }
     }
 }
@@ -127,4 +136,9 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 void UIMainMenuMulti::onStartPossible()
 {
     mWidgetStart->setEnabled(true);
+}
+
+void UIMainMenuMulti::onStartNotPossible()
+{
+    mWidgetStart->setEnabled(false);
 }
