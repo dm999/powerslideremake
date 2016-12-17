@@ -244,7 +244,7 @@ void MultiplayerController::onStart(multislider::Session* session)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onStart]");
 
-    mStartHappened = true;
+    mStartSessionTimer.reset();
 }
 
 void MultiplayerController::onUpdate(multislider::Session* session, const multislider::SessionData & data, const multislider::PlayerData & sharedData)
@@ -512,6 +512,13 @@ void MultiplayerController::receiveSessionData()
 
     if(mSessionStarted)
     {
+        if(!mStartHappened)
+        {
+            const size_t timeToWaitForOthersToLoad = 10000;//in ms
+            if(mStartSessionTimer.getMilliseconds() > timeToWaitForOthersToLoad)
+                mStartHappened = true;
+        }
+
         try{
             mSession->receive();
             //mSession->keepAlive();

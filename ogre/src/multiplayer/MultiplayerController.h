@@ -134,6 +134,8 @@ private:
 
     Ogre::Timer mBroadcastTimer;
 
+    Ogre::Timer mStartSessionTimer;
+
     std::vector<std::string> mAISkins;
 
     size_t mBroadcastInterval; // ms
