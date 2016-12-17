@@ -62,43 +62,41 @@ struct MultiplayerSessionStartInfo
     std::map<std::string, std::string> mPlayersSkins;
 };
 
+typedef std::map<std::string, MultiplayerSessionData> playerToData;
+
+class MultiplayerControllerEvents
+{
+public:
+    virtual void onPlayerEjected(const std::string& player) = 0;
+    virtual void onPlayerJoined(const std::string& player) = 0;
+    virtual void onPlayerLeft(const std::string& player) = 0;
+    virtual void onNewHost(const std::string& player) = 0;
+    virtual void onRoomClosed(const std::string& player) = 0;
+    virtual void onPlayerReady(const std::string& player) = 0;
+    virtual void onPlayerNotReady(const std::string& player) = 0;
+    virtual void onPlayerAddedToSession(const std::string& player) = 0;
+    virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
+    virtual void onSessionReadyToStart() = 0;
+    virtual void onSessionNotReadyToStart() = 0;
+    virtual void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo) = 0;
+    virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
+    virtual void onError(const std::string& message) = 0;
+};
+
 class MultiplayerController : public multislider::Lobby::Callback, public multislider::SessionCallback
 {
 public:
 
-    typedef std::map<std::string, MultiplayerSessionData> playerToData;
+    MultiplayerControllerEvents* mEvents;
 
-    class Events
-    {
-    public:
-        virtual void onPlayerEjected(const std::string& player) = 0;
-        virtual void onPlayerJoined(const std::string& player) = 0;
-        virtual void onPlayerLeft(const std::string& player) = 0;
-        virtual void onNewHost(const std::string& player) = 0;
-        virtual void onRoomClosed(const std::string& player) = 0;
-        virtual void onPlayerReady(const std::string& player) = 0;
-        virtual void onPlayerNotReady(const std::string& player) = 0;
-        virtual void onPlayerAddedToSession(const std::string& player) = 0;
-        virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
-        virtual void onSessionReadyToStart() = 0;
-        virtual void onSessionNotReadyToStart() = 0;
-        virtual void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo) = 0;
-        virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
-        virtual void onError(const std::string& message) = 0;
-    };
+    void setEvents(MultiplayerControllerEvents* events){mEvents = events;}
 
-    Events* mEvents;
-
-    void setEvents(Events* events){mEvents = events;}
-
-private:
+protected:
     //-------------------------------------------------------
     // Lobby callback
 
     void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)override{}
     void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)override;
-    void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)override;
-    void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)override;
     void onLeft(multislider::Lobby* lobby, const multislider::RoomInfo & room, uint8_t flags)override{}
 
     //-------------------------------------------------------
@@ -129,7 +127,6 @@ private:
     bool mReadySent;
     bool mSessionStarted;
     bool mStartHappened;//to synchronize race events
-    bool mGameFinished;
 
     playerToData mOtherPlayersSessionData;
 
@@ -140,25 +137,20 @@ private:
 
     Ogre::Timer mStartSessionTimer;
 
-    std::vector<std::string> mAISkins;
-
     size_t mBroadcastInterval; // ms
 
 public:
 
-    MultiplayerController(Events* events, size_t broadcastInterval);
+    MultiplayerController(MultiplayerControllerEvents* events, size_t broadcastInterval);
     ~MultiplayerController();
 
     void clearSession();
     void clearLobby();
 
-    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount);
-    bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName);
+    virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount) = 0;
+    virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0;
 
-    bool saySessionReadyMaster(const std::vector<std::string>& aiSkins, const std::string& playerCharacter, bool isReady);
-    bool saySessionReadySlave(const std::string& playerCharacter, bool isReady);
-
-    void startSession();
+    virtual bool saySessionReady(const std::string& playerCharacter, bool isReady) = 0;
 
     void receiveData();
 

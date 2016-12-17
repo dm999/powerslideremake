@@ -402,7 +402,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
     mIsSessionStarted = true;
 }
 
-void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
+void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
 {
     const float posDiffMax = 30.0f;
 
@@ -435,7 +435,7 @@ void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData&
 
 
         //human
-        for(MultiplayerController::playerToData::const_iterator i = otherPlayersSessionData.begin(), j = otherPlayersSessionData.end(); 
+        for(playerToData::const_iterator i = otherPlayersSessionData.begin(), j = otherPlayersSessionData.end(); 
             i != j; ++i)
         {
             PSMultiplayerCar& humanCar = mModeContext.mGameState.getMultiplayerCarHuman((*i).first);
@@ -461,7 +461,7 @@ void MultiPlayerMode::onSessionUpdate(const MultiplayerController::playerToData&
     else
     {
         //human only
-        for(MultiplayerController::playerToData::const_iterator i = otherPlayersSessionData.begin(), j = otherPlayersSessionData.end(); 
+        for(playerToData::const_iterator i = otherPlayersSessionData.begin(), j = otherPlayersSessionData.end(); 
             i != j; ++i)
         {
             PSMultiplayerCar& humanCar = mModeContext.mGameState.getMultiplayerCarHuman((*i).first);

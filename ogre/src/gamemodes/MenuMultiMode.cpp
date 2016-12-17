@@ -14,19 +14,22 @@
 
 #include "../gamelogic/GameModeSwitcher.h"
 
+#include "../multiplayer/MultiplayerControllerMaster.h"
+#include "../multiplayer/MultiplayerControllerSlave.h"
+
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
     BaseMenuMode(modeContext)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
 
-    mMultiplayerController.reset(new MultiplayerController(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
-
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
+        mMultiplayerController.reset(new MultiplayerControllerMaster(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
         bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getMultiplayerPlayersLimits(), mModeContext.mGameState.getAICount());
     }
     else
     {
+        mMultiplayerController.reset(new MultiplayerControllerSlave(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
         bool success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
     }
 }

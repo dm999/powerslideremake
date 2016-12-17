@@ -12,7 +12,8 @@
 
 #include "../gamemodes/MenuMultiMode.h"
 
-#include "../multiplayer/MultiplayerController.h"
+#include "../multiplayer/MultiplayerControllerMaster.h"
+#include "../multiplayer/MultiplayerControllerSlave.h"
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : mModeContext(modeContext),
@@ -107,7 +108,7 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
     {
         mWidgetStart->setEnabled(false);
 
-        mMenuMultiMode->getMultiplayerController()->startSession();
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession();
     }
 
     if(sender == mWidgetJoin)
@@ -130,11 +131,13 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             {
                 gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
             }
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadyMaster(gameCars, mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
+
+            static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
         }
         else
         {
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReadySlave(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
+            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
         }
     }
 }
