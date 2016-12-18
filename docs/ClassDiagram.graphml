@@ -1850,12 +1850,13 @@ multislider::SessionCallback</y:NodeLabel>
           <y:Geometry height="283.17811702534755" width="918.9162973508874" x="15770.541851324555" y="-2181.5890585126717"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="867.431640625" x="25.742328362943226" y="7.278511637673546">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="867.431640625" x="25.742328362943226" y="-0.07207429982645408">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerControllerEvents
 
 public:
 
+virtual void onRoomEnter(const std::string&amp; roomName, const std::string&amp; player, const std::vector&lt;std::string&gt;&amp; players) = 0
 virtual void onPlayerEjected(const std::string&amp; player) = 0
 virtual void onPlayerJoined(const std::string&amp; player) = 0
 virtual void onPlayerLeft(const std::string&amp; player) = 0
@@ -2082,14 +2083,13 @@ Ogre::Camera* mCamera</y:NodeLabel>
           <y:Geometry height="247.97426934819396" width="440.92708914224704" x="12259.536455428877" y="-5523.9871346740965"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="19.03971644612284" y="-2.9728262634034763">&lt;&lt;MenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="239.21875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="343.462890625" x="48.73209925862284" y="4.377759674096524">&lt;&lt;MenuMode.h&gt;&gt;
 
 MenuMode
 
 public:
 
 virtual void frameStarted(const Ogre::FrameEvent &amp;evt)override
-virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
 
 protected:
 
@@ -2443,14 +2443,13 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
           <y:Geometry height="549.0696356668786" width="980.3836661963628" x="12469.80816690182" y="-5134.534817833439"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="15.264310020939774">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="7.913724083438865">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
 public:
 
 virtual void frameStarted(const Ogre::FrameEvent &amp;evt)override
-virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
 
 void onPlayerEjected(const std::string&amp; player)override{}
 void onPlayerJoined(const std::string&amp; player)override{}
@@ -2477,7 +2476,9 @@ private:
 MultiplayerSessionStartInfo mMultiplayerSessionStartInfo
 
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
-CommonIncludes::shared_ptr&lt;UIMainMenuMulti&gt; mUIMainMenuMulti</y:NodeLabel>
+CommonIncludes::shared_ptr&lt;UIMainMenuMulti&gt; mUIMainMenuMulti
+
+bool mIsEnterFromBaseMenu</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2540,10 +2541,10 @@ std::map&lt;std::string, std::string&gt; mPlayersSkins</y:NodeLabel>
     <node id="n59">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="237.4299391196214" width="230.8430626792442" x="12934.578468660378" y="-5846.493490150521"/>
+          <y:Geometry height="224.62588367483977" width="426.56219590661294" x="12836.718902046694" y="-5840.09146242813"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="195.115234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="167.39453125" x="31.72426571462165" y="21.157352372310925">&lt;&lt;BaseMenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="402.84765625" x="11.857269828306016" y="0.05415277492011228">&lt;&lt;BaseMenuMode.h&gt;&gt;
 
 BaseMenuMode
 
@@ -2551,6 +2552,8 @@ public:
 
 virtual void initData()override
 virtual void clearData()override
+
+virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
 
 protected:
 
@@ -2596,7 +2599,7 @@ std::vector&lt;std::string&gt; mAISkins</y:NodeLabel>
           <y:Geometry height="256.11687318389636" width="849.2929296845336" x="14935.353535157734" y="-1148.0584365919483"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="239.21875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="11.473613279766141" y="8.44906159194818">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="239.21875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="11.473613279766141" y="8.449061591948293">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
 
 MultiplayerControllerSlave
 
@@ -2607,7 +2610,7 @@ bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::s
 
 bool saySessionReady(const std::string&amp; playerCharacter, bool isReady)override
 
-void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, const std::string &amp; message)override{}
+void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, const std::string &amp; message)override
 void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, multislider::SessionPtr session, const std::string &amp; sessionData)override
 
 private:

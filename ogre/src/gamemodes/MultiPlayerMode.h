@@ -16,6 +16,7 @@ public:
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
 
     //multiplayer events
+    void onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)override{}
     void onPlayerEjected(const std::string& player)override;
     void onPlayerJoined(const std::string& player)override;
     void onPlayerLeft(const std::string& player)override;

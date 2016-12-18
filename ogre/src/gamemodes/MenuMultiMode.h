@@ -25,6 +25,7 @@ public:
     void clearMultiplayerController();
 
     //multiplayer
+    void onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)override;
     void onPlayerEjected(const std::string& player)override;
     void onPlayerJoined(const std::string& player)override;
     void onPlayerLeft(const std::string& player)override;
@@ -58,6 +59,8 @@ private:
 
     CommonIncludes::shared_ptr<MultiplayerController> mMultiplayerController;
     CommonIncludes::shared_ptr<UIMainMenuMulti> mUIMainMenuMulti;
+
+    bool mIsEnterFromBaseMenu;
 
 };
 

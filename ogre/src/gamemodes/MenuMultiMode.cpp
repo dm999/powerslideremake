@@ -10,31 +10,31 @@
 #include "../multiplayer/MultiplayerControllerSlave.h"
 
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
-    BaseMenuMode(modeContext)
+    BaseMenuMode(modeContext),
+    mIsEnterFromBaseMenu(true)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
 
+    //start multiplayer controller
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
         mMultiplayerController.reset(new MultiplayerControllerMaster(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
-        bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getMultiplayerPlayersLimits(), mModeContext.mGameState.getAICount());
     }
     else
     {
         mMultiplayerController.reset(new MultiplayerControllerSlave(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
-        bool success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
     }
 }
 
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
-    BaseMenuMode(modeContext)
+    BaseMenuMode(modeContext),
+    mIsEnterFromBaseMenu(false)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
 
+    //get multiplayer controller from previous (racing) mode
     assert(controller.get());
     mMultiplayerController = controller;
-    if(mMultiplayerController.get())
-        mMultiplayerController->setEvents(this);
 }
 
 void MenuMultiMode::clearMultiplayerController()
@@ -51,6 +51,23 @@ void MenuMultiMode::clearMultiplayerController()
 void MenuMultiMode::doInitData()
 {
     mUIMainMenuMulti->load(mModeContext.mGUI, mModeContext.mGameState);
+
+    //do room operations after UI created
+
+    if(mMultiplayerController.get())
+        mMultiplayerController->setEvents(this);
+
+    if(mIsEnterFromBaseMenu)
+    {
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), mModeContext.mGameState.getMultiplayerPlayersLimits(), mModeContext.mGameState.getAICount());
+        }
+        else
+        {
+            bool success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
+        }
+    }
 }
 
 void MenuMultiMode::doClearData()
@@ -91,6 +108,16 @@ void MenuMultiMode::reloadTextures()
     mUIMainMenuMulti->reloadTextures(mModeContext.mGameState);
 }
 #endif
+
+void MenuMultiMode::onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)
+{
+    mUIMainMenuMulti->addEvent("room entered: " + roomName + " by player: " + player);
+
+    for(size_t q = 0; q < players.size(); ++q)
+    {
+        mUIMainMenuMulti->addEvent("player: " + players[q]);
+    }
+}
 
 void MenuMultiMode::onPlayerEjected(const std::string& player)
 {

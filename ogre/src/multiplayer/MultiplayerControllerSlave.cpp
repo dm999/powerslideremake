@@ -79,7 +79,7 @@ bool MultiplayerControllerSlave::saySessionReady(const std::string& playerCharac
 
     try{
 
-        mLobby->say(fillLobbyReadyMessage(playerCharacter, isReady).json(), false);
+        mLobby->say(fillLobbyReadyMessage(playerCharacter, isReady).json(), true);
 
         mReadySent = true;
     }catch(const std::runtime_error& err)
@@ -89,6 +89,36 @@ bool MultiplayerControllerSlave::saySessionReady(const std::string& playerCharac
     }
 
     return res;
+}
+
+void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)
+{
+    if (!message.empty())
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onMessage]: message [" + Ogre::String(message) + "]");
+
+        std::string playerCharacter;
+        bool isReady = parseLobbyReadyMessage(message, playerCharacter);
+
+        if(isReady)
+        {
+            addReadyPlayer(sender, playerCharacter);
+
+            if(mEvents)
+            {
+                mEvents->onPlayerReady(sender);
+            }
+        }
+        else
+        {
+            removeReadyPlayer(sender);
+
+            if(mEvents)
+            {
+                mEvents->onPlayerNotReady(sender);
+            }
+        }
+    }
 }
 
 void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)

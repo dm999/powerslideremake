@@ -92,6 +92,11 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
             else
             {
                 removeReadyPlayer(sender);
+
+                if(mEvents)
+                {
+                    mEvents->onPlayerNotReady(sender);
+                }
             }
 
             checkAllPlayersReadyOrNot();

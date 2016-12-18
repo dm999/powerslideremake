@@ -15,7 +15,7 @@ public:
     bool saySessionReady(const std::string& playerCharacter, bool isReady)override;
 
     // Lobby callback
-    void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)override{}
+    void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)override;
     void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)override;
 
 private:

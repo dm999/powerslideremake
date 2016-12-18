@@ -67,6 +67,7 @@ typedef std::map<std::string, MultiplayerSessionData> playerToData;
 class MultiplayerControllerEvents
 {
 public:
+    virtual void onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players) = 0;
     virtual void onPlayerEjected(const std::string& player) = 0;
     virtual void onPlayerJoined(const std::string& player) = 0;
     virtual void onPlayerLeft(const std::string& player) = 0;
@@ -95,7 +96,7 @@ protected:
     //-------------------------------------------------------
     // Lobby callback
 
-    void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)override{}
+    void onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)override;
     void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)override;
     void onLeft(multislider::Lobby* lobby, const multislider::RoomInfo & room, uint8_t flags)override{}
 

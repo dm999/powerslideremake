@@ -48,11 +48,6 @@ void MultiplayerController::removeReadyPlayer(const std::string& playerName)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::removeReadyPlayer]");
     mReadyPlayers.erase(playerName);
-
-    if(mEvents)
-    {
-        mEvents->onPlayerNotReady(playerName);
-    }
 }
 
 bool MultiplayerController::checkAllPlayersReady()const
@@ -62,6 +57,23 @@ bool MultiplayerController::checkAllPlayersReady()const
     if(mReadyPlayers.size() == mPlayersLimits) res = true;
 
     return res;
+}
+
+void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislider::RoomInfo & room)
+{
+    if(mEvents)
+    {
+        std::string player = lobby->getPlayerName();
+        std::vector<std::string> players = room.getPlayers();
+        std::vector<std::string> playersFiltered;
+        for(size_t q = 0; q < players.size(); ++q)
+        {
+            if(players[q] != player)
+                playersFiltered.push_back(players[q]);
+        }
+
+        mEvents->onRoomEnter(room.getName(), player, playersFiltered);
+    }
 }
 
 void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)
@@ -74,6 +86,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
         {
             //consider changes (remove from lobby!)
             removeReadyPlayer(sender);
+            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerEjected(sender);
             checkAllPlayersReadyOrNot();
         }
@@ -87,6 +100,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
         {
             //consider changes (remove from lobby!)
             removeReadyPlayer(sender);
+            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerLeft(sender);
             checkAllPlayersReadyOrNot();
         }
@@ -195,6 +209,7 @@ void MultiplayerController::onQuit(multislider::Session* session, const std::str
 
     if(mEvents)
     {
+        mEvents->onPlayerNotReady(playerName);
         mEvents->onPlayerQuitSession(playerName, isHost);
     }
 
