@@ -3,7 +3,7 @@ function createVehicle()
     local Model = {}
 
     Model.IsCastShadows = true;
-    Model.IsAttenuateExcludeBox = true;
+    Model.IsAttenuateExcludeBox = false;
     
     Model.Sfx = {}
     Model.Sfx.ReferenceDist = 30.0;

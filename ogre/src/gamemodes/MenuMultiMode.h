@@ -19,11 +19,7 @@ public:
     MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller);
     virtual ~MenuMultiMode(){}
 
-    virtual void initData()override;
-    virtual void clearData()override;
-
-    virtual void frameStarted(const Ogre::FrameEvent &evt)override;
-    virtual void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
+    void frameStarted(const Ogre::FrameEvent &evt)override;
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
     void clearMultiplayerController();
@@ -50,6 +46,11 @@ public:
     //for UI only
     void reloadTextures()override;
 #endif
+
+protected:
+
+    void doInitData()override;
+    void doClearData()override;
 
 private:
 

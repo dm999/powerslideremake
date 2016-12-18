@@ -20,16 +20,17 @@ public:
     MenuMode(const ModeContext& modeContext);
     virtual ~MenuMode(){}
 
-    virtual void initData()override;
-    virtual void clearData()override;
-
-    virtual void frameStarted(const Ogre::FrameEvent &evt)override;
-    virtual void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
+    void frameStarted(const Ogre::FrameEvent &evt)override{}
 
 #if defined(__ANDROID__)
     //for UI only
     void reloadTextures()override;
 #endif
+
+protected:
+
+    void doInitData()override;
+    void doClearData()override;
 
 private:
 

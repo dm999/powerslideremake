@@ -390,7 +390,6 @@ void BaseRaceMode::initMisc()
     //rear mirror camera
     mRearCamera = NULL;
 
-    mModeContext.mGameState.setMirrorEnabled(mLuaManager.ReadScalarBool("Scene.Mirror.Enable", mModeContext.mPipeline));
     if(mModeContext.mGameState.getMirrorEnabled())
     {
 

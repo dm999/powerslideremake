@@ -25,7 +25,6 @@ function createScene()
     Scene.IsCamToAI = false;
     
     Scene.Mirror = {}
-    Scene.Mirror.Enable = true;
     Scene.Mirror.RTTSize = {}
     Scene.Mirror.RTTSize.w = 256;
     Scene.Mirror.RTTSize.h = 128;

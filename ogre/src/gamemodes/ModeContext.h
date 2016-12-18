@@ -46,6 +46,7 @@ public:
     GameState& getGameState(){return mGameState;}
 
     friend class GameModeSwitcher;
+    friend class BaseMenuMode;
     friend class MenuMode;
     friend class MenuMultiMode;
     friend class UIMainMenu;

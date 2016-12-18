@@ -9,6 +9,16 @@ public:
 
     BaseMenuMode(const ModeContext& modeContext);
     virtual ~BaseMenuMode(){}
+
+    void initData()override;
+    void clearData()override;
+
+    void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
+
+protected:
+
+    virtual void doInitData() = 0;
+    virtual void doClearData() = 0;
 };
 
 #endif

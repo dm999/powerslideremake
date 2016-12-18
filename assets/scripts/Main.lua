@@ -4,7 +4,7 @@ Window = {}
 Window.IsFullScreen = "No";
 Window.FSAA = "0";
 Window.Resolution = "1280 x 1024";
-Window.VSync = "No"
+Window.VSync = "Yes"
 Window.VSyncInterval = "1"
 
 -- executed from native code
