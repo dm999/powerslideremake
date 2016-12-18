@@ -3,6 +3,11 @@
 # OPENAL
 # MYGUI_HOME
 #
+# android
+# OGRE_ANDROID_HOME
+# OPENAL
+# MYGUI_ANDROID_HOME
+#
 # make sure debug & release versions of libs available (/MDd, /MD compilled for MSVC)
 # sample of naming
 # Ogre: OgreMainStatic_d / OgreMainStatic
@@ -121,6 +126,7 @@ if(ANDROID)
             ${OGRE_INCLUDE_DIRS}
             $ENV{OGRE_ANDROID_HOME}/include/OGRE/RenderSystems/GLES2
             $ENV{OGRE_HOME}/include/OGRE/Overlay
+            $ENV{MYGUI_ANDROID_HOME}/include/MYGUI
             #${OGRE_RenderSystem_GL_INCLUDE_DIR}
             #${OGRE_SAMPLES_INCLUDEPATH}
             #${OGRE_Overlay_INCLUDE_DIRS}
@@ -156,6 +162,7 @@ include_directories(../tools/jsonxx/src)
 if(ANDROID)
     link_directories ($ENV{OGRE_ANDROID_HOME}/lib)
     link_directories ($ENV{OGRE_ANDROID_HOME}/lib/OGRE)
+    link_directories ($ENV{MYGUI_ANDROID_HOME}/lib)
 else()
     link_directories ($ENV{OGRE_HOME}/lib/Debug)
     link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
@@ -205,8 +212,10 @@ if(ANDROID)
     
     add_library( PowerslideHD_Engine SHARED ${sources})
     
-    target_link_libraries(PowerslideHD_Engine debug MultiSlider_d)
-    target_link_libraries(PowerslideHD_Engine optimized MultiSlider)
+    target_link_libraries(PowerslideHD_Engine MultiSlider)
+    
+    target_link_libraries(PowerslideHD_Engine MyGUI.OgrePlatform)
+    target_link_libraries(PowerslideHD_Engine MyGUIEngine)
     
     target_link_libraries(PowerslideHD_Engine Jsonxx)
     
