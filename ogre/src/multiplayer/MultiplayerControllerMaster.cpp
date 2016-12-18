@@ -18,11 +18,9 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
 
     try{
 
-        mPlayersLimits = playersLimits;
-
         mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
 
-        multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, "", mPlayersLimits + aiAmount, aiAmount, this);
+        multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, "", playersLimits + aiAmount, aiAmount, this);
         if(status == multislider::Lobby::SUCCESS)
         {
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::startLobbyMaster]: room created [" + Ogre::String(roomName) + "]");
@@ -82,7 +80,7 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
 
             if(isReady)
             {
-                addReadyPlayer(sender, playerCharacter);
+                setPlayerReady(sender, playerCharacter);
 
                 if(mEvents)
                 {
@@ -91,7 +89,7 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
             }
             else
             {
-                removeReadyPlayer(sender);
+                resetPlayerReady(sender);
 
                 if(mEvents)
                 {
@@ -132,7 +130,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
             {
                 if(mEvents)
                 {
-                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), mAISkins, mReadyPlayers));
+                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), mAISkins, mAllPlayers));
                 }
             }
         }
@@ -155,12 +153,13 @@ void MultiplayerControllerMaster::startSession()
     {
         if (checkAllPlayersReady())
         {
+
             jsonxx::Object jsonObject;
 
             //humandata
             {
                 jsonxx::Array jsonArray;
-                for(std::map<std::string, std::string>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end();
+                for(std::map<std::string, std::string>::const_iterator i = mAllPlayers.begin(), j = mAllPlayers.end();
                     i != j; ++i)
                 {
                     jsonxx::Object jsonObjectHuman;
@@ -191,4 +190,10 @@ void MultiplayerControllerMaster::startSession()
             mLobby->startSession(jsonObject.json());
         }
     }
+}
+
+void MultiplayerControllerMaster::reconfigureSession(size_t aiAmount)
+{
+    size_t totalNumber = 12 - aiAmount;
+    mLobby->reconfigure(totalNumber, aiAmount);
 }

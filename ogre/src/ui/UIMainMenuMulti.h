@@ -50,6 +50,7 @@ private:
 
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
+    MyGUI::Button* mWidgetRecalc;
 
     MyGUI::ListBox* mWidgetEvents;
 };

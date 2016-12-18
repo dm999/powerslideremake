@@ -20,13 +20,18 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext) :
     mModeContext.getGameState().setAICount(1);                          //not more than 11
 
     mModeContext.getGameState().setMultiplayerServerPort(8800);
-    mModeContext.getGameState().setMultiplayerPlayersLimits(2);         //for master only
     mModeContext.getGameState().setMultiplayerBroadcastInterval(150);   //in ms; 50 for fast; 150 for slow
 
     mModeContext.getGameState().setListenerGain(0.0f);
 
     mModeContext.getGameState().setMirrorEnabled(true);
 
+    recalculateCharacterNames();
+}
+
+void BaseMenuMode::recalculateCharacterNames()
+{
+    //based on AICount
     std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mModeContext.getGameState());
     mModeContext.getGameState().setAICharacters(aiCharacters);
     for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)

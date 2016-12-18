@@ -20,7 +20,6 @@ GameState::GameState() :
     mMultiplayerUserName("Rasputin"),
     mMultiplayerServerIP(""),
     mMultiplayerServerPort(8800),
-    mMultiplayerPlayersLimits(2),
     mMultiplayerAmountAI(0),
     mMultiplayerBroadcastInterval(150)
 {

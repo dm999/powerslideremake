@@ -37,24 +37,51 @@ void MultiplayerController::clearLobby()
     mLobby.reset();
 }
 
-void MultiplayerController::addReadyPlayer(const std::string& playerName, const std::string& characterName)
+void MultiplayerController::addPlayer(const std::string& playerName)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::addReadyPlayer]");
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::addPlayer]");
 
-    mReadyPlayers.insert(std::make_pair(playerName, characterName));
+    mAllPlayers.insert(std::make_pair(playerName, "frantic"));
+    mReadyPlayers.insert(std::make_pair(playerName, false));
 }
 
-void MultiplayerController::removeReadyPlayer(const std::string& playerName)
+void MultiplayerController::removePlayer(const std::string& playerName)
 {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::removeReadyPlayer]");
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::removePlayer]");
+
+    mAllPlayers.erase(playerName);
     mReadyPlayers.erase(playerName);
+}
+
+void MultiplayerController::setPlayerReady(const std::string& playerName, const std::string& characterName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::setPlayerReady]");
+
+    mAllPlayers[playerName] = characterName;
+    mReadyPlayers[playerName] = true;
+}
+
+void MultiplayerController::resetPlayerReady(const std::string& playerName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::resetPlayerReady]");
+
+    mReadyPlayers[playerName] = false;
 }
 
 bool MultiplayerController::checkAllPlayersReady()const
 {
     bool res = false;
 
-    if(mReadyPlayers.size() == mPlayersLimits) res = true;
+    size_t readyAmount = 0;
+    for(std::map<std::string, bool>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end(); i != j; ++i)
+    {
+        if((*i).second)
+        {
+            ++readyAmount;
+        }
+    }
+
+    if(readyAmount == mAllPlayers.size()) res = true;
 
     return res;
 }
@@ -84,8 +111,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
     {
         if(flags & FLAG_IS_EJECTED)
         {
-            //consider changes (remove from lobby!)
-            removeReadyPlayer(sender);
+            removePlayer(sender);
             mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerEjected(sender);
             checkAllPlayersReadyOrNot();
@@ -93,13 +119,13 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
 
         if(flags & FLAG_JOINED)
         {
+            addPlayer(sender);
             mEvents->onPlayerJoined(sender);
         }
 
         if(flags & FLAG_LEFT)
         {
-            //consider changes (remove from lobby!)
-            removeReadyPlayer(sender);
+            removePlayer(sender);
             mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerLeft(sender);
             checkAllPlayersReadyOrNot();
@@ -116,6 +142,7 @@ void MultiplayerController::onRoomUpdate(multislider::Lobby* lobby, const multis
 
         if(flags & FLAG_RECONFIGURE_FAIL)
         {
+            assert(false);
         }
 
         if(flags & FLAG_ROOM_CLOSED_BY_HOST)
@@ -205,7 +232,7 @@ void MultiplayerController::onQuit(multislider::Session* session, const std::str
 
     bool isHost = mLobby->getRoomInfo().getHostName() == playerName;
 
-    removeReadyPlayer(playerName);
+    resetPlayerReady(playerName);
 
     if(mEvents)
     {

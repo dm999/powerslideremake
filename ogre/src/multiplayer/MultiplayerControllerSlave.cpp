@@ -102,8 +102,6 @@ void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const mult
 
         if(isReady)
         {
-            addReadyPlayer(sender, playerCharacter);
-
             if(mEvents)
             {
                 mEvents->onPlayerReady(sender);
@@ -111,8 +109,6 @@ void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const mult
         }
         else
         {
-            removeReadyPlayer(sender);
-
             if(mEvents)
             {
                 mEvents->onPlayerNotReady(sender);
@@ -126,6 +122,7 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onSessionStart]");
 
     std::vector<std::string> aiSkins;
+    std::map<std::string, std::string> readyPlayers;
 
     try{
         if (!lobby->isHost())
@@ -135,7 +132,6 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
             mAIDataTimestamp = 0;
 
             mAIPlayersSessionData.clear();
-            mReadyPlayers.clear();
 
             for(size_t q = 0; q < room.getReservedPlayersNumber(); ++q)
             {
@@ -155,7 +151,7 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
                     jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
                     if(jsonObject.has<jsonxx::String>("name") && jsonObject.has<jsonxx::String>("cartype"))
                     {
-                        mReadyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), jsonObject.get<jsonxx::String>("cartype")));
+                        readyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), jsonObject.get<jsonxx::String>("cartype")));
                     }
                 }
             }
@@ -200,7 +196,7 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
             {
                 if(mEvents)
                 {
-                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), aiSkins, mReadyPlayers));
+                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), aiSkins, readyPlayers));
                 }
             }
         }

@@ -107,8 +107,10 @@ protected:
     void onUpdate(multislider::Session* session, const multislider::SessionData & data, const multislider::PlayerData & sharedData)override;
     void onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()override;
 
-    void addReadyPlayer(const std::string& playerName, const std::string& characterName);
-    void removeReadyPlayer(const std::string& playerName);
+    void addPlayer(const std::string& playerName);
+    void removePlayer(const std::string& playerName);
+    void setPlayerReady(const std::string& playerName, const std::string& characterName);
+    void resetPlayerReady(const std::string& playerName);
     bool checkAllPlayersReady()const;
 
     static bool parseLobbyReadyMessage(const std::string& message, std::string& characterName);
@@ -123,8 +125,8 @@ protected:
     multislider::shared_ptr<multislider::Lobby> mLobby;
     multislider::SessionPtr mSession;
 
-    uint32_t mPlayersLimits;
-    std::map<std::string, std::string> mReadyPlayers;//used: write in master, read in slaves
+    std::map<std::string, bool> mReadyPlayers;
+    std::map<std::string, std::string> mAllPlayers;//used: write in master, read in slaves
     bool mReadySent;
     bool mSessionStarted;
     bool mStartHappened;//to synchronize race events

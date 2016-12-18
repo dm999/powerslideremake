@@ -136,9 +136,6 @@ public:
     void setMultiplayerServerPort(size_t option){mMultiplayerServerPort = option;}
     size_t getMultiplayerServerPort()const{return mMultiplayerServerPort;}
 
-    void setMultiplayerPlayersLimits(size_t option){mMultiplayerPlayersLimits = option;}
-    size_t getMultiplayerPlayersLimits()const{return mMultiplayerPlayersLimits;}
-
     void setMultiplayerBroadcastInterval(size_t option){mMultiplayerBroadcastInterval = option;}
     size_t getMultiplayerBroadcastInterval()const{return mMultiplayerBroadcastInterval;}
 
@@ -210,7 +207,6 @@ private:
     std::string mMultiplayerUserName;
     std::string mMultiplayerServerIP;
     size_t mMultiplayerServerPort;
-    size_t mMultiplayerPlayersLimits;
     size_t mMultiplayerBroadcastInterval;
 
     static const int mMultiplayerMaxAI = 11;

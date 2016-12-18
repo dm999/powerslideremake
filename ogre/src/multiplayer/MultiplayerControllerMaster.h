@@ -21,6 +21,8 @@ public:
 
     void startSession();
 
+    void reconfigureSession(size_t aiAmount);
+
 private:
 
     std::vector<std::string> mAISkins;

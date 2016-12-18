@@ -15,6 +15,8 @@ public:
 
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
+    void recalculateCharacterNames();
+
 protected:
 
     virtual void doInitData() = 0;

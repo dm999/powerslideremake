@@ -68,6 +68,12 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetStart->setCaption("Start");
             mWidgetStart->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
             mWidgetStart->setEnabled(false);
+
+            Ogre::Vector4 posRecalc = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 0.0f, 0.0f);
+            mWidgetRecalc = gui->createWidget<MyGUI::Button>("Button", posRecalc.x, posRecalc.y, 60, 26, MyGUI::Align::Default, "Middle");
+            mWidgetRecalc->setCaption("Recalc");
+            mWidgetRecalc->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+            mWidgetRecalc->setEnabled(false);
         }
         else
         {
@@ -111,6 +117,14 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession();
     }
 
+    if(sender == mWidgetRecalc)
+    {
+        size_t aiAmount = 2;
+        mModeContext.getGameState().setAICount(aiAmount);
+        mMenuMultiMode->recalculateCharacterNames();
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(aiAmount);
+    }
+
     if(sender == mWidgetJoin)
     {
         bool changeToReady = true;
@@ -145,11 +159,13 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 void UIMainMenuMulti::onStartPossible()
 {
     mWidgetStart->setEnabled(true);
+    mWidgetRecalc->setEnabled(true);
 }
 
 void UIMainMenuMulti::onStartNotPossible()
 {
     mWidgetStart->setEnabled(false);
+    mWidgetRecalc->setEnabled(false);
 }
 
 void UIMainMenuMulti::addEvent(const std::string& eventItem)
