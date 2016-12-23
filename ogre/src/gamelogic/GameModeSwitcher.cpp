@@ -128,6 +128,7 @@ void GameModeSwitcher::frameEnded()
 
                 mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
                 mMenuMultiMode->initData();
+                controller->switchedToMainMenu();
             }
         }
 

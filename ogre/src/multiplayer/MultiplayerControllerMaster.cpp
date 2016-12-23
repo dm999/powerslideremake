@@ -23,6 +23,8 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
         multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, "", playersLimits + aiAmount, aiAmount, this);
         if(status == multislider::Lobby::SUCCESS)
         {
+            addPlayer(userName);
+
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::startLobbyMaster]: room created [" + Ogre::String(roomName) + "]");
         }
         else
@@ -98,6 +100,56 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
 
             checkAllPlayersReadyOrNot();
 
+        }
+    }
+}
+
+void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::onRoomUpdate]");
+
+    if(mEvents)
+    {
+        if(flags & FLAG_IS_EJECTED)
+        {
+            removePlayer(sender);
+            mEvents->onPlayerNotReady(sender);
+            mEvents->onPlayerEjected(sender);
+            checkAllPlayersReadyOrNot();
+        }
+
+        if(flags & FLAG_JOINED)
+        {
+            addPlayer(sender);
+            mEvents->onPlayerJoined(sender);
+            checkAllPlayersReadyOrNot();
+        }
+
+        if(flags & FLAG_LEFT)
+        {
+            removePlayer(sender);
+            mEvents->onPlayerNotReady(sender);
+            mEvents->onPlayerLeft(sender);
+            checkAllPlayersReadyOrNot();
+        }
+
+        if(flags & FLAG_NEW_HOST)
+        {
+            mEvents->onNewHost(sender);
+        }
+
+        if(flags & FLAG_RECONFIGURED_BY_HOST)
+        {
+        }
+
+        if(flags & FLAG_RECONFIGURE_FAIL)
+        {
+            assert(false);
+        }
+
+        if(flags & FLAG_ROOM_CLOSED_BY_HOST)
+        {
+            mEvents->onRoomClosed(sender);
         }
     }
 }
@@ -191,8 +243,90 @@ void MultiplayerControllerMaster::startSession()
     }
 }
 
+void MultiplayerControllerMaster::switchedToMainMenu()
+{
+    resetPlayersReady();
+}
+
 void MultiplayerControllerMaster::reconfigureSession(size_t aiAmount)
 {
     size_t totalNumber = 12 - aiAmount;
     mLobby->reconfigure(totalNumber, aiAmount);
+}
+
+void MultiplayerControllerMaster::addPlayer(const std::string& playerName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::addPlayer]");
+
+    mAllPlayers.insert(std::make_pair(playerName, "frantic"));
+    mReadyPlayers.insert(std::make_pair(playerName, false));
+}
+
+void MultiplayerControllerMaster::removePlayer(const std::string& playerName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::removePlayer]");
+
+    mAllPlayers.erase(playerName);
+    mReadyPlayers.erase(playerName);
+}
+
+void MultiplayerControllerMaster::setPlayerReady(const std::string& playerName, const std::string& characterName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::setPlayerReady]");
+
+    mAllPlayers[playerName] = characterName;
+    mReadyPlayers[playerName] = true;
+}
+
+void MultiplayerControllerMaster::resetPlayerReady(const std::string& playerName)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::resetPlayerReady]");
+
+    mReadyPlayers[playerName] = false;
+}
+
+void MultiplayerControllerMaster::resetPlayersReady()
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::resetPlayersReady]");
+
+    for(std::map<std::string, bool>::iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end(); i != j; ++i)
+    {
+        (*i).second = false;
+    }
+}
+
+bool MultiplayerControllerMaster::checkAllPlayersReady()const
+{
+    bool res = false;
+
+    size_t readyAmount = 0;
+    for(std::map<std::string, bool>::const_iterator i = mReadyPlayers.begin(), j = mReadyPlayers.end(); i != j; ++i)
+    {
+        if((*i).second)
+        {
+            ++readyAmount;
+        }
+    }
+
+    if(readyAmount == mAllPlayers.size()) res = true;
+
+    return res;
+}
+
+void MultiplayerControllerMaster::checkAllPlayersReadyOrNot()const
+{
+    if (checkAllPlayersReady())
+    {
+        if(mEvents)
+        {
+            mEvents->onSessionReadyToStart();
+        }
+    }
+    else
+    {
+        if(mEvents)
+        {
+            mEvents->onSessionNotReadyToStart();
+        }
+    }
 }

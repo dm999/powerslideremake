@@ -116,6 +116,50 @@ void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const mult
     }
 }
 
+void MultiplayerControllerSlave::onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onRoomUpdate]");
+
+    if(mEvents)
+    {
+        if(flags & FLAG_IS_EJECTED)
+        {
+            mEvents->onPlayerNotReady(sender);
+            mEvents->onPlayerEjected(sender);
+        }
+
+        if(flags & FLAG_JOINED)
+        {
+            mEvents->onPlayerJoined(sender);
+        }
+
+        if(flags & FLAG_LEFT)
+        {
+            mEvents->onPlayerNotReady(sender);
+            mEvents->onPlayerLeft(sender);
+        }
+
+        if(flags & FLAG_NEW_HOST)
+        {
+            mEvents->onNewHost(sender);
+        }
+
+        if(flags & FLAG_RECONFIGURED_BY_HOST)
+        {
+        }
+
+        if(flags & FLAG_RECONFIGURE_FAIL)
+        {
+            assert(false);
+        }
+
+        if(flags & FLAG_ROOM_CLOSED_BY_HOST)
+        {
+            mEvents->onRoomClosed(sender);
+        }
+    }
+}
+
 void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo & room, multislider::SessionPtr session, const std::string & sessionData)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onSessionStart]");
