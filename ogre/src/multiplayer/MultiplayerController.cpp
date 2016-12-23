@@ -13,7 +13,7 @@ namespace{
 }
 
 MultiplayerController::MultiplayerController(MultiplayerControllerEvents* events, size_t broadcastInterval)
-    : mEvents(events), mReadySent(false), mSessionStarted(false), mStartHappened(false),
+    : mEvents(events), mSessionStarted(false), mStartHappened(false),
     mBroadcastInterval(broadcastInterval)
 {
 }
@@ -27,7 +27,6 @@ MultiplayerController::~MultiplayerController()
 void MultiplayerController::clearSession()
 {
     mSession.reset();
-    mReadySent = false;
     mSessionStarted = false;
     mStartHappened = false;
 }
@@ -276,11 +275,8 @@ void MultiplayerController::receiveData()
     }
     else
     {
-        if(mReadySent) // create / join room
-        {
-            mLobby->receive();
-            Tools::Sleep(10);
-        }
+        mLobby->receive();
+        Tools::Sleep(10);
     }
 }
 

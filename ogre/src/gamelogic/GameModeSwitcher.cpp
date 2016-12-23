@@ -108,6 +108,7 @@ void GameModeSwitcher::frameEnded()
         {
             mIsSwitchMode = false;
 
+            //from race to single main menu
             if(mGameMode == ModeRaceSingle)
             {
                 mGameMode = ModeMenu;
@@ -118,6 +119,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initData();
             }
 
+            //from race to multi main menu
             if(mGameMode == ModeRaceMulti)
             {
                 mGameMode = ModeMenuMulti;

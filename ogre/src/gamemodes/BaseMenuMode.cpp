@@ -12,21 +12,24 @@
 
 #include "../InputHandler.h"
 
-BaseMenuMode::BaseMenuMode(const ModeContext& modeContext) :
+BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreation) :
     BaseMode(modeContext)
 {
-    mModeContext.getGameState().getPlayerCar().setCharacterName("frantic");
-    mModeContext.getGameState().setRaceParameters("dam", Insane);
-    mModeContext.getGameState().setAICount(1);                          //not more than 11
+    if(isInitialCreation)
+    {
+        mModeContext.getGameState().getPlayerCar().setCharacterName("frantic");
+        mModeContext.getGameState().setRaceParameters("dam", Insane);
+        mModeContext.getGameState().setAICount(1);                          //not more than 11
 
-    mModeContext.getGameState().setMultiplayerServerPort(8800);
-    mModeContext.getGameState().setMultiplayerBroadcastInterval(150);   //in ms; 50 for fast; 150 for slow
+        mModeContext.getGameState().setMultiplayerServerPort(8800);
+        mModeContext.getGameState().setMultiplayerBroadcastInterval(150);   //in ms; 50 for fast; 150 for slow
 
-    mModeContext.getGameState().setListenerGain(0.0f);
+        mModeContext.getGameState().setListenerGain(0.0f);
 
-    mModeContext.getGameState().setMirrorEnabled(true);
+        mModeContext.getGameState().setMirrorEnabled(true);
 
-    recalculateCharacterNames();
+        recalculateCharacterNames();
+    }
 }
 
 void BaseMenuMode::recalculateCharacterNames()

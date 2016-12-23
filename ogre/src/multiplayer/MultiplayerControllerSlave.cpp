@@ -81,7 +81,6 @@ bool MultiplayerControllerSlave::saySessionReady(const std::string& playerCharac
 
         mLobby->say(fillLobbyReadyMessage(playerCharacter, isReady).json(), true);
 
-        mReadySent = true;
     }catch(const std::runtime_error& err)
     {
         res = false;

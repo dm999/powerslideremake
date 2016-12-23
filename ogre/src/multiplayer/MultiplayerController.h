@@ -127,7 +127,6 @@ protected:
 
     std::map<std::string, bool> mReadyPlayers;
     std::map<std::string, std::string> mAllPlayers;//used: write in master, read in slaves
-    bool mReadySent;
     bool mSessionStarted;
     bool mStartHappened;//to synchronize race events
 
@@ -158,8 +157,6 @@ public:
     void receiveData();
 
     void updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI, float spf);
-
-    bool getReadySent()const {return mReadySent;};
 
     bool getStartHappen()const{return mStartHappened;}
 

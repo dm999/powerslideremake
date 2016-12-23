@@ -194,12 +194,9 @@ void MultiPlayerMode::customFrameRenderingQueuedDoBegining()
 {
     if(mMultiplayerController.get())
     {
-        if(mMultiplayerController->getReadySent()) // make sure room is connected
+        if(!mMultiplayerController->getStartHappen())
         {
-            if(!mMultiplayerController->getStartHappen())
-            {
-                mModeContext.mGameState.resetBeforeStartTimer();
-            }
+            mModeContext.mGameState.resetBeforeStartTimer();
         }
 
         mUIRace->setShowMiscText(true);

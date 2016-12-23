@@ -114,6 +114,17 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
     {
         mWidgetStart->setEnabled(false);
 
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            std::vector<std::string> gameCars;
+            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            {
+                gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
+            }
+
+            static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
+        }
+
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession();
     }
 
@@ -138,21 +149,7 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             mWidgetJoin->setCaption("Ready");
         }
 
-        if(mModeContext.mGameState.isMultiplayerMaster())
-        {
-            std::vector<std::string> gameCars;
-            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-            {
-                gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
-            }
-
-            static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
-        }
-        else
-        {
-            bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
-        }
+        bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
     }
 }
 

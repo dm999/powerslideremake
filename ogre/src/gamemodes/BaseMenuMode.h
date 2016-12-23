@@ -7,7 +7,7 @@ class BaseMenuMode : public BaseMode
 {
 public:
 
-    BaseMenuMode(const ModeContext& modeContext);
+    BaseMenuMode(const ModeContext& modeContext, bool isInitialCreation);
     virtual ~BaseMenuMode(){}
 
     void initData()override;

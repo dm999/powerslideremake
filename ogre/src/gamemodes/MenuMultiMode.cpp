@@ -9,8 +9,11 @@
 #include "../multiplayer/MultiplayerControllerMaster.h"
 #include "../multiplayer/MultiplayerControllerSlave.h"
 
+/**
+ * Initial creation of multiplayer session (switch from single menu to multi menu)
+ */
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
-    BaseMenuMode(modeContext),
+    BaseMenuMode(modeContext, true),
     mIsEnterFromBaseMenu(true)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
@@ -26,8 +29,11 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
     }
 }
 
+/**
+ * Multiplayer session already created (switch from multi race to multi menu)
+ */
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
-    BaseMenuMode(modeContext),
+    BaseMenuMode(modeContext, false),
     mIsEnterFromBaseMenu(false)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
