@@ -71,47 +71,18 @@ bool MultiplayerControllerSlave::startLobbySlave(std::string ip, uint16_t port, 
     return res;
 }
 
-bool MultiplayerControllerSlave::saySessionReady(const std::string& playerCharacter, bool isReady)
-{
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::saySessionReady]");
-
-    bool res = true;
-
-    try{
-
-        mLobby->say(fillLobbyMessage(playerCharacter, isReady).json(), true);
-
-    }catch(const std::runtime_error& err)
-    {
-        res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerControllerSlave::saySessionReady]: " + Ogre::String(err.what()));
-    }
-
-    return res;
-}
-
 void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)
 {
     if (!message.empty())
     {
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onMessage]: message [" + Ogre::String(message) + "]");
 
-        std::string playerCharacter;
-        bool isReady = parseLobbyMessage(message, playerCharacter);
+        MultiplayerLobbyData multiplayerLobbyData;
+        parseLobbyMessage(message, multiplayerLobbyData);
 
-        if(isReady)
+        if(mEvents)
         {
-            if(mEvents)
-            {
-                mEvents->onPlayerReady(sender);
-            }
-        }
-        else
-        {
-            if(mEvents)
-            {
-                mEvents->onPlayerNotReady(sender);
-            }
+            mEvents->onLobbyMessage(sender, multiplayerLobbyData);
         }
     }
 }
@@ -124,7 +95,6 @@ void MultiplayerControllerSlave::onRoomUpdate(multislider::Lobby* lobby, const m
     {
         if(flags & FLAG_IS_EJECTED)
         {
-            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerEjected(sender);
         }
 
@@ -135,7 +105,6 @@ void MultiplayerControllerSlave::onRoomUpdate(multislider::Lobby* lobby, const m
 
         if(flags & FLAG_LEFT)
         {
-            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerLeft(sender);
         }
 
@@ -246,7 +215,9 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
             {
                 if(mEvents)
                 {
-                    MultiplayerSessionStartInfo sessionStartInfo(room.getReservedPlayersNumber(), players, q, 
+                    MultiplayerSessionStartInfo sessionStartInfo(
+                        room.getReservedPlayersNumber(), 
+                        players, q, 
                         mLobby->isHost(), 
                         aiSkins, readyPlayers,
                         trackName);

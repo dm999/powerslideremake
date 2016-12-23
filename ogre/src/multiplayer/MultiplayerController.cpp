@@ -53,6 +53,26 @@ void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislide
     }
 }
 
+bool MultiplayerController::sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount)
+{
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::sendLobbyMessage]");
+
+    bool res = true;
+
+    try{
+
+        MultiplayerLobbyData multiplayerLobbyData(isReady, characterName, playerMessage, trackName, aiCount);
+        mLobby->say(fillLobbyMessage(multiplayerLobbyData), true);
+
+    }catch(const std::runtime_error& err)
+    {
+        res = false;
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerControllerSlave::sendLobbyMessage]: " + Ogre::String(err.what()));
+    }
+
+    return res;
+}
+
 void MultiplayerController::onStart(multislider::Session* session)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onStart]");
@@ -287,32 +307,50 @@ jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionDat
     return jsonObject;
 }
 
-bool MultiplayerController::parseLobbyMessage(const std::string& message, std::string& characterName)
+void MultiplayerController::parseLobbyMessage(const std::string& message, MultiplayerLobbyData& data)
 {
-    bool res = false;
-    characterName = "frantic";
+    data.mIsReady = false;
+    data.mCharacterName = "frantic";
+    data.mPlayerMessage = "";
+    data.mTrackName = "";
 
     jsonxx::Object jsonObject;
     jsonObject.parse(message);
-    if(jsonObject.has<jsonxx::Boolean>("status"))
+    if(jsonObject.has<jsonxx::Boolean>("isReady"))
     {
-        res = jsonObject.get<jsonxx::Boolean>("status");
+        data.mIsReady = jsonObject.get<jsonxx::Boolean>("isReady");
     }
 
-    if(jsonObject.has<jsonxx::String>("cartype"))
+    if(jsonObject.has<jsonxx::String>("characterName"))
     {
-        characterName = jsonObject.get<jsonxx::String>("cartype");
+        data.mCharacterName = jsonObject.get<jsonxx::String>("characterName");
     }
 
-    return res;
+    if(jsonObject.has<jsonxx::String>("playerMessage"))
+    {
+        data.mPlayerMessage = jsonObject.get<jsonxx::String>("playerMessage");
+    }
+
+    if(jsonObject.has<jsonxx::String>("trackName"))
+    {
+        data.mTrackName = jsonObject.get<jsonxx::String>("trackName");
+    }
+
+    if(jsonObject.has<jsonxx::Number>("aiCount"))
+    {
+        data.mAICount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiCount"));
+    }
 }
 
-jsonxx::Object MultiplayerController::fillLobbyMessage(const std::string& characterName, bool isReady)
+std::string MultiplayerController::fillLobbyMessage(const MultiplayerLobbyData& data)
 {
     jsonxx::Object jsonObject;
 
-    jsonObject << "status" << isReady;
-    jsonObject << "cartype" << characterName;
+    jsonObject << "isReady" << data.mIsReady;
+    jsonObject << "characterName" << data.mCharacterName;
+    jsonObject << "playerMessage" << data.mPlayerMessage;
+    jsonObject << "trackName" << data.mTrackName;
+    jsonObject << "aiCount" << data.mAICount;
 
-    return jsonObject;
+    return jsonObject.json();
 }

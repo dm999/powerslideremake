@@ -5,6 +5,7 @@
 #include "MyGUI.h"
 
 #include "../tools/OgreTools.h"
+#include "../tools/Conversions.h"
 
 #include "../customs/CustomTrayManager.h"
 
@@ -69,13 +70,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetStart->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
             mWidgetStart->setEnabled(false);
 
-            Ogre::Vector4 posRecalc = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 40.0f, 12.0f);
-            mWidgetRecalc = gui->createWidget<MyGUI::Button>("Button", posRecalc.x, posRecalc.y, posRecalc.z, posRecalc.w, MyGUI::Align::Default, "Middle");
-            mWidgetRecalc->setCaption("Recalc");
-            mWidgetRecalc->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
-            mWidgetRecalc->setEnabled(false);
-
-            Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(440.0f, 80.0f, 60.0f, 12.0f);
+            Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 60.0f, 12.0f);
             mWidgetTrack = gui->createWidget<MyGUI::ComboBox>("ComboBox", posTrack.x, posTrack.y, posTrack.z, posTrack.w, MyGUI::Align::Default, "Middle");
             mWidgetTrack->addItem("desert track");
             mWidgetTrack->addItem("speedway track");
@@ -92,6 +87,15 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetTrack->setIndexSelected(0);
             mWidgetTrack->setEditReadOnly(true);
             mWidgetTrack->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
+
+            Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(520.0f, 80.0f, 30.0f, 12.0f);
+            mWidgetAICount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAI.x, posAI.y, posAI.z, posAI.w, MyGUI::Align::Default, "Middle");
+            for(size_t q = 0; q < 11; ++q)
+                mWidgetAICount->addItem(Conversions::DMToString(q));
+            mWidgetAICount->setIndexSelected(1);
+            mWidgetAICount->setEditReadOnly(true);
+            mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
+
         }
         else
         {
@@ -99,6 +103,22 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
             mWidgetJoin->setCaption("Ready");
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+        }
+
+        {
+            Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(460.0f, 80.0f, 60.0f, 12.0f);
+            mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
+            mWidgetCharacter->addItem("frantic");
+            mWidgetCharacter->addItem("cyber");
+            mWidgetCharacter->addItem("radiation");
+            mWidgetCharacter->addItem("zig");
+            mWidgetCharacter->addItem("zag");
+            mWidgetCharacter->addItem("beryl");
+            mWidgetCharacter->addItem("stig");
+            mWidgetCharacter->addItem("hemp");
+            mWidgetCharacter->setIndexSelected(0);
+            mWidgetCharacter->setEditReadOnly(true);
+            mWidgetCharacter->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
         }
 
         {
@@ -159,16 +179,21 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             mWidgetJoin->setCaption("Ready");
         }
 
-        bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
+        std::string trackName = "";
+
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            trackName = mWidgetTrack->getItem(mWidgetTrack->getItemIndexSelected());
+        }
+
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+            changeToReady, 
+            mModeContext.mGameState.getPlayerCar().getCharacterName(), 
+            "", 
+            trackName,
+            mModeContext.mGameState.getAICount());
     }
 
-    if(sender == mWidgetRecalc)
-    {
-        size_t aiAmount = 2;
-        mModeContext.getGameState().setAICount(aiAmount);
-        mMenuMultiMode->recalculateCharacterNames();
-        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(aiAmount);
-    }
 }
 
 void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
@@ -177,21 +202,59 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     {
         mModeContext.getGameState().setRaceParameters(mWidgetTrack->getItem(index), Insane);
     }
+
+    if(sender == mWidgetCharacter)
+    {
+        mModeContext.getGameState().getPlayerCar().setCharacterName(mWidgetCharacter->getItem(index));
+    }
+
+    if(sender == mWidgetAICount)
+    {
+        mModeContext.getGameState().setAICount(index);
+        mMenuMultiMode->recalculateCharacterNames();
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(index);
+    }
+
+    updateRoomState();
 }
 
 void UIMainMenuMulti::onStartPossible()
 {
     mWidgetStart->setEnabled(true);
-    mWidgetRecalc->setEnabled(true);
 }
 
 void UIMainMenuMulti::onStartNotPossible()
 {
     mWidgetStart->setEnabled(false);
-    mWidgetRecalc->setEnabled(false);
 }
 
 void UIMainMenuMulti::addEvent(const std::string& eventItem)
 {
     mWidgetEvents->insertItem(0, eventItem);
+}
+
+void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
+{
+    bool changeToReady = true;
+    if(mWidgetJoin->getCaption() == "Ready")
+        changeToReady = false;
+
+    if(mModeContext.mGameState.isMultiplayerMaster())
+    {
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+            changeToReady, 
+            mModeContext.mGameState.getPlayerCar().getCharacterName(), 
+            playerMessage, 
+            mModeContext.mGameState.getTrackName(),
+            mModeContext.mGameState.getAICount());
+    }
+    else
+    {
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+            changeToReady, 
+            mModeContext.mGameState.getPlayerCar().getCharacterName(), 
+            playerMessage, 
+            "",
+            0);
+    }
 }

@@ -1751,10 +1751,10 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
     <node id="n29">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="997.2444686135436" width="800.706112148529" x="15649.64694392573" y="-2538.622234306772"/>
+          <y:Geometry height="1006.1758688958967" width="894.4858151132335" x="15602.757092443378" y="-2543.0879344479486"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="944.875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="789.361328125" x="5.6723920117638045" y="26.184734306772043">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="974.27734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="825.05078125" x="34.717516931616046" y="15.949262572948555">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1768,7 +1768,7 @@ void clearLobby()
 virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount) = 0
 virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0
 
-virtual bool saySessionReady(const std::string&amp; playerCharacter, bool isReady) = 0
+bool sendLobbyMessage(bool isReady, const std::string&amp; characterName, const std::string&amp; playerMessage, const std::string&amp; trackName, size_t aiCount)
 
 virtual void switchedToMainMenu() = 0
 
@@ -1794,10 +1794,7 @@ void onUpdate(multislider::Session* session, const multislider::SessionData &amp
 void onQuit(multislider::Session* session, const std::string &amp; playerName, bool byTimeout) throw ()override
 
 static bool parseLobbyReadyMessage(const std::string&amp; message, GameCars&amp; playerSkin)
-static jsonxx::Object fillLobbyReadyMessage(const GameCars&amp; playerSkin)
-
-static void parseDataPacket(MultiplayerSessionData&amp; data, const jsonxx::Object&amp; jsonObject)
-static jsonxx::Object fillDataPacket(const MultiplayerSessionData&amp; data)
+static std::string fillLobbyReadyMessage(const GameCars&amp; playerSkin)
 
 MultiplayerControllerEvents* mEvents
 
@@ -1805,20 +1802,24 @@ multislider::shared_ptr&lt;multislider::Lobby&gt; mLobby
 multislider::SessionPtr mSession
 
 bool mSessionStarted
-bool mStartHappened;//to synchronize race events
 
 playerToData mOtherPlayersSessionData
 
 std::vector&lt;MultiplayerSessionData&gt; mAIPlayersSessionData
 uint64_t mAIDataTimestamp
 
+private:
+
+static void parseDataPacket(MultiplayerSessionData&amp; data, const jsonxx::Object&amp; jsonObject)
+static jsonxx::Object fillDataPacket(const MultiplayerSessionData&amp; data)
+
+bool mStartHappened;//to synchronize race events
+
 Ogre::Timer mBroadcastTimer
 
 Ogre::Timer mStartSessionTimer
 
-size_t mBroadcastInterval
-
-</y:NodeLabel>
+size_t mBroadcastInterval</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -1853,7 +1854,7 @@ virtual void onPlayerJoined(const std::string&amp; player) = 0
 virtual void onPlayerLeft(const std::string&amp; player) = 0
 virtual void onNewHost(const std::string&amp; player) = 0
 virtual void onRoomClosed(const std::string&amp; player) = 0
-virtual void onPlayerReady(const std::string&amp; player) = 0
+virtual void onLobbyMessage(const std::string&amp; player, const MultiplayerLobbyData&amp; data) = 0
 virtual void onPlayerAddedToSession(const std::string&amp; player) = 0
 virtual void onPlayerQuitSession(const std::string&amp; player, bool isHost) = 0
 virtual void onSessionReadyToStart() = 0
@@ -2263,7 +2264,7 @@ void onPlayerJoined(const std::string&amp; player)override
 void onPlayerLeft(const std::string&amp; player)override
 void onNewHost(const std::string&amp; player)override
 void onRoomClosed(const std::string&amp; player)override
-void onPlayerReady(const std::string&amp; player)override
+void onLobbyMessage(const std::string&amp; player, const MultiplayerLobbyData&amp; data)override{}
 void onPlayerAddedToSession(const std::string&amp; player)override
 void onPlayerQuitSession(const std::string&amp; player, bool isHost)override
 void onSessionReadyToStart()override{}
@@ -2449,7 +2450,7 @@ void onPlayerJoined(const std::string&amp; player)override{}
 void onPlayerLeft(const std::string&amp; player)override{}
 void onNewHost(const std::string&amp; player)override{}
 void onRoomClosed(const std::string&amp; player)override{}
-void onPlayerReady(const std::string&amp; player)override{}
+void onLobbyMessage(const std::string&amp; player, const MultiplayerLobbyData&amp; data)override
 void onPlayerAddedToSession(const std::string&amp; player)override{}
 void onPlayerQuitSession(const std::string&amp; player, bool isHost)override{}
 void onSessionReadyToStart()override;
@@ -2565,7 +2566,7 @@ virtual void doClearData() = 0</y:NodeLabel>
           <y:Geometry height="512.0640110752847" width="860.9930640544167" x="15079.50346797279" y="-1276.0320055376444"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="503.83984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="17.32368046470765" y="4.1120836626423625">&lt;&lt;MultiplayerControllerMaster.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="17.32368046470765" y="11.462669600142362">&lt;&lt;MultiplayerControllerMaster.h&gt;&gt;
 
 MultiplayerControllerMaster
 
@@ -2575,7 +2576,6 @@ bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::
 bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override
 
 void setAISkins(const std::vector&lt;std::string&gt;&amp; aiSkins)
-bool saySessionReady(const std::string&amp; playerCharacter, bool isReady)override
 
 void switchedToMainMenu()override
 
@@ -2609,7 +2609,7 @@ std::vector&lt;std::string&gt; mAISkins</y:NodeLabel>
           <y:Geometry height="318.9939311716612" width="849.2929296845336" x="16045.353535157734" y="-1179.4969655858326"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="11.473613279766141" y="17.835832773330594">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="826.345703125" x="11.473613279766141" y="32.537004648330594">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
 
 MultiplayerControllerSlave
 
@@ -2617,8 +2617,6 @@ public:
 
 bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)override
 bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override
-
-bool saySessionReady(const std::string&amp; playerCharacter, bool isReady)override
 
 void switchedToMainMenu()override{}
 
@@ -2629,6 +2627,28 @@ void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo &amp;
 private:
 
 </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n62">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="209.56874358139612" width="221.9197216604748" x="16839.040139169763" y="-1604.784371790698"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="180.4140625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="154.046875" x="33.93642333023672" y="14.57734054069806">&lt;&lt;MultiplayerData.h&gt;&gt;
+
+MultiplayerLobbyData
+
+//master &amp; slave data
+bool mIsReady
+std::string mCharacterName
+std::string mPlayerMessage
+
+//master data only
+std::string mTrackName
+size_t mAICount</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3279,6 +3299,16 @@ private:
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e59" source="n62" target="n29">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

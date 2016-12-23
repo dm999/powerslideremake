@@ -132,17 +132,17 @@ void MenuMultiMode::onRoomEnter(const std::string& roomName, const std::string& 
 
 void MenuMultiMode::onPlayerEjected(const std::string& player)
 {
-    mUIMainMenuMulti->addEvent("Player ejected: " + player);
+    mUIMainMenuMulti->addEvent("player [" + player + "] ejected");
 }
 
 void MenuMultiMode::onPlayerJoined(const std::string& player)
 {
-    mUIMainMenuMulti->addEvent("Player joined: " + player);
+    mUIMainMenuMulti->addEvent("player [" + player + "] joined");
 }
 
 void MenuMultiMode::onPlayerLeft(const std::string& player)
 {
-    mUIMainMenuMulti->addEvent("Player left: " + player);
+    mUIMainMenuMulti->addEvent("player [" + player + "] left");
 }
 
 void MenuMultiMode::onNewHost(const std::string& player)
@@ -155,14 +155,24 @@ void MenuMultiMode::onRoomClosed(const std::string& player)
     mUIMainMenuMulti->addEvent("room closed: " + player);
 }
 
-void MenuMultiMode::onPlayerReady(const std::string& player)
+void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
-    mUIMainMenuMulti->addEvent("player ready: " + player);
-}
+    if(data.mIsReady)
+        mUIMainMenuMulti->addEvent("player [" + player + "] ready");
+    else
+        mUIMainMenuMulti->addEvent("player [" + player + "] not ready");
 
-void MenuMultiMode::onPlayerNotReady(const std::string& player)
-{
-    mUIMainMenuMulti->addEvent("player NOT ready: " + player);
+    mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
+
+    if(!data.mPlayerMessage.empty())
+        mUIMainMenuMulti->addEvent("player [" + player + "] said: " + data.mPlayerMessage);
+
+    //host data
+    if(!data.mTrackName.empty())
+    {
+        mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
+        mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
+    }
 }
 
 void MenuMultiMode::onError(const std::string& message)

@@ -48,12 +48,15 @@ private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
+    void updateRoomState(const std::string& playerMessage = "")const;
+
     MenuMultiMode * mMenuMultiMode;
 
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
-    MyGUI::Button* mWidgetRecalc;
     MyGUI::ComboBox* mWidgetTrack;
+    MyGUI::ComboBox* mWidgetCharacter;
+    MyGUI::ComboBox* mWidgetAICount;
 
     MyGUI::ListBox* mWidgetEvents;
 };

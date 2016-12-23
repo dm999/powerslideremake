@@ -8,6 +8,35 @@
 #include "../includes/OgreInclude.h"
 
 /**
+ * Data packet during lobby
+ */
+struct MultiplayerLobbyData
+{
+    //master & slave data
+    bool mIsReady;
+    std::string mCharacterName;  // defines car as well
+    std::string mPlayerMessage;  // player said something
+
+    //master data only
+    std::string mTrackName;
+    size_t mAICount;
+
+    MultiplayerLobbyData(){}
+
+    MultiplayerLobbyData(bool isReady, 
+        const std::string& characterName, const std::string& playerMessage,
+        const std::string& trackName,
+        size_t aiCount
+    ) :
+    mIsReady(isReady),
+    mCharacterName(characterName),
+    mPlayerMessage(playerMessage),
+    mTrackName(trackName),
+    mAICount(aiCount)
+    {}
+};
+
+/**
  * Data packet during racing session
  */
 struct MultiplayerSessionData
@@ -83,12 +112,14 @@ public:
     virtual void onPlayerLeft(const std::string& player) = 0;
     virtual void onNewHost(const std::string& player) = 0;
     virtual void onRoomClosed(const std::string& player) = 0;
-    virtual void onPlayerReady(const std::string& player) = 0;
-    virtual void onPlayerNotReady(const std::string& player) = 0;
+    virtual void onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data) = 0;
     virtual void onPlayerAddedToSession(const std::string& player) = 0;
     virtual void onPlayerQuitSession(const std::string& player, bool isHost) = 0;
+    
+    //only for master
     virtual void onSessionReadyToStart() = 0;
     virtual void onSessionNotReadyToStart() = 0;
+
     virtual void onSessionStart(const MultiplayerSessionStartInfo& multiplayerSessionStartInfo) = 0;
     virtual void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost) = 0;
     virtual void onError(const std::string& message) = 0;

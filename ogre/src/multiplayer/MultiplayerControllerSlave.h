@@ -12,8 +12,6 @@ public:
     bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)override{assert(false); return false;}
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override;
 
-    bool saySessionReady(const std::string& playerCharacter, bool isReady)override;
-
     void switchedToMainMenu()override{}
 
     // Lobby callback

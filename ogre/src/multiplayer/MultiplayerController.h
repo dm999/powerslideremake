@@ -18,7 +18,7 @@ public:
     virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount) = 0;
     virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0;
 
-    virtual bool saySessionReady(const std::string& playerCharacter, bool isReady) = 0;
+    bool sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount);
 
     virtual void switchedToMainMenu() = 0;
 
@@ -42,25 +42,27 @@ protected:
     void onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()override;
 
 
-    static bool parseLobbyMessage(const std::string& message, std::string& characterName);
-    static jsonxx::Object fillLobbyMessage(const std::string& characterName, bool isReady);
-
-    static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
-    static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
+    static void parseLobbyMessage(const std::string& message, MultiplayerLobbyData& data);
+    static std::string fillLobbyMessage(const MultiplayerLobbyData& data);
 
     MultiplayerControllerEvents* mEvents;
-
 
     multislider::shared_ptr<multislider::Lobby> mLobby;
     multislider::SessionPtr mSession;
 
     bool mSessionStarted;
-    bool mStartHappened;//to synchronize race events
 
     playerToData mOtherPlayersSessionData;
 
     std::vector<MultiplayerSessionData> mAIPlayersSessionData;
     uint64_t mAIDataTimestamp;
+
+private:
+
+    static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
+    static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
+
+    bool mStartHappened;//to synchronize race events
 
     Ogre::Timer mBroadcastTimer;
 

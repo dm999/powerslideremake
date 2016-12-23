@@ -18,7 +18,7 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
     if(isInitialCreation)
     {
         mModeContext.getGameState().getPlayerCar().setCharacterName("frantic");
-        mModeContext.getGameState().setRaceParameters("dam", Insane);
+        mModeContext.getGameState().setRaceParameters("desert track", Insane);
         mModeContext.getGameState().setAICount(1);                          //not more than 11
 
         mModeContext.getGameState().setMultiplayerServerPort(8800);

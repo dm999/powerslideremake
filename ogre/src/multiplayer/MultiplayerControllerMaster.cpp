@@ -45,25 +45,6 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
     return res;
 }
 
-bool MultiplayerControllerMaster::saySessionReady(const std::string& playerCharacter, bool isReady)
-{
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::saySessionReady]");
-
-    bool res = true;
-
-    try{
-
-        mLobby->say(fillLobbyMessage(playerCharacter, isReady).json(), true);
-
-    }catch(const std::runtime_error& err)
-    {
-        res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerControllerMaster::saySessionReady]: " + Ogre::String(err.what()));
-    }
-
-    return res;
-}
-
 void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::onMessage]");
@@ -76,26 +57,21 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
 
         if (isHost)
         {
-            std::string playerCharacter;
-            bool isReady = parseLobbyMessage(message, playerCharacter);
+            MultiplayerLobbyData multiplayerLobbyData;
+            parseLobbyMessage(message, multiplayerLobbyData);
 
-            if(isReady)
+            if(multiplayerLobbyData.mIsReady)
             {
-                setPlayerReady(sender, playerCharacter);
-
-                if(mEvents)
-                {
-                    mEvents->onPlayerReady(sender);
-                }
+                setPlayerReady(sender, multiplayerLobbyData.mCharacterName);
             }
             else
             {
                 resetPlayerReady(sender);
+            }
 
-                if(mEvents)
-                {
-                    mEvents->onPlayerNotReady(sender);
-                }
+            if(mEvents)
+            {
+                mEvents->onLobbyMessage(sender, multiplayerLobbyData);
             }
 
             checkAllPlayersReadyOrNot();
@@ -113,7 +89,6 @@ void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const 
         if(flags & FLAG_IS_EJECTED)
         {
             removePlayer(sender);
-            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerEjected(sender);
             checkAllPlayersReadyOrNot();
         }
@@ -128,7 +103,6 @@ void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const 
         if(flags & FLAG_LEFT)
         {
             removePlayer(sender);
-            mEvents->onPlayerNotReady(sender);
             mEvents->onPlayerLeft(sender);
             checkAllPlayersReadyOrNot();
         }
@@ -140,6 +114,7 @@ void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const 
 
         if(flags & FLAG_RECONFIGURED_BY_HOST)
         {
+            int a = 12;
         }
 
         if(flags & FLAG_RECONFIGURE_FAIL)
@@ -181,7 +156,9 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
             {
                 if(mEvents)
                 {
-                    MultiplayerSessionStartInfo sessionStartInfo(room.getReservedPlayersNumber(), players, q, 
+                    MultiplayerSessionStartInfo sessionStartInfo(
+                        room.getReservedPlayersNumber(), 
+                        players, q, 
                         mLobby->isHost(), 
                         mAISkins, mAllPlayers, "");
                     mEvents->onSessionStart(sessionStartInfo);
@@ -256,8 +233,7 @@ void MultiplayerControllerMaster::switchedToMainMenu()
 
 void MultiplayerControllerMaster::reconfigureSession(size_t aiAmount)
 {
-    size_t totalNumber = 12 - aiAmount;
-    mLobby->reconfigure(totalNumber, aiAmount);
+    mLobby->reconfigure(12, aiAmount);
 }
 
 void MultiplayerControllerMaster::addPlayer(const std::string& playerName)

@@ -13,7 +13,6 @@ public:
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override{assert(false);return false;}
 
     void setAISkins(const std::vector<std::string>& aiSkins){mAISkins = aiSkins;}
-    bool saySessionReady(const std::string& playerCharacter, bool isReady)override;
 
     void switchedToMainMenu()override;
 
