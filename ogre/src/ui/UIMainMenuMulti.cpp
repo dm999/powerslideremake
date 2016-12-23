@@ -58,27 +58,45 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
     {
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            Ogre::Vector4 posReady = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
-            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posReady.x, posReady.y, 60, 26, MyGUI::Align::Default, "Middle");
+            Ogre::Vector4 posReady = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
+            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posReady.x, posReady.y, posReady.z, posReady.w, MyGUI::Align::Default, "Middle");
             mWidgetJoin->setCaption("Ready");
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
 
-            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 0.0f, 0.0f);
-            mWidgetStart = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, 60, 26, MyGUI::Align::Default, "Middle");
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 40.0f, 12.0f);
+            mWidgetStart = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
             mWidgetStart->setCaption("Start");
             mWidgetStart->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
             mWidgetStart->setEnabled(false);
 
-            Ogre::Vector4 posRecalc = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 0.0f, 0.0f);
-            mWidgetRecalc = gui->createWidget<MyGUI::Button>("Button", posRecalc.x, posRecalc.y, 60, 26, MyGUI::Align::Default, "Middle");
+            Ogre::Vector4 posRecalc = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 40.0f, 12.0f);
+            mWidgetRecalc = gui->createWidget<MyGUI::Button>("Button", posRecalc.x, posRecalc.y, posRecalc.z, posRecalc.w, MyGUI::Align::Default, "Middle");
             mWidgetRecalc->setCaption("Recalc");
             mWidgetRecalc->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
             mWidgetRecalc->setEnabled(false);
+
+            Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(440.0f, 80.0f, 60.0f, 12.0f);
+            mWidgetTrack = gui->createWidget<MyGUI::ComboBox>("ComboBox", posTrack.x, posTrack.y, posTrack.z, posTrack.w, MyGUI::Align::Default, "Middle");
+            mWidgetTrack->addItem("desert track");
+            mWidgetTrack->addItem("speedway track");
+            mWidgetTrack->addItem("dam");
+            mWidgetTrack->addItem("mountain forest track");
+            mWidgetTrack->addItem("mineshaft");
+            mWidgetTrack->addItem("alpine track");
+            mWidgetTrack->addItem("city track");
+            mWidgetTrack->addItem("nutopia track");
+            mWidgetTrack->addItem("stunt track");
+            mWidgetTrack->addItem("luge track");
+            mWidgetTrack->addItem("Foxnhound1 track");
+            mWidgetTrack->addItem("Foxnhound2 track");
+            mWidgetTrack->setIndexSelected(0);
+            mWidgetTrack->setEditReadOnly(true);
+            mWidgetTrack->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
         }
         else
         {
-            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
-            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, 60, 26, MyGUI::Align::Default, "Middle");
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
+            mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
             mWidgetJoin->setCaption("Ready");
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
         }
@@ -125,15 +143,7 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
         }
 
-        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession();
-    }
-
-    if(sender == mWidgetRecalc)
-    {
-        size_t aiAmount = 2;
-        mModeContext.getGameState().setAICount(aiAmount);
-        mMenuMultiMode->recalculateCharacterNames();
-        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(aiAmount);
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName());
     }
 
     if(sender == mWidgetJoin)
@@ -150,6 +160,22 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
         }
 
         bool success = mMenuMultiMode->getMultiplayerController()->saySessionReady(mModeContext.mGameState.getPlayerCar().getCharacterName(), changeToReady);
+    }
+
+    if(sender == mWidgetRecalc)
+    {
+        size_t aiAmount = 2;
+        mModeContext.getGameState().setAICount(aiAmount);
+        mMenuMultiMode->recalculateCharacterNames();
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(aiAmount);
+    }
+}
+
+void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
+{
+    if(sender == mWidgetTrack)
+    {
+        mModeContext.getGameState().setRaceParameters(mWidgetTrack->getItem(index), Insane);
     }
 }
 

@@ -181,7 +181,10 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
             {
                 if(mEvents)
                 {
-                    mEvents->onSessionStart(MultiplayerSessionStartInfo(room.getReservedPlayersNumber(), players, q, mLobby->isHost(), mAISkins, mAllPlayers));
+                    MultiplayerSessionStartInfo sessionStartInfo(room.getReservedPlayersNumber(), players, q, 
+                        mLobby->isHost(), 
+                        mAISkins, mAllPlayers, "");
+                    mEvents->onSessionStart(sessionStartInfo);
                 }
             }
         }
@@ -196,7 +199,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
     }
 }
 
-void MultiplayerControllerMaster::startSession()
+void MultiplayerControllerMaster::startSession(const std::string& trackName)
 {
     const bool isHost = mLobby->isHost();
 
@@ -235,6 +238,9 @@ void MultiplayerControllerMaster::startSession()
 
             //host info
             {
+                jsonxx::Object jsonObjectHostInfo;
+                jsonObjectHostInfo << "trackName" << trackName;
+                jsonObject << "hostinfo" << jsonObjectHostInfo;
             }
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::startSession]: start session");

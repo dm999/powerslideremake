@@ -14,6 +14,7 @@ namespace MyGUI
     class Gui;
     class Widget;
     class Button;
+    class ComboBox;
     class ListBox;
 }
 
@@ -29,6 +30,7 @@ public:
     void load(MyGUI::Gui* gui, const GameState& gameState);
 
     void processButtonClick(MyGUI::Widget* sender);
+    void processChangeComboBox(MyGUI::Widget* sender, size_t index);
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
@@ -51,6 +53,7 @@ private:
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
     MyGUI::Button* mWidgetRecalc;
+    MyGUI::ComboBox* mWidgetTrack;
 
     MyGUI::ListBox* mWidgetEvents;
 };

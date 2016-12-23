@@ -2495,7 +2495,7 @@ MultiplayerSessionStartInfo</y:NodeLabel>
           <y:Geometry height="170.05908678035712" width="273.1359434396013" x="17143.4320282802" y="-1795.0295433901802"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="257.4296875" x="7.853127969799971" y="9.52368401517856">&lt;&lt;MultiplayerData.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="257.4296875" x="7.853127969799971" y="2.17309807767856">&lt;&lt;MultiplayerData.h&gt;&gt;
 
 MultiplayerSessionStartInfo
 
@@ -2504,7 +2504,8 @@ std::vector&lt;std::string&gt; mPlayers
 size_t mPlayerIndex
 bool mIsHost
 std::vector&lt;std::string&gt; mAISkins
-std::map&lt;std::string, std::string&gt; mPlayersSkins</y:NodeLabel>
+std::map&lt;std::string, std::string&gt; mPlayersSkins
+std::string mTrackName</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2582,7 +2583,7 @@ void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room
 void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, uint8_t flags)override
 void onSessionStart(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, multislider::SessionPtr session, const std::string &amp; sessionData)override
 
-void startSession()
+void startSession(const std::string&amp; trackName)
 
 private:
 

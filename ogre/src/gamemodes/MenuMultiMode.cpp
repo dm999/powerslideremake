@@ -105,6 +105,11 @@ void MenuMultiMode::onSessionStart(const MultiplayerSessionStartInfo& multiplaye
 {
     mMultiplayerSessionStartInfo = multiplayerSessionStartInfo;
 
+    if(!mMultiplayerSessionStartInfo.mIsHost)
+    {
+        mModeContext.getGameState().setRaceParameters(mMultiplayerSessionStartInfo.mTrackName, Insane);
+    }
+
     mModeContext.getGameModeSwitcher()->switchMode(ModeRaceMulti);
 }
 
