@@ -15,7 +15,7 @@ namespace DE2
      * Conversion to batch oriented approach performed through intermidiate state of MSH file
      * MSH file is separated by parts with merged texture coordinates
      * MSH useful to load scene into editors (blender, 3dsmax, etc.)
-     * In MSH information about texture type (lit or decal) was lost
+     * In MSH information about texture type (lit or decal) captured in isDecalTexture array
      */
 
     /**

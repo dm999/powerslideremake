@@ -287,7 +287,7 @@ jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionDat
     return jsonObject;
 }
 
-bool MultiplayerController::parseLobbyReadyMessage(const std::string& message, std::string& characterName)
+bool MultiplayerController::parseLobbyMessage(const std::string& message, std::string& characterName)
 {
     bool res = false;
     characterName = "frantic";
@@ -307,7 +307,7 @@ bool MultiplayerController::parseLobbyReadyMessage(const std::string& message, s
     return res;
 }
 
-jsonxx::Object MultiplayerController::fillLobbyReadyMessage(const std::string& characterName, bool isReady)
+jsonxx::Object MultiplayerController::fillLobbyMessage(const std::string& characterName, bool isReady)
 {
     jsonxx::Object jsonObject;
 

@@ -42,8 +42,8 @@ protected:
     void onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()override;
 
 
-    static bool parseLobbyReadyMessage(const std::string& message, std::string& characterName);
-    static jsonxx::Object fillLobbyReadyMessage(const std::string& characterName, bool isReady);
+    static bool parseLobbyMessage(const std::string& message, std::string& characterName);
+    static jsonxx::Object fillLobbyMessage(const std::string& characterName, bool isReady);
 
     static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
     static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);

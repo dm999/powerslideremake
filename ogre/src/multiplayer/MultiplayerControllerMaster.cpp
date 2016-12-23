@@ -53,7 +53,7 @@ bool MultiplayerControllerMaster::saySessionReady(const std::string& playerChara
 
     try{
 
-        mLobby->say(fillLobbyReadyMessage(playerCharacter, isReady).json(), true);
+        mLobby->say(fillLobbyMessage(playerCharacter, isReady).json(), true);
 
     }catch(const std::runtime_error& err)
     {
@@ -77,7 +77,7 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
         if (isHost)
         {
             std::string playerCharacter;
-            bool isReady = parseLobbyReadyMessage(message, playerCharacter);
+            bool isReady = parseLobbyMessage(message, playerCharacter);
 
             if(isReady)
             {

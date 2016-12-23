@@ -79,7 +79,7 @@ bool MultiplayerControllerSlave::saySessionReady(const std::string& playerCharac
 
     try{
 
-        mLobby->say(fillLobbyReadyMessage(playerCharacter, isReady).json(), true);
+        mLobby->say(fillLobbyMessage(playerCharacter, isReady).json(), true);
 
     }catch(const std::runtime_error& err)
     {
@@ -97,7 +97,7 @@ void MultiplayerControllerSlave::onMessage(multislider::Lobby* lobby, const mult
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onMessage]: message [" + Ogre::String(message) + "]");
 
         std::string playerCharacter;
-        bool isReady = parseLobbyReadyMessage(message, playerCharacter);
+        bool isReady = parseLobbyMessage(message, playerCharacter);
 
         if(isReady)
         {

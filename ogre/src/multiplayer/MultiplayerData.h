@@ -7,6 +7,9 @@
 
 #include "../includes/OgreInclude.h"
 
+/**
+ * Data packet during racing session
+ */
 struct MultiplayerSessionData
 {
     Ogre::Vector3 pos;
@@ -39,6 +42,11 @@ struct MultiplayerSessionData
     }
 };
 
+/**
+ * Used for switch between multi menu mode to multi race mode:
+ * multiplayer controller execute onSessionStart when GameModeSwitcher is in menu mode
+ * this structure used to pass data into racing mode
+ */
 struct MultiplayerSessionStartInfo
 {
     MultiplayerSessionStartInfo(){}
