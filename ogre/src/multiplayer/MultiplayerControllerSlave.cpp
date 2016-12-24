@@ -138,63 +138,65 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
     std::string trackName = "dam";
 
     try{
-        if (!lobby->isHost())
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onSessionStart]: message [" + Ogre::String(sessionData) + "]");
+
+        mAIDataTimestamp = 0;
+
+        jsonxx::Object jsonObjectBase;
+        jsonObjectBase.parse(sessionData);
+
+
+        //humandata
         {
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onSessionStart]: message [" + Ogre::String(sessionData) + "]");
+            jsonxx::Array jsonArray = jsonObjectBase.get<jsonxx::Array>("humandata");
 
-            mAIDataTimestamp = 0;
-
-            mAIPlayersSessionData.clear();
-
-            for(size_t q = 0; q < room.getReservedPlayersNumber(); ++q)
+            for(size_t q = 0; q < jsonArray.size(); ++q)
             {
-                mAIPlayersSessionData.push_back(MultiplayerSessionData());
-            }
-
-            jsonxx::Object jsonObjectBase;
-            jsonObjectBase.parse(sessionData);
-
-
-            //humandata
-            {
-                jsonxx::Array jsonArray = jsonObjectBase.get<jsonxx::Array>("humandata");
-
-                for(size_t q = 0; q < jsonArray.size(); ++q)
+                jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
+                if(jsonObject.has<jsonxx::String>("name") && jsonObject.has<jsonxx::String>("cartype"))
                 {
-                    jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
-                    if(jsonObject.has<jsonxx::String>("name") && jsonObject.has<jsonxx::String>("cartype"))
-                    {
-                        readyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), jsonObject.get<jsonxx::String>("cartype")));
-                    }
-                }
-            }
-
-            //aidata
-            {
-                jsonxx::Array jsonArray = jsonObjectBase.get<jsonxx::Array>("aidata");
-
-                for(size_t q = 0; q < jsonArray.size(); ++q)
-                {
-                    jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
-                    if(jsonObject.has<jsonxx::String>("cartype"))
-                    {
-                        aiSkins.push_back(jsonObject.get<jsonxx::String>("cartype"));
-                    }
-                }
-            }
-
-            //hostdata
-            {
-                jsonxx::Object jsonObjectHostInfo = jsonObjectBase.get<jsonxx::Object>("hostinfo");
-
-                if(jsonObjectHostInfo.has<jsonxx::String>("trackName"))
-                {
-                    trackName = jsonObjectHostInfo.get<jsonxx::String>("trackName");
+                    readyPlayers.insert(std::make_pair(jsonObject.get<jsonxx::String>("name"), jsonObject.get<jsonxx::String>("cartype")));
                 }
             }
         }
 
-        //human
+        //aidata
+        {
+            jsonxx::Array jsonArray = jsonObjectBase.get<jsonxx::Array>("aidata");
+
+            for(size_t q = 0; q < jsonArray.size(); ++q)
+            {
+                jsonxx::Object jsonObject = jsonArray.get<jsonxx::Object>(q);
+                if(jsonObject.has<jsonxx::String>("cartype"))
+                {
+                    aiSkins.push_back(jsonObject.get<jsonxx::String>("cartype"));
+                }
+            }
+        }
+
+        //hostdata
+        {
+            jsonxx::Object jsonObjectHostInfo = jsonObjectBase.get<jsonxx::Object>("hostinfo");
+
+            if(jsonObjectHostInfo.has<jsonxx::String>("trackName"))
+            {
+                trackName = jsonObjectHostInfo.get<jsonxx::String>("trackName");
+            }
+        }
+
+
+
+        //init AI data
+        mAIPlayersSessionData.clear();
+
+        for(size_t q = 0; q < aiSkins.size(); ++q)
+        {
+            mAIPlayersSessionData.push_back(MultiplayerSessionData());
+        }
+
+
+        //init human data
         mOtherPlayersSessionData.clear();
 
         const std::vector<std::string> players = room.getPlayers();
@@ -216,7 +218,6 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
                 if(mEvents)
                 {
                     MultiplayerSessionStartInfo sessionStartInfo(
-                        room.getReservedPlayersNumber(), 
                         players, q, 
                         mLobby->isHost(), 
                         aiSkins, readyPlayers,

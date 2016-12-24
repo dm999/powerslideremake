@@ -310,8 +310,10 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
 
 void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo)
 {
+    size_t aiCount = sessionStartInfo.mAISkins.size();
+
     //playerIndex should start from 0
-    mModeContext.mGameState.getPlayerCar().setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[sessionStartInfo.mAIAmount + sessionStartInfo.mPlayerIndex]);
+    mModeContext.mGameState.getPlayerCar().setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + sessionStartInfo.mPlayerIndex]);
 
     mModeContext.mGameState.clearMultiplayerCarsHuman();
     mModeContext.mGameState.setMultiplayerCountAI(0);
@@ -339,7 +341,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[sessionStartInfo.mAIAmount + q]);
+                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
 
                 mLapController.addCar(&humanCar);
             }
@@ -368,16 +370,16 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[sessionStartInfo.mAIAmount + q]);
+                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
 
                 mLapController.addCar(&humanCar);
             }
         }
 
         //AI
-        mModeContext.mGameState.setMultiplayerCountAI(sessionStartInfo.mAIAmount);
+        mModeContext.mGameState.setMultiplayerCountAI(aiCount);
 
-        for(size_t q = 0; q < sessionStartInfo.mAIAmount; ++q)
+        for(size_t q = 0; q < aiCount; ++q)
         {
             std::string aiCharacter = "frantic";
             if(sessionStartInfo.mAISkins.size() > q)

@@ -38,7 +38,7 @@ private:
     std::map<std::string, bool> mReadyPlayers;
     std::map<std::string, std::string> mAllPlayers;
 
-    std::vector<std::string> mAISkins;
+    std::vector<std::string> mAISkins;//size == aiCount
 };
 
 #endif

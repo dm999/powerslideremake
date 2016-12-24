@@ -114,7 +114,6 @@ void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const 
 
         if(flags & FLAG_RECONFIGURED_BY_HOST)
         {
-            int a = 12;
         }
 
         if(flags & FLAG_RECONFIGURE_FAIL)
@@ -157,7 +156,6 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
                 if(mEvents)
                 {
                     MultiplayerSessionStartInfo sessionStartInfo(
-                        room.getReservedPlayersNumber(), 
                         players, q, 
                         mLobby->isHost(), 
                         mAISkins, mAllPlayers, "");

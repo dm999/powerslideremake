@@ -81,22 +81,20 @@ struct MultiplayerSessionStartInfo
     MultiplayerSessionStartInfo(){}
 
     MultiplayerSessionStartInfo(
-        uint32_t aiAmount,
         const std::vector<std::string>& players,
         size_t playerIndex, bool isHost,
         const std::vector<std::string>& aiSkins,
         const std::map<std::string, std::string>& playersSkins,
         const std::string& trackName) :
-        mAIAmount(aiAmount), mPlayers(players), mPlayerIndex(playerIndex),
+        mPlayers(players), mPlayerIndex(playerIndex),
         mIsHost(isHost), mAISkins(aiSkins), mPlayersSkins(playersSkins),
         mTrackName(trackName)
     {}
 
-    uint32_t mAIAmount;
     std::vector<std::string> mPlayers;
     size_t mPlayerIndex;
     bool mIsHost;
-    std::vector<std::string> mAISkins;
+    std::vector<std::string> mAISkins;//size == aiCount
     std::map<std::string, std::string> mPlayersSkins;
     std::string mTrackName;
 };
