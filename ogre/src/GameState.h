@@ -57,6 +57,7 @@ public:
     const STRRacecrud& getSTRRacecrud() const;
 
     std::string getTrackName() const {return mTrackName;}
+    std::string getTrackNameAsOriginal() const;
 
     void setAICharacters(const std::vector<std::string>& aiCharacters){mAICharacters = aiCharacters;}
     std::vector<std::string> getAICharacters()const{return mAICharacters;}

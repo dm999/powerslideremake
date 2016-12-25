@@ -114,6 +114,16 @@ const STRRacecrud& GameState::getSTRRacecrud() const
     return mSTRRacecrud;
 }
 
+std::string GameState::getTrackNameAsOriginal() const
+{
+    std::string res = mTrackName;
+
+    if(res == "speedway night track")
+        res = "speedway track";
+
+    return res;
+}
+
 PSAICar& GameState::getAICar(size_t index)
 {
     if(index >= mAIMax)

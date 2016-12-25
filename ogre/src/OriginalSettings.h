@@ -65,6 +65,13 @@ public:
 
     void parse(const PFLoader& pfLoaderStore);
 
+    std::string getBaseCarFromCar(const std::string& car) const;
+    std::string getCarFromCharacter(const std::string& character) const;
+    std::vector<std::string> getCharactersByBaseCar(const std::string& car)const;
+    std::string getTrackTitle(const std::string& track)const;
+    std::string getCarTitle(const std::string& car)const;
+    std::string getCharacterTitle(const std::string& character)const;
+
     Ogre::ColourValue getTrackSkyColor(const std::string& trackName) const;
     Ogre::ColourValue getTrackAmbientColor(const std::string& trackName) const;
     Ogre::ColourValue getTrackTimeTrialColor(const std::string& trackName) const;

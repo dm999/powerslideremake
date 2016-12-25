@@ -55,6 +55,7 @@ private:
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
     MyGUI::ComboBox* mWidgetTrack;
+    MyGUI::ComboBox* mWidgetCar;
     MyGUI::ComboBox* mWidgetCharacter;
     MyGUI::ComboBox* mWidgetAICount;
 

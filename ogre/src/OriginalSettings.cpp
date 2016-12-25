@@ -194,6 +194,121 @@ void STRPowerslide::parse(const PFLoader& pfLoaderStore)
     STRSettings::parse(pfLoaderStore, "", "powerslide.str");
 }
 
+std::string STRPowerslide::getBaseCarFromCar(const std::string& car)const
+{
+    std::string res = car;
+
+    std::string baseCar = getValue(car + " parameters", "base car", "unknown");
+    if(baseCar != "unknown")
+    {
+        res = baseCar;
+    }
+
+    return res;
+}
+
+std::string STRPowerslide::getCarFromCharacter(const std::string& character)const
+{
+    std::string res = getValue(character + " parameters", "car", "feral max");
+
+    return res;
+}
+
+std::vector<std::string> STRPowerslide::getCharactersByBaseCar(const std::string& car)const
+{
+    std::vector<std::string> res;
+
+    std::vector<std::string> availChars = getArrayValue("", "available characters");
+
+    for(size_t q = 0; q < availChars.size(); ++q)
+    {
+        std::string baseCar = getBaseCarFromCar(getCarFromCharacter(availChars[q]));
+        if(baseCar == car)
+            res.push_back(availChars[q]);
+    }
+
+    return res;
+}
+
+std::string STRPowerslide::getTrackTitle(const std::string& track)const
+{
+    std::string res = getValue(track + " parameters", "english", track);
+
+    return res;
+}
+
+std::string STRPowerslide::getCarTitle(const std::string& car)const
+{
+    std::map<std::string, std::string> originalToTitle;
+    originalToTitle["feral max"] = "Warthog";
+    originalToTitle["mustang"] = "Big Heaver";
+    originalToTitle["pickup"] = "Pickup";
+    originalToTitle["exotic"] = "Sabre";
+    originalToTitle["orc"] = "Orc";
+    originalToTitle["skeeto"] = "Skeeto";
+    originalToTitle["supercar"] = "Supercar";
+
+    std::string res = originalToTitle[car];
+
+    return res;
+}
+
+std::string STRPowerslide::getCharacterTitle(const std::string& character)const
+{
+    std::map<std::string, std::string> originalToTitle;
+    originalToTitle["frantic"] = "Fran Tick";
+    originalToTitle["cyber"] = "Cyberasta";
+    originalToTitle["radiation"] = "Radiation Boy";
+    originalToTitle["zig"] = "Blade";
+    originalToTitle["zag"] = "Chain";
+    originalToTitle["beryl"] = "Feryl";
+    originalToTitle["stig"] = "Stig Mata";
+
+    originalToTitle["dodgy"] = "Dodgy Dave";
+    originalToTitle["pepper"] = "Boris";
+    originalToTitle["colonel"] = "Colonel Slanders";
+    originalToTitle["furnace"] = "Furnace Chan";
+    originalToTitle["pablo"] = "Pablo Martinez";
+    originalToTitle["dwayne"] = "Dwayne Schmitt";
+    originalToTitle["massie"] = "Chopper";
+
+    originalToTitle["jean"] = "Jean-Marc Laplace";
+    originalToTitle["hemp"] = "Hemp Girl";
+    originalToTitle["hardy"] = "Hardy Buckmeister";
+    originalToTitle["bill"] = "William Grates";
+    originalToTitle["upjohn"] = "Upjohn Worthington";
+    originalToTitle["bendito"] = "Bendito Mescalini";
+
+    originalToTitle["marl"] = "Mal Burro";
+    originalToTitle["yukio"] = "Yukio";
+    originalToTitle["bimbeau"] = "Bimbeau Escargeaugeau";
+    originalToTitle["miki"] = "Miki Yamamoto";
+    originalToTitle["rosie"] = "Rosie Crippler";
+    originalToTitle["cinnamon"] = "Cinnamon Conrad";
+
+    originalToTitle["crayz"] = "CrayZ 1000";
+    originalToTitle["mad"] = "Mad Vlad Alexovich";
+    originalToTitle["max"] = "Max Alexovich";
+
+    originalToTitle["driverx"] = "Driver X";
+    originalToTitle["chuck"] = "Chuck Schmitt";
+    originalToTitle["punch"] = "Punch";
+
+    originalToTitle["mach"] = "Mach";
+    originalToTitle["armadillo"] = "Armadillo";
+    originalToTitle["alter"] = "Alter";
+    originalToTitle["komodo"] = "Komodo";
+    originalToTitle["panther"] = "Panther";
+    originalToTitle["volt"] = "Volt";
+    originalToTitle["razer"] = "Razer";
+    originalToTitle["argon"] = "Argo";
+
+
+    std::string res = originalToTitle[character];
+
+    return res;
+}
+
 Ogre::ColourValue STRPowerslide::getTrackSkyColor(const std::string& trackName) const
 {
     Ogre::ColourValue ret;

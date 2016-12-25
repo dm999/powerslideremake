@@ -1109,7 +1109,7 @@ Ogre::Real mLapPosition</y:NodeLabel>
           <y:Geometry height="2660.8924341783104" width="608.5912499495803" x="11335.70437502521" y="-9190.446217089155"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2562.00390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="49.44426396415474">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2664.912109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="-2.009837598345257">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1129,6 +1129,7 @@ const STRPowerslide&amp; getSTRPowerslide() const
 const STRRacecrud&amp; getSTRRacecrud() const
 
 std::string getTrackName() const
+std::string getTrackNameAsOriginal() const
 
 void setAICharacters(const std::vector&lt;std::string&gt;&amp; chars)
 
@@ -1229,8 +1230,14 @@ void removeMultiplayerCarHuman(const std::string&amp; playerName)
 
 private:
 
-std::string mPSOriginalPath
 std::string mTrackName
+
+bool mOriginalDataInited
+PFLoader mPFLoaderData
+PFLoader mPFLoaderGameshell
+PFLoader mPFLoaderStore
+STRPowerslide mSTRPowerslide
+STRRacecrud mSTRRacecrud
 
 static const int mAIMax = 11
 
@@ -2653,6 +2660,112 @@ size_t mAICount</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n63">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="464.20539942905543" width="600.4139445734068" x="10049.283554875077" y="-8812.102699714527"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="582.267578125" x="9.073183224203603" y="9.585121589527262">&lt;&lt;OriginalSettings.h&gt;&gt;
+
+STRSettings
+
+public:
+
+void parse(const PFLoader&amp; pfLoaderStore, const std::string&amp; relativeDir, const std::string&amp; fileName)
+
+std::string getValue(const std::string&amp; section, const std::string&amp; key, const std::string&amp; defaultVal = "") const
+
+std::vector&lt;std::string&gt; getArrayValue(const std::string&amp; section, const std::string&amp; key, bool&amp; isFound) const
+std::vector&lt;std::string&gt; getArrayValue(const std::string&amp; section, const std::string&amp; key) const
+
+Ogre::Vector4 getArray4Value(const std::string&amp; section, const std::string&amp; key, bool&amp; isFound) const
+Ogre::Vector4 getArray4Value(const std::string&amp; section, const std::string&amp; key) const
+
+Ogre::Vector3 getArray3Value(const std::string&amp; section, const std::string&amp; key) const
+
+Ogre::Vector2 getArray2Value(const std::string&amp; section, const std::string&amp; key) const
+
+float getFloatValue(const std::string&amp; section, const std::string&amp; key, bool&amp; isFound) const
+float getFloatValue(const std::string&amp; section, const std::string&amp; key) const
+
+int getIntValue(const std::string&amp; section, const std::string&amp; key, bool&amp; isFound) const
+int getIntValue(const std::string&amp; section, const std::string&amp; key) const
+
+protected:
+
+CSimpleIniA mSTR
+bool mIsSTRLoaded</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n64">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="431.7379731226456" width="653.4593171303563" x="10022.760868596602" y="-8075.868986561323"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="629.59375" x="11.932783565178397" y="8.052580311322345">&lt;&lt;OriginalSettings.h&gt;&gt;
+
+STRPowerslide
+
+public:
+
+void parse(const PFLoader&amp; pfLoaderStore)
+
+std::string getBaseCarFromCar(const std::string&amp; car) const
+std::string getCarFromCharacter(const std::string&amp; character) const
+std::vector&lt;std::string&gt; getCharactersByBaseCar(const std::string&amp; car)const
+std::string getTrackTitle(const std::string&amp; car)const
+std::string getCarTitle(const std::string&amp; car)const
+std::string getCharacterTitle(const std::string&amp; character)const
+
+Ogre::ColourValue getTrackSkyColor(const std::string&amp; trackName) const
+Ogre::ColourValue getTrackAmbientColor(const std::string&amp; trackName) const
+Ogre::ColourValue getTrackTimeTrialColor(const std::string&amp; trackName) const
+Ogre::ColourValue getCharacterSpecularColor(const std::string&amp; trackName, const std::string&amp; characterName) const
+std::string getExclusionFile(const std::string&amp; trackName) const
+std::string getBaseDir(const std::string&amp; trackName) const
+std::string getDataSubDir(const std::string&amp; trackName) const
+size_t getLapsCount(const std::string&amp; trackName) const
+Ogre::Vector3 getFinishCameraPos(const std::string&amp; trackName) const
+
+private:
+
+Ogre::ColourValue parseColor(const std::string&amp; val) const</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n65">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="146.50477370542194" width="281.9130653844727" x="10775.260484102959" y="-8053.252386852711"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="239.46484375" x="21.22411081723658" y="19.798285290210515">&lt;&lt;OriginalSettings.h&gt;&gt;
+
+STRRacecrud
+
+public:
+
+void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n66">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="37.27627252126149" width="91.21585033136864" x="9884.392074834315" y="-8598.63813626063"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="70.0234375" x="10.596206415684719" y="9.287550323129835">CSimpleIniA</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:PolyLineEdge>
@@ -3309,6 +3422,56 @@ size_t mAICount</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e60" source="n64" target="n63">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e61" source="n65" target="n63">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e62" source="n65" target="n18">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e63" source="n64" target="n18">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e64" source="n66" target="n63">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
