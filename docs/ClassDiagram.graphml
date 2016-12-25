@@ -1109,7 +1109,7 @@ Ogre::Real mLapPosition</y:NodeLabel>
           <y:Geometry height="2660.8924341783104" width="608.5912499495803" x="11335.70437502521" y="-9190.446217089155"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2547.302734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="56.79484990165474">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2562.00390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="49.44426396415474">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1120,6 +1120,7 @@ void initOriginalData(const std::string&amp; originalPathData, const std::string
 bool isOriginalDataInited()const
 
 void setRaceParameters(const std::string&amp; trackName, AIStrength aiStrength)
+void setRaceParameters(const std::string&amp; trackName, AIStrength aiStrength, size_t lapsCount)
 
 const PFLoader&amp; getPFLoaderData() const
 const PFLoader&amp; getPFLoaderGameshell() const

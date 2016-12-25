@@ -53,7 +53,7 @@ namespace multislider
 
         jsonxx::Object makeEnvelop(const jsonxx::Object & obj) const;
 
-        void sendTcpMessage(const std::string & message) const;
+        void sendTcpMessage(const std::string & message, bool isSendInstantly = false) const;
 
         Lobby(const Lobby &);
         Lobby & operator=(const Lobby &);

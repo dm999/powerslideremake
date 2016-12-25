@@ -81,10 +81,10 @@ public:
 #endif
 
 	/// Sends a byte stream
-	virtual void Send( const char *data, unsigned int length, const SystemAddress &systemAddress, bool broadcast );
+	virtual void Send( const char *data, unsigned int length, const SystemAddress &systemAddress, bool broadcast , bool isSendInstantly = false);
 
 	// Sends a concatenated list of byte streams
-	virtual bool SendList( const char **data, const unsigned int  *lengths, const int numParameters, const SystemAddress &systemAddress, bool broadcast );
+	virtual bool SendList( const char **data, const unsigned int  *lengths, const int numParameters, const SystemAddress &systemAddress, bool broadcast , bool isSendInstantly = false);
 
 	// Get how many bytes are waiting to be sent. If too many, you may want to skip sending
 	unsigned int GetOutgoingDataBufferSize(SystemAddress systemAddress) const;
@@ -252,7 +252,7 @@ struct RemoteClient
 		outgoingDataMutex.Unlock();
 	}
 	void SetActive(bool a);
-	void SendOrBuffer(const char **data, const unsigned int *lengths, const int numParameters);
+	void SendOrBuffer(const char **data, const unsigned int *lengths, const int numParameters, bool isSendInstantly);
 };
 
 } // namespace RakNet

@@ -66,6 +66,11 @@ void GameState::initOriginalData(const std::string& originalPathData, const std:
 
 void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStrength)
 {
+    setRaceParameters(trackName, aiStrength, mSTRPowerslide.getLapsCount(trackName));
+}
+
+void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount)
+{
     mTrackName = trackName;
 
     mAIStrength = aiStrength;
@@ -76,7 +81,7 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     }
 
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
-    mLapsCount = mSTRPowerslide.getLapsCount(mTrackName);
+    mLapsCount = lapsCount;
 }
 
 const PFLoader& GameState::getPFLoaderData() const

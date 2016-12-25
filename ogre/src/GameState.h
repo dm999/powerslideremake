@@ -48,6 +48,7 @@ public:
     bool isOriginalDataInited()const {return mOriginalDataInited;}
 
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
+    void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
 
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;

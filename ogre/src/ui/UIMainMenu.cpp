@@ -262,16 +262,20 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
         if(mWidgetRooms->getIndexSelected() == MyGUI::ITEM_NONE)
         {
             mWidgetRooms->deleteAllItems();
+            mWidgetRoomPlayers->deleteAllItems();
+
             std::string ip = mWidgetIP->getCaption();
             if(!ip.empty())
             {
                 std::vector<std::string> rooms;
-                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, mPlayersInServerRooms);
+                std::vector<std::pair<size_t, size_t> > playersInServerRooms;
+                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, playersInServerRooms);
                 if(isConnected)
                 {
                     for(size_t q = 0; q < rooms.size(); ++q)
                     {
                         mWidgetRooms->addItem(rooms[q]);
+                        mWidgetRoomPlayers->addItem(Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second));
                     }
                 }
                 else
@@ -312,13 +316,5 @@ void UIMainMenu::processItemSelected(MyGUI::Widget* sender, size_t index)
 {
     if(sender == mWidgetRooms)
     {
-        mWidgetRoomPlayers->deleteAllItems();
-        if(index != MyGUI::ITEM_NONE)
-        {
-            for(size_t q = 0; q < mPlayersInServerRooms[index].size(); ++q)
-            {
-                mWidgetRooms->addItem(mPlayersInServerRooms[index][q]);
-            }
-        }
     }
 }

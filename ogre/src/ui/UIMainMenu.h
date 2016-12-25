@@ -46,8 +46,6 @@ private:
     MyGUI::ListBox* mWidgetRooms;
     MyGUI::ListBox* mWidgetRoomPlayers;
 
-    std::vector<std::vector<std::string> > mPlayersInServerRooms;
-
     //Ogre::PanelOverlayElement* mMainBackground;
     //Ogre::PanelOverlayElement* mBackgroundA;
     //Ogre::PanelOverlayElement* mBackgroundB;
