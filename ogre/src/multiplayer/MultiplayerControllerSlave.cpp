@@ -178,12 +178,6 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
 
         //hostdata
         {
-            jsonxx::Object jsonObjectHostInfo = jsonObjectBase.get<jsonxx::Object>("hostinfo");
-
-            if(jsonObjectHostInfo.has<jsonxx::String>("trackName"))
-            {
-                trackName = jsonObjectHostInfo.get<jsonxx::String>("trackName");
-            }
         }
 
 
@@ -221,8 +215,7 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
                     MultiplayerSessionStartInfo sessionStartInfo(
                         players, q, 
                         mLobby->isHost(), 
-                        aiSkins, readyPlayers,
-                        trackName);
+                        aiSkins, readyPlayers);
                     mEvents->onSessionStart(sessionStartInfo);
                 }
             }

@@ -67,7 +67,7 @@ void MenuMultiMode::doInitData()
     {
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount());
+            bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount(), mModeContext.mGameState.getVersion());
         }
         else
         {

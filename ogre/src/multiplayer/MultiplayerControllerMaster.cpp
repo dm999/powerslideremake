@@ -9,7 +9,7 @@ MultiplayerControllerMaster::MultiplayerControllerMaster(MultiplayerControllerEv
 {
 }
 
-bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)
+bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string& version)
 {
 
     bool res = true;
@@ -20,7 +20,7 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
 
         mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
 
-        multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, "", playersLimits + aiAmount, aiAmount, this);
+        multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, version, playersLimits + aiAmount, aiAmount, this);
         if(status == multislider::Lobby::SUCCESS)
         {
             addPlayer(userName);
@@ -159,7 +159,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
                     MultiplayerSessionStartInfo sessionStartInfo(
                         players, q, 
                         mLobby->isHost(), 
-                        mAISkins, mAllPlayers, "");
+                        mAISkins, mAllPlayers);
                     mEvents->onSessionStart(sessionStartInfo);
                 }
             }
@@ -214,9 +214,6 @@ void MultiplayerControllerMaster::startSession(const std::string& trackName)
 
             //host info
             {
-                jsonxx::Object jsonObjectHostInfo;
-                jsonObjectHostInfo << "trackName" << trackName;
-                jsonObject << "hostinfo" << jsonObjectHostInfo;
             }
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::startSession]: start session");

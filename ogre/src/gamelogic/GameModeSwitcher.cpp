@@ -56,10 +56,12 @@ void GameModeSwitcher::frameEnded()
     bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
     bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceMulti;
 
+    //exit on time - only for single player
     const unsigned long afterFinishTimeThreshold = 10000; // ms
     bool raceOverAndReadyToQuit =   modeRace                                &&
                                     mContext.mGameState.getRaceFinished()   &&
-                                    mContext.mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold;
+                                    mContext.mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold    &&
+                                    mGameMode == ModeRaceSingle;
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {

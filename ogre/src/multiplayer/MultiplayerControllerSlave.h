@@ -9,7 +9,7 @@ public:
     MultiplayerControllerSlave(MultiplayerControllerEvents* events, size_t broadcastInterval);
     virtual ~MultiplayerControllerSlave(){}
 
-    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)override{assert(false); return false;}
+    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string& version)override{assert(false); return false;}
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override;
 
     void switchedToMainMenu()override{}

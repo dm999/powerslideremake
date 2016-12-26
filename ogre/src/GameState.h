@@ -38,6 +38,8 @@ public:
     GameState();
     ~GameState();
 
+    std::string getVersion()const{return mVersion;}
+
     /**
      * init data to read from *.pf and *.str files
      * originalPathData - should contain data.pf, gameshell.pf
@@ -154,6 +156,8 @@ public:
     void removeMultiplayerCarHuman(const std::string& playerName);
 
 private:
+
+    std::string mVersion;
 
     std::string mTrackName;
 

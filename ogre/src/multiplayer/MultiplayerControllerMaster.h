@@ -9,7 +9,7 @@ public:
     MultiplayerControllerMaster(MultiplayerControllerEvents* events, size_t broadcastInterval);
     virtual ~MultiplayerControllerMaster(){}
 
-    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount)override;
+    bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string& version)override;
     bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override{assert(false);return false;}
 
     void setAISkins(const std::vector<std::string>& aiSkins){mAISkins = aiSkins;}

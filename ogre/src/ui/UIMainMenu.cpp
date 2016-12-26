@@ -268,14 +268,23 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
             if(!ip.empty())
             {
                 std::vector<std::string> rooms;
+                std::vector<std::string> roomsDesc;
                 std::vector<std::pair<size_t, size_t> > playersInServerRooms;
-                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, playersInServerRooms);
+                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, roomsDesc, playersInServerRooms);
                 if(isConnected)
                 {
                     for(size_t q = 0; q < rooms.size(); ++q)
                     {
-                        mWidgetRooms->addItem(rooms[q]);
-                        mWidgetRoomPlayers->addItem(Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second));
+                        if((playersInServerRooms[q].first + playersInServerRooms[q].second) < 12)
+                        {
+                            mWidgetRooms->addItem("#00FF00" + rooms[q]);
+                            mWidgetRoomPlayers->addItem("#00FF00" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
+                        }
+                        else
+                        {
+                            mWidgetRooms->addItem("#FF0000" + rooms[q]);
+                            mWidgetRoomPlayers->addItem("#FF0000" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
+                        }
                     }
                 }
                 else
@@ -288,7 +297,11 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
         {
             mModeContext.mGameState.setMultiplayerMaster(false);
             mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
-            mModeContext.mGameState.setMultiplayerRoomName(mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected()));
+
+            std::string roomName = mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected());
+            roomName = roomName.substr(7, roomName.size());
+            mModeContext.mGameState.setMultiplayerRoomName(roomName);
+
             mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
             mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
         }

@@ -3,7 +3,10 @@
 
 #include "GameState.h"
 
+#define GAMEVERSION "1.20.0"
+
 GameState::GameState() :
+    mVersion(GAMEVERSION),
     mOriginalDataInited(false),
     mAiOpponentsAmount(1),
     mLLTObject(NULL),

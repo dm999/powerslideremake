@@ -5,12 +5,13 @@
 #include "multislider/MultiSlider.h"
 #include "multislider/CommonIncludes.h"
 
-bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::pair<size_t, size_t> >& players)const
+bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::string>& roomsDesc, std::vector<std::pair<size_t, size_t> >& players)const
 {
 
     bool res = true;
 
     rooms.clear();
+    roomsDesc.clear();
     players.clear();
 
     try{
@@ -23,6 +24,7 @@ bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::
         for(size_t q = 0; q < roomsGet.size(); ++q)
         {
             rooms.push_back(roomsGet[q].getName());
+            roomsDesc.push_back(roomsGet[q].getDescription());
             players.push_back(std::make_pair(roomsGet[q].getPlayersNumber(), roomsGet[q].getReservedPlayersNumber()));
         }
 
