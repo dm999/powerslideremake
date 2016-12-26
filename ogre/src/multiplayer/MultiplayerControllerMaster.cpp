@@ -114,11 +114,12 @@ void MultiplayerControllerMaster::onRoomUpdate(multislider::Lobby* lobby, const 
 
         if(flags & FLAG_RECONFIGURED_BY_HOST)
         {
+            mEvents->onReconfigure(sender);
         }
 
         if(flags & FLAG_RECONFIGURE_FAIL)
         {
-            assert(false);
+            mEvents->onReconfigureFailed(sender);
         }
 
         if(flags & FLAG_ROOM_CLOSED_BY_HOST)

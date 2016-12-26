@@ -105,11 +105,6 @@ void MenuMultiMode::onSessionStart(const MultiplayerSessionStartInfo& multiplaye
 {
     mMultiplayerSessionStartInfo = multiplayerSessionStartInfo;
 
-    if(!mMultiplayerSessionStartInfo.mIsHost)
-    {
-        mModeContext.getGameState().setRaceParameters(mMultiplayerSessionStartInfo.mTrackName, Insane);
-    }
-
     mModeContext.getGameModeSwitcher()->switchMode(ModeRaceMulti);
 }
 
@@ -150,6 +145,16 @@ void MenuMultiMode::onNewHost(const std::string& player)
     mUIMainMenuMulti->addEvent("New host: " + player);
 }
 
+void MenuMultiMode::onReconfigure(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("Reconfigure: " + player);
+}
+
+void MenuMultiMode::onReconfigureFailed(const std::string& player)
+{
+    mUIMainMenuMulti->addEvent("Reconfigure failed: " + player);
+}
+
 void MenuMultiMode::onRoomClosed(const std::string& player)
 {
     mUIMainMenuMulti->addEvent("room closed: " + player);
@@ -172,6 +177,10 @@ void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerL
     {
         mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
         mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
+        mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
+        mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
+
+        mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
     }
 }
 

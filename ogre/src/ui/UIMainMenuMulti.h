@@ -58,6 +58,8 @@ private:
     MyGUI::ComboBox* mWidgetCar;
     MyGUI::ComboBox* mWidgetCharacter;
     MyGUI::ComboBox* mWidgetAICount;
+    MyGUI::ComboBox* mWidgetAIStrength;
+    MyGUI::ComboBox* mWidgetLapsCount;
 
     MyGUI::ListBox* mWidgetEvents;
 };

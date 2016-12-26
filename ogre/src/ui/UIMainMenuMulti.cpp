@@ -59,18 +59,18 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
     {
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            Ogre::Vector4 posReady = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
+            Ogre::Vector4 posReady = screenAdaptionRelative * Ogre::Vector4(220.0f, 80.0f, 40.0f, 12.0f);
             mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posReady.x, posReady.y, posReady.z, posReady.w, MyGUI::Align::Default, "Middle");
             mWidgetJoin->setCaption("Ready");
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
 
-            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 40.0f, 12.0f);
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(260.0f, 80.0f, 40.0f, 12.0f);
             mWidgetStart = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
             mWidgetStart->setCaption("Start");
             mWidgetStart->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
             mWidgetStart->setEnabled(false);
 
-            Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(400.0f, 80.0f, 60.0f, 12.0f);
+            Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(300.0f, 80.0f, 60.0f, 12.0f);
             mWidgetTrack = gui->createWidget<MyGUI::ComboBox>("ComboBox", posTrack.x, posTrack.y, posTrack.z, posTrack.w, MyGUI::Align::Default, "Middle");
 
             const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
@@ -90,7 +90,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetTrack->setEditReadOnly(true);
             mWidgetTrack->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
 
-            Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(520.0f, 80.0f, 30.0f, 12.0f);
+            Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(420.0f, 80.0f, 30.0f, 12.0f);
             mWidgetAICount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAI.x, posAI.y, posAI.z, posAI.w, MyGUI::Align::Default, "Middle");
             for(size_t q = 0; q < 11; ++q)
                 mWidgetAICount->addItem(Conversions::DMToString(q));
@@ -99,10 +99,32 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetAICount->setEditReadOnly(true);
             mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
 
+
+            Ogre::Vector4 posAIStrength = screenAdaptionRelative * Ogre::Vector4(460.0f, 80.0f, 30.0f, 12.0f);
+            mWidgetAIStrength = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAIStrength.x, posAIStrength.y, posAIStrength.z, posAIStrength.w, MyGUI::Align::Default, "Middle");
+            mWidgetAIStrength->addItem("Novice");
+            mWidgetAIStrength->addItem("Advanced");
+            mWidgetAIStrength->addItem("Expert");
+            mWidgetAIStrength->addItem("Insane");
+
+            mWidgetAIStrength->setIndexSelected(mModeContext.getGameState().getAIStrength());
+            mWidgetAIStrength->setEditReadOnly(true);
+            mWidgetAIStrength->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
+
+
+            Ogre::Vector4 posLapsCount = screenAdaptionRelative * Ogre::Vector4(500.0f, 80.0f, 30.0f, 12.0f);
+            mWidgetLapsCount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posLapsCount.x, posLapsCount.y, posLapsCount.z, posLapsCount.w, MyGUI::Align::Default, "Middle");
+            for(size_t q = 1; q <= 10; ++q)
+                mWidgetLapsCount->addItem(Conversions::DMToString(q));
+
+            mWidgetLapsCount->setIndexSelected(mModeContext.getGameState().getLapsCount() - 1);
+            mWidgetLapsCount->setEditReadOnly(true);
+            mWidgetLapsCount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
+
         }
         else
         {
-            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
+            Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(220.0f, 80.0f, 40.0f, 12.0f);
             mWidgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
             mWidgetJoin->setCaption("Ready");
             mWidgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
@@ -116,7 +138,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
             std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
 
-            Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(460.0f, 60.0f, 60.0f, 12.0f);
+            Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(360.0f, 60.0f, 60.0f, 12.0f);
             mWidgetCar = gui->createWidget<MyGUI::ComboBox>("ComboBox", posCar.x, posCar.y, posCar.z, posCar.w, MyGUI::Align::Default, "Middle");
 
             size_t itemToSelect = 0;
@@ -132,7 +154,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetCar->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
 
 
-            Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(460.0f, 80.0f, 60.0f, 12.0f);
+            Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 60.0f, 12.0f);
             mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
 
             itemToSelect = 0;
@@ -214,7 +236,9 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             "", 
             trackName,
-            mModeContext.mGameState.getAICount());
+            mModeContext.mGameState.getAICount(), 
+            mModeContext.mGameState.getAIStrength(),
+            mModeContext.mGameState.getLapsCount());
     }
 
 }
@@ -225,7 +249,8 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     {
         const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
         std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-        mModeContext.getGameState().setRaceParameters(availTracks[index], Insane);
+        mModeContext.getGameState().setRaceParameters(availTracks[index], mModeContext.getGameState().getAIStrength());
+        mWidgetLapsCount->setIndexSelected(mModeContext.getGameState().getLapsCount() - 1);
     }
 
     if(sender == mWidgetCar)
@@ -265,6 +290,17 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(index);
     }
 
+    if(sender == mWidgetAIStrength)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(index), mModeContext.getGameState().getLapsCount());
+        mMenuMultiMode->recalculateCharacterNames();
+    }
+
+    if(sender == mWidgetLapsCount)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), index + 1);
+    }
+
     updateRoomState();
 }
 
@@ -296,7 +332,9 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             playerMessage, 
             mModeContext.mGameState.getTrackName(),
-            mModeContext.mGameState.getAICount());
+            mModeContext.mGameState.getAICount(),
+            mModeContext.mGameState.getAIStrength(),
+            mModeContext.mGameState.getLapsCount());
     }
     else
     {
@@ -305,6 +343,6 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             playerMessage, 
             "",
-            0);
+            0, 0, 0);
     }
 }

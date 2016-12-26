@@ -20,19 +20,25 @@ struct MultiplayerLobbyData
     //master data only
     std::string mTrackName;
     size_t mAICount;
+    size_t mAIStrength;
+    size_t mLapsCount;
 
     MultiplayerLobbyData(){}
 
     MultiplayerLobbyData(bool isReady, 
         const std::string& characterName, const std::string& playerMessage,
         const std::string& trackName,
-        size_t aiCount
+        size_t aiCount,
+        size_t aiStrength,
+        size_t lapsCount
     ) :
     mIsReady(isReady),
     mCharacterName(characterName),
     mPlayerMessage(playerMessage),
     mTrackName(trackName),
-    mAICount(aiCount)
+    mAICount(aiCount),
+    mAIStrength(aiStrength),
+    mLapsCount(lapsCount)
     {}
 };
 
@@ -109,6 +115,8 @@ public:
     virtual void onPlayerJoined(const std::string& player) = 0;
     virtual void onPlayerLeft(const std::string& player) = 0;
     virtual void onNewHost(const std::string& player) = 0;
+    virtual void onReconfigure(const std::string& player) = 0;
+    virtual void onReconfigureFailed(const std::string& player) = 0;
     virtual void onRoomClosed(const std::string& player) = 0;
     virtual void onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data) = 0;
     virtual void onPlayerAddedToSession(const std::string& player) = 0;

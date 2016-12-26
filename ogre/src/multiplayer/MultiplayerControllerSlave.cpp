@@ -115,6 +115,7 @@ void MultiplayerControllerSlave::onRoomUpdate(multislider::Lobby* lobby, const m
 
         if(flags & FLAG_RECONFIGURED_BY_HOST)
         {
+            mEvents->onReconfigure(sender);
         }
 
         if(flags & FLAG_RECONFIGURE_FAIL)

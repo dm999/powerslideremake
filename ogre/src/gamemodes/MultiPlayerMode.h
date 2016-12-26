@@ -21,6 +21,8 @@ public:
     void onPlayerJoined(const std::string& player)override;
     void onPlayerLeft(const std::string& player)override;
     void onNewHost(const std::string& player)override;
+    void onReconfigure(const std::string& player)override{}
+    void onReconfigureFailed(const std::string& player)override{}
     void onRoomClosed(const std::string& player)override;
     void onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)override{}
     void onPlayerAddedToSession(const std::string& player)override;

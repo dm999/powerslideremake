@@ -18,7 +18,7 @@ public:
     virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount) = 0;
     virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0;
 
-    bool sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount);
+    bool sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount, size_t aiStrength, size_t lapsCount);
 
     virtual void switchedToMainMenu() = 0;
 

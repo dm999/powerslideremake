@@ -53,7 +53,7 @@ void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislide
     }
 }
 
-bool MultiplayerController::sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount)
+bool MultiplayerController::sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount, size_t aiStrength, size_t lapsCount)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::sendLobbyMessage]");
 
@@ -61,7 +61,7 @@ bool MultiplayerController::sendLobbyMessage(bool isReady, const std::string& ch
 
     try{
 
-        MultiplayerLobbyData multiplayerLobbyData(isReady, characterName, playerMessage, trackName, aiCount);
+        MultiplayerLobbyData multiplayerLobbyData(isReady, characterName, playerMessage, trackName, aiCount, aiStrength, lapsCount);
         mLobby->say(fillLobbyMessage(multiplayerLobbyData), true);
 
     }catch(const std::runtime_error& err)
@@ -340,6 +340,16 @@ void MultiplayerController::parseLobbyMessage(const std::string& message, Multip
     {
         data.mAICount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiCount"));
     }
+
+    if(jsonObject.has<jsonxx::Number>("aiStrength"))
+    {
+        data.mAIStrength = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiStrength"));
+    }
+
+    if(jsonObject.has<jsonxx::Number>("lapsCount"))
+    {
+        data.mLapsCount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("lapsCount"));
+    }
 }
 
 std::string MultiplayerController::fillLobbyMessage(const MultiplayerLobbyData& data)
@@ -351,6 +361,8 @@ std::string MultiplayerController::fillLobbyMessage(const MultiplayerLobbyData& 
     jsonObject << "playerMessage" << data.mPlayerMessage;
     jsonObject << "trackName" << data.mTrackName;
     jsonObject << "aiCount" << data.mAICount;
+    jsonObject << "aiStrength" << data.mAIStrength;
+    jsonObject << "lapsCount" << data.mLapsCount;
 
     return jsonObject.json();
 }
