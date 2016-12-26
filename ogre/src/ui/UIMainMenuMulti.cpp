@@ -197,6 +197,8 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
+            mMenuMultiMode->recalculateCharacterNames(static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->getAllPlayersSkins());
+
             std::vector<std::string> gameCars;
             for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
             {
@@ -206,7 +208,7 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
         }
 
-        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName());
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName(), mModeContext.mGameState.getAIStrength(), mModeContext.mGameState.getLapsCount());
     }
 
     if(sender == mWidgetJoin)
@@ -286,14 +288,12 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     if(sender == mWidgetAICount)
     {
         mModeContext.getGameState().setAICount(index);
-        mMenuMultiMode->recalculateCharacterNames();
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(index);
     }
 
     if(sender == mWidgetAIStrength)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(index), mModeContext.getGameState().getLapsCount());
-        mMenuMultiMode->recalculateCharacterNames();
     }
 
     if(sender == mWidgetLapsCount)

@@ -90,9 +90,14 @@ struct MultiplayerSessionStartInfo
         const std::vector<std::string>& players,
         size_t playerIndex, bool isHost,
         const std::vector<std::string>& aiSkins,
-        const std::map<std::string, std::string>& playersSkins) :
+        const std::map<std::string, std::string>& playersSkins,
+        const std::string& trackName,
+        size_t aiStrength, size_t lapsCount) :
         mPlayers(players), mPlayerIndex(playerIndex),
-        mIsHost(isHost), mAISkins(aiSkins), mPlayersSkins(playersSkins)
+        mIsHost(isHost), mAISkins(aiSkins), mPlayersSkins(playersSkins),
+        mTrackName(trackName),
+        mAIStrength(aiStrength),
+        mLapsCount(lapsCount)
     {}
 
     std::vector<std::string> mPlayers;
@@ -100,6 +105,10 @@ struct MultiplayerSessionStartInfo
     bool mIsHost;
     std::vector<std::string> mAISkins;//size == aiCount
     std::map<std::string, std::string> mPlayersSkins;
+
+    std::string mTrackName;
+    size_t mAIStrength;
+    size_t mLapsCount;
 };
 
 typedef std::map<std::string, MultiplayerSessionData> playerToData;

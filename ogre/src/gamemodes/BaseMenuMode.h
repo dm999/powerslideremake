@@ -15,7 +15,7 @@ public:
 
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
-    void recalculateCharacterNames();
+    void recalculateCharacterNames(const std::vector<std::string>& playersCharacters);
 
 protected:
 

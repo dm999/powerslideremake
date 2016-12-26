@@ -64,6 +64,8 @@ Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& su
     {
         res = load(fileToLoad, texturename, group);
         fclose(fileToLoad);
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + filename + "]");
     }
     return res;
 }

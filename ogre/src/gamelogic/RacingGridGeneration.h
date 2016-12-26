@@ -11,7 +11,7 @@ class RacingGridGeneration
 public:
     RacingGridGeneration(){}
 
-    std::vector<std::string> generate(GameState& gameState) const;
+    std::vector<std::string> generate(GameState& gameState, const std::vector<std::string>& playersCharacters) const;
 
 private:
 

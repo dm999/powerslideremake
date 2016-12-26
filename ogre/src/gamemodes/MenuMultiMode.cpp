@@ -105,6 +105,11 @@ void MenuMultiMode::onSessionStart(const MultiplayerSessionStartInfo& multiplaye
 {
     mMultiplayerSessionStartInfo = multiplayerSessionStartInfo;
 
+    if(!mMultiplayerSessionStartInfo.mIsHost)
+    {
+        mModeContext.getGameState().setRaceParameters(mMultiplayerSessionStartInfo.mTrackName, static_cast<AIStrength>(mMultiplayerSessionStartInfo.mAIStrength), mMultiplayerSessionStartInfo.mLapsCount);
+    }
+
     mModeContext.getGameModeSwitcher()->switchMode(ModeRaceMulti);
 }
 

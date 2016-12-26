@@ -29,6 +29,8 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
             img.load(memoryStream, tex_ext);
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TextureLoader::load]: [" + filename + "]");
         }
 
     }
@@ -91,6 +93,8 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
             if(resize) chromaKeyedImg.resize(newSize, newSize);
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, chromaKeyedImg, Ogre::TEX_TYPE_2D);
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TextureLoader::loadChroma]: [" + filename + "]");
         }
 
     }

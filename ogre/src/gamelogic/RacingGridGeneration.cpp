@@ -2,7 +2,7 @@
 
 #include "RacingGridGeneration.h"
 
-std::vector<std::string> RacingGridGeneration::generate(GameState& gameState) const
+std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, const std::vector<std::string>& playersCharacters) const
 {
     std::vector<std::string> res;
 
@@ -27,7 +27,6 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState) co
         aiIndexes = getEasyIndexes();
     }
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
-    std::string playerCharacter = gameState.getPlayerCar().getCharacterName();
 
     for(size_t q = 0; q < gameState.getAICount(); ++q)
     {
@@ -35,24 +34,29 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState) co
     }
 
     //solve collision
-    std::vector<std::string>::iterator found = std::find(res.begin(), res.end(), playerCharacter);
-    if(found != res.end())
+    for(size_t q = 0; q < playersCharacters.size(); ++q)
     {
-        size_t newCharIndex = 0;
-        while(newCharIndex < 12)
-        {
-            std::string newCharName = availableCharacters[aiIndexes[newCharIndex]];
-            if(newCharName != playerCharacter)
-            {
-                std::vector<std::string>::const_iterator foundMore = std::find(res.begin(), res.end(), newCharName);
-                if(foundMore == res.end())
-                {
-                    (*found) = newCharName;
-                    break;
-                }
-            }
+        std::string playerCharacter = playersCharacters[q];
 
-            ++newCharIndex;
+        std::vector<std::string>::iterator found = std::find(res.begin(), res.end(), playerCharacter);
+        if(found != res.end())
+        {
+            size_t newCharIndex = 0;
+            while(newCharIndex < 12)
+            {
+                std::string newCharName = availableCharacters[aiIndexes[newCharIndex]];
+                if(newCharName != playerCharacter)
+                {
+                    std::vector<std::string>::const_iterator foundMore = std::find(res.begin(), res.end(), newCharName);
+                    if(foundMore == res.end())
+                    {
+                        (*found) = newCharName;
+                        break;
+                    }
+                }
+
+                ++newCharIndex;
+            }
         }
     }
 

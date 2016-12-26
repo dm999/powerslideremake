@@ -298,6 +298,7 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
             mModeContext.mGameState.setMultiplayerMaster(false);
             mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
 
+            //remove color data from room name
             std::string roomName = mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected());
             roomName = roomName.substr(7, roomName.size());
             mModeContext.mGameState.setMultiplayerRoomName(roomName);

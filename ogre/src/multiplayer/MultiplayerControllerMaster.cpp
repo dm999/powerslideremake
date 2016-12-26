@@ -45,6 +45,19 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
     return res;
 }
 
+std::vector<std::string> MultiplayerControllerMaster::getAllPlayersSkins()const
+{
+    std::vector<std::string> res;
+
+    for(std::map<std::string, std::string>::const_iterator i = mAllPlayers.begin(), j = mAllPlayers.end();
+        i != j; ++i)
+    {
+        res.push_back((*i).second);
+    }
+
+    return res;
+}
+
 void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::onMessage]");
@@ -159,7 +172,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
                     MultiplayerSessionStartInfo sessionStartInfo(
                         players, q, 
                         mLobby->isHost(), 
-                        mAISkins, mAllPlayers);
+                        mAISkins, mAllPlayers, "", 0, 0);
                     mEvents->onSessionStart(sessionStartInfo);
                 }
             }
@@ -175,7 +188,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
     }
 }
 
-void MultiplayerControllerMaster::startSession(const std::string& trackName)
+void MultiplayerControllerMaster::startSession(const std::string& trackName, size_t aiStrength, size_t lapsCount)
 {
     const bool isHost = mLobby->isHost();
 
@@ -214,6 +227,11 @@ void MultiplayerControllerMaster::startSession(const std::string& trackName)
 
             //host info
             {
+                jsonxx::Object jsonObjectHostInfo;
+                jsonObjectHostInfo << "trackName" << trackName;
+                jsonObjectHostInfo << "aiStrength" << aiStrength;
+                jsonObjectHostInfo << "lapsCount" << lapsCount;
+                jsonObject << "hostinfo" << jsonObjectHostInfo;
             }
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerMaster::startSession]: start session");

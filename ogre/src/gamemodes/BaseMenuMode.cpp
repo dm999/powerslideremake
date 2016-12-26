@@ -17,7 +17,8 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
 {
     if(isInitialCreation)
     {
-        mModeContext.getGameState().getPlayerCar().setCharacterName("frantic");
+        std::string playerCharacter = "frantic";
+        mModeContext.getGameState().getPlayerCar().setCharacterName(playerCharacter);
         mModeContext.getGameState().setRaceParameters("desert track", Insane);
         mModeContext.getGameState().setAICount(1);                          //not more than 11
 
@@ -28,14 +29,16 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
 
         mModeContext.getGameState().setMirrorEnabled(true);
 
-        recalculateCharacterNames();
+        std::vector<std::string> playersCharacters;
+        playersCharacters.push_back(playerCharacter);
+        recalculateCharacterNames(playersCharacters);
     }
 }
 
-void BaseMenuMode::recalculateCharacterNames()
+void BaseMenuMode::recalculateCharacterNames(const std::vector<std::string>& playersCharacters)
 {
     //based on AICount
-    std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mModeContext.getGameState());
+    std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mModeContext.getGameState(), playersCharacters);
     mModeContext.getGameState().setAICharacters(aiCharacters);
     for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
     {
