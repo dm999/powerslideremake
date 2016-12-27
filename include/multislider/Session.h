@@ -19,12 +19,12 @@ namespace jsonxx
 
 namespace multislider
 {
-    class UdpSocket;
+    class UdpInterface;
     struct MsgInfo;
 
     class Session
     {
-        shared_ptr<UdpSocket> mSocket;
+        shared_ptr<UdpInterface> mUdpInterface;
         const std::string mServerIp;
         const uint16_t mServerPort;
         const std::string mPlayerName;
@@ -39,8 +39,6 @@ namespace multislider
         uint64_t mLastSyncTime;
         uint8_t  mClockSyncId;
 
-        std::vector<uint8_t> mReceiveBuffer;
-
         /*
          * Support reliable connection
          */
@@ -51,12 +49,13 @@ namespace multislider
 
         //-------------------------------------------------------
 
+        // Current local time in milliseconds (not syncronized)
+        uint64_t getTimeLocalMS() const;
+
         // Current synchronized time in milliseconds
-        uint64_t getTimeMS() const;
+        uint64_t getTimeSyncronizedMS() const;
 
         jsonxx::Object makeEnvelop(const jsonxx::Object & obj) const;
-
-        void sendUpdDatagram(const std::string & message) const;
 
         /*
          *  Generate next seq idx
@@ -74,11 +73,6 @@ namespace multislider
         void updatePing(uint64_t timestamp);
 
         void sendClockSync();
-
-        /*
-         *  Returns datagram length
-         */
-        size_t awaitUdpDatagram(uint64_t timeoutMilliseconds, uint32_t attemptsTimeoutMilliseconds = 100);
 
         // No copy
         Session(const Session&);

@@ -16,7 +16,7 @@ namespace multislider
     {
         static const uint32_t VERSION_MAJOR    = 0;
         static const uint32_t VERSION_MINOR    = 8;
-        static const uint32_t VERSION_REVISION = 0;
+        static const uint32_t VERSION_REVISION = 3;
 
         static const char RESPONSE_GREET[] = "HALO";
         static const char RESPONSE_SUCC[]  = "SUCC";
