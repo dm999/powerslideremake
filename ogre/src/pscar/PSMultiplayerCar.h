@@ -3,11 +3,28 @@
 
 #include "PSAICar.h"
 
+namespace Ogre
+{
+    class MovableText;
+}
+
 class PSMultiplayerCar : public PSAICar
 {
 public:
     PSMultiplayerCar();
     virtual ~PSMultiplayerCar(){}
+
+    void initModel( lua_State * pipeline, 
+                            const GameState& gameState,
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            const std::string& characterName,
+                            const Ogre::Matrix4& transform,
+                            bool isPossesCamera, const std::string& humanName, bool isHuman);
+
+    void clear()override;
 
     void setModelPosition(const Ogre::Vector3& pos, const Ogre::Quaternion& rot, const Ogre::Vector3& wheel0, const Ogre::Vector3& wheel1, const Ogre::Vector3& wheel2, const Ogre::Vector3& wheel3);
     void setModelRotationOnly(const Ogre::Quaternion& rot);
@@ -27,6 +44,8 @@ private:
 
     size_t mCurrentLap;
     Ogre::Real mLapPosition;
+
+    CommonIncludes::shared_ptr<Ogre::MovableText> mPlayerTitle;
 };
 
 #endif

@@ -1072,14 +1072,24 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="369.8097463881825" width="1097.166186683005" x="6291.416906658497" y="-1144.9048731940911"/>
+          <y:Geometry height="565.4393049363096" width="1097.166186683005" x="6291.416906658497" y="-912.7196524681548"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="6.490810694091124">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="16.098558718154777">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
 public:
+
+void initModel( lua_State * pipeline, 
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            GameCars gameCar,
+                            const Ogre::Matrix4&amp; transform,
+                            const std::vector&lt;Particle&gt;&amp; particles,
+                            bool isPossesCamera, const std::string&amp; humanName, bool isHuman)
 
 void setModelPosition(const Ogre::Vector3&amp; pos, const Ogre::Quaternion&amp; rot, const Ogre::Vector3&amp; wheel0, const Ogre::Vector3&amp; wheel1, const Ogre::Vector3&amp; wheel2, const Ogre::Vector3&amp; wheel3)
 void setModelRotationOnly(const Ogre::Quaternion&amp; rot)
@@ -1098,7 +1108,9 @@ private:
 void removeFromPhysicsSimulation()
 
 size_t mCurrentLap
-Ogre::Real mLapPosition</y:NodeLabel>
+Ogre::Real mLapPosition
+
+CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2465,7 +2477,7 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
           <y:Geometry height="637.5570968632119" width="980.3836661963628" x="13579.80816690182" y="-6258.778548431606"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="22.755110931605486">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="22.755110931606396">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -2548,7 +2560,7 @@ size_t mLapsCount</y:NodeLabel>
     <node id="n57">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="32.25791453345391" width="204.88871618483893" x="14807.555641907578" y="-2476.128957266728"/>
+          <y:Geometry height="32.25791453345391" width="204.88871618483893" x="14807.555641907578" y="-2626.128957266727"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="150.724609375" x="27.08205340491986" y="6.778371329226957">MultiplayerControllerEvents</y:NodeLabel>
@@ -2819,6 +2831,21 @@ MultiPlayerMode * mMultiPlayerMode
 PSMultiplayerCar&amp; mHumanCar
 
 std::string mHumanName</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n68">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="99.25540900083922" width="395.22605608423464" x="6642.386971957882" y="-229.6277045004196"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="359.857421875" x="17.68431710461755" y="10.874774812919611">&lt;&lt;MovableText.h&gt;&gt;
+
+MovableText
+
+http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3538,7 +3565,17 @@ std::string mHumanName</y:NodeLabel>
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e66" source="n68" target="n17">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

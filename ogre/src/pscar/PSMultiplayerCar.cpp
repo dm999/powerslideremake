@@ -4,9 +4,40 @@
 
 #include "../customs/CustomRigidBodyWheel.h"
 
+#include "../customs/MovableText.h"
+
 PSMultiplayerCar::PSMultiplayerCar() :
     mCurrentLap(0), mLapPosition(0.0f)
 {
+}
+
+void PSMultiplayerCar::initModel(    lua_State * pipeline, 
+                            const GameState& gameState,
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            CameraMan * cameraMan,
+                            ModelsPool* modelsPool,
+                            OgreBulletDynamics::DynamicsWorld * world,
+                            const std::string& characterName,
+                            const Ogre::Matrix4& transform,
+                            bool isPossesCamera,
+                            const std::string& humanName, bool isHuman)
+{
+    PSAICar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera);
+
+    if(isHuman)
+    {
+        mPlayerTitle.reset(new Ogre::MovableText("Title", humanName, "SdkTrays/Caption", 5.0f));
+        mPlayerTitle->setTextAlignment(Ogre::MovableText::H_CENTER, Ogre::MovableText::V_ABOVE);
+        mPlayerTitle->setLocalTranslation(Ogre::Vector3(0.0f, 10.0f, 0.0f));
+        mModelNode->attachObject(mPlayerTitle.get());
+    }
+}
+
+void PSMultiplayerCar::clear()
+{
+    PSAICar::clear();
+
+    mPlayerTitle.reset();
 }
 
 void PSMultiplayerCar::setModelPosition(const Ogre::Vector3& pos, const Ogre::Quaternion& rot, const Ogre::Vector3& wheel0, const Ogre::Vector3& wheel1, const Ogre::Vector3& wheel2, const Ogre::Vector3& wheel3)
@@ -71,6 +102,9 @@ void PSMultiplayerCar::removeFromScene(Ogre::SceneManager* sceneMgr)
 {
     //remove bullet objects
     removeFromPhysicsSimulation();
+
+    //remove title
+    mPlayerTitle.reset();
 
     //remove ogre objects
     if(mModelNode)

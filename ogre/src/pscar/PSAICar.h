@@ -22,7 +22,7 @@ public:
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
-                            bool isPossesCamera);
+                            bool isPossesCamera)override;
 
     void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff){mLateralStabilizationCoeff = linearStabilizationCoeff;}
     void setSpeedCoeff(Ogre::Real speedCoeff){mAIUtils.setSpeedCoeff(speedCoeff);}

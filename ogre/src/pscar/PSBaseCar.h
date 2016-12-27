@@ -53,7 +53,7 @@ public:
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
 
-    void clear();
+    virtual void clear();
 
     std::string getFrontLWheelColliderString(){return mWheelFrontLColliderString;}
     std::string getFrontRWheelColliderString(){return mWheelFrontRColliderString;}

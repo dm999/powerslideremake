@@ -349,6 +349,7 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
             PSMultiplayerCar& carHuman = mModeContext.mGameState.getMultiplayerCarHuman(player);
             mLapController.removeCar(&carHuman);
             carHuman.removeFromScene(mSceneMgr);
+            carHuman.deinitSounds();
 
             //remove PSMultiplayerCar object
             mModeContext.mGameState.removeMultiplayerCarHuman(player);
@@ -362,6 +363,7 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
                 PSMultiplayerCar& carAI = mModeContext.mGameState.getMultiplayerCarAI(q);
                 mLapController.removeCar(&carAI);
                 carAI.removeFromScene(mSceneMgr);
+                carAI.deinitSounds();
             }
             mModeContext.mGameState.setMultiplayerCountAI(0);
         }
@@ -401,7 +403,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false);
+                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
                 humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
@@ -435,7 +437,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false);
+                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
                 humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
@@ -462,7 +464,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
             mModeContext.mGameState.getMultiplayerCarAI(q).setCharacterName(aiCharacter);
 
-            mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mModeContext.mGameState.getTrackPositions()[q], false);
+            mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mModeContext.mGameState.getTrackPositions()[q], false, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
             mModeContext.mGameState.getMultiplayerCarAI(q).setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[q]);
