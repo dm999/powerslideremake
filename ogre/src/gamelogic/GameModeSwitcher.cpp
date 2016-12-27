@@ -59,12 +59,11 @@ void GameModeSwitcher::frameEnded()
     bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
     bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceMulti;
 
-    //exit on time - only for single player
+    //exit on time
     const unsigned long afterFinishTimeThreshold = 10000; // ms
     bool raceOverAndReadyToQuit =   modeRace                                &&
                                     mContext.mGameState.getRaceFinished()   &&
-                                    mContext.mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold    &&
-                                    mGameMode == ModeRaceSingle;
+                                    mContext.mGameState.getAfterFinishTimerTime() > afterFinishTimeThreshold;
 
     if(mIsSwitchMode || raceOverAndReadyToQuit)
     {
@@ -74,7 +73,7 @@ void GameModeSwitcher::frameEnded()
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
         //store multiplayer controller (switch from multiplayer race to main menu multi)
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit)
         {
             if(mPlayerMode.get())
             {
@@ -109,7 +108,7 @@ void GameModeSwitcher::frameEnded()
             //from race to single main menu
             if(mGameMode == ModeRaceSingle)
             {
-                mGameMode = mGameModeNext;
+                mGameMode = ModeMenu;
 
                 //mContext.mTrayMgr->showCursor();
 
@@ -120,7 +119,7 @@ void GameModeSwitcher::frameEnded()
             //from race to multi main menu
             if(mGameMode == ModeRaceMulti)
             {
-                mGameMode = mGameModeNext;
+                mGameMode = ModeMenuMulti;
 
                 //mContext.mTrayMgr->showCursor();
 

@@ -143,13 +143,13 @@ public:
     void setMultiplayerBroadcastInterval(size_t option){mMultiplayerBroadcastInterval = option;}
     size_t getMultiplayerBroadcastInterval()const{return mMultiplayerBroadcastInterval;}
 
-    //int getMaxMultiplayer()const{return mMultiplayerMax;}
-
     PSMultiplayerCar& getMultiplayerCarAI(size_t index);
     void setMultiplayerCountAI(size_t multiplayerAmountAI);
     size_t getMultiplayerCountAI()const{return mMultiplayerAmountAI;}
 
+    int getMaxMultiplayerHumans()const{return mMultiplayerMaxHumans;}
     std::vector<std::string> getMultiplayerCarHumanNames() const;
+    PSMultiplayerCar& getMultiplayerCarHuman(size_t index);//only for data preparation in LLT
     PSMultiplayerCar& getMultiplayerCarHuman(const std::string& playerName);
     void addMultiplayerCarHuman(const std::string& playerName);
     void clearMultiplayerCarsHuman();
@@ -220,7 +220,9 @@ private:
     size_t mMultiplayerAmountAI;
     PSMultiplayerCar mMultiplayerCarAI[mMultiplayerMaxAI];
 
-    std::map<std::string, PSMultiplayerCar> mMultiplayerCarHuman;
+    static const int mMultiplayerMaxHumans = 11;
+    PSMultiplayerCar mMultiplayerCarHuman[mMultiplayerMaxHumans];
+    std::map<std::string, size_t> mMultiplayerCarHumanIndexes;
 };
 
 #endif

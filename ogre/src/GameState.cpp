@@ -204,7 +204,7 @@ std::vector<std::string> GameState::getMultiplayerCarHumanNames() const
 {
     std::vector<std::string> ret;
 
-    for(std::map<std::string, PSMultiplayerCar>::const_iterator i = mMultiplayerCarHuman.begin(), j = mMultiplayerCarHuman.end();
+    for(std::map<std::string, size_t>::const_iterator i = mMultiplayerCarHumanIndexes.begin(), j = mMultiplayerCarHumanIndexes.end();
         i != j; ++i)
     {
         ret.push_back((*i).first);
@@ -213,32 +213,41 @@ std::vector<std::string> GameState::getMultiplayerCarHumanNames() const
     return ret;
 }
 
+PSMultiplayerCar& GameState::getMultiplayerCarHuman(size_t index)
+{
+    if(index >= mMultiplayerMaxHumans)
+        assert(false && "GameState::getMultiplayerCarHuman");
+
+    return mMultiplayerCarHuman[index];
+}
+
 PSMultiplayerCar& GameState::getMultiplayerCarHuman(const std::string& playerName)
 {
-    std::map<std::string, PSMultiplayerCar>::iterator i = mMultiplayerCarHuman.find(playerName);
+    std::map<std::string, size_t>::iterator i = mMultiplayerCarHumanIndexes.find(playerName);
 
-    assert(i != mMultiplayerCarHuman.end() && "GameState::getMultiplayerCarHuman");
+    assert(i != mMultiplayerCarHumanIndexes.end() && "GameState::getMultiplayerCarHuman");
 
-    return (*i).second;
+    return mMultiplayerCarHuman[(*i).second];
 }
 
 void GameState::addMultiplayerCarHuman(const std::string& playerName)
 {
-    if(mMultiplayerCarHuman.find(playerName) == mMultiplayerCarHuman.end())
+    if(mMultiplayerCarHumanIndexes.find(playerName) == mMultiplayerCarHumanIndexes.end())
     {
-        mMultiplayerCarHuman.insert(std::make_pair(playerName, PSMultiplayerCar()));
+        size_t amount = mMultiplayerCarHumanIndexes.size();
+        mMultiplayerCarHumanIndexes.insert(std::make_pair(playerName, amount));
     }
 }
 
 void GameState::clearMultiplayerCarsHuman()
 {
-    mMultiplayerCarHuman.clear();
+    mMultiplayerCarHumanIndexes.clear();
 }
 
 void GameState::removeMultiplayerCarHuman(const std::string& playerName)
 {
-    if(mMultiplayerCarHuman.find(playerName) != mMultiplayerCarHuman.end())
+    if(mMultiplayerCarHumanIndexes.find(playerName) != mMultiplayerCarHumanIndexes.end())
     {
-        mMultiplayerCarHuman.erase(playerName);
+        mMultiplayerCarHumanIndexes.erase(playerName);
     }
 }

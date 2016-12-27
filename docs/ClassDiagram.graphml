@@ -1106,10 +1106,10 @@ Ogre::Real mLapPosition</y:NodeLabel>
     <node id="n18">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="2769.4982616117204" width="608.5912499495803" x="11335.70437502521" y="-9244.74913080586"/>
+          <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2723.716796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="22.89073236835975">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2782.521484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="87.33594061836084">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1224,7 +1224,9 @@ PSMultiplayerCar&amp; getMultiplayerCarAI(size_t index)
 void setMultiplayerCountAI(size_t multiplayerAmountAI)
 size_t getMultiplayerCountAI()const
 
+int getMaxMultiplayerHumans()const
 std::vector&lt;std::string&gt; getMultiplayerCarHumanNames() const
+PSMultiplayerCar&amp; getMultiplayerCarHuman(size_t index)
 PSMultiplayerCar&amp; getMultiplayerCarHuman(const std::string&amp; playerName)
 void addMultiplayerCarHuman(const std::string&amp; playerName)
 void clearMultiplayerCarsHuman()
@@ -1293,7 +1295,9 @@ static const int mMultiplayerMaxAI = 11
 size_t mMultiplayerAmountAI
 PSMultiplayerCar mMultiplayerCarAI[mMultiplayerMaxAI]
 
-std::map&lt;std::string, PSMultiplayerCar&gt; mMultiplayerCarHuman</y:NodeLabel>
+static const int mMultiplayerMaxHumans = 11
+PSMultiplayerCar mMultiplayerCarHuman[mMultiplayerMaxHumans]
+std::map&lt;std::string, size_t&gt; mMultiplayerCarHumanIndexes</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2260,16 +2264,18 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
     <node id="n45">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="626.6089300907411" width="1021.9078593826357" x="14159.04607030868" y="-2353.304465045371"/>
+          <y:Geometry height="790.6415064968105" width="1021.9078593826357" x="14159.04607030868" y="-2435.320753248406"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="2.579855670370307">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="11.090284498405254">&lt;&lt;MultiPlayerMode.h&gt;&gt;
 
 MultiPlayerMode
 
 public:
 
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; getMultiplayerController()
+
+void onLapFinished()override
 
 void onPlayerEjected(const std::string&amp; player)override
 void onPlayerJoined(const std::string&amp; player)override
@@ -2302,9 +2308,17 @@ virtual void customFrameRenderingQueuedDo2DUI()override
 
 private:
 
+void onLapFinishedByHuman(const std::string&amp; humanName, size_t lap, Ogre::Real lastLapTime)
+void onRaceFinishedByHuman(const std::string&amp; humanName)
+
+void checkRaceFinished()
+
 bool mIsSessionStarted
 
-CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController</y:NodeLabel>
+CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
+
+bool mIsSelfFinished
+std::map&lt;std::string, bool&gt; mIsRaceFinishedByHuman</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2778,6 +2792,33 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="70.0234375" x="10.596206415684719" y="9.287550323129835">CSimpleIniA</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n67">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1570.2342745543065"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="210.75390625" x="16.187033856740527" y="3.2743136168064666">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+
+MultiplayerHumansLapFinishController
+
+public:
+
+void onLapFinished()override
+
+private:
+
+GameState&amp; mGameState
+
+MultiPlayerMode * mMultiPlayerMode
+
+PSMultiplayerCar&amp; mHumanCar
+
+std::string mHumanName</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3488,6 +3529,16 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e65" source="n67" target="n45">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

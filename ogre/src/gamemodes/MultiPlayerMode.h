@@ -5,6 +5,31 @@
 
 #include "../multiplayer/MultiplayerController.h"
 
+class MultiPlayerMode;
+
+class MultiplayerHumansLapFinishController : public LapUtils::Events
+{
+public:
+
+    MultiplayerHumansLapFinishController(GameState& gameState, MultiPlayerMode * multiPlayerMode, PSMultiplayerCar& humanCar, const std::string& humanName) : 
+      mGameState(gameState),
+      mMultiPlayerMode(multiPlayerMode),
+      mHumanCar(humanCar),
+      mHumanName(humanName){}
+
+    void onLapFinished()override;
+
+private:
+
+    GameState& mGameState;
+
+    MultiPlayerMode * mMultiPlayerMode;
+
+    PSMultiplayerCar& mHumanCar;
+
+    std::string mHumanName;
+};
+
 class MultiPlayerMode : public BaseRaceMode,
     public MultiplayerControllerEvents
 {
@@ -14,6 +39,9 @@ public:
     virtual ~MultiPlayerMode(){}
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
+
+    //LapUtils
+    void onLapFinished()override;
 
     //multiplayer events
     void onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)override{}
@@ -49,9 +77,22 @@ protected:
 
 private:
 
+    friend class MultiplayerHumansLapFinishController;
+
+    //MultiplayerHumansLapFinishController
+    void onLapFinishedByHuman(const std::string& humanName, size_t lap, Ogre::Real lastLapTime);
+    void onRaceFinishedByHuman(const std::string& humanName);
+
+    void checkRaceFinished();
+
     bool mIsSessionStarted;
 
     CommonIncludes::shared_ptr<MultiplayerController> mMultiplayerController;
+
+    std::vector<CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> > mHumanLapsController;
+
+    bool mIsSelfFinished;
+    std::map<std::string, bool> mIsRaceFinishedByHuman;//key - human name, self not included
 };
 
 #endif

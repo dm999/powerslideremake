@@ -300,11 +300,11 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
             {
                 gameState.getAICar(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
             }
-            /*
-            for(int w = 0; w < gameState.getMaxMultiplayer(); ++w)
+            
+            for(int w = 0; w < gameState.getMaxMultiplayerHumans(); ++w)
             {
-                gameState.getMultiplayerCar(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
-            }*/
+                gameState.getMultiplayerCarHuman(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
+            }
             gameState.getPlayerCar().getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
         }
 

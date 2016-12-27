@@ -541,7 +541,12 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
         customFrameRenderingQueuedDoRaceStarted();
 
+        //reset lap timer before race started (for every human player include self)
         mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
+        for(int q = 0; q < mModeContext.mGameState.getMaxMultiplayerHumans(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarHuman(q).getLapUtils().resetLapTimer();
+        }
 
         mModeContext.mGameState.setRaceStarted(true);
     }
