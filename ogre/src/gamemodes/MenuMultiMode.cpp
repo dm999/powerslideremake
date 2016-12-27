@@ -43,17 +43,6 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonInclude
     mMultiplayerController = controller;
 }
 
-void MenuMultiMode::clearMultiplayerController()
-{
-    //to execute onQuit
-    if(mMultiplayerController.get())
-    {
-        mMultiplayerController->clearSession();
-        mMultiplayerController->clearLobby();
-    }
-    mMultiplayerController.reset();
-}
-
 void MenuMultiMode::doInitData()
 {
     mUIMainMenuMulti->load(mModeContext.mGUI, mModeContext.mGameState);

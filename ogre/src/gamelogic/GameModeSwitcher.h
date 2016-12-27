@@ -33,7 +33,6 @@ public:
     void switchMode(GameMode nextMode);
 
     void restartRace();
-    void reloadRace();
 
 #if defined(__ANDROID__)
     //for UI only

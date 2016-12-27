@@ -51,6 +51,9 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
         mPlayerMode->frameRenderingQueued(evt);
 }
 
+/**
+ * Main switchng logic goes here
+ */
 void GameModeSwitcher::frameEnded()
 {
     bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
@@ -71,7 +74,7 @@ void GameModeSwitcher::frameEnded()
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
         //store multiplayer controller (switch from multiplayer race to main menu multi)
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
         {
             if(mPlayerMode.get())
             {
@@ -83,7 +86,7 @@ void GameModeSwitcher::frameEnded()
             }
         }
 
-        //store multiplayer controller
+        //store multiplayer controller (switch from main menu multi to multiplayer race)
         if(mGameMode == ModeMenuMulti && mGameModeNext == ModeRaceMulti)
         {
             if(mMenuMultiMode.get())
@@ -92,15 +95,6 @@ void GameModeSwitcher::frameEnded()
                 assert(controller.get());
                 controller->setEvents(NULL);
                 multiplayerSessionStartInfo = mMenuMultiMode->getMultiplayerSessionStartInfo();
-            }
-        }
-
-        //clean up multiplayer lobby
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
-        {
-            if(mMenuMultiMode.get())
-            {
-                mMenuMultiMode->clearMultiplayerController();
             }
         }
 
@@ -141,7 +135,7 @@ void GameModeSwitcher::frameEnded()
         {
             mIsSwitchMode = false;
 
-            mGameMode = ModeRaceSingle;
+            mGameMode = mGameModeNext;
 
             //mContext.mTrayMgr->hideCursor();
 
@@ -154,7 +148,7 @@ void GameModeSwitcher::frameEnded()
         {
             mIsSwitchMode = false;
 
-            mGameMode = ModeRaceMulti;
+            mGameMode = mGameModeNext;
 
             //mContext.mTrayMgr->hideCursor();
 
@@ -168,7 +162,7 @@ void GameModeSwitcher::frameEnded()
         {
             mIsSwitchMode = false;
 
-            mGameMode = ModeMenu;
+            mGameMode = mGameModeNext;
 
             //mContext.mTrayMgr->hideCursor();
 
@@ -200,12 +194,6 @@ void GameModeSwitcher::restartRace()
 {
     if(mPlayerMode.get())
         mPlayerMode->restart();
-}
-
-void GameModeSwitcher::reloadRace()
-{
-    if(mPlayerMode.get())
-        mPlayerMode->reload();
 }
 
 #if defined(__ANDROID__)

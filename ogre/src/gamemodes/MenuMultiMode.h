@@ -22,7 +22,6 @@ public:
     void frameStarted(const Ogre::FrameEvent &evt)override;
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
-    void clearMultiplayerController();
 
     //multiplayer
     void onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)override;

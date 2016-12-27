@@ -47,7 +47,6 @@ public:
 
     void go();
 
-    void scriptsReload();       // full reload of scene
     void quickScriptsReload();  // reread main params only
 
     // scripting functions

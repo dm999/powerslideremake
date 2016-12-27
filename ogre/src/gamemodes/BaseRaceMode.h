@@ -32,7 +32,6 @@ public:
     virtual void clearData()override;
 
     void restart();
-    void reload();
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;

@@ -97,10 +97,6 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->quickScriptsReload();
 
-    }else if (arg.key == OIS::KC_F6)
-    {
-        baseApp->scriptsReload();
-
     }else if (arg.key == OIS::KC_SPACE)
     {
         if(mCameraMan)

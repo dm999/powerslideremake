@@ -1542,7 +1542,7 @@ bool mIsVertexArraySupported</y:NodeLabel>
           <y:Geometry height="121.5123985933451" width="252.8089192692164" x="12203.595540365392" y="-4110.756199296675"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.787109375" x="20.01090494710843" y="14.652683671672548">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.787109375" x="20.01090494710843" y="14.652683671673003">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 DE2SingleBatch
 
@@ -2117,7 +2117,7 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
           <y:Geometry height="1142.2539939183798" width="930.2499573032924" x="14204.875021348353" y="-4351.126996959191"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1121.2890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="10.482465709190365">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1121.2890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="10.482465709189455">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2215,7 +2215,7 @@ Ogre::RenderTargetListener</y:NodeLabel>
           <y:Geometry height="434.5806668488958" width="399.02319879457855" x="14980.488400602711" y="-8197.290333424447"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="2.123341236948363">&lt;&lt;ModeContext.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="2.1233412369474536">&lt;&lt;ModeContext.h&gt;&gt;
 
 ModeContext
 
@@ -2450,16 +2450,18 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
     <node id="n54">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="581.2226766833492" width="980.3836661963628" x="13579.80816690182" y="-6230.611338341674"/>
+          <y:Geometry height="637.5570968632119" width="980.3836661963628" x="13579.80816690182" y="-6258.778548431606"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="9.289072716674127">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="22.755110931605486">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
 public:
 
 virtual void frameStarted(const Ogre::FrameEvent &amp;evt)override
+
+CommonIncludes::shared_ptr&lt;MultiplayerController&gt; getMultiplayerController()
 
 void onPlayerEjected(const std::string&amp; player)override
 void onPlayerJoined(const std::string&amp; player)override
@@ -2498,7 +2500,7 @@ bool mIsEnterFromBaseMenu</y:NodeLabel>
     <node id="n55">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="65.52349051922829" width="162.20703162726488" x="13988.896484186367" y="-5624.109152332935"/>
+          <y:Geometry height="65.52349051922829" width="162.20703162726488" x="13988.896484186367" y="-5582.761745259614"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="150.068359375" x="6.069336126132839" y="8.709987447114145">MultiplayerController
@@ -2722,7 +2724,7 @@ bool mIsSTRLoaded</y:NodeLabel>
           <y:Geometry height="431.7379731226456" width="653.4593171303563" x="10022.760868596602" y="-8075.868986561323"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="629.59375" x="11.932783565178397" y="8.052580311322345">&lt;&lt;OriginalSettings.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="629.59375" x="11.932783565178397" y="8.052580311323254">&lt;&lt;OriginalSettings.h&gt;&gt;
 
 STRPowerslide
 
@@ -2760,7 +2762,7 @@ Ogre::ColourValue parseColor(const std::string&amp; val) const</y:NodeLabel>
           <y:Geometry height="146.50477370542194" width="281.9130653844727" x="10775.260484102959" y="-8053.252386852711"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="239.46484375" x="21.22411081723658" y="19.798285290210515">&lt;&lt;OriginalSettings.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="239.46484375" x="21.22411081723658" y="19.798285290211425">&lt;&lt;OriginalSettings.h&gt;&gt;
 
 STRRacecrud
 

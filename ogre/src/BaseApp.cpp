@@ -361,13 +361,6 @@ void BaseApp::windowFocusChange(Ogre::RenderWindow* rw)
     (void) rw;
 }
 
-void BaseApp::scriptsReload()
-{
-    doLuaMainFile();
-
-    mGameModeSwitcher->reloadRace();
-}
-
 void BaseApp::quickScriptsReload()
 {
     mGameModeSwitcher->restartRace();

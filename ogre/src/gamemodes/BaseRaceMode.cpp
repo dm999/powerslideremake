@@ -119,25 +119,6 @@ void BaseRaceMode::restart()
     initLightLists();
 }
 
-void BaseRaceMode::reload()
-{
-    mIsGlobalReset = true;
-    clearScene();
-    unloadResources();
-    mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
-    initScene();
-    loadResources();
-
-    initTerrain();
-    initModel();
-    initMisc();
-
-
-    initLightLists();
-
-}
-
-
 void BaseRaceMode::initScene()
 {
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
