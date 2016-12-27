@@ -282,8 +282,9 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(dashboardPosition);
     }
 
+    Ogre::PanelOverlayElement* dashboard;
     {
-        Ogre::PanelOverlayElement* dashboard = createPanel("Dashboard", dashWidth, dashHeight, 0.0f, dashTop, "Test/DashboardWarthog");
+        dashboard = createPanel("Dashboard", dashWidth, dashHeight, 0.0f, dashTop, "Test/DashboardWarthog");
         dashboard->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(dashboard);
     }
@@ -352,8 +353,10 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
                             TEMP_RESOURCE_GROUP_NAME);
     }
 
+    mNeedle->setMaterialName(0, "Test/TachoFrantic", TEMP_RESOURCE_GROUP_NAME);
+
     Ogre::Real tachoLeft = viewportWidth - tachoWidth;
-    Ogre::Real tachoTop = viewportHeight - tachoHeight;
+    Ogre::Real tachoTop = viewportHeight - tachoHeight - dashTop;
 
     {
         Ogre::Vector4 tachoRegion = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho texture region 1");
@@ -361,7 +364,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         Ogre::PanelOverlayElement* tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
         tacho->setUV(tachoRegion.x, tachoRegion.y, tachoRegion.z, tachoRegion.w);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(tacho);
+        dashboard->addChild(tacho);
     }
 
     //tacho lamps
@@ -380,6 +383,8 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         {
             Ogre::Vector4 tachoLightsScreen = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho 1 lights screen " + Conversions::DMToString(q));
             tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
+            tachoLightsScreen.y -= dashTop;
+            tachoLightsScreen.w -= dashTop;
 
             Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
             tachoLightsTexture /= 255.0f;
@@ -389,7 +394,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
             mTachoLamps[q] = createPanel("TachoLamps" + Conversions::DMToString(q), tachoLightsScreen, "Test/TachoFrantic");
             mTachoLamps[q]->setUV(tachoLightsTexture.x, tachoLightsTexture.y, tachoLightsTexture.z, tachoLightsTexture.w);
-            trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoLamps[q]);
+            dashboard->addChild(mTachoLamps[q]);
             mTachoLamps[q]->hide();
         }
     }
@@ -403,6 +408,15 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         tachoDigitsScreen1 = screenAdaptionRelative * tachoDigitsScreen1;
         tachoDigitsScreen10 = screenAdaptionRelative * tachoDigitsScreen10;
         tachoDigitsScreen100 = screenAdaptionRelative * tachoDigitsScreen100;
+
+        tachoDigitsScreen1.y -= dashTop;
+        tachoDigitsScreen1.w -= dashTop;
+
+        tachoDigitsScreen10.y -= dashTop;
+        tachoDigitsScreen10.w -= dashTop;
+
+        tachoDigitsScreen100.y -= dashTop;
+        tachoDigitsScreen100.w -= dashTop;
 
         mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit texture 1");
         mTachoDigitsTexture /= 255.0f;
@@ -421,15 +435,15 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mTachoSpeedDigit1 = createPanel("TachoDigit1", tachoDigitsScreen1, "Test/TachoFranticDigits");
         std::pair<Ogre::Real, Ogre::Real> texCoords = getTachoDigitOffset(0);
         mTachoSpeedDigit1->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit1);
+        dashboard->addChild(mTachoSpeedDigit1);
 
         mTachoSpeedDigit2 = createPanel("TachoDigit2", tachoDigitsScreen10, "Test/TachoFranticDigits");
         mTachoSpeedDigit2->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit2);
+        dashboard->addChild(mTachoSpeedDigit2);
 
         mTachoSpeedDigit3 = createPanel("TachoDigit3", tachoDigitsScreen100, "Test/TachoFranticDigits");
         mTachoSpeedDigit3->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoSpeedDigit3);
+        dashboard->addChild(mTachoSpeedDigit3);
 
 
         //mTachoSpeedDigit1->hide();
@@ -466,38 +480,42 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::Real dashDigitLeftGear = viewportWidth - tachoWidth - dashDigitWidth;
         Ogre::Real dashDigitTop = dashTop + dashDigitHeight * 1.1f;
         Ogre::Real dashDigitTopSmall = dashTop + dashDigitHeightSmall * 1.45f;
+
+        dashDigitTop -= dashTop;
+        dashDigitTopSmall -= dashTop;
+
         mDashGear = createPanel("DashDigitGear", dashDigitWidth, dashDigitHeight, dashDigitLeftGear, dashDigitTop, "Test/DashFont");
         std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(0);
         std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(0);
         mDashGear->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashGear);
+        dashboard->addChild(mDashGear);
 
         Ogre::Real dashDigitLeftLap1 = viewportWidth - tachoWidth - dashDigitWidth * 20.5f;
         mDashLap1 = createPanel("DashDigitLap1", dashDigitWidth, dashDigitHeight, dashDigitLeftLap1, dashDigitTop, "Test/DashFont");
         mDashLap1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLap1);
+        dashboard->addChild(mDashLap1);
 
         Ogre::Real dashDigitLeftLap2 = viewportWidth - tachoWidth - dashDigitWidth * 21.5f;
         mDashLap2 = createPanel("DashDigitLap2", dashDigitWidth, dashDigitHeight, dashDigitLeftLap2, dashDigitTop, "Test/DashFont");
         mDashLap2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLap2);
+        dashboard->addChild(mDashLap2);
 
         {
             Ogre::Real dashDigitLeftLapDiv = viewportWidth - tachoWidth - dashDigitWidth * 19.5f;
             Ogre::PanelOverlayElement* tachoLapDigitDiv = createPanel("DashDigitLapDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftLapDiv, dashDigitTopSmall, "Test/DashFont");
             tachoLapDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
-            trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(tachoLapDigitDiv);
+            dashboard->addChild(tachoLapDigitDiv);
         }
 
         mDashDigitLeftTotalLap1 = viewportWidth - tachoWidth - dashDigitWidth * 17.5f;
         mDashTotalLap1 = createPanel("DashDigitTotalLap1", dashDigitWidthSmall, dashDigitHeightSmall, mDashDigitLeftTotalLap1, dashDigitTopSmall, "Test/DashFont");
         mDashTotalLap1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashTotalLap1);
+        dashboard->addChild(mDashTotalLap1);
 
         Ogre::Real dashDigitLeftTotalLap2 = viewportWidth - tachoWidth - dashDigitWidth * 18.5f;
         mDashTotalLap2 = createPanel("DashDigitTotalLap2", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalLap2, dashDigitTopSmall, "Test/DashFont");
         mDashTotalLap2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashTotalLap2);
+        dashboard->addChild(mDashTotalLap2);
 
 
         mDashLap2->hide();
@@ -508,12 +526,12 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mDashDigitLeftTotalCars1 = viewportWidth - tachoWidth - dashDigitWidth * 26.5f;
         mTachoTotalCarsDigit1 = createPanel("DashDigitTotalCars1", dashDigitWidthSmall, dashDigitHeightSmall, mDashDigitLeftTotalCars1, dashDigitTopSmall, "Test/DashFont");
         mTachoTotalCarsDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoTotalCarsDigit1);
+        dashboard->addChild(mTachoTotalCarsDigit1);
 
         Ogre::Real dashDigitLeftTotalCars2 = viewportWidth - tachoWidth - dashDigitWidth * 27.5f;
         mTachoTotalCarsDigit2 = createPanel("DashDigitTotalCars2", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCars2, dashDigitTopSmall, "Test/DashFont");
         mTachoTotalCarsDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoTotalCarsDigit2);
+        dashboard->addChild(mTachoTotalCarsDigit2);
 
         mTachoTotalCarsDigit2->hide();
 
@@ -522,19 +540,19 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             Ogre::Real dashDigitLeftTotalCarsDiv = viewportWidth - tachoWidth - dashDigitWidth * 28.5f;
             Ogre::PanelOverlayElement* tachoTotalCarsDigitDiv = createPanel("DashDigitTotalCarsDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCarsDiv, dashDigitTopSmall, "Test/DashFont");
             tachoTotalCarsDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
-            trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(tachoTotalCarsDigitDiv);
+            dashboard->addChild(tachoTotalCarsDigitDiv);
         }
 
 
         Ogre::Real dashDigitLeftPos1 = viewportWidth - tachoWidth - dashDigitWidth * 29.5f;
         mTachoPosDigit1 = createPanel("DashDigitPos1", dashDigitWidth, dashDigitHeight, dashDigitLeftPos1, dashDigitTop, "Test/DashFont");
         mTachoPosDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoPosDigit1);
+        dashboard->addChild(mTachoPosDigit1);
 
         Ogre::Real dashDigitLeftPos2 = viewportWidth - tachoWidth - dashDigitWidth * 30.5f;
         mTachoPosDigit2 = createPanel("DashDigitPos2", dashDigitWidth, dashDigitHeight, dashDigitLeftPos2, dashDigitTop, "Test/DashFont");
         mTachoPosDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mTachoPosDigit2);
+        dashboard->addChild(mTachoPosDigit2);
 
         mTachoPosDigit2->hide();
 
@@ -543,32 +561,32 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::Real dashDigitLeftTime1 = viewportWidth - tachoWidth - dashDigitWidth * 6.8f;
         mDashLapTime1 = createPanel("DashDigitTime1", dashDigitWidth, dashDigitHeight, dashDigitLeftTime1, dashDigitTop, "Test/DashFont");
         mDashLapTime1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime1);
+        dashboard->addChild(mDashLapTime1);
 
         Ogre::Real dashDigitLeftTime2 = viewportWidth - tachoWidth - dashDigitWidth * 7.8f;
         mDashLapTime2 = createPanel("DashDigitTime2", dashDigitWidth, dashDigitHeight, dashDigitLeftTime2, dashDigitTop, "Test/DashFont");
         mDashLapTime2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime2);
+        dashboard->addChild(mDashLapTime2);
 
         Ogre::Real dashDigitLeftTime3 = viewportWidth - tachoWidth - dashDigitWidth * 9.3f;
         mDashLapTime3 = createPanel("DashDigitTime3", dashDigitWidth, dashDigitHeight, dashDigitLeftTime3, dashDigitTop, "Test/DashFont");
         mDashLapTime3->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime3);
+        dashboard->addChild(mDashLapTime3);
 
         Ogre::Real dashDigitLeftTime4 = viewportWidth - tachoWidth - dashDigitWidth * 10.3f;
         mDashLapTime4 = createPanel("DashDigitTime4", dashDigitWidth, dashDigitHeight, dashDigitLeftTime4, dashDigitTop, "Test/DashFont");
         mDashLapTime4->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime4);
+        dashboard->addChild(mDashLapTime4);
 
         Ogre::Real dashDigitLeftTime5 = viewportWidth - tachoWidth - dashDigitWidth * 11.8f;
         mDashLapTime5 = createPanel("DashDigitTime5", dashDigitWidth, dashDigitHeight, dashDigitLeftTime5, dashDigitTop, "Test/DashFont");
         mDashLapTime5->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime5);
+        dashboard->addChild(mDashLapTime5);
 
         Ogre::Real dashDigitLeftTime6 = viewportWidth - tachoWidth - dashDigitWidth * 12.8f;
         mDashLapTime6 = createPanel("DashDigitTime6", dashDigitWidth, dashDigitHeight, dashDigitLeftTime6, dashDigitTop, "Test/DashFont");
         mDashLapTime6->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashLapTime6);
+        dashboard->addChild(mDashLapTime6);
     }
 
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
@@ -762,7 +780,7 @@ void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState&
 
     mNeedle = sceneManager->createManualObject("ManualTachoNeedle");
 
-    mNeedle->begin("Test/TachoFrantic", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
+    mNeedle->begin("BaseWhite", Ogre::RenderOperation::OT_TRIANGLE_STRIP);
 
     mNeedle->position(-needleWidthBottom / 2.0f, needleOffset, 0.0f);
     mNeedle->textureCoord(tachoNeedle.x, tachoNeedle.w);

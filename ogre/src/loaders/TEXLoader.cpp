@@ -51,6 +51,8 @@ Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturena
 
         fread(pDest, sizeofformat * sizeOfBuffer, 1, fileToLoad);
         pixelBuffer->unlock();
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "]");
     }
 
     return res;
@@ -64,8 +66,6 @@ Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& su
     {
         res = load(fileToLoad, texturename, group);
         fclose(fileToLoad);
-
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + filename + "]");
     }
     return res;
 }
