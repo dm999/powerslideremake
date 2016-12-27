@@ -1072,10 +1072,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="565.4393049363096" width="1097.166186683005" x="6291.416906658497" y="-912.7196524681548"/>
+          <y:Geometry height="641.6564616502405" width="1097.166186683005" x="6291.416906658497" y="-950.8282308251203"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="16.098558718154777">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="17.454207387620272">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1103,9 +1103,14 @@ size_t getCurrentLap()const override
 void setLapPosition(Ogre::Real lapPosition)
 Ogre::Real getLapPosition()const override
 
+void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate)
+uint64_t getLastTimeOfUpdate()const 
+
 private:
 
 void removeFromPhysicsSimulation()
+
+uint64_t mLastTimeOfUpdate
 
 size_t mCurrentLap
 Ogre::Real mLapPosition
@@ -1782,7 +1787,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1006.1758688958967" width="1040.9607797438198" x="15529.519610128085" y="-2543.0879344479486"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="974.27734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="15.949262572948555">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="23.299848510448555">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1834,12 +1839,11 @@ bool mSessionStarted
 playerToData mOtherPlayersSessionData
 
 std::vector&lt;MultiplayerSessionData&gt; mAIPlayersSessionData
-uint64_t mAIDataTimestamp
 
 private:
 
 static void parseDataPacket(MultiplayerSessionData&amp; data, const jsonxx::Object&amp; jsonObject)
-static jsonxx::Object fillDataPacket(const MultiplayerSessionData&amp; data)
+jsonxx::Object fillDataPacket(const MultiplayerSessionData&amp; data)
 
 bool mStartHappened;//to synchronize race events
 

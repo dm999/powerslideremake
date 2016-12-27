@@ -55,18 +55,17 @@ protected:
     playerToData mOtherPlayersSessionData;
 
     std::vector<MultiplayerSessionData> mAIPlayersSessionData;
-    uint64_t mAIDataTimestamp;
 
 private:
 
     static void parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject);
-    static jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
+    jsonxx::Object fillDataPacket(const MultiplayerSessionData& data);
 
     bool mStartHappened;//to synchronize race events
 
     Ogre::Timer mBroadcastTimer;
 
-    Ogre::Timer mStartSessionTimer;
+    Ogre::Timer mStartSessionTimer;//used to measure time from session start
 
     size_t mBroadcastInterval; // ms
 

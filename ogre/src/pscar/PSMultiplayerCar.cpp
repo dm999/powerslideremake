@@ -22,6 +22,8 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
                             bool isPossesCamera,
                             const std::string& humanName, bool isHuman)
 {
+    mLastTimeOfUpdate = 0;
+
     PSAICar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera);
 
     if(isHuman)

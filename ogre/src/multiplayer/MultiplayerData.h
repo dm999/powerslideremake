@@ -57,7 +57,7 @@ struct MultiplayerSessionData
     bool isLeft;
     bool isRight;
 
-    uint64_t dataUpdateTimestamp;//server side time
+    uint64_t dataUpdateTimestamp;//other client update timestamp
 
     size_t currentLap;
     Ogre::Real lapPosition;

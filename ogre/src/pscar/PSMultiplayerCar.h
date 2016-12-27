@@ -1,6 +1,12 @@
 #ifndef PSMULTIPLAYERCAR_H
 #define PSMULTIPLAYERCAR_H
 
+#if defined(_MSC_VER) && (_MSC_VER < 1800)
+typedef unsigned __int64 uint64_t;
+#else
+#include <cstdint>
+#endif
+
 #include "PSAICar.h"
 
 namespace Ogre
@@ -38,9 +44,14 @@ public:
     void setLapPosition(Ogre::Real lapPosition){mLapPosition = lapPosition;}
     Ogre::Real getLapPosition()const override{return mLapPosition;}
 
+    void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate){mLastTimeOfUpdate = lastTimeOfUpdate;}
+    uint64_t getLastTimeOfUpdate()const {return mLastTimeOfUpdate;}
+
 private:
 
     void removeFromPhysicsSimulation();
+
+    uint64_t mLastTimeOfUpdate;//other client timestamp
 
     size_t mCurrentLap;
     Ogre::Real mLapPosition;

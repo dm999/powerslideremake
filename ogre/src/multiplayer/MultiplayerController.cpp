@@ -91,10 +91,8 @@ void MultiplayerController::onUpdate(multislider::Session* session, const multis
         multislider::SessionData::const_iterator i = data.find((*ii).first);
         if(i != data.end())
         {
-            if(!(*i).second.data.empty() && (*i).second.timestamp > (*ii).second.dataUpdateTimestamp)
+            if(!(*i).second.data.empty())
             {
-                (*ii).second.dataUpdateTimestamp = (*i).second.timestamp;
-
                 jsonxx::Object jsonObject;
                 jsonObject.parse((*i).second.data);
                 parseDataPacket((*ii).second, jsonObject);
@@ -105,11 +103,10 @@ void MultiplayerController::onUpdate(multislider::Session* session, const multis
     //ai data
     if (!mLobby->isHost())
     {
-        if(!sharedData.data.empty() && sharedData.timestamp > mAIDataTimestamp)
+        if(!sharedData.data.empty())
         {
             //Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onUpdate]: shared data " + Ogre::String(sharedData.data));
 
-            mAIDataTimestamp = sharedData.timestamp;
             jsonxx::Array jsonArray;
             jsonArray.parse(sharedData.data);
             if(mAIPlayersSessionData.size() == jsonArray.size())
@@ -231,6 +228,7 @@ void MultiplayerController::parseDataPacket(MultiplayerSessionData& data, const 
 {
     if(jsonObject.has<jsonxx::Number>("x"))
     {
+        data.dataUpdateTimestamp = static_cast<uint64_t>(jsonObject.get<jsonxx::Number>("timestamp"));
         data.pos.x = static_cast<float>(jsonObject.get<jsonxx::Number>("x"));
         data.pos.y = static_cast<float>(jsonObject.get<jsonxx::Number>("y"));
         data.pos.z = static_cast<float>(jsonObject.get<jsonxx::Number>("z"));
@@ -270,6 +268,7 @@ void MultiplayerController::parseDataPacket(MultiplayerSessionData& data, const 
 jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionData& data)
 {
     jsonxx::Object jsonObject;
+    jsonObject << "timestamp" << mStartSessionTimer.getMilliseconds();
     jsonObject << "x" << data.pos.x;
     jsonObject << "y" << data.pos.y;
     jsonObject << "z" << data.pos.z;

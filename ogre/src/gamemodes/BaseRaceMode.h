@@ -16,6 +16,11 @@
 class CameraMan;
 class UIRace;
 
+namespace OgreBites
+{
+    class ParamsPanel;
+}
+
 #define SHOW_DETAILS_PANEL 0
 
 class BaseRaceMode : 

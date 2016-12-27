@@ -144,8 +144,6 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
 
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerControllerSlave::onSessionStart]: message [" + Ogre::String(sessionData) + "]");
 
-        mAIDataTimestamp = 0;
-
         jsonxx::Object jsonObjectBase;
         jsonObjectBase.parse(sessionData);
 

@@ -54,9 +54,12 @@ void BaseRaceMode::initData()
 #if SHOW_DETAILS_PANEL
     // create a params panel for displaying sample details
     Ogre::StringVector items;
-    items.push_back("cam.pX");
-    items.push_back("cam.pY");
-    items.push_back("cam.pZ");
+    //items.push_back("cam.pX");
+    //items.push_back("cam.pY");
+    //items.push_back("cam.pZ");
+    items.push_back("car.pX");
+    items.push_back("car.pY");
+    items.push_back("car.pZ");
     items.push_back("");
     items.push_back("carSpeedLinear");
     items.push_back("carSpeedProj");
@@ -97,6 +100,10 @@ void BaseRaceMode::initData()
 
 void BaseRaceMode::clearData()
 {
+#if SHOW_DETAILS_PANEL
+    mModeContext.mTrayMgr->destroyWidget(mDetailsPanel);
+#endif
+
     clearScene();
 
     unloadResources();
@@ -606,9 +613,12 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 
 #if SHOW_DETAILS_PANEL
-        mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
-        mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
-        mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
+        //mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
+        //mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
+        //mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
+        mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition().x));
+        mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition().y));
+        mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition().z));
         
         mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLinearVelocity().length()));
         mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getAlignedVelocity()));
