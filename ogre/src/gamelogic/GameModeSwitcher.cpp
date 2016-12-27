@@ -74,7 +74,7 @@ void GameModeSwitcher::frameEnded()
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
         //store multiplayer controller (switch from multiplayer race to main menu multi)
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenu)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti)
         {
             if(mPlayerMode.get())
             {
@@ -109,7 +109,7 @@ void GameModeSwitcher::frameEnded()
             //from race to single main menu
             if(mGameMode == ModeRaceSingle)
             {
-                mGameMode = ModeMenu;
+                mGameMode = mGameModeNext;
 
                 //mContext.mTrayMgr->showCursor();
 
@@ -120,7 +120,7 @@ void GameModeSwitcher::frameEnded()
             //from race to multi main menu
             if(mGameMode == ModeRaceMulti)
             {
-                mGameMode = ModeMenuMulti;
+                mGameMode = mGameModeNext;
 
                 //mContext.mTrayMgr->showCursor();
 

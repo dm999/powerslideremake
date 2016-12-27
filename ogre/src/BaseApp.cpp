@@ -374,7 +374,14 @@ void BaseApp::setShutdown(bool shutdown)
         mGameModeSwitcher->getMode() == ModeRaceMulti
     )
     {
-        mGameModeSwitcher->switchMode(ModeMenu);
+        if(
+            mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+            mGameModeSwitcher->getMode() == ModeMenuMulti
+            )
+            mGameModeSwitcher->switchMode(ModeMenu);
+
+        if(mGameModeSwitcher->getMode() == ModeRaceMulti)
+            mGameModeSwitcher->switchMode(ModeMenuMulti);
     }
     if(mGameModeSwitcher->getMode() == ModeMenu)
     {

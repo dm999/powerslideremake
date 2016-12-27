@@ -2017,7 +2017,7 @@ DWORD Length</y:NodeLabel>
           <y:Geometry height="535.3609709024449" width="807.9384596111427" x="12376.03077019443" y="-6207.680485451223"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="503.83984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="15.760563576222921">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="23.11114951372292">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2030,7 +2030,6 @@ void frameEnded()
 void switchMode()
 
 void restartRace()
-void reloadRace()
 
 void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 
@@ -2117,7 +2116,7 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
           <y:Geometry height="1142.2539939183798" width="930.2499573032924" x="14204.875021348353" y="-4351.126996959191"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1121.2890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="10.482465709189455">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1106.587890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="17.833051646689455">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2127,7 +2126,6 @@ virtual void initData()override
 virtual void clearData()override
 
 void restart()
-void reload()
 
 void frameStarted(const Ogre::FrameEvent &amp;evt)override
 void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
