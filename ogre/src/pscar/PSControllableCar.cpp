@@ -384,6 +384,29 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
     Ogre::Real projectedVel = getAlignedVelocity();
 
+    Ogre::Vector3 carForwardVector = getForwardAxis();
+    Ogre::Real forwardProjY = Ogre::Vector3::UNIT_Y.dotProduct(carForwardVector);
+
+    //freeze on low speed
+    if( Ogre::Math::Abs(projectedVel) < 10.0f   &&
+        Ogre::Math::Abs(forwardProjY) < 0.2f    &&
+        !mSteeringLeft                          &&
+        !mSteeringRight                         &&
+        !mBrakeEnabled                          &&
+        !mAccelEnabled
+        )
+    {
+        mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 1.0f, 0.0f));
+        mCarChassis->getBulletRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+        //mCarChassis->setActivationState(DISABLE_SIMULATION);
+    }
+    else
+    {
+        mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+        //mCarChassis->forceActivationState();
+    }
+
+
     const Ogre::Real wheelRadius = 2.0f;
     Ogre::Real projectedDist = projectedVel * evt.timeSinceLastFrame;
     Ogre::Real wheelRotationalIncrement = projectedDist / wheelRadius;
@@ -432,6 +455,17 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
 
 
+    applyDriveImpulses(evt, isRaceStarted);
+
+    cleanWheelsCollisionsFlags();
+}
+
+void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted)
+{
+    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+
+    Ogre::Real projectedVel = getAlignedVelocity();
+
     Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
     Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spf;
 
@@ -479,8 +513,6 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
             mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
         }
     }
-
-    cleanWheelsCollisionsFlags();
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)

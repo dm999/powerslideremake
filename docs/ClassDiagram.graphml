@@ -337,10 +337,10 @@
     <node id="n1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1744.199527930226" width="735.5387943622018" x="5962.2306028189" y="-6272.099763965113"/>
+          <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1753.439453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="-4.619962597386802">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1753.439453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="29.313241087425013">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -579,10 +579,10 @@ Ogre::WindowEventListener</y:NodeLabel>
     <node id="n6">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="2115.749750025006" width="701.7915528832027" x="5979.104223558399" y="-4387.874875012503"/>
+          <y:Geometry height="2183.061097666385" width="701.7915528832027" x="5979.104223558399" y="-4421.530548833192"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2091.56640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="12.091671887503253">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2120.96875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="31.04617383319237">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -639,6 +639,8 @@ size_t getCurrentLap() const override
 Ogre::Real getLapPosition() const override
 
 protected:
+
+virtual void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
 
 virtual void processSounds(const Ogre::FrameEvent &amp;evt)
 
@@ -1072,10 +1074,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="641.6564616502405" width="1097.166186683005" x="6291.416906658497" y="-950.8282308251203"/>
+          <y:Geometry height="677.9010334571371" width="1097.166186683005" x="6291.416906658497" y="-968.9505167285686"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="17.454207387620272">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1073.869140625" x="11.648523029002718" y="6.174149541068573">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1105,6 +1107,10 @@ Ogre::Real getLapPosition()const override
 
 void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate)
 uint64_t getLastTimeOfUpdate()const 
+
+protected:
+
+void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)override{}
 
 private:
 

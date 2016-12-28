@@ -30,6 +30,9 @@ public:
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera, const std::string& humanName, bool isHuman);
 
+    /**
+     * Should delete title for multiplayer car
+     */
     void clear()override;
 
     void setModelPosition(const Ogre::Vector3& pos, const Ogre::Quaternion& rot, const Ogre::Vector3& wheel0, const Ogre::Vector3& wheel1, const Ogre::Vector3& wheel2, const Ogre::Vector3& wheel3);
@@ -46,6 +49,14 @@ public:
 
     void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate){mLastTimeOfUpdate = lastTimeOfUpdate;}
     uint64_t getLastTimeOfUpdate()const {return mLastTimeOfUpdate;}
+
+protected:
+
+    /**
+     * Don`t apply impulses to multiplayer car
+     * rely only on velocity from remote client
+     */
+    void applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted)override{}
 
 private:
 

@@ -74,6 +74,8 @@ public:
 
 protected:
 
+    virtual void applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted);
+
     virtual void processSounds(const Ogre::FrameEvent &evt);
 
     LinearController<float> mPitchValueLow;
