@@ -97,15 +97,15 @@ void GameModeSwitcher::frameEnded()
             }
         }
 
-        //clean all modes
+        //clear all modes
         clear();
 
-        //from race to main menu (single or multi)
+        //race -> main menu (single | multi)
         if(modeRace && mIsSwitchMode || raceOverAndReadyToQuit)
         {
             mIsSwitchMode = false;
 
-            //from race to single main menu
+            //race -> single main menu
             if(mGameMode == ModeRaceSingle)
             {
                 mGameMode = ModeMenu;
@@ -116,7 +116,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initData();
             }
 
-            //from race to multi main menu
+            //race -> multi main menu
             if(mGameMode == ModeRaceMulti)
             {
                 mGameMode = ModeMenuMulti;
@@ -129,7 +129,7 @@ void GameModeSwitcher::frameEnded()
             }
         }
 
-        //from main menu single to race
+        //main menu single -> race
         if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceSingle)
         {
             mIsSwitchMode = false;
@@ -142,7 +142,7 @@ void GameModeSwitcher::frameEnded()
             mPlayerMode->initData();
         }
 
-        //from main menu multi to race
+        //main menu multi -> race
         if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeRaceMulti)
         {
             mIsSwitchMode = false;
@@ -156,7 +156,7 @@ void GameModeSwitcher::frameEnded()
             static_cast<MultiPlayerMode *>(mPlayerMode.get())->prepareDataForSession(multiplayerSessionStartInfo);
         }
 
-        //from main menu multi to main menu single
+        //main menu multi -> main menu single
         if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeMenu)
         {
             mIsSwitchMode = false;
@@ -169,7 +169,7 @@ void GameModeSwitcher::frameEnded()
             mMenuMode->initData();
         }
 
-        //from main menu single to multi main menu
+        //main menu single -> multi main menu
         if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeMenuMulti)
         {
             mIsSwitchMode = false;
@@ -178,6 +178,16 @@ void GameModeSwitcher::frameEnded()
 
             mMenuMultiMode.reset(new MenuMultiMode(mContext));
             mMenuMultiMode->initData();
+
+            //unable to enter to lobby
+            //recreate main menu single
+            if(!mMenuMultiMode->getIsLobbyEntered())
+            {
+                clear();
+                mGameMode = ModeMenu;
+                mMenuMode.reset(new MenuMode(mContext));
+                mMenuMode->initData();
+            }
         }
 
     }

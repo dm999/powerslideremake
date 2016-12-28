@@ -2478,10 +2478,10 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
     <node id="n54">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="637.5570968632119" width="980.3836661963628" x="13579.80816690182" y="-6258.778548431606"/>
+          <y:Geometry height="672.0205068555979" width="980.3836661963628" x="13579.80816690182" y="-6276.010253427799"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="22.755110931606396">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="650.8515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="10.584472177799398">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -2508,6 +2508,8 @@ void onError(const std::string&amp; message)override{}
 
 MultiplayerSessionStartInfo getMultiplayerSessionStartInfo()const
 
+bool getIsLobbyEntered()const
+
 protected:
 
 void doInitData()override
@@ -2520,7 +2522,9 @@ MultiplayerSessionStartInfo mMultiplayerSessionStartInfo
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
 CommonIncludes::shared_ptr&lt;UIMainMenuMulti&gt; mUIMainMenuMulti
 
-bool mIsEnterFromBaseMenu</y:NodeLabel>
+bool mIsEnterFromBaseMenu
+
+bool mIsLobbyEntered</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2818,7 +2822,7 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
           <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1570.2342745543065"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="210.75390625" x="16.187033856740527" y="3.2743136168064666">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="210.75390625" x="16.187033856740527" y="3.2743136168064666">&lt;&lt;MultiPlayerMode.cpp&gt;&gt;
 
 MultiplayerHumansLapFinishController
 

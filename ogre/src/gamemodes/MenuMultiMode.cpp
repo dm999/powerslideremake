@@ -14,7 +14,8 @@
  */
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
     BaseMenuMode(modeContext, true),
-    mIsEnterFromBaseMenu(true)
+    mIsEnterFromBaseMenu(true),
+    mIsLobbyEntered(true)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
 
@@ -34,7 +35,8 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
  */
 MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
     BaseMenuMode(modeContext, false),
-    mIsEnterFromBaseMenu(false)
+    mIsEnterFromBaseMenu(false),
+    mIsLobbyEntered(true)
 {
     mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
 
@@ -54,14 +56,17 @@ void MenuMultiMode::doInitData()
 
     if(mIsEnterFromBaseMenu)
     {
+        bool success;
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            bool success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount(), mModeContext.mGameState.getVersion());
+            success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount(), mModeContext.mGameState.getVersion());
         }
         else
         {
-            bool success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
+            success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
         }
+
+        mIsLobbyEntered = success;
     }
 }
 

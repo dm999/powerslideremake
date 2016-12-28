@@ -43,6 +43,8 @@ public:
 
     MultiplayerSessionStartInfo getMultiplayerSessionStartInfo()const{return mMultiplayerSessionStartInfo;}
 
+    bool getIsLobbyEntered()const{return mIsLobbyEntered;}
+
 #if defined(__ANDROID__)
     //for UI only
     void reloadTextures()override;
@@ -61,6 +63,8 @@ private:
     CommonIncludes::shared_ptr<UIMainMenuMulti> mUIMainMenuMulti;
 
     bool mIsEnterFromBaseMenu;
+
+    bool mIsLobbyEntered;
 
 };
 

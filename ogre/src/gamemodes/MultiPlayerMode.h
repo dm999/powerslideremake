@@ -5,30 +5,7 @@
 
 #include "../multiplayer/MultiplayerController.h"
 
-class MultiPlayerMode;
-
-class MultiplayerHumansLapFinishController : public LapUtils::Events
-{
-public:
-
-    MultiplayerHumansLapFinishController(GameState& gameState, MultiPlayerMode * multiPlayerMode, PSMultiplayerCar& humanCar, const std::string& humanName) : 
-      mGameState(gameState),
-      mMultiPlayerMode(multiPlayerMode),
-      mHumanCar(humanCar),
-      mHumanName(humanName){}
-
-    void onLapFinished()override;
-
-private:
-
-    GameState& mGameState;
-
-    MultiPlayerMode * mMultiPlayerMode;
-
-    PSMultiplayerCar& mHumanCar;
-
-    std::string mHumanName;
-};
+class MultiplayerHumansLapFinishController;
 
 class MultiPlayerMode : public BaseRaceMode,
     public MultiplayerControllerEvents
