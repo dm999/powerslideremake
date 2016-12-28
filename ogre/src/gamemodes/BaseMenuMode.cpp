@@ -23,7 +23,6 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
         mModeContext.getGameState().setAICount(1);                          //not more than 11
 
         mModeContext.getGameState().setMultiplayerServerPort(8800);
-        mModeContext.getGameState().setMultiplayerBroadcastInterval(150);   //in ms; 50 for fast; 150 for slow
 
         mModeContext.getGameState().setListenerGain(0.0f);
 

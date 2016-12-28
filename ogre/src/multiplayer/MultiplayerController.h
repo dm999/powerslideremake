@@ -28,6 +28,8 @@ public:
 
     size_t getSessionPing()const;
 
+    void setBroadcastInterval(size_t interval){mBroadcastInterval = interval;}
+
 protected:
 
     // Lobby callback

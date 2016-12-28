@@ -24,7 +24,7 @@ GameState::GameState() :
     mMultiplayerServerIP(""),
     mMultiplayerServerPort(8800),
     mMultiplayerAmountAI(0),
-    mMultiplayerBroadcastInterval(150)
+    mMultiplayerBroadcastInterval(350)
 {
 }
 

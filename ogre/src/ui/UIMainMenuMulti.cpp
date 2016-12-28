@@ -138,6 +138,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
             std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
 
+            //car
             Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(360.0f, 60.0f, 60.0f, 12.0f);
             mWidgetCar = gui->createWidget<MyGUI::ComboBox>("ComboBox", posCar.x, posCar.y, posCar.z, posCar.w, MyGUI::Align::Default, "Middle");
 
@@ -154,6 +155,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetCar->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
 
 
+            //character
             Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 60.0f, 12.0f);
             mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
 
@@ -169,6 +171,24 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
 
             mWidgetCharacter->setEditReadOnly(true);
             mWidgetCharacter->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
+
+
+            //broadcast interval
+            Ogre::Vector4 posBroadcast = screenAdaptionRelative * Ogre::Vector4(540.0f, 80.0f, 60.0f, 12.0f);
+            mWidgetBroadcast = gui->createWidget<MyGUI::ComboBox>("ComboBox", posBroadcast.x, posBroadcast.y, posBroadcast.z, posBroadcast.w, MyGUI::Align::Default, "Middle");
+
+            itemToSelect = 0;
+            for(size_t q = 50, w = 0; q <= 500; q += 50, ++w)
+            {
+                mWidgetBroadcast->addItem(Conversions::DMToString(q));
+
+                if(q == mModeContext.getGameState().getMultiplayerBroadcastInterval())
+                    itemToSelect = w;
+            }
+            mWidgetBroadcast->setIndexSelected(itemToSelect);
+
+            mWidgetBroadcast->setEditReadOnly(true);
+            mWidgetBroadcast->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
         }
 
         {
@@ -299,6 +319,12 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     if(sender == mWidgetLapsCount)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), index + 1);
+    }
+
+    if(sender == mWidgetBroadcast)
+    {
+        mModeContext.getGameState().setMultiplayerBroadcastInterval((index + 1) * 50);
+        mMenuMultiMode->getMultiplayerController()->setBroadcastInterval(mModeContext.getGameState().getMultiplayerBroadcastInterval());
     }
 
     updateRoomState();

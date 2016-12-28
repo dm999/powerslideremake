@@ -1787,7 +1787,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1006.1758688958967" width="1040.9607797438198" x="15529.519610128085" y="-2543.0879344479486"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="930.173828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="38.001020385448555">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="23.299848510448555">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1812,6 +1812,8 @@ bool getReadySent()const
 bool getStartHappen()const
 
 size_t getSessionPing()const
+
+void setBroadcastInterval(size_t interval)
 
 protected:
 

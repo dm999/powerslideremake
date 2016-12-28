@@ -60,6 +60,7 @@ private:
     MyGUI::ComboBox* mWidgetAICount;
     MyGUI::ComboBox* mWidgetAIStrength;
     MyGUI::ComboBox* mWidgetLapsCount;
+    MyGUI::ComboBox* mWidgetBroadcast;
 
     MyGUI::ListBox* mWidgetEvents;
 };
