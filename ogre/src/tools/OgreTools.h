@@ -45,6 +45,11 @@ void AdjustSuspension(  Ogre::Entity* cockpit,
 Ogre::Real GetSignedAngle(const Ogre::Vector3& a, const Ogre::Vector3& b);
 
 /**
+ * Get angle in radians between two quaternions
+ */
+Ogre::Vector3 GetAngleBetweenQuaternions(const Ogre::Quaternion& from, const Ogre::Quaternion& to);
+
+/**
  * a - point, b, c - start/end points of line
  * return - point within line
  */

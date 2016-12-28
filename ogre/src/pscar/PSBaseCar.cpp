@@ -538,17 +538,6 @@ void PSBaseCar::setModelPositionOnGrid(const Ogre::Matrix4& transform)
     }
 }
 
-void PSBaseCar::getWheelsPositions(Ogre::Vector3& wheel0, Ogre::Vector3& wheel1, Ogre::Vector3& wheel2, Ogre::Vector3& wheel3) const
-{
-    if(mModelNode)
-    {
-        wheel0 = mWheelNodes[0]->getPosition();
-        wheel1 = mWheelNodes[1]->getPosition();
-        wheel2 = mWheelNodes[2]->getPosition();
-        wheel3 = mWheelNodes[3]->getPosition();
-    }
-}
-
 void PSBaseCar::clear()
 {
     mModelNode = NULL;

@@ -505,6 +505,28 @@ Ogre::Real GetSignedAngle(const Ogre::Vector3& a, const Ogre::Vector3& b)
     return res;
 }
 
+Ogre::Vector3 GetAngleBetweenQuaternions(const Ogre::Quaternion& from, const Ogre::Quaternion& to)
+{
+    Ogre::Vector3 res;
+
+    Ogre::Radian rotAngle;
+    Ogre::Real valRadians;
+
+    Ogre::Real dot = to.Dot(from);
+    Ogre::Quaternion angleDiffQ = to * from.Inverse();
+    angleDiffQ.ToAngleAxis(rotAngle, res);
+    valRadians = rotAngle.valueRadians();
+    if(dot < 0.0f)
+    {
+        angleDiffQ = to * (-from.Inverse());
+        angleDiffQ.ToAngleAxis(rotAngle, res);
+        valRadians = rotAngle.valueRadians();
+    }
+    res *= valRadians;
+
+    return res;
+}
+
 Ogre::Vector3 ProjectPointOnLine(const Ogre::Vector3& a, const Ogre::Vector3& b, const Ogre::Vector3& c)
 {
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79096

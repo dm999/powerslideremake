@@ -35,8 +35,10 @@ public:
      */
     void clear()override;
 
-    void setModelPosition(const Ogre::Vector3& pos, const Ogre::Quaternion& rot, const Ogre::Vector3& wheel0, const Ogre::Vector3& wheel1, const Ogre::Vector3& wheel2, const Ogre::Vector3& wheel3);
-    void setModelRotationOnly(const Ogre::Quaternion& rot);
+    /**
+     * Positioning of multiplayer car based on velocities
+     * Absolute positions not used
+     */
     void setModelVelocity(const Ogre::Vector3& linear, const Ogre::Vector3& angular);
 
     void removeFromScene(Ogre::SceneManager* sceneMgr);

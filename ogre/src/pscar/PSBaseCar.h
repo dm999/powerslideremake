@@ -40,7 +40,6 @@ public:
                             bool isAI);
 
     void setModelPositionOnGrid(const Ogre::Matrix4& transform); // for multiplayer
-    void getWheelsPositions(Ogre::Vector3& wheel0, Ogre::Vector3& wheel1, Ogre::Vector3& wheel2, Ogre::Vector3& wheel3) const; // for multiplayer
 
     void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();

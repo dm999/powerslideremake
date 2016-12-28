@@ -51,7 +51,6 @@ struct MultiplayerSessionData
     Ogre::Quaternion rot;
     Ogre::Vector3 vel;
     Ogre::Vector3 velang;
-    Ogre::Vector3 wheelpos[4];
     bool isAcc;
     bool isBrake;
     bool isLeft;
@@ -69,12 +68,7 @@ struct MultiplayerSessionData
     isAcc(false), isBrake(false), isLeft(false), isRight(false),
     dataUpdateTimestamp(0),
     currentLap(0), lapPosition(0.0f)
-    {
-        wheelpos[0] = Ogre::Vector3::ZERO;
-        wheelpos[1] = Ogre::Vector3::ZERO;
-        wheelpos[2] = Ogre::Vector3::ZERO;
-        wheelpos[3] = Ogre::Vector3::ZERO;
-    }
+    {}
 };
 
 /**
