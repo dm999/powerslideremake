@@ -358,11 +358,12 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     Ogre::Real tachoLeft = viewportWidth - tachoWidth;
     Ogre::Real tachoTop = viewportHeight - tachoHeight - dashTop;
 
+    Ogre::PanelOverlayElement* tacho;
     {
         Ogre::Vector4 tachoRegion = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho texture region 1");
         tachoRegion /= 255.0f;
 
-        Ogre::PanelOverlayElement* tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
+        tacho = createPanel("TachoFrantic", tachoWidth, tachoHeight, tachoLeft, tachoTop, "Test/TachoFrantic");
         tacho->setUV(tachoRegion.x, tachoRegion.y, tachoRegion.z, tachoRegion.w);
         dashboard->addChild(tacho);
     }
@@ -385,6 +386,10 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             tachoLightsScreen = screenAdaptionRelative * tachoLightsScreen;
             tachoLightsScreen.y -= dashTop;
             tachoLightsScreen.w -= dashTop;
+            tachoLightsScreen.y -= tachoTop;
+            tachoLightsScreen.w -= tachoTop;
+            tachoLightsScreen.x -= tachoLeft;
+            tachoLightsScreen.z -= tachoLeft;
 
             Ogre::Vector4 tachoLightsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho 1 lights " + Conversions::DMToString(q));
             tachoLightsTexture /= 255.0f;
@@ -394,7 +399,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
             mTachoLamps[q] = createPanel("TachoLamps" + Conversions::DMToString(q), tachoLightsScreen, "Test/TachoFrantic");
             mTachoLamps[q]->setUV(tachoLightsTexture.x, tachoLightsTexture.y, tachoLightsTexture.z, tachoLightsTexture.w);
-            dashboard->addChild(mTachoLamps[q]);
+            tacho->addChild(mTachoLamps[q]);
             mTachoLamps[q]->hide();
         }
     }
@@ -411,12 +416,24 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         tachoDigitsScreen1.y -= dashTop;
         tachoDigitsScreen1.w -= dashTop;
+        tachoDigitsScreen1.y -= tachoTop;
+        tachoDigitsScreen1.w -= tachoTop;
+        tachoDigitsScreen1.x -= tachoLeft;
+        tachoDigitsScreen1.z -= tachoLeft;
 
         tachoDigitsScreen10.y -= dashTop;
         tachoDigitsScreen10.w -= dashTop;
+        tachoDigitsScreen10.y -= tachoTop;
+        tachoDigitsScreen10.w -= tachoTop;
+        tachoDigitsScreen10.x -= tachoLeft;
+        tachoDigitsScreen10.z -= tachoLeft;
 
         tachoDigitsScreen100.y -= dashTop;
         tachoDigitsScreen100.w -= dashTop;
+        tachoDigitsScreen100.y -= tachoTop;
+        tachoDigitsScreen100.w -= tachoTop;
+        tachoDigitsScreen100.x -= tachoLeft;
+        tachoDigitsScreen100.z -= tachoLeft;
 
         mTachoDigitsTexture = gameState.getSTRRacecrud().getArray4Value(gameState.getPlayerCar().getCharacterName() + " dash parameters", "speed digit texture 1");
         mTachoDigitsTexture /= 255.0f;
@@ -435,15 +452,15 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mTachoSpeedDigit1 = createPanel("TachoDigit1", tachoDigitsScreen1, "Test/TachoFranticDigits");
         std::pair<Ogre::Real, Ogre::Real> texCoords = getTachoDigitOffset(0);
         mTachoSpeedDigit1->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        dashboard->addChild(mTachoSpeedDigit1);
+        tacho->addChild(mTachoSpeedDigit1);
 
         mTachoSpeedDigit2 = createPanel("TachoDigit2", tachoDigitsScreen10, "Test/TachoFranticDigits");
         mTachoSpeedDigit2->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        dashboard->addChild(mTachoSpeedDigit2);
+        tacho->addChild(mTachoSpeedDigit2);
 
         mTachoSpeedDigit3 = createPanel("TachoDigit3", tachoDigitsScreen100, "Test/TachoFranticDigits");
         mTachoSpeedDigit3->setUV(texCoords.first, 1.0f - mTachoDigitsTexture.x, texCoords.second, 1.0f - mTachoDigitsTexture.z);
-        dashboard->addChild(mTachoSpeedDigit3);
+        tacho->addChild(mTachoSpeedDigit3);
 
 
         //mTachoSpeedDigit1->hide();
