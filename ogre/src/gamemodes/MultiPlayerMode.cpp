@@ -520,16 +520,39 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                     mModeContext.mGameState.getMultiplayerCarAI(q).setLastTimeOfUpdate(aiPlayersSessionData[q].dataUpdateTimestamp);
 
                     Ogre::Vector3 aiPos = mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getPosition();
+
+                    Ogre::Radian rotAngle;
+                    Ogre::Real valRadians;
+                    Ogre::Vector3 angleDiff;
+
+                    Ogre::Real dot = aiPlayersSessionData[q].rot.Dot(mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getOrientation());
+                    Ogre::Quaternion angleDiffQ = aiPlayersSessionData[q].rot * mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getOrientation().Inverse();
+                    angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                    valRadians = rotAngle.valueRadians();
+                    if(dot < 0.0f)
+                    {
+                        angleDiffQ = aiPlayersSessionData[q].rot * (-mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getOrientation().Inverse());
+                        angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                        valRadians = rotAngle.valueRadians();
+                    }
+                    angleDiff *= valRadians;
+
+
                     //if(aiPos.distance(aiPlayersSessionData[q].pos) > posDiffMax)
                     {
-                        mModeContext.mGameState.getMultiplayerCarAI(q).setModelPosition(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot, aiPlayersSessionData[q].wheelpos[0], aiPlayersSessionData[q].wheelpos[1], aiPlayersSessionData[q].wheelpos[2], aiPlayersSessionData[q].wheelpos[3]);
+                        //mModeContext.mGameState.getMultiplayerCarAI(q).setModelPosition(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot, aiPlayersSessionData[q].wheelpos[0], aiPlayersSessionData[q].wheelpos[1], aiPlayersSessionData[q].wheelpos[2], aiPlayersSessionData[q].wheelpos[3]);
                     }
                     //else
                     {
                         //mModeContext.mGameState.getMultiplayerCarAI(q).setModelRotationOnly(aiPlayersSessionData[q].rot);
                     }
 
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setModelVelocity(aiPlayersSessionData[q].vel, aiPlayersSessionData[q].velang);
+                    Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                    Ogre::Vector3 posDiff = aiPlayersSessionData[q].pos - aiPos;
+                    Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                    mModeContext.mGameState.getMultiplayerCarAI(q).setModelVelocity(aiPlayersSessionData[q].vel + velocityAddition, aiPlayersSessionData[q].velang + angularVelocityAddition);
                     mModeContext.mGameState.getMultiplayerCarAI(q).setAcceleration(aiPlayersSessionData[q].isAcc);
                     mModeContext.mGameState.getMultiplayerCarAI(q).setBrake(aiPlayersSessionData[q].isBrake);
                     mModeContext.mGameState.getMultiplayerCarAI(q).setSteerLeft(aiPlayersSessionData[q].isLeft);
@@ -554,16 +577,39 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 humanCar.setLastTimeOfUpdate((*i).second.dataUpdateTimestamp);
 
                 Ogre::Vector3 humanPos = humanCar.getModelNode()->getPosition();
+
+                Ogre::Radian rotAngle;
+                Ogre::Real valRadians;
+                Ogre::Vector3 angleDiff;
+
+                Ogre::Real dot = (*i).second.rot.Dot(humanCar.getModelNode()->getOrientation());
+                Ogre::Quaternion angleDiffQ = (*i).second.rot * humanCar.getModelNode()->getOrientation().Inverse();
+                angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                valRadians = rotAngle.valueRadians();
+                if(dot < 0.0f)
+                {
+                    angleDiffQ = (*i).second.rot * (-humanCar.getModelNode()->getOrientation().Inverse());
+                    angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                    valRadians = rotAngle.valueRadians();
+                }
+                angleDiff *= valRadians;
+
                 //if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
-                    humanCar.setModelPosition((*i).second.pos, (*i).second.rot, (*i).second.wheelpos[0], (*i).second.wheelpos[1], (*i).second.wheelpos[2], (*i).second.wheelpos[3]);
+                    //humanCar.setModelPosition((*i).second.pos, (*i).second.rot, (*i).second.wheelpos[0], (*i).second.wheelpos[1], (*i).second.wheelpos[2], (*i).second.wheelpos[3]);
                 }
                 //else
                 {
                     //humanCar.setModelRotationOnly((*i).second.rot);
                 }
 
-                humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
+
+                Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
+                Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
                 humanCar.setSteerLeft((*i).second.isLeft);
@@ -588,16 +634,38 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 humanCar.setLastTimeOfUpdate((*i).second.dataUpdateTimestamp);
 
                 Ogre::Vector3 humanPos = humanCar.getModelNode()->getPosition();
+
+                Ogre::Radian rotAngle;
+                Ogre::Real valRadians;
+                Ogre::Vector3 angleDiff;
+
+                Ogre::Real dot = (*i).second.rot.Dot(humanCar.getModelNode()->getOrientation());
+                Ogre::Quaternion angleDiffQ = (*i).second.rot * humanCar.getModelNode()->getOrientation().Inverse();
+                angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                valRadians = rotAngle.valueRadians();
+                if(dot < 0.0f)
+                {
+                    angleDiffQ = (*i).second.rot * (-humanCar.getModelNode()->getOrientation().Inverse());
+                    angleDiffQ.ToAngleAxis(rotAngle, angleDiff);
+                    valRadians = rotAngle.valueRadians();
+                }
+                angleDiff *= valRadians;
+
                 //if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
-                    humanCar.setModelPosition((*i).second.pos, (*i).second.rot, (*i).second.wheelpos[0], (*i).second.wheelpos[1], (*i).second.wheelpos[2], (*i).second.wheelpos[3]);
+                    //humanCar.setModelPosition((*i).second.pos, (*i).second.rot, (*i).second.wheelpos[0], (*i).second.wheelpos[1], (*i).second.wheelpos[2], (*i).second.wheelpos[3]);
                 }
                 //else
                 {
                     //humanCar.setModelRotationOnly((*i).second.rot);
                 }
 
-                humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
+                Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
+                Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
                 humanCar.setSteerLeft((*i).second.isLeft);
