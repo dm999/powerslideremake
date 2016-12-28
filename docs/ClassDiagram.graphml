@@ -1787,7 +1787,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1006.1758688958967" width="1040.9607797438198" x="15529.519610128085" y="-2543.0879344479486"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="23.299848510448555">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="930.173828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1016.48828125" x="12.23624924690921" y="38.001020385448555">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1802,8 +1802,6 @@ virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userNam
 virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0
 
 bool sendLobbyMessage(bool isReady, const std::string&amp; characterName, const std::string&amp; playerMessage, const std::string&amp; trackName, size_t aiCount, size_t aiStrength, size_t lapsCount)
-
-virtual void switchedToMainMenu() = 0
 
 void receiveData()
 
@@ -2620,7 +2618,7 @@ virtual void doClearData() = 0</y:NodeLabel>
           <y:Geometry height="512.0640110752847" width="941.0184105842977" x="15039.49079470785" y="-1276.0320055376444"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="503.83984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="917.74609375" x="11.63615841714818" y="4.1120836626423625">&lt;&lt;MultiplayerControllerMaster.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="917.74609375" x="11.63615841714818" y="18.813255537642362">&lt;&lt;MultiplayerControllerMaster.h&gt;&gt;
 
 MultiplayerControllerMaster
 
@@ -2631,8 +2629,6 @@ bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::s
 
 void setAISkins(const std::vector&lt;std::string&gt;&amp; aiSkins)
 std::vector&lt;std::string&gt; getAllPlayersSkins()const
-
-void switchedToMainMenu()override
 
 void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, const std::string &amp; message)override
 void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, uint8_t flags)override
@@ -2664,7 +2660,7 @@ std::vector&lt;std::string&gt; mAISkins</y:NodeLabel>
           <y:Geometry height="318.9939311716612" width="929.3182762144147" x="16005.340861892793" y="-1179.4969655858326"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="917.74609375" x="5.786091232206672" y="32.537004648330594">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="917.74609375" x="5.786091232206672" y="47.238176523330594">&lt;&lt;MultiplayerControllerSlave.h&gt;&gt;
 
 MultiplayerControllerSlave
 
@@ -2672,8 +2668,6 @@ public:
 
 bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string&amp; version)override
 bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName)override
-
-void switchedToMainMenu()override{}
 
 void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, const std::string &amp; message)override
 void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo &amp; room, const std::string &amp; sender, uint8_t flags)override

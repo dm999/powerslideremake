@@ -20,8 +20,6 @@ public:
 
     bool sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount, size_t aiStrength, size_t lapsCount);
 
-    virtual void switchedToMainMenu() = 0;
-
     void receiveData();
 
     void updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI, float spf);

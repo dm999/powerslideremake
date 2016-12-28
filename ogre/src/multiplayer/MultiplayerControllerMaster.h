@@ -15,8 +15,6 @@ public:
     void setAISkins(const std::vector<std::string>& aiSkins){mAISkins = aiSkins;}
     std::vector<std::string> getAllPlayersSkins()const;
 
-    void switchedToMainMenu()override;
-
     // Lobby callback
     void onMessage(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, const std::string & message)override;
     void onRoomUpdate(multislider::Lobby* lobby, const multislider::RoomInfo & room, const std::string & sender, uint8_t flags)override;

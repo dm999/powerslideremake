@@ -161,6 +161,8 @@ void MultiplayerController::receiveData()
         try{
             mSession->receive();
             //mSession->keepAlive();
+
+            mLobby->receive();
         }catch(multislider::RuntimeError& e)
         {
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerController::receiveData]: " + Ogre::String(e.what()));

@@ -197,6 +197,8 @@ void MultiplayerControllerMaster::startSession(const std::string& trackName, siz
         if (checkAllPlayersReady())
         {
 
+            resetPlayersReady();
+
             jsonxx::Object jsonObject;
 
             //humandata
@@ -238,11 +240,6 @@ void MultiplayerControllerMaster::startSession(const std::string& trackName, siz
             mLobby->startSession(jsonObject.json());
         }
     }
-}
-
-void MultiplayerControllerMaster::switchedToMainMenu()
-{
-    resetPlayersReady();
 }
 
 void MultiplayerControllerMaster::reconfigureSession(size_t aiAmount)
