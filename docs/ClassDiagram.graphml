@@ -1126,7 +1126,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2782.521484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="87.33594061836084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2797.22265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="79.98535468086084">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1237,6 +1237,7 @@ size_t getMultiplayerPlayersLimits()const
 void setMultiplayerBroadcastInterval(size_t option)
 size_t getMultiplayerBroadcastInterval()const
 
+int getMaxMultiplayerAI()const
 PSMultiplayerCar&amp; getMultiplayerCarAI(size_t index)
 void setMultiplayerCountAI(size_t multiplayerAmountAI)
 size_t getMultiplayerCountAI()const

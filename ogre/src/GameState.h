@@ -143,6 +143,7 @@ public:
     void setMultiplayerBroadcastInterval(size_t option){mMultiplayerBroadcastInterval = option;}
     size_t getMultiplayerBroadcastInterval()const{return mMultiplayerBroadcastInterval;}
 
+    int getMaxMultiplayerAI()const{return mMultiplayerMaxAI;}
     PSMultiplayerCar& getMultiplayerCarAI(size_t index);
     void setMultiplayerCountAI(size_t multiplayerAmountAI);
     size_t getMultiplayerCountAI()const{return mMultiplayerAmountAI;}
