@@ -1073,10 +1073,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="677.9010334571371" width="523.8806166173504" x="6578.059691691325" y="-968.9505167285686"/>
+          <y:Geometry height="677.9010334571371" width="548.858304388275" x="6565.570847805862" y="-968.9505167285686"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="27.516480183675412" y="20.875321416068573">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="650.8515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="481.568359375" x="33.644972506637714" y="13.524735478568573">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1093,6 +1093,7 @@ void initModel( lua_State * pipeline,
                             bool isPossesCamera, const std::string&amp; humanName, bool isHuman)
 
 void setModelVelocity(const Ogre::Vector3&amp; linear, const Ogre::Vector3&amp; angular)
+void setModelPositionOrientation(const Ogre::Vector3&amp; pos, const Ogre::Quaternion&amp; rot)
 
 void removeFromScene(Ogre::SceneManager* sceneMgr)
 
@@ -1909,7 +1910,7 @@ virtual void onError(const std::string&amp; message) = 0</y:NodeLabel>
           <y:Geometry height="281.27145407217085" width="273.1359434396013" x="16783.432028280193" y="-2603.3748863538312"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="266.125" x="3.5054717197999707" y="6.325180161085427">&lt;&lt;MultiplayerData.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="266.125" x="3.5054717197999707" y="13.675766098585427">&lt;&lt;MultiplayerData.h&gt;&gt;
 
 MultiplayerSessionData
 
@@ -1917,7 +1918,6 @@ Ogre::Vector3 pos
 Ogre::Quaternion rot
 Ogre::Vector3 vel
 Ogre::Vector3 velang
-Ogre::Vector3 wheelpos[4]
 bool isAcc
 bool isBrake
 bool isLeft

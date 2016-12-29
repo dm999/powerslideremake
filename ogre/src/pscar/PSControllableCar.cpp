@@ -382,13 +382,13 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
-    Ogre::Real projectedVel = getAlignedVelocity();
+    Ogre::Vector3 linearVelocity = getLinearVelocity();
 
     Ogre::Vector3 carForwardVector = getForwardAxis();
     Ogre::Real forwardProjY = Ogre::Vector3::UNIT_Y.dotProduct(carForwardVector);
 
     //freeze on low speed
-    if( Ogre::Math::Abs(projectedVel) < 10.0f   &&
+    if( Ogre::Math::Abs(linearVelocity.length()) < 10.0f    &&
         Ogre::Math::Abs(forwardProjY) < 0.2f    &&
         !mSteeringLeft                          &&
         !mSteeringRight                         &&
@@ -405,6 +405,8 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
         mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
         //mCarChassis->forceActivationState();
     }
+
+    Ogre::Real projectedVel = getAlignedVelocity();
 
 
     const Ogre::Real wheelRadius = 2.0f;

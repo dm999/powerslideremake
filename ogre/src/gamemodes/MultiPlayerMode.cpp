@@ -484,6 +484,8 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
 void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
 {
+    const float posDiffMax = 100.0f;
+
     if(!isHost)
     {
         //AI
@@ -491,27 +493,37 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
         {
             for(size_t q = 0; q < aiPlayersSessionData.size(); ++q)
             {
+                PSMultiplayerCar& aiCar = mModeContext.mGameState.getMultiplayerCarAI(q);
 
-                uint64_t lastTimestamp = mModeContext.mGameState.getMultiplayerCarAI(q).getLastTimeOfUpdate();
+                uint64_t lastTimestamp = aiCar.getLastTimeOfUpdate();
 
                 if(lastTimestamp < aiPlayersSessionData[q].dataUpdateTimestamp)
                 {
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setLastTimeOfUpdate(aiPlayersSessionData[q].dataUpdateTimestamp);
+                    aiCar.setLastTimeOfUpdate(aiPlayersSessionData[q].dataUpdateTimestamp);
 
-                    Ogre::Vector3 aiPos = mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getPosition();
+                    Ogre::Vector3 aiPos = aiCar.getModelNode()->getPosition();
                     Ogre::Vector3 posDiff = aiPlayersSessionData[q].pos - aiPos;
                     Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
-                    Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getOrientation(), aiPlayersSessionData[q].rot);
+                    Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(aiCar.getModelNode()->getOrientation(), aiPlayersSessionData[q].rot);
                     Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setModelVelocity(aiPlayersSessionData[q].vel + velocityAddition, aiPlayersSessionData[q].velang + angularVelocityAddition);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setAcceleration(aiPlayersSessionData[q].isAcc);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setBrake(aiPlayersSessionData[q].isBrake);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setSteerLeft(aiPlayersSessionData[q].isLeft);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setSteerRight(aiPlayersSessionData[q].isRight);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setCurrentLap(aiPlayersSessionData[q].currentLap);
-                    mModeContext.mGameState.getMultiplayerCarAI(q).setLapPosition(aiPlayersSessionData[q].lapPosition);
+                    if(aiPos.distance(aiPlayersSessionData[q].pos) > posDiffMax)
+                    {
+                        aiCar.setModelPositionOrientation(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot);
+                        aiCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                    }
+                    else
+                    {
+                        aiCar.setModelVelocity(aiPlayersSessionData[q].vel + velocityAddition, aiPlayersSessionData[q].velang + angularVelocityAddition);
+                    }
+
+                    aiCar.setAcceleration(aiPlayersSessionData[q].isAcc);
+                    aiCar.setBrake(aiPlayersSessionData[q].isBrake);
+                    aiCar.setSteerLeft(aiPlayersSessionData[q].isLeft);
+                    aiCar.setSteerRight(aiPlayersSessionData[q].isRight);
+                    aiCar.setCurrentLap(aiPlayersSessionData[q].currentLap);
+                    aiCar.setLapPosition(aiPlayersSessionData[q].lapPosition);
                 }
             }
         }
@@ -536,7 +548,16 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
                 Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
-                humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
+                if(humanPos.distance((*i).second.pos) > posDiffMax)
+                {
+                    humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
+                    humanCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                }
+                else
+                {
+                    humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
+                }
+
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
                 humanCar.setSteerLeft((*i).second.isLeft);
@@ -567,7 +588,16 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
                 Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
-                humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
+                if(humanPos.distance((*i).second.pos) > posDiffMax)
+                {
+                    humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
+                    humanCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                }
+                else
+                {
+                    humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
+                }
+
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
                 humanCar.setSteerLeft((*i).second.isLeft);

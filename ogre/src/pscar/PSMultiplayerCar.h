@@ -37,9 +37,14 @@ public:
 
     /**
      * Positioning of multiplayer car based on velocities
-     * Absolute positions not used
      */
     void setModelVelocity(const Ogre::Vector3& linear, const Ogre::Vector3& angular);
+
+    /**
+     * If car shifted too far use absolute positioning
+     */
+    void setModelPositionOrientation(const Ogre::Vector3& pos, const Ogre::Quaternion& rot);
+
 
     void removeFromScene(Ogre::SceneManager* sceneMgr);
 
