@@ -249,7 +249,7 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
                     Ogre::Quaternion rotInv = rot.Inverse();
                     Ogre::Vector3 originTransformed = rotInv * origin;
 
-                    originTransformed.y += mWheelRadiusFront;
+                    originTransformed.y += mInitialVehicleSetup.mWheelRadius.x;
                     originTransformed = rot * originTransformed;
 
                     mCarWheelFrontL->setExternalUpdate(originTransformed);
@@ -281,7 +281,7 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
                     Ogre::Quaternion rotInv = rot.Inverse();
                     Ogre::Vector3 originTransformed = rotInv * origin;
 
-                    originTransformed.y += mWheelRadiusFront;
+                    originTransformed.y += mInitialVehicleSetup.mWheelRadius.x;
                     originTransformed = rot * originTransformed;
 
                     mCarWheelFrontR->setExternalUpdate(originTransformed);
@@ -313,7 +313,7 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
                     Ogre::Quaternion rotInv = rot.Inverse();
                     Ogre::Vector3 originTransformed = rotInv * origin;
 
-                    originTransformed.y += mWheelRadiusBack;
+                    originTransformed.y += mInitialVehicleSetup.mWheelRadius.y;
                     originTransformed = rot * originTransformed;
 
                     mCarWheelBackL->setExternalUpdate(originTransformed);
@@ -345,7 +345,7 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
                     Ogre::Quaternion rotInv = rot.Inverse();
                     Ogre::Vector3 originTransformed = rotInv * origin;
 
-                    originTransformed.y += mWheelRadiusBack;
+                    originTransformed.y += mInitialVehicleSetup.mWheelRadius.y;
                     originTransformed = rot * originTransformed;
 
                     mCarWheelBackR->setExternalUpdate(originTransformed);
@@ -384,12 +384,12 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
     Ogre::Vector3 linearVelocity = getLinearVelocity();
 
-    Ogre::Vector3 carForwardVector = getForwardAxis();
-    Ogre::Real forwardProjY = Ogre::Vector3::UNIT_Y.dotProduct(carForwardVector);
+    Ogre::Vector3 carUpVector = rot * Ogre::Vector3::UNIT_Y;
+    Ogre::Real upProjY = Ogre::Vector3::UNIT_Y.dotProduct(carUpVector);
 
     //freeze on low speed
     if( Ogre::Math::Abs(linearVelocity.length()) < 10.0f    &&
-        Ogre::Math::Abs(forwardProjY) < 0.2f    &&
+        upProjY > 0.96f                         &&
         !mSteeringLeft                          &&
         !mSteeringRight                         &&
         !mBrakeEnabled                          &&
@@ -587,10 +587,10 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre:
 {
     Ogre::Vector3 wheelBackLPos = mWheelNodes[1]->getPosition();
     Ogre::Vector3 wheelBackRPos = mWheelNodes[0]->getPosition();
-    Ogre::Vector3 particlesShift = rot * (Ogre::Vector3::NEGATIVE_UNIT_Z * mWheelRadiusBack);
+    Ogre::Vector3 particlesShift = rot * (Ogre::Vector3::NEGATIVE_UNIT_Z * mInitialVehicleSetup.mWheelRadius.y);
     Ogre::Vector3 particlesDir = rot * Ogre::Vector3(0.0f, 1.0f, 0.1f);
-    wheelBackLPos.y -= mWheelRadiusBack / 1.5f;
-    wheelBackRPos.y -= mWheelRadiusBack / 1.5f;
+    wheelBackLPos.y -= mInitialVehicleSetup.mWheelRadius.y / 1.5f;
+    wheelBackRPos.y -= mInitialVehicleSetup.mWheelRadius.y / 1.5f;
     wheelBackLPos -= particlesShift;
     wheelBackRPos -= particlesShift;
     mParticleNodeWheelBackL->setPosition(wheelBackLPos);

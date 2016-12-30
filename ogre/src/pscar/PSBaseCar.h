@@ -2,9 +2,8 @@
 #ifndef PSBASECAR_H
 #define PSBASECAR_H
 
-#include "../includes/OgreInclude.h"
-#include "../includes/OgreBulletInclude.h"
-#include "../includes/CommonIncludes.h"
+#include "PSBaseVehicle.h"
+
 #include "../loaders/PFLoader.h"
 #include "../OriginalSettings.h"
 
@@ -12,14 +11,13 @@ struct lua_State;
 class CameraMan;
 
 class StaticMeshProcesser;
-class CustomRigidBodyWheel;
 class ModelsPool;
 
 class OpenALSource;
 
 class GameState;
 
-class PSBaseCar
+class PSBaseCar : public PSBaseVehicle
 {
 public:
 
@@ -52,7 +50,7 @@ public:
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
 
-    virtual void clear();
+    void clear()override;
 
     std::string getFrontLWheelColliderString(){return mWheelFrontLColliderString;}
     std::string getFrontRWheelColliderString(){return mWheelFrontRColliderString;}
@@ -103,21 +101,6 @@ protected:
     Ogre::Entity * mWheelEntitys[4];
     Ogre::SceneNode *mWheelNodes[4];
 
-    OgreBulletDynamics::RigidBody *mCarChassis;
-    CustomRigidBodyWheel *mCarWheelFrontL;
-    CustomRigidBodyWheel *mCarWheelFrontR;
-    CustomRigidBodyWheel *mCarWheelBackL;
-    CustomRigidBodyWheel *mCarWheelBackR;
-    //OgreBulletDynamics::VehicleTuning *mTuning;
-    //OgreBulletDynamics::VehicleRayCaster *mVehicleRayCaster;
-    //OgreBulletDynamics::RaycastVehicle *mVehicle;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR;
-
-    Ogre::Real mWheelRadiusFront;
-    Ogre::Real mWheelRadiusBack;
 
 
     std::string mWheelFrontLColliderString;
@@ -130,8 +113,6 @@ protected:
     unsigned char mWheelBackLColliderIndex;
     unsigned char mWheelBackRColliderIndex;
     unsigned char mChassisColliderIndex;
-
-    static Ogre::NameGenerator nameGenNodes;
 
     std::string mCharacterName;
 

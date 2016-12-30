@@ -9,8 +9,6 @@
 #include "../listeners/VehicleSceneObjectListener.h"
 #include "../listeners/PlayerVehicleSceneObjectListener.h"
 
-#include "../customs/CustomRigidBodyWheel.h"
-
 #include "../mesh/ModelsPool.h"
 
 #include "../OpenAL/OpenALSource.h"
@@ -27,7 +25,6 @@ namespace{
 
 Ogre::NameGenerator PSBaseCar::nameGenMaterials("Scene/Material/Vehicle/Name");
 Ogre::NameGenerator PSBaseCar::nameGenTextures("Scene/Texture/Vehicle/Name");
-Ogre::NameGenerator PSBaseCar::nameGenNodes("Scene/Node/Vehicle/Name");
 
 PSBaseCar::PSBaseCar() :
     mModelNode(NULL),
@@ -240,273 +237,90 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     }
 
 
-    Ogre::Vector3 chassisPos = mModelNode->getPosition();
-    Ogre::Quaternion chassisRot = mModelNode->getOrientation();
-    Ogre::Vector3 connectionPoint_rrWheel = mWheelNodes[0]->getPosition();
-    Ogre::Vector3 connectionPoint_rlWheel = mWheelNodes[1]->getPosition();
-    Ogre::Vector3 connectionPoint_frWheel = mWheelNodes[2]->getPosition();
-    Ogre::Vector3 connectionPoint_flWheel = mWheelNodes[3]->getPosition();
+    InitialVehicleSetup initialVehicleSetup;
+    initialVehicleSetup.mChassisPos = mModelNode->getPosition();
+    initialVehicleSetup.mChassisRot = mModelNode->getOrientation();
+    initialVehicleSetup.mConnectionPointRRWheel = mBackROriginalPos;
+    initialVehicleSetup.mConnectionPointRLWheel = mBackLOriginalPos;
+    initialVehicleSetup.mConnectionPointFRWheel = mFrontROriginalPos;
+    initialVehicleSetup.mConnectionPointFLWheel = mFrontLOriginalPos;
 
-    OgreBulletCollisions::CompoundCollisionShape* compound = new OgreBulletCollisions::CompoundCollisionShape();
+    initialVehicleSetup.mRoofBackRadius = carSettings.getFloatValue("", "roof back radius");
+    Ogre::Vector3 roofBack = carSettings.getArray3Value("", "roof back");
+    roofBack.z = -roofBack.z;
+    initialVehicleSetup.mRoofBackPos = roofBack;
 
-    //const Ogre::Vector3 chassisShift = strSettings.getArrayValue("", "centre of gravity");
-    //OgreBulletCollisions::BoxCollisionShape* chassisShape = new OgreBulletCollisions::BoxCollisionShape(Ogre::Vector3(3.0f,0.75f, 8.0f));
-    //compound->addChildShape(chassisShape, chassisShift);
+    initialVehicleSetup.mRoofFrontRadius = carSettings.getFloatValue("", "roof front radius");
+    Ogre::Vector3 roofFront = carSettings.getArray3Value("", "roof front");
+    roofFront.z = -roofFront.z;
+    initialVehicleSetup.mRoofFrontPos = roofFront;
 
-    //if(!isAI)
-    {
-        float roofBackRadius = carSettings.getFloatValue("", "roof back radius");
-        Ogre::Vector3 roofBack = carSettings.getArray3Value("", "roof back");
-        roofBack.z = -roofBack.z;
+    initialVehicleSetup.mBodyRadius = carSettings.getFloatValue("", "body radius");
+    Ogre::Vector3 bodyBase = carSettings.getArray3Value("", "body base 0");
+    bodyBase.z = -bodyBase.z;
+    initialVehicleSetup.mBodyBasePos = bodyBase;
 
-        float roofFrontRadius = carSettings.getFloatValue("", "roof front radius");
-        Ogre::Vector3 roofFront = carSettings.getArray3Value("", "roof front");
-        roofFront.z = -roofFront.z;
+    initialVehicleSetup.mWheelRadius = carSettings.getArray2Value("", "wheel radii");
 
-        float bodyRadius = carSettings.getFloatValue("", "body radius");
-        Ogre::Vector3 bodyBase = carSettings.getArray3Value("", "body base 0");
-        bodyBase.z = -bodyBase.z;
-
-        OgreBulletCollisions::SphereCollisionShape* roofBackR = new OgreBulletCollisions::SphereCollisionShape(roofBackRadius);
-        OgreBulletCollisions::SphereCollisionShape* roofBackL = new OgreBulletCollisions::SphereCollisionShape(roofBackRadius);
-        compound->addChildShape(roofBackR, roofBack);
-        compound->addChildShape(roofBackL, Ogre::Vector3(-roofBack.x, roofBack.y, roofBack.z));
-        
-        OgreBulletCollisions::SphereCollisionShape* roofFrontR = new OgreBulletCollisions::SphereCollisionShape(roofFrontRadius);
-        OgreBulletCollisions::SphereCollisionShape* roofFrontL = new OgreBulletCollisions::SphereCollisionShape(roofFrontRadius);
-        compound->addChildShape(roofFrontR, roofFront);
-        compound->addChildShape(roofFrontL, Ogre::Vector3(-roofFront.x, roofFront.y, roofFront.z));
-
-        OgreBulletCollisions::SphereCollisionShape* chassisBody = new OgreBulletCollisions::SphereCollisionShape(bodyRadius);
-        compound->addChildShape(chassisBody, bodyBase);
-    }
-    if(isAI)
-    {
-#if 0
-        Ogre::Vector3 cockpit = strSettings.getArrayValue("", "cockpit");
-        cockpit.z = -cockpit.z;
-
-        OgreBulletCollisions::SphereCollisionShape* chassisCockpit = new OgreBulletCollisions::SphereCollisionShape(strSettings.getFloatValue("", "collision radius"));
-        compound->addChildShape(chassisCockpit, cockpit);
-#endif
-    }
-
-
-    mCarChassis = new OgreBulletDynamics::RigidBody(nameGenNodes.generate(), world);
-    //mCarChassis = new OgreBulletDynamics::RigidBody("carChassis", world, 0, 1);//no collision with static mesh
-
-    mCarChassis->setShape ( mModelNode, 
-                            compound, 
-                            luaManager.ReadScalarFloat("Model.Physics.Chassis.Restitution", pipeline), 
-                            luaManager.ReadScalarFloat("Model.Physics.Chassis.Friction", pipeline), 
-                            1.0f,
-                            Ogre::Vector3::UNIT_SCALE,
-                            getCarParameter(carSettings, trackSettings, defaultSettings, "", "mass"),
-                            chassisPos, 
-                            chassisRot);
-
-    mCarChassis->getBulletRigidBody()->setCollisionFlags(mCarChassis->getBulletRigidBody()->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-
-    //mCarChassis->setCenterOfMass(Ogre::Vector3(0.0f, -3.0f, 0.0f));
-
-    Ogre::Real airDensityLinear = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density translation");
-    Ogre::Real airDensityAngular = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density rotation");
-
-    mCarChassis->setDamping(airDensityLinear, airDensityAngular);
-
-    if(isAI)
-    {
-        //mCarChassis->setDamping(airDensityLinear, 0.9f);
-    }
-
-    //mCarChassis->getBulletRigidBody()->setCollisionFlags(mCarChassis->getBulletRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-
-    Ogre::Vector2 wheelRadius = carSettings.getArray2Value("", "wheel radii");
-    mWheelRadiusFront = wheelRadius.x;
-    mWheelRadiusBack = wheelRadius.y;
-
-
-    OgreBulletCollisions::SphereCollisionShape* wheelShapeFront = new OgreBulletCollisions::SphereCollisionShape(mWheelRadiusFront);
-    OgreBulletCollisions::SphereCollisionShape* wheelShapeBack = new OgreBulletCollisions::SphereCollisionShape(mWheelRadiusBack);
-
-    mCarWheelFrontL = new CustomRigidBodyWheel(nameGenNodes.generate(), world, mModelNode, connectionPoint_flWheel, true, 1, 2);// don`t collide with other car
-    mCarWheelFrontR = new CustomRigidBodyWheel(nameGenNodes.generate(), world, mModelNode, connectionPoint_frWheel, true, 1, 2);// don`t collide with other car
-    mCarWheelBackL = new CustomRigidBodyWheel(nameGenNodes.generate(), world, mModelNode, connectionPoint_rlWheel, false, 1, 2);// don`t collide with other car
-    mCarWheelBackR = new CustomRigidBodyWheel(nameGenNodes.generate(), world, mModelNode, connectionPoint_rrWheel, false, 1, 2);// don`t collide with other car
-
-    Ogre::Vector3 anisotropicFriction(
+    initialVehicleSetup.mAnisotropicFriction = Ogre::Vector3(
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.x", pipeline),
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.y", pipeline),
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.z", pipeline)
         );
 
-    const Ogre::Real rollingFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.RollingFriction", pipeline);
+    initialVehicleSetup.mRollingFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.RollingFriction", pipeline);
 
-    mCarWheelFrontL->setShape ( mWheelNodes[3], 
-                                wheelShapeFront, 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline), 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline), 
-                                rollingFriction,
-                                anisotropicFriction,
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.Mass", pipeline), 
-                                chassisPos + chassisRot * connectionPoint_flWheel, 
-                                chassisRot);
+    initialVehicleSetup.mMaxTravel = -getCarParameter(carSettings, trackSettings, defaultSettings, "", "max travel");
 
-    mCarWheelFrontR->setShape ( mWheelNodes[2], 
-                                wheelShapeFront, 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline), 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline), 
-                                rollingFriction,
-                                anisotropicFriction,
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.Mass", pipeline), 
-                                chassisPos + chassisRot * connectionPoint_frWheel, 
-                                chassisRot);
+    initialVehicleSetup.mWheelsFSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline);
+    initialVehicleSetup.mWheelsFSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline);
+    initialVehicleSetup.mWheelsRSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringStiffness", pipeline);
+    initialVehicleSetup.mWheelsRSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringDamping", pipeline);
+    initialVehicleSetup.mLimitSpringParamsF = luaManager.ReadScalarBool("Model.Physics.Wheels.Front.LimitSpringParams", pipeline);
+    initialVehicleSetup.mLimitSpringParamsR = luaManager.ReadScalarBool("Model.Physics.Wheels.Rear.LimitSpringParams", pipeline);
 
-    mCarWheelBackL->setShape (  mWheelNodes[1], 
-                                wheelShapeBack, 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline), 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline), 
-                                rollingFriction,
-                                anisotropicFriction,
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline), 
-                                chassisPos + chassisRot * connectionPoint_rlWheel, 
-                                chassisRot);
+    initialVehicleSetup.mAirDensityLinear = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density translation");
+    initialVehicleSetup.mAirDensityAngular = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density rotation");
 
-    mCarWheelBackR->setShape (  mWheelNodes[0], 
-                                wheelShapeBack, 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline), 
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline), 
-                                rollingFriction,
-                                anisotropicFriction,
-                                luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline), 
-                                chassisPos + chassisRot * connectionPoint_rrWheel, 
-                                chassisRot);
+    initialVehicleSetup.mChassisMass = getCarParameter(carSettings, trackSettings, defaultSettings, "", "mass");
+    initialVehicleSetup.mChassisRestitution = luaManager.ReadScalarFloat("Model.Physics.Chassis.Restitution", pipeline);
+    initialVehicleSetup.mChassisFriction = luaManager.ReadScalarFloat("Model.Physics.Chassis.Friction", pipeline);
 
-    mCarWheelFrontL->setDamping(airDensityLinear, airDensityAngular);
-    mCarWheelFrontR->setDamping(airDensityLinear, airDensityAngular);
-    mCarWheelBackL->setDamping(airDensityLinear, airDensityAngular);
-    mCarWheelBackR->setDamping(airDensityLinear, airDensityAngular);
+    initialVehicleSetup.mWheelsFMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.Mass", pipeline);
+    initialVehicleSetup.mWheelsRMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline);
+    initialVehicleSetup.mWheelsRestitution = luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline);
+    initialVehicleSetup.mWheelsFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline);
 
-
-    mCarChassis->disableDeactivation ();
-    mCarWheelFrontL->disableDeactivation ();
-    mCarWheelFrontR->disableDeactivation ();
-    mCarWheelBackL->disableDeactivation ();
-    mCarWheelBackR->disableDeactivation ();
-
-    Ogre::Real maxTravel = -getCarParameter(carSettings, trackSettings, defaultSettings, "", "max travel");
-
-    bool limitSpringParamsF = luaManager.ReadScalarBool("Model.Physics.Wheels.Front.LimitSpringParams", pipeline);
-    bool limitSpringParamsR = luaManager.ReadScalarBool("Model.Physics.Wheels.Rear.LimitSpringParams", pipeline);
-
-    {
-        //http://bulletphysics.org/mediawiki-1.5.8/index.php/Constraints
-        //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=8284
-        //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=6662
-        //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=4785&view=previous
-
-        mSixDofSpringFrontL = new OgreBulletDynamics::SixDofSpring2Constraint(mCarChassis, mCarWheelFrontL, connectionPoint_flWheel, Ogre::Quaternion::IDENTITY, Ogre::Vector3::ZERO, Ogre::Quaternion::IDENTITY);
-        mSixDofSpringFrontL->setLinearLowerLimit(Ogre::Vector3(0.0f, maxTravel, 0.0f));
-        mSixDofSpringFrontL->setLinearUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        mSixDofSpringFrontL->setAngularLowerLimit(Ogre::Vector3(1.0f, 0.0f, 0.0f));
-        mSixDofSpringFrontL->setAngularUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_enableMotor[1] = true;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_targetVelocity[1] = 1.0f;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_maxMotorForce[1] = 2.5f;
-        mSixDofSpringFrontL->enableSpring(1, true);
-        mSixDofSpringFrontL->setStiffness(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline), limitSpringParamsF);
-        mSixDofSpringFrontL->setDamping(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline), limitSpringParamsF);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setBounce(1, 0.0f);
-        //sixDofSpring->setParam(BT_CONSTRAINT_STOP_CFM, 1.0e-5f, 5);
-        mSixDofSpringFrontL->setEquilibriumPoint(1, maxTravel);
-        world->addConstraint(mSixDofSpringFrontL, true);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontL->getBulletTypedConstraint())->enableMotor(3,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontL->getBulletTypedConstraint())->setMaxMotorForce(3,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(3,10);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontL->getBulletTypedConstraint())->enableMotor(4,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontL->getBulletTypedConstraint())->setMaxMotorForce(4,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(4,0.1f);
-    }
-
-    {
-        mSixDofSpringFrontR = new OgreBulletDynamics::SixDofSpring2Constraint(mCarChassis, mCarWheelFrontR, connectionPoint_frWheel, Ogre::Quaternion::IDENTITY, Ogre::Vector3::ZERO, Ogre::Quaternion::IDENTITY);
-        mSixDofSpringFrontR->setLinearLowerLimit(Ogre::Vector3(0.0f, maxTravel, 0.0f));
-        mSixDofSpringFrontR->setLinearUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        mSixDofSpringFrontR->setAngularLowerLimit(Ogre::Vector3(1.0f, 0.0f, 0.0f));
-        mSixDofSpringFrontR->setAngularUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_enableMotor[1] = true;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_targetVelocity[1] = 2.0f;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_maxMotorForce[1] = 2.5f;
-        mSixDofSpringFrontR->enableSpring(1, true);
-        mSixDofSpringFrontR->setStiffness(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline), limitSpringParamsF);
-        mSixDofSpringFrontR->setDamping(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline), limitSpringParamsF);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setBounce(1, 0.0f);
-        //sixDofSpring->setParam(BT_CONSTRAINT_STOP_CFM, 1.0e-5f, 5);
-        mSixDofSpringFrontR->setEquilibriumPoint(1, maxTravel);
-        world->addConstraint(mSixDofSpringFrontR, true);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontR->getBulletTypedConstraint())->enableMotor(3,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontR->getBulletTypedConstraint())->setMaxMotorForce(3,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(3,10);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontR->getBulletTypedConstraint())->enableMotor(4,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringFrontR->getBulletTypedConstraint())->setMaxMotorForce(4,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(4,.1f);
-    }
-
-    {
-        mSixDofSpringBackL = new OgreBulletDynamics::SixDofSpring2Constraint(mCarChassis, mCarWheelBackL, connectionPoint_rlWheel, Ogre::Quaternion::IDENTITY, Ogre::Vector3::ZERO, Ogre::Quaternion::IDENTITY);
-        mSixDofSpringBackL->setLinearLowerLimit(Ogre::Vector3(0.0f, maxTravel, 0.0f));
-        mSixDofSpringBackL->setLinearUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        mSixDofSpringBackL->setAngularLowerLimit(Ogre::Vector3(1.0f, 0.0f, 0.0f));
-        mSixDofSpringBackL->setAngularUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_enableMotor[1] = true;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_targetVelocity[1] = 2.0f;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_maxMotorForce[1] = 2.5f;
-        mSixDofSpringBackL->enableSpring(1, true);
-        mSixDofSpringBackL->setStiffness(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringStiffness", pipeline), limitSpringParamsR);
-        mSixDofSpringBackL->setDamping(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringDamping", pipeline), limitSpringParamsR);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setBounce(1, 0.0f);
-        //sixDofSpring->setParam(BT_CONSTRAINT_STOP_CFM, 1.0e-5f, 5);
-        mSixDofSpringBackL->setEquilibriumPoint(1, maxTravel);
-        world->addConstraint(mSixDofSpringBackL, true);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringBackL->getBulletTypedConstraint())->enableMotor(3,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringBackL->getBulletTypedConstraint())->setMaxMotorForce(3,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(3,10);
-    }
-
-    {
-        mSixDofSpringBackR = new OgreBulletDynamics::SixDofSpring2Constraint(mCarChassis, mCarWheelBackR, connectionPoint_rrWheel, Ogre::Quaternion::IDENTITY, Ogre::Vector3::ZERO, Ogre::Quaternion::IDENTITY);
-        mSixDofSpringBackR->setLinearLowerLimit(Ogre::Vector3(0.0f, maxTravel, 0.0f));
-        mSixDofSpringBackR->setLinearUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        mSixDofSpringBackR->setAngularLowerLimit(Ogre::Vector3(1.0f, 0.0f, 0.0f));
-        mSixDofSpringBackR->setAngularUpperLimit(Ogre::Vector3(0.0f, 0.0f, 0.0f));
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_enableMotor[1] = true;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_targetVelocity[1] = 2.0f;
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->getTranslationalLimitMotor()->m_maxMotorForce[1] = 2.5f;
-        mSixDofSpringBackR->enableSpring(1, true);
-        mSixDofSpringBackR->setStiffness(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringStiffness", pipeline), limitSpringParamsR);
-        mSixDofSpringBackR->setDamping(1, luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringDamping", pipeline), limitSpringParamsR);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setBounce(1, 0.0f);
-        //sixDofSpring->setParam(BT_CONSTRAINT_STOP_CFM, 1.0e-5f, 5);
-        mSixDofSpringBackR->setEquilibriumPoint(1, maxTravel);
-        world->addConstraint(mSixDofSpringBackR, true);
-
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringBackR->getBulletTypedConstraint())->enableMotor(3,true);
-        //static_cast<btGeneric6DofSpring2Constraint *>(mSixDofSpringBackR->getBulletTypedConstraint())->setMaxMotorForce(3,1000);
-        //static_cast<btGeneric6DofSpring2Constraint *>(sixDofSpring->getBulletTypedConstraint())->setTargetVelocity(3,10);
-        
-    }
+    initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);
 
 }
 
 void PSBaseCar::setModelPositionOnGrid(const Ogre::Matrix4& transform)
 {
+#if 0
     if(mModelNode)
     {
+        
+        
+        removeFromWorld();
+
+        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarChassis->getBulletRigidBody());
+        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelBackR->getBulletRigidBody());
+        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelBackL->getBulletRigidBody());
+        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelFrontR->getBulletRigidBody());
+        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelFrontL->getBulletRigidBody());
+
+        int originalFlagsChassis = mCarChassis->getBulletRigidBody()->getCollisionFlags();
+        int originalFlagsBackR = mCarWheelBackR->getBulletRigidBody()->getCollisionFlags();
+        int originalFlagsBackL = mCarWheelBackL->getBulletRigidBody()->getCollisionFlags();
+        int originalFlagsFrontR = mCarWheelFrontR->getBulletRigidBody()->getCollisionFlags();
+        int originalFlagsFrontL = mCarWheelFrontL->getBulletRigidBody()->getCollisionFlags();
+        mCarChassis->getBulletRigidBody()->setCollisionFlags(originalFlagsChassis | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        mCarWheelBackR->getBulletRigidBody()->setCollisionFlags(originalFlagsBackR | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        mCarWheelBackL->getBulletRigidBody()->setCollisionFlags(originalFlagsBackL | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        mCarWheelFrontR->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontR | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        mCarWheelFrontL->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontL | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
         Ogre::Quaternion rot = transform.extractQuaternion();
         Ogre::Radian angle;
         Ogre::Vector3 axis;
@@ -514,32 +328,216 @@ void PSBaseCar::setModelPositionOnGrid(const Ogre::Matrix4& transform)
         rot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
         Ogre::Vector3 chassisPos(transform.getTrans() + gridShift);
         
-        mModelNode->setPosition(chassisPos);
-        mModelNode->setOrientation(rot);
+        //mModelNode->setPosition(chassisPos);
+        //mModelNode->setOrientation(rot);
 
-        mWheelNodes[0]->setPosition(chassisPos + rot * mBackROriginalPos);
-        mWheelNodes[1]->setPosition(chassisPos + rot * mBackLOriginalPos);
-        mWheelNodes[2]->setPosition(chassisPos + rot * mFrontROriginalPos);
-        mWheelNodes[3]->setPosition(chassisPos + rot * mFrontLOriginalPos);
+        //mWheelNodes[0]->setPosition(chassisPos + rot * mBackROriginalPos);
+        //mWheelNodes[1]->setPosition(chassisPos + rot * mBackLOriginalPos);
+        //mWheelNodes[2]->setPosition(chassisPos + rot * mFrontROriginalPos);
+        //mWheelNodes[3]->setPosition(chassisPos + rot * mFrontLOriginalPos);
 
-        mWheelNodes[0]->setOrientation(rot);
-        mWheelNodes[1]->setOrientation(rot);
-        mWheelNodes[2]->setOrientation(rot);
-        mWheelNodes[3]->setOrientation(rot);
+        //mWheelNodes[0]->setOrientation(rot);
+        //mWheelNodes[1]->setOrientation(rot);
+        //mWheelNodes[2]->setOrientation(rot);
+        //mWheelNodes[3]->setOrientation(rot);
 
+        mCarChassis->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
+        mCarWheelBackR->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
+        mCarWheelBackL->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
+        mCarWheelFrontR->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
+        mCarWheelFrontL->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
+
+        mCarChassis->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
 
 
         mCarChassis->setCenterOfMass(chassisPos, rot);
-
         mCarWheelBackR->setCenterOfMass(chassisPos + rot * mBackROriginalPos, rot);
         mCarWheelBackL->setCenterOfMass(chassisPos + rot * mBackLOriginalPos, rot);
         mCarWheelFrontR->setCenterOfMass(chassisPos + rot * mFrontROriginalPos, rot);
         mCarWheelFrontL->setCenterOfMass(chassisPos + rot * mFrontLOriginalPos, rot);
+
+
+        btTransform initialTransformChassis;
+        initialTransformChassis.setOrigin(OgreBulletCollisions::convert(chassisPos));
+        initialTransformChassis.setRotation(OgreBulletCollisions::convert(rot));
+
+        mCarChassis->getBulletRigidBody()->setWorldTransform(initialTransformChassis);
+        mCarChassis->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformChassis);
+
+        btTransform initialTransformBackR;
+        btTransform initialTransformBackL;
+        btTransform initialTransformFrontR;
+        btTransform initialTransformFrontL;
+        initialTransformBackR.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mBackROriginalPos));
+        initialTransformBackR.setRotation(OgreBulletCollisions::convert(rot));
+        initialTransformBackL.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mBackLOriginalPos));
+        initialTransformBackL.setRotation(OgreBulletCollisions::convert(rot));
+        initialTransformFrontR.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mFrontROriginalPos));
+        initialTransformFrontR.setRotation(OgreBulletCollisions::convert(rot));
+        initialTransformFrontL.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mFrontLOriginalPos));
+        initialTransformFrontL.setRotation(OgreBulletCollisions::convert(rot));
+        
+        mCarWheelBackR->getBulletRigidBody()->setWorldTransform(initialTransformBackR);
+        mCarWheelBackR->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformBackR);
+
+        mCarWheelBackL->getBulletRigidBody()->setWorldTransform(initialTransformBackL);
+        mCarWheelBackL->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformBackL);
+
+        mCarWheelFrontR->getBulletRigidBody()->setWorldTransform(initialTransformFrontR);
+        mCarWheelFrontR->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformFrontR);
+
+        mCarWheelFrontL->getBulletRigidBody()->setWorldTransform(initialTransformFrontL);
+        mCarWheelFrontL->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformFrontL);
+
+
+        mCarChassis->getBulletRigidBody()->setCollisionFlags(originalFlagsChassis);
+        mCarWheelBackR->getBulletRigidBody()->setCollisionFlags(originalFlagsBackR);
+        mCarWheelBackL->getBulletRigidBody()->setCollisionFlags(originalFlagsBackL);
+        mCarWheelFrontR->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontR);
+        mCarWheelFrontL->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontL);
+
+        btVector3 inertia(0,0,0);
+        mCarChassis->getShape()->getBulletShape()->calculateLocalInertia(15.0f, inertia);
+        mCarChassis->getBulletRigidBody()->setMassProps(15.0f, inertia);
+
+        mCarWheelBackR->getShape()->getBulletShape()->calculateLocalInertia(2.0f, inertia);
+        mCarWheelBackR->getBulletRigidBody()->setMassProps(2.0f, inertia);
+
+        mCarWheelBackL->getShape()->getBulletShape()->calculateLocalInertia(2.0f, inertia);
+        mCarWheelBackL->getBulletRigidBody()->setMassProps(2.0f, inertia);
+
+        mCarWheelFrontR->getShape()->getBulletShape()->calculateLocalInertia(1.0f, inertia);
+        mCarWheelFrontR->getBulletRigidBody()->setMassProps(1.0f, inertia);
+
+        mCarWheelFrontL->getShape()->getBulletShape()->calculateLocalInertia(1.0f, inertia);
+        mCarWheelFrontL->getBulletRigidBody()->setMassProps(1.0f, inertia);
+
+        mCarChassis->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
+        mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
+
+        addToWorld();
+
     }
+#endif
 }
+
+#if 0
+
+void PSBaseCar::removeFromWorld()
+{
+
+    mWorld->removeConstraint(mSixDofSpringFrontL);
+    mWorld->removeConstraint(mSixDofSpringFrontR);
+    mWorld->removeConstraint(mSixDofSpringBackL);
+    mWorld->removeConstraint(mSixDofSpringBackR);
+    mWorld->removeRigidBody(mCarChassis);
+    mWorld->removeRigidBody(mCarWheelBackR);
+    mWorld->removeRigidBody(mCarWheelBackL);
+    mWorld->removeRigidBody(mCarWheelFrontR);
+    mWorld->removeRigidBody(mCarWheelFrontL);
+
+    mCarChassis->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarChassis->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackR->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackR->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackL->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackL->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontR->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontR->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontL->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontL->setLinearVelocity(Ogre::Vector3::ZERO);
+
+    mCarChassis->getBulletRigidBody()->clearForces();
+    mCarWheelBackR->getBulletRigidBody()->clearForces();
+    mCarWheelBackL->getBulletRigidBody()->clearForces();
+    mCarWheelFrontR->getBulletRigidBody()->clearForces();
+    mCarWheelFrontL->getBulletRigidBody()->clearForces();
+
+    mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarChassis->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelBackR->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelBackR->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelBackL->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelBackL->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelFrontR->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelFrontR->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelFrontL->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
+    mCarWheelFrontL->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+
+    mCarChassis->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
+
+    //mWorld->stepSimulation(0.01f, 1, 1.0f / 600.0f);
+
+}
+
+void PSBaseCar::addToWorld()
+{
+
+    mCarChassis->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarChassis->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackR->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackR->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackL->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelBackL->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontR->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontR->setLinearVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontL->setAngularVelocity(Ogre::Vector3::ZERO);
+    mCarWheelFrontL->setLinearVelocity(Ogre::Vector3::ZERO);
+
+    mCarChassis->getBulletRigidBody()->clearForces();
+    mCarWheelBackR->getBulletRigidBody()->clearForces();
+    mCarWheelBackL->getBulletRigidBody()->clearForces();
+    mCarWheelFrontR->getBulletRigidBody()->clearForces();
+    mCarWheelFrontL->getBulletRigidBody()->clearForces();
+
+    mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarChassis->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelBackR->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelBackR->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelBackL->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelBackL->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelFrontR->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelFrontR->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelFrontL->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
+    mCarWheelFrontL->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
+
+    mCarChassis->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
+    mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
+
+    mWorld->addRigidBody(mCarChassis, 0, 0);
+    mWorld->addRigidBody(mCarWheelBackR, 1, 2);// don`t collide with other car
+    mWorld->addRigidBody(mCarWheelBackL, 1, 2);// don`t collide with other car
+    mWorld->addRigidBody(mCarWheelFrontR, 1, 2);// don`t collide with other car
+    mWorld->addRigidBody(mCarWheelFrontL, 1, 2);// don`t collide with other car
+    mWorld->addConstraint(mSixDofSpringFrontL, true);
+    mWorld->addConstraint(mSixDofSpringFrontR, true);
+    mWorld->addConstraint(mSixDofSpringBackL, true);
+    mWorld->addConstraint(mSixDofSpringBackR, true);
+
+    mWorld->stepSimulation(0.01f);
+
+}
+
+#endif
 
 void PSBaseCar::clear()
 {
+    PSBaseVehicle::clear();
+
     mModelNode = NULL;
 }
 

@@ -412,8 +412,6 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
-
                 mLapController.addCar(&humanCar);
 
                 CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> humanLapsController(new MultiplayerHumansLapFinishController(mModeContext.mGameState, this, humanCar, sessionStartInfo.mPlayers[q]));
@@ -446,8 +444,6 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
-
                 mLapController.addCar(&humanCar);
 
                 CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> humanLapsController(new MultiplayerHumansLapFinishController(mModeContext.mGameState, this, humanCar, sessionStartInfo.mPlayers[q]));
@@ -473,7 +469,6 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
             mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mModeContext.mGameState.getTrackPositions()[q], false, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
-            mModeContext.mGameState.getMultiplayerCarAI(q).setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[q]);
 
             mLapController.addCar(&mModeContext.mGameState.getMultiplayerCarAI(q));
         }
@@ -502,19 +497,20 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                     aiCar.setLastTimeOfUpdate(aiPlayersSessionData[q].dataUpdateTimestamp);
 
                     Ogre::Vector3 aiPos = aiCar.getModelNode()->getPosition();
-                    Ogre::Vector3 posDiff = aiPlayersSessionData[q].pos - aiPos;
-                    Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
-
-                    Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(aiCar.getModelNode()->getOrientation(), aiPlayersSessionData[q].rot);
-                    Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
                     if(aiPos.distance(aiPlayersSessionData[q].pos) > posDiffMax)
                     {
                         aiCar.setModelPositionOrientation(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot);
-                        aiCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                        aiCar.setModelVelocity(aiPlayersSessionData[q].vel, aiPlayersSessionData[q].velang);
                     }
                     else
                     {
+                        Ogre::Vector3 posDiff = aiPlayersSessionData[q].pos - aiPos;
+                        Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                        Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(aiCar.getModelNode()->getOrientation(), aiPlayersSessionData[q].rot);
+                        Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
                         aiCar.setModelVelocity(aiPlayersSessionData[q].vel + velocityAddition, aiPlayersSessionData[q].velang + angularVelocityAddition);
                     }
 
@@ -542,19 +538,20 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 humanCar.setLastTimeOfUpdate((*i).second.dataUpdateTimestamp);
 
                 Ogre::Vector3 humanPos = humanCar.getModelNode()->getPosition();
-                Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
-                Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
-
-                Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
-                Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
                 if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
                     humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
-                    humanCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                    humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
                 }
                 else
                 {
+                    Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
+                    Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                    Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
+                    Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
                     humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
                 }
 
@@ -582,19 +579,20 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                 humanCar.setLastTimeOfUpdate((*i).second.dataUpdateTimestamp);
 
                 Ogre::Vector3 humanPos = humanCar.getModelNode()->getPosition();
-                Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
-                Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
-
-                Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
-                Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
 
                 if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
                     humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
-                    humanCar.setModelVelocity(Ogre::Vector3::ZERO, Ogre::Vector3::ZERO);
+                    humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
                 }
                 else
                 {
+                    Ogre::Vector3 posDiff = (*i).second.pos - humanPos;
+                    Ogre::Vector3 velocityAddition = posDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
+                    Ogre::Vector3 angleDiff = GetAngleBetweenQuaternions(humanCar.getModelNode()->getOrientation(), (*i).second.rot);
+                    Ogre::Vector3 angularVelocityAddition = angleDiff / (mModeContext.mGameState.getMultiplayerBroadcastInterval() / 1000.0f);
+
                     humanCar.setModelVelocity((*i).second.vel + velocityAddition, (*i).second.velang + angularVelocityAddition);
                 }
 

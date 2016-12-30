@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1738.73828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="36.66382702492501">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1503.51953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="154.273202024925">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -372,7 +372,7 @@ Ogre::Vector3 getForwardAxis()const
 
 Ogre::SceneNode* getModelNode()
 
-void clear()
+void clear() override
 
 std::string getFrontLWheelColliderString()
 std::string getFrontRWheelColliderString()
@@ -418,20 +418,6 @@ Ogre::Vector3 mBackROriginalPos
 Ogre::Entity * mWheelEntitys[4]
 Ogre::SceneNode *mWheelNodes[4]
 
-OgreBulletDynamics::RigidBody *mCarChassis
-CustomRigidBodyWheel *mCarWheelFrontL
-CustomRigidBodyWheel *mCarWheelFrontR
-CustomRigidBodyWheel *mCarWheelBackL
-CustomRigidBodyWheel *mCarWheelBackR
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR
-
-Ogre::Real mWheelRadiusFront
-Ogre::Real mWheelRadiusBack
-
-
 std::string mWheelFrontLColliderString
 std::string mWheelFrontRColliderString
 std::string mWheelBackLColliderString
@@ -442,8 +428,6 @@ unsigned char mWheelFrontRColliderIndex
 unsigned char mWheelBackLColliderIndex
 unsigned char mWheelBackRColliderIndex
 unsigned char mChassisColliderIndex
-
-static Ogre::NameGenerator nameGenNodes
 
 // for multiplayer
 GameCars mGameCarType
@@ -1073,10 +1057,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="677.9010334571371" width="548.858304388275" x="6565.570847805862" y="-968.9505167285686"/>
+          <y:Geometry height="687.8424017241719" width="519.0341995871709" x="6580.482900206414" y="-973.9212008620859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="650.8515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="481.568359375" x="33.644972506637714" y="13.524735478568573">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="481.568359375" x="18.732920106085658" y="3.794247737085925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1091,6 +1075,8 @@ void initModel( lua_State * pipeline,
                             const Ogre::Matrix4&amp; transform,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera, const std::string&amp; humanName, bool isHuman)
+
+void clear()override
 
 void setModelVelocity(const Ogre::Vector3&amp; linear, const Ogre::Vector3&amp; angular)
 void setModelPositionOrientation(const Ogre::Vector3&amp; pos, const Ogre::Quaternion&amp; rot)
@@ -2858,6 +2844,102 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n69">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="485.8353035773589" width="1008.3577762526452" x="5825.821111873677" y="-6932.917651788679"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="459.736328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.140625" x="14.608575626322818" y="13.049487726178995">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+
+PSBaseVehicle
+
+public:
+
+virtual void clear()
+
+protected:
+
+void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], const InitialVehicleSetup&amp; initialVehicleSetup)
+
+OgreBulletDynamics::RigidBody *mCarChassis
+CustomRigidBodyWheel *mCarWheelFrontL
+CustomRigidBodyWheel *mCarWheelFrontR
+CustomRigidBodyWheel *mCarWheelBackL
+CustomRigidBodyWheel *mCarWheelBackR
+
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL
+OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR
+
+InitialVehicleSetup mInitialVehicleSetup
+
+static Ogre::NameGenerator nameGenNodes
+
+private:
+
+void removeFromWorld()
+void addToWorld()</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n70">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="733.3753734265165" width="370.78469139349863" x="7074.6076543032505" y="-7056.687686713258"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="231.4375" x="69.67359569674954" y="33.91131952575779">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+
+InitialVehicleSetup
+
+Ogre::Vector3 mChassisPos
+Ogre::Quaternion mChassisRot
+Ogre::Vector3 mConnectionPointRRWheel
+Ogre::Vector3 mConnectionPointRLWheel
+Ogre::Vector3 mConnectionPointFRWheel
+Ogre::Vector3 mConnectionPointFLWheel
+
+float mRoofBackRadius
+Ogre::Vector3 mRoofBackPos
+
+float mRoofFrontRadius
+Ogre::Vector3 mRoofFrontPos
+
+float mBodyRadius
+Ogre::Vector3 mBodyBasePos
+
+Ogre::Vector2 mWheelRadius
+
+Ogre::Vector3 mAnisotropicFriction
+Ogre::Real mRollingFriction
+
+Ogre::Real mMaxTravel
+
+Ogre::Real mWheelsFSpringStiffness
+Ogre::Real mWheelsFSpringDamping
+Ogre::Real mWheelsRSpringStiffness
+Ogre::Real mWheelsRSpringDamping
+bool mLimitSpringParamsF
+bool mLimitSpringParamsR
+
+Ogre::Real mAirDensityLinear
+Ogre::Real mAirDensityAngular
+
+Ogre::Real mChassisMass
+Ogre::Real mChassisRestitution
+Ogre::Real mChassisFriction
+
+Ogre::Real mWheelsFMass
+Ogre::Real mWheelsRMass
+Ogre::Real mWheelsRestitution
+Ogre::Real mWheelsFriction</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:PolyLineEdge>
@@ -3579,6 +3661,26 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
       </data>
     </edge>
     <edge id="e66" source="n68" target="n17">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e67" source="n1" target="n69">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e68" source="n70" target="n69">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
