@@ -7,11 +7,23 @@
 
 #include "../includes/OgreInclude.h"
 
+
+enum MultiplayerLobbyDataType
+{
+    lobbyDataRegular = 0,
+    lobbyDataLapTime = 1,
+    lobbyDataLapTimeAI = 2
+};
+
 /**
  * Data packet during lobby
  */
 struct MultiplayerLobbyData
 {
+    MultiplayerLobbyDataType mDataType;
+
+    //regular lobby data
+
     //master & slave data
     bool mIsReady;
     std::string mCharacterName;  // defines car as well
@@ -23,8 +35,13 @@ struct MultiplayerLobbyData
     size_t mAIStrength;
     size_t mLapsCount;
 
+
+    //race total time data
+    Ogre::Real mRaceTotalTime;
+
     MultiplayerLobbyData(){}
 
+    //lobby message constructor
     MultiplayerLobbyData(bool isReady, 
         const std::string& characterName, const std::string& playerMessage,
         const std::string& trackName,
@@ -32,13 +49,20 @@ struct MultiplayerLobbyData
         size_t aiStrength,
         size_t lapsCount
     ) :
-    mIsReady(isReady),
-    mCharacterName(characterName),
-    mPlayerMessage(playerMessage),
-    mTrackName(trackName),
-    mAICount(aiCount),
-    mAIStrength(aiStrength),
-    mLapsCount(lapsCount)
+        mDataType(lobbyDataRegular),
+        mIsReady(isReady),
+        mCharacterName(characterName),
+        mPlayerMessage(playerMessage),
+        mTrackName(trackName),
+        mAICount(aiCount),
+        mAIStrength(aiStrength),
+        mLapsCount(lapsCount)
+    {}
+
+    //race message constructor
+    MultiplayerLobbyData(MultiplayerLobbyDataType dataType, Ogre::Real raceTotalTime) :
+        mDataType(dataType),
+        mRaceTotalTime(raceTotalTime)
     {}
 };
 

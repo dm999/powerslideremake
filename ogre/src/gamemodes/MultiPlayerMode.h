@@ -29,7 +29,7 @@ public:
     void onReconfigure(const std::string& player)override{}
     void onReconfigureFailed(const std::string& player)override{}
     void onRoomClosed(const std::string& player)override;
-    void onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)override{}
+    void onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)override;
     void onPlayerAddedToSession(const std::string& player)override;
     void onPlayerQuitSession(const std::string& player, bool isHost)override;
     void onSessionReadyToStart()override{};
@@ -57,11 +57,10 @@ protected:
 
 private:
 
-    friend class MultiplayerHumansLapFinishController;
+    friend class MultiplayerAILapFinishController;
 
-    //MultiplayerHumansLapFinishController
-    void onLapFinishedByHuman(const std::string& humanName, size_t lap, Ogre::Real lastLapTime);
-    void onRaceFinishedByHuman(const std::string& humanName);
+    //MultiplayerAILapFinishController
+    void onRaceFinishedByAI(PSAICar& aiCar);
 
     void checkRaceFinished();
 
@@ -69,10 +68,13 @@ private:
 
     CommonIncludes::shared_ptr<MultiplayerController> mMultiplayerController;
 
-    std::vector<CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> > mHumanLapsController;
+    std::vector<CommonIncludes::shared_ptr<MultiplayerAILapFinishController> > mAILapsController;
 
     bool mIsSelfFinished;
+    Ogre::Real mSelfTotalRaceTime;
     std::map<std::string, bool> mIsRaceFinishedByHuman;//key - human name, self not included
+    std::map<std::string, Ogre::Real> mRaceTimeByHuman;//key - human name, self not included
+    std::vector<Ogre::Real> mRaceTimeByAI;
 };
 
 #endif

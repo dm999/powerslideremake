@@ -10,15 +10,14 @@
 
 #include "../ui/UIRace.h"
 
-class MultiplayerHumansLapFinishController : public LapUtils::Events
+class MultiplayerAILapFinishController : public LapUtils::Events
 {
 public:
 
-    MultiplayerHumansLapFinishController(GameState& gameState, MultiPlayerMode * multiPlayerMode, PSMultiplayerCar& humanCar, const std::string& humanName) : 
+    MultiplayerAILapFinishController(GameState& gameState, MultiPlayerMode * multiPlayerMode, PSAICar& aiCar) : 
       mGameState(gameState),
       mMultiPlayerMode(multiPlayerMode),
-      mHumanCar(humanCar),
-      mHumanName(humanName){}
+      mAICar(aiCar){}
 
     void onLapFinished()override;
 
@@ -28,26 +27,18 @@ private:
 
     MultiPlayerMode * mMultiPlayerMode;
 
-    PSMultiplayerCar& mHumanCar;
-
-    std::string mHumanName;
+    PSAICar& mAICar;
 };
 
 
-void MultiplayerHumansLapFinishController::onLapFinished()
+void MultiplayerAILapFinishController::onLapFinished()
 {
-    size_t lap = mHumanCar.getLapUtils().getCurrentLap() - 1;
+    size_t lap = mAICar.getLapUtils().getCurrentLap() - 1;
 
-    if(lap <= mGameState.getLapsCount())
-    {
-        Ogre::Real lastLapTime = mHumanCar.getLapUtils().getLastLapTime();
-        mMultiPlayerMode->onLapFinishedByHuman(mHumanName, lap, lastLapTime);
-    }
-
-    //race finished
+    //race finished by AI
     if(lap == mGameState.getLapsCount())
     {
-        mMultiPlayerMode->onRaceFinishedByHuman(mHumanName);
+        mMultiPlayerMode->onRaceFinishedByAI(mAICar);
     }
 }
 
@@ -77,27 +68,36 @@ void MultiPlayerMode::onLapFinished()
     //final self lap finished
     if(lap == mModeContext.mGameState.getLapsCount())
     {
-        std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
-        mUIRace->addMiscPanelText("Final lap finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
 
-        //check all other humans as well
-        mIsSelfFinished = true;
-        checkRaceFinished();
+        mSelfTotalRaceTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime();
+
+        MultiplayerLobbyData multiplayerLobbyData(lobbyDataLapTime, mSelfTotalRaceTime);
+
+        bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
+
+        if(success)
+        {
+            std::string totalTime = Tools::SecondsToString(mSelfTotalRaceTime);
+            mUIRace->addMiscPanelText("Final lap finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+
+            //check all other humans as well
+            mIsSelfFinished = true;
+            checkRaceFinished();
+        }
+        else
+        {
+            mUIRace->addMiscPanelText("Error sending finish data!!!", Ogre::ColourValue::Red);
+        }
     }
 }
 
-void MultiPlayerMode::onLapFinishedByHuman(const std::string& humanName, size_t lap, Ogre::Real lastLapTime)
+void MultiPlayerMode::onRaceFinishedByAI(PSAICar& aiCar)
 {
-    std::string time = Tools::SecondsToString(lastLapTime);
-    std::string lapS = Conversions::DMToString(lap);
-    mUIRace->addMiscPanelText("Lap finished by [" + humanName + "] " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
-}
+    Ogre::Real aiTotalRaceTime = aiCar.getLapUtils().getTotalTime();
 
-void MultiPlayerMode::onRaceFinishedByHuman(const std::string& humanName)
-{
-    mIsRaceFinishedByHuman[humanName] = true;
+    MultiplayerLobbyData multiplayerLobbyData(lobbyDataLapTimeAI, aiTotalRaceTime);
 
-    checkRaceFinished();
+    bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, true, 10);
 }
 
 void MultiPlayerMode::customInitScene()
@@ -336,6 +336,27 @@ void MultiPlayerMode::onRoomClosed(const std::string& player)
     mUIRace->addMiscPanelText("Room closed: [" + player + "]", Ogre::ColourValue::Red);
 }
 
+void MultiPlayerMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
+{
+    //check other players finished all laps
+    if(data.mDataType == lobbyDataLapTime)
+    {
+        std::string time = Tools::SecondsToString(data.mRaceTotalTime);
+        mUIRace->addMiscPanelText("Race finished by [" + player + "]: " + Ogre::String(time), mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+
+        mIsRaceFinishedByHuman[player] = true;
+        mRaceTimeByHuman[player] = data.mRaceTotalTime;
+        checkRaceFinished();
+    }
+
+    if(data.mDataType == lobbyDataLapTimeAI)
+    {
+        std::string time = Tools::SecondsToString(data.mRaceTotalTime);
+        mUIRace->addMiscPanelText("Race finished by AI: " + Ogre::String(time), mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+        mRaceTimeByAI.push_back(data.mRaceTotalTime);
+    }
+}
+
 void MultiPlayerMode::onPlayerAddedToSession(const std::string& player)
 {
     mUIRace->addMiscPanelText("Player added to session: [" + player + "]");
@@ -376,10 +397,16 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
                 carAI.deinitSounds();
             }
             mModeContext.mGameState.setMultiplayerCountAI(0);
+
+            //mRaceTimeByAI.clear();
         }
     }
 
-    mIsRaceFinishedByHuman.erase(player);
+    if(!mIsRaceFinishedByHuman[player])
+    {
+        mIsRaceFinishedByHuman.erase(player);
+        mRaceTimeByHuman.erase(player);
+    }
     checkRaceFinished();
 }
 
@@ -420,12 +447,20 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 mLapController.addCar(&humanCar);
 
-                CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> humanLapsController(new MultiplayerHumansLapFinishController(mModeContext.mGameState, this, humanCar, sessionStartInfo.mPlayers[q]));
-                mHumanLapsController.push_back(humanLapsController);
-                humanCar.getLapUtils().setEvents(humanLapsController.get());
                 mIsRaceFinishedByHuman.insert(std::make_pair(sessionStartInfo.mPlayers[q], false));
+                mRaceTimeByHuman.insert(std::make_pair(sessionStartInfo.mPlayers[q], 0.0f));
             }
         }
+
+        //add AI cars laps listener
+        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        {
+            PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
+            CommonIncludes::shared_ptr<MultiplayerAILapFinishController> humanLapsController(new MultiplayerAILapFinishController(mModeContext.mGameState, this, aiCar));
+            mAILapsController.push_back(humanLapsController);
+            aiCar.getLapUtils().setEvents(humanLapsController.get());
+        }
+
     }
     else
     {
@@ -454,10 +489,8 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 mLapController.addCar(&humanCar);
 
-                CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> humanLapsController(new MultiplayerHumansLapFinishController(mModeContext.mGameState, this, humanCar, sessionStartInfo.mPlayers[q]));
-                mHumanLapsController.push_back(humanLapsController);
-                humanCar.getLapUtils().setEvents(humanLapsController.get());
                 mIsRaceFinishedByHuman.insert(std::make_pair(sessionStartInfo.mPlayers[q], false));
+                mRaceTimeByHuman.insert(std::make_pair(sessionStartInfo.mPlayers[q], 0.0f));
             }
         }
 
@@ -643,14 +676,37 @@ void MultiPlayerMode::checkRaceFinished()
     {
         mModeContext.mGameState.resetAfterFinishTimer();
 
-        Ogre::Real raceTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime();
+        Ogre::Real raceTime = mSelfTotalRaceTime;
+
+        std::vector<std::pair<Ogre::Real, bool> > timeToSelf;
+        timeToSelf.push_back(std::make_pair(mSelfTotalRaceTime, true));
 
         //take whole race time as slowest human player
-        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-        for(size_t q = 0; q < playerNames.size(); ++q)
+        for(std::map<std::string, Ogre::Real>::const_iterator i = mRaceTimeByHuman.begin(), j = mRaceTimeByHuman.end();
+            i != j; ++i)
         {
-            Ogre::Real otherRaceTime = mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().getTotalTime();
+            Ogre::Real otherRaceTime = (*i).second;
             if(otherRaceTime > raceTime)raceTime = otherRaceTime;
+
+            timeToSelf.push_back(std::make_pair(otherRaceTime, false));
+        }
+
+        //add AI times
+        for(size_t q = 0; q < mRaceTimeByAI.size(); ++q)
+        {
+            timeToSelf.push_back(std::make_pair(mRaceTimeByAI[q], false));
+        }
+
+        std::sort(timeToSelf.begin(), timeToSelf.end());
+
+        size_t selfPosition = 0;
+        for(size_t q = 0; q < timeToSelf.size(); ++q)
+        {
+            if(timeToSelf[q].second)
+            {
+                selfPosition = q;
+                break;
+            }
         }
 
         std::string totalTime = Tools::SecondsToString(raceTime);
@@ -659,7 +715,7 @@ void MultiPlayerMode::checkRaceFinished()
         mModeContext.mGameState.getPlayerCar().setDisableMouse(false);
         mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(mModeContext.mGameState.getTrackName()));
         mUIRace->setRearViewMirrorPanelShow(false);
-        mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
+        mUIRace->setVisibleFinishSign(true, selfPosition + 1);
 
         mModeContext.mGameState.setRaceFinished(true);
     }

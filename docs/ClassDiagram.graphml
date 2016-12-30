@@ -1791,7 +1791,7 @@ void clearLobby()
 virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string&amp; version) = 0
 virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0
 
-bool sendLobbyMessage(const MultiplayerLobbyData&amp; multiplayerLobbyData, size_t attemptsAmount)
+bool sendLobbyMessage(const MultiplayerLobbyData&amp; multiplayerLobbyData, bool sendToSelf = true, size_t attemptsAmount = 1)
 
 void receiveData()
 
@@ -2269,10 +2269,10 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
     <node id="n45">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="790.6415064968105" width="1021.9078593826357" x="14159.04607030868" y="-2435.320753248406"/>
+          <y:Geometry height="851.6152318679551" width="1021.9078593826357" x="14159.04607030868" y="-2465.8076159339785"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="11.090284498405254">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="856.66796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="-2.5263684410224414">&lt;&lt;MultiPlayerMode.h&gt;&gt;
 
 MultiPlayerMode
 
@@ -2289,7 +2289,7 @@ void onNewHost(const std::string&amp; player)override
 void onReconfigure(const std::string&amp; player)override{}
 void onReconfigureFailed(const std::string&amp; player)override{}
 void onRoomClosed(const std::string&amp; player)override
-void onLobbyMessage(const std::string&amp; player, const MultiplayerLobbyData&amp; data)override{}
+void onLobbyMessage(const std::string&amp; player, const MultiplayerLobbyData&amp; data)override
 void onPlayerAddedToSession(const std::string&amp; player)override
 void onPlayerQuitSession(const std::string&amp; player, bool isHost)override
 void onSessionReadyToStart()override{}
@@ -2313,8 +2313,9 @@ virtual void customFrameRenderingQueuedDo2DUI()override
 
 private:
 
-void onLapFinishedByHuman(const std::string&amp; humanName, size_t lap, Ogre::Real lastLapTime)
-void onRaceFinishedByHuman(const std::string&amp; humanName)
+friend class MultiplayerAILapFinishController
+
+void onRaceFinishedByAI(PSAICar&amp; aiCar)
 
 void checkRaceFinished()
 
@@ -2322,8 +2323,13 @@ bool mIsSessionStarted
 
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
 
+std::vector&lt;CommonIncludes::shared_ptr&lt;MultiplayerAILapFinishController&gt; &gt; mAILapsController
+
 bool mIsSelfFinished
-std::map&lt;std::string, bool&gt; mIsRaceFinishedByHuman</y:NodeLabel>
+Ogre::Real mSelfTotalRaceTime
+std::map&lt;std::string, bool&gt; mIsRaceFinishedByHuman
+std::map&lt;std::string, Ogre::Real&gt; mRaceTimeByHuman
+std::vector&lt;Ogre::Real&gt; mRaceTimeByAI</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2674,12 +2680,14 @@ private:
     <node id="n62">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="209.56874358139612" width="221.9197216604748" x="16839.040139169763" y="-1604.784371790698"/>
+          <y:Geometry height="336.61465817732915" width="250.15214712623992" x="16824.92392643688" y="-1668.3073290886646"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="209.81640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="154.046875" x="33.93642333023672" y="-0.12383133430193993">&lt;&lt;MultiplayerData.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="268.62109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="212.095703125" x="19.02822200061928" y="33.996782213664574">&lt;&lt;MultiplayerData.h&gt;&gt;
 
 MultiplayerLobbyData
+
+MultiplayerLobbyDataType mDataType
 
 //master &amp; slave data
 bool mIsReady
@@ -2690,7 +2698,9 @@ std::string mPlayerMessage
 std::string mTrackName
 size_t mAICount
 size_t mAIStrength
-size_t mLapsCount</y:NodeLabel>
+size_t mLapsCount
+
+Ogre::Real mRaceTotalTime</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2807,9 +2817,9 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
           <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1570.2342745543065"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="210.75390625" x="16.187033856740527" y="3.2743136168064666">&lt;&lt;MultiPlayerMode.cpp&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="204.068359375" x="19.529807294240527" y="17.975485491806467">&lt;&lt;MultiPlayerMode.cpp&gt;&gt;
 
-MultiplayerHumansLapFinishController
+MultiplayerAILapFinishController
 
 public:
 
@@ -2821,9 +2831,7 @@ GameState&amp; mGameState
 
 MultiPlayerMode * mMultiPlayerMode
 
-PSMultiplayerCar&amp; mHumanCar
-
-std::string mHumanName</y:NodeLabel>
+PSAICar&amp; mAICar</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

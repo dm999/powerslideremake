@@ -257,7 +257,7 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
             mModeContext.mGameState.getLapsCount());
 
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
 
         if(success)
         {
@@ -371,7 +371,7 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
             mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
             mModeContext.mGameState.getLapsCount());
 
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
     }
     else
     {
@@ -383,6 +383,6 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
             0, 0, 
             0);
 
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
     }
 }

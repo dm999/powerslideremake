@@ -364,13 +364,17 @@ void BaseRaceMode::initModel()
 
     for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
     {
+        PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
+
         bool isCam = (q == (mModeContext.mGameState.getAICount() - 1));
         if(!isCamToAI)
             isCam = false;
-        mModeContext.mGameState.getAICar(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacters[q], mModeContext.mGameState.getTrackPositions()[q], isCam);
-        mModeContext.mGameState.getAICar(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
+        aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacters[q], mModeContext.mGameState.getTrackPositions()[q], isCam);
+        aiCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-        mLapController.addCar(&mModeContext.mGameState.getAICar(q));
+        mLapController.addCar(&aiCar);
+
+        aiCar.getLapUtils().setEvents(NULL);
     }
 
 }
@@ -553,11 +557,15 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
         customFrameRenderingQueuedDoRaceStarted();
 
-        //reset lap timer before race started (for every human player include self)
+        //reset lap timer before race started (for every human player include self, and ai)
         mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
         for(int q = 0; q < mModeContext.mGameState.getMaxMultiplayerHumans(); ++q)
         {
             mModeContext.mGameState.getMultiplayerCarHuman(q).getLapUtils().resetLapTimer();
+        }
+        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        {
+            mModeContext.mGameState.getAICar(q).getLapUtils().resetLapTimer();
         }
 
         mModeContext.mGameState.setRaceStarted(true);

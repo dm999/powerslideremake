@@ -18,7 +18,7 @@ public:
     virtual bool startLobbyMaster(std::string ip, uint16_t port, std::string userName, std::string roomName, uint32_t playersLimits, uint32_t aiAmount, const std::string& version) = 0;
     virtual bool startLobbySlave(std::string ip, uint16_t port, std::string userName, std::string roomName) = 0;
 
-    bool sendLobbyMessage(const MultiplayerLobbyData& multiplayerLobbyData, size_t attemptsAmount = 1);
+    bool sendLobbyMessage(const MultiplayerLobbyData& multiplayerLobbyData, bool sendToSelf = true, size_t attemptsAmount = 1);
 
     void receiveData();
 

@@ -53,7 +53,7 @@ void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislide
     }
 }
 
-bool MultiplayerController::sendLobbyMessage(const MultiplayerLobbyData& multiplayerLobbyData, size_t attemptsAmount)
+bool MultiplayerController::sendLobbyMessage(const MultiplayerLobbyData& multiplayerLobbyData, bool sendToSelf, size_t attemptsAmount)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::sendLobbyMessage]");
 
@@ -64,7 +64,7 @@ bool MultiplayerController::sendLobbyMessage(const MultiplayerLobbyData& multipl
     {
         try{
 
-            mLobby->say(fillLobbyMessage(multiplayerLobbyData), true);
+            mLobby->say(fillLobbyMessage(multiplayerLobbyData), sendToSelf);
 
         }catch(const std::runtime_error& err)
         {
@@ -293,46 +293,59 @@ jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionDat
 
 void MultiplayerController::parseLobbyMessage(const std::string& message, MultiplayerLobbyData& data)
 {
-    data.mIsReady = false;
-    data.mCharacterName = "frantic";
-    data.mPlayerMessage = "";
-    data.mTrackName = "";
-
     jsonxx::Object jsonObject;
     jsonObject.parse(message);
-    if(jsonObject.has<jsonxx::Boolean>("isReady"))
-    {
-        data.mIsReady = jsonObject.get<jsonxx::Boolean>("isReady");
-    }
 
-    if(jsonObject.has<jsonxx::String>("characterName"))
-    {
-        data.mCharacterName = jsonObject.get<jsonxx::String>("characterName");
-    }
+    data.mDataType = static_cast<MultiplayerLobbyDataType>(static_cast<size_t>(jsonObject.get<jsonxx::Number>("type")));
 
-    if(jsonObject.has<jsonxx::String>("playerMessage"))
+    if(data.mDataType == lobbyDataRegular)
     {
-        data.mPlayerMessage = jsonObject.get<jsonxx::String>("playerMessage");
-    }
+        data.mIsReady = false;
+        data.mCharacterName = "frantic";
+        data.mPlayerMessage = "";
+        data.mTrackName = "";
 
-    if(jsonObject.has<jsonxx::String>("trackName"))
-    {
-        data.mTrackName = jsonObject.get<jsonxx::String>("trackName");
-    }
+        if(jsonObject.has<jsonxx::Boolean>("isReady"))
+        {
+            data.mIsReady = jsonObject.get<jsonxx::Boolean>("isReady");
+        }
 
-    if(jsonObject.has<jsonxx::Number>("aiCount"))
-    {
-        data.mAICount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiCount"));
-    }
+        if(jsonObject.has<jsonxx::String>("characterName"))
+        {
+            data.mCharacterName = jsonObject.get<jsonxx::String>("characterName");
+        }
 
-    if(jsonObject.has<jsonxx::Number>("aiStrength"))
-    {
-        data.mAIStrength = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiStrength"));
-    }
+        if(jsonObject.has<jsonxx::String>("playerMessage"))
+        {
+            data.mPlayerMessage = jsonObject.get<jsonxx::String>("playerMessage");
+        }
 
-    if(jsonObject.has<jsonxx::Number>("lapsCount"))
+        if(jsonObject.has<jsonxx::String>("trackName"))
+        {
+            data.mTrackName = jsonObject.get<jsonxx::String>("trackName");
+        }
+
+        if(jsonObject.has<jsonxx::Number>("aiCount"))
+        {
+            data.mAICount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiCount"));
+        }
+
+        if(jsonObject.has<jsonxx::Number>("aiStrength"))
+        {
+            data.mAIStrength = static_cast<size_t>(jsonObject.get<jsonxx::Number>("aiStrength"));
+        }
+
+        if(jsonObject.has<jsonxx::Number>("lapsCount"))
+        {
+            data.mLapsCount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("lapsCount"));
+        }
+    }
+    else
     {
-        data.mLapsCount = static_cast<size_t>(jsonObject.get<jsonxx::Number>("lapsCount"));
+        if(jsonObject.has<jsonxx::Number>("totalTime"))
+        {
+            data.mRaceTotalTime = static_cast<Ogre::Real>(jsonObject.get<jsonxx::Number>("totalTime"));
+        }
     }
 }
 
@@ -340,13 +353,22 @@ std::string MultiplayerController::fillLobbyMessage(const MultiplayerLobbyData& 
 {
     jsonxx::Object jsonObject;
 
-    jsonObject << "isReady" << data.mIsReady;
-    jsonObject << "characterName" << data.mCharacterName;
-    jsonObject << "playerMessage" << data.mPlayerMessage;
-    jsonObject << "trackName" << data.mTrackName;
-    jsonObject << "aiCount" << data.mAICount;
-    jsonObject << "aiStrength" << data.mAIStrength;
-    jsonObject << "lapsCount" << data.mLapsCount;
+    jsonObject << "type" << static_cast<size_t>(data.mDataType);
+
+    if(data.mDataType == lobbyDataRegular)
+    {
+        jsonObject << "isReady" << data.mIsReady;
+        jsonObject << "characterName" << data.mCharacterName;
+        jsonObject << "playerMessage" << data.mPlayerMessage;
+        jsonObject << "trackName" << data.mTrackName;
+        jsonObject << "aiCount" << data.mAICount;
+        jsonObject << "aiStrength" << data.mAIStrength;
+        jsonObject << "lapsCount" << data.mLapsCount;
+    }
+    else
+    {
+        jsonObject << "totalTime" << data.mRaceTotalTime;
+    }
 
     return jsonObject.json();
 }

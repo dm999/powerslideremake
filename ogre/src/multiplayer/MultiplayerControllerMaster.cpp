@@ -73,13 +73,17 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
             MultiplayerLobbyData multiplayerLobbyData;
             parseLobbyMessage(message, multiplayerLobbyData);
 
-            if(multiplayerLobbyData.mIsReady)
+            //only if message during lobby session
+            if(multiplayerLobbyData.mDataType == lobbyDataRegular)
             {
-                setPlayerReady(sender, multiplayerLobbyData.mCharacterName);
-            }
-            else
-            {
-                resetPlayerReady(sender);
+                if(multiplayerLobbyData.mIsReady)
+                {
+                    setPlayerReady(sender, multiplayerLobbyData.mCharacterName);
+                }
+                else
+                {
+                    resetPlayerReady(sender);
+                }
             }
 
             if(mEvents)
@@ -87,7 +91,9 @@ void MultiplayerControllerMaster::onMessage(multislider::Lobby* lobby, const mul
                 mEvents->onLobbyMessage(sender, multiplayerLobbyData);
             }
 
-            checkAllPlayersReadyOrNot();
+            //only if message during lobby session
+            if(multiplayerLobbyData.mDataType == lobbyDataRegular)
+                checkAllPlayersReadyOrNot();
 
         }
     }
