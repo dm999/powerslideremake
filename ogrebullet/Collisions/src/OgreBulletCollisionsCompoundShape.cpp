@@ -74,6 +74,7 @@ namespace OgreBulletCollisions
     // -------------------------------------------------------------------------
     CompoundCollisionShape::~CompoundCollisionShape()
     {
+        delete mShape;
     }
     // -------------------------------------------------------------------------
     void CompoundCollisionShape::addChildShape(CollisionShape *shape,

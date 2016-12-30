@@ -51,36 +51,10 @@ void PSMultiplayerCar::setModelVelocity(const Ogre::Vector3& linear, const Ogre:
     }
 }
 
-void PSMultiplayerCar::setModelPositionOrientation(const Ogre::Vector3& pos, const Ogre::Quaternion& rot)
-{
-    if(mModelNode)
-    {
-        mModelNode->setPosition(pos);
-        mModelNode->setOrientation(rot);
-
-        mWheelNodes[0]->setPosition(pos + rot *  mBackROriginalPos);
-        mWheelNodes[1]->setPosition(pos + rot *  mBackLOriginalPos);
-        mWheelNodes[2]->setPosition(pos + rot *  mFrontROriginalPos);
-        mWheelNodes[3]->setPosition(pos + rot *  mFrontLOriginalPos);
-
-        mWheelNodes[0]->setOrientation(rot);
-        mWheelNodes[1]->setOrientation(rot);
-        mWheelNodes[2]->setOrientation(rot);
-        mWheelNodes[3]->setOrientation(rot);
-
-        mCarChassis->setCenterOfMass(pos, rot);
-
-        mCarWheelBackR->setCenterOfMass(pos + rot * mBackROriginalPos, rot);
-        mCarWheelBackL->setCenterOfMass(pos + rot * mBackLOriginalPos, rot);
-        mCarWheelFrontR->setCenterOfMass(pos + rot * mFrontROriginalPos, rot);
-        mCarWheelFrontL->setCenterOfMass(pos + rot * mFrontLOriginalPos, rot);
-    }
-}
-
 void PSMultiplayerCar::removeFromScene(Ogre::SceneManager* sceneMgr)
 {
     //remove bullet objects
-    removeFromPhysicsSimulation();
+    clear();
 
     //remove title
     mPlayerTitle.reset();
@@ -142,20 +116,6 @@ void PSMultiplayerCar::removeFromScene(Ogre::SceneManager* sceneMgr)
 
 
     //other clearing
-    clear();
     deinitSounds();
 }
 
-void PSMultiplayerCar::removeFromPhysicsSimulation()
-{
-    mWorld->removeConstraint(mSixDofSpringFrontL);
-    mWorld->removeConstraint(mSixDofSpringFrontR);
-    mWorld->removeConstraint(mSixDofSpringBackL);
-    mWorld->removeConstraint(mSixDofSpringBackR);
-    mWorld->removeRigidBody(mCarWheelFrontL);
-    mWorld->removeRigidBody(mCarWheelFrontR);
-    mWorld->removeRigidBody(mCarWheelBackL);
-    mWorld->removeRigidBody(mCarWheelBackR);
-    mWorld->removeRigidBody(mCarChassis);
-    
-}

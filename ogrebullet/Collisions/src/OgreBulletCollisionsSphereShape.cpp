@@ -45,6 +45,7 @@ namespace OgreBulletCollisions
     // -------------------------------------------------------------------------
     SphereCollisionShape::~SphereCollisionShape()
     {
+        delete mShape;
     }
     // -------------------------------------------------------------------------
     float SphereCollisionShape::getRadius() const

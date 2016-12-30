@@ -63,8 +63,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     mIsAI = isAI;
 
-    mWorld = world;
-
     DMLuaManager luaManager;
 
     std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
@@ -295,250 +293,49 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
 }
 
-void PSBaseCar::setModelPositionOnGrid(const Ogre::Matrix4& transform)
+void PSBaseCar::repositionVehicle(const Ogre::Matrix4& transform)
 {
-#if 0
+
+    Ogre::Quaternion chassisRot = transform.extractQuaternion();
+    Ogre::Radian angle;
+    Ogre::Vector3 axis;
+    chassisRot.ToAngleAxis(angle, axis);
+    chassisRot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
+    Ogre::Vector3 chassisPos(transform.getTrans() + gridShift);
+
+    repositionVehicle(chassisPos, chassisRot);
+
+}
+
+void PSBaseCar::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
+{
+
     if(mModelNode)
     {
-        
-        
-        removeFromWorld();
+        mModelNode->setPosition(chassisPos);
+        mModelNode->setOrientation(chassisRot);
 
-        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarChassis->getBulletRigidBody());
-        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelBackR->getBulletRigidBody());
-        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelBackL->getBulletRigidBody());
-        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelFrontR->getBulletRigidBody());
-        //mWorld->getBulletCollisionWorld()->removeCollisionObject(mCarWheelFrontL->getBulletRigidBody());
+        mWheelNodes[0]->setPosition(chassisPos + chassisRot * mBackROriginalPos);
+        mWheelNodes[1]->setPosition(chassisPos + chassisRot * mBackLOriginalPos);
+        mWheelNodes[2]->setPosition(chassisPos + chassisRot * mFrontROriginalPos);
+        mWheelNodes[3]->setPosition(chassisPos + chassisRot * mFrontLOriginalPos);
 
-        int originalFlagsChassis = mCarChassis->getBulletRigidBody()->getCollisionFlags();
-        int originalFlagsBackR = mCarWheelBackR->getBulletRigidBody()->getCollisionFlags();
-        int originalFlagsBackL = mCarWheelBackL->getBulletRigidBody()->getCollisionFlags();
-        int originalFlagsFrontR = mCarWheelFrontR->getBulletRigidBody()->getCollisionFlags();
-        int originalFlagsFrontL = mCarWheelFrontL->getBulletRigidBody()->getCollisionFlags();
-        mCarChassis->getBulletRigidBody()->setCollisionFlags(originalFlagsChassis | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-        mCarWheelBackR->getBulletRigidBody()->setCollisionFlags(originalFlagsBackR | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-        mCarWheelBackL->getBulletRigidBody()->setCollisionFlags(originalFlagsBackL | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-        mCarWheelFrontR->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontR | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-        mCarWheelFrontL->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontL | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        mWheelNodes[0]->setOrientation(chassisRot);
+        mWheelNodes[1]->setOrientation(chassisRot);
+        mWheelNodes[2]->setOrientation(chassisRot);
+        mWheelNodes[3]->setOrientation(chassisRot);
 
-        Ogre::Quaternion rot = transform.extractQuaternion();
-        Ogre::Radian angle;
-        Ogre::Vector3 axis;
-        rot.ToAngleAxis(angle, axis);
-        rot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
-        Ogre::Vector3 chassisPos(transform.getTrans() + gridShift);
-        
-        //mModelNode->setPosition(chassisPos);
-        //mModelNode->setOrientation(rot);
-
-        //mWheelNodes[0]->setPosition(chassisPos + rot * mBackROriginalPos);
-        //mWheelNodes[1]->setPosition(chassisPos + rot * mBackLOriginalPos);
-        //mWheelNodes[2]->setPosition(chassisPos + rot * mFrontROriginalPos);
-        //mWheelNodes[3]->setPosition(chassisPos + rot * mFrontLOriginalPos);
-
-        //mWheelNodes[0]->setOrientation(rot);
-        //mWheelNodes[1]->setOrientation(rot);
-        //mWheelNodes[2]->setOrientation(rot);
-        //mWheelNodes[3]->setOrientation(rot);
-
-        mCarChassis->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
-        mCarWheelBackR->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
-        mCarWheelBackL->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
-        mCarWheelFrontR->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
-        mCarWheelFrontL->getBulletRigidBody()->setMassProps(0.0f, btVector3(0.0f,0.0f,0.0f));
-
-        mCarChassis->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
-
-
-        mCarChassis->setCenterOfMass(chassisPos, rot);
-        mCarWheelBackR->setCenterOfMass(chassisPos + rot * mBackROriginalPos, rot);
-        mCarWheelBackL->setCenterOfMass(chassisPos + rot * mBackLOriginalPos, rot);
-        mCarWheelFrontR->setCenterOfMass(chassisPos + rot * mFrontROriginalPos, rot);
-        mCarWheelFrontL->setCenterOfMass(chassisPos + rot * mFrontLOriginalPos, rot);
-
-
-        btTransform initialTransformChassis;
-        initialTransformChassis.setOrigin(OgreBulletCollisions::convert(chassisPos));
-        initialTransformChassis.setRotation(OgreBulletCollisions::convert(rot));
-
-        mCarChassis->getBulletRigidBody()->setWorldTransform(initialTransformChassis);
-        mCarChassis->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformChassis);
-
-        btTransform initialTransformBackR;
-        btTransform initialTransformBackL;
-        btTransform initialTransformFrontR;
-        btTransform initialTransformFrontL;
-        initialTransformBackR.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mBackROriginalPos));
-        initialTransformBackR.setRotation(OgreBulletCollisions::convert(rot));
-        initialTransformBackL.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mBackLOriginalPos));
-        initialTransformBackL.setRotation(OgreBulletCollisions::convert(rot));
-        initialTransformFrontR.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mFrontROriginalPos));
-        initialTransformFrontR.setRotation(OgreBulletCollisions::convert(rot));
-        initialTransformFrontL.setOrigin(OgreBulletCollisions::convert(chassisPos + rot * mFrontLOriginalPos));
-        initialTransformFrontL.setRotation(OgreBulletCollisions::convert(rot));
-        
-        mCarWheelBackR->getBulletRigidBody()->setWorldTransform(initialTransformBackR);
-        mCarWheelBackR->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformBackR);
-
-        mCarWheelBackL->getBulletRigidBody()->setWorldTransform(initialTransformBackL);
-        mCarWheelBackL->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformBackL);
-
-        mCarWheelFrontR->getBulletRigidBody()->setWorldTransform(initialTransformFrontR);
-        mCarWheelFrontR->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformFrontR);
-
-        mCarWheelFrontL->getBulletRigidBody()->setWorldTransform(initialTransformFrontL);
-        mCarWheelFrontL->getBulletRigidBody()->getMotionState()->setWorldTransform(initialTransformFrontL);
-
-
-        mCarChassis->getBulletRigidBody()->setCollisionFlags(originalFlagsChassis);
-        mCarWheelBackR->getBulletRigidBody()->setCollisionFlags(originalFlagsBackR);
-        mCarWheelBackL->getBulletRigidBody()->setCollisionFlags(originalFlagsBackL);
-        mCarWheelFrontR->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontR);
-        mCarWheelFrontL->getBulletRigidBody()->setCollisionFlags(originalFlagsFrontL);
-
-        btVector3 inertia(0,0,0);
-        mCarChassis->getShape()->getBulletShape()->calculateLocalInertia(15.0f, inertia);
-        mCarChassis->getBulletRigidBody()->setMassProps(15.0f, inertia);
-
-        mCarWheelBackR->getShape()->getBulletShape()->calculateLocalInertia(2.0f, inertia);
-        mCarWheelBackR->getBulletRigidBody()->setMassProps(2.0f, inertia);
-
-        mCarWheelBackL->getShape()->getBulletShape()->calculateLocalInertia(2.0f, inertia);
-        mCarWheelBackL->getBulletRigidBody()->setMassProps(2.0f, inertia);
-
-        mCarWheelFrontR->getShape()->getBulletShape()->calculateLocalInertia(1.0f, inertia);
-        mCarWheelFrontR->getBulletRigidBody()->setMassProps(1.0f, inertia);
-
-        mCarWheelFrontL->getShape()->getBulletShape()->calculateLocalInertia(1.0f, inertia);
-        mCarWheelFrontL->getBulletRigidBody()->setMassProps(1.0f, inertia);
-
-        mCarChassis->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
-        mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
-
-        addToWorld();
+        PSBaseVehicle::repositionVehicle(chassisPos, chassisRot, mModelNode, mWheelNodes);
 
     }
-#endif
-}
-
-#if 0
-
-void PSBaseCar::removeFromWorld()
-{
-
-    mWorld->removeConstraint(mSixDofSpringFrontL);
-    mWorld->removeConstraint(mSixDofSpringFrontR);
-    mWorld->removeConstraint(mSixDofSpringBackL);
-    mWorld->removeConstraint(mSixDofSpringBackR);
-    mWorld->removeRigidBody(mCarChassis);
-    mWorld->removeRigidBody(mCarWheelBackR);
-    mWorld->removeRigidBody(mCarWheelBackL);
-    mWorld->removeRigidBody(mCarWheelFrontR);
-    mWorld->removeRigidBody(mCarWheelFrontL);
-
-    mCarChassis->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarChassis->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackR->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackR->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackL->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackL->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontR->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontR->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontL->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontL->setLinearVelocity(Ogre::Vector3::ZERO);
-
-    mCarChassis->getBulletRigidBody()->clearForces();
-    mCarWheelBackR->getBulletRigidBody()->clearForces();
-    mCarWheelBackL->getBulletRigidBody()->clearForces();
-    mCarWheelFrontR->getBulletRigidBody()->clearForces();
-    mCarWheelFrontL->getBulletRigidBody()->clearForces();
-
-    mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarChassis->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelBackR->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelBackR->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelBackL->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelBackL->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelFrontR->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelFrontR->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelFrontL->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 0.0f, 0.0f));
-    mCarWheelFrontL->getBulletRigidBody()->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-
-    mCarChassis->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
-
-    //mWorld->stepSimulation(0.01f, 1, 1.0f / 600.0f);
 
 }
-
-void PSBaseCar::addToWorld()
-{
-
-    mCarChassis->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarChassis->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackR->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackR->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackL->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelBackL->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontR->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontR->setLinearVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontL->setAngularVelocity(Ogre::Vector3::ZERO);
-    mCarWheelFrontL->setLinearVelocity(Ogre::Vector3::ZERO);
-
-    mCarChassis->getBulletRigidBody()->clearForces();
-    mCarWheelBackR->getBulletRigidBody()->clearForces();
-    mCarWheelBackL->getBulletRigidBody()->clearForces();
-    mCarWheelFrontR->getBulletRigidBody()->clearForces();
-    mCarWheelFrontL->getBulletRigidBody()->clearForces();
-
-    mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarChassis->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelBackR->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelBackR->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelBackL->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelBackL->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelFrontR->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelFrontR->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelFrontL->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-    mCarWheelFrontL->getBulletRigidBody()->setAngularFactor(btVector3(1.0f, 1.0f, 1.0f));
-
-    mCarChassis->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelBackR->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelBackL->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelFrontR->getBulletRigidBody()->updateInertiaTensor();
-    mCarWheelFrontL->getBulletRigidBody()->updateInertiaTensor();
-
-    mWorld->addRigidBody(mCarChassis, 0, 0);
-    mWorld->addRigidBody(mCarWheelBackR, 1, 2);// don`t collide with other car
-    mWorld->addRigidBody(mCarWheelBackL, 1, 2);// don`t collide with other car
-    mWorld->addRigidBody(mCarWheelFrontR, 1, 2);// don`t collide with other car
-    mWorld->addRigidBody(mCarWheelFrontL, 1, 2);// don`t collide with other car
-    mWorld->addConstraint(mSixDofSpringFrontL, true);
-    mWorld->addConstraint(mSixDofSpringFrontR, true);
-    mWorld->addConstraint(mSixDofSpringBackL, true);
-    mWorld->addConstraint(mSixDofSpringBackR, true);
-
-    mWorld->stepSimulation(0.01f);
-
-}
-
-#endif
 
 void PSBaseCar::clear()
 {
     PSBaseVehicle::clear();
 
-    mModelNode = NULL;
+    //mModelNode = NULL;
 }
 
 Ogre::Real PSBaseCar::getAlignedVelocity()const

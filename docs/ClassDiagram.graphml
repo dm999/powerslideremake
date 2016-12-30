@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1503.51953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="154.273202024925">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1488.818359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="161.623787962425">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -359,7 +359,8 @@ virtual void initModel( lua_State * pipeline,
                             bool isAI)
 
 // for multiplayer
-void setModelPositionOnGrid(const Ogre::Matrix4&amp; transform)
+void repositionVehicle(const Ogre::Matrix4&amp; transform)
+void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot)
 
 void initSounds(lua_State * pipeline)
 void deinitSounds()
@@ -400,8 +401,6 @@ virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
 void stopSounds()
 
 bool mIsAI
-
-OgreBulletDynamics::DynamicsWorld * mWorld
 
 Ogre::SceneNode* mModelNode
 Ogre::Entity* mModelEntity
@@ -1060,7 +1059,7 @@ Ogre::Vector3 dir</y:NodeLabel>
           <y:Geometry height="687.8424017241719" width="519.0341995871709" x="6580.482900206414" y="-973.9212008620859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="481.568359375" x="18.732920106085658" y="3.794247737085925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="25.093271668585658" y="25.846005549585925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1079,7 +1078,6 @@ void initModel( lua_State * pipeline,
 void clear()override
 
 void setModelVelocity(const Ogre::Vector3&amp; linear, const Ogre::Vector3&amp; angular)
-void setModelPositionOrientation(const Ogre::Vector3&amp; pos, const Ogre::Quaternion&amp; rot)
 
 void removeFromScene(Ogre::SceneManager* sceneMgr)
 
@@ -1097,8 +1095,6 @@ protected:
 void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)override{}
 
 private:
-
-void removeFromPhysicsSimulation()
 
 uint64_t mLastTimeOfUpdate
 
@@ -2847,10 +2843,10 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
     <node id="n69">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="485.8353035773589" width="1008.3577762526452" x="5825.821111873677" y="-6932.917651788679"/>
+          <y:Geometry height="788.4836915201113" width="894.8936264315575" x="5882.553186784221" y="-7204.241845760056"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="459.736328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.140625" x="14.608575626322818" y="13.049487726178995">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="871.1171875" x="11.888219465779002" y="24.712548885056094">&lt;&lt;PSBaseVehicle.h&gt;&gt;
 
 PSBaseVehicle
 
@@ -2860,18 +2856,24 @@ virtual void clear()
 
 protected:
 
-void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], const InitialVehicleSetup&amp; initialVehicleSetup)
+void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, 
+    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
+    const InitialVehicleSetup&amp; initialVehicleSetup)
 
-OgreBulletDynamics::RigidBody *mCarChassis
-CustomRigidBodyWheel *mCarWheelFrontL
-CustomRigidBodyWheel *mCarWheelFrontR
-CustomRigidBodyWheel *mCarWheelBackL
-CustomRigidBodyWheel *mCarWheelBackR
+void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL
-OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR
+OgreBulletDynamics::DynamicsWorld * mWorld
+
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::RigidBody&gt; mCarChassis
+CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelFrontL
+CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelFrontR
+CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelBackL
+CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelBackR
+
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::SixDofSpring2Constraint&gt; mSixDofSpringFrontL
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::SixDofSpring2Constraint&gt; mSixDofSpringFrontR
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::SixDofSpring2Constraint&gt; mSixDofSpringBackL
+CommonIncludes::shared_ptr&lt;OgreBulletDynamics::SixDofSpring2Constraint&gt; mSixDofSpringBackR
 
 InitialVehicleSetup mInitialVehicleSetup
 
@@ -2880,7 +2882,20 @@ static Ogre::NameGenerator nameGenNodes
 private:
 
 void removeFromWorld()
-void addToWorld()</y:NodeLabel>
+void addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
+
+void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
+void addSpringsToWorld()
+
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::CompoundCollisionShape&gt; mCompoundShape
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mRoofBackRShape
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mRoofBackLShape
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mRoofFrontRShape
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mRoofFrontLShape
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mChassisBodyShape
+
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mWheelShapeFront
+CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mWheelShapeBack</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2888,7 +2903,7 @@ void addToWorld()</y:NodeLabel>
     <node id="n70">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="733.3753734265165" width="370.78469139349863" x="7074.6076543032505" y="-7056.687686713258"/>
+          <y:Geometry height="733.3753734265165" width="370.78469139349863" x="6894.6076543032505" y="-7176.687686713258"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="231.4375" x="69.67359569674954" y="33.91131952575779">&lt;&lt;PSBaseVehicle.h&gt;&gt;

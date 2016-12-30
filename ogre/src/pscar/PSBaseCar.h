@@ -37,7 +37,8 @@ public:
                             const Ogre::Matrix4& transform,
                             bool isAI);
 
-    void setModelPositionOnGrid(const Ogre::Matrix4& transform); // for multiplayer
+    void repositionVehicle(const Ogre::Matrix4& transform); // for multiplayer
+    void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot); // for multiplayer
 
     void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();
@@ -83,8 +84,6 @@ protected:
     Ogre::Vector4 getCarArray4Parameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const;
 
     bool mIsAI;
-
-    OgreBulletDynamics::DynamicsWorld * mWorld;
 
     Ogre::SceneNode* mModelNode;
     Ogre::Entity* mModelEntity[5];

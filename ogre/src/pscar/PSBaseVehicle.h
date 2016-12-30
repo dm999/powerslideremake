@@ -66,18 +66,28 @@ public:
 
 protected:
 
-    void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], const InitialVehicleSetup& initialVehicleSetup);
+    void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, 
+        Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
+        const InitialVehicleSetup& initialVehicleSetup);
 
-    OgreBulletDynamics::RigidBody *mCarChassis;
-    CustomRigidBodyWheel *mCarWheelFrontL;
-    CustomRigidBodyWheel *mCarWheelFrontR;
-    CustomRigidBodyWheel *mCarWheelBackL;
-    CustomRigidBodyWheel *mCarWheelBackR;
+    /**
+     * Could be slow due to total removal from world
+     * http://www.bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=4517
+     */
+    void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontL;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringFrontR;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackL;
-    OgreBulletDynamics::SixDofSpring2Constraint * mSixDofSpringBackR;
+    OgreBulletDynamics::DynamicsWorld * mWorld;
+
+    CommonIncludes::shared_ptr<OgreBulletDynamics::RigidBody> mCarChassis;
+    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontL;
+    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontR;
+    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelBackL;
+    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelBackR;
+
+    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringFrontL;
+    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringFrontR;
+    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackL;
+    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackR;
 
     InitialVehicleSetup mInitialVehicleSetup;
 
@@ -86,7 +96,20 @@ protected:
 private:
 
     void removeFromWorld();
-    void addToWorld();
+    void addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
+
+    void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
+    void addSpringsToWorld();
+
+    CommonIncludes::shared_ptr<OgreBulletCollisions::CompoundCollisionShape> mCompoundShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackRShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackLShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontRShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontLShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mChassisBodyShape;
+
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeFront;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeBack;
 
 };
 

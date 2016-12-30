@@ -275,8 +275,6 @@ void BaseRaceMode::clearScene()
     mModeContext.mGameState.setRaceStarted(false);
     mModeContext.mGameState.setRaceFinished(false);
 
-    deInitWorld();
-
     //deinit sounds of system
 
     //clear sounds of cars as well
@@ -289,6 +287,8 @@ void BaseRaceMode::clearScene()
     }
 
     customClearScene();
+
+    deInitWorld();
 
     mModeContext.mSoundsProcesser.stopSounds();
 

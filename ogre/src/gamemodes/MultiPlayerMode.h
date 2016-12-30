@@ -38,6 +38,9 @@ public:
     void onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)override;
     void onError(const std::string& message)override;
 
+    /**
+     * create vehicles and positioning them according data
+     */
     void prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo);
 
 protected:

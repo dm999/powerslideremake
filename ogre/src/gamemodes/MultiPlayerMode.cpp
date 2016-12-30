@@ -384,7 +384,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
     size_t aiCount = sessionStartInfo.mAISkins.size();
 
     //playerIndex should start from 0
-    mModeContext.mGameState.getPlayerCar().setModelPositionOnGrid(mModeContext.mGameState.getTrackPositions()[aiCount + sessionStartInfo.mPlayerIndex]);
+    mModeContext.mGameState.getPlayerCar().repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + sessionStartInfo.mPlayerIndex]);
 
     mModeContext.mGameState.clearMultiplayerCarsHuman();
     mModeContext.mGameState.setMultiplayerCountAI(0);
@@ -411,6 +411,8 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
+
+                humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
 
                 mLapController.addCar(&humanCar);
 
@@ -444,6 +446,8 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
+                humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
+
                 mLapController.addCar(&humanCar);
 
                 CommonIncludes::shared_ptr<MultiplayerHumansLapFinishController> humanLapsController(new MultiplayerHumansLapFinishController(mModeContext.mGameState, this, humanCar, sessionStartInfo.mPlayers[q]));
@@ -469,6 +473,8 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
             mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacter, mModeContext.mGameState.getTrackPositions()[q], false, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
+
+            mModeContext.mGameState.getMultiplayerCarAI(q).repositionVehicle(mModeContext.mGameState.getTrackPositions()[q]);
 
             mLapController.addCar(&mModeContext.mGameState.getMultiplayerCarAI(q));
         }
@@ -500,7 +506,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                     if(aiPos.distance(aiPlayersSessionData[q].pos) > posDiffMax)
                     {
-                        aiCar.setModelPositionOrientation(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot);
+                        aiCar.repositionVehicle(aiPlayersSessionData[q].pos, aiPlayersSessionData[q].rot);
                         aiCar.setModelVelocity(aiPlayersSessionData[q].vel, aiPlayersSessionData[q].velang);
                     }
                     else
@@ -541,7 +547,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                 if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
-                    humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
+                    humanCar.repositionVehicle((*i).second.pos, (*i).second.rot);
                     humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
                 }
                 else
@@ -582,7 +588,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                 if(humanPos.distance((*i).second.pos) > posDiffMax)
                 {
-                    humanCar.setModelPositionOrientation((*i).second.pos, (*i).second.rot);
+                    humanCar.repositionVehicle((*i).second.pos, (*i).second.rot);
                     humanCar.setModelVelocity((*i).second.vel, (*i).second.velang);
                 }
                 else
