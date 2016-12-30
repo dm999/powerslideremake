@@ -22,22 +22,15 @@ To build project you need set environment variables:
 "Powerslide rebuild" also depends and includes sources of such open sourced projects as:  
 - [Bullet](http://bulletphysics.org/wordpress/)  
 - [Ogre Bullet](http://www.ogre3d.org/tikiwiki/OgreBullet)  
-- TinyXML  
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
-- [Enet](http://enet.bespin.org/)  
-- [Raknet](http://www.jenkinssoftware.com/)  
+- [Boost::asio](http://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio.html)  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
 ### Run ###
 To run builded project you need to support original game assets (packed files *.pf). Game assets could be found on original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
-You need to have: data.pf, gameshell.pf, store.pf.  
-Make sure script variables in file assets/scripts/Main.lua points to correct location:  
-Main.OriginalPathData = "F:/Data/";  
-Main.OriginalPathCommon = "F:/Common/";  
-Main.OriginalPathData - should point at directory with data.pf & gameshell.pf  
-Main.OriginalPathCommon - should point at directory with store.pf  
+You need to have: data.pf, gameshell.pf, store.pf. Place them in the folder with builded application.  
 
 ### License ###
 The MIT License (MIT) Copyright (c) 2016 Dmitry Polubotko  
