@@ -269,7 +269,7 @@ bool BaseApp::setup()
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
 
     mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
-    mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
+    //mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
     //mTrayMgr->toggleAdvancedFrameStats();

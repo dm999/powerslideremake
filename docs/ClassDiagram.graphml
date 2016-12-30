@@ -1586,7 +1586,7 @@ Ogre::Vector3 offset</y:NodeLabel>
           <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="16263.030019461887" y="-6576.479197446333"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1591.7265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="20.615916196333274">&lt;&lt;UIRace.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1635.830078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="-1.4358416161667265">&lt;&lt;UIRace.h&gt;&gt;
 
 UIRace
 
@@ -1617,7 +1617,9 @@ void setRaceTime(const std::string&amp; time)
 void setShowPausedPanel(bool isShow)
 
 void setShowMiscText(bool isShow)
-void setMiscText(const std::string&amp; text)
+void setMiscText(const std::string&amp; text, const Ogre::ColourValue&amp; col = Ogre::ColourValue::White)
+void setShowMiscTextRight(bool isShow)
+void setMiscTextRight(const std::string&amp; text)
 void addMiscPanelText(const std::string&amp; text, const Ogre::ColourValue&amp; col = Ogre::ColourValue::White)
 
 void destroy(CustomTrayManager* trayMgr)
@@ -1692,6 +1694,7 @@ Ogre::PanelOverlayElement* mRearViewMirrorPanel
 Ogre::PanelOverlayElement* mPausedPanel
 
 Ogre::TextAreaOverlayElement * mMiscText
+Ogre::TextAreaOverlayElement * mMiscTextRight
 static const int mMiscTextArraySize = 5
 Ogre::TextAreaOverlayElement * mMiscTextArray[mMiscTextArraySize]</y:NodeLabel>
           <y:Shape type="rectangle"/>

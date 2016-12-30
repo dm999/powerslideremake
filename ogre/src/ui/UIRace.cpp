@@ -743,7 +743,18 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mMiscText->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
         mMiscText->hide();
 
+        Ogre::Real miscTextRLeft = viewportWidth;
+        mMiscTextRight = createTextArea("MiscTextBoxRight", miscTextWidth, miscTextHeight, miscTextRLeft, miscTextTop); 
+        mMiscTextRight->setCaption("MISC");
+        mMiscTextRight->setCharHeight(16.0f);
+        mMiscTextRight->setSpaceWidth(9.0f);
+        mMiscTextRight->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mMiscTextRight->setFontName("SdkTrays/Caption");
+        mMiscTextRight->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+        mMiscTextRight->hide();
+
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMiscText);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMiscTextRight);
 
         for(int q = 0; q < mMiscTextArraySize; ++q)
         {
@@ -1497,9 +1508,27 @@ void UIRace::setShowMiscText(bool isShow)
     }
 }
 
-void UIRace::setMiscText(const std::string& text)
+void UIRace::setMiscText(const std::string& text, const Ogre::ColourValue& col)
 {
+    mMiscText->setColour(col);
     mMiscText->setCaption(text);
+}
+
+void UIRace::setShowMiscTextRight(bool isShow)
+{
+    if(isShow)
+    {
+        mMiscTextRight->show();
+    }
+    else
+    {
+        mMiscTextRight->hide();
+    }
+}
+
+void UIRace::setMiscTextRight(const std::string& text)
+{
+    mMiscTextRight->setCaption(text);
 }
 
 void UIRace::addMiscPanelText(const std::string& text, const Ogre::ColourValue& col)

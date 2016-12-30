@@ -96,6 +96,8 @@ void BaseRaceMode::initData()
 
     mUIRace->createRearViewMirrorPanel(mModeContext.mTrayMgr, mModeContext.mGameState.getMirrorEnabled());
     mUIRace->load(mModeContext.mTrayMgr, mModeContext.mGameState);
+
+    mUIRace->setShowMiscTextRight(true);
 }
 
 void BaseRaceMode::clearData()
@@ -512,6 +514,9 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
 void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+
+    mUIRace->setMiscTextRight(Conversions::DMToString(static_cast<size_t>(mModeContext.mWindow->getAverageFPS())));
+
     customFrameRenderingQueuedDoBegining();
 
     if( !mModeContext.mGameState.getRaceStarted() && 

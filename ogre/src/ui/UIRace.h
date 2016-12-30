@@ -45,7 +45,9 @@ public:
     void setShowPausedPanel(bool isShow);
 
     void setShowMiscText(bool isShow);
-    void setMiscText(const std::string& text);
+    void setMiscText(const std::string& text, const Ogre::ColourValue& col = Ogre::ColourValue::White);
+    void setShowMiscTextRight(bool isShow);
+    void setMiscTextRight(const std::string& text);
     void addMiscPanelText(const std::string& text, const Ogre::ColourValue& col = Ogre::ColourValue::White);
     void clearMiscPanelText();
 
@@ -134,6 +136,7 @@ private:
     Ogre::PanelOverlayElement* mPausedPanel;
 
     Ogre::TextAreaOverlayElement * mMiscText;
+    Ogre::TextAreaOverlayElement * mMiscTextRight;
     static const int mMiscTextArraySize = 5;
     Ogre::TextAreaOverlayElement * mMiscTextArray[mMiscTextArraySize];
 
