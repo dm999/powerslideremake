@@ -234,14 +234,9 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
     if(sender == mWidgetJoin)
     {
         bool changeToReady = true;
-        if(mWidgetJoin->getCaption() == "Ready")
-        {
-            mWidgetJoin->setCaption("Not ready");
-        }
-        else
+        if(mWidgetJoin->getCaption() != "Ready")
         {
             changeToReady = false;
-            mWidgetJoin->setCaption("Ready");
         }
 
         std::string trackName = "";
@@ -253,14 +248,28 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             trackName = availTracks[mWidgetTrack->getItemIndexSelected()];
         }
 
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+
+        MultiplayerLobbyData multiplayerLobbyData(
             changeToReady, 
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             "", 
-            trackName,
-            mModeContext.mGameState.getAICount(), 
-            mModeContext.mGameState.getAIStrength(),
+            trackName, 
+            mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
             mModeContext.mGameState.getLapsCount());
+
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
+
+        if(success)
+        {
+            if(mWidgetJoin->getCaption() == "Ready")
+            {
+                mWidgetJoin->setCaption("Not ready");
+            }
+            else
+            {
+                mWidgetJoin->setCaption("Ready");
+            }
+        }
     }
 
 }
@@ -353,22 +362,27 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+
+        MultiplayerLobbyData multiplayerLobbyData(
             changeToReady, 
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             playerMessage, 
-            mModeContext.mGameState.getTrackName(),
-            mModeContext.mGameState.getAICount(),
-            mModeContext.mGameState.getAIStrength(),
+            mModeContext.mGameState.getTrackName(), 
+            mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
             mModeContext.mGameState.getLapsCount());
+
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
     }
     else
     {
-        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(
+        MultiplayerLobbyData multiplayerLobbyData(
             changeToReady, 
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             playerMessage, 
-            "",
-            0, 0, 0);
+            "", 
+            0, 0, 
+            0);
+
+        bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, 10);
     }
 }

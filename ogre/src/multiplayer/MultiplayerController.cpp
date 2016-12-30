@@ -53,21 +53,28 @@ void MultiplayerController::onJoined(multislider::Lobby* lobby, const multislide
     }
 }
 
-bool MultiplayerController::sendLobbyMessage(bool isReady, const std::string& characterName, const std::string& playerMessage, const std::string& trackName, size_t aiCount, size_t aiStrength, size_t lapsCount)
+bool MultiplayerController::sendLobbyMessage(const MultiplayerLobbyData& multiplayerLobbyData, size_t attemptsAmount)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::sendLobbyMessage]");
 
     bool res = true;
 
-    try{
-
-        MultiplayerLobbyData multiplayerLobbyData(isReady, characterName, playerMessage, trackName, aiCount, aiStrength, lapsCount);
-        mLobby->say(fillLobbyMessage(multiplayerLobbyData), true);
-
-    }catch(const std::runtime_error& err)
+    size_t attempts = 0;
+    while(attempts < attemptsAmount)
     {
-        res = false;
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerControllerSlave::sendLobbyMessage]: " + Ogre::String(err.what()));
+        try{
+
+            mLobby->say(fillLobbyMessage(multiplayerLobbyData), true);
+
+        }catch(const std::runtime_error& err)
+        {
+            res = false;
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[MultiplayerControllerSlave::sendLobbyMessage]: " + Ogre::String(err.what()));
+        }
+
+        ++attempts;
+
+        if(res)break;
     }
 
     return res;
