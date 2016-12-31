@@ -12,10 +12,13 @@
 
 #include "../loaders/TextureLoader.h"
 
+#include "../gamemodes/MenuMode.h"
+
 #include "../multiplayer/MultiplayerRoomInfo.h"
 
-UIMainMenu::UIMainMenu(const ModeContext& modeContext)
-: mModeContext(modeContext)
+UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)
+    : mModeContext(modeContext),
+    mMenuMode(menuMode)
 {}
 
 UIMainMenu::~UIMainMenu()
@@ -76,6 +79,93 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
         MyGUI::ButtonPtr widget = gui->createWidget<MyGUI::Button>("Button", pos.x, pos.y, pos.z, pos.w, MyGUI::Align::Default, "Middle");
         widget->setCaption("Single");
         widget->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
+
+
+        //track
+        Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(360.0f, 50.0f, 60.0f, 12.0f);
+        mWidgetTrack = gui->createWidget<MyGUI::ComboBox>("ComboBox", posTrack.x, posTrack.y, posTrack.z, posTrack.w, MyGUI::Align::Default, "Middle");
+
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+        size_t itemToSelect = 0;
+        for(size_t q = 0; q < availTracks.size(); ++q)
+        {
+            mWidgetTrack->addItem(strPowerslide.getTrackTitle(availTracks[q]));
+
+            if(availTracks[q] == mModeContext.getGameState().getTrackNameAsOriginal())
+                itemToSelect = q;
+        }
+
+        mWidgetTrack->setIndexSelected(itemToSelect);
+
+        mWidgetTrack->setEditReadOnly(true);
+        mWidgetTrack->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
+
+
+        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+        //car
+        Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(420.0f, 50.0f, 60.0f, 12.0f);
+        mWidgetCar = gui->createWidget<MyGUI::ComboBox>("ComboBox", posCar.x, posCar.y, posCar.z, posCar.w, MyGUI::Align::Default, "Middle");
+
+        itemToSelect = 0;
+        for(size_t q = 0; q < availCars.size(); ++q)
+        {
+            mWidgetCar->addItem(strPowerslide.getCarTitle(availCars[q]));
+
+            if(availCars[q] == characterCar)
+                itemToSelect = q;
+        }
+        mWidgetCar->setIndexSelected(itemToSelect);
+        mWidgetCar->setEditReadOnly(true);
+        mWidgetCar->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
+
+
+        //character
+        Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(480.0f, 50.0f, 60.0f, 12.0f);
+        mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
+
+        itemToSelect = 0;
+        for(size_t q = 0; q < availChars.size(); ++q)
+        {
+            mWidgetCharacter->addItem(strPowerslide.getCharacterTitle(availChars[q]));
+
+            if(availChars[q] == mModeContext.getGameState().getPlayerCar().getCharacterName())
+                itemToSelect = q;
+        }
+        mWidgetCharacter->setIndexSelected(itemToSelect);
+
+        mWidgetCharacter->setEditReadOnly(true);
+        mWidgetCharacter->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
+
+
+
+        Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(540.0f, 50.0f, 30.0f, 12.0f);
+        mWidgetAICount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAI.x, posAI.y, posAI.z, posAI.w, MyGUI::Align::Default, "Middle");
+        for(size_t q = 3; q <= 11; ++q)
+            mWidgetAICount->addItem(Conversions::DMToString(q));
+
+        mWidgetAICount->setIndexSelected(mModeContext.getGameState().getAICount() - 3);
+        mWidgetAICount->setEditReadOnly(true);
+        mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
+
+
+        Ogre::Vector4 posAIStrength = screenAdaptionRelative * Ogre::Vector4(570.0f, 50.0f, 30.0f, 12.0f);
+        mWidgetAIStrength = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAIStrength.x, posAIStrength.y, posAIStrength.z, posAIStrength.w, MyGUI::Align::Default, "Middle");
+        mWidgetAIStrength->addItem("Novice");
+        mWidgetAIStrength->addItem("Advanced");
+        mWidgetAIStrength->addItem("Expert");
+        mWidgetAIStrength->addItem("Insane");
+
+        mWidgetAIStrength->setIndexSelected(mModeContext.getGameState().getAIStrength());
+        mWidgetAIStrength->setEditReadOnly(true);
+        mWidgetAIStrength->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
+
     }
 
     {
@@ -255,7 +345,14 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
     MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
 
     if(senderButton->getCaption() == "Single")
+    {
+
+        std::vector<std::string> playersCharacters;
+        playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        mMenuMode->recalculateCharacterNames(playersCharacters);
+
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+    }
 
     if(senderButton->getCaption() == "Multi Join")
     {
@@ -330,5 +427,55 @@ void UIMainMenu::processItemSelected(MyGUI::Widget* sender, size_t index)
 {
     if(sender == mWidgetRooms)
     {
+    }
+}
+
+void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
+{
+    if(sender == mWidgetTrack)
+    {
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+        mModeContext.getGameState().setRaceParameters(availTracks[index], mModeContext.getGameState().getAIStrength());
+    }
+
+    if(sender == mWidgetCar)
+    {
+        mWidgetCharacter->deleteAllItems();
+
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+        std::string characterCar = availCars[index];
+        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+        for(size_t q = 0; q < availChars.size(); ++q)
+        {
+            mWidgetCharacter->addItem(strPowerslide.getCharacterTitle(availChars[q]));
+        }
+
+        mWidgetCharacter->setIndexSelected(0);
+        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
+    }
+
+    if(sender == mWidgetCharacter)
+    {
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+
+        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[index]);
+    }
+
+    if(sender == mWidgetAICount)
+    {
+        mModeContext.getGameState().setAICount(index + 3);
+    }
+
+    if(sender == mWidgetAIStrength)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(index), mModeContext.getGameState().getLapsCount());
     }
 }

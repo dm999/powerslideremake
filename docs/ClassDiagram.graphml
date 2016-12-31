@@ -2390,10 +2390,10 @@ std::vector&lt;Ogre::OverlayElement*&gt; mCreatedElements</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="262.1825904052903" width="476.64200237214163" x="15451.678998813928" y="-6551.091295202645"/>
+          <y:Geometry height="482.7484143565607" width="489.36695375394766" x="15385.316523123027" y="-6661.37420717828"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="7.863969936070134" y="4.131334265144687">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="2.9207815644731454" y="4.155457178279903">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2401,15 +2401,30 @@ public:
 
 void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
 
+void processButtonClick(MyGUI::Widget* sender)
+void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+void processItemSelected(MyGUI::Widget* sender, size_t index)
+void processChangeComboBox(MyGUI::Widget* sender, size_t index)
+
 private:
 
 ModeContext mModeContext
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
 
-Ogre::PanelOverlayElement* mMainBackground
-Ogre::PanelOverlayElement* mBackgroundA
-Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
+MenuMode * mMenuMode
+
+MyGUI::ComboBox* mWidgetTrack
+MyGUI::ComboBox* mWidgetCar
+MyGUI::ComboBox* mWidgetCharacter
+MyGUI::ComboBox* mWidgetAICount
+MyGUI::ComboBox* mWidgetAIStrength
+
+MyGUI::EditBox* mWidgetIP
+MyGUI::EditBox* mWidgetRoom
+MyGUI::EditBox* mWidgetUserName
+MyGUI::ListBox* mWidgetRooms
+MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2450,10 +2465,10 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
     <node id="n53">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="262.1825904052903" width="476.64200237214163" x="15691.678998813928" y="-6221.091295202645"/>
+          <y:Geometry height="597.7037694177025" width="476.64200237214163" x="15601.67899881393" y="-6028.851884708851"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="195.115234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="7.863969936070134" y="33.53367801514469">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="7.863969936070134" y="24.880205021350775">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
@@ -2461,11 +2476,35 @@ public:
 
 void load(MyGUI::Gui* gui, const GameState&amp; gameState)
 
+void processButtonClick(MyGUI::Widget* sender)
+void processChangeComboBox(MyGUI::Widget* sender, size_t index)
+
+void onStartPossible()
+void onStartNotPossible()
+
+void addEvent(const std::string&amp; eventItem)
+
 private:
 
 ModeContext mModeContext
 
-void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)</y:NodeLabel>
+void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
+
+void updateRoomState(const std::string&amp; playerMessage = "")const
+
+MenuMultiMode * mMenuMultiMode
+
+MyGUI::Button* mWidgetJoin
+MyGUI::Button* mWidgetStart
+MyGUI::ComboBox* mWidgetTrack
+MyGUI::ComboBox* mWidgetCar
+MyGUI::ComboBox* mWidgetCharacter
+MyGUI::ComboBox* mWidgetAICount
+MyGUI::ComboBox* mWidgetAIStrength
+MyGUI::ComboBox* mWidgetLapsCount
+MyGUI::ComboBox* mWidgetBroadcast
+
+MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

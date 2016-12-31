@@ -5,9 +5,10 @@
 #include "../ui/UIMainMenu.h"
 
 MenuMode::MenuMode(const ModeContext& modeContext) :
-    BaseMenuMode(modeContext, true),
-    mUIMainMenu(new UIMainMenu(modeContext))
-{}
+    BaseMenuMode(modeContext, true)
+{
+    mUIMainMenu.reset(new UIMainMenu(modeContext, this));
+}
 
 void MenuMode::doInitData()
 {
