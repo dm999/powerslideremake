@@ -210,7 +210,7 @@ void BaseRaceMode::initScene()
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
+            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.6f;

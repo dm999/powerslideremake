@@ -75,7 +75,7 @@ void GameModeSwitcher::frameEnded()
         //store multiplayer controller (switch from multiplayer race to main menu multi)
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit)
         {
-            if(mPlayerMode.get())
+            if(mPlayerMode.get() && mGameMode == ModeRaceMulti)
             {
                 MultiPlayerMode * mode = static_cast<MultiPlayerMode *>(mPlayerMode.get());
                 controller = mode->getMultiplayerController();

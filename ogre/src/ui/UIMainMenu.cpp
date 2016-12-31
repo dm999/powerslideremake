@@ -150,6 +150,8 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
         for(size_t q = 3; q <= 11; ++q)
             mWidgetAICount->addItem(Conversions::DMToString(q));
 
+        if(mModeContext.getGameState().getAICount() < 3)
+            mModeContext.getGameState().setAICount(3);
         mWidgetAICount->setIndexSelected(mModeContext.getGameState().getAICount() - 3);
         mWidgetAICount->setEditReadOnly(true);
         mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
