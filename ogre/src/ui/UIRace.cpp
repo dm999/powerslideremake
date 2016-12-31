@@ -343,6 +343,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
         tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
         TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME);
+        //TEXLoader().loadChroma(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME, Ogre::ColourValue::White);
 
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalTacho");
@@ -351,6 +352,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
                             texName, 
                             1.0f,
                             TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
 
     mNeedle->setMaterialName(0, "Test/TachoFrantic", TEMP_RESOURCE_GROUP_NAME);
