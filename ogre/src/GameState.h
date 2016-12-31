@@ -161,6 +161,7 @@ private:
     std::string mVersion;
 
     std::string mTrackName;
+    size_t mLapsCount;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;
@@ -201,8 +202,6 @@ private:
     Ogre::ColourValue mBackgroundColor;
 
     bool mIsMirrorEnabled;
-
-    size_t mLapsCount;
 
     Ogre::Real mListenerGain; //master volume
 

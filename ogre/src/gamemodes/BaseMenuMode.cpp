@@ -17,11 +17,6 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
 {
     if(isInitialCreation)
     {
-        std::string playerCharacter = "frantic";
-        mModeContext.getGameState().getPlayerCar().setCharacterName(playerCharacter);
-        mModeContext.getGameState().setRaceParameters("desert track", Easy);
-        mModeContext.getGameState().setAICount(3);                          //not more than 11
-
         mModeContext.getGameState().setMultiplayerServerPort(8800);
 
         mModeContext.getGameState().setListenerGain(0.0f);
@@ -29,7 +24,7 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
         mModeContext.getGameState().setMirrorEnabled(true);
 
         std::vector<std::string> playersCharacters;
-        playersCharacters.push_back(playerCharacter);
+        playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
         recalculateCharacterNames(playersCharacters);
     }
 }
