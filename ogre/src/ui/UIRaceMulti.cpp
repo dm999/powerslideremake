@@ -40,6 +40,7 @@ void UIRaceMulti::switchVisibleMessageWidget()
 
     if(mWidgetMessage->isVisible())
     {
+        mWidgetMessage->setCaption("");
         MyGUI::InputManager::getInstance().setKeyFocusWidget(mWidgetMessage);
         MyGUI::InputManager::getInstance().getKeyFocusWidget();
     }

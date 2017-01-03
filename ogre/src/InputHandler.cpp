@@ -107,24 +107,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         if(mCameraMan)
         {
-            Ogre::PolygonMode pm;
-
-            switch (mCameraMan->getCamera()->getPolygonMode())
-            {
-            case Ogre::PM_SOLID:
-                //newVal = "Wireframe";
-                pm = Ogre::PM_WIREFRAME;
-                break;
-            case Ogre::PM_WIREFRAME:
-                //newVal = "Points";
-                pm = Ogre::PM_POINTS;
-                break;
-            default:
-                //newVal = "Solid";
-                pm = Ogre::PM_SOLID;
-            }
-
-            mCameraMan->getCamera()->setPolygonMode(pm);
+            baseApp->switchRenderType();
         }
     }else if (arg.key == OIS::KC_1)
     {

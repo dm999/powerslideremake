@@ -50,6 +50,7 @@ public:
     void quickScriptsReload();  // reread main params only
     void enablePause();
     void tabPressed();
+    void switchRenderType();
 
     // scripting functions
     void parseFile(const std::string& fileName);

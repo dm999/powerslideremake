@@ -9,6 +9,8 @@
 #include "tools/OgreTools.h"
 #include "tools/Conversions.h"
 
+#include "CameraMan.h"
+
 #include "lua/Lua_Include.h"
 
 #include "customs/CustomSceneManager.h"
@@ -385,6 +387,31 @@ void BaseApp::enablePause()
 void BaseApp::tabPressed()
 {
     mGameModeSwitcher->tabPressed();
+}
+
+void BaseApp::switchRenderType()
+{
+    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    {
+        Ogre::PolygonMode pm;
+
+        switch (mInputHandler->mCameraMan->getCamera()->getPolygonMode())
+        {
+        case Ogre::PM_SOLID:
+            //newVal = "Wireframe";
+            pm = Ogre::PM_WIREFRAME;
+            break;
+        case Ogre::PM_WIREFRAME:
+            //newVal = "Points";
+            pm = Ogre::PM_POINTS;
+            break;
+        default:
+            //newVal = "Solid";
+            pm = Ogre::PM_SOLID;
+        }
+
+        mInputHandler->mCameraMan->getCamera()->setPolygonMode(pm);
+    }
 }
 
 void BaseApp::setShutdown(bool shutdown)

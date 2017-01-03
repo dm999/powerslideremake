@@ -15,6 +15,7 @@ class InputHandler : public OIS::KeyListener
     , public OIS::MouseListener
 #endif
 {
+    friend class BaseApp;
 private:
 
     BaseApp * baseApp;

@@ -473,7 +473,7 @@ static Ogre::NameGenerator nameGenMaterials</y:NodeLabel>
           <y:Geometry height="2147.889618372409" width="1178.2932695893192" x="9820.853365205341" y="-7013.944809186205"/>
           <y:Fill color="#FF00FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1033.08203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="557.403793561205">&lt;&lt;BaseApp.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1047.783203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="550.053207623705">&lt;&lt;BaseApp.h&gt;&gt;
 
 BaseApp
 
@@ -484,6 +484,7 @@ virtual void go(void)
 void quickScriptsReload()
 void enablePause()
 void tabPressed()
+void switchRenderType()
 
 void parseFile(const std::string&amp; fileName)
 
