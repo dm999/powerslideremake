@@ -210,6 +210,23 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
         }
     }
 
+
+    //cursor
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalCursor");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+    }
+
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 
 }

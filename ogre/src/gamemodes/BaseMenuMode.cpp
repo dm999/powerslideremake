@@ -45,6 +45,9 @@ void BaseMenuMode::initData()
 {
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
+    Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("UI");
+    Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("UI");
+
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
     mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
     mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -67,11 +70,12 @@ void BaseMenuMode::initData()
     //update mouse position
     const OIS::MouseState &ms = mModeContext.mInputHandler->getInputContext().mMouse->getMouseState();
     MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
+    MyGUI::PointerManager::getInstance().setVisible(false);
 
     doInitData();
 
     //mModeContext.mTrayMgr->showCursor();
-    //mModeContext.mTrayMgr->showCursor("Test/Cursor");
+    mModeContext.mTrayMgr->showCursor("Test/Cursor");
     //mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
     //mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
 }
@@ -86,6 +90,10 @@ void BaseMenuMode::clearData()
     mSceneMgr->clearScene();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
     mModeContext.mWindow->removeAllViewports();
+
+    mModeContext.mTrayMgr->hideCursor();
+
+    Ogre::ResourceGroupManager::getSingleton().clearResourceGroup("UI");
 
     Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 }

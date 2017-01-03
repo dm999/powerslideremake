@@ -266,6 +266,8 @@ void BaseRaceMode::initScene()
     cameraCarUI->setFOVy(Ogre::Degree(45.0f));
     cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
     cameraCarUI->lookAt(Ogre::Vector3::ZERO);
+
+    mModeContext.mTrayMgr->hideCursor();
 }
 
 void BaseRaceMode::clearScene()
