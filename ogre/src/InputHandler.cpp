@@ -76,58 +76,62 @@ void InputHandler::resetCameraMenPointer(CameraMan* cameraMan)
     mCameraMan = cameraMan;
 }
 
+bool InputHandler::noSpecialKey()
+{
+    return !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Shift)   &&
+    !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Ctrl)           &&
+    !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt);
+}
+
 bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
 {
 
     if(arg.key < mKeycodesSize)
         mKeyCodes[arg.key] = true;
 
-    if (    arg.key == OIS::KC_ESCAPE && 
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Shift)    &&
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Ctrl)     &&
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt)
-        )
+    if (arg.key == OIS::KC_ESCAPE)
     {
-        baseApp->setShutdown(true);
-
-    }else if (arg.key == OIS::KC_F4)
+        if(noSpecialKey())
+            baseApp->setShutdown(true);
+    }
+    else if (arg.key == OIS::KC_F4)
     {
-        
-        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper && !baseApp->getGameState().getRaceFinished())
-        {
-            PSPlayerCar& playerCar = baseApp->getGameState().getPlayerCar();
-            playerCar.setDisableMouse(!playerCar.getDisableMouse());
-        }
-
-    }else if (arg.key == OIS::KC_F5)
+        if(noSpecialKey())
+            baseApp->dropCamera();
+    }
+    else if (arg.key == OIS::KC_F5)
     {
         baseApp->quickScriptsReload();
-
-    }else if (arg.key == OIS::KC_SPACE)
+    }
+    else if (arg.key == OIS::KC_SPACE)
     {
         if(mCameraMan)
         {
             baseApp->switchRenderType();
         }
-    }else if (arg.key == OIS::KC_1)
+    }
+    else if (arg.key == OIS::KC_1)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_Bumper);
         }
-    }else if (arg.key == OIS::KC_2)
+    }
+    else if (arg.key == OIS::KC_2)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_ChassisA);
         }
-    }else if (arg.key == OIS::KC_3)
+    }
+    else if (arg.key == OIS::KC_3)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_ChassisB);
         }
-    }else if (arg.key == OIS::KC_4)
+    }
+    else if (arg.key == OIS::KC_4)
     {
         if(mCameraMan)
         {
@@ -138,12 +142,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->enablePause();
     }
-    else if (arg.key == OIS::KC_TAB && 
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Shift)    &&
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Ctrl)     &&
-            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt))
+    else if (arg.key == OIS::KC_TAB)
     {
-        baseApp->tabPressed();
+        if(noSpecialKey())
+            baseApp->tabPressed();
     }
 
     baseApp->keyDown(arg);

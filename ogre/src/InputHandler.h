@@ -31,6 +31,8 @@ private:
     static const int mKeycodesSize = 256;
     bool mKeyCodes[mKeycodesSize];
 
+    bool noSpecialKey();
+
 protected:
 
     virtual bool keyPressed( const OIS::KeyEvent &arg );

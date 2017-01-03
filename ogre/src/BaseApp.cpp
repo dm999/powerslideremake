@@ -414,6 +414,24 @@ void BaseApp::switchRenderType()
     }
 }
 
+void BaseApp::dropCamera()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceMulti
+    )
+    {
+        if(
+            mInputHandler->mCameraMan->getCameraPositionType() != CameraPosition_Bumper && 
+            !mGameState.getRaceFinished()
+        )
+        {
+            PSPlayerCar& playerCar = mGameState.getPlayerCar();
+            playerCar.setDisableMouse(!playerCar.getDisableMouse());
+        }
+    }
+}
+
 void BaseApp::setShutdown(bool shutdown)
 {
     if(

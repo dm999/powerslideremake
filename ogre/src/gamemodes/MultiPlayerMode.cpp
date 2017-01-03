@@ -364,7 +364,7 @@ void MultiPlayerMode::onLobbyMessage(const std::string& player, const Multiplaye
     if(data.mDataType == lobbyDataRegular)
     {
         if(!data.mPlayerMessage.empty())
-            mUIRace->addMiscPanelText("Player [" + player + "] said: " + data.mPlayerMessage, Ogre::ColourValue::Green);
+            mUIRace->addMiscPanelText(player + ": " + data.mPlayerMessage, Ogre::ColourValue::Green);
     }
 
     //check other players finished all laps

@@ -51,6 +51,7 @@ public:
     void enablePause();
     void tabPressed();
     void switchRenderType();
+    void dropCamera();
 
     // scripting functions
     void parseFile(const std::string& fileName);

@@ -183,7 +183,7 @@ void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerL
     }
     else
     {
-        mUIMainMenuMulti->addEvent("player [" + player + "] said: " + data.mPlayerMessage, true);
+        mUIMainMenuMulti->addEvent(player + ": " + data.mPlayerMessage, true);
     }
 }
 
