@@ -34,6 +34,12 @@ InputHandler::InputHandler(Ogre::RenderWindow* mWindow, BaseApp * app) :
 
     mInputContext.mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
     mInputContext.mMouse->setEventCallback(this);
+    
+    //centered mouse
+    //http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Initial+Mouse+Position+With+OIS+and+CEGUI
+    OIS::MouseState &mutableMouseState = const_cast<OIS::MouseState &>(mInputContext.mMouse->getMouseState());
+    mutableMouseState.X.abs = mWindow->getWidth() / 2;
+    mutableMouseState.Y.abs = mWindow->getHeight() / 2;
 #endif
 }
 

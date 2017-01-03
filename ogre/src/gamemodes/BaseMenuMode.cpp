@@ -12,10 +12,11 @@
 
 #include "../InputHandler.h"
 
-BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreation) :
+BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreationMultiplayer) :
     BaseMode(modeContext)
 {
-    if(isInitialCreation)
+    //flag for multiplayer only, indicate switch from single menu to multi
+    if(isInitialCreationMultiplayer)
     {
         mModeContext.getGameState().setMultiplayerServerPort(8800);
 
@@ -63,6 +64,9 @@ void BaseMenuMode::initData()
     mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
     mModeContext.mGUI->initialise();
 
+    //update mouse position
+    const OIS::MouseState &ms = mModeContext.mInputHandler->getInputContext().mMouse->getMouseState();
+    MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
 
     doInitData();
 

@@ -409,24 +409,30 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
 #if !defined(__ANDROID__)
 void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
 {
-    mTrayMgr->injectMouseMove(arg);
-
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    {
+        mTrayMgr->injectMouseMove(arg);
+
         MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
+    }
 }
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    mTrayMgr->injectMouseDown(arg, id);
-
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    {
+        mTrayMgr->injectMouseDown(arg, id);
+
         MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+    }
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    mTrayMgr->injectMouseUp(arg, id);
-
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    {
+        mTrayMgr->injectMouseUp(arg, id);
+
         MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+    }
 }
 #endif
 

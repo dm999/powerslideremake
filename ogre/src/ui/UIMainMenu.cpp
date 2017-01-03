@@ -196,7 +196,7 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 
         Ogre::Vector4 posUserName = screenAdaptionRelative * Ogre::Vector4(320.0f, 140.0f, 100.0f, 12.0f);
         mWidgetUserName = gui->createWidget<MyGUI::EditBox>("EditBox", posUserName.x, posUserName.y, posUserName.z, posUserName.w, MyGUI::Align::Default, "Middle");
-        mWidgetUserName->setCaption("DM");
+        mWidgetUserName->setCaption(mModeContext.getGameState().getMultiplayerUserName());
         mWidgetUserName->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
         mWidgetUserName->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
 
@@ -394,26 +394,40 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
         }
         else
         {
-            mModeContext.mGameState.setMultiplayerMaster(false);
-            mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
+            if(mWidgetUserName->getCaption() != "")
+            {
+                mModeContext.mGameState.setMultiplayerMaster(false);
+                mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
 
-            //remove color data from room name
-            std::string roomName = mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected());
-            roomName = roomName.substr(7, roomName.size());
-            mModeContext.mGameState.setMultiplayerRoomName(roomName);
+                //remove color data from room name
+                std::string roomName = mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected());
+                roomName = roomName.substr(7, roomName.size());
+                mModeContext.mGameState.setMultiplayerRoomName(roomName);
 
-            mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
-            mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+                mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
+                mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+            }
+            else
+            {
+                mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+            }
         }
     }
 
     if(senderButton->getCaption() == "Multi Host")
     {
-        mModeContext.mGameState.setMultiplayerMaster(true);
-        mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
-        mModeContext.mGameState.setMultiplayerRoomName(mWidgetRoom->getCaption());
-        mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
-        mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+        if(mWidgetUserName->getCaption() != "")
+        {
+            mModeContext.mGameState.setMultiplayerMaster(true);
+            mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
+            mModeContext.mGameState.setMultiplayerRoomName(mWidgetRoom->getCaption());
+            mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
+            mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+        }
+        else
+        {
+            mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+        }
     }
 }
 
