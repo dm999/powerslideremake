@@ -21,9 +21,6 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
     mMenuMultiMode(menuMultiMode)
 {}
 
-UIMainMenuMulti::~UIMainMenuMulti()
-{}
-
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
     TextureLoader().loadChroma( pfLoaderGameshell, 

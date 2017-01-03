@@ -9,6 +9,10 @@
 #include "../tools/OgreTools.h"
 
 #include "../ui/UIRace.h"
+#include "../ui/UIRaceMulti.h"
+
+#include "MyGUI.h"
+#include "MyGUI_OgrePlatform.h"
 
 class MultiplayerAILapFinishController : public LapUtils::Events
 {
@@ -47,6 +51,9 @@ MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext, const CommonInc
     mIsSessionStarted(false),
     mIsSelfFinished(false)
 {
+
+    mUIRaceMulti.reset(new UIRaceMulti(modeContext, this));
+
     assert(controller.get());
 
     mMultiplayerController = controller;
@@ -124,6 +131,22 @@ void MultiPlayerMode::customClearScene()
         mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).clear();
         mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).deinitSounds();
     }
+}
+
+void MultiPlayerMode::customInitUI()
+{
+    mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
+    mModeContext.mGUI->initialise();
+
+    MyGUI::PointerManager::getInstance().setVisible(false);
+
+    mUIRaceMulti->load(mModeContext.mGUI, mModeContext.mGameState);
+}
+
+void MultiPlayerMode::customClearUI()
+{
+    mModeContext.mGUI->shutdown();
+    mModeContext.mPlatform->shutdown();
 }
 
 void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
@@ -524,6 +547,11 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
     }
 
     mIsSessionStarted = true;
+}
+
+void MultiPlayerMode::tabPressed()
+{
+    mUIRaceMulti->switchVisibleMessageWidget();
 }
 
 void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)

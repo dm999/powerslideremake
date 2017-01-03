@@ -363,7 +363,28 @@ void BaseApp::windowFocusChange(Ogre::RenderWindow* rw)
 
 void BaseApp::quickScriptsReload()
 {
-    mGameModeSwitcher->restartRace();
+    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+        mGameModeSwitcher->restartRace();
+}
+
+void BaseApp::enablePause()
+{
+    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    {
+        if(baseApp->getGameState().isGamePaused())
+        {
+            baseApp->getGameState().resetGamePaused();
+        }
+        else
+        {
+            baseApp->getGameState().setGamePaused();
+        }
+    }
+}
+
+void BaseApp::tabPressed()
+{
+    mGameModeSwitcher->tabPressed();
 }
 
 void BaseApp::setShutdown(bool shutdown)
@@ -394,7 +415,7 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
     if(!mGameState.isGamePaused())
         mGameState.getPlayerCar().keyDown(arg.key);
 
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
         MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
 }
 
@@ -402,7 +423,7 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
 {
     mGameState.getPlayerCar().keyUp(arg.key);
 
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
         MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
 }
 

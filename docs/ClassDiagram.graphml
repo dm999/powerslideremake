@@ -473,7 +473,7 @@ static Ogre::NameGenerator nameGenMaterials</y:NodeLabel>
           <y:Geometry height="2147.889618372409" width="1178.2932695893192" x="9820.853365205341" y="-7013.944809186205"/>
           <y:Fill color="#FF00FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1018.380859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="564.754379498705">&lt;&lt;BaseApp.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1033.08203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="557.403793561205">&lt;&lt;BaseApp.h&gt;&gt;
 
 BaseApp
 
@@ -481,8 +481,9 @@ public:
 
 virtual void go(void)
 
-void scriptsReload()
 void quickScriptsReload()
+void enablePause()
+void tabPressed()
 
 void parseFile(const std::string&amp; fileName)
 
@@ -2026,7 +2027,7 @@ DWORD Length</y:NodeLabel>
           <y:Geometry height="535.3609709024449" width="807.9384596111427" x="12376.03077019443" y="-6207.680485451223"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="23.11114951372292">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="8.409977638722921">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2039,6 +2040,8 @@ void frameEnded()
 void switchMode()
 
 void restartRace()
+
+void tabPressed()
 
 void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 
@@ -2125,7 +2128,7 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
           <y:Geometry height="1142.2539939183798" width="930.2499573032924" x="14204.875021348353" y="-4351.126996959191"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1106.587890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="17.833051646689455">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1135.990234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="3.131879771689455">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2165,6 +2168,8 @@ virtual void initMisc()
 //used in multiplayer mode
 virtual void customInitScene()
 virtual void customClearScene()
+virtual void customInitUI(){}
+virtual void customClearUI(){}
 virtual void customProcessCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 virtual void customUnloadResources()
 virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &amp;evt)
@@ -2269,10 +2274,10 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
     <node id="n45">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="851.6152318679551" width="1021.9078593826357" x="14159.04607030868" y="-2465.8076159339785"/>
+          <y:Geometry height="988.3090455396791" width="1021.9078593826357" x="14159.04607030868" y="-2534.1545227698407"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="856.66796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="-2.5263684410224414">&lt;&lt;MultiPlayerMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="944.875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="971.798828125" x="25.05451562881717" y="21.717022769839787">&lt;&lt;MultiPlayerMode.h&gt;&gt;
 
 MultiPlayerMode
 
@@ -2299,10 +2304,14 @@ void onError(const std::string&amp; message)override
 
 void prepareDataForSession(const MultiplayerSessionStartInfo&amp; sessionStartInfo)
 
+void tabPressed()
+
 protected:
 
 virtual void customInitScene()override
 virtual void customClearScene()override
+virtual void customInitUI()override
+virtual void customClearUI()override
 virtual void customProcessCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)override
 virtual void customUnloadResources()override
 virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &amp;evt)override
@@ -2322,6 +2331,8 @@ void checkRaceFinished()
 bool mIsSessionStarted
 
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; mMultiplayerController
+
+CommonIncludes::shared_ptr&lt;UIRaceMulti&gt; mUIRaceMulti
 
 std::vector&lt;CommonIncludes::shared_ptr&lt;MultiplayerAILapFinishController&gt; &gt; mAILapsController
 
@@ -2857,7 +2868,7 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
     <node id="n67">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1570.2342745543065"/>
+          <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1480.2342745543065"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="204.068359375" x="19.529807294240527" y="17.975485491806467">&lt;&lt;MultiPlayerMode.cpp&gt;&gt;
@@ -3005,6 +3016,46 @@ Ogre::Real mWheelsFMass
 Ogre::Real mWheelsRMass
 Ogre::Real mWheelsRestitution
 Ogre::Real mWheelsFriction</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n71">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="25.135841344832443" width="107.47884035471282" x="14916.260579822643" y="-1457.6801154742502"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="69.349609375" x="19.064615489856806" y="3.2173347349162214">UIRaceMulti</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n72">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="327.9348001234566" width="519.624060372907" x="17380.187969813545" y="-5983.967400061729"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="18.04933487395465" y="22.306267249228767">&lt;&lt;UIRaceMulti.h&gt;&gt;
+
+UIRaceMulti
+
+public:
+
+void load(MyGUI::Gui* gui, const GameState&amp; gameState)
+
+void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+
+void switchVisibleMessageWidget()
+
+private:
+
+ModeContext mModeContext
+
+MultiPlayerMode * mMultiPlayerMode
+
+MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3750,6 +3801,16 @@ Ogre::Real mWheelsFriction</y:NodeLabel>
       </data>
     </edge>
     <edge id="e68" source="n70" target="n69">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e69" source="n71" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

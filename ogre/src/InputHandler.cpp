@@ -153,14 +153,14 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     }
     else if (arg.key == OIS::KC_P)
     {
-        if(baseApp->getGameState().isGamePaused())
-        {
-            baseApp->getGameState().resetGamePaused();
-        }
-        else
-        {
-            baseApp->getGameState().setGamePaused();
-        }
+        baseApp->enablePause();
+    }
+    else if (arg.key == OIS::KC_TAB && 
+            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Shift)    &&
+            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Ctrl)     &&
+            !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt))
+    {
+        baseApp->tabPressed();
     }
 
     baseApp->keyDown(arg);

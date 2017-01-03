@@ -34,6 +34,8 @@ public:
 
     void restartRace();
 
+    void tabPressed();
+
 #if defined(__ANDROID__)
     //for UI only
     void reloadTextures();

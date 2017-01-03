@@ -48,6 +48,8 @@ public:
     void go();
 
     void quickScriptsReload();  // reread main params only
+    void enablePause();
+    void tabPressed();
 
     // scripting functions
     void parseFile(const std::string& fileName);

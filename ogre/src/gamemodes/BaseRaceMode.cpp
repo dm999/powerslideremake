@@ -98,6 +98,8 @@ void BaseRaceMode::initData()
     mUIRace->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 
     mUIRace->setShowMiscTextRight(true);
+
+    customInitUI();
 }
 
 void BaseRaceMode::clearData()
@@ -105,6 +107,8 @@ void BaseRaceMode::clearData()
 #if SHOW_DETAILS_PANEL
     mModeContext.mTrayMgr->destroyWidget(mDetailsPanel);
 #endif
+
+    customClearUI();
 
     clearScene();
 

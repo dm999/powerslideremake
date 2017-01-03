@@ -78,6 +78,8 @@ protected:
     //used in multiplayer mode
     virtual void customInitScene(){}
     virtual void customClearScene(){}
+    virtual void customInitUI(){}
+    virtual void customClearUI(){}
     virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex){}
     virtual void customUnloadResources(){}
     virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt){}

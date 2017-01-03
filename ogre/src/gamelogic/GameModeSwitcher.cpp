@@ -204,6 +204,14 @@ void GameModeSwitcher::restartRace()
         mPlayerMode->restart();
 }
 
+void GameModeSwitcher::tabPressed()
+{
+    if(mGameMode == ModeRaceMulti)
+    {
+        static_cast<MultiPlayerMode *>(mPlayerMode.get())->tabPressed();
+    }
+}
+
 #if defined(__ANDROID__)
 void GameModeSwitcher::reloadTextures()
 {

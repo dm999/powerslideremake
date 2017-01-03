@@ -28,7 +28,7 @@ class UIMainMenuMulti : public UIBase
 public:
 
     UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode);
-    ~UIMainMenuMulti();
+    ~UIMainMenuMulti(){}
 
     void load(MyGUI::Gui* gui, const GameState& gameState);
 

@@ -6,6 +6,7 @@
 #include "../multiplayer/MultiplayerController.h"
 
 class MultiplayerHumansLapFinishController;
+class UIRaceMulti;
 
 class MultiPlayerMode : public BaseRaceMode,
     public MultiplayerControllerEvents
@@ -43,10 +44,14 @@ public:
      */
     void prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo);
 
+    void tabPressed();
+
 protected:
 
     virtual void customInitScene()override;
     virtual void customClearScene()override;
+    virtual void customInitUI()override;
+    virtual void customClearUI()override;
     virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)override;
     virtual void customUnloadResources()override;
     virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)override;
@@ -67,6 +72,8 @@ private:
     bool mIsSessionStarted;
 
     CommonIncludes::shared_ptr<MultiplayerController> mMultiplayerController;
+
+    CommonIncludes::shared_ptr<UIRaceMulti> mUIRaceMulti;
 
     std::vector<CommonIncludes::shared_ptr<MultiplayerAILapFinishController> > mAILapsController;
 
