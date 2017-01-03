@@ -2465,10 +2465,10 @@ MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
     <node id="n53">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="597.7037694177025" width="476.64200237214163" x="15601.67899881393" y="-6028.851884708851"/>
+          <y:Geometry height="640.1202740237177" width="507.18188568847245" x="15586.409057155764" y="-6050.060137011858"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="460.9140625" x="7.863969936070134" y="24.880205021350775">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="11.828247531735542" y="16.686113574358387">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
@@ -2478,11 +2478,12 @@ void load(MyGUI::Gui* gui, const GameState&amp; gameState)
 
 void processButtonClick(MyGUI::Widget* sender)
 void processChangeComboBox(MyGUI::Widget* sender, size_t index)
+void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
 
 void onStartPossible()
 void onStartNotPossible()
 
-void addEvent(const std::string&amp; eventItem)
+void addEvent(const std::string&amp; eventItem, bool isMessage = false)
 
 private:
 
@@ -2503,6 +2504,9 @@ MyGUI::ComboBox* mWidgetAICount
 MyGUI::ComboBox* mWidgetAIStrength
 MyGUI::ComboBox* mWidgetLapsCount
 MyGUI::ComboBox* mWidgetBroadcast
+
+MyGUI::EditBox* mWidgetMessage
+MyGUI::Button* mWidgetSendMessage
 
 MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Shape type="rectangle"/>

@@ -161,25 +161,29 @@ void MenuMultiMode::onRoomClosed(const std::string& player)
 
 void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
-    if(data.mIsReady)
-        mUIMainMenuMulti->addEvent("player [" + player + "] ready");
-    else
-        mUIMainMenuMulti->addEvent("player [" + player + "] not ready");
-
-    mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
-
-    if(!data.mPlayerMessage.empty())
-        mUIMainMenuMulti->addEvent("player [" + player + "] said: " + data.mPlayerMessage);
-
-    //host data
-    if(!data.mTrackName.empty())
+    if(data.mPlayerMessage.empty())
     {
-        mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
-        mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
-        mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
-        mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
+        if(data.mIsReady)
+            mUIMainMenuMulti->addEvent("player [" + player + "] ready");
+        else
+            mUIMainMenuMulti->addEvent("player [" + player + "] not ready");
 
-        mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
+        mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
+
+        //host data
+        if(!data.mTrackName.empty())
+        {
+            mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
+            mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
+            mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
+            mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
+
+            mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
+        }
+    }
+    else
+    {
+        mUIMainMenuMulti->addEvent("player [" + player + "] said: " + data.mPlayerMessage, true);
     }
 }
 

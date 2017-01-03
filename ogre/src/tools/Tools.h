@@ -15,6 +15,7 @@ struct AIData
 {
     Ogre::Vector3 pos;
     Ogre::Vector3 dir;
+    Ogre::Vector3 dir2;
 };
 
 struct Exclusion

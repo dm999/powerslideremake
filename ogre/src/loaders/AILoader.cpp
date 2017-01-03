@@ -63,6 +63,10 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                     aiData.dir.y = someBuf2[4];
                     aiData.dir.z = -someBuf2[5];
 
+                    aiData.dir2.x = someBuf2[6];
+                    aiData.dir2.y = someBuf2[7];
+                    aiData.dir2.z = -someBuf2[8];
+
                     aIData.push_back(aiData);
                 }
 
@@ -99,6 +103,9 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                     manual->position(aIData[q].pos);
                     manual->position(aIData[q].pos + aIData[q].dir * length);
+
+                    manual->position(aIData[q].pos);
+                    manual->position(aIData[q].pos + aIData[q].dir2 * length);
 
                     manual->end(); 
                     manual->setCastShadows(false);

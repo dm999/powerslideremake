@@ -338,6 +338,12 @@ void MultiPlayerMode::onRoomClosed(const std::string& player)
 
 void MultiPlayerMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
+    if(data.mDataType == lobbyDataRegular)
+    {
+        if(!data.mPlayerMessage.empty())
+            mUIRace->addMiscPanelText("Player [" + player + "] said: " + data.mPlayerMessage, Ogre::ColourValue::Green);
+    }
+
     //check other players finished all laps
     if(data.mDataType == lobbyDataLapTime)
     {

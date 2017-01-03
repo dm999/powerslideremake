@@ -4,8 +4,10 @@
 #include <string>
 
 #include "UIBase.h"
+#include "MyGUI_KeyCode.h"
 
 #include "../gamemodes/ModeContext.h"
+
 
 #include "../GameState.h"
 
@@ -16,6 +18,7 @@ namespace MyGUI
     class Button;
     class ComboBox;
     class ListBox;
+    class EditBox;
 }
 
 class MenuMultiMode;
@@ -31,6 +34,7 @@ public:
 
     void processButtonClick(MyGUI::Widget* sender);
     void processChangeComboBox(MyGUI::Widget* sender, size_t index);
+    void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
@@ -40,7 +44,7 @@ public:
     void onStartPossible();
     void onStartNotPossible();
 
-    void addEvent(const std::string& eventItem);
+    void addEvent(const std::string& eventItem, bool isMessage = false);
 
 private:
 
@@ -61,6 +65,9 @@ private:
     MyGUI::ComboBox* mWidgetAIStrength;
     MyGUI::ComboBox* mWidgetLapsCount;
     MyGUI::ComboBox* mWidgetBroadcast;
+
+    MyGUI::EditBox* mWidgetMessage;
+    MyGUI::Button* mWidgetSendMessage;
 
     MyGUI::ListBox* mWidgetEvents;
 };

@@ -191,10 +191,22 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetBroadcast->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
         }
 
+        //messages
+        {
+            Ogre::Vector4 posMessage = screenAdaptionRelative * Ogre::Vector4(220.0f, 110.0f, 200.0f, 12.0f);
+            mWidgetMessage = gui->createWidget<MyGUI::EditBox>("EditBox", posMessage.x, posMessage.y, posMessage.z, posMessage.w, MyGUI::Align::Default, "Middle");
+            mWidgetMessage->eventKeyButtonPressed += MyGUI::newDelegate(this, &UIMainMenuMulti::processKeyPress);
+
+            Ogre::Vector4 posSend = screenAdaptionRelative * Ogre::Vector4(440.0f, 110.0f, 40.0f, 12.0f);
+            mWidgetSendMessage = gui->createWidget<MyGUI::Button>("Button", posSend.x, posSend.y, posSend.z, posSend.w, MyGUI::Align::Default, "Middle");
+            mWidgetSendMessage->setCaption("Send");
+            mWidgetSendMessage->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
+        }
+
         {
             Ogre::Vector4 posEvents = screenAdaptionRelative * Ogre::Vector4(20.0f, 130.0f, 600.0f, 300.0f);
             mWidgetEvents = gui->createWidget<MyGUI::ListBox>("ListBox", posEvents.x, posEvents.y, posEvents.z, posEvents.w, MyGUI::Align::Default, "Middle");
-            //mWidgetEvents->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
+            mWidgetEvents->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
         }
     }
 
@@ -272,6 +284,18 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
         }
     }
 
+    if(sender == mWidgetSendMessage)
+    {
+        std::string message = mWidgetMessage->getCaption();
+        if(!message.empty())
+        {
+            
+            mWidgetMessage->setCaption("");
+
+            updateRoomState(message);
+        }
+    }
+
 }
 
 void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
@@ -339,6 +363,24 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     updateRoomState();
 }
 
+void UIMainMenuMulti::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+{
+    if(sender == mWidgetMessage)
+    {
+        if(key == MyGUI::KeyCode::Return)
+        {
+            std::string message = mWidgetMessage->getCaption();
+            if(!message.empty())
+            {
+                
+                mWidgetMessage->setCaption("");
+
+                updateRoomState(message);
+            }
+        }
+    }
+}
+
 void UIMainMenuMulti::onStartPossible()
 {
     mWidgetStart->setEnabled(true);
@@ -349,9 +391,14 @@ void UIMainMenuMulti::onStartNotPossible()
     mWidgetStart->setEnabled(false);
 }
 
-void UIMainMenuMulti::addEvent(const std::string& eventItem)
+void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 {
-    mWidgetEvents->insertItem(0, eventItem);
+    if(isMessage)
+        mWidgetEvents->insertItem(0, "#FF0000" + eventItem);
+    else
+        mWidgetEvents->insertItem(0, "#FFFFFF" + eventItem);
+
+    mWidgetEvents->setScrollPosition(0);
 }
 
 void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
