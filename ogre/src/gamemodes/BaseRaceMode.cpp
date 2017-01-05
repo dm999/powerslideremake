@@ -439,8 +439,6 @@ void BaseRaceMode::initMisc()
             mUIRace->rearViewMirrorPanelTextureRemoveAllViewports();
         }
 
-        mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
-
 
         mRearCamera = mSceneMgr->createCamera("RearViewCamera");
         mRearCamera->setNearClipDistance(0.5f);
@@ -457,6 +455,9 @@ void BaseRaceMode::initMisc()
     {
         mUIRace->setRearViewMirrorPanelShow(false);
     }
+
+    mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
+
     mCameraMan->setRearCamera(mRearCamera);
 
     //as long as last procedure before draw started

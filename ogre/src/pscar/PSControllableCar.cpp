@@ -726,7 +726,6 @@ bool PSControllableCar::checkFrontCollision()
 
 void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
 {
-#ifndef NO_OPENAL
     Ogre::Real projectedVel = getAlignedVelocity();
 
     Ogre::Vector3 pos = mModelNode->getPosition();
@@ -734,6 +733,7 @@ void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
     mCarEngine.process(projectedVel, mAccelEnabled, mBrakeEnabled, checkRearCollision() || checkFrontCollision(), evt);
     Ogre::Real engineRPM = mCarEngine.getEngineRPM();
 
+#ifndef NO_OPENAL
     if(!mIsAI)
     {
         mEngLow->setPosition(pos.x, pos.y, pos.z);

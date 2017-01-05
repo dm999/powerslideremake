@@ -20,7 +20,7 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
     {
         mModeContext.getGameState().setMultiplayerServerPort(8800);
 
-        mModeContext.getGameState().setListenerGain(0.0f);
+        mModeContext.getGameState().setListenerGain(1.0f);
 
         mModeContext.getGameState().setMirrorEnabled(true);
 
