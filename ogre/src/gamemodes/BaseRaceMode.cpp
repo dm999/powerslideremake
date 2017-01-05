@@ -142,7 +142,9 @@ void BaseRaceMode::initScene()
 
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
 
+#ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());
+#endif
 
     //migration from 1.8.1 to 1.9.0
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=78278
@@ -306,7 +308,9 @@ void BaseRaceMode::clearScene()
 
     deInitWorld();
 
+#ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.stopSounds();
+#endif
 
     mModeContext.mGameState.setGlobalLight(NULL);
     mModeContext.mGameState.setShadowLight(NULL);
@@ -348,7 +352,10 @@ void BaseRaceMode::initTerrain()
     mStaticMeshProcesser.setFrictionRemapArray(terrainLoader.getRemapFriction());
     mStaticMeshProcesser.setLatutuideFrictionArray(terrainLoader.getLatitudeFriction());
     mStaticMeshProcesser.setLongtitudeFrictionArray(terrainLoader.getLongtitudeFriction());
+
+#ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.setRemappers(terrainLoader.getRemapSounds(), terrainLoader.getRemapSoundsCollision());
+#endif
 
     //particle (before loading cars)
     {
@@ -511,11 +518,13 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
 
+#ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.setListenerPos(playerPos);
     if(!mModeContext.mGameState.isGamePaused())
         mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
     else
         mModeContext.mSoundsProcesser.setListenerGain(0.0f);
+#endif
 
     if(!mModeContext.mGameState.getRaceFinished())
         mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
@@ -572,7 +581,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mUIRace->setRearViewMirrorPanelShow(false);
         mUIRace->hideAllStart();
         mUIRace->showBeforeStart1();
+#ifndef NO_OPENAL
         mModeContext.mSoundsProcesser.playBeforeStart1();
+#endif
     }
 
     if(!mModeContext.mGameState.getRaceStarted() && 
@@ -581,7 +592,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         mUIRace->hideAllStart();
         mUIRace->showBeforeStart2();
+#ifndef NO_OPENAL
         mModeContext.mSoundsProcesser.playBeforeStart2();
+#endif
     }
 
     if(!mModeContext.mGameState.getRaceStarted() && 
@@ -590,7 +603,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         mUIRace->hideAllStart();
         mUIRace->showBeforeStart3();
+#ifndef NO_OPENAL
         mModeContext.mSoundsProcesser.playBeforeStart3();
+#endif
 
         for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
         {
@@ -750,6 +765,7 @@ void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObject
 
     customProcessCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
 
+#ifndef NO_OPENAL
     //surface sound
     bool isSoundPlay = false;
     if(mModeContext.mGameState.getPlayerCar().checkFrontCollision() || mModeContext.mGameState.getPlayerCar().checkRearCollision())
@@ -817,6 +833,7 @@ void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObject
             
         }
     }
+#endif
 }
 
 void BaseRaceMode::loadResources()
@@ -861,7 +878,9 @@ void BaseRaceMode::unloadResources()
 
     customUnloadResources();
 
+#ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.stopSounds();
+#endif
 
     Ogre::ParticleSystemManager::getSingleton().removeAllTemplates();
 

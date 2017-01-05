@@ -10,7 +10,9 @@
 
 #include "../lua/DMLuaManager.h"
 
-#include "../OpenAL/OpenALSource.h"
+#ifndef NO_OPENAL
+    #include "../OpenAL/OpenALSource.h"
+#endif
 
 #include "../tools/OgreTools.h"
 
@@ -724,6 +726,7 @@ bool PSControllableCar::checkFrontCollision()
 
 void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
 {
+#ifndef NO_OPENAL
     Ogre::Real projectedVel = getAlignedVelocity();
 
     Ogre::Vector3 pos = mModelNode->getPosition();
@@ -771,6 +774,7 @@ void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
         mEngHigh->setPitch(defaultHighPitch);
         mEngHigh->startPlaying();
     }
+#endif
 }
 
 void PSControllableCar::restoreRollOver()

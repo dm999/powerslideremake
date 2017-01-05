@@ -11,7 +11,9 @@
 
 #include "../mesh/ModelsPool.h"
 
-#include "../OpenAL/OpenALSource.h"
+#ifndef NO_OPENAL
+    #include "../OpenAL/OpenALSource.h"
+#endif
 
 #include "../loaders/TEXLoader.h"
 #include "../loaders/SUSLoader.h"
@@ -390,6 +392,7 @@ void PSBaseCar::initSuspension(const GameState& gameState)
 
 void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
 {
+#ifndef NO_OPENAL
     DMLuaManager luaManager;
 
     Ogre::Real referenceDist = luaManager.ReadScalarFloat("Model.Sfx.ReferenceDist", pipeline);
@@ -433,20 +436,23 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
 
         mEngHigh->setLooping(AL_TRUE);
     }
-
+#endif
 }
 
 void PSBaseCar::deinitSounds()
 {
+#ifndef NO_OPENAL
     stopSounds();
 
     mEngLow.reset();
     mEngMid.reset();
     mEngHigh.reset();
+#endif
 }
 
 void PSBaseCar::stopSounds()
 {
+#ifndef NO_OPENAL
     if(mEngLow.get() && mEngLow->getSourceState() == AL_PLAYING)
     {
         mEngLow->stopPlaying();
@@ -461,6 +467,7 @@ void PSBaseCar::stopSounds()
     {
         mEngHigh->stopPlaying();
     }
+#endif
 }
 
 float PSBaseCar::getCarParameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const

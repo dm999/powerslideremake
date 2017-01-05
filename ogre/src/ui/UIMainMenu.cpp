@@ -7,6 +7,7 @@
 #include "../gamelogic/GameModeSwitcher.h"
 
 #include "../tools/OgreTools.h"
+#include "../tools/Conversions.h"
 
 #include "../customs/CustomTrayManager.h"
 

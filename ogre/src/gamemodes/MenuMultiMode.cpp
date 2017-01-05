@@ -4,6 +4,8 @@
 
 #include "../ui/UIMainMenuMulti.h"
 
+#include "../tools/Conversions.h"
+
 #include "../gamelogic/GameModeSwitcher.h"
 
 #include "../multiplayer/MultiplayerControllerMaster.h"

@@ -1,5 +1,6 @@
 #include "pcheader.h"
 
+#ifndef NO_OPENAL
 #include "SoundsProcesser.h"
 
 #include "OpenAL/OpenALSource.h"
@@ -299,3 +300,5 @@ void SoundsProcesser::updatePosition(const Ogre::Vector3& pos)
         mBeforeStart3->setPosition(pos.x, pos.y, pos.z);
     }
 }
+
+#endif

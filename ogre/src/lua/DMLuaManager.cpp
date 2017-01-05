@@ -18,6 +18,10 @@
 #include "lundump.h"
 #include "lvm.h"
 
+#ifdef _MSC_VER
+# pragma warning (disable: 4800)
+#endif
+
 #define api_incr_top(L)   {api_check(L, L->top < L->ci->top); L->top++;}
 
 typedef unsigned char BYTE;

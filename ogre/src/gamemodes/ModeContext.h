@@ -32,7 +32,10 @@ public:
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState, SoundsProcesser& soundsProcesser,
+        GameState& gameState,
+#ifndef NO_OPENAL
+        SoundsProcesser& soundsProcesser,
+#endif
         MyGUI::Gui* gui, MyGUI::OgrePlatform* platform
     );
 
@@ -72,7 +75,10 @@ private:
     GameModeSwitcher* mGameModeSwitcher;
 
     GameState& mGameState;
+
+#ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;
+#endif
 
     MyGUI::Gui* mGUI;
     MyGUI::OgrePlatform* mPlatform;

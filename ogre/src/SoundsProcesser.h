@@ -2,6 +2,7 @@
 #ifndef SOUNDSPROCESSER
 #define SOUNDSPROCESSER
 
+#ifndef NO_OPENAL
 #include <vector>
 
 #include "OpenAL/OpenALState.h"
@@ -81,5 +82,5 @@ private:
     bool mBeforeStartPlayedOnce3;
 
 };
-
+#endif
 #endif

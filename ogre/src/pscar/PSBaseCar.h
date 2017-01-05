@@ -116,9 +116,11 @@ protected:
     std::string mCharacterName;
 
     //sounds
+#ifndef NO_OPENAL
     CommonIncludes::shared_ptr<OpenALSource> mEngLow;
     CommonIncludes::shared_ptr<OpenALSource> mEngMid;
     CommonIncludes::shared_ptr<OpenALSource> mEngHigh;
+#endif
 
 private:
 

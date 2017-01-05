@@ -134,8 +134,10 @@ BaseApp::~BaseApp()
     mOverlaySystem.reset();
     mRoot.reset();
 
+#ifndef NO_OPENAL
     mSoundsProcesser.deinitSounds();
     mSoundsProcesser.deInitSoundSystem();
+#endif
 }
 
 bool BaseApp::configure()
@@ -248,7 +250,9 @@ void BaseApp::go()
 
 bool BaseApp::setup()
 {
+#ifndef NO_OPENAL
     mSoundsProcesser.initSoundSystem();
+#endif
 
     mRoot.reset(new Ogre::Root());
     mOverlaySystem.reset(new CustomOverlaySystem());
@@ -583,7 +587,10 @@ ModeContext BaseApp::createModeContext()
         mInputHandler.get(),
         mTrayMgr.get(), mOverlaySystem.get(),
         mPipeline,
-        mGameState, mSoundsProcesser,
+        mGameState,
+#ifndef NO_OPENAL
+        mSoundsProcesser,
+#endif
         mGUI.get(), mPlatform.get()
     );
 }

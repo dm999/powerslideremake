@@ -133,7 +133,9 @@ private:
 
     CommonIncludes::shared_ptr<CustomSceneManagerFactory> mSMFactory;
 
+#ifndef NO_OPENAL
     SoundsProcesser mSoundsProcesser;
+#endif
     GameState mGameState;
 
     CommonIncludes::shared_ptr<GameModeSwitcher> mGameModeSwitcher;
