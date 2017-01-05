@@ -19,6 +19,7 @@ namespace MyGUI
     class ComboBox;
     class ListBox;
     class EditBox;
+    class TextBox;
 }
 
 class MenuMultiMode;
@@ -35,6 +36,8 @@ public:
     void processButtonClick(MyGUI::Widget* sender);
     void processChangeComboBox(MyGUI::Widget* sender, size_t index);
     void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
+
+    void setMiscText(const std::string& text, const Ogre::ColourValue& color = Ogre::ColourValue::White);
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
@@ -68,6 +71,8 @@ private:
 
     MyGUI::EditBox* mWidgetMessage;
     MyGUI::Button* mWidgetSendMessage;
+
+    MyGUI::TextBox* mWidgetPingLabel;
 
     MyGUI::ListBox* mWidgetEvents;
 };

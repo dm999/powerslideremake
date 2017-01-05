@@ -75,6 +75,15 @@ void MenuMultiMode::doClearData()
     mUIMainMenuMulti->destroy(mModeContext.mTrayMgr);
 }
 
+void MenuMultiMode::customFrameRenderingQueued()
+{
+    if(mMultiplayerController.get())
+    {
+        size_t ping = mMultiplayerController->getLobbyPing();
+        mUIMainMenuMulti->setMiscText(Conversions::DMToString(ping), pingToColor(ping));
+    }
+}
+
 void MenuMultiMode::frameStarted(const Ogre::FrameEvent &evt)
 {
     if(mMultiplayerController.get())

@@ -168,6 +168,12 @@ namespace multislider
         MULTISLIDER_EXPORT
         uint32_t receive();
 
+        MULTISLIDER_EXPORT
+        size_t getLastPing()const;
+
+        MULTISLIDER_EXPORT
+        void pollPing();
+
         //-------------------------------------------------------
 
         /**

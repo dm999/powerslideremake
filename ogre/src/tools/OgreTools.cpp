@@ -598,3 +598,22 @@ Ogre::TexturePtr loadChromaKeyedTexture(const Ogre::String& filename,
      // chromaKeyedImg.save(resName); 
      return TextureManager::getSingleton ().loadImage( resName , resGroup, chromaKeyedImg, TEX_TYPE_2D, numMipmaps );
 }
+
+std::string OgreColorToString(const Ogre::ColourValue& color)
+{
+    std::string ret;
+
+    Ogre::Real r = color.r * 255.0f;
+    Ogre::Real g = color.g * 255.0f;
+    Ogre::Real b = color.b * 255.0f;
+
+    char buf[10];
+    sprintf(buf, "%02x", static_cast<size_t>(r));
+    ret += buf;
+    sprintf(buf, "%02x", static_cast<size_t>(g));
+    ret += buf;
+    sprintf(buf, "%02x", static_cast<size_t>(b));
+    ret += buf;
+
+    return ret;
+}

@@ -21,6 +21,8 @@ protected:
 
     virtual void doInitData() = 0;
     virtual void doClearData() = 0;
+
+    virtual void customFrameRenderingQueued(){}
 };
 
 #endif

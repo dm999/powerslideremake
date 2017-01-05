@@ -55,6 +55,8 @@ protected:
     void doInitData()override;
     void doClearData()override;
 
+    void customFrameRenderingQueued()override;
+
 private:
 
     MultiplayerSessionStartInfo mMultiplayerSessionStartInfo;

@@ -16,6 +16,8 @@ public:
     virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;
     virtual void frameRenderingQueued(const Ogre::FrameEvent& evt) = 0;
 
+    Ogre::ColourValue pingToColor(size_t ping)const;
+
 #if defined(__ANDROID__)
     //for UI only
     virtual void reloadTextures() = 0;

@@ -289,11 +289,9 @@ void MultiPlayerMode::customFrameRenderingQueuedDoBegining()
         }
 
         mUIRace->setShowMiscText(true);
-        size_t ping = mMultiplayerController->getSessionPing();
-        Ogre::ColourValue pingColor = Ogre::ColourValue::Green;
-        if(ping == 0 || ping >= 500) pingColor = Ogre::ColourValue::Red;
-        if(ping > 350 && ping < 500) pingColor = Ogre::ColourValue(1.0f, 0.5f, 0.0f);
-        mUIRace->setMiscText(Conversions::DMToString(ping), pingColor);
+        //size_t ping = mMultiplayerController->getSessionPing();
+        size_t ping = mMultiplayerController->getLobbyPing();
+        mUIRace->setMiscText(Conversions::DMToString(ping), pingToColor(ping));
     }
 }
 

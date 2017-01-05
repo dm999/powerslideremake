@@ -200,6 +200,14 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetSendMessage->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenuMulti::processButtonClick);
         }
 
+        //labels
+        {
+            Ogre::Vector4 posLabelPing = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 40.0f, 12.0f);
+            mWidgetPingLabel = gui->createWidget<MyGUI::TextBox>("TextBox", posLabelPing.x, posLabelPing.y, posLabelPing.z, posLabelPing.w, MyGUI::Align::Default, "Middle");
+            mWidgetPingLabel->setCaption("");
+            //mWidgetPingLabel->setVisible(false);
+        }
+
         {
             Ogre::Vector4 posEvents = screenAdaptionRelative * Ogre::Vector4(20.0f, 130.0f, 600.0f, 300.0f);
             mWidgetEvents = gui->createWidget<MyGUI::ListBox>("ListBox", posEvents.x, posEvents.y, posEvents.z, posEvents.w, MyGUI::Align::Default, "Middle");
@@ -446,4 +454,11 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 
         bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
     }
+}
+
+void UIMainMenuMulti::setMiscText(const std::string& text, const Ogre::ColourValue& color)
+{
+    std::string textColor = OgreColorToString(color);
+    textColor = "#" + textColor;
+    mWidgetPingLabel->setCaption(textColor + text);
 }

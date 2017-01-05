@@ -1780,7 +1780,7 @@ bool mBeforeStartPlayedOnce3</y:NodeLabel>
           <y:Geometry height="1006.1758688958967" width="1040.9607797438198" x="15529.519610128085" y="-2543.0879344479486"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="930.0859375" x="55.43742112190921" y="23.299848510448555">&lt;&lt;MultiplayerController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="974.27734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="930.0859375" x="55.43742112190921" y="15.949262572948555">&lt;&lt;MultiplayerController.h&gt;&gt;
 
 MultiplayerController
 
@@ -1804,6 +1804,7 @@ bool getReadySent()const
 
 bool getStartHappen()const
 
+size_t getLobbyPing()
 size_t getSessionPing()const
 
 void setBroadcastInterval(size_t interval)
@@ -2073,9 +2074,9 @@ void clear()
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="320.6928825262544" width="420.48941532423214" x="14458.752269457724" y="-8140.346441263127"/>
-          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:Fill color="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.84375" x="20.322832662115616" y="18.685308450627417">&lt;&lt;BaseMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.84375" x="20.322832662115616" y="3.984136575627417">&lt;&lt;BaseMode.h&gt;&gt;
 
 BaseMode
 
@@ -2086,6 +2087,8 @@ virtual void clearData() = 0
 
 virtual void frameStarted(const Ogre::FrameEvent &amp;evt) = 0
 virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt) = 0
+
+Ogre::ColourValue pingToColor(size_t ping)const
 
 protected:
 
@@ -2478,10 +2481,10 @@ MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
     <node id="n53">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="640.1202740237177" width="507.18188568847245" x="15586.409057155764" y="-6050.060137011858"/>
+          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-6070.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="11.828247531735542" y="16.686113574358387">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609001875">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
@@ -2492,6 +2495,8 @@ void load(MyGUI::Gui* gui, const GameState&amp; gameState)
 void processButtonClick(MyGUI::Widget* sender)
 void processChangeComboBox(MyGUI::Widget* sender, size_t index)
 void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+
+void setMiscText(const std::string&amp; text, const Ogre::ColourValue&amp; color = Ogre::ColourValue::White)
 
 void onStartPossible()
 void onStartNotPossible()
@@ -2521,6 +2526,8 @@ MyGUI::ComboBox* mWidgetBroadcast
 MyGUI::EditBox* mWidgetMessage
 MyGUI::Button* mWidgetSendMessage
 
+MyGUI::TextBox* mWidgetPingLabel
+
 MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
@@ -2532,7 +2539,7 @@ MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Geometry height="672.0205068555979" width="980.3836661963628" x="13579.80816690182" y="-6276.010253427799"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="650.8515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="10.584472177799398">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="-4.116699697200602">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -2565,6 +2572,8 @@ protected:
 
 void doInitData()override
 void doClearData()override
+
+void customFrameRenderingQueued()override
 
 private:
 
@@ -2642,9 +2651,9 @@ size_t mLapsCount</y:NodeLabel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="284.62202918752837" width="457.29192897408666" x="13841.354035512957" y="-7492.311014593764"/>
-          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:Fill color="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="15.351053656264412">&lt;&lt;BaseMenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="0.649881781264412">&lt;&lt;BaseMenuMode.h&gt;&gt;
 
 BaseMenuMode
 
@@ -2660,7 +2669,9 @@ void recalculateCharacterNames(const std::vector&lt;std::string&gt;&amp; players
 protected:
 
 virtual void doInitData() = 0
-virtual void doClearData() = 0</y:NodeLabel>
+virtual void doClearData() = 0
+
+virtual void customFrameRenderingQueued(){}</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

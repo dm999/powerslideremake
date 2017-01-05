@@ -26,6 +26,7 @@ public:
 
     bool getStartHappen()const{return mStartHappened;}
 
+    size_t getLobbyPing();
     size_t getSessionPing()const;
 
     void setBroadcastInterval(size_t interval){mBroadcastInterval = interval;}

@@ -222,6 +222,18 @@ void MultiplayerController::updateSessionData(const MultiplayerSessionData& data
     }
 }
 
+size_t MultiplayerController::getLobbyPing()
+{
+    size_t res = 0;
+    if(mLobby.get())
+    {
+        mLobby->pollPing();
+        res = mLobby->getLastPing();
+    }
+
+    return res;
+}
+
 size_t MultiplayerController::getSessionPing()const
 {
     uint64_t res = 0;

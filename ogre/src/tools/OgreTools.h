@@ -69,4 +69,9 @@ Ogre::TexturePtr loadChromaKeyedTexture(const Ogre::String& filename,
          bool resize = false,
          size_t newSize = 64);
 
+/**
+ * return - 000000 (black); FFFFFF(white)
+ */
+std::string OgreColorToString(const Ogre::ColourValue& color);
+
 #endif

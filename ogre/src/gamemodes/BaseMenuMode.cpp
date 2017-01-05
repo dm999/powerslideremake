@@ -100,6 +100,8 @@ void BaseMenuMode::clearData()
 
 void BaseMenuMode::frameRenderingQueued(const Ogre::FrameEvent &evt)
 {
+    customFrameRenderingQueued();
+
     mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), true);
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
 }
