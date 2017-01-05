@@ -261,6 +261,9 @@ bool BaseApp::setup()
         return false;
     }
 
+    if(mLuaManager.ReadScalarBool("Main.LevelLogDetailed", mPipeline))
+        Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
+
 
     //setup renderer, create window, init input
     bool carryOn = configure();

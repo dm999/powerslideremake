@@ -40,6 +40,8 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
 
 void BaseRaceMode::initData()
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Enter");
+
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
     initScene();
 
@@ -100,6 +102,8 @@ void BaseRaceMode::initData()
     mUIRace->setShowMiscTextRight(true);
 
     customInitUI();
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Exit");
 }
 
 void BaseRaceMode::clearData()
@@ -134,6 +138,8 @@ void BaseRaceMode::restart()
 
 void BaseRaceMode::initScene()
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Enter");
+
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
 
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());
@@ -272,6 +278,8 @@ void BaseRaceMode::initScene()
     cameraCarUI->lookAt(Ogre::Vector3::ZERO);
 
     mModeContext.mTrayMgr->hideCursor();
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Exit");
 }
 
 void BaseRaceMode::clearScene()
@@ -317,12 +325,18 @@ void BaseRaceMode::clearScene()
 
 void BaseRaceMode::initLightLists()
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Enter");
+
     //d.polubotko: make sure light lists created during loading
     mStaticMeshProcesser.queryLights();
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Exit");
 }
 
 void BaseRaceMode::initTerrain()
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Enter");
+
     mStaticMeshProcesser.initParts( mModeContext.mPipeline, mSceneMgr, mMainNode, mIsGlobalReset, 
                                     mModeContext.mGameState, mWorld.get());
     mStaticMeshProcesser.loadTerrainMaps(mModeContext.mGameState);
@@ -343,10 +357,14 @@ void BaseRaceMode::initTerrain()
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
     }
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Exit");
 }
 
 void BaseRaceMode::initModel()
 {
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Enter");
 
     //arrow (before loading models)
     {
@@ -383,10 +401,15 @@ void BaseRaceMode::initModel()
         aiCar.getLapUtils().setEvents(NULL);
     }
 
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Exit");
+
 }
 
 void BaseRaceMode::initMisc()
 {
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initMisc]: Enter");
+
     //rear mirror camera
     mRearCamera = NULL;
 
@@ -442,12 +465,16 @@ void BaseRaceMode::initMisc()
     mModeContext.mGameState.getArrowNode()->setVisible(true);
 
     mIsGlobalReset = false;
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initMisc]: Exit");
 }
 
 
 
 void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::AxisAlignedBox &bounds)
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
+
     mWorld.reset(new OgreBulletDynamics::DynamicsWorld(mSceneMgr, bounds, gravityVector, true, true, 10000));
     mDebugDrawer.reset(new OgreBulletCollisions::DebugDrawer());
     mWorld->setDebugDrawer(mDebugDrawer.get());
@@ -463,6 +490,8 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
         mDebugDrawer->setDrawContactPoints(true);
         mWorld->setShowDebugContactPoints(true);
     }
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }
 
 void BaseRaceMode::deInitWorld()
@@ -475,6 +504,9 @@ void BaseRaceMode::deInitWorld()
 
 void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 {
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Enter");
+
     Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
 
     Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
@@ -520,10 +552,14 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
         mModeContext.mGameState.getAICar(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
 
     customFrameStartedDoProcessFrameAfterPhysics(evt);
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Exit");
 }
 
 void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameRenderingQueued]: Enter");
 
     mUIRace->setMiscTextRight(Conversions::DMToString(static_cast<size_t>(mModeContext.mWindow->getAverageFPS())));
 
@@ -690,6 +726,8 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mDetailsPanel->setParamValue(29, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM()));
 #endif
     }
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameRenderingQueued]: Exit");
 }
 
 
@@ -783,6 +821,8 @@ void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObject
 
 void BaseRaceMode::loadResources()
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Enter");
+
 #if defined(__ANDROID__)
     LOGI("BaseApp[loadResources]: Begin"); 
 #endif
@@ -802,6 +842,8 @@ void BaseRaceMode::loadResources()
 #if defined(__ANDROID__)
     LOGI("BaseApp[loadResources]: End"); 
 #endif
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Exit");
 }
 
 void BaseRaceMode::unloadResources()

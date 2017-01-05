@@ -1,4 +1,5 @@
 Main = {}
+Main.LevelLogDetailed = false;
 
 Window = {}
 Window.IsFullScreen = "No";
