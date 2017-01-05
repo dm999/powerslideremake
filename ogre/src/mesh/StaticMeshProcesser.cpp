@@ -200,29 +200,32 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         }
     }
 
-    //shadow light
-    gameState.setShadowLight(sceneMgr->createLight("shadow_light"));
-    //Ogre::SceneNode * lightNode = mModelNode->createChildSceneNode("shadow_light");
-    Ogre::SceneNode * lightNode = sceneMgr->getRootSceneNode()->createChildSceneNode("shadow_light");
-    lightNode->attachObject(gameState.getShadowLight());
-    gameState.getShadowLight()->setType(Ogre::Light::LT_SPOTLIGHT);
-    gameState.getShadowLight()->setCastShadows(true);
-    //mShadowLight->setPosition(0.0f, 40.0f, 0.0f);
-    //mShadowLight->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y);
-    gameState.getShadowLight()->setSpotlightOuterAngle(Ogre::Degree(90.0f));
-    gameState.getShadowLight()->setSpotlightInnerAngle(Ogre::Degree(80.0f));
+    if(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline))
+    {
+        //shadow light
+        gameState.setShadowLight(sceneMgr->createLight("shadow_light"));
+        //Ogre::SceneNode * lightNode = mModelNode->createChildSceneNode("shadow_light");
+        Ogre::SceneNode * lightNode = sceneMgr->getRootSceneNode()->createChildSceneNode("shadow_light");
+        lightNode->attachObject(gameState.getShadowLight());
+        gameState.getShadowLight()->setType(Ogre::Light::LT_SPOTLIGHT);
+        gameState.getShadowLight()->setCastShadows(true);
+        //mShadowLight->setPosition(0.0f, 40.0f, 0.0f);
+        //mShadowLight->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y);
+        gameState.getShadowLight()->setSpotlightOuterAngle(Ogre::Degree(90.0f));
+        gameState.getShadowLight()->setSpotlightInnerAngle(Ogre::Degree(80.0f));
 
 
-    sceneMgr->setShadowTextureCount(1);
-    // Shadow (after lights and camera)
-    sceneMgr->setShadowTextureSelfShadow(false);
-    sceneMgr->setShadowTextureCasterMaterial("Test/ShadowCaster");
-    sceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_R);
-    sceneMgr->setShadowCasterRenderBackFaces(false);
-    //sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
-    sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-    sceneMgr->setShadowTextureSize(luaManager.ReadScalarInt("Scene.ShadowMapSize", pipeline));
-    sceneMgr->setShadowCameraSetup(Ogre::ShadowCameraSetupPtr(new Ogre::DefaultShadowCameraSetup()));
+        sceneMgr->setShadowTextureCount(1);
+        // Shadow (after lights and camera)
+        sceneMgr->setShadowTextureSelfShadow(false);
+        sceneMgr->setShadowTextureCasterMaterial("Test/ShadowCaster");
+        sceneMgr->setShadowTexturePixelFormat(Ogre::PF_FLOAT16_R);
+        sceneMgr->setShadowCasterRenderBackFaces(false);
+        //sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE_INTEGRATED);
+        sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+        sceneMgr->setShadowTextureSize(luaManager.ReadScalarInt("Scene.ShadowMapSize", pipeline));
+        sceneMgr->setShadowCameraSetup(Ogre::ShadowCameraSetupPtr(new Ogre::DefaultShadowCameraSetup()));
+    }
 
     if(gameState.getLLTObject())
         gameState.getLLTObject()->setVisible(true);

@@ -55,7 +55,6 @@ namespace
 
     const char  frag[] = "                              \n\
     #version 120                                        \n\
-    precision highp float;                              \n\
     uniform sampler2D diffuseMap;                       \n\
     varying vec2 T;                                     \n\
     varying vec4 C;                                     \n\

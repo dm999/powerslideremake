@@ -20,6 +20,7 @@ function main()
     
     Terrain.Material = {}
     Terrain.Material.IsMaskLights = false;
+--~     Terrain.Material.SingleSubMaterial = "Test/DiffuseSimpleNoShadow";
     Terrain.Material.SingleSubMaterial = "Test/DiffuseSimpleShadowSoft";
     Terrain.Material.SingleSubMaterialArray = "Test/DiffuseSimpleShadowSoftArray";
     Terrain.Material.IsOverrideDefaultTextureWithTransparentForSubMaterials = true;
