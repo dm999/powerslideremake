@@ -5,11 +5,15 @@
 #include "../gamemodes/MenuMode.h"
 #include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
-#include "../gamemodes/MultiPlayerMode.h"
+#ifndef NO_MULTIPLAYER
+    #include "../gamemodes/MultiPlayerMode.h"
+#endif
 
 #include "../customs/CustomTrayManager.h"
 
-#include "../multiplayer/MultiplayerController.h"
+#ifndef NO_MULTIPLAYER
+    #include "../multiplayer/MultiplayerController.h"
+#endif
 
 GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
@@ -32,8 +36,10 @@ void GameModeSwitcher::frameStarted(const Ogre::FrameEvent &evt)
     if(mMenuMode.get())
         mMenuMode->frameStarted(evt);
 
+#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->frameStarted(evt);
+#endif
 
     if(mPlayerMode.get())
         mPlayerMode->frameStarted(evt);
@@ -44,8 +50,10 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
     if(mMenuMode.get())
         mMenuMode->frameRenderingQueued(evt);
 
+#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->frameRenderingQueued(evt);
+#endif
 
     if(mPlayerMode.get())
         mPlayerMode->frameRenderingQueued(evt);
@@ -69,6 +77,7 @@ void GameModeSwitcher::frameEnded()
     {
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameModeSwitcher::frameEnded]: game mode switching started [" + Conversions::DMToString(mGameMode) + "-" + Conversions::DMToString(mGameModeNext) + "]");
 
+#ifndef NO_MULTIPLAYER
         MultiplayerSessionStartInfo multiplayerSessionStartInfo;
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
@@ -96,6 +105,7 @@ void GameModeSwitcher::frameEnded()
                 multiplayerSessionStartInfo = mMenuMultiMode->getMultiplayerSessionStartInfo();
             }
         }
+#endif
 
         //clear all modes
         clear();
@@ -116,6 +126,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initData();
             }
 
+#ifndef NO_MULTIPLAYER
             //race -> multi main menu
             if(mGameMode == ModeRaceMulti)
             {
@@ -126,6 +137,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
                 mMenuMultiMode->initData();
             }
+#endif
         }
 
         //main menu single -> race
@@ -141,6 +153,7 @@ void GameModeSwitcher::frameEnded()
             mPlayerMode->initData();
         }
 
+#ifndef NO_MULTIPLAYER
         //main menu multi -> race
         if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeRaceMulti)
         {
@@ -188,7 +201,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initData();
             }
         }
-
+#endif
     }
 }
 
@@ -206,10 +219,12 @@ void GameModeSwitcher::restartRace()
 
 void GameModeSwitcher::tabPressed()
 {
+#ifndef NO_MULTIPLAYER
     if(mGameMode == ModeRaceMulti)
     {
         static_cast<MultiPlayerMode *>(mPlayerMode.get())->tabPressed();
     }
+#endif
 }
 
 #if defined(__ANDROID__)
@@ -238,9 +253,11 @@ void GameModeSwitcher::clear()
         mMenuMode->clearData();
     mMenuMode.reset();
 
+#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->clearData();
     mMenuMultiMode.reset();
+#endif
 
     if(mPlayerMode.get())
         mPlayerMode->clearData();

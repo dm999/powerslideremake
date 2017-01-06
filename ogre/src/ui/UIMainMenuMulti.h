@@ -1,6 +1,8 @@
 #ifndef UIMAINMENU_H
 #define UIMAINMENU_H
 
+#ifndef NO_MULTIPLAYER
+
 #include <string>
 
 #include "UIBase.h"
@@ -76,5 +78,5 @@ private:
 
     MyGUI::ListBox* mWidgetEvents;
 };
-
+#endif
 #endif

@@ -1,6 +1,7 @@
 #ifndef UIRACEMULTI_H
 #define UIRACEMULTI_H
 
+#ifndef NO_MULTIPLAYER
 #include <string>
 
 #include "UIBase.h"
@@ -43,5 +44,5 @@ private:
     MyGUI::EditBox* mWidgetMessage;
 };
 
-
+#endif
 #endif

@@ -1,5 +1,7 @@
 #include "../pcheader.h"
 
+#ifndef NO_MULTIPLAYER
+
 #include "MultiPlayerMode.h"
 
 #include "../InputHandler.h"
@@ -752,3 +754,5 @@ void MultiPlayerMode::checkRaceFinished()
         mModeContext.mGameState.setRaceFinished(true);
     }
 }
+
+#endif

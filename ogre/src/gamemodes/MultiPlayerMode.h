@@ -1,6 +1,8 @@
 #ifndef MULTIPLAYERMODE_H
 #define MULTIPLAYERMODE_H
 
+#ifndef NO_MULTIPLAYER
+
 #include "BaseRaceMode.h"
 
 #include "../multiplayer/MultiplayerController.h"
@@ -83,5 +85,5 @@ private:
     std::map<std::string, Ogre::Real> mRaceTimeByHuman;//key - human name, self not included
     std::vector<Ogre::Real> mRaceTimeByAI;
 };
-
+#endif
 #endif

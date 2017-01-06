@@ -1,5 +1,7 @@
 #include "../pcheader.h"
 
+#ifndef NO_MULTIPLAYER
+
 #include "UIMainMenuMulti.h"
 
 #include "MyGUI.h"
@@ -462,3 +464,5 @@ void UIMainMenuMulti::setMiscText(const std::string& text, const Ogre::ColourVal
     textColor = "#" + textColor;
     mWidgetPingLabel->setCaption(textColor + text);
 }
+
+#endif

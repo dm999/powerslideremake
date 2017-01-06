@@ -1,5 +1,7 @@
 #include "../pcheader.h"
 
+#ifndef NO_MULTIPLAYER
+
 #include "MenuMultiMode.h"
 
 #include "../ui/UIMainMenuMulti.h"
@@ -202,3 +204,5 @@ void MenuMultiMode::onError(const std::string& message)
 {
     mUIMainMenuMulti->addEvent("Error: " + message);
 }
+
+#endif

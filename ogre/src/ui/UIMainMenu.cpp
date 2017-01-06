@@ -15,7 +15,9 @@
 
 #include "../gamemodes/MenuMode.h"
 
-#include "../multiplayer/MultiplayerRoomInfo.h"
+#ifndef NO_MULTIPLAYER
+    #include "../multiplayer/MultiplayerRoomInfo.h"
+#endif
 
 UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)
     : mModeContext(modeContext),
@@ -171,6 +173,7 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 
     }
 
+#ifndef NO_MULTIPLAYER
     {
         Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
         MyGUI::ButtonPtr widgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
@@ -210,6 +213,7 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
         mWidgetRoomPlayers = gui->createWidget<MyGUI::ListBox>("ListBox", posRoomPlayers.x, posRoomPlayers.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
         mWidgetRoomPlayers->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
     }
+#endif
 
 
     //cursor
@@ -374,6 +378,7 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
     }
 
+#ifndef NO_MULTIPLAYER
     if(senderButton->getCaption() == "Multi Join")
     {
         if(mWidgetRooms->getIndexSelected() == MyGUI::ITEM_NONE)
@@ -447,6 +452,7 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
             mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
         }
     }
+#endif
 }
 
 void UIMainMenu::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)

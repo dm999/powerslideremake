@@ -1,5 +1,6 @@
 #include "../pcheader.h"
 
+#ifndef NO_MULTIPLAYER
 #include "UIRaceMulti.h"
 
 #include "MyGUI.h"
@@ -70,3 +71,4 @@ void UIRaceMulti::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, uns
         }
     }
 }
+#endif
