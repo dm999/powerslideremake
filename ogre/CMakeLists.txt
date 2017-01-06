@@ -1,12 +1,7 @@
-# set env variables
-# OGRE_HOME
-# OPENAL
-# MYGUI_HOME
-#
-# android
-# OGRE_ANDROID_HOME
-# OPENAL
-# MYGUI_ANDROID_HOME
+# set variables
+# PowerslideRebuild_OGREHOME
+# PowerslideRebuild_MYGUIHOME
+# PowerslideRebuild_OPENALDIR (if PowerslideRebuild_OPENAL set)
 #
 # make sure debug & release versions of libs available (/MDd, /MD compilled for MSVC)
 # sample of naming
@@ -18,12 +13,11 @@ project(PowerslideRebuild)
 
 option(PowerslideRebuild_OPENAL "OpenAL build" ON)
 option(PowerslideRebuild_MULTIPLAYER "Multiplayer build" ON)
+set(PowerslideRebuild_OGREHOME "" CACHE STRING "")
+set(PowerslideRebuild_OPENALDIR "" CACHE STRING "")
+set(PowerslideRebuild_MYGUIHOME "" CACHE STRING "")
 
-if(ANDROID)
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_ANDROID_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-else()
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-endif()
+set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
 
 set(OGRE_STATIC true)
 
@@ -145,9 +139,9 @@ if(ANDROID)
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_ANDROID_HOME}/include/OGRE/RenderSystems/GLES2
-            $ENV{OGRE_HOME}/include/OGRE/Overlay
-            $ENV{MYGUI_ANDROID_HOME}/include/MYGUI
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GLES2
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
+            ${PowerslideRebuild_MYGUIHOME}/include/MYGUI
             #${OGRE_RenderSystem_GL_INCLUDE_DIR}
             #${OGRE_SAMPLES_INCLUDEPATH}
             #${OGRE_Overlay_INCLUDE_DIRS}
@@ -156,9 +150,9 @@ else()
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
-            $ENV{OGRE_HOME}/include/OGRE/Overlay
-            $ENV{MYGUI_HOME}/include/MYGUI
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
+            ${PowerslideRebuild_MYGUIHOME}/include/MYGUI
             #${OGRE_RenderSystem_GL_INCLUDE_DIR}
             #${OGRE_SAMPLES_INCLUDEPATH}
             #${OGRE_Overlay_INCLUDE_DIRS}
@@ -173,8 +167,8 @@ include_directories(../ogrebullet/Collisions/include)
 include_directories(../ogrebullet/Dynamics/include)
 
 if(PowerslideRebuild_OPENAL)
-    include_directories($ENV{OPENAL}/include)
-    link_directories ($ENV{OPENAL}/lib)
+    include_directories(${PowerslideRebuild_OPENALDIR}/include)
+    link_directories (${PowerslideRebuild_OPENALDIR}/lib)
 endif()
 
 if(PowerslideRebuild_MULTIPLAYER)
@@ -185,16 +179,16 @@ include_directories(../include/raknet)
 include_directories(../tools/jsonxx/src)
 
 if(ANDROID)
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib)
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib/OGRE)
-    link_directories ($ENV{MYGUI_ANDROID_HOME}/lib)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
+    link_directories (${PowerslideRebuild_MYGUIHOME}/lib)
 else()
-    link_directories ($ENV{OGRE_HOME}/lib/Debug)
-    link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
-    link_directories ($ENV{OGRE_HOME}/lib/Release)
-    link_directories ($ENV{OGRE_HOME}/lib/Release/opt)
-    link_directories ($ENV{MYGUI_HOME}/lib/Debug)
-    link_directories ($ENV{MYGUI_HOME}/lib/Release)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug/opt)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
+    link_directories (${PowerslideRebuild_MYGUIHOME}/lib/Debug)
+    link_directories (${PowerslideRebuild_MYGUIHOME}/lib/Release)
 endif()
 
 if(WIN32)

@@ -13,10 +13,11 @@ To build the project you need:
 
 Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Multislider.  
 
-To build project you need set environment variables:  
-- OGRE_HOME - path to Ogre includes & binaries  
-- MYGUI_HOME - path to MyGUI includes & binaries  
-- OPENAL - path to OpenAL includes & binaries  
+To build project you need:  
+- Set CMake variable PowerslideRebuild_OGREHOME - path to Ogre includes & binaries (for example C:\Program Files\OGRE\1_9_0)  
+- Set CMake variable PowerslideRebuild_MYGUIHOME - path to MyGUI includes & binaries (for example C:\Program Files\mygui\build\sdk)  
+- Set CMake variable PowerslideRebuild_OPENALDIR (only if PowerslideRebuild_OPENAL ON) - path to OpenAL includes & binaries (for example C:\Program Files\OpenAL)  
+- Build Multislider (only if PowerslideRebuild_MULTIPLAYER set) and put *.lib into lib folder  
 
 ### Sources ###
 "Powerslide rebuild" also depends and includes sources of such open sourced projects as:  

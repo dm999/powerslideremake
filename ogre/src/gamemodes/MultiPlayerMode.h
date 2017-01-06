@@ -7,7 +7,7 @@
 
 #include "../multiplayer/MultiplayerController.h"
 
-class MultiplayerHumansLapFinishController;
+class MultiplayerAILapFinishController;
 class UIRaceMulti;
 
 class MultiPlayerMode : public BaseRaceMode,
