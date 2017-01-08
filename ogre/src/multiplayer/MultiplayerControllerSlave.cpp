@@ -241,7 +241,7 @@ void MultiplayerControllerSlave::onSessionStart(multislider::Lobby* lobby, const
 
 
         mSession = session;
-        mSession->startup(this, 5 * 1000);
+        mSession->startup(this, 10000);
         mSessionStarted = true;
     }catch(const std::runtime_error& err)
     {

@@ -291,9 +291,9 @@ void MultiPlayerMode::customFrameRenderingQueuedDoBegining()
         }
 
         mUIRace->setShowMiscText(true);
-        //size_t ping = mMultiplayerController->getSessionPing();
+        size_t pingSession = mMultiplayerController->getSessionPing();
         size_t ping = mMultiplayerController->getLobbyPing();
-        mUIRace->setMiscText(Conversions::DMToString(ping), pingToColor(ping));
+        mUIRace->setMiscText(Conversions::DMToString(ping) + "/" + Conversions::DMToString(pingSession), pingToColor(pingSession));
     }
 }
 

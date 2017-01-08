@@ -186,7 +186,7 @@ void MultiplayerControllerMaster::onSessionStart(multislider::Lobby* lobby, cons
 
 
         mSession = session;
-        mSession->startup(this, 5 * 1000);
+        mSession->startup(this, 10000);
         mSessionStarted = true;
     }catch(const std::runtime_error& err)
     {
