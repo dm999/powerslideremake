@@ -284,6 +284,9 @@ void TerrainSceneObjectListener::doCPUVertexColor()
 
         Ogre::ColourValue diffuse(0.0f, 0.0f, 0.0f, 1.0f);
 
+        float finalAttenuation = 1.0f;
+        bool isChangeFinalAttenuation = true;
+
         Ogre::Vector3 ptGlobal = pt + derivedPos;
 
         //light iteration
@@ -392,25 +395,35 @@ void TerrainSceneObjectListener::doCPUVertexColor()
                                     }
                                 }
                             }
-                    }
+                    }//all exclusions
 
-                    if(!isInAnyBox)
+                    if(isInAnyBox)
                     {
-                        diffuse += (lightAffect * NdotL);
+                        if(finalBright < finalAttenuation && isChangeFinalAttenuation)
+                            finalAttenuation = finalBright;
                     }
-                    else
+                    else//not in box but light affects
                     {
-                        diffuse += (lightAffect * finalBright * NdotL);
+                        finalAttenuation = 1.0f;
+                        isChangeFinalAttenuation = false;
                     }
-                }
-                else
+                }//exclusions non empty
+                else//no exclusions but light affect
                 {
-                    diffuse += (lightAffect * NdotL);
+                    finalAttenuation = 1.0f;
+                    isChangeFinalAttenuation = false;
                 }
-            }
-        }
+
+                diffuse += (lightAffect * NdotL);
+
+            }//light affect point
+        }//all lights
+
+        finalAttenuation = Ogre::Math::Clamp(finalAttenuation, 0.2f, 1.0f);
+        diffuse = diffuse * Ogre::ColourValue(finalAttenuation, finalAttenuation, finalAttenuation);
 
         //color normalization
+
         if(diffuse.r > 1.0f || diffuse.g > 1.0f || diffuse.b > 1.0f)
         {
             Ogre::Vector3 normColor(diffuse.r, diffuse.g, diffuse.b);

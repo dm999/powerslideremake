@@ -137,6 +137,8 @@ void MultiplayerController::onUpdate(multislider::Session* session, const multis
 void MultiplayerController::onQuit(multislider::Session* session, const std::string & playerName, bool byTimeout) throw ()
 {
 
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[MultiplayerController::onQuit]: " + playerName);
+
     bool isHost = mLobby->getRoomInfo().getHostName() == playerName;
 
     if(mEvents)

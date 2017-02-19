@@ -3,7 +3,7 @@
 
 #include "GameState.h"
 
-#define GAMEVERSION "1.20.0"
+#define GAMEVERSION "1.18.0"
 
 GameState::GameState() :
     mVersion(GAMEVERSION),
@@ -37,6 +37,8 @@ GameState::~GameState()
 
 void GameState::initOriginalData(const std::string& originalPathData, const std::string& originalPathCommon)
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
+
     bool isLoaded = mPFLoaderData.init(originalPathData, "data.pf");
 
     if(isLoaded)

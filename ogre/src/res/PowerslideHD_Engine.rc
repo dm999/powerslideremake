@@ -30,8 +30,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,20,0,0
- PRODUCTVERSION 1,20,0,0
+ FILEVERSION 1,18,0,0
+ PRODUCTVERSION 1,18,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -47,14 +47,14 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "CompanyName", "Rascal\0"
-            VALUE "FileDescription", "Powerslide HD Application\0"
-            VALUE "FileVersion", "1, 20, 0, 0\0"
+            VALUE "FileDescription", "Powerslide Rebuild Application\0"
+            VALUE "FileVersion", "1, 18, 0, 0\0"
             VALUE "InternalName", "PSHD\0"
             VALUE "LegalCopyright", "Copyright (C) 2020\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "PowerslideHD_Engine.EXE\0"
-            VALUE "ProductName", "Powerslide HD\0"
-            VALUE "ProductVersion", "1, 20, 0, 0\0"
+            VALUE "OriginalFilename", "PowerslideRebuild.EXE\0"
+            VALUE "ProductName", "Powerslide Rebuild\0"
+            VALUE "ProductVersion", "1, 18, 0, 0\0"
         END
     END
     BLOCK "VarFileInfo"
