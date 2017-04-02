@@ -309,6 +309,26 @@ std::string STRPowerslide::getCharacterTitle(const std::string& character)const
     return res;
 }
 
+Ogre::Vector2 STRPowerslide::getFogStartEnd(const std::string& trackName) const
+{
+    Ogre::Vector2 ret;
+
+    if(mIsSTRLoaded)
+    {
+        ret.x = getFloatValue(std::string(trackName + " parameters").c_str(), "fog start");
+        ret.y = getFloatValue(std::string(trackName + " parameters").c_str(), "fog stop");
+#if 0
+        if(ret.x < 1000000.0f)
+        {
+            ret.x = 20.0f;
+            ret.y = 100.0f;
+        }
+#endif
+    }
+
+    return ret;
+}
+
 Ogre::ColourValue STRPowerslide::getTrackSkyColor(const std::string& trackName) const
 {
     Ogre::ColourValue ret;

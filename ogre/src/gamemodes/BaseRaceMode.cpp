@@ -363,6 +363,9 @@ void BaseRaceMode::initTerrain()
         Ogre::TexturePtr particle = TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
+
+        Ogre::MaterialPtr particleMatFog = Ogre::MaterialManager::getSingleton().getByName("Test/ParticleFog");
+        particleMatFog->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Exit");

@@ -181,12 +181,31 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mWheelBackLParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
     mWheelBackRParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
 
+    const Ogre::Vector2& fogStartEnd = gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName());
+    bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
+
     mParticleMaterialName = nameGenMaterialsParticles.generate();
-    CloneMaterial(  mParticleMaterialName, 
-                    "Test/Particle", 
-                    std::vector<Ogre::String>(), 
-                    1.0f,
-                    TEMP_RESOURCE_GROUP_NAME);
+
+    if(!isFogEnabled)
+    {
+        CloneMaterial(  mParticleMaterialName, 
+                        "Test/Particle", 
+                        std::vector<Ogre::String>(), 
+                        1.0f,
+                        TEMP_RESOURCE_GROUP_NAME);
+    }
+    else
+    {
+        Ogre::MaterialPtr newMatParticle = CloneMaterial(  mParticleMaterialName, 
+                        "Test/ParticleFog", 
+                        std::vector<Ogre::String>(), 
+                        1.0f,
+                        TEMP_RESOURCE_GROUP_NAME);
+
+        const Ogre::ColourValue& skyColor = gameState.getSTRPowerslide().getTrackSkyColor(gameState.getTrackName());
+
+        //newMatParticle->setFog(true, Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
+    }
 
     mWheelBackLParticle->setMaterialName(mParticleMaterialName);
     mWheelBackRParticle->setMaterialName(mParticleMaterialName);

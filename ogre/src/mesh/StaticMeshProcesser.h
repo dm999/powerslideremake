@@ -130,6 +130,8 @@ private:
                                 const Ogre::Vector3& min, 
                                 const Ogre::Vector3& max,
                                 MSHData& mshData,
+                                const Ogre::ColourValue& skyColor,//as fog color
+                                const Ogre::Vector2& fogStartEnd,
                                 const Ogre::ColourValue& ambient);
 
     /**
@@ -149,7 +151,10 @@ private:
                                                         std::string defaultTextureName, 
                                                         const Ogre::String& ovverideMaterialName,
                                                         MSHData& mshData,
-                                                        const Ogre::ColourValue& ambient);
+                                                        const Ogre::ColourValue& skyColor,//as fog color
+                                                        const Ogre::Vector2& fogStartEnd,
+                                                        const Ogre::ColourValue& ambient,
+                                                        bool isFogEnabled);
 
     typedef std::map<const btCollisionObject *, std::pair<int, int> > bodies;
     bodies mBodies;

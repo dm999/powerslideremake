@@ -89,6 +89,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     bool isAttenuateExcludeBox = luaManager.ReadScalarBool("Model.IsAttenuateExcludeBox", pipeline);
 
+    const Ogre::Vector2& fogStartEnd = gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName());
+    bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
+
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
     {
         for(size_t q = 0; q < 5; ++q)
@@ -122,11 +125,25 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                 }
                 else
                 {
+
+                    std::string aiMaterial = "Model.Material.SingleSubMaterialAI";
+                    if(isFogEnabled)
+                    {
+                        aiMaterial = "Model.Material.SingleSubMaterialAIFog";
+                    }
+
                     newMat = CloneMaterial(  nameSub, 
-                            luaManager.ReadScalarString("Model.Material.SingleSubMaterialAI", pipeline), 
+                            luaManager.ReadScalarString(aiMaterial.c_str(), pipeline), 
                             texturesSubMat, 
                             1.0f,
                             TEMP_RESOURCE_GROUP_NAME);
+
+                    //if(isFogEnabled)
+                    //{
+                        //const Ogre::ColourValue& skyColor = gameState.getSTRPowerslide().getTrackSkyColor(gameState.getTrackName());
+
+                        //newMat->setFog(true, Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
+                    //}
                 }
 
                 newMat->setAmbient( luaManager.ReadScalarFloat("Model.Material.SingleAmbient.r", pipeline),

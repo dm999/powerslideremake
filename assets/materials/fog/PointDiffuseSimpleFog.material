@@ -1,0 +1,56 @@
+fragment_program Test/FPPointDiffuseSimpleFog glsl
+{
+    source PointFragDiffuseSimpleFog.glsl
+}
+
+vertex_program Test/VPPoint_1 glsl
+{
+    source PointVert.glsl
+}
+
+material Test/PointDiffuseSimpleFog
+{
+
+    receive_shadows off
+    
+    technique
+    {
+        pass
+        {
+            
+            ambient 0.4 0.4 0.4 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 10.0
+
+            fragment_program_ref Test/FPPointDiffuseSimpleFog
+            {
+                param_named diffuseMap int 0
+                
+                param_named_auto fogColor fog_colour
+                param_named_auto fogParams fog_params
+                
+                param_named_auto lightAmbient AMBIENT_LIGHT_COLOUR 0
+                param_named_auto lightDiffuse LIGHT_DIFFUSE_COLOUR 0
+                
+                param_named_auto matAmbient surface_ambient_colour
+            }
+            vertex_program_ref Test/VPPoint_1
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto modelview worldview_matrix
+                param_named_auto normalmatrix inverse_transpose_worldview_matrix
+                param_named_auto texturematrix texture_matrix 0
+                param_named_auto lightPosition light_position_view_space 0
+
+            }
+            
+            texture_unit
+            {
+                //tex_address_mode clamp
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+        }
+    }
+}

@@ -24,6 +24,7 @@ function main()
 --~     Terrain.Material.SingleSubMaterial = "Test/DiffuseSimpleNoShadow";
     Terrain.Material.SingleSubMaterial = "Test/DiffuseSimpleShadowSoft";
     Terrain.Material.SingleSubMaterialArray = "Test/DiffuseSimpleShadowSoftArray";
+    Terrain.Material.SingleSubMaterialFog = "Test/DiffuseSimpleShadowSoftFog";
     Terrain.Material.IsOverrideDefaultTextureWithTransparentForSubMaterials = true;
     Terrain.Material.DefaultTextureName = "defaulttexture.tex";
     

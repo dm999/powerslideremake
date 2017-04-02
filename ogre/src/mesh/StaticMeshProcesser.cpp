@@ -128,6 +128,8 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                         sceneMgr, nodeName, 
                                         centroid, min, max, 
                                         mergedMSH[q], 
+                                        gameState.getSTRPowerslide().getTrackSkyColor(gameState.getTrackName()),
+                                        gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName()),
                                         gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getTrackName()));
             }
             else
@@ -468,6 +470,8 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
                                                 const Ogre::Vector3& min, 
                                                 const Ogre::Vector3& max,
                                                 MSHData& mshData,
+                                                const Ogre::ColourValue& skyColor,
+                                                const Ogre::Vector2& fogStartEnd,
                                                 const Ogre::ColourValue& ambient)
 {
     Ogre::Entity * res = NULL;
@@ -477,11 +481,18 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
     DMLuaManager luaManager;
 
     Ogre::MaterialPtr overrideMaterial = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterial", pipeline));
+    Ogre::MaterialPtr overrideMaterialFog = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialFog", pipeline));
     Ogre::MaterialPtr overrideMaterialArray = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialArray", pipeline));
 
     std::string defaultTextureName = luaManager.ReadScalarString("Terrain.Material.DefaultTextureName", pipeline);
 
     bool isOverrideDefault = luaManager.ReadScalarBool("Terrain.Material.IsOverrideDefaultTextureWithTransparentForSubMaterials", pipeline);
+
+    bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
+    if(isFogEnabled)
+    {
+        sceneMgr->setFog(Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
+    }
 
     if(!overrideMaterial.isNull())
     {
@@ -501,9 +512,12 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
         {
             materialNames = loadWithoutVertexArray( isOverrideDefault, 
                                                     defaultTextureName, 
-                                                    overrideMaterial->getName(),
+                                                    isFogEnabled ? overrideMaterialFog->getName() : overrideMaterial->getName(),
                                                     mshData,
-                                                    ambient);
+                                                    skyColor,
+                                                    fogStartEnd,
+                                                    ambient,
+                                                    isFogEnabled);
         }
 
 
@@ -712,7 +726,10 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
                                                                      std::string defaultTextureName, 
                                                                      const Ogre::String& ovverideMaterialName,
                                                                      MSHData& mshData,
-                                                                     const Ogre::ColourValue& ambient)
+                                                                     const Ogre::ColourValue& skyColor,
+                                                                     const Ogre::Vector2& fogStartEnd,
+                                                                     const Ogre::ColourValue& ambient,
+                                                                     bool isFogEnabled)
 {
     std::vector<std::string> materialNames;
 
@@ -745,11 +762,24 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
 
             materialName = mNameGenMaterials.generate();
 
-            Ogre::MaterialPtr newMat = CloneMaterial(  materialName, 
-                        "Test/Diffuse", 
-                        texturesSubMat, 
-                        1.0f,
-                        TEMP_RESOURCE_GROUP_NAME);
+            if(!isFogEnabled)
+            {
+                Ogre::MaterialPtr newMat = CloneMaterial(  materialName, 
+                            "Test/Diffuse", 
+                            texturesSubMat, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+            }
+            else
+            {
+                Ogre::MaterialPtr newMat = CloneMaterial(  materialName, 
+                            "Test/DiffuseFog", 
+                            texturesSubMat, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+
+                //newMat->setFog(true, Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
+            }
         }
         else
         {
@@ -766,6 +796,11 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
                 TEMP_RESOURCE_GROUP_NAME);
 
             newMat->setAmbient(ambient);
+
+            //if(isFogEnabled)
+            //{
+                //newMat->setFog(true, Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
+            //}
         }
 
         materialNames.push_back(materialName);
