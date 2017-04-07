@@ -617,3 +617,64 @@ std::string OgreColorToString(const Ogre::ColourValue& color)
 
     return ret;
 }
+
+//https://www.opengl.org/discussion_boards/showthread.php/184412-Converting-to-and-from-color-space-in-GLSL-only-works-for-few-colors
+Ogre::Vector3 RGBToXYZ(Ogre::Vector3 RGB, float gamma)
+{
+   if (RGB.x > 0.04045f) {
+        RGB.x = pow(((RGB.x + 0.055f) / 1.055f), gamma);
+    } else {
+        RGB.x = RGB.x / 12.92f;
+    }
+    if (RGB.y > 0.04045f) {
+        RGB.y = pow(((RGB.y + 0.055f) / 1.055f), gamma);
+    } else {
+        RGB.y = RGB.y / 12.92f;
+    }
+
+    if (RGB.z > 0.04045f) {
+        RGB.z = pow(((RGB.z + 0.055f) / 1.055f), gamma);
+    } else {
+        RGB.z = RGB.z / 12.92f;
+    }
+
+    RGB.x = RGB.x * 100.0f;
+    RGB.y = RGB.y * 100.0f;
+    RGB.z = RGB.z * 100.0f;
+
+    //Observer. = 2.0°, Illuminant = D65
+    float X = RGB.x * 0.4124f + RGB.y * 0.3576f + RGB.z * 0.1805f;
+    float Y = RGB.x * 0.2126f + RGB.y * 0.7152f + RGB.z * 0.0722f;
+    float Z = RGB.x * 0.0193f + RGB.y * 0.1192f + RGB.z * 0.9505f;
+
+    return Ogre::Vector3(X, Y, Z);
+}
+
+Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma)
+{
+    float var_X =  XYZ.x / 100.0f; //X from 0.0 to  95.047      (Observer = 2.0 degrees, Illuminant = D65);
+    float var_Y =  XYZ.y / 100.0f; //Y from 0.0 to 100.000;
+    float var_Z =  XYZ.z / 100.0f; //Z from 0.0 to 108.883;
+
+    float var_R = var_X * 3.2406f + var_Y * -1.5372f + var_Z * -0.4986f;
+    float var_G = var_X * -0.9689f + var_Y * 1.8758f + var_Z * 0.0415f;
+    float var_B = var_X * 0.0557f + var_Y * -0.2040f + var_Z * 1.0570f;
+
+    if (var_R > 0.0031308f) {
+        var_R = 1.055f * pow(var_R, (1.0f / gamma)) - 0.055f;
+    } else {
+        var_R = 12.92f * var_R;
+    }
+    if (var_G > 0.0031308f) {
+        var_G = 1.055f * pow(var_G, (1.0f / gamma)) - 0.055f;
+    } else {
+        var_G = 12.92f * var_G;
+    }
+    if (var_B > 0.0031308f) {
+        var_B = 1.055f * pow(var_B, (1.0f / gamma)) - 0.055f;
+    } else {
+        var_B = 12.92f * var_B;
+    }
+
+    return Ogre::Vector3(var_R, var_G, var_B);
+}

@@ -74,4 +74,7 @@ Ogre::TexturePtr loadChromaKeyedTexture(const Ogre::String& filename,
  */
 std::string OgreColorToString(const Ogre::ColourValue& color);
 
+Ogre::Vector3 RGBToXYZ(Ogre::Vector3 RGB, float gamma = 2.4f);
+Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma = 2.4f);
+
 #endif
