@@ -9,23 +9,23 @@ To build the project you need:
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [MyGUI](https://github.com/MyGUI/mygui)  
 - [OpenAL](https://www.openal.org)  
-- [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 
-Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Multislider.  
+Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Boost::asio.  
 
 To build project you need:  
 - Set CMake variable PowerslideRebuild_OGREHOME - path to Ogre includes & binaries (for example C:\Program Files\OGRE\1_9_0)  
 - Set CMake variable PowerslideRebuild_MYGUIHOME - path to MyGUI includes & binaries (for example C:\Program Files\mygui\build\sdk)  
 - Set CMake variable PowerslideRebuild_OPENALDIR (only if PowerslideRebuild_OPENAL ON) - path to OpenAL includes & binaries (for example C:\Program Files\OpenAL)  
-- Build Multislider (only if PowerslideRebuild_MULTIPLAYER set) and put *.lib into lib folder  
 
 ### Sources ###
-"Powerslide rebuild" also depends and includes sources of such open sourced projects as:  
+"Powerslide rebuild" also depends and/or includes sources of such open sourced projects as:  
 - [Bullet](http://bulletphysics.org/wordpress/)  
 - [Ogre Bullet](http://www.ogre3d.org/tikiwiki/OgreBullet)  
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
-- [Boost::asio](http://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio.html)  
+- [JSON++](https://github.com/hjiang/jsonxx)  
+- [Multislider](https://bitbucket.org/alexey_gruzdev/multislider) (only if PowerslideRebuild_MULTIPLAYER ON)  
+- [Boost::asio](http://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio.html) (only if PowerslideRebuild_MULTIPLAYER ON)  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 

@@ -12,7 +12,6 @@ cmake_minimum_required(VERSION 2.8)
 project(PowerslideRebuild)
 
 option(PowerslideRebuild_OPENAL "OpenAL build" ON)
-option(PowerslideRebuild_MULTIPLAYER "Multiplayer build" ON)
 set(PowerslideRebuild_OGREHOME "" CACHE STRING "")
 set(PowerslideRebuild_OPENALDIR "" CACHE STRING "")
 set(PowerslideRebuild_MYGUIHOME "" CACHE STRING "")
@@ -76,8 +75,6 @@ file(GLOB sources_modes_main_h src/gamemodes/*.h)
 file(GLOB sources_ui_main src/ui/*.cpp)
 file(GLOB sources_ui_main_h src/ui/*.h)
 
-file(GLOB sources_includes_main_h src/includes/*.h)
-
 if(WIN32)
     foreach( src_file ${sources_main} )
         message(STATUS ${src_file})
@@ -130,7 +127,6 @@ list(APPEND sources ${sources_tools_main_h})
 list(APPEND sources ${sources_mesh_main_h})
 list(APPEND sources ${sources_modes_main_h})
 list(APPEND sources ${sources_ui_main_h})
-list(APPEND sources ${sources_includes_main_h})
 
 
 if(ANDROID)
@@ -166,16 +162,15 @@ include_directories(../bullet ../bulletextras)
 include_directories(../ogrebullet/Collisions/include)
 include_directories(../ogrebullet/Dynamics/include)
 
+if(PowerslideRebuild_MULTIPLAYER)
+    include_directories(../multislider/client/source)
+endif()
+
 if(PowerslideRebuild_OPENAL)
     include_directories(${PowerslideRebuild_OPENALDIR}/include)
     link_directories (${PowerslideRebuild_OPENALDIR}/lib)
 endif()
 
-if(PowerslideRebuild_MULTIPLAYER)
-    link_directories (${PROJECT_SOURCE_DIR}/../lib/multislider)
-endif()
-include_directories(../include)
-include_directories(../include/raknet)
 include_directories(../tools/jsonxx/src)
 
 if(ANDROID)

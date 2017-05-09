@@ -1,9 +1,8 @@
 #ifndef MULTIPLAYERDATA_H
 #define MULTIPLAYERDATA_H
 
-#include "multislider/MultiSlider.h"
-
-#include "multislider/CommonIncludes.h"
+#include "MultiSlider.h"
+#include "CommonIncludes.h"
 
 #include "../includes/OgreInclude.h"
 
