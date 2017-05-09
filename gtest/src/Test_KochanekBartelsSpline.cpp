@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <gtest/gtest.h>
 
-#include "KochanekBartelsSpline.h"
+#include "tools/KochanekBartelsSpline.h"
 
 namespace UT
 {

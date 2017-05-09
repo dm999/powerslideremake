@@ -2,8 +2,8 @@
 
 #include "MultiplayerRoomInfo.h"
 
-#include "multislider/MultiSlider.h"
-#include "multislider/CommonIncludes.h"
+#include "MultiSlider.h"
+#include "CommonIncludes.h"
 
 bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::string>& roomsDesc, std::vector<std::pair<size_t, size_t> >& players)const
 {

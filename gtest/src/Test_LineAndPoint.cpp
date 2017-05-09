@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "OgreTools.h"
+#include "tools/OgreTools.h"
 
 namespace UT
 {

@@ -1,8 +1,8 @@
 
 #include <stdio.h>
 
-#include "MshData.h"
-#include "Conversions.h"
+#include "mesh/MshData.h"
+#include "tools/Conversions.h"
 
 #ifdef _MSC_VER
     #pragma warning(disable:4996)

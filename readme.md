@@ -2,7 +2,7 @@
 
 ### Goal ###
 
-"Powerslide rebuild" is the project which tries to rebuild main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) such as arcade racing in non limited 3D environment.
+"Powerslide rebuild" is a project aimed to rebuild main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment and multiplayer gaming.
 
 ### Build ###
 To build the project you need:  

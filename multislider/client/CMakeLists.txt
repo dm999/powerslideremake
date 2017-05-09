@@ -36,8 +36,6 @@ endif()
 
 file(GLOB all_sources ./source/*.h ./source/*.cpp)
 
-set(CMAKE_DEBUG_POSTFIX "_d")
-
 add_library(MultiSlider STATIC ${all_sources})
 
 target_link_libraries(MultiSlider PRIVATE Jsonxx)
