@@ -233,8 +233,10 @@ void GameModeSwitcher::reloadTextures()
     if(mMenuMode.get())
         mMenuMode->reloadTextures();
 
+#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->reloadTextures();
+#endif
 
     if(mPlayerMode.get())
         mPlayerMode->reloadTextures();
