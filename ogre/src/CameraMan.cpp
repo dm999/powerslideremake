@@ -51,21 +51,24 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
     Ogre::Quaternion additionalRotYaw;
     additionalRotYaw.FromAngleAxis(Ogre::Degree(lateralVelocity / 20.0f), Ogre::Vector3::UNIT_Y);
 
-    Ogre::Vector3 camOffset = carPos + carRot * additionalRotYaw * additionalRotPitch * cameraDisplacement;
-
-    Ogre::Vector3 ray = camOffset - carPos;
-
-
     if(mCamPositonType != CameraPosition_Bumper)
     {
-        //perform collision correction
-        Ogre::Vector3 collisionPoint;
-        bool isContactsHappen = checkRayInBetween(carPos, camOffset, collisionPoint);
-        if(isContactsHappen)
-        {
-            ray = (collisionPoint - carPos) * 0.9f;
-        }
 
+        Ogre::Vector3 camOffset = carPos + carRot * additionalRotYaw * additionalRotPitch * cameraDisplacement;
+        const float prolongFactor = 1.2f;
+        Ogre::Vector3 camOffsetProlong = carPos + carRot * additionalRotYaw * additionalRotPitch * (cameraDisplacement * prolongFactor);
+
+        Ogre::Vector3 ray = camOffset - carPos;
+
+        //perform collision correction
+        {
+            Ogre::Vector3 collisionPoint;
+            bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint);
+            if(isContactsHappen)
+            {
+                ray = (collisionPoint - carPos) * 0.9f;
+            }
+        }
 
 
 
