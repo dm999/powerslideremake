@@ -30,6 +30,7 @@
 
 BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
+    mShadowLightDistanceFromCar(40.0f),
     mIsGlobalReset(true),
     mRearCamera(0),
     mUIRace(new UIRace())
@@ -139,6 +140,8 @@ void BaseRaceMode::restart()
 void BaseRaceMode::initScene()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Enter");
+
+    mShadowLightDistanceFromCar = mLuaManager.ReadScalarFloat("Model.ShadowLightDistance", mModeContext.mPipeline);
 
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
 
@@ -642,7 +645,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), true);
+    mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), mShadowLightDistanceFromCar, true);
 
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
 

@@ -51,6 +51,7 @@ public:
 
     void capture(const Ogre::FrameEvent& evt, 
                 Ogre::SceneNode * modelNode, Ogre::Light * globalLight, Ogre::Light * shadowLight,
+                float shadowLightDistanceFromCar,
                 bool isDisableMouse);
     void detach();
 

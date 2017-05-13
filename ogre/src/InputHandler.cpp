@@ -200,6 +200,7 @@ bool InputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID
 
 void InputHandler::capture(const Ogre::FrameEvent& evt, 
                             Ogre::SceneNode * modelNode, Ogre::Light * globalLight, Ogre::Light * shadowLight,
+                            float shadowLightDistanceFromCar,
                             bool isDisableMouse)
 {
 
@@ -220,8 +221,7 @@ void InputHandler::capture(const Ogre::FrameEvent& evt,
             Ogre::Vector3 lightDir = modelPos - lightPos;
             lightDir.normalise();
 
-            float distanceFromCar = 40.0f;
-            Ogre::Vector3 shadowLightPos = modelPos + (-lightDir) * distanceFromCar;
+            Ogre::Vector3 shadowLightPos = modelPos + (-lightDir) * shadowLightDistanceFromCar;
             shadowLight->setPosition(shadowLightPos);
             shadowLight->setDirection(lightDir);
         }

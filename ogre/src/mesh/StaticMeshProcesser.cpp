@@ -213,8 +213,8 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         gameState.getShadowLight()->setCastShadows(true);
         //mShadowLight->setPosition(0.0f, 40.0f, 0.0f);
         //mShadowLight->setDirection(Ogre::Vector3::NEGATIVE_UNIT_Y);
-        gameState.getShadowLight()->setSpotlightOuterAngle(Ogre::Degree(90.0f));
-        gameState.getShadowLight()->setSpotlightInnerAngle(Ogre::Degree(80.0f));
+        gameState.getShadowLight()->setSpotlightOuterAngle(Ogre::Degree(luaManager.ReadScalarFloat("Model.ShadowLightOuterAngle", pipeline)));
+        gameState.getShadowLight()->setSpotlightInnerAngle(Ogre::Degree(luaManager.ReadScalarFloat("Model.ShadowLightInnerAngle", pipeline)));
 
 
         sceneMgr->setShadowTextureCount(1);

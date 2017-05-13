@@ -90,6 +90,8 @@ protected:
 
 private:
 
+    float mShadowLightDistanceFromCar;
+
     bool mIsGlobalReset;
 
     DMLuaManager mLuaManager;

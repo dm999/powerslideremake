@@ -2130,10 +2130,10 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
     <node id="n41">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1142.2539939183798" width="930.2499573032924" x="14204.875021348353" y="-4351.126996959191"/>
+          <y:Geometry height="1204.869649495391" width="930.2499573032924" x="14204.875021348353" y="-4382.434824747697"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1135.990234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="3.131879771689455">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1165.392578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="19.73853568519553">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2184,6 +2184,8 @@ virtual void customFrameRenderingQueuedDoRaceStarted()
 virtual void customFrameRenderingQueuedDo2DUI()
 
 private:
+
+float mShadowLightDistanceFromCar
 
 bool mIsGlobalReset
 
@@ -2484,7 +2486,7 @@ MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
           <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-6070.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609001875">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
