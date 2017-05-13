@@ -50,7 +50,8 @@ material Test/DiffuseSimpleShadowSoftArray
             texture_unit
             {
                 content_type shadow
-                tex_address_mode clamp
+                tex_address_mode border
+                tex_border_colour 1.0 1.0 1.0 1.0
                 filtering none
             }
         }
