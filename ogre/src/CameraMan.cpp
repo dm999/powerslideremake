@@ -66,7 +66,17 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
             bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint);
             if(isContactsHappen)
             {
-                ray = (collisionPoint - carPos) * 0.9f;
+                Ogre::Vector3 distanceFromCarToCollision = collisionPoint - carPos;
+                
+                //not too close
+                const float minDistanceThreshold = 15.0f;
+                float distanceFromCarToCollisionLength = distanceFromCarToCollision.length();
+                if(distanceFromCarToCollisionLength < minDistanceThreshold)
+                {
+                    distanceFromCarToCollision *= (minDistanceThreshold / distanceFromCarToCollisionLength);
+                }
+
+                ray = distanceFromCarToCollision * 0.9f;
             }
         }
 
