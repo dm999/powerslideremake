@@ -567,7 +567,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2183.061097666385" width="701.7915528832027" x="5979.104223558399" y="-4421.530548833192"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2120.96875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="31.04617383319237">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="16.34500195819237">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -656,6 +656,8 @@ Ogre::Timer mTimerCollisionHappenFront
 Ogre::Timer mTimerCollisionHappenRear
 
 LinearController&lt;float&gt; mDriveImpulse
+LinearController&lt;float&gt; mGroundSpoilerImpulse
+LinearController&lt;float&gt; mAirSpoilerImpulse
 LinearController&lt;float&gt; mWheelsRotationByEngineAddition
 
 Ogre::Real mWheelRotationalAngle

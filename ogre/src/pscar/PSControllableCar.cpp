@@ -21,6 +21,9 @@ namespace
     const float defaultLowPitch = 0.25f;
     const float defaultMidPitch = 0.15f;
     const float defaultHighPitch = 0.5f;
+
+    LinearController<float> mDriveImpulse;
+    LinearController<float> mWheelsRotationByEngineAddition;
 }
 
 Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material/Particles/Name");
@@ -45,10 +48,16 @@ PSControllableCar::PSControllableCar() :
     mDriveImpulse.addPoint(-100.0f, 0.0f);
     mDriveImpulse.addPoint(0.0f, 25.0f);
     mDriveImpulse.addPoint(60.0f, 20.0f);
-    mDriveImpulse.addPoint(120.0f, 15.0f);
-    mDriveImpulse.addPoint(160.0f, 10.0f);
-    mDriveImpulse.addPoint(180.0f, 5.0f);
-    mDriveImpulse.addPoint(200.0f, 0.0f);
+    mDriveImpulse.addPoint(120.0f, 18.0f);
+    mDriveImpulse.addPoint(200.0f, 15.0f);
+    mDriveImpulse.addPoint(240.0f, 6.0f);
+    mDriveImpulse.addPoint(300.0f, 0.0f);
+
+    mGroundSpoilerImpulse.addPoint(0.0f, 0.0f);
+    mGroundSpoilerImpulse.addPoint(200.0f, 15.0f);
+
+    mAirSpoilerImpulse.addPoint(0.0f, 0.0f);
+    mAirSpoilerImpulse.addPoint(200.0f, 50.0f);
 
     mWheelsRotationByEngineAddition.addPoint(-50.0f, 20.0f);
     mWheelsRotationByEngineAddition.addPoint(0.0f, 200.0f);
@@ -491,6 +500,8 @@ void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, bool isR
 
     Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
     Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spf;
+    Ogre::Real cockpitGroundSpoilerImpulse = mGroundSpoilerImpulse.getVal(projectedVel) * spf;
+    Ogre::Real cockpitAirSpoilerImpulse = mAirSpoilerImpulse.getVal(projectedVel) * spf;
 
     Ogre::Vector3 carForwardVector = getForwardAxis();
     Ogre::Real antiForwardProjY = Ogre::Vector3::NEGATIVE_UNIT_Y.dotProduct(carForwardVector);
@@ -536,6 +547,11 @@ void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, bool isR
             mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
         }
     }
+
+    if(!checkRearCollision() && !checkFrontCollision())
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
+    else
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)

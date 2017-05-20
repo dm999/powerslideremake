@@ -8,6 +8,11 @@
 
 //#include "KochanekBartelsSpline.h"
 
+namespace
+{
+    const float aiMaxSpeed = 300.0f;
+}
+
 AIUtils::AIUtils() :
         mIsDebugAI(false),
         mSpeedCoeff(1.0f),
@@ -170,7 +175,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isGamePaused)
             aiCar->setBrake(true);
         }
 
-        if(aiSpeed < (200.0f * mSpeedCoeff/* * speedCoeff*/))
+        if(aiSpeed < (aiMaxSpeed * mSpeedCoeff/* * speedCoeff*/))
         {
             aiCar->setAcceleration(true);
         }

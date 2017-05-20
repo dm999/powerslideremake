@@ -52,7 +52,7 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         isReverse = true;
     }
 
-    const Ogre::Real wheelRadius = 3.2f;
+    const Ogre::Real wheelRadius = 4.2f;
     Ogre::Real wheelRotation = projectedVel / (wheelRadius * 2.0f * Ogre::Math::PI / 1000.0f);
     wheelRotation /= 60.0f; // rpm
 

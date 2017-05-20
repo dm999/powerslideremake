@@ -110,6 +110,8 @@ private:
     Ogre::Timer mTimerCollisionHappenRear;
 
     LinearController<float> mDriveImpulse;
+    LinearController<float> mGroundSpoilerImpulse;
+    LinearController<float> mAirSpoilerImpulse;
     LinearController<float> mWheelsRotationByEngineAddition;
 
     Ogre::Real mWheelRotationalAngle;
