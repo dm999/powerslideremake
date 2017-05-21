@@ -57,7 +57,7 @@ protected:
      * Don`t apply impulses to multiplayer car
      * rely only on velocity from remote client
      */
-    void applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted)override{}
+    void applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)override{}
 
 private:
 

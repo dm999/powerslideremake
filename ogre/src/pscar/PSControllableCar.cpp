@@ -408,7 +408,9 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 {
     processSounds(evt);
 
-    adjustWheelsFriction(processer);
+    Ogre::Real backLRollResistance;
+    Ogre::Real backRRollResistance;
+    adjustWheelsFriction(processer, backLRollResistance, backRRollResistance);
 
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
@@ -487,12 +489,12 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
 
 
-    applyDriveImpulses(evt, isRaceStarted);
+    applyDriveImpulses(evt, backLRollResistance, backRRollResistance, isRaceStarted);
 
     cleanWheelsCollisionsFlags();
 }
 
-void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted)
+void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)
 {
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
@@ -541,17 +543,20 @@ void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, bool isR
     {
         if(checkRearCollision(true) /*|| checkFrontCollision()*/)
         {
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
+            const Ogre::Real backLRollImpulse = 1.0f - backLRollResistance;
+            const Ogre::Real backRRollImpulse = 1.0f - backRRollResistance;
 
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
+
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
         }
     }
 
     if(!checkRearCollision() && !checkFrontCollision())
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
     else
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, 0.0f));
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)
@@ -585,7 +590,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
 }
 
 
-void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
+void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer, Ogre::Real& backLRollResistance, Ogre::Real& backRRollResistance)
 {
     Ogre::Real latitudeFriction;
     Ogre::Real longtitudeFriction;
@@ -607,6 +612,7 @@ void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
 
     latitudeFriction = processer.getLatitudeFriction(getBackLWheelColliderIndex());
     longtitudeFriction = processer.getLongtitudeFriction(getBackLWheelColliderIndex());
+    backLRollResistance = longtitudeFriction;
     anisotropicFriction.x = latitudeFriction;
     anisotropicFriction.y = longtitudeFriction;
     anisotropicFriction.z = longtitudeFriction;
@@ -614,6 +620,7 @@ void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
 
     latitudeFriction = processer.getLatitudeFriction(getBackRWheelColliderIndex());
     longtitudeFriction = processer.getLongtitudeFriction(getBackRWheelColliderIndex());
+    backRRollResistance = longtitudeFriction;
     anisotropicFriction.x = latitudeFriction;
     anisotropicFriction.y = longtitudeFriction;
     anisotropicFriction.z = longtitudeFriction;

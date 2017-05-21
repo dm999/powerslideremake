@@ -564,10 +564,10 @@ Ogre::WindowEventListener</y:NodeLabel>
     <node id="n6">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="2183.061097666385" width="701.7915528832027" x="5979.104223558399" y="-4421.530548833192"/>
+          <y:Geometry height="2183.061097666385" width="892.9780212450123" x="5883.510989377493" y="-4421.530548833192"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="12.766870191600901" y="16.34500195819237">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="805.66796875" x="43.65502624750661" y="16.34500195819237">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -625,7 +625,7 @@ Ogre::Real getLapPosition() const override
 
 protected:
 
-virtual void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
+virtual void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)
 
 virtual void processSounds(const Ogre::FrameEvent &amp;evt)
 
@@ -678,7 +678,7 @@ Ogre::String mParticleMaterialName
 
 static Ogre::NameGenerator nameGenMaterialsParticles
 
-virtual void adjustWheelsFriction(StaticMeshProcesser&amp; processer)
+virtual void adjustWheelsFriction(StaticMeshProcesser&amp; processer, Ogre::Real&amp; backLRollResistance, Ogre::Real&amp; backRRollResistance)
 void adjustWheelsParticles(const Ogre::Quaternion&amp; rot, Ogre::Real rotAngleAddition)
 
 bool isRollOver()
@@ -1061,10 +1061,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="687.8424017241719" width="519.0341995871709" x="6580.482900206414" y="-973.9212008620859"/>
+          <y:Geometry height="687.8424017241719" width="869.681870818436" x="6405.159064590782" y="-973.9212008620859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="25.093271668585658" y="25.846005549585925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="821.693359375" x="23.99425572171822" y="25.846005549585925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1097,7 +1097,7 @@ uint64_t getLastTimeOfUpdate()const
 
 protected:
 
-void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)override{}
+void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)override{}
 
 private:
 

@@ -74,7 +74,7 @@ public:
 
 protected:
 
-    virtual void applyDriveImpulses(const Ogre::FrameEvent &evt, bool isRaceStarted);
+    virtual void applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted);
 
     virtual void processSounds(const Ogre::FrameEvent &evt);
 
@@ -132,7 +132,7 @@ private:
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
-    virtual void adjustWheelsFriction(StaticMeshProcesser& processer);
+    virtual void adjustWheelsFriction(StaticMeshProcesser& processer, Ogre::Real& backLRollResistance, Ogre::Real& backRRollResistance);
     void adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition);
 
     bool isRollOver();
