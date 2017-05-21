@@ -110,6 +110,7 @@ private:
     Ogre::Timer mTimerCollisionHappenRear;
 
     LinearController<float> mDriveImpulse;
+    LinearController<float> mResistanceImpulse;     //terrain back friction
     LinearController<float> mGroundSpoilerImpulse;
     LinearController<float> mAirSpoilerImpulse;
     LinearController<float> mWheelsRotationByEngineAddition;

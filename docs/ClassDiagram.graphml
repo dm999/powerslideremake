@@ -567,7 +567,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2183.061097666385" width="892.9780212450123" x="5883.510989377493" y="-4421.530548833192"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="805.66796875" x="43.65502624750661" y="16.34500195819237">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2165.072265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="805.66796875" x="43.65502624750661" y="8.99441602069237">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -656,6 +656,7 @@ Ogre::Timer mTimerCollisionHappenFront
 Ogre::Timer mTimerCollisionHappenRear
 
 LinearController&lt;float&gt; mDriveImpulse
+LinearController&lt;float&gt; mResistanceImpulse
 LinearController&lt;float&gt; mGroundSpoilerImpulse
 LinearController&lt;float&gt; mAirSpoilerImpulse
 LinearController&lt;float&gt; mWheelsRotationByEngineAddition

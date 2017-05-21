@@ -21,9 +21,6 @@ namespace
     const float defaultLowPitch = 0.25f;
     const float defaultMidPitch = 0.15f;
     const float defaultHighPitch = 0.5f;
-
-    LinearController<float> mDriveImpulse;
-    LinearController<float> mWheelsRotationByEngineAddition;
 }
 
 Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material/Particles/Name");
@@ -52,6 +49,9 @@ PSControllableCar::PSControllableCar() :
     mDriveImpulse.addPoint(200.0f, 15.0f);
     mDriveImpulse.addPoint(240.0f, 6.0f);
     mDriveImpulse.addPoint(300.0f, 0.0f);
+
+    mResistanceImpulse.addPoint(160.0f, 0.0f);
+    mResistanceImpulse.addPoint(300.0f, 20.0f);
 
     mGroundSpoilerImpulse.addPoint(0.0f, 0.0f);
     mGroundSpoilerImpulse.addPoint(200.0f, 15.0f);
@@ -502,6 +502,7 @@ void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Re
 
     Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
     Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spf;
+    Ogre::Real wheelsResistanceImpulse = mResistanceImpulse.getVal(projectedVel) * spf;
     Ogre::Real cockpitGroundSpoilerImpulse = mGroundSpoilerImpulse.getVal(projectedVel) * spf;
     Ogre::Real cockpitAirSpoilerImpulse = mAirSpoilerImpulse.getVal(projectedVel) * spf;
 
@@ -551,6 +552,13 @@ void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Re
 
             mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
         }
+    }
+
+    //terrain back friction
+    if(checkRearCollision() && isRaceStarted)
+    {
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * backLRollResistance * 2.0f), rot * Ogre::Vector3(-6, -2, 4));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * backRRollResistance * 2.0f), rot * Ogre::Vector3(6, -2, 4));
     }
 
     if(!checkRearCollision() && !checkFrontCollision())
