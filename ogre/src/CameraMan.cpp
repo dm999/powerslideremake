@@ -24,13 +24,17 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
         cameraDisplacement.y = 6.0f;
         cameraDisplacement.z = 0.0f;
     }
+    if(mCamPositonType == CameraPosition_ChassisA)
+    {
+        cameraDisplacement.y = 12.0f;
+    }
     if(mCamPositonType == CameraPosition_ChassisB)
     {
         cameraDisplacement.z = 16.0f;
     }
     if(mCamPositonType == CameraPosition_ChassisC)
     {
-        cameraDisplacement.y = 18.0f;
+        cameraDisplacement.y = 16.0f;
     }
 
     Ogre::Vector3 forwardAxis = carRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
@@ -82,11 +86,15 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
 
 
 
-        Ogre::Vector3 targetOffset(0.0f, 10.0f, 0.0f);
+        Ogre::Vector3 targetOffset(0.0f, 6.0f, 0.0f);
 
         if(mCamPositonType == CameraPosition_ChassisB)
         {
             targetOffset = Ogre::Vector3::ZERO;
+        }
+        if(mCamPositonType == CameraPosition_ChassisC)
+        {
+            targetOffset = Ogre::Vector3 (0.0f, 6.0f, 0.0f);
         }
 
         mCamera->setAutoTracking(true, target, targetOffset);

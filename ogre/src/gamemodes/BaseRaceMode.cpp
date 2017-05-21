@@ -162,8 +162,10 @@ void BaseRaceMode::initScene()
     Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
 
     mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-    mCamera->setAspectRatio(Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
-    mCamera->setFOVy(Ogre::Degree(95.0f));
+    //mCamera->setAspectRatio(Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
+    mCamera->setAspectRatio(1.2f);
+    //mCamera->setFOVy(Ogre::Degree(95.0f));
+    mCamera->setFOVy(Ogre::Degree(80.0f));
 
     initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mModeContext.mPipeline), 0.0f));
 
