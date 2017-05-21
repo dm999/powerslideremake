@@ -38,19 +38,13 @@ protected:
 
 private:
 
-    LinearController<float> mSteeringImpulse;
-    LinearController<float> mOverSteeringImpulseLength;
-    //LinearController<float> mParticlesEmmisionRate;
-    //LinearController<float> mJumpImpulse;
+    float mSteeringAngleVelocity;
+    LinearController<float> mRotationIntensity;
 
+    void processSteering(bool isRaceStarted);
 
-
-    Ogre::Real mSideImpulse;    // oversteer simulation
-    Ogre::Timer mSteerTimer;
-    unsigned long mLastSteerLength;
-    bool mIsTimerFirstTime;
-    bool mIsLastTurnLeft;
-    Ogre::Real mSmoothSideImpulse;
+    bool checkOverSteer();
+    Ogre::Timer mTimerOversteer;
 };
 
 #endif

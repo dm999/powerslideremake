@@ -879,7 +879,7 @@ void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bo
           <y:Geometry height="570.4779855747715" width="814.9492552746156" x="5442.525372362692" y="-1845.2389927873858"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="18.61789903738577">&lt;&lt;PSPlayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="503.83984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="33.31907091238577">&lt;&lt;PSPlayerCar.h&gt;&gt;
 
 PSPlayerCar
 
@@ -906,15 +906,13 @@ virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStart
 
 private:
 
-LinearController&lt;float&gt; mSteeringImpulse
-LinearController&lt;float&gt; mOverSteeringImpulseLength
+float mSteeringAngleVelocity
+LinearController&lt;float&gt; mRotationIntensity
 
-Ogre::Real mSideImpulse
-Ogre::Timer mSteerTimer
-unsigned long mLastSteerLength
-bool mIsTimerFirstTime
-bool mIsLastTurnLeft
-Ogre::Real mSmoothSideImpulse</y:NodeLabel>
+void processSteering(bool isRaceStarted)
+
+bool checkOverSteer()
+Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

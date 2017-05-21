@@ -1,5 +1,7 @@
 #include "../pcheader.h"
 
+#include <cmath>
+
 #include "PSPlayerCar.h"
 
 #include "../mesh/StaticMeshProcesser.h"
@@ -9,31 +11,11 @@
 #include "../lua/DMLuaManager.h"
 
 PSPlayerCar::PSPlayerCar() :
-    mSideImpulse(0.0f),
-    mIsTimerFirstTime(true),
-    mIsLastTurnLeft(false),
-    mSmoothSideImpulse(0.0f)
+    mSteeringAngleVelocity(0.0f)
 {
-    mSteeringImpulse.addPoint(0.0f, 0.0f);
-    mSteeringImpulse.addPoint(10.0f, 40.0f);
-    mSteeringImpulse.addPoint(60.0f, 80.0f);
-    mSteeringImpulse.addPoint(120.0f, 100.0f);
-
-    mOverSteeringImpulseLength.addPoint(0.0f, 10.0f);
-    mOverSteeringImpulseLength.addPoint(20.0f, 1.0f);
-    mOverSteeringImpulseLength.addPoint(100.0f, 0.25f);
-
-    //mParticlesEmmisionRate.addPoint(-50.0f, 20.0f);
-    //mParticlesEmmisionRate.addPoint(-10.0f, 100.0f);
-    //mParticlesEmmisionRate.addPoint(-1.0f, 0.0f);
-    //mParticlesEmmisionRate.addPoint(1.0f, 0.0f);
-    //mParticlesEmmisionRate.addPoint(10.0f, 100.0f);
-    //mParticlesEmmisionRate.addPoint(100.0f, 10.0f);
-    //mParticlesEmmisionRate.addPoint(200.0f, 5.0f);
-
-    //mJumpImpulse.addPoint(10.0f, 0.0f);
-    //mJumpImpulse.addPoint(15.0f, 300.0f);
-    //mJumpImpulse.addPoint(100.0f, 400.0f);
+    mRotationIntensity.addPoint(-50.0f, 1.5f);
+    mRotationIntensity.addPoint(0.0f, 0.0f);
+    mRotationIntensity.addPoint(1.0f, 1.0f);
 }
 
 void PSPlayerCar::initModel(    lua_State * pipeline, 
@@ -46,10 +28,8 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
                                 const Ogre::Matrix4& transform,
                                 bool isPossesCamera)
 {
-    mSideImpulse = 0.0f;
-    mIsTimerFirstTime = true;
-    mIsLastTurnLeft = false;
-    mSmoothSideImpulse = 0.0f;
+
+    mSteeringAngleVelocity = 0.0f;
 
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera, false);
 
@@ -59,6 +39,70 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     for(int q = 0; q < 5; ++q)
     {
         mModelEntity[q]->setCastShadows(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline));
+    }
+}
+
+bool PSPlayerCar::checkOverSteer()
+{
+    bool ret = false;
+
+    if((!mSteeringLeft || !mSteeringRight) && !mAccelEnabled) mTimerOversteer.reset();
+
+    const unsigned long timeThreshold = 1500; //ms
+    unsigned long millisecondsPassed = mTimerOversteer.getMilliseconds();
+
+    if(mAccelEnabled && (mSteeringLeft || mSteeringRight) && millisecondsPassed > timeThreshold)
+        ret = true;
+
+    return ret;
+}
+
+void PSPlayerCar::processSteering(bool isRaceStarted)
+{
+    if(isRaceStarted)
+    {
+        const float steeringAccelMax = 1.4f;
+        const float steeringAccelStep = 0.03f;
+        const float steeringAccelOversteerStep = steeringAccelStep / 2.0f;
+        const float steeringAccelStepFade = steeringAccelStep / 2.0f;
+        const float steeringAccelMinThreshols = steeringAccelStepFade * 2.0f;
+
+        bool isOversteer = checkOverSteer();
+
+        if (mSteeringLeft && checkFrontCollision())
+        {
+            if(mSteeringAngleVelocity < steeringAccelMax)
+            {
+                mSteeringAngleVelocity += steeringAccelStep;
+                if(isOversteer) mSteeringAngleVelocity += steeringAccelOversteerStep;
+            }
+            else
+                mSteeringAngleVelocity = steeringAccelMax;
+        }
+
+        if (mSteeringRight && checkFrontCollision())
+        {
+            if(mSteeringAngleVelocity > -steeringAccelMax)
+            {
+                mSteeringAngleVelocity -= steeringAccelStep;
+                if(isOversteer) mSteeringAngleVelocity -= steeringAccelOversteerStep;
+            }
+            else
+                mSteeringAngleVelocity = -steeringAccelMax;
+        }
+
+        if (!mSteeringRight && !mSteeringLeft)
+        {
+            if(mSteeringAngleVelocity < -steeringAccelMinThreshols)
+            {
+                mSteeringAngleVelocity += steeringAccelStepFade;
+            }
+            else if(mSteeringAngleVelocity > steeringAccelMinThreshols)
+            {
+                mSteeringAngleVelocity -= steeringAccelStepFade;
+            }
+            else mSteeringAngleVelocity = 0.0f;
+        }
     }
 }
 
@@ -72,105 +116,42 @@ void PSPlayerCar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStar
 
     Ogre::Real projectedVel = getAlignedVelocity();
 
-
-
-    Ogre::Real wheelsTurnImpulse = 0.0f;
-    if(projectedVel < 0.0f)
+    if(projectedVel < 0.0f && mBrakeEnabled)
     {
-        wheelsTurnImpulse = -50.0f;
+        if (mSteeringLeft && checkFrontCollision())
+        {
+            mSteeringAngleVelocity = -mRotationIntensity.getVal(projectedVel);
+        }
+
+        if (mSteeringRight && checkFrontCollision())
+        {
+            mSteeringAngleVelocity = mRotationIntensity.getVal(projectedVel);
+        }
+
+        if(!mSteeringLeft && !mSteeringRight) mSteeringAngleVelocity = 0.0f;
     }
     else
+        processSteering(isRaceStarted);
+
+    if(checkFrontCollision() && isRaceStarted)
     {
-        wheelsTurnImpulse = mSteeringImpulse.getVal(projectedVel);
+        mCarChassis->setAngularVelocity(Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * spf);
     }
-    //wheelsTurnImpulse = Ogre::Math::Clamp(wheelsTurnImpulse * 0.1f * spf, -50.0f, 60.0f);
-    wheelsTurnImpulse *= (0.1f * spf);
-
-    Ogre::Real wheelsSkidImpulse = 300.0f * spf;
-
 
     if (mSteeringLeft)
     {
-        if(checkFrontCollision() && isRaceStarted)
-        {
-            if(!mIsLastTurnLeft)
-            {
-                mSmoothSideImpulse = wheelsTurnImpulse;
-            }
-            wheelsTurnImpulse -= mSmoothSideImpulse;
-            mSmoothSideImpulse -= mSmoothSideImpulse * evt.timeSinceLastFrame * 4.0f;
-            if(mSmoothSideImpulse < 0.01f)mSmoothSideImpulse = 0.0f;
-
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(-wheelsTurnImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(-wheelsTurnImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mSideImpulse = wheelsTurnImpulse;
-            mIsLastTurnLeft = true;
-
-            if(mIsTimerFirstTime)
-            {
-                mSteerTimer.reset();
-                mIsTimerFirstTime = false;
-            }
-            else
-            {
-                mLastSteerLength = mSteerTimer.getMilliseconds();
-            }
-
-            //skid
-            if(mAccelEnabled && projectedVel > 20.0f && projectedVel < 70.0f)
-            {
-                mCarWheelBackL->applyImpulse(rot * Ogre::Vector3(wheelsSkidImpulse / projectedVel, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                mCarWheelBackR->applyImpulse(rot * Ogre::Vector3(wheelsSkidImpulse / projectedVel, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            }
-        }
-
         mSteering += mSteeringIncrement * spf;
         if (mSteering > mSteeringMax)
             mSteering = mSteeringMax;
     }
     else if (mSteeringRight)
     {
-        if(checkFrontCollision() && isRaceStarted)
-        {
-            if(mIsLastTurnLeft)
-            {
-                mSmoothSideImpulse = wheelsTurnImpulse;
-            }
-            wheelsTurnImpulse -= mSmoothSideImpulse;
-            mSmoothSideImpulse -= mSmoothSideImpulse * evt.timeSinceLastFrame * 4.0f;
-            if(mSmoothSideImpulse < 0.01f) mSmoothSideImpulse = 0.0f;
-
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(wheelsTurnImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(wheelsTurnImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mSideImpulse = wheelsTurnImpulse;
-            mIsLastTurnLeft = false;
-
-            if(mIsTimerFirstTime)
-            {
-                mSteerTimer.reset();
-                mIsTimerFirstTime = false;
-            }
-            else
-            {
-                mLastSteerLength = mSteerTimer.getMilliseconds();
-            }
-
-            //skid
-            if(mAccelEnabled && projectedVel > 20.0f && projectedVel < 70.0f)
-            {
-                mCarWheelBackL->applyImpulse(rot * Ogre::Vector3(-wheelsSkidImpulse / projectedVel, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                mCarWheelBackR->applyImpulse(rot * Ogre::Vector3(-wheelsSkidImpulse / projectedVel, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            }
-        }
-
         mSteering -= mSteeringIncrement * spf;
         if (mSteering < mSteeringMin)
             mSteering = mSteeringMin;
     }
     else
     {
-        mIsTimerFirstTime = true;
-
         if(mSteering < -mSteeringIncrement)
         {
             mSteering += mSteeringIncrement * spf;
@@ -182,30 +163,6 @@ void PSPlayerCar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStar
         else
         {
             mSteering = 0.0f;
-        }
-
-        //oversteer
-        mLastSteerLength = Ogre::Math::Clamp(mLastSteerLength, (unsigned long)1, (unsigned long)4000);
-        mSideImpulse -= mSideImpulse * evt.timeSinceLastFrame * mOverSteeringImpulseLength.getVal(projectedVel) / (mLastSteerLength / 1000.0f);
-        if(mSideImpulse > 0.01f)
-        {
-            if(checkFrontCollision() && isRaceStarted)
-            {
-                if(mIsLastTurnLeft)
-                {
-                    mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(-mSideImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                    mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(-mSideImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                }
-                else
-                {
-                    mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(mSideImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                    mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSideImpulse, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-                }
-            }
-        }
-        else
-        {
-            mSideImpulse = 0.0f;
         }
     }
 }
