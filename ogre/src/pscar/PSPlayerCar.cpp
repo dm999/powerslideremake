@@ -42,6 +42,40 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     }
 }
 
+void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
+{
+    PSControllableCar::processInternalTick(timeStep, isRaceStarted);
+
+    Ogre::Real spfFake = 1.5f;
+
+    Ogre::Vector3 pos = mCarChassis->getSceneNode()->_getDerivedPosition();
+    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+
+    Ogre::Real projectedVel = getAlignedVelocity();
+
+    if(projectedVel < 0.0f && mBrakeEnabled)
+    {
+        if (mSteeringLeft && checkFrontCollision())
+        {
+            mSteeringAngleVelocity = -mRotationIntensity.getVal(projectedVel);
+        }
+
+        if (mSteeringRight && checkFrontCollision())
+        {
+            mSteeringAngleVelocity = mRotationIntensity.getVal(projectedVel);
+        }
+
+        if(!mSteeringLeft && !mSteeringRight) mSteeringAngleVelocity = 0.0f;
+    }
+    else
+        processSteering(isRaceStarted);
+
+    if(checkFrontCollision() && isRaceStarted)
+    {
+        mCarChassis->setAngularVelocity(Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * spfFake);
+    }
+}
+
 bool PSPlayerCar::checkOverSteer()
 {
     bool ret = false;
@@ -108,35 +142,9 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
 
 void PSPlayerCar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)
 {
+    (void) isRaceStarted;
 
     Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
-
-    Ogre::Vector3 pos = mCarChassis->getSceneNode()->_getDerivedPosition();
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
-
-    Ogre::Real projectedVel = getAlignedVelocity();
-
-    if(projectedVel < 0.0f && mBrakeEnabled)
-    {
-        if (mSteeringLeft && checkFrontCollision())
-        {
-            mSteeringAngleVelocity = -mRotationIntensity.getVal(projectedVel);
-        }
-
-        if (mSteeringRight && checkFrontCollision())
-        {
-            mSteeringAngleVelocity = mRotationIntensity.getVal(projectedVel);
-        }
-
-        if(!mSteeringLeft && !mSteeringRight) mSteeringAngleVelocity = 0.0f;
-    }
-    else
-        processSteering(isRaceStarted);
-
-    if(checkFrontCollision() && isRaceStarted)
-    {
-        mCarChassis->setAngularVelocity(Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * spf);
-    }
 
     if (mSteeringLeft)
     {

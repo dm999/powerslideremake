@@ -404,13 +404,86 @@ void PSControllableCar::processChassisCollision(   btManifoldPoint& cp,
     }
 }
 
+void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
+{
+    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+
+    Ogre::Real projectedVel = getAlignedVelocity();
+
+    Ogre::Real spfFake = 1.5f;
+    Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spfFake;
+    Ogre::Real wheelsResistanceImpulse = mResistanceImpulse.getVal(projectedVel) * spfFake;
+    Ogre::Real cockpitGroundSpoilerImpulse = mGroundSpoilerImpulse.getVal(projectedVel) * spfFake;
+    Ogre::Real cockpitAirSpoilerImpulse = mAirSpoilerImpulse.getVal(projectedVel) * spfFake;
+
+    Ogre::Vector3 carForwardVector = getForwardAxis();
+    Ogre::Real antiForwardProjY = Ogre::Vector3::NEGATIVE_UNIT_Y.dotProduct(carForwardVector);
+    Ogre::Real carAntiSlopeCoefficient = 1.0f - antiForwardProjY;
+
+    if (mBrakeEnabled && isRaceStarted)
+    {
+        if(checkRearCollision() || checkFrontCollision())
+        {
+#if defined(__ANDROID__)
+            if(!mIsAI)
+            {
+                if(projectedVel > 10.0f)
+                {
+                    mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
+                    mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
+                }
+                else
+                {
+                    setBrake(false);
+                }
+            }
+#else
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
+#endif
+        }
+    }
+
+    Ogre::Real forwardProjY = Ogre::Vector3::UNIT_Y.dotProduct(carForwardVector);
+    Ogre::Real carSlopeCoefficient = 1.0f - forwardProjY;
+    //carSlopeCoefficient = Ogre::Math::Clamp(carSlopeCoefficient, 0.0f, 1.0f);
+
+    Ogre::Real lateralVel = getLateralVelocity();
+
+    const float reduceRollResistance = 2.0f;
+
+    if (mAccelEnabled && isRaceStarted)
+    {
+        if(checkRearCollision(true) /*|| checkFrontCollision()*/)
+        {
+            const Ogre::Real backLRollImpulse = 1.0f - mBackLRollResistance / reduceRollResistance;
+            const Ogre::Real backRRollImpulse = 1.0f - mBackRRollResistance / reduceRollResistance;
+
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
+
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+        }
+    }
+
+    //terrain back friction
+    if(checkRearCollision() && isRaceStarted)
+    {
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * mBackLRollResistance / reduceRollResistance), rot * Ogre::Vector3(-6, -2, 4));
+            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * mBackRRollResistance / reduceRollResistance), rot * Ogre::Vector3(6, -2, 4));
+    }
+
+    if(!checkRearCollision() && !checkFrontCollision())
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
+    else
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
+}
+
 void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, StaticMeshProcesser& processer, bool isRaceStarted)
 {
     processSounds(evt);
 
-    Ogre::Real backLRollResistance;
-    Ogre::Real backRRollResistance;
-    adjustWheelsFriction(processer, backLRollResistance, backRRollResistance);
+    adjustWheelsFriction(processer, mBackLRollResistance, mBackRRollResistance);
 
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
@@ -489,82 +562,15 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
 
 
-    applyDriveImpulses(evt, backLRollResistance, backRRollResistance, isRaceStarted);
+    applyDriveImpulses(evt, mBackLRollResistance, mBackRRollResistance, isRaceStarted);
 
     cleanWheelsCollisionsFlags();
 }
 
 void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)
 {
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
-    Ogre::Real projectedVel = getAlignedVelocity();
 
-    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
-    Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spf;
-    Ogre::Real wheelsResistanceImpulse = mResistanceImpulse.getVal(projectedVel) * spf;
-    Ogre::Real cockpitGroundSpoilerImpulse = mGroundSpoilerImpulse.getVal(projectedVel) * spf;
-    Ogre::Real cockpitAirSpoilerImpulse = mAirSpoilerImpulse.getVal(projectedVel) * spf;
-
-    Ogre::Vector3 carForwardVector = getForwardAxis();
-    Ogre::Real antiForwardProjY = Ogre::Vector3::NEGATIVE_UNIT_Y.dotProduct(carForwardVector);
-    Ogre::Real carAntiSlopeCoefficient = 1.0f - antiForwardProjY;
-
-    if (mBrakeEnabled && isRaceStarted)
-    {
-        if(checkRearCollision() || checkFrontCollision())
-        {
-#if defined(__ANDROID__)
-            if(!mIsAI)
-            {
-                if(projectedVel > 10.0f)
-                {
-                    mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
-                    mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
-                }
-                else
-                {
-                    setBrake(false);
-                }
-            }
-#else
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
-#endif
-        }
-    }
-
-    Ogre::Real forwardProjY = Ogre::Vector3::UNIT_Y.dotProduct(carForwardVector);
-    Ogre::Real carSlopeCoefficient = 1.0f - forwardProjY;
-    //carSlopeCoefficient = Ogre::Math::Clamp(carSlopeCoefficient, 0.0f, 1.0f);
-
-    Ogre::Real lateralVel = getLateralVelocity();
-
-    if (mAccelEnabled && isRaceStarted)
-    {
-        if(checkRearCollision(true) /*|| checkFrontCollision()*/)
-        {
-            const Ogre::Real backLRollImpulse = 1.0f - backLRollResistance;
-            const Ogre::Real backRRollImpulse = 1.0f - backRRollResistance;
-
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
-
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
-        }
-    }
-
-    //terrain back friction
-    if(checkRearCollision() && isRaceStarted)
-    {
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * backLRollResistance * 2.0f), rot * Ogre::Vector3(-6, -2, 4));
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsResistanceImpulse * backRRollResistance * 2.0f), rot * Ogre::Vector3(6, -2, 4));
-    }
-
-    if(!checkRearCollision() && !checkFrontCollision())
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
-    else
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)

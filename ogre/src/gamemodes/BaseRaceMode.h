@@ -47,6 +47,7 @@ public:
 #endif
 
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+    void processInternalTick(float timeStep);
 
     //LapUtils
     void onLapFinished()override;

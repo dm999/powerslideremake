@@ -24,6 +24,8 @@ public:
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera)override;
 
+    virtual void processInternalTick(float timeStep, bool isRaceStarted)override;
+
     void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff){mLateralStabilizationCoeff = linearStabilizationCoeff;}
     void setSpeedCoeff(Ogre::Real speedCoeff){mAIUtils.setSpeedCoeff(speedCoeff);}
 

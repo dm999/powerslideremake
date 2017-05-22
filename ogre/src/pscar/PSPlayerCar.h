@@ -27,6 +27,8 @@ public:
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera);
 
+    virtual void processInternalTick(float timeStep, bool isRaceStarted) override;
+
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 

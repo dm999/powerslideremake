@@ -31,6 +31,12 @@ public:
                             bool isPossesCamera, const std::string& humanName, bool isHuman);
 
     /**
+     * Don`t apply impulses to multiplayer car
+     * rely only on velocity from remote client
+     */
+    virtual void processInternalTick(float timeStep, bool isRaceStarted)override{}
+
+    /**
      * Should delete title for multiplayer car
      */
     void clear()override;

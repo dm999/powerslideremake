@@ -28,6 +28,17 @@
     #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 #endif
 
+namespace
+{
+    BaseRaceMode * pBaseRaceMode = NULL;
+    //http://bulletphysics.org/mediawiki-1.5.8/index.php/Code_Snippets
+    void InternalTickCallback(btDynamicsWorld *world, btScalar timeStep)
+    {
+        if(pBaseRaceMode)
+            pBaseRaceMode->processInternalTick(timeStep);
+    }
+}
+
 BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
     mShadowLightDistanceFromCar(40.0f),
@@ -37,7 +48,9 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
 #endif
-{}
+{
+    pBaseRaceMode = this;
+}
 
 void BaseRaceMode::initData()
 {
@@ -162,8 +175,7 @@ void BaseRaceMode::initScene()
     Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
 
     mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-    //mCamera->setAspectRatio(Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
-    mCamera->setAspectRatio(1.2f);
+    mCamera->setAspectRatio(1.2f * Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
     //mCamera->setFOVy(Ogre::Degree(95.0f));
     mCamera->setFOVy(Ogre::Degree(80.0f));
 
@@ -494,6 +506,7 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
     mWorld.reset(new OgreBulletDynamics::DynamicsWorld(mSceneMgr, bounds, gravityVector, true, true, 10000));
     mDebugDrawer.reset(new OgreBulletCollisions::DebugDrawer());
     mWorld->setDebugDrawer(mDebugDrawer.get());
+    mWorld->getBulletDynamicsWorld()->setInternalTickCallback(InternalTickCallback);
 
     Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("debugDrawer", Ogre::Vector3::ZERO);
     node->attachObject(static_cast<Ogre::SimpleRenderable *>(mDebugDrawer.get()));
@@ -561,6 +574,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     mLapController.calculateLapPositions();
 
+    //http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World
     if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
         mWorld->stepSimulation(evt.timeSinceLastFrame, 7);
 
@@ -843,6 +857,16 @@ void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObject
         }
     }
 #endif
+}
+
+void BaseRaceMode::processInternalTick(float timeStep)
+{
+    mModeContext.mGameState.getPlayerCar().processInternalTick(timeStep, mModeContext.mGameState.getRaceStarted());
+
+    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    {
+        mModeContext.mGameState.getAICar(q).processInternalTick(timeStep, mModeContext.mGameState.getRaceStarted());
+    }
 }
 
 void BaseRaceMode::loadResources()

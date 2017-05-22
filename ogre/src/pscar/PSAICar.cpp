@@ -26,11 +26,11 @@ void PSAICar::initModel(    lua_State * pipeline,
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera);
 }
 
-void PSAICar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)
+void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)
 {
-    (void) isRaceStarted;
+    PSControllableCar::processInternalTick(timeStep, isRaceStarted);
 
-    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
+    Ogre::Real spfFake = 1.5f;
 
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
@@ -38,22 +38,34 @@ void PSAICar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)
     {
         if(checkFrontCollision())
         {
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spf, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spf, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
+            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
+            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
         }
+    }
+    else if (mSteeringRight)
+    {
+        if(checkFrontCollision())
+        {
+            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
+            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
+        }
+    }
+}
 
+void PSAICar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)
+{
+    (void) isRaceStarted;
+
+    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
+
+    if (mSteeringLeft)
+    {
         mSteering += mSteeringIncrement * spf;
         if (mSteering > mSteeringMax)
             mSteering = mSteeringMax;
     }
     else if (mSteeringRight)
     {
-        if(checkFrontCollision())
-        {
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spf, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spf, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-        }
-
         mSteering -= mSteeringIncrement * spf;
         if (mSteering < mSteeringMin)
             mSteering = mSteeringMin;

@@ -43,6 +43,8 @@ public:
                                     StaticMeshProcesser& processer,
                                     int triIndex);
 
+    virtual void processInternalTick(float timeStep, bool isRaceStarted);
+
     void setAcceleration(bool isEnable){mAccelEnabled = isEnable;}
     bool getAcceleration() const{return mAccelEnabled;} // multiplayer
 
@@ -175,6 +177,11 @@ protected:
     void setWheelCollisionHappenBackR(){mWheelCollisionBackR = true;}
 
     virtual void calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted) = 0;
+
+    private:
+
+    Ogre::Real mBackLRollResistance;
+    Ogre::Real mBackRRollResistance;
 };
 
 #endif
