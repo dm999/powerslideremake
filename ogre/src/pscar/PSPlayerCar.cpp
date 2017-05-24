@@ -80,13 +80,18 @@ bool PSPlayerCar::checkOverSteer()
 {
     bool ret = false;
 
-    if((!mSteeringLeft || !mSteeringRight) && !mAccelEnabled) mTimerOversteer.reset();
+    if((!mSteeringLeft || !mSteeringRight) && !mAccelEnabled)
+    {
+        mTimerOversteer.reset();
+    }
+    else
+    {
+        const unsigned long timeThreshold = 1000; //ms
+        unsigned long millisecondsPassed = mTimerOversteer.getMilliseconds();
 
-    const unsigned long timeThreshold = 1500; //ms
-    unsigned long millisecondsPassed = mTimerOversteer.getMilliseconds();
-
-    if(mAccelEnabled && (mSteeringLeft || mSteeringRight) && millisecondsPassed > timeThreshold)
-        ret = true;
+        if(mAccelEnabled && (mSteeringLeft || mSteeringRight) && millisecondsPassed > timeThreshold)
+            ret = true;
+    }
 
     return ret;
 }
@@ -96,6 +101,7 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
     if(isRaceStarted)
     {
         const float steeringAccelMax = 1.4f;
+        const float steeringAccelOversteerMax = 2.4f;
         const float steeringAccelStep = 0.03f;
         const float steeringAccelOversteerStep = steeringAccelStep / 2.0f;
         const float steeringAccelStepFade = steeringAccelStep / 2.0f;
@@ -111,7 +117,17 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
                 if(isOversteer) mSteeringAngleVelocity += steeringAccelOversteerStep;
             }
             else
-                mSteeringAngleVelocity = steeringAccelMax;
+            {
+                if(isOversteer)
+                {
+                    if(mSteeringAngleVelocity < steeringAccelOversteerMax)
+                        mSteeringAngleVelocity += steeringAccelOversteerStep;
+                    if(mSteeringAngleVelocity >= steeringAccelOversteerMax)
+                        mSteeringAngleVelocity = steeringAccelOversteerMax;
+                }
+                else
+                    mSteeringAngleVelocity = steeringAccelMax;
+            }
         }
 
         if (mSteeringRight && checkFrontCollision())
@@ -122,7 +138,17 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
                 if(isOversteer) mSteeringAngleVelocity -= steeringAccelOversteerStep;
             }
             else
-                mSteeringAngleVelocity = -steeringAccelMax;
+            {
+                if(isOversteer)
+                {
+                    if(mSteeringAngleVelocity > -steeringAccelOversteerMax)
+                        mSteeringAngleVelocity -= steeringAccelOversteerStep;
+                    if(mSteeringAngleVelocity <= -steeringAccelOversteerMax)
+                        mSteeringAngleVelocity = -steeringAccelOversteerMax;
+                }
+                else
+                    mSteeringAngleVelocity = -steeringAccelMax;
+            }
         }
 
         if (!mSteeringRight && !mSteeringLeft)
@@ -137,6 +163,8 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
             }
             else mSteeringAngleVelocity = 0.0f;
         }
+
+        if (!checkFrontCollision()) mSteeringAngleVelocity = 0.0f;
     }
 }
 

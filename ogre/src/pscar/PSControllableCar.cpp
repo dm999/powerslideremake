@@ -450,7 +450,7 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
 
     Ogre::Real lateralVel = getLateralVelocity();
 
-    const float reduceRollResistance = 2.0f;
+    const float reduceRollResistance = 10.0f;
 
     if (mAccelEnabled && isRaceStarted)
     {
