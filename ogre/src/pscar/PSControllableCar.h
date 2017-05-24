@@ -43,6 +43,9 @@ public:
                                     StaticMeshProcesser& processer,
                                     int triIndex);
 
+    /**
+     * apply impulses and set velocity on bullet internal tick
+     */
     virtual void processInternalTick(float timeStep, bool isRaceStarted);
 
     void setAcceleration(bool isEnable){mAccelEnabled = isEnable;}
@@ -75,8 +78,6 @@ public:
     void setDisableMouse(bool disableMouse) {mIsDisableMouse = disableMouse ;}
 
 protected:
-
-    virtual void applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted);
 
     virtual void processSounds(const Ogre::FrameEvent &evt);
 
@@ -135,7 +136,7 @@ private:
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
-    virtual void adjustWheelsFriction(StaticMeshProcesser& processer, Ogre::Real& backLRollResistance, Ogre::Real& backRRollResistance);
+    virtual void adjustWheelsFriction(StaticMeshProcesser& processer);
     void adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition);
 
     bool isRollOver();
@@ -176,9 +177,9 @@ protected:
     void setWheelCollisionHappenBackL(){mWheelCollisionBackL = true;}
     void setWheelCollisionHappenBackR(){mWheelCollisionBackR = true;}
 
-    virtual void calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted) = 0;
-
     private:
+
+    void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt);
 
     Ogre::Real mBackLRollResistance;
     Ogre::Real mBackRRollResistance;

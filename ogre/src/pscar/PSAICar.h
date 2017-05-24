@@ -41,10 +41,6 @@ public:
     void setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
 
-protected:
-
-    virtual void calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted);
-
 private:
 
     //virtual void adjustWheelsFriction(StaticMeshProcesser& processer);

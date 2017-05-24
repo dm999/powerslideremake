@@ -140,41 +140,6 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
     }
 }
 
-void PSPlayerCar::calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted)
-{
-    (void) isRaceStarted;
-
-    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
-
-    if (mSteeringLeft)
-    {
-        mSteering += mSteeringIncrement * spf;
-        if (mSteering > mSteeringMax)
-            mSteering = mSteeringMax;
-    }
-    else if (mSteeringRight)
-    {
-        mSteering -= mSteeringIncrement * spf;
-        if (mSteering < mSteeringMin)
-            mSteering = mSteeringMin;
-    }
-    else
-    {
-        if(mSteering < -mSteeringIncrement)
-        {
-            mSteering += mSteeringIncrement * spf;
-        }
-        else if(mSteering > mSteeringIncrement)
-        {
-            mSteering -= mSteeringIncrement * spf;
-        }
-        else
-        {
-            mSteering = 0.0f;
-        }
-    }
-}
-
 void PSPlayerCar::keyDown(OIS::KeyCode key)
 {
     switch(key)

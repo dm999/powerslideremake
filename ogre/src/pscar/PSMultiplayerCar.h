@@ -31,12 +31,6 @@ public:
                             bool isPossesCamera, const std::string& humanName, bool isHuman);
 
     /**
-     * Don`t apply impulses to multiplayer car
-     * rely only on velocity from remote client
-     */
-    virtual void processInternalTick(float timeStep, bool isRaceStarted)override{}
-
-    /**
      * Should delete title for multiplayer car
      */
     void clear()override;
@@ -56,14 +50,6 @@ public:
 
     void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate){mLastTimeOfUpdate = lastTimeOfUpdate;}
     uint64_t getLastTimeOfUpdate()const {return mLastTimeOfUpdate;}
-
-protected:
-
-    /**
-     * Don`t apply impulses to multiplayer car
-     * rely only on velocity from remote client
-     */
-    void applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)override{}
 
 private:
 

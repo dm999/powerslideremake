@@ -380,13 +380,13 @@ void BaseApp::enablePause()
 {
     if(mGameModeSwitcher->getMode() == ModeRaceSingle)
     {
-        if(baseApp->getGameState().isGamePaused())
+        if(getGameState().isGamePaused())
         {
-            baseApp->getGameState().resetGamePaused();
+            getGameState().resetGamePaused();
         }
         else
         {
-            baseApp->getGameState().setGamePaused();
+            getGameState().setGamePaused();
         }
     }
 }
@@ -628,19 +628,19 @@ void BaseApp::touchDown(int id, float x, float y)
     if(cursorPos.x < 200.0f)
     {
         mTouchLeftID = id;
-        baseApp->keyDown(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
+        keyDown(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
     }
 
     if(cursorPos.x > viewportWidth - 200)
     {
         mTouchRightID = id;
-        baseApp->keyDown(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
+        keyDown(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
     }
 
     if(cursorPos.y > viewportHeight - 200)
     {
         mTouchDownID = id;
-        baseApp->keyDown(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
+        keyDown(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
     }
 }
 
@@ -653,17 +653,17 @@ void BaseApp::touchUp(int id, float x, float y)
 
     if(/*cursorPos.x < 200.0f*/ id == mTouchLeftID)
     {
-        baseApp->keyUp(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
+        keyUp(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
     }
 
     if(/*cursorPos.x > viewportWidth - 200*/ id == mTouchRightID)
     {
-        baseApp->keyUp(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
+        keyUp(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
     }
 
     if(/*cursorPos.x > viewportWidth - 200*/ id == mTouchDownID)
     {
-        baseApp->keyUp(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
+        keyUp(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
     }
 }
 

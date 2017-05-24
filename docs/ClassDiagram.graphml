@@ -564,10 +564,10 @@ Ogre::WindowEventListener</y:NodeLabel>
     <node id="n6">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="2283.2461465896035" width="892.9780212450123" x="5883.510989377493" y="-4471.6230732948015"/>
+          <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4471.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2267.98046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="805.66796875" x="43.65502624750661" y="7.632838919801543">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2238.578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925220024" y="22.334010794801543">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -627,8 +627,6 @@ Ogre::Real getLapPosition() const override
 
 protected:
 
-virtual void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)
-
 virtual void processSounds(const Ogre::FrameEvent &amp;evt)
 
 LinearController&lt;float&gt; mPitchValue
@@ -681,7 +679,7 @@ Ogre::String mParticleMaterialName
 
 static Ogre::NameGenerator nameGenMaterialsParticles
 
-virtual void adjustWheelsFriction(StaticMeshProcesser&amp; processer, Ogre::Real&amp; backLRollResistance, Ogre::Real&amp; backRRollResistance)
+virtual void adjustWheelsFriction(StaticMeshProcesser&amp; processer)
 void adjustWheelsParticles(const Ogre::Quaternion&amp; rot, Ogre::Real rotAngleAddition)
 
 bool isRollOver()
@@ -715,9 +713,9 @@ void setWheelCollisionHappenFrontR()
 void setWheelCollisionHappenBackL()
 void setWheelCollisionHappenBackR()
 
-virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted) = 0
-
 private:
+
+void adjustFrontWheelsAngle(const Ogre::FrameEvent &amp;evt)
 
 Ogre::Real mBackLRollResistance
 Ogre::Real mBackRRollResistance</y:NodeLabel>
@@ -886,7 +884,7 @@ void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bo
           <y:Geometry height="570.4779855747715" width="814.9492552746156" x="5442.525372362692" y="-1845.2389927873858"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="18.61789903738577">&lt;&lt;PSPlayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="48.02024278738577">&lt;&lt;PSPlayerCar.h&gt;&gt;
 
 PSPlayerCar
 
@@ -908,10 +906,6 @@ void keyDown(OIS::KeyCode key)
 void keyUp(OIS::KeyCode key)
 
 bool isCollideChassis(const PSBaseCar&amp; otherCar, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap)const
-
-protected:
-
-virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
 
 private:
 
@@ -943,7 +937,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1867.4543197495618"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="-3.2702896254381812">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="26.13205412456182">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -975,10 +969,6 @@ void performAICorrection(bool isGamePaused)
 void clearAIData()
 void setAIData(const std::vector&lt;AIData&gt;&amp; aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void raceStarted()
-
-protected:
-
-virtual void calculateSteering(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
 
 private:
 
@@ -1071,10 +1061,10 @@ Ogre::Vector3 dir</y:NodeLabel>
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="687.8424017241719" width="869.681870818436" x="6405.159064590782" y="-973.9212008620859"/>
+          <y:Geometry height="607.6943625855972" width="542.4107110025902" x="6568.794644498705" y="-933.8471812927986"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="821.693359375" x="23.99425572171822" y="11.144833674585925">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="36.781527376295344" y="15.17432973029861">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1090,8 +1080,6 @@ void initModel( lua_State * pipeline,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera, const std::string&amp; humanName, bool isHuman)
 
-virtual void processInternalTick(float timeStep, bool isRaceStarted){}
-
 void clear()override
 
 void setModelVelocity(const Ogre::Vector3&amp; linear, const Ogre::Vector3&amp; angular)
@@ -1106,10 +1094,6 @@ Ogre::Real getLapPosition()const override
 
 void setLastTimeOfUpdate(uint64_t lastTimeOfUpdate)
 uint64_t getLastTimeOfUpdate()const 
-
-protected:
-
-void applyDriveImpulses(const Ogre::FrameEvent &amp;evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)override{}
 
 private:
 

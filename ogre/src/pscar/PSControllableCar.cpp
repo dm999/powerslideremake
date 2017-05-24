@@ -483,7 +483,7 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 {
     processSounds(evt);
 
-    adjustWheelsFriction(processer, mBackLRollResistance, mBackRRollResistance);
+    adjustWheelsFriction(processer);
 
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
@@ -538,7 +538,7 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     }
 
 
-    calculateSteering(evt, isRaceStarted);
+    adjustFrontWheelsAngle(evt);
 
 
     Ogre::Quaternion rotDrive;
@@ -562,15 +562,40 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
 
 
-    applyDriveImpulses(evt, mBackLRollResistance, mBackRRollResistance, isRaceStarted);
-
     cleanWheelsCollisionsFlags();
 }
 
-void PSControllableCar::applyDriveImpulses(const Ogre::FrameEvent &evt, Ogre::Real backLRollResistance, Ogre::Real backRRollResistance, bool isRaceStarted)
+void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
 {
+    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
 
-
+    if (mSteeringLeft)
+    {
+        mSteering += mSteeringIncrement * spf;
+        if (mSteering > mSteeringMax)
+            mSteering = mSteeringMax;
+    }
+    else if (mSteeringRight)
+    {
+        mSteering -= mSteeringIncrement * spf;
+        if (mSteering < mSteeringMin)
+            mSteering = mSteeringMin;
+    }
+    else
+    {
+        if(mSteering < -mSteeringIncrement)
+        {
+            mSteering += mSteeringIncrement * spf;
+        }
+        else if(mSteering > mSteeringIncrement)
+        {
+            mSteering -= mSteeringIncrement * spf;
+        }
+        else
+        {
+            mSteering = 0.0f;
+        }
+    }
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)
@@ -604,7 +629,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
 }
 
 
-void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer, Ogre::Real& backLRollResistance, Ogre::Real& backRRollResistance)
+void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
 {
     Ogre::Real latitudeFriction;
     Ogre::Real longtitudeFriction;
@@ -626,7 +651,7 @@ void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer, Ogr
 
     latitudeFriction = processer.getLatitudeFriction(getBackLWheelColliderIndex());
     longtitudeFriction = processer.getLongtitudeFriction(getBackLWheelColliderIndex());
-    backLRollResistance = longtitudeFriction;
+    mBackLRollResistance = longtitudeFriction;
     anisotropicFriction.x = latitudeFriction;
     anisotropicFriction.y = longtitudeFriction;
     anisotropicFriction.z = longtitudeFriction;
@@ -634,7 +659,7 @@ void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer, Ogr
 
     latitudeFriction = processer.getLatitudeFriction(getBackRWheelColliderIndex());
     longtitudeFriction = processer.getLongtitudeFriction(getBackRWheelColliderIndex());
-    backRRollResistance = longtitudeFriction;
+    mBackRRollResistance = longtitudeFriction;
     anisotropicFriction.x = latitudeFriction;
     anisotropicFriction.y = longtitudeFriction;
     anisotropicFriction.z = longtitudeFriction;

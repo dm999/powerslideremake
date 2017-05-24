@@ -30,10 +30,10 @@
 
 namespace
 {
-    BaseRaceMode * pBaseRaceMode = NULL;
     //http://bulletphysics.org/mediawiki-1.5.8/index.php/Code_Snippets
-    void InternalTickCallback(btDynamicsWorld *world, btScalar timeStep)
+    void internalTickCallback(btDynamicsWorld *world, btScalar timeStep)
     {
+        BaseRaceMode * pBaseRaceMode = reinterpret_cast<BaseRaceMode *>(world->getWorldUserInfo());
         if(pBaseRaceMode)
             pBaseRaceMode->processInternalTick(timeStep);
     }
@@ -49,7 +49,6 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     ,mDetailsPanel(0)
 #endif
 {
-    pBaseRaceMode = this;
 }
 
 void BaseRaceMode::initData()
@@ -506,7 +505,7 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
     mWorld.reset(new OgreBulletDynamics::DynamicsWorld(mSceneMgr, bounds, gravityVector, true, true, 10000));
     mDebugDrawer.reset(new OgreBulletCollisions::DebugDrawer());
     mWorld->setDebugDrawer(mDebugDrawer.get());
-    mWorld->getBulletDynamicsWorld()->setInternalTickCallback(InternalTickCallback);
+    mWorld->getBulletDynamicsWorld()->setInternalTickCallback(internalTickCallback, this);
 
     Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("debugDrawer", Ogre::Vector3::ZERO);
     node->attachObject(static_cast<Ogre::SimpleRenderable *>(mDebugDrawer.get()));

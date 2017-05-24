@@ -34,10 +34,6 @@ public:
 
     bool isCollideChassis(const PSBaseCar& otherCar, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap)const;
 
-protected:
-
-    virtual void calculateSteering(const Ogre::FrameEvent &evt, bool isRaceStarted);
-
 private:
 
     float mSteeringAngleVelocity;
