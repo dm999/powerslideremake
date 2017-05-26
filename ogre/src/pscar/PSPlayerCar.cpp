@@ -15,7 +15,7 @@ PSPlayerCar::PSPlayerCar() :
 {
     mRotationIntensity.addPoint(-50.0f, 1.5f);
     mRotationIntensity.addPoint(0.0f, 0.0f);
-    mRotationIntensity.addPoint(1.0f, 1.0f);
+    mRotationIntensity.addPoint(20.0f, 1.0f);
 }
 
 void PSPlayerCar::initModel(    lua_State * pipeline, 
@@ -53,6 +53,8 @@ void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
 
     Ogre::Real projectedVel = getAlignedVelocity();
 
+    Ogre::Real rotationIntensity = 1.0f;
+
     if(projectedVel < 0.0f && mBrakeEnabled)
     {
         if (mSteeringLeft && checkFrontCollision())
@@ -68,11 +70,15 @@ void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
         if(!mSteeringLeft && !mSteeringRight) mSteeringAngleVelocity = 0.0f;
     }
     else
+    {
         processSteering(isRaceStarted);
+        rotationIntensity = mRotationIntensity.getVal(projectedVel);
+    }
 
     if(checkFrontCollision() && isRaceStarted)
     {
-        mCarChassis->setAngularVelocity(Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * spfFake);
+        //mCarChassis->setAngularVelocity(rot * Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * rotationIntensity * spfFake);
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(-mSteeringAngleVelocity * rotationIntensity * spfFake * 10.0f, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -15.0f));
     }
 }
 
@@ -163,8 +169,6 @@ void PSPlayerCar::processSteering(bool isRaceStarted)
             }
             else mSteeringAngleVelocity = 0.0f;
         }
-
-        if (!checkFrontCollision()) mSteeringAngleVelocity = 0.0f;
     }
 }
 

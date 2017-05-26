@@ -409,14 +409,16 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
     Ogre::Real projectedVel = getAlignedVelocity();
+    Ogre::Vector3 carForwardVector = getForwardAxis();
 
     Ogre::Real spfFake = 1.5f;
     Ogre::Real wheelsPushImpulse = mDriveImpulse.getVal(projectedVel) * spfFake;
+    if(projectedVel < 0.0f && mAccelEnabled)wheelsPushImpulse = mDriveImpulse.getVal(-projectedVel) * spfFake;
+
     Ogre::Real wheelsResistanceImpulse = mResistanceImpulse.getVal(projectedVel) * spfFake;
     Ogre::Real cockpitGroundSpoilerImpulse = mGroundSpoilerImpulse.getVal(projectedVel) * spfFake;
     Ogre::Real cockpitAirSpoilerImpulse = mAirSpoilerImpulse.getVal(projectedVel) * spfFake;
 
-    Ogre::Vector3 carForwardVector = getForwardAxis();
     Ogre::Real antiForwardProjY = Ogre::Vector3::NEGATIVE_UNIT_Y.dotProduct(carForwardVector);
     Ogre::Real carAntiSlopeCoefficient = 1.0f - antiForwardProjY;
 
