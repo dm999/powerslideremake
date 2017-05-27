@@ -4,6 +4,7 @@
 #include "tools/Conversions.h"
 #include "tools/Tools.h"
 #include "BaseApp.h"
+#include "tools/OgreTools.h"
 
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
@@ -17,7 +18,7 @@ CameraMan::CameraMan(Ogre::Camera* cam, OgreBulletDynamics::DynamicsWorld * worl
 
 void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::SceneNode * const target)
 {
-    Ogre::Vector3 cameraDisplacement(0, 14.0f, 20.0f);
+    Ogre::Vector3 cameraDisplacement(0.0f, 0.0f, 0.0f);
 
     if(mCamPositonType == CameraPosition_Bumper)
     {
@@ -26,46 +27,63 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
     }
     if(mCamPositonType == CameraPosition_ChassisA)
     {
-        cameraDisplacement.y = 12.0f;
+        cameraDisplacement.y = 5.0f;
+        cameraDisplacement.z = 24.0f;
     }
     if(mCamPositonType == CameraPosition_ChassisB)
     {
-        cameraDisplacement.z = 16.0f;
+        cameraDisplacement.y = 10.0f;
+        cameraDisplacement.z = 18.0f;
     }
     if(mCamPositonType == CameraPosition_ChassisC)
     {
-        cameraDisplacement.y = 16.0f;
+        cameraDisplacement.y = 9.0f;
+        cameraDisplacement.z = 24.0f;
     }
 
-    Ogre::Vector3 forwardAxis = carRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
-    //adjust camera according to the normals (pitch), velocity (yaw)
-    Ogre::Vector3 carTop = carRot * Ogre::Vector3::UNIT_Y;
-
-    Ogre::Degree chassisIncline = forwardAxis.angleBetween(Ogre::Vector3::UNIT_Y);
-    Ogre::Real chassisInclineDegrees = chassisIncline.valueDegrees();
-    chassisInclineDegrees -= 70.0f;
-
-    Ogre::Quaternion additionalRotPitch;
-    if(carTop.y < 0.0f) //  turn over
-        additionalRotPitch.FromAngleAxis(Ogre::Degree(-90.0f * carTop.y), Ogre::Vector3::UNIT_X);
-    else
-        additionalRotPitch.FromAngleAxis(Ogre::Degree(carTop.y * chassisInclineDegrees), Ogre::Vector3::UNIT_X);
-
-    Ogre::Quaternion additionalRotYaw;
-    additionalRotYaw.FromAngleAxis(Ogre::Degree(lateralVelocity / 20.0f), Ogre::Vector3::UNIT_Y);
 
     if(mCamPositonType != CameraPosition_Bumper)
     {
+        Ogre::Vector3 targetOffset(0.0f, 0.0f, 0.0f);
 
-        Ogre::Vector3 camOffset = carPos + carRot * additionalRotYaw * additionalRotPitch * cameraDisplacement;
-        const float prolongFactor = 1.2f;
-        Ogre::Vector3 camOffsetProlong = carPos + carRot * additionalRotYaw * additionalRotPitch * (cameraDisplacement * prolongFactor);
+        if(mCamPositonType == CameraPosition_ChassisA)
+        {
+            targetOffset = Ogre::Vector3(0.0f, 6.0f, 0.0f);
+        }
+        if(mCamPositonType == CameraPosition_ChassisB)
+        {
+            targetOffset = Ogre::Vector3(0.0f, 6.0f, 0.0f);
+        }
+        if(mCamPositonType == CameraPosition_ChassisC)
+        {
+            targetOffset = Ogre::Vector3(0.0f, 6.0f, 0.0f);
+        }
+
+        Ogre::Vector3 forwardAxis = carRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
+
+        Ogre::Quaternion additionalRotYaw;
+        additionalRotYaw.FromAngleAxis(Ogre::Degree(lateralVelocity / 20.0f), Ogre::Vector3::UNIT_Y);
+
+        Ogre::Quaternion camRot;
+        Ogre::Degree rot;
+
+        Ogre::Plane worldPlane(Ogre::Vector3::UNIT_Y, 0.0f);
+
+        Ogre::Vector3 projectedOnPlane = worldPlane.projectVector(forwardAxis);
+
+        rot = Ogre::Degree(GetSignedAngle(projectedOnPlane, Ogre::Vector3::NEGATIVE_UNIT_Z));
+        camRot.FromAngleAxis(rot, Ogre::Vector3::UNIT_Y);
+
+        Ogre::Vector3 camOffset = carPos + camRot * additionalRotYaw * cameraDisplacement;
 
         Ogre::Vector3 ray = camOffset - carPos;
 
+#if 1
         //perform collision correction
         {
+            const float prolongFactor = 1.2f;
+            Ogre::Vector3 camOffsetProlong = carPos + camRot * additionalRotYaw * (cameraDisplacement * prolongFactor);
             Ogre::Vector3 collisionPoint;
             bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint);
             if(isContactsHappen)
@@ -83,19 +101,8 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
                 ray = distanceFromCarToCollision * 0.9f;
             }
         }
+#endif
 
-
-
-        Ogre::Vector3 targetOffset(0.0f, 6.0f, 0.0f);
-
-        if(mCamPositonType == CameraPosition_ChassisB)
-        {
-            targetOffset = Ogre::Vector3::ZERO;
-        }
-        if(mCamPositonType == CameraPosition_ChassisC)
-        {
-            targetOffset = Ogre::Vector3 (0.0f, 6.0f, 0.0f);
-        }
 
         mCamera->setAutoTracking(true, target, targetOffset);
         mCamera->setOrientation(Ogre::Quaternion::IDENTITY);
