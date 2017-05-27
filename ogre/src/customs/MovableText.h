@@ -28,7 +28,7 @@ namespace Ogre {
 		String					mFontName;
 		String					mType;
 		String					mName;
-		String					mCaption;
+		DisplayString			mCaption;
 		HorizontalAlignment		mHorizontalAlignment;
 		VerticalAlignment		mVerticalAlignment;
  
@@ -58,7 +58,7 @@ namespace Ogre {
  
 		/******************************** public methods ******************************/
 	public:
-		MovableText(const String &name, const String &caption, const String &fontName = "BlueHighway-8", Real charHeight = 1.0, const ColourValue &color = ColourValue::White);
+		MovableText(const String &name, const DisplayString &caption, const String &fontName = "BlueHighway-8", Real charHeight = 1.0, const ColourValue &color = ColourValue::White);
 		virtual ~MovableText();
  
 		// Add to build on Shoggoth:
@@ -66,7 +66,7 @@ namespace Ogre {
  
 		// Set settings
 		void						setFontName(const String &fontName);
-		void						setCaption(const String &caption);
+		void						setCaption(const DisplayString &caption);
 		void						setColor(const ColourValue &color);
 		void						setCharacterHeight(Real height);
 		void						setSpaceWidth(Real width);
@@ -77,7 +77,7 @@ namespace Ogre {
  
 		// Get settings
 		const   String				&getFontName()	const {return mFontName;}
-		const   String				&getCaption()	const {return mCaption;}
+		const   DisplayString		&getCaption()	const {return mCaption;}
 		const   ColourValue			&getColor()		const {return mColor;}
  
 		Real						getCharacterHeight() const {return mCharHeight;}

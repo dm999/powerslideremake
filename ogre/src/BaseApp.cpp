@@ -45,6 +45,73 @@ namespace
 {
     lua_State * mPipeline = NULL;
     BaseApp * baseApp = NULL;
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    //https://github.com/MyGUI/mygui/blob/master/Common/Input/OIS/InputManager.cpp
+    MyGUI::Char translateWin32Text(MyGUI::KeyCode kc)
+    {
+        static WCHAR deadKey = 0;
+
+        BYTE keyState[256];
+        HKL  layout = GetKeyboardLayout(0);
+        if ( GetKeyboardState(keyState) == 0 )
+            return 0;
+
+        int code = *((int*)&kc);
+        unsigned int vk = MapVirtualKeyEx((UINT)code, 3, layout);
+        if ( vk == 0 )
+            return 0;
+
+        WCHAR buff[3] = { 0, 0, 0 };
+        int ascii = ToUnicodeEx(vk, (UINT)code, keyState, buff, 3, 0, layout);
+        if (ascii == 1 && deadKey != '\0' )
+        {
+            // A dead key is stored and we have just converted a character key
+            // Combine the two into a single character
+            WCHAR wcBuff[3] = { buff[0], deadKey, '\0' };
+            WCHAR out[3];
+
+            deadKey = '\0';
+            if (FoldStringW(MAP_PRECOMPOSED, (LPWSTR)wcBuff, 3, (LPWSTR)out, 3))
+                return out[0];
+        }
+        else if (ascii == 1)
+        {
+            // We have a single character
+            deadKey = '\0';
+            return buff[0];
+        }
+        else if (ascii == 2)
+        {
+            // Convert a non-combining diacritical mark into a combining diacritical mark
+            // Combining versions range from 0x300 to 0x36F; only 5 (for French) have been mapped below
+            // http://www.fileformat.info/info/unicode/block/combining_diacritical_marks/images.htm
+            switch (buff[0])
+            {
+            case 0x5E: // Circumflex accent:
+                deadKey = 0x302;
+                break;
+            case 0x60: // Grave accent:
+                deadKey = 0x300;
+                break;
+            case 0xA8: // Diaeresis:
+                deadKey = 0x308;
+                break;
+            case 0xB4: // Acute accent:
+                deadKey = 0x301;
+                break;
+            case 0xB8: // Cedilla:
+                deadKey = 0x327;
+                break;
+            default:
+                deadKey = buff[0];
+                break;
+            }
+        }
+
+        return 0;
+    }
+#endif
 }
 
 extern ContactAddedCallback gContactAddedCallback;
@@ -467,8 +534,14 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
     if(!mGameState.isGamePaused())
         mGameState.getPlayerCar().keyDown(arg.key);
 
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
+        MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), translateWin32Text(MyGUI::KeyCode::Enum(arg.key)));
+#else
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
         MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
+#endif
+    
 }
 
 void BaseApp::keyUp(const OIS::KeyEvent &arg )

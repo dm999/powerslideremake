@@ -9,6 +9,10 @@
 *	- See "Notes" on: http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText
 */
  
+
+//unicode support added from
+//http://www.ogre3d.org/forums/viewtopic.php?f=2&t=42630
+
 #include "../pcheader.h"
 
 #include "MovableText.h"
@@ -17,8 +21,13 @@ using namespace Ogre;
  
 #define POS_TEX_BINDING    0
 #define COLOUR_BINDING     1
+#define UNICODE_NEL 0x0085
+#define UNICODE_CR 0x000D
+#define UNICODE_LF 0x000A
+#define UNICODE_SPACE 0x0020
+#define UNICODE_ZERO 0x0030
  
-MovableText::MovableText(const String &name, const String &caption, const String &fontName, Real charHeight, const ColourValue &color)
+MovableText::MovableText(const String &name, const DisplayString &caption, const String &fontName, Real charHeight, const ColourValue &color)
 : mpCam(NULL)
 , mpWin(NULL)
 , mpFont(NULL)
@@ -89,7 +98,7 @@ void MovableText::setFontName(const String &fontName)
     }
 }
  
-void MovableText::setCaption(const String &caption)
+void MovableText::setCaption(const DisplayString &caption)
 {
     if (caption != mCaption)
     {
@@ -159,14 +168,13 @@ void MovableText::showOnTop(bool show)
         mpMaterial->setDepthWriteEnabled(mOnTop);
     }
 }
- 
 void MovableText::_setupGeometry()
 {
     assert(mpFont);
     assert(!mpMaterial.isNull());
- 
+
     unsigned int vertexCount = static_cast<unsigned int>(mCaption.size() * 6);
- 
+
     if (mRenderOp.vertexData)
     {
         // Removed this test as it causes problems when replacing a caption
@@ -179,66 +187,66 @@ void MovableText::_setupGeometry()
             mUpdateColors = true;
         }
     }
- 
+
     if (!mRenderOp.vertexData)
         mRenderOp.vertexData = new VertexData();
- 
+
     mRenderOp.indexData = 0;
     mRenderOp.vertexData->vertexStart = 0;
     mRenderOp.vertexData->vertexCount = vertexCount;
     mRenderOp.operationType = RenderOperation::OT_TRIANGLE_LIST; 
     mRenderOp.useIndexes = false; 
- 
+
     VertexDeclaration  *decl = mRenderOp.vertexData->vertexDeclaration;
     VertexBufferBinding   *bind = mRenderOp.vertexData->vertexBufferBinding;
     size_t offset = 0;
- 
+
     // create/bind positions/tex.ccord. buffer
     if (!decl->findElementBySemantic(VES_POSITION))
         decl->addElement(POS_TEX_BINDING, offset, VET_FLOAT3, VES_POSITION);
- 
+
     offset += VertexElement::getTypeSize(VET_FLOAT3);
- 
+
     if (!decl->findElementBySemantic(VES_TEXTURE_COORDINATES))
         decl->addElement(POS_TEX_BINDING, offset, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 0);
- 
+
     HardwareVertexBufferSharedPtr ptbuf = HardwareBufferManager::getSingleton().createVertexBuffer(decl->getVertexSize(POS_TEX_BINDING),
         mRenderOp.vertexData->vertexCount,
         HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
     bind->setBinding(POS_TEX_BINDING, ptbuf);
- 
+
     // Colours - store these in a separate buffer because they change less often
     if (!decl->findElementBySemantic(VES_DIFFUSE))
         decl->addElement(COLOUR_BINDING, 0, VET_COLOUR, VES_DIFFUSE);
- 
+
     HardwareVertexBufferSharedPtr cbuf = HardwareBufferManager::getSingleton().createVertexBuffer(decl->getVertexSize(COLOUR_BINDING),
         mRenderOp.vertexData->vertexCount,
         HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY);
     bind->setBinding(COLOUR_BINDING, cbuf);
- 
-    size_t charlen = mCaption.size();
+
+//    size_t charlen = mCaption.size();
     float *pPCBuff = static_cast<float*>(ptbuf->lock(HardwareBuffer::HBL_DISCARD));
- 
+
     float largestWidth = 0;
     float left = 0 * 2.0 - 1.0;
     float top = -((0 * 2.0) - 1.0);
- 
+
     Real spaceWidth = mSpaceWidth;
     // Derive space width from a capital A
     if (spaceWidth == 0)
-        spaceWidth = mpFont->getGlyphAspectRatio('A') * mCharHeight * 2.0f;
- 
+        spaceWidth = mpFont->getGlyphAspectRatio(UNICODE_ZERO) * mCharHeight * 2.0f;
+
     // for calculation of AABB
     Ogre::Vector3 min, max, currPos;
     Ogre::Real maxSquaredRadius;
     bool first = true;
- 
+
     // Use iterator
-    String::iterator i, iend;
+    DisplayString::iterator i, iend;
     iend = mCaption.end();
     bool newLine = true;
     Real len = 0.0f;
- 
+
     Real verticalOffset = 0;
     switch (mVerticalAlignment)
     {
@@ -246,67 +254,94 @@ void MovableText::_setupGeometry()
         verticalOffset = mCharHeight;
         break;
     case MovableText::V_CENTER:
-        verticalOffset = 0.5f*mCharHeight;
+        verticalOffset = 0.5f * mCharHeight;
         break;
     case MovableText::V_BELOW:
         verticalOffset = 0;
         break;
     }
+
     // Raise the first line of the caption
     top += verticalOffset;
     for (i = mCaption.begin(); i != iend; ++i)
-    {
-        if (*i == '\n')
+    {      
+      Font::CodePoint character = OGRE_DEREF_DISPLAYSTRING_ITERATOR(i);
+      if (character == UNICODE_CR
+        || character == UNICODE_NEL
+        || character == UNICODE_LF)
             top += verticalOffset * 2.0f;
     }
- 
+
     for (i = mCaption.begin(); i != iend; ++i)
     {
         if (newLine)
         {
             len = 0.0f;
-            for (String::iterator j = i; j != iend && *j != '\n'; j++)
+            for (DisplayString::iterator j = i; j != iend; j++)
             {
-                if (*j == ' ')
-                    len += spaceWidth;
-                else 
-                    len += mpFont->getGlyphAspectRatio((unsigned char)*j) * mCharHeight * 2.0f;
+              Font::CodePoint character = OGRE_DEREF_DISPLAYSTRING_ITERATOR(j);
+                if (character == UNICODE_CR
+                || character == UNICODE_NEL
+                || character == UNICODE_LF)
+              {
+                break;
+              }
+              else if (character == UNICODE_SPACE) // space
+              {
+                len += mSpaceWidth;
+              }
+              else
+              {
+                len += mpFont->getGlyphAspectRatio(character) * mCharHeight * 2.0f;
+              }
             }
             newLine = false;
         }
- 
-        if (*i == '\n')
+        
+      Font::CodePoint character = OGRE_DEREF_DISPLAYSTRING_ITERATOR(i);
+      if (character == UNICODE_CR
+        || character == UNICODE_NEL
+        || character == UNICODE_LF)
+      {
+        left = 0 * 2.0 - 1.0;
+        top -= mCharHeight * 2.0f;
+        newLine = true;
+        // Also reduce tri count
+        mRenderOp.vertexData->vertexCount -= 6;
+
+        // consume CR/LF in one
+        if (character == UNICODE_CR)
         {
-            left = 0 * 2.0 - 1.0;
-            top -= mCharHeight * 2.0f;
-            newLine = true;
- 
-            // Bugfix by Wladimir Lukutin - thanks :)
+          DisplayString::iterator peeki = i;
+          peeki++;
+          if (peeki != iend && OGRE_DEREF_DISPLAYSTRING_ITERATOR(peeki) == UNICODE_LF)
+          {
+            i = peeki; // skip both as one newline
             // Also reduce tri count
             mRenderOp.vertexData->vertexCount -= 6;
-            // Bugfix end.
- 
-            continue;
+          }
+
         }
- 
-        if (*i == ' ')
-        {
-            // Just leave a gap, no tris
-            left += spaceWidth;
-            // Also reduce tri count
-            mRenderOp.vertexData->vertexCount -= 6;
-            continue;
-        }
- 
-        Real horiz_height = mpFont->getGlyphAspectRatio((unsigned char)*i);
+        continue;
+      }
+      else if (character == UNICODE_SPACE) // space
+      {
+        // Just leave a gap, no tris
+        left += mSpaceWidth;
+        // Also reduce tri count
+        mRenderOp.vertexData->vertexCount -= 6;
+        continue;
+      }
+
+        Real horiz_height = mpFont->getGlyphAspectRatio(character);
         Real u1, u2, v1, v2; 
         Ogre::Font::UVRect utmp;
-        utmp = mpFont->getGlyphTexCoords((unsigned char)*i);
+        utmp = mpFont->getGlyphTexCoords(character);
         u1 = utmp.left;
         u2 = utmp.right;
         v1 = utmp.top;
         v2 = utmp.bottom;
- 
+
         // each vert is (x, y, z, u, v)
         //-------------------------------------------------------------------------------------
         // First tri
@@ -320,7 +355,7 @@ void MovableText::_setupGeometry()
         *pPCBuff++ = -1.0;
         *pPCBuff++ = u1;
         *pPCBuff++ = v1;
- 
+
         // Deal with bounds
         if(mHorizontalAlignment == MovableText::H_LEFT)
             currPos = Ogre::Vector3(left, top, -1.0);
@@ -338,9 +373,9 @@ void MovableText::_setupGeometry()
             max.makeCeil(currPos);
             maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
         }
- 
+
         top -= mCharHeight * 2.0f;
- 
+
         // Bottom left
         if(mHorizontalAlignment == MovableText::H_LEFT)
             *pPCBuff++ = left;
@@ -350,7 +385,7 @@ void MovableText::_setupGeometry()
         *pPCBuff++ = -1.0;
         *pPCBuff++ = u1;
         *pPCBuff++ = v2;
- 
+
         // Deal with bounds
         if(mHorizontalAlignment == MovableText::H_LEFT)
             currPos = Ogre::Vector3(left, top, -1.0);
@@ -359,10 +394,10 @@ void MovableText::_setupGeometry()
         min.makeFloor(currPos);
         max.makeCeil(currPos);
         maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
- 
+
         top += mCharHeight * 2.0f;
         left += horiz_height * mCharHeight * 2.0f;
- 
+
         // Top right
         if(mHorizontalAlignment == MovableText::H_LEFT)
             *pPCBuff++ = left;
@@ -373,7 +408,7 @@ void MovableText::_setupGeometry()
         *pPCBuff++ = u2;
         *pPCBuff++ = v1;
         //-------------------------------------------------------------------------------------
- 
+
         // Deal with bounds
         if(mHorizontalAlignment == MovableText::H_LEFT)
             currPos = Ogre::Vector3(left, top, -1.0);
@@ -382,7 +417,7 @@ void MovableText::_setupGeometry()
         min.makeFloor(currPos);
         max.makeCeil(currPos);
         maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
- 
+
         //-------------------------------------------------------------------------------------
         // Second tri
         //
@@ -392,18 +427,18 @@ void MovableText::_setupGeometry()
         else
             *pPCBuff++ = left - (len / 2);
         *pPCBuff++ = top;
-        *pPCBuff++ = -1.0f;
+        *pPCBuff++ = -1.0;
         *pPCBuff++ = u2;
         *pPCBuff++ = v1;
- 
-        currPos = Ogre::Vector3(left, top, -1.0f);
+
+        currPos = Ogre::Vector3(left, top, -1.0);
         min.makeFloor(currPos);
         max.makeCeil(currPos);
         maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
- 
+
         top -= mCharHeight * 2.0f;
         left -= horiz_height  * mCharHeight * 2.0f;
- 
+
         // Bottom left (again)
         if(mHorizontalAlignment == MovableText::H_LEFT)
             *pPCBuff++ = left;
@@ -413,14 +448,14 @@ void MovableText::_setupGeometry()
         *pPCBuff++ = -1.0;
         *pPCBuff++ = u1;
         *pPCBuff++ = v2;
- 
+
         currPos = Ogre::Vector3(left, top, -1.0);
         min.makeFloor(currPos);
         max.makeCeil(currPos);
         maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
- 
+
         left += horiz_height  * mCharHeight * 2.0f;
- 
+
         // Bottom right
         if(mHorizontalAlignment == MovableText::H_LEFT)
             *pPCBuff++ = left;
@@ -431,32 +466,33 @@ void MovableText::_setupGeometry()
         *pPCBuff++ = u2;
         *pPCBuff++ = v2;
         //-------------------------------------------------------------------------------------
- 
-        currPos = Ogre::Vector3(left, top, -1.0f);
+
+        currPos = Ogre::Vector3(left, top, -1.0);
         min.makeFloor(currPos);
         max.makeCeil(currPos);
         maxSquaredRadius = std::max(maxSquaredRadius, currPos.squaredLength());
- 
+
         // Go back up with top
         top += mCharHeight * 2.0f;
- 
+
         float currentWidth = (left + 1)/2 - 0;
         if (currentWidth > largestWidth)
             largestWidth = currentWidth;
     }
- 
+
     // Unlock vertex buffer
     ptbuf->unlock();
- 
+
     // update AABB/Sphere radius
     mAABB = Ogre::AxisAlignedBox(min, max);
     mRadius = Ogre::Math::Sqrt(maxSquaredRadius);
- 
+
     if (mUpdateColors)
         this->_updateColors();
- 
+
     mNeedUpdate = false;
 }
+
  
 void MovableText::_updateColors(void)
 {
