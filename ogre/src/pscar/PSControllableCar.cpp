@@ -56,9 +56,6 @@ PSControllableCar::PSControllableCar() :
     mGroundSpoilerImpulse.addPoint(0.0f, 0.0f);
     mGroundSpoilerImpulse.addPoint(200.0f, 15.0f);
 
-    mAirSpoilerImpulse.addPoint(0.0f, 0.0f);
-    mAirSpoilerImpulse.addPoint(200.0f, 50.0f);
-
     mWheelsRotationByEngineAddition.addPoint(-50.0f, 20.0f);
     mWheelsRotationByEngineAddition.addPoint(0.0f, 200.0f);
     mWheelsRotationByEngineAddition.addPoint(50.0f, 20.0f);
@@ -225,6 +222,11 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mParticleNodeWheelBackR = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
     mParticleNodeWheelBackR->attachObject(mWheelBackRParticle);
 
+    mAirSpoilerImpulse.addPoint(0.0f, 0.0f);
+    if(isAI)
+        mAirSpoilerImpulse.addPoint(200.0f, 50.0f);
+    else
+        mAirSpoilerImpulse.addPoint(150.0f, 80.0f);
 }
 
 void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp, 
@@ -476,7 +478,7 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
     }
 
     if(!checkRearCollision() && !checkFrontCollision())
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
+        mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -0.5f));
     else
         mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
 }
