@@ -477,6 +477,13 @@ void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
         const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
         std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
         mModeContext.getGameState().setRaceParameters(availTracks[index], mModeContext.getGameState().getAIStrength());
+        if(
+            mModeContext.getGameState().getTrackName() == "stunt track"         ||
+            mModeContext.getGameState().getTrackName() == "luge track"          ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
+            )
+            mModeContext.getGameState().setAICount(0);
     }
 
     if(sender == mWidgetCar)
@@ -512,6 +519,13 @@ void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     if(sender == mWidgetAICount)
     {
         mModeContext.getGameState().setAICount(index + 3);
+        if(
+            mModeContext.getGameState().getTrackName() == "stunt track"         ||
+            mModeContext.getGameState().getTrackName() == "luge track"          ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
+            )
+            mModeContext.getGameState().setAICount(0);
     }
 
     if(sender == mWidgetAIStrength)

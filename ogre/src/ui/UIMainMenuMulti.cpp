@@ -330,6 +330,13 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
         std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
         mModeContext.getGameState().setRaceParameters(availTracks[index], mModeContext.getGameState().getAIStrength());
         mWidgetLapsCount->setIndexSelected(mModeContext.getGameState().getLapsCount() - 1);
+        if(
+            mModeContext.getGameState().getTrackName() == "stunt track"         ||
+            mModeContext.getGameState().getTrackName() == "luge track"          ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
+            )
+            mModeContext.getGameState().setAICount(0);
     }
 
     if(sender == mWidgetCar)
@@ -365,6 +372,13 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     if(sender == mWidgetAICount)
     {
         mModeContext.getGameState().setAICount(index);
+        if(
+            mModeContext.getGameState().getTrackName() == "stunt track"         ||
+            mModeContext.getGameState().getTrackName() == "luge track"          ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
+            )
+            mModeContext.getGameState().setAICount(0);
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(index);
     }
 
