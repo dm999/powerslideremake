@@ -13,6 +13,10 @@
 
 #if defined(__ANDROID__)
     #include <jni.h>
+    #include <android/log.h>
+
+    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 
     BaseApp * base = NULL;
     bool gInit = false;
@@ -39,6 +43,12 @@
             catch( Ogre::Exception& e )
             {
                 std::cerr << "An exception has occured: " << e.getFullDescription().c_str() << std::endl;
+                LOGE("An exception has occured: %s", e.getFullDescription().c_str());
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "An exception has occured: " << e.what() << std::endl;
+                LOGE("An exception has occured: %s", e.what());
             }
         }
 
@@ -68,6 +78,12 @@
                 catch( Ogre::Exception& e )
                 {
                     std::cerr << "An exception has occured: " << e.getFullDescription().c_str() << std::endl;
+                    LOGE("An exception has occured: %s", e.getFullDescription().c_str());
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << "An exception has occured: " << e.what() << std::endl;
+                    LOGE("An exception has occured: %s", e.what());
                 }
             }
         }

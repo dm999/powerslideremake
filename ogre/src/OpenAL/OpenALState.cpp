@@ -1,13 +1,6 @@
 
 #include "OpenALState.h"
 
-#if defined(__ANDROID__)
-    #include <android/log.h>
-
-    #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
-    #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
-#endif
-
 OpenALState::OpenALState() :
     mDevice(0),
     mContext(0)

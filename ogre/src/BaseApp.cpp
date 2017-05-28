@@ -32,8 +32,8 @@
     #include <android/asset_manager_jni.h>
     #include <android/log.h>
 
-    #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
-    #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 
     #include "Android/OgreAndroidEGLWindow.h"
     #include "Android/OgreAPKFileSystemArchive.h"
@@ -353,7 +353,7 @@ bool BaseApp::setup()
     mPlatform.reset(new MyGUI::OgrePlatform());
     mGUI.reset(new MyGUI::Gui());
 
-    mGameState.initOriginalData("./");
+    mGameState.initOriginalData();
     if(!mGameState.isOriginalDataInited())
     {
         OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
@@ -829,7 +829,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before create scene"); 
 
-            mGameState.initOriginalData("./");
+            mGameState.initOriginalData();
             if(!mGameState.isOriginalDataInited())
             {
                 OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");

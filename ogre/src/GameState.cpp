@@ -35,7 +35,7 @@ GameState::~GameState()
 {
 }
 
-void GameState::initOriginalData(const std::string& originalPathCommon)
+void GameState::initOriginalData()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
 

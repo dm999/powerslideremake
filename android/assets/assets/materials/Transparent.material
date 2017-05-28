@@ -1,0 +1,30 @@
+fragment_program Test/FPTransparent glsles
+{
+    source TransparentFrag.glsl
+}
+
+vertex_program Test/VPTransparent glsles
+{
+    source TransparentVert.glsl
+}
+
+material Test/Transparent
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            depth_write off
+            scene_blend alpha_blend
+
+            fragment_program_ref Test/FPTransparent
+            {
+            }
+            vertex_program_ref Test/VPTransparent
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+fragment_program Test/FPPointSimpleShadowSoftArray glsles
+{
+    source FragSimpleShadowSoftArray.glsl
+}
+
+vertex_program Test/VPPointSimpleShadowSoftArray glsles
+{
+    source VertSimpleShadowSoftArray.glsl
+}
+
+material Test/DiffuseSimpleShadowSoftArray
+{
+    receive_shadows off
+
+    technique
+    {
+        pass
+        {
+            
+            ambient 0.4 0.4 0.4 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 10.0
+
+            fragment_program_ref Test/FPPointSimpleShadowSoftArray
+            {
+                param_named diffuseMap int 0
+                param_named shadowMap int 1
+
+                param_named_auto lightAmbient AMBIENT_LIGHT_COLOUR 0
+                param_named_auto matAmbient surface_ambient_colour
+                
+                param_named_auto textureSize texture_size 1
+            }
+            vertex_program_ref Test/VPPointSimpleShadowSoftArray
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto model world_matrix
+                param_named_auto texturematrix texture_matrix 0
+                param_named_auto texviewproj texture_viewproj_matrix 0
+            }
+            
+            texture_unit
+            {
+                //tex_address_mode clamp
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+            
+            texture_unit
+            {
+                content_type shadow
+                tex_address_mode clamp
+                filtering none
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+fragment_program Test/FPDiffuseFog glsles
+{
+    source DiffuseFragFog.glsl
+}
+
+vertex_program Test/VPDiffuse glsles
+{
+    source DiffuseVert.glsl
+}
+
+material Test/DiffuseFog
+{
+    receive_shadows off
+
+    technique
+    {
+        pass
+        {
+            
+            ambient 0.4 0.4 0.4 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 10.0
+
+            fragment_program_ref Test/FPDiffuseFog
+            {
+                param_named diffuseMap int 0
+                
+                param_named_auto fogColor fog_colour
+                param_named_auto fogParams fog_params
+            }
+            vertex_program_ref Test/VPDiffuse
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+
+                param_named_auto texturematrix texture_matrix 0
+            }
+            
+            texture_unit
+            {
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+        }
+    }
+}

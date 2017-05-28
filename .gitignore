@@ -5,7 +5,7 @@
 /**/*.so
 /*.exe
 /*.bat
-/*.pf
+/**/*.pf
 /android/bin
 /android/gen
 /android/libs
@@ -15,3 +15,4 @@
 /multislider/server/project/project
 /multislider/server/project/target
 /multislider/server/target
+/android/local.properties
