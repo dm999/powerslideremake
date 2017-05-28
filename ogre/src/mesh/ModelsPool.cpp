@@ -32,8 +32,8 @@ void ModelsPool::initModels(Ogre::SceneManager* sceneMgr, const GameState& gameS
 
 void ModelsPool::loadArrow(const PFLoader& pfloader)
 {
-    FILE * fileToLoad = pfloader.getFile("data", "arrow.de2");
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfloader.getFile("data", "arrow.de2");
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         std::vector<MSHData> arrowParts;
         bool loadResult = DE2Loader().load(arrowParts, fileToLoad);
@@ -57,15 +57,15 @@ void ModelsPool::loadArrow(const PFLoader& pfloader)
             mArrowModel->setMaterialName("Test/ArrowMaterial");
             mArrowModel->setCastShadows(false);
         }
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false && "No arrow DE2 file");}
 }
 
 void ModelsPool::loadVehicle(const PFLoader& pfloader, vehicleModel& vehicle, const std::string& path, const std::string& fileName)
 {
-    FILE * fileToLoad = pfloader.getFile(path, fileName);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfloader.getFile(path, fileName);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         std::vector<MSHData> vehicleParts;
         bool loadResult = DE2Loader().load(vehicleParts, fileToLoad);
@@ -79,7 +79,7 @@ void ModelsPool::loadVehicle(const PFLoader& pfloader, vehicleModel& vehicle, co
                 AddjustNormals(vehicle.mVehicleModel[4 - q], Ogre::Math::Cos(Ogre::Degree(80.0f).valueRadians()));
             }
         }
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false && "No vehicle DE2 file");}
 }

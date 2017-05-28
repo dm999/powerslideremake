@@ -10,13 +10,13 @@ void PHYLoader::load(GameState& gameState) const
 
     for(int q = 0; q < (gameState.getMaxAI() + 1); ++q)
     {
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
-        if(fileToLoad)
+        Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
+        if(fileToLoad.get() && fileToLoad->isReadable())
         {
             typedef unsigned int DWORD;
 
             DWORD something;
-            fread(&something, 4, 1, fileToLoad);
+            fileToLoad->read(&something, 4);
 
             float rotX[3];
             float rotY[3];
@@ -36,17 +36,17 @@ void PHYLoader::load(GameState& gameState) const
 
             gameState.getTrackPositions().push_back(transform);
 
-            fclose(fileToLoad);
+            fileToLoad->close();
         }
         else {assert(false && "No PHY file");}
     }
 }
 
-void PHYLoader::loadVector(FILE * f, float data[3]) const
+void PHYLoader::loadVector(const Ogre::DataStreamPtr& stream, float data[3]) const
 {
-    fread(&data[0], 4, 1, f);
-    fread(&data[1], 4, 1, f);
-    fread(&data[2], 4, 1, f);
+    stream->read(&data[0], 4);
+    stream->read(&data[1], 4);
+    stream->read(&data[2], 4);
 
     //fprintf(ff, "%10.4f %10.4f %10.4f\n", data[0], data[1], data[2]);
 }

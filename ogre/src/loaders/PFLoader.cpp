@@ -7,39 +7,35 @@
 #include "../tools/Tools.h"
 
 PFLoader::PFLoader()
-    : mPath("."), mFileName("data.pf")
-{
-    mIsPathCorrect = checkPathCorrect(mPath, mFileName);
-}
+    : mFileName("data.pf")
+{ }
 
-bool PFLoader::init(const std::string& path, const std::string& file)
+bool PFLoader::init(const std::string& file)
 {
     bool res = false;
 
-    mPath = path;
     mFileName = file;
-    mIsPathCorrect = checkPathCorrect(path, file);
 
-    if(mIsPathCorrect)
+    Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
+
+    if(stream.get() && stream->isReadable())
     {
+
         fileSystem.clear();
 
         //read file system
-        std::string dataPF = mPath + "/" + mFileName;
-        FILE * f = fopen(dataPF.c_str(), "rb");
-        if(f)
         {
             res = true;
 
-            DWORD Size,From;
+            DWORD From;
             DWORD ElemCount;
+            size_t Size;
 
-            fseek(f,0,SEEK_END);
-            Size=ftell(f);
-            fseek(f,-4,SEEK_CUR);
-            fread(&From,4,1,f);
-            fseek(f,From,0);
-            fread(&ElemCount,4,1,f);
+            Size = stream->size();
+            stream->seek(Size - 4);
+            stream->read(&From,4);
+            stream->seek(From);
+            stream->read(&ElemCount,4);
 
             DWORD FilePos=From+4;
 
@@ -51,17 +47,17 @@ bool PFLoader::init(const std::string& path, const std::string& file)
 
                 DWORD Next,F_F,Offset,Length,Smthing;
 
-                std::string itemName = readString(f, FilePos);
+                std::string itemName = readString(stream, FilePos);
 
-                fread(&Next,4,1,f);
-                fread(&F_F,4,1,f);
+                stream->read(&Next,4);
+                stream->read(&F_F,4);
                 FilePos+=8;
                 if(F_F==0xffffffff)//file
                 {
                     FilePos+=10;
-                    fread(&Offset,4,1,f);
-                    fread(&Length,4,1,f);
-                    fread(&Smthing,2,1,f);
+                    stream->read(&Offset,4);
+                    stream->read(&Length,4);
+                    stream->read(&Smthing,2);
                     fileSystem.push_back(PF::PackedFileItem(itemName,Next,Offset,Length));
                 }
                 else                // folder
@@ -70,50 +66,34 @@ bool PFLoader::init(const std::string& path, const std::string& file)
                 }
             }
 
-            fclose(f);
         }
+
+        stream->close();
     }
 
     return res;
 }
 
-bool PFLoader::checkPathCorrect(const std::string& path, const std::string& file) const
+Ogre::DataStreamPtr PFLoader::getFile(const std::string& relativeDir, const std::string& file) const
 {
-    bool res = false;
+    Ogre::DataStreamPtr ret;
 
-    std::string dataPF = path + "/" + file;
-
-    FILE * f = fopen(dataPF.c_str(), "rb");
-    if(f)
+    if(!fileSystem.empty())
     {
-        fclose(f);
-        res = true;
-    }
-
-    return res;
-}
-
-FILE * PFLoader::getFile(const std::string& relativeDir, const std::string& file) const
-{
-    FILE * ret = NULL;
-
-    if(mIsPathCorrect && !fileSystem.empty())
-    {
-        std::string dataPF = mPath + "/" + mFileName;
-        ret = fopen(dataPF.c_str(), "rb");
-        if(ret)
+        ret = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
+        if(ret.get() && ret->isReadable())
         {
             //find file offset
             size_t fileSize;
             size_t offset = findFile(relativeDir, file, fileSize);
             if(offset != 0)
             {
-                fseek(ret, offset, SEEK_SET);
+                ret->seek(offset);
             }
             else
             {
-                fclose(ret);
-                ret = NULL;
+                ret->close();
+                ret = Ogre::DataStreamPtr();
             }
         }
     }
@@ -125,7 +105,7 @@ size_t PFLoader::getFileSize(const std::string& relativeDir, const std::string& 
 {
     size_t ret = 0;
 
-    if(mIsPathCorrect && !fileSystem.empty())
+    if(!fileSystem.empty())
     {
         //find file size
         size_t fileSize;
@@ -196,7 +176,7 @@ size_t PFLoader::findFile(const std::string& relativeDir, const std::string& fil
     return res;
 }
 
-std::string PFLoader::readString(FILE * f, DWORD& FilePos)
+std::string PFLoader::readString(const Ogre::DataStreamPtr& stream, DWORD& FilePos)
 {
     std::string ret = "";
     char ch='!';
@@ -204,7 +184,7 @@ std::string PFLoader::readString(FILE * f, DWORD& FilePos)
     DWORD charpos=0;
     while(ch)
     {
-        fread(&ch,1,1,f);
+        stream->read(&ch,1);
         buffer[charpos] = ch;
         charpos++;
         FilePos++;

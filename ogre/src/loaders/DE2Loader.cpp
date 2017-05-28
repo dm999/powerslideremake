@@ -40,7 +40,7 @@ namespace DE2
         Data_TerranPath.clear();
     }
 
-    void Find_xV4(FILE *f, int count)
+    void Find_xV4(const Ogre::DataStreamPtr& stream, int count)
     {
         typedef unsigned char BYTE;
         typedef unsigned int DWORD;
@@ -50,13 +50,13 @@ namespace DE2
         DWORD xV4=0x12345678;//305419896
         while(ch!=count)
         {
-            fread(&temp,4,1,f);
+            stream->read(&temp,4);
             if(temp==xV4) ch++;
-            else fseek(f,-3,SEEK_CUR);
+            else stream->seek(stream->tell() - 3 );
         }
     }
 
-    int loadTriInfo(DE2_File & DE2, int partIndex, FILE * f, int curTri)
+    int loadTriInfo(DE2_File & DE2, int partIndex, const Ogre::DataStreamPtr& stream, int curTri)
     {
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
@@ -72,26 +72,26 @@ namespace DE2
         BYTE ss_7;
         WORD subCount;
 
-        fread(&ss_1,1,4,f);
-        fread(&ss_2,1,1,f);
-        fread(&ss_3,1,1,f);
-        fread(&ss_4,1,1,f);
-        fread(&bright,1,1,f);
-        fread(&ss_6,1,1,f);
-        fread(&ss_7,1,1,f);
-        fread(&subCount,1,2,f);
+        stream->read(&ss_1,4);
+        stream->read(&ss_2,1);
+        stream->read(&ss_3,1);
+        stream->read(&ss_4,1);
+        stream->read(&bright,1);
+        stream->read(&ss_6,1);
+        stream->read(&ss_7,1);
+        stream->read(&subCount,2);
 
         int totalsum = 0;
 
         if(subCount)
         {
             for(int q = 0; q < subCount; ++q)
-                totalsum += loadTriInfo(DE2, partIndex, f, q);
+                totalsum += loadTriInfo(DE2, partIndex, stream, q);
         }
         else
         {
             WORD triIndex;
-            fread(&triIndex,1,2,f);
+            stream->read(&triIndex,2);
 
             int vertIndexA = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].v0;
             int vertIndexB = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].v1;
@@ -107,50 +107,50 @@ namespace DE2
         return totalsum;
     }
 
-    void readDE2(FILE * f, DE2_File & DataDE2)
+    void readDE2(const Ogre::DataStreamPtr& stream, DE2_File & DataDE2)
     {
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
         typedef unsigned int DWORD;
 
-        if(f)
+        if(stream.get() && stream->isReadable())
         {
             BYTE ch=1;
             DWORD temp;
 
             while(ch!=0)
-            fread(&ch,1,1,f);
-            fread(&temp,4,1,f);
+            stream->read(&ch,1);
+            stream->read(&temp,4);
 
-            fread(&DataDE2.Vertexes,4,1,f);
+            stream->read(&DataDE2.Vertexes,4);
             DataDE2.Data_Vertexes.clear();
             DataDE2.Data_Vertexes.resize(DataDE2.Vertexes);
 
             for(DWORD q=0;q<DataDE2.Vertexes;q++)
             {
-                fread(&DataDE2.Data_Vertexes[q].x,1,4,f);
-                fread(&DataDE2.Data_Vertexes[q].y,1,4,f);
-                fread(&DataDE2.Data_Vertexes[q].z,1,4,f);
+                stream->read(&DataDE2.Data_Vertexes[q].x,4);
+                stream->read(&DataDE2.Data_Vertexes[q].y,4);
+                stream->read(&DataDE2.Data_Vertexes[q].z,4);
             }
 
             //Decal TexVerts
-            Find_xV4(f,1);
-            fread(&DataDE2.TexCoordsDecal,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&DataDE2.TexCoordsDecal,4);
             if(DataDE2.TexCoordsDecal!=0)
             {
                 DataDE2.Data_Texture_Coord_Decal.clear();
                 DataDE2.Data_Texture_Coord_Decal.resize(DataDE2.TexCoordsDecal);
                 for(DWORD q=0;q<DataDE2.TexCoordsDecal;q++)
                 {
-                    fread(&DataDE2.Data_Texture_Coord_Decal[q].uv,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord_Decal[q].uw,1,4,f);
+                    stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uv,4);
+                    stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uw,4);
                     DataDE2.Data_Texture_Coord_Decal[q].uz = 0.0f;
                 }
             }
 
             //Prelit TexVerts
-            Find_xV4(f,1);
-            fread(&DataDE2.TexCoords,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&DataDE2.TexCoords,4);
             if(DataDE2.TexCoords==0)
             {
                 DataDE2.TexCoorTypeOne=false;
@@ -163,9 +163,9 @@ namespace DE2
 
                 for(DWORD q=0;q<DataDE2.TexCoords;q++)
                 {
-                    fread(&DataDE2.Data_Texture_Coord[q].uv,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].uw,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].uz,1,4,f);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uv,4);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uw,4);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uz,4);
                     DataDE2.Data_Texture_Coord[q].hz0=0;
                     DataDE2.Data_Texture_Coord[q].hz1=0;
                     DataDE2.Data_Texture_Coord[q].hz2=0;
@@ -173,8 +173,8 @@ namespace DE2
             }
 
             //Lit TexVerts
-            Find_xV4(f,1);
-            fread(&temp,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&temp,4);
             if(!DataDE2.TexCoorTypeOne)
             {
                 DataDE2.TexCoords=temp;
@@ -183,19 +183,19 @@ namespace DE2
 
                 for(DWORD q=0;q<DataDE2.TexCoords;q++)
                 {
-                    fread(&DataDE2.Data_Texture_Coord[q].uv,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].uw,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].uz,1,4,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].hz0,1,1,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].hz1,1,1,f);
-                    fread(&DataDE2.Data_Texture_Coord[q].hz2,1,1,f);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uv,4);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uw,4);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uz,4);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].hz0,1);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].hz1,1);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].hz2,1);
                 }
             }
 
             //Lights
-            Find_xV4(f,1);
+            Find_xV4(stream,1);
             DWORD ligthsCount;
-            fread(&ligthsCount,4,1,f);
+            stream->read(&ligthsCount,4);
             struct LightsHeader
             {
                 float x,y,z;
@@ -206,7 +206,7 @@ namespace DE2
 
             for(DWORD q = 0; q < ligthsCount; ++q)
             {
-                fread(&lightsHeader,sizeof(LightsHeader),1,f);
+                stream->read(&lightsHeader,sizeof(LightsHeader));
                 DE2_Light light;
                 light.position.x = lightsHeader.x;
                 light.position.y = lightsHeader.y;
@@ -220,63 +220,63 @@ namespace DE2
             }
 
             //Meshes
-            Find_xV4(f,1);
-            fread(&DataDE2.Parts,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&DataDE2.Parts,4);
             DataDE2.Data_Parts.clear();
             DataDE2.Data_Parts.resize(DataDE2.Parts);
 
             for(DWORD q=0;q<DataDE2.Parts;q++)
             {
-                if(q!=0)Find_xV4(f,1);
+                if(q!=0)Find_xV4(stream,1);
 
-                fread(&DataDE2.Data_Parts[q].IsMainPart,4,1,f);
-                fread(&DataDE2.Data_Parts[q].Triangles,4,1,f);
+                stream->read(&DataDE2.Data_Parts[q].IsMainPart,4);
+                stream->read(&DataDE2.Data_Parts[q].Triangles,4);
                 DataDE2.Data_Parts[q].Data_Triangles.clear();
                 DataDE2.Data_Parts[q].Data_Triangles.resize(DataDE2.Data_Parts[q].Triangles);
 
                 for(DWORD w=0;w<DataDE2.Data_Parts[q].Triangles;w++)
                 {
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].v0,1,2,f);
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].v1,1,2,f);
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].v2,1,2,f);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].v0,2);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].v1,2);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].v2,2);
 
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].t0,1,2,f);
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].t1,1,2,f);
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].t2,1,2,f);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].t0,2);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].t1,2);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].t2,2);
 
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].hz0,1,2,f);
-                    fread(&DataDE2.Data_Parts[q].Data_Triangles[w].hz1,1,2,f);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].hz0,2);
+                    stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].hz1,2);
                 }
 
                 DWORD switcher;
-                fread(&switcher,1,4,f);
+                stream->read(&switcher,4);
 
                 if(switcher)
                 {
                     struct switcher_1{ float x,y,z;} sw_1, sw_2;
-                    fread(&sw_1,1,sizeof(switcher_1),f);
-                    fread(&sw_2,1,sizeof(switcher_1),f);
+                    stream->read(&sw_1,sizeof(switcher_1));
+                    stream->read(&sw_2,sizeof(switcher_1));
                     WORD triCount;
-                    fread(&triCount,1,2,f);
+                    stream->read(&triCount,2);
 
                     if(triCount)
                     {
                         int totalSum = 0;
                         for(int ll = 0; ll < triCount; ++ll)
                         {
-                            totalSum += loadTriInfo(DataDE2, q, f, ll);
+                            totalSum += loadTriInfo(DataDE2, q, stream, ll);
                         }
                     }else
                     {
                         WORD triIndex;
-                        fread(&triIndex,1,2,f);
+                        stream->read(&triIndex,2);
                     }
                 }
             }
 
             //texture names
-            Find_xV4(f,3);
-            fread(&DataDE2.TexturePathCount,4,1,f);
+            Find_xV4(stream,3);
+            stream->read(&DataDE2.TexturePathCount,4);
 
             if(DataDE2.TexturePathCount)
             {
@@ -284,49 +284,49 @@ namespace DE2
                 DataDE2.Data_TexturePath.resize(DataDE2.TexturePathCount);
                 for(DWORD q=0;q<DataDE2.TexturePathCount;q++)
                 {
-                    fread(&temp,4,1,f);
+                    stream->read(&temp,4);
                     char buf[4096];
-                    fread(buf, 1, temp, f);
+                    stream->read(buf, temp);
                     buf[temp] = 0;
                     DataDE2.Data_TexturePath[q] = buf;;
                 }
             }
 
             //terrain names
-            Find_xV4(f,1);
-            fread(&DataDE2.TerranPathCount,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&DataDE2.TerranPathCount,4);
             if(DataDE2.TerranPathCount)
             {
                 DataDE2.Data_TerranPath.clear();
                 DataDE2.Data_TerranPath.resize(DataDE2.TerranPathCount);
                 for(DWORD q=0;q<DataDE2.TerranPathCount;q++)
                 {
-                    fread(&temp,4,1,f);
+                    stream->read(&temp,4);
                     char buf[4096];
-                    fread(buf, 1, temp, f);
+                    stream->read(buf, temp);
                     buf[temp] = 0;
                     DataDE2.Data_TerranPath[q] = buf;
                 }
             }
 
             //LODs
-            Find_xV4(f,1);
-            fread(&DataDE2.RealPartsCount,4,1,f);
+            Find_xV4(stream,1);
+            stream->read(&DataDE2.RealPartsCount,4);
             DataDE2.indexesForHighestLODS.clear();
             DataDE2.indexesForHighestLODS.resize(DataDE2.RealPartsCount);
             for(DWORD q=0;q<DataDE2.RealPartsCount;q++)
             {
                 DWORD subLODSCount;
-                fread(&subLODSCount,4,1,f);
+                stream->read(&subLODSCount,4);
                 for(DWORD w = 0; w < subLODSCount; ++w)
                 {
                     DWORD partIndex;
                     float something3,something4;
                     DWORD lodTriCount;
-                    fread(&partIndex,4,1,f);
-                    fread(&something3,4,1,f);
-                    fread(&something4,4,1,f);
-                    fread(&lodTriCount,4,1,f);
+                    stream->read(&partIndex,4);
+                    stream->read(&something3,4);
+                    stream->read(&something4,4);
+                    stream->read(&lodTriCount,4);
 
                     if(w == 0)
                     {
@@ -647,13 +647,13 @@ namespace DE2
 
 }//DE2 namespace
 
-bool DE2Loader::load(std::vector<MSHData>& parts, FILE * fileToLoad)
+bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fileToLoad)
 {
     bool res = false;
 
     parts.clear();
 
-    if(fileToLoad)
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         mDE2.Clear();
         readDE2(fileToLoad, mDE2);

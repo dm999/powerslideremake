@@ -567,7 +567,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4471.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2238.578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925220024" y="22.334010794801543">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2238.578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="22.334010794801543">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -1969,15 +1969,15 @@ bool load(std::vector&lt;MSHData&gt;&amp; parts, FILE * fileToLoad) const</y:Nod
           <y:Geometry height="439.001597538464" width="571.0431467421781" x="12194.478426628912" y="-7663.500040597352"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="490.861328125" x="40.09090930858838" y="11.68439251923246">&lt;&lt;PFLoader.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="342.126953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.17578125" x="49.43368274608838" y="48.43732220673246">&lt;&lt;PFLoader.h&gt;&gt;
 
 PFLoader
 
 public:
 
-void init(const std::string&amp; path, const std::string&amp; file)
+void init(const std::string&amp; file)
 
-FILE * getFile(const std::string&amp; relativeDir, const std::string&amp; file) const
+Ogre::DataStreamPtr getFile(const std::string&amp; relativeDir, const std::string&amp; file) const
 
 size_t getFileSize(const std::string&amp; relativeDir, const std::string&amp; file) const
 
@@ -1986,17 +1986,13 @@ private:
 typedef unsigned int DWORD
 
 std::string mPath
-std::string mFileName
-bool mIsPathCorrect
 
 std::vector&lt;PackedFileItem&gt; mFileSystem
 
-bool checkPathCorrect(const std::string&amp; path, const std::string&amp; file) const
-
 size_t findFile(const std::string&amp; relativeDir, const std::string&amp; file, size_t&amp; fileSize) const
 
-static std::string readString(FILE * f, DWORD&amp; FilePos)
-static std::vector&lt;std::string&gt; splitpath(const std::string&amp; str, const std::set&lt;char&gt; delimiters)</y:NodeLabel>
+static std::string readString(const Ogre::DataStreamPtr&amp; stream, DWORD&amp; FilePos)
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

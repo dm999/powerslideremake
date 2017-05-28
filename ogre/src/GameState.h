@@ -45,7 +45,7 @@ public:
      * originalPathData - should contain data.pf, gameshell.pf
      * originalPathCommon - should contain store.pf
      */
-    void initOriginalData(const std::string& originalPathData, const std::string& originalPathCommon);
+    void initOriginalData(const std::string& originalPathCommon);
 
     bool isOriginalDataInited()const {return mOriginalDataInited;}
 

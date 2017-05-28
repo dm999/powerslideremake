@@ -17,7 +17,7 @@ public:
 
 private:
 
-    void loadVector(FILE * f, float data[3]) const;
+    void loadVector(const Ogre::DataStreamPtr& stream, float data[3]) const;
 };
 
 #endif

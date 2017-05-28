@@ -9,30 +9,31 @@ TerrainLoader::TerrainLoader()
 
 void TerrainLoader::load(GameState& gameState)
 {
-    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "terrain.txt");
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "terrain.txt");
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        for(size_t q = 0; q < 16; ++q) fscanf(fileToLoad, " %d", &remapFriction[q]);
-        fscanf(fileToLoad, "\n");
+        char buf[1024];
+        fileToLoad->readLine(buf, 1024);
+        for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &remapFriction[q]);
 
-        for(size_t q = 0; q < 16; ++q) fscanf(fileToLoad, " %d", &remapSounds[q]);
-        fscanf(fileToLoad, "\n");
+        fileToLoad->readLine(buf, 1024);
+        for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &remapSounds[q]);
 
         {
             int something;
+            fileToLoad->readLine(buf, 1024);
             for(size_t q = 0; q < 16; ++q)
             {
-                fscanf(fileToLoad, " %d", &something);
+                sscanf(buf, " %d", &something);
                 if(something < 0) something = 0;
                 remapSoundsCollision[q] = something;
             }
-            fscanf(fileToLoad, "\n");
         }
 
         {
             int something;
-            for(size_t q = 0; q < 16; ++q) fscanf(fileToLoad, " %d", &something);
-            fscanf(fileToLoad, "\n");
+            fileToLoad->readLine(buf, 1024);
+            for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &something);
         }
 
         {
@@ -45,7 +46,8 @@ void TerrainLoader::load(GameState& gameState)
             float something, something2;
             for(size_t q = 0; q < 16; ++q)
             {
-                fscanf(fileToLoad, "%f;%f;%f,%f,%f,%f\n", 
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "%f;%f;%f,%f,%f,%f\n", 
                                 &rollingResistance, &longtitudinalGripMultiplier, &latitudinalGripMultiplier, &combinedGripMultiplier,
                                 &something, &something2);
 
@@ -54,7 +56,7 @@ void TerrainLoader::load(GameState& gameState)
             }
         }
 
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false);}
 }

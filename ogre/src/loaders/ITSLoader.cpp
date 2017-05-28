@@ -24,8 +24,8 @@ namespace
 size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, std::vector<unsigned char>& rawData) const
 {
     size_t res = 0;
-    FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         typedef unsigned int DWORD;
         typedef unsigned short WORD;
@@ -34,13 +34,13 @@ size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, c
         rawData.clear();
 
         header head;
-        fread(&head, sizeof(header), 1, fileToLoad);
+        fileToLoad->read(&head, sizeof(header));
         size_t bufLen = head.length * head.bpp;
 
         std::vector<BYTE> buf(bufLen);
         rawData.resize(bufLen);
 
-        fread(&buf[0], bufLen, 1, fileToLoad);
+        fileToLoad->read(&buf[0], bufLen);
 
         res = bufLen;
 
@@ -53,7 +53,7 @@ size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, c
             rawData[q] = static_cast<BYTE>(tmpval);
         }
 
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false && "No ITS file");}
 

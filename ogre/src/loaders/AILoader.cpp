@@ -27,33 +27,33 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
     for(size_t w = 0; w < gameState.getAICount(); ++w)
     {
 
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
+        Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/ai/" + folderWithData, "rec" + Conversions::DMToString(w));
 
-        if(fileToLoad)
+        if(fileToLoad.get() && fileToLoad->isReadable())
         {
             //gameState.getAICar(w).clearAIData();
 
             std::vector<AIData> aIData;
 
             float someBuf[9];
-            fread(someBuf, 36, 1, fileToLoad);
+            fileToLoad->read(someBuf, 36);
 
             typedef unsigned int DWORD;
 
             DWORD someData;
-            fread(&someData, 4, 1, fileToLoad);
+            fileToLoad->read(&someData, 4);
 
             while(someData)
             {
                 DWORD someData2;
-                fread(&someData2, 4, 1, fileToLoad);
+                fileToLoad->read(&someData2, 4);
 
                 for(size_t q = 0; q < someData2; ++q)
                 {
                     AIData aiData;
 
                     float someBuf2[9];//x, y, z, normx?, normy?, normz?, unknown, unknown, unknown
-                    fread(someBuf2, 36, 1, fileToLoad);
+                    fileToLoad->read(someBuf2, 36);
 
                     aiData.pos.x = someBuf2[0];
                     aiData.pos.y = someBuf2[1];
@@ -70,7 +70,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                     aIData.push_back(aiData);
                 }
 
-                fread(&someData, 4, 1, fileToLoad);
+                fileToLoad->read(&someData, 4);
             }
 
 
@@ -113,7 +113,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 }
             }
 
-            fclose(fileToLoad);
+            fileToLoad->close();
         }
     }
 }

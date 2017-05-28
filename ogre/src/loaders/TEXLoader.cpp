@@ -18,7 +18,7 @@ namespace
     };
 }
 
-Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const Ogre::String& group) const
 {
     Ogre::TexturePtr res;
 
@@ -26,10 +26,10 @@ Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturena
     typedef unsigned short WORD;
     typedef unsigned int DWORD;
 
-    if(fileToLoad)
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         header head;
-        fread(&head, sizeof(header), 1, fileToLoad);
+        fileToLoad->read(&head, sizeof(header));
 
         size_t sizeOfBuffer = head.width * head.height;
 
@@ -51,7 +51,7 @@ Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturena
 
         size_t sizeofformat = Ogre::PixelUtil::getNumElemBytes(targetFormat);
 
-        fread(pDest, sizeofformat * sizeOfBuffer, 1, fileToLoad);
+        fileToLoad->read(pDest, sizeofformat * sizeOfBuffer);
 
         //try to adjust brightness/contrast of texture
 #if 0
@@ -132,11 +132,11 @@ Ogre::TexturePtr TEXLoader::load(FILE * fileToLoad, const std::string& texturena
 Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
 {
     Ogre::TexturePtr res;
-    FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         res = load(fileToLoad, texturename, group);
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     return res;
 }
@@ -155,11 +155,11 @@ Ogre::TexturePtr TEXLoader::loadChroma( const PFLoader& pfLoader,
     typedef unsigned short WORD;
     typedef unsigned int DWORD;
 
-    FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         header head;
-        fread(&head, sizeof(header), 1, fileToLoad);
+        fileToLoad->read(&head, sizeof(header));
 
         size_t sizeOfBuffer = head.width * head.height;
 
@@ -181,7 +181,7 @@ Ogre::TexturePtr TEXLoader::loadChroma( const PFLoader& pfLoader,
 
         size_t sizeofformat = Ogre::PixelUtil::getNumElemBytes(targetFormat);
 
-        fread(pDest, sizeofformat * sizeOfBuffer, 1, fileToLoad);
+        fileToLoad->read(pDest, sizeofformat * sizeOfBuffer);
 
         Ogre::ulong pxDataIndex = 0, pxDataIndexStep = Ogre::PixelUtil::getNumElemBytes (targetFormat); 
 

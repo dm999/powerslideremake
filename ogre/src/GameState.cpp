@@ -35,19 +35,19 @@ GameState::~GameState()
 {
 }
 
-void GameState::initOriginalData(const std::string& originalPathData, const std::string& originalPathCommon)
+void GameState::initOriginalData(const std::string& originalPathCommon)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
 
-    bool isLoaded = mPFLoaderData.init(originalPathData, "data.pf");
+    bool isLoaded = mPFLoaderData.init("data.pf");
 
     if(isLoaded)
     {
-        isLoaded = mPFLoaderGameshell.init(originalPathData, "gameshell.pf");
+        isLoaded = mPFLoaderGameshell.init("gameshell.pf");
 
         if(isLoaded)
         {
-            isLoaded = mPFLoaderStore.init(originalPathCommon, "store.pf");
+            isLoaded = mPFLoaderStore.init("store.pf");
 
             if(isLoaded)
             {

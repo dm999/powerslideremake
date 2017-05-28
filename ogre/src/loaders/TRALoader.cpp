@@ -5,19 +5,19 @@
 #include <vector>
 
 
-bool TRALoader::load(FILE * fileToLoad, CommonIncludes::shared_ptr<Ogre::Image>& img) const
+bool TRALoader::load(const Ogre::DataStreamPtr& fileToLoad, CommonIncludes::shared_ptr<Ogre::Image>& img) const
 {
     bool res = false;
 
-    if(fileToLoad)
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         typedef unsigned char BYTE;
         typedef unsigned int DWORD;
 
         DWORD ver, height, width;
-        fread(&ver, 4, 1, fileToLoad);
-        fread(&height, 4, 1, fileToLoad);
-        fread(&width, 4, 1, fileToLoad);
+        fileToLoad->read(&ver, 4);
+        fileToLoad->read(&height, 4);
+        fileToLoad->read(&width, 4);
 
         if(!ver)//check version
         {
@@ -25,7 +25,7 @@ bool TRALoader::load(FILE * fileToLoad, CommonIncludes::shared_ptr<Ogre::Image>&
             {
                 DWORD readSize = height * width / 2;
                 std::vector<BYTE> buffer(readSize);
-                fread(&buffer[0], readSize, 1, fileToLoad);
+                fileToLoad->read(&buffer[0], readSize);
 
                 DWORD imageSize = height * width;
                 BYTE * image = OGRE_ALLOC_T(BYTE, imageSize, Ogre::MEMCATEGORY_GENERAL);

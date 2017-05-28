@@ -5,6 +5,8 @@
 #include <vector>
 #include <set>
 
+#include "Ogre.h"
+
 namespace PF
 {
     struct PackedFileItem
@@ -56,13 +58,13 @@ public:
     /**
      * file - data.pf
      */
-    bool init(const std::string& path, const std::string& file);
+    bool init(const std::string& file);
 
     /**
      * opens packed file and offsets to proper location
      * should be closed externaly
     */
-    FILE * getFile(const std::string& relativeDir, const std::string& file) const;
+    Ogre::DataStreamPtr getFile(const std::string& relativeDir, const std::string& file) const;
 
     size_t getFileSize(const std::string& relativeDir, const std::string& file) const;
 
@@ -70,17 +72,13 @@ private:
 
     typedef unsigned int DWORD;
 
-    std::string mPath;
     std::string mFileName;
-    bool mIsPathCorrect;
 
     std::vector<PF::PackedFileItem> fileSystem;
 
-    bool checkPathCorrect(const std::string& path, const std::string& file) const;
-
     size_t findFile(const std::string& relativeDir, const std::string& file, size_t& fileSize) const;
 
-    static std::string readString(FILE * f, DWORD& FilePos);
+    static std::string readString(const Ogre::DataStreamPtr& stream, DWORD& FilePos);
 };
 
 #endif

@@ -16,8 +16,8 @@ namespace
 
 void ParticlesLoader::load(GameState& gameState) const
 {
-    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "partgraph.txt");
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "partgraph.txt");
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         gameState.getParticles().clear();
 
@@ -26,25 +26,33 @@ void ParticlesLoader::load(GameState& gameState) const
             Particle particle;
             PSParticle part;
 
-            fscanf(fileToLoad, "%d %d %d %d %d %d\n", &part.R1, &part.G1, &part.B1, &part.R2, &part.G2, &part.B2);
-            fscanf(fileToLoad, "%d\n", &part.index1);
-            fscanf(fileToLoad, "%d\n", &part.index2);
-            char buf[256] = {0};
-            fgets(buf, 256, fileToLoad);//AGESTEP
-            fgets(buf, 256, fileToLoad);//DRAG
-            fgets(buf, 256, fileToLoad);//GRAVITY
-            fgets(buf, 256, fileToLoad);//C1
-            fgets(buf, 256, fileToLoad);//C2
-            fgets(buf, 256, fileToLoad);//C3
-            fgets(buf, 256, fileToLoad);//RANDMAX
-            fgets(buf, 256, fileToLoad);//WIDTH? or ALPHA
+            char buf[1024];
+            fileToLoad->readLine(buf, 1024);
+            sscanf(buf, "%d %d %d %d %d %d\n", &part.R1, &part.G1, &part.B1, &part.R2, &part.G2, &part.B2);
+
+            fileToLoad->readLine(buf, 1024);
+            sscanf(buf, "%d\n", &part.index1);
+
+            fileToLoad->readLine(buf, 1024);
+            sscanf(buf, "%d\n", &part.index2);
+
+            fileToLoad->readLine(buf, 1024);//AGESTEP
+            fileToLoad->readLine(buf, 1024);//DRAG
+            fileToLoad->readLine(buf, 1024);//GRAVITY
+            fileToLoad->readLine(buf, 1024);//C1
+            fileToLoad->readLine(buf, 1024);//C2
+            fileToLoad->readLine(buf, 1024);//C3
+            fileToLoad->readLine(buf, 1024);//RANDMAX
+            fileToLoad->readLine(buf, 1024);//WIDTH? or ALPHA
             if(buf[0] == 'W' || buf[0] == 'w')
-                fgets(buf, 256, fileToLoad);//ALPHA
-            fgets(buf, 256, fileToLoad);//SIZE
+                fileToLoad->readLine(buf, 1024);//ALPHA
+            fileToLoad->readLine(buf, 1024);//SIZE
             float skid[11];
-            fscanf(fileToLoad, "%s %f %f %f %f %f %f %f %f %f %f %f\n", buf, &skid[0], &skid[1], &skid[2], &skid[3], &skid[4], &skid[5], &skid[6], &skid[7], &skid[8], &skid[9], &skid[10]);
-            fgets(buf, 256, fileToLoad);
-            fgets(buf, 256, fileToLoad);
+            fileToLoad->readLine(buf, 1024);
+            char buf2[256] = {0};
+            sscanf(buf, "%s %f %f %f %f %f %f %f %f %f %f %f\n", buf2, &skid[0], &skid[1], &skid[2], &skid[3], &skid[4], &skid[5], &skid[6], &skid[7], &skid[8], &skid[9], &skid[10]);
+            fileToLoad->readLine(buf, 1024);
+            fileToLoad->readLine(buf, 1024);
 
             part.isVisible = false;
             for(size_t w = 1; w < 11; ++w)
@@ -73,7 +81,7 @@ void ParticlesLoader::load(GameState& gameState) const
             gameState.getParticles().push_back(particle);
         }
 
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false && "No particle file");}
 }

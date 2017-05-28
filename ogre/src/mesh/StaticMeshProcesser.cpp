@@ -54,12 +54,12 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
     DE2Loader de2Loader;
     std::vector<MSHData> originalParts;
     std::string pfFolderName = gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName());
-    FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName, gameState.getSTRPowerslide().getValue(gameState.getTrackName() + " parameters", "de2 filename", ""));
+    Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + pfFolderName, gameState.getSTRPowerslide().getValue(gameState.getTrackName() + " parameters", "de2 filename", ""));
     bool loadResult = false;
-    if(fileToLoad)
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         loadResult = de2Loader.load(originalParts, fileToLoad);
-        fclose(fileToLoad);
+        fileToLoad->close();
 
         if(loadResult)
         {
@@ -250,26 +250,26 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
         i != j; ++i)
     {
         std::string noExtFileName = (*i).substr(0, (*i).length() - 4);
-        FILE * fileToLoad;
+        Ogre::DataStreamPtr fileToLoad;
 
         fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_1.tex");
-        if(!fileToLoad)
+        if(!fileToLoad.get() || !fileToLoad->isReadable())
         {
             fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_2.tex");
         }
-        if(!fileToLoad)
+        if(!fileToLoad.get() || !fileToLoad->isReadable())
         {
             fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_3.tex");
         }
-        if(!fileToLoad)
+        if(!fileToLoad.get() || !fileToLoad->isReadable())
         {
             fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_4.tex");
         }
 
-        if(fileToLoad)
+        if(fileToLoad.get() && fileToLoad->isReadable())
         {
             TEXLoader().load(fileToLoad, (*i));
-            fclose(fileToLoad);
+            fileToLoad->close();
         }
     }
 }
@@ -998,9 +998,9 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
     {
         std::string mapName = (*i);
 
-        FILE * fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) +"/terrains", mapName);
+        Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) +"/terrains", mapName);
 
-        if(fileToLoad)
+        if(fileToLoad.get() && fileToLoad->isReadable())
         {
             CommonIncludes::shared_ptr<Ogre::Image> img = CommonIncludes::shared_ptr<Ogre::Image>(new Ogre::Image());
             bool isLoaded = TRALoader().load(fileToLoad, img);
@@ -1014,7 +1014,7 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
                 mTerrainMaps.insert(std::make_pair(mapName, img));
             }
 
-            fclose(fileToLoad);
+            fileToLoad->close();
         }
     }
 }

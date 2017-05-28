@@ -9,13 +9,13 @@ std::string STRLoader::load(const PFLoader& pfLoader, const std::string& relativ
 {
     std::string res = "";
 
-    FILE * fileToLoad = pfLoader.getFile(relativeDir, file);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(relativeDir, file);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         size_t sizeOfFile = pfLoader.getFileSize(relativeDir, file);
         std::vector<unsigned char> buf(sizeOfFile);
-        fread(&buf[0], sizeOfFile, 1, fileToLoad);
-        fclose(fileToLoad);
+        fileToLoad->read(&buf[0], sizeOfFile);
+        fileToLoad->close();
 
         for(size_t q = 0; q < sizeOfFile; ++q)
         {

@@ -353,7 +353,7 @@ bool BaseApp::setup()
     mPlatform.reset(new MyGUI::OgrePlatform());
     mGUI.reset(new MyGUI::Gui());
 
-    mGameState.initOriginalData("./", "./");
+    mGameState.initOriginalData("./");
     if(!mGameState.isOriginalDataInited())
     {
         OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
@@ -829,7 +829,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before create scene"); 
 
-            mGameState.initOriginalData("./", "./");
+            mGameState.initOriginalData("./");
             if(!mGameState.isOriginalDataInited())
             {
                 OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");

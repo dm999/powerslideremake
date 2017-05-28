@@ -18,8 +18,8 @@ namespace
 
 void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, std::vector<std::vector<Ogre::Vector3> >& suspensionData) const
 {
-    FILE * fileToLoad = pfLoader.getFile("data/cars/" + subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile("data/cars/" + subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         suspensionData.clear();
 
@@ -30,7 +30,9 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
         for(size_t q = 0; q < 5; ++q)
         {
             char partName[256];
-            fscanf(fileToLoad, "%s\n", partName);
+            char buf[1024];
+            fileToLoad->readLine(buf, 1024);
+            sscanf(buf, "%s\n", partName);
 
             parts[q].name = partName;
 
@@ -57,21 +59,24 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
         suspensionData.push_back(parts[firstPartIndex].backLeft);
         suspensionData.push_back(parts[firstPartIndex].backRight);
 
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
     else {assert(false && "No suspension file");}
 }
 
-std::vector<Ogre::Vector3> SUSLoader::readWheelSuspension(FILE * fileToLoad) const
+std::vector<Ogre::Vector3> SUSLoader::readWheelSuspension(const Ogre::DataStreamPtr& fileToLoad) const
 {
     std::vector<Ogre::Vector3> res;
 
     size_t pointsAmount;
-    fscanf(fileToLoad, "%d\n", &pointsAmount);
+    char buf[1024];
+    fileToLoad->readLine(buf, 1024);
+    sscanf(buf, "%d\n", &pointsAmount);
     for(size_t q = 0; q < pointsAmount; ++q)
     {
         Ogre::Vector3 point;
-        fscanf(fileToLoad, "%f,%f,%f\n", &point.x, &point.y, &point.z);
+        fileToLoad->readLine(buf, 1024);
+        sscanf(buf, "%f,%f,%f\n", &point.x, &point.y, &point.z);
         point.z = -point.z;
         res.push_back(point);
     }

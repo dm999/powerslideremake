@@ -17,7 +17,7 @@ public:
 
 private:
 
-    std::vector<Ogre::Vector3> readWheelSuspension(FILE * fileToLoad) const;
+    std::vector<Ogre::Vector3> readWheelSuspension(const Ogre::DataStreamPtr& fileToLoad) const;
 
 };
 

@@ -8,8 +8,8 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
 {
     Ogre::TexturePtr res;
 
-    FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         Ogre::String tex_ext;
         Ogre::String texture_path = filename.c_str();
@@ -20,8 +20,8 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
 
             size_t fileSize = pfLoader.getFileSize(subfolder, filename);
             std::vector<unsigned char> fileBuffer(fileSize);
-            fread(&fileBuffer[0], fileSize, 1, fileToLoad);
-            fclose(fileToLoad);
+            fileToLoad->read(&fileBuffer[0], fileSize);
+            fileToLoad->close();
 
             Ogre::DataStreamPtr memoryStream(new Ogre::MemoryDataStream(&fileBuffer[0], fileSize, false, true));
 
@@ -49,8 +49,8 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
 {
     Ogre::TexturePtr res;
 
-    FILE * fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad)
+    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         Ogre::String tex_ext;
         Ogre::String texture_path = filename.c_str();
@@ -61,8 +61,8 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
 
             size_t fileSize = pfLoader.getFileSize(subfolder, filename);
             std::vector<unsigned char> fileBuffer(fileSize);
-            fread(&fileBuffer[0], fileSize, 1, fileToLoad);
-            fclose(fileToLoad);
+            fileToLoad->read(&fileBuffer[0], fileSize);
+            fileToLoad->close();
 
             Ogre::DataStreamPtr memoryStream(new Ogre::MemoryDataStream(&fileBuffer[0], fileSize, false, true));
 

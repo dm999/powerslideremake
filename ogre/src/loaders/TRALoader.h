@@ -11,7 +11,7 @@ class TRALoader
 public:
     TRALoader(){}
 
-    bool load(FILE * fileToLoad, CommonIncludes::shared_ptr<Ogre::Image>& image) const;
+    bool load(const Ogre::DataStreamPtr& fileToLoad, CommonIncludes::shared_ptr<Ogre::Image>& image) const;
 
 private:
 };

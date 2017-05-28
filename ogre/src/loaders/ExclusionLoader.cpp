@@ -9,11 +9,11 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
 {
     std::string excludeFile = gameState.getSTRPowerslide().getExclusionFile(gameState.getTrackName());
 
-    FILE * fileToLoad = gameState.getPFLoaderData().getFile(
+    Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile(
         "data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()), 
         excludeFile);
 
-    if(fileToLoad)
+    if(fileToLoad.get() && fileToLoad->isReadable())
     {
         gameState.getExclusions().clear();
 
@@ -22,21 +22,32 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
             LightEclusion lightExcl;
 
             int count;
-            int err = fscanf(fileToLoad, "%d\n", &count);
+            char buf[1024];
+            fileToLoad->readLine(buf, 1024);
+            int err = sscanf(buf, "%d\n", &count);
             if(err == 0) break;
 
             for(int q = 0; q < count; ++q)
             {
                 float min[3], max[3], trans[4][3], falloff, min_exclude;
-                fscanf(fileToLoad, "Min : %f,%f,%f\n", &min[0], &min[1], &min[2]);
-                fscanf(fileToLoad, "Max : %f,%f,%f\n", &max[0], &max[1], &max[2]);
-                fscanf(fileToLoad, "Trans : %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "Min : %f,%f,%f\n", &min[0], &min[1], &min[2]);
+
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "Max : %f,%f,%f\n", &max[0], &max[1], &max[2]);
+
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "Trans : %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
                                                 &trans[0][0], &trans[0][1], &trans[0][2],
                                                 &trans[1][0], &trans[1][1], &trans[1][2],
                                                 &trans[2][0], &trans[2][1], &trans[2][2],
                                                 &trans[3][0], &trans[3][1], &trans[3][2]);
-                fscanf(fileToLoad, "Falloff : %f\n", &falloff);
-                fscanf(fileToLoad, "Min exclude : %f\n", &min_exclude);
+
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "Falloff : %f\n", &falloff);
+
+                fileToLoad->readLine(buf, 1024);
+                sscanf(buf, "Min exclude : %f\n", &min_exclude);
 
                 Exclusion excl;
 
@@ -159,6 +170,6 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
             }
         }
 
-        fclose(fileToLoad);
+        fileToLoad->close();
     }
 }
