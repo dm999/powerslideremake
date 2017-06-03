@@ -70,6 +70,7 @@ public:
 
 private:
 
+#if !defined(__ANDROID__)
     typedef unsigned int DWORD;
 
     std::string mFileName;
@@ -79,6 +80,7 @@ private:
     size_t findFile(const std::string& relativeDir, const std::string& file, size_t& fileSize) const;
 
     static std::string readString(const Ogre::DataStreamPtr& stream, DWORD& FilePos);
+#endif
 };
 
 #endif

@@ -239,6 +239,15 @@ public class MainActivity extends Activity implements SensorEventListener {
             });
             break;
         case MotionEvent.ACTION_MOVE:
+            final int indexPointer2Move = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+            final int idPointer2Move = event.getPointerId(indexPointer2Move);
+            final float xPointer2Move = event.getX(indexPointer2Move);
+            final float yPointer2Move = event.getY(indexPointer2Move);
+            handler.post(new Runnable() {
+                public void run() {
+                    OgreActivityJNI.handleActionMove(idPointer2Move, xPointer2Move, yPointer2Move);
+                }
+            });
             break;
         }
         return true;
@@ -246,7 +255,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	static {
         System.loadLibrary("openal");
-        System.loadLibrary("MyGUIEngine");
 		System.loadLibrary("PowerslideRebuild");
 	}
 }

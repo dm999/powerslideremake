@@ -77,4 +77,6 @@ std::string OgreColorToString(const Ogre::ColourValue& color);
 Ogre::Vector3 RGBToXYZ(Ogre::Vector3 RGB, float gamma = 2.4f);
 Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma = 2.4f);
 
+size_t getPowerOf2(size_t val);
+
 #endif

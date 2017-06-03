@@ -67,6 +67,10 @@ public:
     void mouseMoved(const OIS::MouseEvent &arg);
     void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
     void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+#else
+    void mouseMoved(const OIS::MultiTouchEvent& arg);
+    void mousePressed(const OIS::MultiTouchEvent& arg);
+    void mouseReleased(const OIS::MultiTouchEvent& arg);
 #endif
 
     GameState& getGameState(){return mGameState;}
@@ -76,6 +80,7 @@ public:
 
     void touchDown(int id, float x, float y);
     void touchUp(int id, float x, float y);
+    void touchMove(int id, float x, float y);
 
     void androidCreate(JNIEnv * env, jobject obj, jobject assetManager);
     void androidDestroy();

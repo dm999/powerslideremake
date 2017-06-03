@@ -16,6 +16,14 @@ Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre:
         Ogre::TextureUnitState * state = materialNew->getTechnique(0)->getPass(0)->getTextureUnitState(q);
         state->setTextureName(texturesNames[q]);
         state->setTextureScale(scale, scale);
+
+        if(state->getTextureFiltering(Ogre::FT_MIN) == Ogre::FO_ANISOTROPIC || state->getTextureFiltering(Ogre::FT_MAG) == Ogre::FO_ANISOTROPIC)
+        {
+            if(!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_ANISOTROPY))
+            {
+                state->setTextureFiltering(Ogre::TFO_TRILINEAR);
+            }
+        }
     }
 
     return materialNew;
@@ -677,4 +685,9 @@ Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma)
     }
 
     return Ogre::Vector3(var_R, var_G, var_B);
+}
+
+size_t getPowerOf2(size_t val)
+{
+    return static_cast<size_t>(Ogre::Math::Pow(2.0f, ceil(Ogre::Math::Log2(static_cast<Ogre::Real>(val)))));
 }

@@ -27,7 +27,7 @@ public:
     UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode);
     ~UIMainMenu();
 
-    void load(MyGUI::Gui* gui, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState);
 
     void processButtonClick(MyGUI::Widget* sender);
     void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
@@ -37,6 +37,10 @@ public:
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
 #endif
+
+    //OgreBites::SdkTrayListener
+    virtual void buttonHit(OgreBites::Button* button);
+    virtual void itemSelected(OgreBites::SelectMenu* menu);
 
 private:
 
@@ -58,9 +62,9 @@ private:
     MyGUI::ListBox* mWidgetRooms;
     MyGUI::ListBox* mWidgetRoomPlayers;
 
-    //Ogre::PanelOverlayElement* mMainBackground;
-    //Ogre::PanelOverlayElement* mBackgroundA;
-    //Ogre::PanelOverlayElement* mBackgroundB;
+    Ogre::PanelOverlayElement* mMainBackground;
+    Ogre::PanelOverlayElement* mBackgroundA;
+    Ogre::PanelOverlayElement* mBackgroundB;
 };
 
 #endif

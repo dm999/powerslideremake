@@ -9,7 +9,7 @@
 
 class CustomTrayManager;
 
-class UIBase
+class UIBase : public OgreBites::SdkTrayListener
 {
 public:
     UIBase(){}
@@ -21,6 +21,8 @@ public:
     Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
     OgreBites::Button* createButton(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width = 0);
+    OgreBites::TextBox* createTextBox(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width = 0, Ogre::Real height = 0);
+    OgreBites::SelectMenu* createSelectMenu(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width, unsigned int maxItemsShown, const Ogre::StringVector& items);
 
     void destroy(CustomTrayManager* trayMgr);
 

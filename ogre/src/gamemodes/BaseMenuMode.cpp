@@ -64,13 +64,13 @@ void BaseMenuMode::initData()
     //to load textures & materials
     mModeContext.mWindow->update(false);
 
-    mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
-    mModeContext.mGUI->initialise();
+    //mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
+    //mModeContext.mGUI->initialise();
 
     //update mouse position
     const OIS::MouseState &ms = mModeContext.mInputHandler->getInputContext().mMouse->getMouseState();
-    MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
-    MyGUI::PointerManager::getInstance().setVisible(false);
+    //MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
+    //MyGUI::PointerManager::getInstance().setVisible(false);
 
     doInitData();
 
@@ -84,8 +84,8 @@ void BaseMenuMode::clearData()
 {
     doClearData();
 
-    mModeContext.mGUI->shutdown();
-    mModeContext.mPlatform->shutdown();
+    //mModeContext.mGUI->shutdown();
+    //mModeContext.mPlatform->shutdown();
 
     mSceneMgr->clearScene();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);

@@ -7,13 +7,16 @@
 #include "../tools/Tools.h"
 
 PFLoader::PFLoader()
+#if !defined(__ANDROID__)
     : mFileName("data.pf")
+#endif
 { }
 
 bool PFLoader::init(const std::string& file)
 {
     bool res = false;
 
+#if !defined(__ANDROID__)
     mFileName = file;
 
     Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
@@ -70,6 +73,9 @@ bool PFLoader::init(const std::string& file)
 
         stream->close();
     }
+#else
+    res = true;
+#endif
 
     return res;
 }
@@ -78,6 +84,7 @@ Ogre::DataStreamPtr PFLoader::getFile(const std::string& relativeDir, const std:
 {
     Ogre::DataStreamPtr ret;
 
+#if !defined(__ANDROID__)
     if(!fileSystem.empty())
     {
         ret = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
@@ -97,7 +104,14 @@ Ogre::DataStreamPtr PFLoader::getFile(const std::string& relativeDir, const std:
             }
         }
     }
-
+#else
+    std::string relDir = relativeDir + "/";
+    if(relDir == "/") relDir = "";
+    if(Ogre::ResourceGroupManager::getSingleton().resourceExists("PF", std::string(relDir + file).c_str()))
+    {
+        ret = Ogre::ResourceGroupManager::getSingleton().openResource( std::string(relDir + file).c_str(), "PF" );
+    }
+#endif
     return ret;
 }
 
@@ -105,6 +119,7 @@ size_t PFLoader::getFileSize(const std::string& relativeDir, const std::string& 
 {
     size_t ret = 0;
 
+#if !defined(__ANDROID__)
     if(!fileSystem.empty())
     {
         //find file size
@@ -115,10 +130,25 @@ size_t PFLoader::getFileSize(const std::string& relativeDir, const std::string& 
             ret = fileSize;
         }
     }
+#else
+    Ogre::DataStreamPtr data;
+    std::string relDir = relativeDir + "/";
+    if(relDir == "/") relDir = "";
+    if(Ogre::ResourceGroupManager::getSingleton().resourceExists("PF", std::string(relDir + file).c_str()))
+    {
+        data = Ogre::ResourceGroupManager::getSingleton().openResource( std::string(relDir + file).c_str(), "PF" );
+        if(data.get() && data->isReadable())
+        {
+            ret = data->size();
+            data->close();
+        }
+    }
+#endif
 
     return ret;
 }
 
+#if !defined(__ANDROID__)
 size_t PFLoader::findFile(const std::string& relativeDir, const std::string& file, size_t& fileSize) const
 {
     size_t res = 0;
@@ -192,3 +222,4 @@ std::string PFLoader::readString(const Ogre::DataStreamPtr& stream, DWORD& FileP
     ret = buffer;
     return ret;
 }
+#endif

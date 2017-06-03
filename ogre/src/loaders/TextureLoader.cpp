@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "TextureLoader.h"
+#include "../tools/OgreTools.h"
 
 Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
 {
@@ -27,6 +28,8 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
 
             Ogre::Image img;
             img.load(memoryStream, tex_ext);
+
+            adjustTextureSizeIfNecessary(img);
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
 
@@ -69,6 +72,8 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
             Ogre::Image srcImg;
             srcImg.load(memoryStream, tex_ext);
 
+            adjustTextureSizeIfNecessary(srcImg);
+
             const Ogre::PixelFormat targetTextureFormat = Ogre::PF_A8R8G8B8;
 
             Ogre::uint width = srcImg.getWidth (), height = srcImg.getHeight ();
@@ -101,4 +106,15 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
     else {assert(false && "No texture file");}
 
     return res;
+}
+
+void TextureLoader::adjustTextureSizeIfNecessary(Ogre::Image& image)const
+{
+    if(!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_NON_POWER_OF_2_TEXTURES))
+    {
+        size_t wPow2 = getPowerOf2(image.getWidth());
+        size_t hPow2 = getPowerOf2(image.getHeight());
+        if(wPow2 != image.getWidth() || hPow2 != image.getHeight())
+            image.resize(wPow2, hPow2);
+    }
 }

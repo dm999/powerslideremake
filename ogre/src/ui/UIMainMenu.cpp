@@ -47,8 +47,10 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 }
 
-void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
+void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState)
 {
+    trayMgr->setListener(this);
+
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
@@ -61,7 +63,9 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[UIMainMenu::load]: viewport [" + Conversions::DMToString(viewportWidth) + "x" + Conversions::DMToString(viewportHeight) + "]");
 
+#if 0
     {
         Ogre::Vector4 backgroundAPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
         Ogre::Vector4 backgroundBPos = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 102.0f, 217.0f);
@@ -214,6 +218,7 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
         mWidgetRoomPlayers->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
     }
 #endif
+#endif
 
 
     //cursor
@@ -234,7 +239,7 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 
-#if 0
+#if 1
     //main background
     {
         std::vector<Ogre::String> texName;
@@ -293,44 +298,32 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
 
         mBackgroundA = createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
         mBackgroundA->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBackgroundA);
+        mMainBackground->addChild(mBackgroundA);
 
         mBackgroundB = createPanel("BackgroundB", backgroundB, "Test/BackgroundB");
         mBackgroundB->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mBackgroundB);
-    }
-
-    //cursor
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCursor");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
-                            "Test/DiffuseTransparent", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        mMainBackground->addChild(mBackgroundB);
     }
 
     //buttons
     {
         {
-            createButton(trayMgr, OgreBites::TL_NONE, "SinglePlayer", "Single", 120);
+            Ogre::Vector4 posSingle = screenAdaptionRelative * Ogre::Vector4(320.0f, 0.0f, 0.0f, 0.0f);
+            OgreBites::Button* widget = createButton(trayMgr, OgreBites::TL_NONE, "SinglePlayer", "Single", 120);
+            widget->getOverlayElement()->setLeft(posSingle.x);
         }
 
         {
+            Ogre::Vector4 posMulti = screenAdaptionRelative * Ogre::Vector4(400.0f, 0.0f, 0.0f, 0.0f);
             OgreBites::Button* widget = createButton(trayMgr, OgreBites::TL_NONE, "MultiPlayer", "Multi", 120);
-            widget->getOverlayElement()->setLeft(200.0f);
+            widget->getOverlayElement()->setLeft(posMulti.x);
         }
 
         {
+            Ogre::Vector4 roomList = screenAdaptionRelative * Ogre::Vector4(320.0f, 200.0f, 0.0f, 0.0f);
             OgreBites::TextBox* widget = createTextBox(trayMgr, OgreBites::TL_NONE, "RoomList", "Rooms", 120, 200);
-            widget->getOverlayElement()->setLeft(200.0f);
-            widget->getOverlayElement()->setTop(200.0f);
+            widget->getOverlayElement()->setLeft(roomList.x);
+            widget->getOverlayElement()->setTop(roomList.y);
             widget->appendText("OK1\n");
             widget->appendText("OK2\n");
             widget->appendText("OK3\n");
@@ -344,14 +337,25 @@ void UIMainMenu::load(MyGUI::Gui* gui, const GameState& gameState)
         }
 
         {
+            Ogre::Vector4 trackList = screenAdaptionRelative * Ogre::Vector4(400.0f, 200.0f, 120.0f, 0.0f);
+
+            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+            size_t itemToSelect = 0;
             Ogre::StringVector items;
-            items.push_back("room1");
-            items.push_back("room2");
-            items.push_back("room3");
-            items.push_back("room4");
-            OgreBites::SelectMenu* widget = createSelectMenu(trayMgr, OgreBites::TL_NONE, "RoomList2", "Rooms2", 120, 20, items);
-            widget->getOverlayElement()->setLeft(400.0f);
-            widget->getOverlayElement()->setTop(200.0f);
+            for(size_t q = 0; q < availTracks.size(); ++q)
+            {
+                items.push_back(strPowerslide.getTrackTitle(availTracks[q]));
+
+                if(availTracks[q] == mModeContext.getGameState().getTrackNameAsOriginal())
+                    itemToSelect = q;
+            }
+
+            OgreBites::SelectMenu* widget = createSelectMenu(trayMgr, OgreBites::TL_NONE, "Tracks", "Tracks", trackList.z, 5, items);
+            widget->selectItem(itemToSelect, false);
+            widget->getOverlayElement()->setLeft(trackList.x);
+            widget->getOverlayElement()->setTop(trackList.y);
         }
     }
 #endif
@@ -364,6 +368,7 @@ void UIMainMenu::reloadTextures(const GameState& gameState)
 }
 #endif
 
+#if 0
 void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
 {
     MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
@@ -531,5 +536,35 @@ void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     if(sender == mWidgetAIStrength)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(index), mModeContext.getGameState().getLapsCount());
+    }
+}
+#endif
+
+void UIMainMenu::buttonHit(OgreBites::Button* button)
+{
+    if(button->getName() == "SinglePlayer")
+    {
+        std::vector<std::string> playersCharacters;
+        playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        mMenuMode->recalculateCharacterNames(playersCharacters);
+
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+    }
+}
+
+void UIMainMenu::itemSelected(OgreBites::SelectMenu* menu)
+{
+    if(menu->getName() == "Tracks")
+    {
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+        mModeContext.getGameState().setRaceParameters(availTracks[menu->getSelectionIndex()], mModeContext.getGameState().getAIStrength());
+        if(
+            mModeContext.getGameState().getTrackName() == "stunt track"         ||
+            mModeContext.getGameState().getTrackName() == "luge track"          ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
+            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
+            )
+            mModeContext.getGameState().setAICount(0);
     }
 }

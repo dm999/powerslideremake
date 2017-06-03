@@ -61,8 +61,28 @@ OgreBites::Button* UIBase::createButton(CustomTrayManager* trayMgr, OgreBites::T
     return res;
 }
 
+OgreBites::TextBox* UIBase::createTextBox(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width, Ogre::Real height)
+{
+    OgreBites::TextBox* res = trayMgr->createTextBox(trayLoc, name, caption, width, height);
+
+    mCreatedWidgets.push_back(res);
+
+    return res;
+}
+
+OgreBites::SelectMenu* UIBase::createSelectMenu(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width, unsigned int maxItemsShown, const Ogre::StringVector& items)
+{
+    OgreBites::SelectMenu* res = trayMgr->createThickSelectMenu(trayLoc, name, caption, width, maxItemsShown, items);
+
+    mCreatedWidgets.push_back(res);
+
+    return res;
+}
+
 void UIBase::destroy(CustomTrayManager* trayMgr)
 {
+    trayMgr->setListener(NULL);
+
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
 
     for(size_t q = 0; q < mCreatedElements.size(); ++q)

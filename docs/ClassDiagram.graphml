@@ -2378,10 +2378,10 @@ public:
     <node id="n48">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="269.07666112608695" width="918.357184344271" x="15620.821407827865" y="-7034.538330563044"/>
+          <y:Geometry height="332.5271921107915" width="1335.7948881910138" x="15412.102555904494" y="-7066.263596055396"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="894.408203125" x="11.974490609634813" y="22.279541500543928">&lt;&lt;UIBase.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1315.90234375" x="9.946272220506216" y="17.251877305396192">&lt;&lt;UIBase.h&gt;&gt;
 
 UIBase
 
@@ -2391,11 +2391,16 @@ Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, Ogre::Real 
 Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, const Ogre::Vector4&amp; pos, const Ogre::String&amp; material)
 Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 
+OgreBites::Button* createButton(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width = 0)
+OgreBites::TextBox* createTextBox(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width = 0, Ogre::Real height = 0)
+OgreBites::SelectMenu* createSelectMenu(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width, unsigned int maxItemsShown, const Ogre::StringVector&amp; items)
+
 void destroy(CustomTrayManager* trayMgr)
 
 private:
 
-std::vector&lt;Ogre::OverlayElement*&gt; mCreatedElements</y:NodeLabel>
+std::vector&lt;Ogre::OverlayElement*&gt; mCreatedElements
+std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2403,10 +2408,10 @@ std::vector&lt;Ogre::OverlayElement*&gt; mCreatedElements</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="482.7484143565607" width="489.36695375394766" x="15385.316523123027" y="-6661.37420717828"/>
+          <y:Geometry height="639.304250807244" width="489.36695375394766" x="15385.316523123027" y="-6649.6521254036215"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="2.9207815644731454" y="4.155457178279903">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="2.9207815644731454" y="1.5769300911215396">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2418,6 +2423,13 @@ void processButtonClick(MyGUI::Widget* sender)
 void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
 void processItemSelected(MyGUI::Widget* sender, size_t index)
 void processChangeComboBox(MyGUI::Widget* sender, size_t index)
+
+#if defined(__ANDROID__)
+    void reloadTextures(const GameState&amp; gameState)
+#endif
+
+virtual void buttonHit(OgreBites::Button* button)
+virtual void itemSelected(OgreBites::SelectMenu* menu)
 
 private:
 
@@ -2437,7 +2449,11 @@ MyGUI::EditBox* mWidgetIP
 MyGUI::EditBox* mWidgetRoom
 MyGUI::EditBox* mWidgetUserName
 MyGUI::ListBox* mWidgetRooms
-MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
+MyGUI::ListBox* mWidgetRoomPlayers
+
+Ogre::PanelOverlayElement* mMainBackground
+Ogre::PanelOverlayElement* mBackgroundA
+Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2478,7 +2494,7 @@ MyGUI::ListBox* mWidgetRoomPlayers</y:NodeLabel>
     <node id="n53">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-6070.097146796503"/>
+          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-5920.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
@@ -3066,6 +3082,17 @@ ModeContext mModeContext
 MultiPlayerMode * mMultiPlayerMode
 
 MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n73">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="32.25791453345391" width="204.88871618483893" x="15977.55564190758" y="-7126.128957266727"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="26.74806902991986" y="6.7783713292274115">OgreBites::SdkTrayListener</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3826,6 +3853,16 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e70" source="n48" target="n73">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

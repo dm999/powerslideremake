@@ -120,6 +120,11 @@
         {
             base->touchUp(pID, pX, pY);
         }
+
+        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleActionMove(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
+        {
+            base->touchMove(pID, pX, pY);
+        }
     }
 #else
 

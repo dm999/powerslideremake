@@ -23,6 +23,8 @@ public:
                                     size_t newSize = 64) const;
 
 private:
+
+    void adjustTextureSizeIfNecessary(Ogre::Image& image)const;
 };
 
 #endif
