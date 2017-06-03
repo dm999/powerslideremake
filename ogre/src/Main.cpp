@@ -125,6 +125,11 @@
         {
             base->touchMove(pID, pX, pY);
         }
+
+        JNIEXPORT jboolean JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleBackPressed(JNIEnv* env, jobject obj)
+        {
+            base->androidOnBack();
+        }
     }
 #else
 

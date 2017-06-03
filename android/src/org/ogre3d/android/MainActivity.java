@@ -253,6 +253,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         return true;
     }
 
+
+    @Override
+    public void onBackPressed() {
+        boolean isMainMenu = OgreActivityJNI.handleBackPressed();
+        if(isMainMenu){
+            finish();
+            System.exit(0);
+        }
+    }
+
 	static {
         System.loadLibrary("openal");
 		System.loadLibrary("PowerslideRebuild");

@@ -308,15 +308,21 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameSta
     //buttons
     {
         {
-            Ogre::Vector4 posSingle = screenAdaptionRelative * Ogre::Vector4(320.0f, 0.0f, 0.0f, 0.0f);
+            Ogre::Vector4 posSingle = screenAdaptionRelative * Ogre::Vector4(320.0f, 15.0f, 100.0f, 100.0f);
             OgreBites::Button* widget = createButton(trayMgr, OgreBites::TL_NONE, "SinglePlayer", "Single", 120);
             widget->getOverlayElement()->setLeft(posSingle.x);
+            widget->getOverlayElement()->setTop(posSingle.w);
+            widget->getOverlayElement()->setHeight(posSingle.y);
+            widget->getOverlayElement()->setWidth(posSingle.z);
         }
 
         {
-            Ogre::Vector4 posMulti = screenAdaptionRelative * Ogre::Vector4(400.0f, 0.0f, 0.0f, 0.0f);
+            Ogre::Vector4 posMulti = screenAdaptionRelative * Ogre::Vector4(320.0f, 15.0f, 100.0f, 120.0f);
             OgreBites::Button* widget = createButton(trayMgr, OgreBites::TL_NONE, "MultiPlayer", "Multi", 120);
             widget->getOverlayElement()->setLeft(posMulti.x);
+            widget->getOverlayElement()->setTop(posMulti.w);
+            widget->getOverlayElement()->setHeight(posMulti.y);
+            widget->getOverlayElement()->setWidth(posMulti.z);
         }
 
         {

@@ -82,6 +82,8 @@ public:
     void touchUp(int id, float x, float y);
     void touchMove(int id, float x, float y);
 
+    bool androidOnBack();
+
     void androidCreate(JNIEnv * env, jobject obj, jobject assetManager);
     void androidDestroy();
     void androidInitWindow(JNIEnv * env, jobject obj,  jobject surface);

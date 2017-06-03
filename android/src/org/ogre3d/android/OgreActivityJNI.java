@@ -43,4 +43,5 @@ public class OgreActivityJNI {
     public native static void handleActionDown(final int pID, final float pX, final float pY);
     public native static void handleActionUp(final int pID, final float pX, final float pY);
     public native static void handleActionMove(final int pID, final float pX, final float pY);
+    public native static boolean handleBackPressed();
 }

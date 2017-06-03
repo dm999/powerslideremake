@@ -17,13 +17,29 @@ Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre:
         state->setTextureName(texturesNames[q]);
         state->setTextureScale(scale, scale);
 
+#if defined(__ANDROID__)
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        /*
         if(state->getTextureFiltering(Ogre::FT_MIN) == Ogre::FO_ANISOTROPIC || state->getTextureFiltering(Ogre::FT_MAG) == Ogre::FO_ANISOTROPIC)
         {
             if(!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_ANISOTROPY))
             {
-                state->setTextureFiltering(Ogre::TFO_TRILINEAR);
+                state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
             }
-        }
+            else
+            {
+                Ogre::Real maxAniso = const_cast<Ogre::RenderSystemCapabilities *>(Ogre::Root::getSingleton().getRenderSystem()->getCapabilities())->getMaxSupportedAnisotropy();
+                if(maxAniso < 1.0f)
+                {
+                    state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+                }
+                else
+                {
+                    state->setTextureAnisotropy(static_cast<unsigned int>(maxAniso));
+                }
+            }
+        }*/
+#endif
     }
 
     return materialNew;
