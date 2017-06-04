@@ -2054,8 +2054,8 @@ bool mIsSwitchMode
 bool mIsInitialLoadPassed
 
 UIBackground mUIBackground
-UIBackgroundLoader mUILoader
-UIBackground mUIUnloader
+CommonIncludes::shared_ptr&lt;UIBackgroundLoader&gt; mUILoader
+CommonIncludes::shared_ptr&lt;UIBackgroundLoader&gt; mUIUnloader
 
 
 CommonIncludes::shared_ptr&lt;BaseMenuMode&gt; mMenuMode

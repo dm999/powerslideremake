@@ -80,11 +80,12 @@ UIBackground::UIBackground(const ModeContext& modeContext,
     mModeContext(modeContext)
 {
     mMaterialName = nameGenMaterials.generate();
-    mTextureName = nameGenTextures.generate();
+
+    Ogre::String textureName = nameGenTextures.generate();
 
     TextureLoader().load(   loader, 
                             path, fileName, 
-                            mTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+                            textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
     mMaterial = Ogre::MaterialManager::getSingleton().create(mMaterialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
@@ -109,7 +110,7 @@ UIBackground::UIBackground(const ModeContext& modeContext,
     mMaterial->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
     mMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
-    mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState(mTextureName);
+    mMaterial->getTechnique(0)->getPass(0)->createTextureUnitState(textureName);
 
     Ogre::TextureUnitState *state = mMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
@@ -194,7 +195,7 @@ void UIBackground::destroyCamera()
 }
 
 
-UIBackgroundLoader::UIBackgroundLoader(const ModeContext& modeContext, 
+UIBackgroundLoaderProgress::UIBackgroundLoaderProgress(const ModeContext& modeContext, 
                            const PFLoader& loader,
                            const std::string& path, const std::string& fileName,
                            float progressTop, float progressBottom, float progressLeft, float progressRight) :
@@ -202,23 +203,23 @@ UIBackgroundLoader::UIBackgroundLoader(const ModeContext& modeContext,
     mProgressTop(progressTop), mProgressBottom(progressBottom), mProgressLeft(progressLeft), mProgressRight(progressRight),
     mPercent(0.0f)
 {
-    mTextureNameEnd = nameGenTextures.generate();
-    mTextureNameMiddle = nameGenTextures.generate();
+    Ogre::String textureNameEnd = nameGenTextures.generate();
+    Ogre::String textureNameMiddle = nameGenTextures.generate();
 
     mMaterialNameEnd = nameGenMaterials.generate();
     mMaterialNameMiddle = nameGenMaterials.generate();
 
     TextureLoader().load(   loader, 
                             "data/misc/loading", "end.tga", 
-                            mTextureNameEnd, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+                            textureNameEnd, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
     TextureLoader().load(   loader, 
                             "data/misc/loading", "middle.tga", 
-                            mTextureNameMiddle, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+                            textureNameMiddle, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
     {
         std::vector<Ogre::String> texName;
-        texName.push_back(mTextureNameEnd);
+        texName.push_back(textureNameEnd);
 
         Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialNameEnd, 
                             mMaterialName, 
@@ -235,7 +236,7 @@ UIBackgroundLoader::UIBackgroundLoader(const ModeContext& modeContext,
 
     {
         std::vector<Ogre::String> texName;
-        texName.push_back(mTextureNameMiddle);
+        texName.push_back(textureNameMiddle);
 
         Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialNameMiddle, 
                             mMaterialName, 
@@ -252,7 +253,7 @@ UIBackgroundLoader::UIBackgroundLoader(const ModeContext& modeContext,
 
 }
 
-void UIBackgroundLoader::show()
+void UIBackgroundLoaderProgress::show()
 {
     UIBackground::show();
 
@@ -296,7 +297,7 @@ void UIBackgroundLoader::show()
     mModeContext.mWindow->update(true);// update draw
 }
 
-void UIBackgroundLoader::hide()
+void UIBackgroundLoaderProgress::hide()
 {
     mLoaderScreen->removeChild(mBegin->getName());
     mLoaderScreen->removeChild(mMiddle->getName());
@@ -310,7 +311,7 @@ void UIBackgroundLoader::hide()
     UIBackground::hide();
 }
 
-void UIBackgroundLoader::setPercent(float percent)
+void UIBackgroundLoaderProgress::setPercent(float percent)
 {
     mPercent = percent;
 
@@ -332,4 +333,80 @@ void UIBackgroundLoader::setPercent(float percent)
     mEnd->setLeft(resWidth.z + resWidth.x);
 
     mModeContext.mWindow->update(true);// update draw
+}
+
+UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeContext& modeContext, 
+                           const PFLoader& loader,
+                           const std::string& path, const std::string& fileName,
+                           float progressTop, float progressBottom, float progressLeft, float progressRight) :
+    UIBackgroundLoaderProgress(modeContext, loader, path, fileName, progressTop, progressBottom, progressLeft, progressRight)
+{
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    for(size_t q = 0; q < availTracks.size(); ++q)
+    {
+        std::string loadingFileName = "data/tracks/" + strPowerslide.getBaseDir(availTracks[q]) + "/misc/loading";
+
+        Ogre::String textureName = nameGenTextures.generate();
+
+        Ogre::String materialName = nameGenMaterials.generate();
+        mMaterialTrackNames.insert(std::make_pair(availTracks[q], materialName));
+
+        TextureLoader().load(   loader, 
+                                loadingFileName, "loading.tga", 
+                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureName);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  materialName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+    }
+}
+
+void UIBackgroundLoaderProgressTracks::show(const std::string& trackName)
+{
+    UIBackgroundLoaderProgress::show();
+    
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
+
+    Ogre::Matrix4 screenAdaptionRelative(
+        viewportWidth / 640.0f, 0.0f,                       0.0f,                   0.0f,
+        0.0f,                   viewportHeight / 480.0f,    0.0f,                   0.0f,
+        0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
+        0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
+
+    Ogre::Vector4 trackPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 140.0f, 640.0f, 328.0f);
+
+
+    mTrack = createPanel("LoaderScreenProgressTrack", trackPos, mMaterialTrackNames[trackName]);
+    mTrack->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+    mLoaderScreen->addChild(mTrack);
+    mTrack->show();
+
+    mModeContext.mWindow->update(true);// update draw
+}
+
+void UIBackgroundLoaderProgressTracks::hide()
+{
+    mLoaderScreen->removeChild(mTrack->getName());
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
+    om.destroyOverlayElement(mTrack);
+
+    UIBackgroundLoaderProgress::hide();
 }

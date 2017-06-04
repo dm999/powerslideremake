@@ -42,15 +42,13 @@ private:
 
     Ogre::SceneManager* mSceneMgr;
     Ogre::Camera* mCamera;
-
-    Ogre::String mTextureName;
 };
 
-class UIBackgroundLoader : public UIBackground
+class UIBackgroundLoaderProgress : public UIBackground
 {
 public:
 
-    UIBackgroundLoader(const ModeContext& modeContext, 
+    UIBackgroundLoaderProgress(const ModeContext& modeContext, 
         const PFLoader& loader,
         const std::string& path, const std::string& fileName,
         float progressTop, float progressBottom, float progressLeft, float progressRight);
@@ -71,13 +69,28 @@ private:
     Ogre::PanelOverlayElement* mMiddle;
     Ogre::PanelOverlayElement* mEnd;
 
-    Ogre::String mTextureNameEnd;
-    Ogre::String mTextureNameMiddle;
-
     Ogre::String mMaterialNameEnd;
     Ogre::String mMaterialNameMiddle;
 
     float mPercent;
+};
+
+class UIBackgroundLoaderProgressTracks : public UIBackgroundLoaderProgress
+{
+public:
+
+    UIBackgroundLoaderProgressTracks(const ModeContext& modeContext, 
+        const PFLoader& loader,
+        const std::string& path, const std::string& fileName,
+        float progressTop, float progressBottom, float progressLeft, float progressRight);
+
+    void show(const std::string& trackName);
+    void hide();
+
+private:
+
+    std::map<std::string, Ogre::String> mMaterialTrackNames;
+    Ogre::PanelOverlayElement* mTrack;
 };
 
 #endif

@@ -19,15 +19,15 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
     mGameMode(ModeMenu), mIsSwitchMode(false),
     mIsInitialLoadPassed(false),
-    mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp"),
-    mUILoader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f),
-    mUIUnloader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f)
+    mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp")
 {
 
     mContext.setGameModeSwitcher(this);
 
     mMenuMode.reset(new MenuMode(mContext));
     mUIBackground.show();
+    mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
+    mUIUnloader.reset(new UIBackgroundLoaderProgress(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f));
     mMenuMode->initData(this);
     mUIBackground.hide();
     mMenuMode->initCamera();
@@ -132,9 +132,9 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMode.reset(new MenuMode(mContext));
-                mUIUnloader.show();
+                mUIUnloader->show();
                 mMenuMode->initData(this);
-                mUIUnloader.hide();
+                mUIUnloader->hide();
                 mMenuMode->initCamera();
             }
 
@@ -163,9 +163,9 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
-            mUILoader.show();
+            mUILoader->show(mContext.getGameState().getTrackName());
             mPlayerMode->initData(this);
-            mUILoader.hide();
+            mUILoader->hide();
             mPlayerMode->initCamera();
         }
 
@@ -290,12 +290,12 @@ void GameModeSwitcher::loadState(float percent)
 {
     if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
     {
-        mUILoader.setPercent(percent);
+        mUILoader->setPercent(percent);
     }
 
     if(mGameMode == ModeMenu || mGameMode == ModeMenuMulti)
     {
         if(mIsInitialLoadPassed)
-            mUIUnloader.setPercent(percent);
+            mUIUnloader->setPercent(percent);
     }
 }

@@ -62,8 +62,8 @@ private:
     bool mIsInitialLoadPassed;
 
     UIBackground mUIBackground;
-    UIBackgroundLoader mUILoader;
-    UIBackgroundLoader mUIUnloader;
+    CommonIncludes::shared_ptr<UIBackgroundLoaderProgressTracks> mUILoader;
+    CommonIncludes::shared_ptr<UIBackgroundLoaderProgress> mUIUnloader;
 
 
     CommonIncludes::shared_ptr<MenuMode> mMenuMode;
