@@ -896,7 +896,6 @@ void UIRace::loadDashboardCars(const GameState& gameState)
     {
         std::string iconName = gameState.getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
 
-        //too small - should be resized to work on mobile
         //d.polubotko(TODO): consider atlas usage
         Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( gameState.getPFLoaderGameshell(), 
                                     "data/gameshell", iconName, 

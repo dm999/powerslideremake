@@ -45,6 +45,58 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "tmgb.bmp", 
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
+
+    {
+        const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track10.bmp", "track11.bmp"};
+
+        for(size_t q = 0; q < 12; ++q)
+        {
+            TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", trackNames[q], 
+                                "OriginalTrack" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+        }
+    }
+
+    {
+        std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+        for (size_t q = 0; q < availableCharacters.size(); ++q)
+        {
+            std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
+            size_t carIndex = 0;
+            size_t charIndex = 0;
+            sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
+
+            std::string carName = "car" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
+            std::string carsName = "carst" + Conversions::DMToString(carIndex) + ".bmp";
+            std::string charName = "char" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
+
+            if(charIndex < 1)
+            {
+                TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", carName, 
+                                    "OriginalCar" + Conversions::DMToString(carIndex), TEMP_RESOURCE_GROUP_NAME);
+
+                TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", carsName, 
+                                    "OriginalCarS" + Conversions::DMToString(carIndex), TEMP_RESOURCE_GROUP_NAME);
+            }
+
+            //supercar is different
+            if(carIndex < 6)
+            {
+                TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", charName, 
+                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
+            }
+            else
+            {
+                TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", carName, 
+                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
+            }
+        }
+
+    }
 }
 
 void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState)
@@ -266,6 +318,9 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameSta
         {
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalBackgroundA");
+            //texName.push_back("OriginalCar0");
+            //texName.push_back("OriginalChar0_0");
+            //texName.push_back("OriginalTrack0");
             Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
                                 "Test/Diffuse", 
                                 texName, 
@@ -294,6 +349,9 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameSta
         }
 
         Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
+        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 311.0f, 219.0f);
+        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 309.0f, 358.0f);
+        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 313.0f, 218.0f);
         Ogre::Vector4 backgroundB = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 197.0f + 102.0f, 217.0f);
 
         mBackgroundA = createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
@@ -572,5 +630,7 @@ void UIMainMenu::itemSelected(OgreBites::SelectMenu* menu)
             mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
             )
             mModeContext.getGameState().setAICount(0);
+        else
+            mModeContext.getGameState().setAICount(3);
     }
 }

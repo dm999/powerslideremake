@@ -52,6 +52,15 @@ Ogre::TextAreaOverlayElement* UIBase::createTextArea(const Ogre::String& name, O
     return res;
 }
 
+OgreBites::Label* UIBase::createLabel(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width)
+{
+    OgreBites::Label* res = trayMgr->createLabel(trayLoc, name, caption, width);
+
+    mCreatedWidgets.push_back(res);
+
+    return res;
+}
+
 OgreBites::Button* UIBase::createButton(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width)
 {
     OgreBites::Button* res = trayMgr->createButton(trayLoc, name, caption, width);

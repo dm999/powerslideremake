@@ -2381,7 +2381,7 @@ public:
           <y:Geometry height="332.5271921107915" width="1335.7948881910138" x="15412.102555904494" y="-7066.263596055396"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1315.90234375" x="9.946272220506216" y="17.251877305396192">&lt;&lt;UIBase.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1315.90234375" x="9.946272220506216" y="9.901291367896192">&lt;&lt;UIBase.h&gt;&gt;
 
 UIBase
 
@@ -2391,6 +2391,7 @@ Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, Ogre::Real 
 Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, const Ogre::Vector4&amp; pos, const Ogre::String&amp; material)
 Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 
+OgreBites::Label* createLabel(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width = 0)
 OgreBites::Button* createButton(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width = 0)
 OgreBites::TextBox* createTextBox(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width = 0, Ogre::Real height = 0)
 OgreBites::SelectMenu* createSelectMenu(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String&amp; name, const Ogre::String&amp; caption, Ogre::Real width, unsigned int maxItemsShown, const Ogre::StringVector&amp; items)
