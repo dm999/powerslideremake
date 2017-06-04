@@ -90,7 +90,9 @@ public:
 private:
 
     std::map<std::string, Ogre::String> mMaterialTrackNames;
+    std::map<std::string, Ogre::String> mMaterialTrackTitlesNames;
     Ogre::PanelOverlayElement* mTrack;
+    Ogre::PanelOverlayElement* mTrackTitle;
 };
 
 #endif

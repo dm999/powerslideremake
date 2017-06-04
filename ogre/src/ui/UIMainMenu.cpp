@@ -436,7 +436,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameSta
 #if defined(__ANDROID__)
 void UIMainMenu::reloadTextures(const GameState& gameState)
 {
-    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
+    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell(), NULL);
 }
 #endif
 

@@ -346,22 +346,46 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
 
     for(size_t q = 0; q < availTracks.size(); ++q)
     {
-        std::string loadingFileName = "data/tracks/" + strPowerslide.getBaseDir(availTracks[q]) + "/misc/loading";
+        std::string loadingFilePath = "data/tracks/" + strPowerslide.getBaseDir(availTracks[q]) + "/misc/loading";
 
         Ogre::String textureName = nameGenTextures.generate();
+        Ogre::String textureNameTitle = nameGenTextures.generate();
 
         Ogre::String materialName = nameGenMaterials.generate();
         mMaterialTrackNames.insert(std::make_pair(availTracks[q], materialName));
 
+        Ogre::String materialNameTitle = nameGenMaterials.generate();
+        mMaterialTrackTitlesNames.insert(std::make_pair(availTracks[q], materialNameTitle));
+
         TextureLoader().load(   loader, 
-                                loadingFileName, "loading.tga", 
+                                loadingFilePath, "loading.tga", 
                                 textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load(   loader, 
+                                loadingFilePath, "text-english.tga", 
+                                textureNameTitle, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
         {
             std::vector<Ogre::String> texName;
             texName.push_back(textureName);
 
             Ogre::MaterialPtr newMat = CloneMaterial(  materialName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureNameTitle);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  materialNameTitle, 
                                 mMaterialName, 
                                 texName, 
                                 1.0f,
@@ -390,6 +414,7 @@ void UIBackgroundLoaderProgressTracks::show(const std::string& trackName)
         0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
 
     Ogre::Vector4 trackPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 140.0f, 640.0f, 328.0f);
+    Ogre::Vector4 trackTitlePos = screenAdaptionRelative * Ogre::Vector4(133.0f, 341.0f, 133.0f + 363.0f, 341.0f + 40.0f);
 
 
     mTrack = createPanel("LoaderScreenProgressTrack", trackPos, mMaterialTrackNames[trackName]);
@@ -398,15 +423,25 @@ void UIBackgroundLoaderProgressTracks::show(const std::string& trackName)
     mLoaderScreen->addChild(mTrack);
     mTrack->show();
 
+
+    mTrackTitle = createPanel("LoaderScreenProgressTrackTitle", trackTitlePos, mMaterialTrackTitlesNames[trackName]);
+    mTrackTitle->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+    mLoaderScreen->addChild(mTrackTitle);
+    mTrackTitle->show();
+
+
     mModeContext.mWindow->update(true);// update draw
 }
 
 void UIBackgroundLoaderProgressTracks::hide()
 {
     mLoaderScreen->removeChild(mTrack->getName());
+    mLoaderScreen->removeChild(mTrackTitle->getName());
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
     om.destroyOverlayElement(mTrack);
+    om.destroyOverlayElement(mTrackTitle);
 
     UIBackgroundLoaderProgress::hide();
 }
