@@ -11,6 +11,7 @@ public:
     virtual ~BaseMenuMode(){}
 
     void initData()override;
+    void initCamera()override;
     void clearData()override;
 
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;

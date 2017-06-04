@@ -14,7 +14,6 @@ PSAICar::PSAICar() :
 void PSAICar::initModel(    lua_State * pipeline, 
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
@@ -23,7 +22,7 @@ void PSAICar::initModel(    lua_State * pipeline,
 {
     mSteeringImpulse = 0.0f;
 
-    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isPossesCamera);
+    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isPossesCamera);
 }
 
 void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)

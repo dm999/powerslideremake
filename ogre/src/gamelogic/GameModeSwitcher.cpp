@@ -17,13 +17,19 @@
 
 GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
-    mGameMode(ModeMenu), mIsSwitchMode(false)
+    mGameMode(ModeMenu), mIsSwitchMode(false),
+    mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp"),
+    mUILoader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga"),
+    mUIUnloader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga")
 {
 
     mContext.setGameModeSwitcher(this);
 
     mMenuMode.reset(new MenuMode(mContext));
+    mUIBackground.show();
     mMenuMode->initData();
+    mUIBackground.hide();
+    mMenuMode->initCamera();
 }
 
 GameModeSwitcher::~GameModeSwitcher()
@@ -123,7 +129,10 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMode.reset(new MenuMode(mContext));
+                mUIUnloader.show();
                 mMenuMode->initData();
+                mUIUnloader.hide();
+                mMenuMode->initCamera();
             }
 
 #ifndef NO_MULTIPLAYER
@@ -136,6 +145,7 @@ void GameModeSwitcher::frameEnded()
 
                 mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
                 mMenuMultiMode->initData();
+                mMenuMultiMode->initCamera();
             }
 #endif
         }
@@ -150,7 +160,10 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mUILoader.show();
             mPlayerMode->initData();
+            mUILoader.hide();
+            mPlayerMode->initCamera();
         }
 
 #ifndef NO_MULTIPLAYER
@@ -165,6 +178,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
             mPlayerMode->initData();
+            mPlayerMode->initCamera();
             static_cast<MultiPlayerMode *>(mPlayerMode.get())->prepareDataForSession(multiplayerSessionStartInfo);
         }
 
@@ -179,6 +193,7 @@ void GameModeSwitcher::frameEnded()
 
             mMenuMode.reset(new MenuMode(mContext));
             mMenuMode->initData();
+            mMenuMode->initCamera();
         }
 
         //main menu single -> multi main menu
@@ -190,6 +205,7 @@ void GameModeSwitcher::frameEnded()
 
             mMenuMultiMode.reset(new MenuMultiMode(mContext));
             mMenuMultiMode->initData();
+            mMenuMultiMode->initCamera();
 
             //unable to enter to lobby
             //recreate main menu single
@@ -199,6 +215,7 @@ void GameModeSwitcher::frameEnded()
                 mGameMode = ModeMenu;
                 mMenuMode.reset(new MenuMode(mContext));
                 mMenuMode->initData();
+                mMenuMode->initCamera();
             }
         }
 #endif

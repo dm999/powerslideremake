@@ -11,6 +11,7 @@ public:
     virtual ~BaseMode(){}
 
     virtual void initData() = 0;
+    virtual void initCamera() = 0;
     virtual void clearData() = 0;
 
     virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;

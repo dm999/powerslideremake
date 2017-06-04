@@ -65,7 +65,6 @@ PSControllableCar::PSControllableCar() :
 void PSControllableCar::initModel(  lua_State * pipeline, 
                                     const GameState& gameState,
                                     Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                                    CameraMan * cameraMan,
                                     ModelsPool* modelsPool,
                                     OgreBulletDynamics::DynamicsWorld * world,
                                     const std::string& characterName,
@@ -92,9 +91,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mParticles = gameState.getParticles();
 
-    mCameraMan = cameraMan;
-
-    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, cameraMan, modelsPool, world, characterName, transform, isAI);
+    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isAI);
 
     {
         std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
@@ -177,12 +174,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mSteeringMaxRad = Ogre::Degree(mSteeringMax).valueRadians();
 
     mIsPossesCamera = isPossesCamera;
-    if(mIsPossesCamera)
-    {
-        //Ogre::Vector3 cameraOffset(0.0f, 0.0f, 0.0f);
-        //mCameraMan->setTarget(mModelNode);//, cameraOffset);
-        mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), mModelNode);
-    }
 
     mWheelBackLParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
     mWheelBackRParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");

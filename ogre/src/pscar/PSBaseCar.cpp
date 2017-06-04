@@ -54,7 +54,6 @@ void PSBaseCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt)
 void PSBaseCar::initModel(  lua_State * pipeline, 
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,

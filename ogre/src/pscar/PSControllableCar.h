@@ -12,6 +12,8 @@
 
 #include "PSCarEngine.h"
 
+class CameraMan;
+
 class PSControllableCar : public PSBaseCar
 {
 public:
@@ -22,13 +24,14 @@ public:
     virtual void initModel( lua_State * pipeline, 
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera,
                             bool isAI = true);
+
+    void setCameraMan(CameraMan * cameraMan){mCameraMan = cameraMan;}
 
     virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, StaticMeshProcesser& processer, bool isRaceStarted);
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted);

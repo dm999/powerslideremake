@@ -47,6 +47,9 @@ public:
     GameModeSwitcher * getGameModeSwitcher() const{return mGameModeSwitcher;}
 
     GameState& getGameState(){return mGameState;}
+    const GameState& getGameState() const{return mGameState;}
+
+    CustomTrayManager* getTrayManager(){return mTrayMgr;}
 
     friend class GameModeSwitcher;
     friend class BaseMenuMode;
@@ -57,6 +60,7 @@ public:
     friend class BaseRaceMode;
     friend class SinglePlayerMode;
     friend class MultiPlayerMode;
+    friend class UIBackground;
 
 private:
 

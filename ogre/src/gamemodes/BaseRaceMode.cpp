@@ -109,14 +109,70 @@ void BaseRaceMode::initData()
     //mDetailsPanel->hide();
 #endif
 
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Exit");
+}
+
+
+void BaseRaceMode::initCamera()
+{
+
+    mCamera = mSceneMgr->createCamera("PlayerCam");
+    mCamera->setNearClipDistance(0.5f);
+    Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
+
+    mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
+    mCamera->setAspectRatio(1.2f * Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
+    //mCamera->setFOVy(Ogre::Degree(95.0f));
+    mCamera->setFOVy(Ogre::Degree(80.0f));
+
+    mCameraMan.reset(new CameraMan(mCamera, mWorld.get(), mSceneMgr));
+    mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
+
+    mModeContext.mGameState.getPlayerCar().setCameraMan(mCameraMan.get());
+
+    //http://www.ogre3d.org/forums/viewtopic.php?p=331138
+    //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79581
+    mSceneMgrCarUI = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
+    Ogre::Camera * cameraCarUI = mSceneMgrCarUI->createCamera("PlayerCam");
+    cameraCarUI->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
+    cameraCarUI->setOrthoWindow(static_cast<float>(mViewPort->getActualWidth()), static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setNearClipDistance(0.5f);
+    cameraCarUI->setFarClipDistance(10000.0f);
+    Ogre::Viewport * viewPortCarUI = mModeContext.mWindow->addViewport(cameraCarUI, 1);
+    viewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
+    viewPortCarUI->setOverlaysEnabled(false);
+    viewPortCarUI->setSkiesEnabled(false);
+    cameraCarUI->setAspectRatio(static_cast<float>(mViewPort->getActualWidth()) / static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setFOVy(Ogre::Degree(45.0f));
+    cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
+    cameraCarUI->lookAt(Ogre::Vector3::ZERO);
+
+    mModeContext.mTrayMgr->hideCursor();
+
+    //init misc
+    if(mModeContext.mGameState.getMirrorEnabled())
+    {
+        mRearCamera = mSceneMgr->createCamera("RearViewCamera");
+        mRearCamera->setNearClipDistance(0.5f);
+        Ogre::Viewport *v = mUIRace->rearViewMirrorPanelTextureAddViewport(mRearCamera);
+        v->setOverlaysEnabled(false);
+        v->setClearEveryFrame(true);
+        v->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
+        mRearCamera->setAspectRatio(1.0f);
+        mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
+    }
+
+    mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
+
+    mCameraMan->setRearCamera(mRearCamera);
+    //init misc end
+
     mUIRace->createRearViewMirrorPanel(mModeContext.mTrayMgr, mModeContext.mGameState.getMirrorEnabled());
     mUIRace->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 
     mUIRace->setShowMiscTextRight(true);
 
     customInitUI();
-
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Exit");
 }
 
 void BaseRaceMode::clearData()
@@ -169,19 +225,7 @@ void BaseRaceMode::initScene()
 
     mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 
-    mCamera = mSceneMgr->createCamera("PlayerCam");
-    mCamera->setNearClipDistance(0.5f);
-    Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
-
-    mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-    mCamera->setAspectRatio(1.2f * Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
-    //mCamera->setFOVy(Ogre::Degree(95.0f));
-    mCamera->setFOVy(Ogre::Degree(80.0f));
-
     initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mModeContext.mPipeline), 0.0f));
-
-    mCameraMan.reset(new CameraMan(mCamera, mWorld.get(), mSceneMgr));
-    mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
     //load data
     {
@@ -278,27 +322,9 @@ void BaseRaceMode::initScene()
 
     ParticlesLoader().load(mModeContext.mGameState);
 
-    //http://www.ogre3d.org/forums/viewtopic.php?p=331138
-    //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79581
-    mSceneMgrCarUI = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
-    Ogre::Camera * cameraCarUI = mSceneMgrCarUI->createCamera("PlayerCam");
-    cameraCarUI->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-    cameraCarUI->setOrthoWindow(static_cast<float>(mViewPort->getActualWidth()), static_cast<float>(mViewPort->getActualHeight()));
-    cameraCarUI->setNearClipDistance(0.5f);
-    cameraCarUI->setFarClipDistance(10000.0f);
-    Ogre::Viewport * viewPortCarUI = mModeContext.mWindow->addViewport(cameraCarUI, 1);
-    viewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
-    viewPortCarUI->setOverlaysEnabled(false);
-    viewPortCarUI->setSkiesEnabled(false);
-    cameraCarUI->setAspectRatio(static_cast<float>(mViewPort->getActualWidth()) / static_cast<float>(mViewPort->getActualHeight()));
-    cameraCarUI->setFOVy(Ogre::Degree(45.0f));
-    cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
-    cameraCarUI->lookAt(Ogre::Vector3::ZERO);
-
-    mModeContext.mTrayMgr->hideCursor();
-
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Exit");
 }
+
 
 void BaseRaceMode::clearScene()
 {
@@ -407,7 +433,7 @@ void BaseRaceMode::initModel()
 
     mModelsPool.initModels(mSceneMgr, mModeContext.mGameState);
 
-    mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], !isCamToAI);
+    mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
@@ -419,7 +445,7 @@ void BaseRaceMode::initModel()
         bool isCam = (q == (mModeContext.mGameState.getAICount() - 1));
         if(!isCamToAI)
             isCam = false;
-        aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, mCameraMan.get(), &mModelsPool, mWorld.get(), aiCharacters[q], mModeContext.mGameState.getTrackPositions()[q], isCam);
+        aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacters[q], mModeContext.mGameState.getTrackPositions()[q], isCam);
         aiCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
         mLapController.addCar(&aiCar);
@@ -459,25 +485,12 @@ void BaseRaceMode::initMisc()
         }
 
 
-        mRearCamera = mSceneMgr->createCamera("RearViewCamera");
-        mRearCamera->setNearClipDistance(0.5f);
-        Ogre::Viewport *v = mUIRace->rearViewMirrorPanelTextureAddViewport(mRearCamera);
-        v->setOverlaysEnabled(false);
-        v->setClearEveryFrame(true);
-        v->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-        mRearCamera->setAspectRatio(1.0f);
-        mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
-
         mUIRace->setRearViewMirrorPanelShow(true);
     }
     else
     {
         mUIRace->setRearViewMirrorPanelShow(false);
     }
-
-    mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
-
-    mCameraMan->setRearCamera(mRearCamera);
 
     //as long as last procedure before draw started
     mModeContext.mGameState.resetBeforeStartTimer();
@@ -879,14 +892,14 @@ void BaseRaceMode::loadResources()
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
     //http://ogre3d.org/forums/viewtopic.php?f=2&t=54469
-    mModeContext.mTrayMgr->showLoadingBar(2, 2);
+    //mModeContext.mTrayMgr->showLoadingBar(2, 2);
     //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
 
 
-    mModeContext.mTrayMgr->hideLoadingBar();
+    //mModeContext.mTrayMgr->hideLoadingBar();
 
 #if defined(__ANDROID__)
     LOGI("BaseApp[loadResources]: End"); 

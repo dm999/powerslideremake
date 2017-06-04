@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1488.818359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="161.623787962425">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1474.1171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="168.974373899925">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -351,7 +351,6 @@ virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt)
 
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
@@ -567,7 +566,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4471.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2238.578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="22.334010794801543">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2253.279296875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="14.983424857301543">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -575,14 +574,15 @@ public:
 
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera,
-                            bool isAI = true);
+                            bool isAI = true)
+
+void setCameraMan(CameraMan * cameraMan)
 
 virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, StaticMeshProcesser&amp; processer, bool isRaceStarted)
 virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt, bool isRaceStarted)
@@ -884,7 +884,7 @@ void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bo
           <y:Geometry height="570.4779855747715" width="814.9492552746156" x="5442.525372362692" y="-1845.2389927873858"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="48.02024278738577">&lt;&lt;PSPlayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="459.736328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="55.37082872488577">&lt;&lt;PSPlayerCar.h&gt;&gt;
 
 PSPlayerCar
 
@@ -892,7 +892,6 @@ public:
 
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
@@ -937,7 +936,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1867.4543197495618"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="26.13205412456182">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="33.48264006206182">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -945,7 +944,6 @@ public:
 
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
@@ -1064,7 +1062,7 @@ Ogre::Vector3 dir</y:NodeLabel>
           <y:Geometry height="607.6943625855972" width="542.4107110025902" x="6568.794644498705" y="-933.8471812927986"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="36.781527376295344" y="15.17432973029861">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="36.781527376295344" y="22.52491566779861">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1072,7 +1070,6 @@ public:
 
 void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
@@ -2021,10 +2018,10 @@ DWORD Length</y:NodeLabel>
     <node id="n38">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="535.3609709024449" width="807.9384596111427" x="12376.03077019443" y="-6207.680485451223"/>
+          <y:Geometry height="587.7243564729806" width="807.9384596111427" x="12376.03077019443" y="-6233.86217823649"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="8.409977638722921">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="5.189326673989854">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2053,6 +2050,10 @@ GameMode mGameMode
 GameMode mGameModeNext
 bool mIsSwitchMode
 
+UIBackground mUIBackground
+UIBackground mUILoader
+UIBackground mUIUnloader
+
 
 CommonIncludes::shared_ptr&lt;BaseMenuMode&gt; mMenuMode
 CommonIncludes::shared_ptr&lt;MenuMultiMode&gt; mMenuMultiMode
@@ -2067,16 +2068,17 @@ void clear()
     <node id="n39">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="320.6928825262544" width="420.48941532423214" x="14458.752269457724" y="-8140.346441263127"/>
+          <y:Geometry height="357.0266602690749" width="420.48941532423214" x="14458.752269457724" y="-8158.513330134538"/>
           <y:Fill color="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.84375" x="20.322832662115616" y="3.984136575627417">&lt;&lt;BaseMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="327.42578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.84375" x="20.322832662115616" y="14.800439509537682">&lt;&lt;BaseMode.h&gt;&gt;
 
 BaseMode
 
 public:
 
 virtual void initData() = 0
+virtual void initCamera() = 0
 virtual void clearData() = 0
 
 virtual void frameStarted(const Ogre::FrameEvent &amp;evt) = 0
@@ -2127,14 +2129,15 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
           <y:Geometry height="1204.869649495391" width="930.2499573032924" x="14204.875021348353" y="-4382.434824747697"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1180.09375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="12.38794974769553">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1194.794921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="5.037363810195529">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
 public:
 
-virtual void initData()override
-virtual void clearData()override
+void initData()override
+void initCamera()override
+void clearData()override
 
 void restart()
 
@@ -2226,10 +2229,10 @@ Ogre::RenderTargetListener</y:NodeLabel>
     <node id="n43">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="434.5806668488958" width="399.02319879457855" x="14980.488400602711" y="-8197.290333424447"/>
+          <y:Geometry height="505.5450765028427" width="399.02319879457855" x="14980.488400602711" y="-8232.772538251422"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="2.1233412369474536">&lt;&lt;ModeContext.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="15.553788251421793">&lt;&lt;ModeContext.h&gt;&gt;
 
 ModeContext
 
@@ -2239,6 +2242,9 @@ void setGameModeSwitcher(GameModeSwitcher* gameModeSwitcher)
 GameModeSwitcher* getGameModeSwitcher()const
 
 GameState&amp; getGameState()
+const GameState&amp; getGameState() const
+
+CustomTrayManager* getTrayManager()
 
 private:
 
@@ -2265,7 +2271,7 @@ SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
     <node id="n44">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="26.610244263811182" width="114.85085494960651" x="12722.574572525196" y="-5623.305122131904"/>
+          <y:Geometry height="26.610244263811182" width="114.85085494960651" x="12722.574572525196" y="-5593.305122131906"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="75.373046875" x="19.738904037303655" y="3.9545361944055912">ModeContext</y:NodeLabel>
@@ -2484,7 +2490,7 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
     <node id="n52">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="26.610244263811182" width="173.38367984003628" x="12693.308160079981" y="-6275.405065361787"/>
+          <y:Geometry height="26.610244263811182" width="173.38367984003628" x="12693.308160079981" y="-6343.305122131906"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="10.995550857518538" y="3.9545361944055912">OgreBites::SdkTrayListener</y:NodeLabel>
@@ -2664,17 +2670,18 @@ size_t mLapsCount</y:NodeLabel>
     <node id="n59">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="284.62202918752837" width="457.29192897408666" x="13841.354035512957" y="-7492.311014593764"/>
+          <y:Geometry height="332.49712456630505" width="457.29192897408666" x="13841.354035512957" y="-7516.248562283153"/>
           <y:Fill color="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="0.649881781264412">&lt;&lt;BaseMenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="298.0234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="17.23684353315275">&lt;&lt;BaseMenuMode.h&gt;&gt;
 
 BaseMenuMode
 
 public:
 
-virtual void initData()override
-virtual void clearData()override
+void initData()override
+void initCamera()override
+void clearData()override
 
 virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
 

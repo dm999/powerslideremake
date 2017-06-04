@@ -17,7 +17,6 @@ public:
     virtual void initModel( lua_State * pipeline, 
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            CameraMan * cameraMan,
                             ModelsPool* modelsPool,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,

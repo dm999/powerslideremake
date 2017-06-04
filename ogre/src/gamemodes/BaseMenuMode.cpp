@@ -48,6 +48,14 @@ void BaseMenuMode::initData()
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("UI");
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("UI");
 
+    //to load textures & materials
+    mModeContext.mWindow->update(false);
+
+    doInitData();
+}
+
+void BaseMenuMode::initCamera()
+{
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
     mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
     mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -61,9 +69,6 @@ void BaseMenuMode::initData()
     mCamera->setPosition(0.0f, 0.0f, 100.0f);
     mCamera->lookAt(Ogre::Vector3::ZERO);
 
-    //to load textures & materials
-    mModeContext.mWindow->update(false);
-
     //mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
     //mModeContext.mGUI->initialise();
 
@@ -72,12 +77,13 @@ void BaseMenuMode::initData()
     //MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
     //MyGUI::PointerManager::getInstance().setVisible(false);
 
-    doInitData();
+    
 
     //mModeContext.mTrayMgr->showCursor();
     mModeContext.mTrayMgr->showCursor("Test/Cursor");
     //mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
     //mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
+
 }
 
 void BaseMenuMode::clearData()

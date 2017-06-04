@@ -33,8 +33,9 @@ public:
     BaseRaceMode(const ModeContext& modeContext);
     virtual ~BaseRaceMode(){}
 
-    virtual void initData()override;
-    virtual void clearData()override;
+    void initData()override;
+    void initCamera()override;
+    void clearData()override;
 
     void restart();
 

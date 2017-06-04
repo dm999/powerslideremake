@@ -7,6 +7,7 @@
 #include "../GameState.h"
 
 #include "../gamemodes/ModeContext.h"
+#include "../ui/UIBackground.h"
 
 class MenuMode;
 class MenuMultiMode;
@@ -52,6 +53,10 @@ private:
     GameMode mGameMode;//current
     GameMode mGameModeNext;//next
     bool mIsSwitchMode;
+
+    UIBackground mUIBackground;
+    UIBackground mUILoader;
+    UIBackground mUIUnloader;
 
 
     CommonIncludes::shared_ptr<MenuMode> mMenuMode;
