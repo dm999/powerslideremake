@@ -19,6 +19,8 @@
 #include "../loaders/TEXLoader.h"
 #include "../loaders/TextureLoader.h"
 
+#include "../listeners/LoaderListener.h"
+
 #include "../ui/UIRace.h"
 
 #if defined(__ANDROID__)
@@ -51,20 +53,40 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
 {
 }
 
-void BaseRaceMode::initData()
+void BaseRaceMode::initData(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Enter");
 
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
     initScene();
 
+    if(loaderListener)
+        loaderListener->loadState(0.1f);
+
     loadResources();
 
-    initTerrain();
+    if(loaderListener)
+        loaderListener->loadState(0.2f);
+
+    initTerrain(loaderListener);
+
+    if(loaderListener)
+        loaderListener->loadState(0.8f);
+
     initModel();
+
+    if(loaderListener)
+        loaderListener->loadState(0.9f);
+
     initMisc();
 
+    if(loaderListener)
+        loaderListener->loadState(0.95f);
+
     initLightLists();
+
+    if(loaderListener)
+        loaderListener->loadState(1.0f);
 
 #if SHOW_DETAILS_PANEL
     // create a params panel for displaying sample details
@@ -198,7 +220,7 @@ void BaseRaceMode::restart()
     clearScene();
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
     initScene();
-    initTerrain();
+    initTerrain(NULL);
     initModel();
     initMisc();
 
@@ -379,12 +401,13 @@ void BaseRaceMode::initLightLists()
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Exit");
 }
 
-void BaseRaceMode::initTerrain()
+void BaseRaceMode::initTerrain(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Enter");
 
     mStaticMeshProcesser.initParts( mModeContext.mPipeline, mSceneMgr, mMainNode, mIsGlobalReset, 
-                                    mModeContext.mGameState, mWorld.get());
+                                    mModeContext.mGameState, mWorld.get(),
+                                    loaderListener);
     mStaticMeshProcesser.loadTerrainMaps(mModeContext.mGameState);
 
     //load terrain params

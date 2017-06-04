@@ -10,9 +10,9 @@ MenuMode::MenuMode(const ModeContext& modeContext) :
     mUIMainMenu.reset(new UIMainMenu(modeContext, this));
 }
 
-void MenuMode::doInitData()
+void MenuMode::doInitData(LoaderListener* loaderListener)
 {
-    mUIMainMenu->load(mModeContext.mTrayMgr, mModeContext.mGUI, mModeContext.mGameState);
+    mUIMainMenu->load(mModeContext.mTrayMgr, mModeContext.mGUI, mModeContext.mGameState, loaderListener);
 }
 
 void MenuMode::doClearData()

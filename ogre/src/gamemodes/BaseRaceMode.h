@@ -23,6 +23,8 @@ namespace OgreBites
 
 #define SHOW_DETAILS_PANEL 0
 
+class LoaderListener;
+
 class BaseRaceMode : 
     public BaseMode,
     public LapUtils::Events,
@@ -33,7 +35,7 @@ public:
     BaseRaceMode(const ModeContext& modeContext);
     virtual ~BaseRaceMode(){}
 
-    void initData()override;
+    void initData(LoaderListener* loaderListener)override;
     void initCamera()override;
     void clearData()override;
 
@@ -105,7 +107,7 @@ private:
     CommonIncludes::shared_ptr<OgreBulletCollisions::DebugDrawer> mDebugDrawer;
 
     void initScene();
-    void initTerrain();
+    void initTerrain(LoaderListener* loaderListener);
     void initModel();
 
     void initLightLists();

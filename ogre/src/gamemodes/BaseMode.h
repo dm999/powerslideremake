@@ -3,6 +3,8 @@
 
 #include "ModeContext.h"
 
+class LoaderListener;
+
 class BaseMode
 {
 public:
@@ -10,7 +12,7 @@ public:
     BaseMode(const ModeContext& modeContext);
     virtual ~BaseMode(){}
 
-    virtual void initData() = 0;
+    virtual void initData(LoaderListener* loaderListener) = 0;
     virtual void initCamera() = 0;
     virtual void clearData() = 0;
 

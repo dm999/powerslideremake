@@ -29,7 +29,7 @@ public:
 
 protected:
 
-    void doInitData()override;
+    void doInitData(LoaderListener* loaderListener)override;
     void doClearData()override;
 
 private:

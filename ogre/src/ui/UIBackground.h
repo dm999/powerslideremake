@@ -17,27 +17,67 @@ public:
     void show();
     void hide();
 
-private:
+protected:
 
     Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material);
+    Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
+
+
+    ModeContext mModeContext;
+
+    Ogre::PanelOverlayElement* mLoaderScreen;
+
+    Ogre::String mMaterialName;
+
+    static Ogre::NameGenerator nameGenMaterials;
+    static Ogre::NameGenerator nameGenTextures;
+
+private:
+
     
     void createCamera();
     void destroyCamera();
-
-    ModeContext mModeContext;
 
     Ogre::MaterialPtr mMaterial;
 
     Ogre::SceneManager* mSceneMgr;
     Ogre::Camera* mCamera;
 
-    Ogre::PanelOverlayElement* mLoaderScreen;
-
-    Ogre::String mMaterialName;
     Ogre::String mTextureName;
+};
 
-    static Ogre::NameGenerator nameGenMaterials;
-    static Ogre::NameGenerator nameGenTextures;
+class UIBackgroundLoader : public UIBackground
+{
+public:
+
+    UIBackgroundLoader(const ModeContext& modeContext, 
+        const PFLoader& loader,
+        const std::string& path, const std::string& fileName,
+        float progressTop, float progressBottom, float progressLeft, float progressRight);
+
+    void show();
+    void hide();
+
+    void setPercent(float percent);
+
+private:
+
+    float mProgressTop;
+    float mProgressBottom;
+    float mProgressLeft;
+    float mProgressRight;
+
+    Ogre::PanelOverlayElement* mBegin;
+    Ogre::PanelOverlayElement* mMiddle;
+    Ogre::PanelOverlayElement* mEnd;
+
+    Ogre::String mTextureNameEnd;
+    Ogre::String mTextureNameMiddle;
+
+    Ogre::String mMaterialNameEnd;
+    Ogre::String mMaterialNameMiddle;
+
+    float mPercent;
 };
 
 #endif

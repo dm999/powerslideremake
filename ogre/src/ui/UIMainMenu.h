@@ -19,6 +19,7 @@ namespace MyGUI
 }
 
 class MenuMode;
+class LoaderListener;
 
 class UIMainMenu : public UIBase
 {
@@ -27,7 +28,7 @@ public:
     UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode);
     ~UIMainMenu();
 
-    void load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState, LoaderListener* loaderListener);
 
     void processButtonClick(MyGUI::Widget* sender);
     void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
@@ -46,7 +47,7 @@ private:
 
     ModeContext mModeContext;
 
-    void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+    void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
 
     MenuMode * mMenuMode;
 

@@ -4,6 +4,8 @@
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
 
+#include "../listeners/LoaderListener.h"
+
 #include "../GameState.h"
 
 #include "../gamemodes/ModeContext.h"
@@ -20,7 +22,7 @@ struct lua_State;
 class SoundsProcesser;
 class Graphics2D;
 
-class GameModeSwitcher
+class GameModeSwitcher : public LoaderListener
 {
 public:
 
@@ -46,6 +48,9 @@ public:
 
     GameMode getMode()const{return mGameMode;}
 
+    //LoaderListener
+    void loadState(float percent) override;
+
 private:
 
     ModeContext mContext;
@@ -54,9 +59,11 @@ private:
     GameMode mGameModeNext;//next
     bool mIsSwitchMode;
 
+    bool mIsInitialLoadPassed;
+
     UIBackground mUIBackground;
-    UIBackground mUILoader;
-    UIBackground mUIUnloader;
+    UIBackgroundLoader mUILoader;
+    UIBackgroundLoader mUIUnloader;
 
 
     CommonIncludes::shared_ptr<MenuMode> mMenuMode;

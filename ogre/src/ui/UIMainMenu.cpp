@@ -6,6 +6,8 @@
 
 #include "../gamelogic/GameModeSwitcher.h"
 
+#include "../listeners/LoaderListener.h"
+
 #include "../tools/OgreTools.h"
 #include "../tools/Conversions.h"
 
@@ -27,7 +29,7 @@ UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)
 UIMainMenu::~UIMainMenu()
 {}
 
-void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
+void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "cursor.bmp", 
@@ -45,6 +47,9 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "tmgb.bmp", 
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
+
+    if(loaderListener)
+        loaderListener->loadState(0.5f);
 
     {
         const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track10.bmp", "track11.bmp"};
@@ -97,9 +102,12 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
         }
 
     }
+
+    if(loaderListener)
+        loaderListener->loadState(0.9f);
 }
 
-void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState)
+void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState, LoaderListener* loaderListener)
 {
     trayMgr->setListener(this);
 
@@ -113,7 +121,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameSta
         0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
         0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
 
-    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
+    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell(), loaderListener);
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[UIMainMenu::load]: viewport [" + Conversions::DMToString(viewportWidth) + "x" + Conversions::DMToString(viewportHeight) + "]");
 

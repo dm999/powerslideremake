@@ -1423,7 +1423,7 @@ static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
           <y:Geometry height="1710.4154565810131" width="869.3089261662258" x="12615.345536916888" y="-4635.207728290507"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1694.634765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="784.955078125" x="42.176924020612205" y="7.890345478006566">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1709.3359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="0.5397595405065658">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 StaticMeshProcesser
 
@@ -1435,7 +1435,8 @@ void initParts( lua_State * pipeline,
                     bool isGlobalReset,
                     GameState&amp; gameState, 
                     PFLoader&amp; pfloader,
-                    OgreBulletDynamics::DynamicsWorld * world)
+                    OgreBulletDynamics::DynamicsWorld * world,
+                    LoaderListener* loaderListener)
 
 void queryLights()
 
@@ -1461,7 +1462,7 @@ void setLongtitudeFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
 
 private:
 
-void loadTextures(const std::vector&lt;MSHData&gt;&amp; mergedMSH, const PFLoader&amp; pfloader, const std::string&amp; trackName)
+void loadTextures(const std::vector&lt;MSHData&gt;&amp; mergedMSH, const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
 
 void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File&amp; de2, GameState&amp; gameState)
 
@@ -2018,10 +2019,10 @@ DWORD Length</y:NodeLabel>
     <node id="n38">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="587.7243564729806" width="807.9384596111427" x="12376.03077019443" y="-6233.86217823649"/>
+          <y:Geometry height="626.1954152594963" width="807.9384596111427" x="12376.03077019443" y="-6253.097707629748"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="5.189326673989854">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="9.723684192247674">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2050,8 +2051,10 @@ GameMode mGameMode
 GameMode mGameModeNext
 bool mIsSwitchMode
 
+bool mIsInitialLoadPassed
+
 UIBackground mUIBackground
-UIBackground mUILoader
+UIBackgroundLoader mUILoader
 UIBackground mUIUnloader
 
 
@@ -2077,7 +2080,7 @@ BaseMode
 
 public:
 
-virtual void initData() = 0
+virtual void initData(LoaderListener* loaderListener) = 0
 virtual void initCamera() = 0
 virtual void clearData() = 0
 
@@ -2113,7 +2116,7 @@ virtual void frameStarted(const Ogre::FrameEvent &amp;evt)override
 
 protected:
 
-void doInitData()override
+void doInitData(LoaderListener* loaderListener)override
 void doClearData()override
 
 private:
@@ -2135,7 +2138,7 @@ BaseRaceMode
 
 public:
 
-void initData()override
+void initData(LoaderListener* loaderListener)override
 void initCamera()override
 void clearData()override
 
@@ -2196,7 +2199,7 @@ Ogre::SceneManager* mSceneMgrCarUI
 CommonIncludes::shared_ptr&lt;OgreBulletCollisions::DebugDrawer&gt; mDebugDrawer
 
 void initScene()
-void initTerrain()
+void initTerrain(LoaderListener* loaderListener)
 void initModel()
 
 void initLightLists()
@@ -2415,16 +2418,16 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="639.304250807244" width="489.36695375394766" x="15385.316523123027" y="-6649.6521254036215"/>
+          <y:Geometry height="639.304250807244" width="647.5257509874004" x="15246.2371245063" y="-6649.6521254036215"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="2.9207815644731454" y="1.5769300911215396">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="1.5769300911215396">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
 public:
 
-void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
+void load(CustomTrayManager* trayMgr, const GameState&amp; gameState, LoaderListener* loaderListener)
 
 void processButtonClick(MyGUI::Widget* sender)
 void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
@@ -2442,7 +2445,7 @@ private:
 
 ModeContext mModeContext
 
-void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
+void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
 
 MenuMode * mMenuMode
 
@@ -2488,17 +2491,6 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
       </data>
     </node>
     <node id="n52">
-      <data key="d6">
-        <y:ShapeNode>
-          <y:Geometry height="26.610244263811182" width="173.38367984003628" x="12693.308160079981" y="-6343.305122131906"/>
-          <y:Fill color="#00FF00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="10.995550857518538" y="3.9545361944055912">OgreBites::SdkTrayListener</y:NodeLabel>
-          <y:Shape type="rectangle"/>
-        </y:ShapeNode>
-      </data>
-    </node>
-    <node id="n53">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-5920.097146796503"/>
@@ -2553,7 +2545,7 @@ MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n54">
+    <node id="n53">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="672.0205068555979" width="980.3836661963628" x="13579.80816690182" y="-6276.010253427799"/>
@@ -2609,7 +2601,7 @@ bool mIsLobbyEntered</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n55">
+    <node id="n54">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="65.52349051922829" width="162.20703162726488" x="13988.896484186367" y="-5582.761745259614"/>
@@ -2622,7 +2614,7 @@ MultiplayerSessionStartInfo</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n56">
+    <node id="n55">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="215.4220260704392" width="273.1359434396013" x="17143.4320282802" y="-1817.7110130352212"/>
@@ -2645,7 +2637,7 @@ size_t mLapsCount</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n57">
+    <node id="n56">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="32.25791453345391" width="204.88871618483893" x="14807.555641907578" y="-2626.128957266727"/>
@@ -2656,7 +2648,7 @@ size_t mLapsCount</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n58">
+    <node id="n57">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="32.25791453345391" width="204.88871618483893" x="14177.55564190758" y="-6376.128957266727"/>
@@ -2667,7 +2659,7 @@ size_t mLapsCount</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n59">
+    <node id="n58">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="332.49712456630505" width="457.29192897408666" x="13841.354035512957" y="-7516.248562283153"/>
@@ -2679,7 +2671,7 @@ BaseMenuMode
 
 public:
 
-void initData()override
+void initData(LoaderListener* loaderListener)override
 void initCamera()override
 void clearData()override
 
@@ -2689,7 +2681,7 @@ void recalculateCharacterNames(const std::vector&lt;std::string&gt;&amp; players
 
 protected:
 
-virtual void doInitData() = 0
+virtual void doInitData(LoaderListener* loaderListener) = 0
 virtual void doClearData() = 0
 
 virtual void customFrameRenderingQueued(){}</y:NodeLabel>
@@ -2697,7 +2689,7 @@ virtual void customFrameRenderingQueued(){}</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n60">
+    <node id="n59">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="512.0640110752847" width="941.0184105842977" x="15039.49079470785" y="-1276.0320055376444"/>
@@ -2739,7 +2731,7 @@ std::vector&lt;std::string&gt; mAISkins</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n61">
+    <node id="n60">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="318.9939311716612" width="929.3182762144147" x="16005.340861892793" y="-1179.4969655858326"/>
@@ -2765,7 +2757,7 @@ private:
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n62">
+    <node id="n61">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="336.61465817732915" width="250.15214712623992" x="16824.92392643688" y="-1668.3073290886646"/>
@@ -2793,7 +2785,7 @@ Ogre::Real mRaceTotalTime</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n63">
+    <node id="n62">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="464.20539942905543" width="600.4139445734068" x="10049.283554875077" y="-8812.102699714527"/>
@@ -2833,7 +2825,7 @@ bool mIsSTRLoaded</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n64">
+    <node id="n63">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="431.7379731226456" width="653.4593171303563" x="10022.760868596602" y="-8075.868986561323"/>
@@ -2871,7 +2863,7 @@ Ogre::ColourValue parseColor(const std::string&amp; val) const</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n65">
+    <node id="n64">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="146.50477370542194" width="281.9130653844727" x="10775.260484102959" y="-8053.252386852711"/>
@@ -2888,7 +2880,7 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n66">
+    <node id="n65">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="37.27627252126149" width="91.21585033136864" x="9884.392074834315" y="-8598.63813626063"/>
@@ -2899,7 +2891,7 @@ void parse(const PFLoader&amp; pfLoaderStore)</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n67">
+    <node id="n66">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="260.46854910861293" width="243.12797396348242" x="14548.436013018254" y="-1480.2342745543065"/>
@@ -2924,7 +2916,7 @@ PSAICar&amp; mAICar</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n68">
+    <node id="n67">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="99.25540900083922" width="395.22605608423464" x="6642.386971957882" y="-229.6277045004196"/>
@@ -2939,7 +2931,7 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n69">
+    <node id="n68">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="788.4836915201113" width="894.8936264315575" x="5882.553186784221" y="-7204.241845760056"/>
@@ -2999,7 +2991,7 @@ CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mWh
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n70">
+    <node id="n69">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="733.3753734265165" width="370.78469139349863" x="6894.6076543032505" y="-7176.687686713258"/>
@@ -3054,7 +3046,7 @@ Ogre::Real mWheelsFriction</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n71">
+    <node id="n70">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="25.135841344832443" width="107.47884035471282" x="14916.260579822643" y="-1457.6801154742502"/>
@@ -3065,7 +3057,7 @@ Ogre::Real mWheelsFriction</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n72">
+    <node id="n71">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="327.9348001234566" width="519.624060372907" x="17380.187969813545" y="-5983.967400061729"/>
@@ -3094,13 +3086,30 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n73">
+    <node id="n72">
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="32.25791453345391" width="204.88871618483893" x="15977.55564190758" y="-7126.128957266727"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="26.74806902991986" y="6.7783713292274115">OgreBites::SdkTrayListener</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n73">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="233.50630176798813" width="307.6539188540237" x="12626.173040572989" y="-6686.753150883994"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="150.748046875" x="78.45293598951139" y="63.29904932149384">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+
+LoaderListener
+
+public:
+
+virtual void loadState() = 0</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3465,7 +3474,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e30" source="n40" target="n59">
+    <edge id="e30" source="n40" target="n58">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3645,7 +3654,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e48" source="n38" target="n52">
+    <edge id="e48" source="n38" target="n73">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3655,7 +3664,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e49" source="n53" target="n48">
+    <edge id="e49" source="n52" target="n48">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3665,7 +3674,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e50" source="n55" target="n54">
+    <edge id="e50" source="n54" target="n53">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3675,7 +3684,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e51" source="n54" target="n59">
+    <edge id="e51" source="n53" target="n58">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3685,7 +3694,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e52" source="n54" target="n38">
+    <edge id="e52" source="n53" target="n38">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3695,7 +3704,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e53" source="n56" target="n29">
+    <edge id="e53" source="n55" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3705,7 +3714,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e54" source="n45" target="n57">
+    <edge id="e54" source="n45" target="n56">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3715,7 +3724,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e55" source="n54" target="n58">
+    <edge id="e55" source="n53" target="n57">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3725,7 +3734,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e56" source="n59" target="n39">
+    <edge id="e56" source="n58" target="n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3735,7 +3744,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e57" source="n61" target="n29">
+    <edge id="e57" source="n60" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3745,7 +3754,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e58" source="n60" target="n29">
+    <edge id="e58" source="n59" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3755,7 +3764,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e59" source="n62" target="n29">
+    <edge id="e59" source="n61" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3765,7 +3774,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e60" source="n64" target="n63">
+    <edge id="e60" source="n63" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3775,7 +3784,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e61" source="n65" target="n63">
+    <edge id="e61" source="n64" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3785,7 +3794,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e62" source="n65" target="n18">
+    <edge id="e62" source="n64" target="n18">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3795,7 +3804,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e63" source="n64" target="n18">
+    <edge id="e63" source="n63" target="n18">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3805,7 +3814,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e64" source="n66" target="n63">
+    <edge id="e64" source="n65" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3815,7 +3824,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e65" source="n67" target="n45">
+    <edge id="e65" source="n66" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3825,7 +3834,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e66" source="n68" target="n17">
+    <edge id="e66" source="n67" target="n17">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3835,7 +3844,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e67" source="n1" target="n69">
+    <edge id="e67" source="n1" target="n68">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3845,7 +3854,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e68" source="n70" target="n69">
+    <edge id="e68" source="n69" target="n68">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3855,7 +3864,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e69" source="n71" target="n45">
+    <edge id="e69" source="n70" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3865,7 +3874,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e70" source="n48" target="n73">
+    <edge id="e70" source="n48" target="n72">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

@@ -3,6 +3,8 @@
 
 #include "BaseMode.h"
 
+class LoaderListener;
+
 class BaseMenuMode : public BaseMode
 {
 public:
@@ -10,7 +12,7 @@ public:
     BaseMenuMode(const ModeContext& modeContext, bool isInitialCreation);
     virtual ~BaseMenuMode(){}
 
-    void initData()override;
+    void initData(LoaderListener* loaderListener)override;
     void initCamera()override;
     void clearData()override;
 
@@ -20,7 +22,7 @@ public:
 
 protected:
 
-    virtual void doInitData() = 0;
+    virtual void doInitData(LoaderListener* loaderListener) = 0;
     virtual void doClearData() = 0;
 
     virtual void customFrameRenderingQueued(){}

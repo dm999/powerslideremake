@@ -9,6 +9,7 @@
 #include "../tools/OgreTools.h"
 
 #include "../listeners/TerrainSceneObjectListener.h"
+#include "../listeners/LoaderListener.h"
 
 #include "../loaders/DE2Loader.h"
 #include "../loaders/TRALoader.h"
@@ -39,7 +40,8 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                     Ogre::SceneNode* mainNode,
                                     bool isGlobalReset,
                                     GameState& gameState,
-                                    OgreBulletDynamics::DynamicsWorld * world)
+                                    OgreBulletDynamics::DynamicsWorld * world,
+                                    LoaderListener* loaderListener)
 {
     checkIsVertexArraySupported();
 
@@ -105,7 +107,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         }
 
         //create textures
-        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName);
+        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, loaderListener);
 
 
         for(size_t q = 0; q < mergedMSH.size(); ++q)
@@ -233,9 +235,14 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         gameState.getLLTObject()->setVisible(true);
 }
 
-void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName)
+void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
 {
     std::set<std::string> texturesNames;
+
+    //ranges from BaseRaceMode::initData
+    const float loaderMin = 0.2f;
+    const float loaderMax = 0.8f;
+    const float loaderDistance = loaderMax - loaderMin;
 
     //get unique names
     for(size_t q = 0; q < mergedMSH.size(); ++q)
@@ -246,8 +253,10 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
         }
     }
 
+    size_t loadedAmount = 0;
+
     for(std::set<std::string>::const_iterator i = texturesNames.begin(), j = texturesNames.end();
-        i != j; ++i)
+        i != j; ++i, ++loadedAmount)
     {
         std::string noExtFileName = (*i).substr(0, (*i).length() - 4);
         Ogre::DataStreamPtr fileToLoad;
@@ -271,6 +280,9 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
             TEXLoader().load(fileToLoad, (*i));
             fileToLoad->close();
         }
+
+        if(loaderListener)
+            loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()));
     }
 }
 

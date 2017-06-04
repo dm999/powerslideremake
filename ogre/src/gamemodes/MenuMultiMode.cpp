@@ -49,7 +49,7 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonInclude
     mMultiplayerController = controller;
 }
 
-void MenuMultiMode::doInitData()
+void MenuMultiMode::doInitData(LoaderListener* loaderListener)
 {
     mUIMainMenuMulti->load(mModeContext.mGUI, mModeContext.mGameState);
 

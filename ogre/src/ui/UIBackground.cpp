@@ -6,6 +6,8 @@
 
 #include "../loaders/TextureLoader.h"
 
+#include "../tools/OgreTools.h"
+
 #include "../customs/CustomTrayManager.h"
 #include "../customs/CustomOverlaySystem.h"
 
@@ -134,6 +136,11 @@ Ogre::PanelOverlayElement* UIBackground::createPanel(const Ogre::String& name, O
     return res;
 }
 
+Ogre::PanelOverlayElement* UIBackground::createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material)
+{
+    return createPanel(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y, material);
+}
+
 void UIBackground::show()
 {
     createCamera();
@@ -184,4 +191,145 @@ void UIBackground::destroyCamera()
     mSceneMgr->clearScene();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
     mModeContext.mWindow->removeAllViewports();
+}
+
+
+UIBackgroundLoader::UIBackgroundLoader(const ModeContext& modeContext, 
+                           const PFLoader& loader,
+                           const std::string& path, const std::string& fileName,
+                           float progressTop, float progressBottom, float progressLeft, float progressRight) :
+    UIBackground(modeContext, loader, path, fileName),
+    mProgressTop(progressTop), mProgressBottom(progressBottom), mProgressLeft(progressLeft), mProgressRight(progressRight),
+    mPercent(0.0f)
+{
+    mTextureNameEnd = nameGenTextures.generate();
+    mTextureNameMiddle = nameGenTextures.generate();
+
+    mMaterialNameEnd = nameGenMaterials.generate();
+    mMaterialNameMiddle = nameGenMaterials.generate();
+
+    TextureLoader().load(   loader, 
+                            "data/misc/loading", "end.tga", 
+                            mTextureNameEnd, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load(   loader, 
+                            "data/misc/loading", "middle.tga", 
+                            mTextureNameMiddle, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back(mTextureNameEnd);
+
+        Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialNameEnd, 
+                            mMaterialName, 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back(mTextureNameMiddle);
+
+        Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialNameMiddle, 
+                            mMaterialName, 
+                            texName, 
+                            1.0f,
+                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+    }
+
+}
+
+void UIBackgroundLoader::show()
+{
+    UIBackground::show();
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
+
+    Ogre::Matrix4 screenAdaptionRelative(
+        viewportWidth / 640.0f, 0.0f,                       0.0f,                   0.0f,
+        0.0f,                   viewportHeight / 480.0f,    0.0f,                   0.0f,
+        0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
+        0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
+
+    Ogre::Vector4 beginPos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft - 16.0f, mProgressTop, mProgressLeft, mProgressBottom);
+    Ogre::Vector4 middlePos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft, mProgressTop, mProgressLeft + 1.0f, mProgressBottom);
+    Ogre::Vector4 endPos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft + 1.0f, mProgressTop, mProgressLeft + 16.0f, mProgressBottom);
+
+
+    mBegin = createPanel("LoaderScreenProgressBegin", beginPos, mMaterialNameEnd);
+    mBegin->setUV(1.0f, 0.0f, 0.0f, 1.0f);
+
+    mLoaderScreen->addChild(mBegin);
+    mBegin->show();
+
+
+    mMiddle = createPanel("LoaderScreenProgressMiddle", middlePos, mMaterialNameMiddle);
+    mMiddle->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+    mLoaderScreen->addChild(mMiddle);
+    mMiddle->show();
+
+
+    mEnd = createPanel("LoaderScreenProgressEnd", endPos, mMaterialNameEnd);
+    mEnd->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+    mLoaderScreen->addChild(mEnd);
+    mEnd->show();
+
+
+
+    mModeContext.mWindow->update(true);// update draw
+}
+
+void UIBackgroundLoader::hide()
+{
+    mLoaderScreen->removeChild(mBegin->getName());
+    mLoaderScreen->removeChild(mMiddle->getName());
+    mLoaderScreen->removeChild(mEnd->getName());
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
+    om.destroyOverlayElement(mBegin);
+    om.destroyOverlayElement(mMiddle);
+    om.destroyOverlayElement(mEnd);
+
+    UIBackground::hide();
+}
+
+void UIBackgroundLoader::setPercent(float percent)
+{
+    mPercent = percent;
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
+
+    Ogre::Matrix4 screenAdaptionRelative(
+        viewportWidth / 640.0f, 0.0f,                       0.0f,                   0.0f,
+        0.0f,                   viewportHeight / 480.0f,    0.0f,                   0.0f,
+        0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
+        0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
+
+    float screenWidth = (mProgressRight - mProgressLeft) * mPercent;
+
+    Ogre::Vector4 resWidth = screenAdaptionRelative * Ogre::Vector4(screenWidth, 0.0f, mProgressLeft, 0.0f);
+
+    mMiddle->setWidth(resWidth.x);
+    mEnd->setLeft(resWidth.z + resWidth.x);
+
+    mModeContext.mWindow->update(true);// update draw
 }

@@ -18,18 +18,21 @@
 GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
     mGameMode(ModeMenu), mIsSwitchMode(false),
+    mIsInitialLoadPassed(false),
     mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp"),
-    mUILoader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga"),
-    mUIUnloader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga")
+    mUILoader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f),
+    mUIUnloader(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f)
 {
 
     mContext.setGameModeSwitcher(this);
 
     mMenuMode.reset(new MenuMode(mContext));
     mUIBackground.show();
-    mMenuMode->initData();
+    mMenuMode->initData(this);
     mUIBackground.hide();
     mMenuMode->initCamera();
+
+    mIsInitialLoadPassed = true;
 }
 
 GameModeSwitcher::~GameModeSwitcher()
@@ -130,7 +133,7 @@ void GameModeSwitcher::frameEnded()
 
                 mMenuMode.reset(new MenuMode(mContext));
                 mUIUnloader.show();
-                mMenuMode->initData();
+                mMenuMode->initData(this);
                 mUIUnloader.hide();
                 mMenuMode->initCamera();
             }
@@ -144,7 +147,7 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
-                mMenuMultiMode->initData();
+                mMenuMultiMode->initData(this);
                 mMenuMultiMode->initCamera();
             }
 #endif
@@ -161,7 +164,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mUILoader.show();
-            mPlayerMode->initData();
+            mPlayerMode->initData(this);
             mUILoader.hide();
             mPlayerMode->initCamera();
         }
@@ -177,7 +180,7 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
-            mPlayerMode->initData();
+            mPlayerMode->initData(this);
             mPlayerMode->initCamera();
             static_cast<MultiPlayerMode *>(mPlayerMode.get())->prepareDataForSession(multiplayerSessionStartInfo);
         }
@@ -192,7 +195,7 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mMenuMode.reset(new MenuMode(mContext));
-            mMenuMode->initData();
+            mMenuMode->initData(this);
             mMenuMode->initCamera();
         }
 
@@ -204,7 +207,7 @@ void GameModeSwitcher::frameEnded()
             mGameMode = mGameModeNext;
 
             mMenuMultiMode.reset(new MenuMultiMode(mContext));
-            mMenuMultiMode->initData();
+            mMenuMultiMode->initData(this);
             mMenuMultiMode->initCamera();
 
             //unable to enter to lobby
@@ -214,7 +217,7 @@ void GameModeSwitcher::frameEnded()
                 clear();
                 mGameMode = ModeMenu;
                 mMenuMode.reset(new MenuMode(mContext));
-                mMenuMode->initData();
+                mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }
         }
@@ -281,4 +284,18 @@ void GameModeSwitcher::clear()
     if(mPlayerMode.get())
         mPlayerMode->clearData();
     mPlayerMode.reset();
+}
+
+void GameModeSwitcher::loadState(float percent)
+{
+    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
+    {
+        mUILoader.setPercent(percent);
+    }
+
+    if(mGameMode == ModeMenu || mGameMode == ModeMenuMulti)
+    {
+        if(mIsInitialLoadPassed)
+            mUIUnloader.setPercent(percent);
+    }
 }

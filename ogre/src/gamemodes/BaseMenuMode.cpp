@@ -10,6 +10,8 @@
 #include "../customs/CustomTrayManager.h"
 #include "../customs/CustomOverlaySystem.h"
 
+#include "../listeners/LoaderListener.h"
+
 #include "../InputHandler.h"
 
 BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreationMultiplayer) :
@@ -41,7 +43,7 @@ void BaseMenuMode::recalculateCharacterNames(const std::vector<std::string>& pla
     }
 }
 
-void BaseMenuMode::initData()
+void BaseMenuMode::initData(LoaderListener* loaderListener)
 {
     Ogre::ResourceGroupManager::getSingleton().createResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
@@ -51,7 +53,10 @@ void BaseMenuMode::initData()
     //to load textures & materials
     mModeContext.mWindow->update(false);
 
-    doInitData();
+    doInitData(loaderListener);
+
+    if(loaderListener)
+        loaderListener->loadState(1.0f);
 }
 
 void BaseMenuMode::initCamera()

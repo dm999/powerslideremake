@@ -61,6 +61,7 @@ public:
     friend class SinglePlayerMode;
     friend class MultiPlayerMode;
     friend class UIBackground;
+    friend class UIBackgroundLoader;
 
 private:
 

@@ -32,6 +32,7 @@ struct DE2Part
 };
 
 struct lua_State;
+class LoaderListener;
 
 class StaticMeshProcesser
 {
@@ -44,7 +45,8 @@ public :
                     Ogre::SceneNode* mainNode,
                     bool isGlobalReset,
                     GameState& gameState, 
-                    OgreBulletDynamics::DynamicsWorld * world);
+                    OgreBulletDynamics::DynamicsWorld * world,
+                    LoaderListener* loaderListener);
 
     void queryLights();
 
@@ -70,7 +72,7 @@ public :
 
 private:
 
-    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName);
+    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
 
     void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File& de2, GameState& gameState);
 
