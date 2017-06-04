@@ -46,7 +46,8 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mShadowLightDistanceFromCar(40.0f),
     mIsGlobalReset(true),
     mRearCamera(0),
-    mUIRace(new UIRace())
+    mUIRace(new UIRace()),
+    mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
 #endif
@@ -58,15 +59,17 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Enter");
 
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
-    initScene();
+    initScene(loaderListener);
 
-    if(loaderListener)
-        loaderListener->loadState(0.1f);
-
-    loadResources();
+    mLoaderListener = loaderListener;
 
     if(loaderListener)
         loaderListener->loadState(0.2f);
+
+    loadResources(loaderListener);
+
+    if(loaderListener)
+        loaderListener->loadState(0.4f);
 
     initTerrain(loaderListener);
 
@@ -219,7 +222,7 @@ void BaseRaceMode::restart()
 {
     clearScene();
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
-    initScene();
+    initScene(NULL);
     initTerrain(NULL);
     initModel();
     initMisc();
@@ -227,7 +230,7 @@ void BaseRaceMode::restart()
     initLightLists();
 }
 
-void BaseRaceMode::initScene()
+void BaseRaceMode::initScene(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Enter");
 
@@ -249,6 +252,9 @@ void BaseRaceMode::initScene()
 
     initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mModeContext.mPipeline), 0.0f));
 
+    if(loaderListener)
+        loaderListener->loadState(0.1f);
+
     //load data
     {
         bool isDebugLLT = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugLLT", mModeContext.mPipeline);
@@ -256,12 +262,21 @@ void BaseRaceMode::initScene()
         LLTLoader().load(mModeContext.mGameState, mSceneMgr, isDebugLLT);
     }
 
+    if(loaderListener)
+        loaderListener->loadState(0.12f);
+
     {
         bool isDebugExclusion = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugExclusion", mModeContext.mPipeline);
         ExclusionLoader().load(mModeContext.mGameState, mSceneMgr, isDebugExclusion);
     }
 
+    if(loaderListener)
+        loaderListener->loadState(0.13f);
+
     PHYLoader().load(mModeContext.mGameState);
+
+    if(loaderListener)
+        loaderListener->loadState(0.14f);
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mModeContext.mPipeline);
@@ -335,6 +350,9 @@ void BaseRaceMode::initScene()
         }
 
         AILoader().load(mModeContext.mGameState, mSceneMgr, isDebugAI);
+
+        if(loaderListener)
+            loaderListener->loadState(0.18f);
     }
 
     //init multiplayer
@@ -904,7 +922,7 @@ void BaseRaceMode::processInternalTick(float timeStep)
     }
 }
 
-void BaseRaceMode::loadResources()
+void BaseRaceMode::loadResources(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Enter");
 
@@ -918,8 +936,12 @@ void BaseRaceMode::loadResources()
     //mModeContext.mTrayMgr->showLoadingBar(2, 2);
     //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
+    Ogre::ResourceGroupManager::getSingleton().addResourceGroupListener(this);
+
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Popular");
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Popular");
+
+    Ogre::ResourceGroupManager::getSingleton().removeResourceGroupListener(this);
 
 
     //mModeContext.mTrayMgr->hideLoadingBar();
@@ -929,6 +951,44 @@ void BaseRaceMode::loadResources()
 #endif
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Exit");
+}
+
+void BaseRaceMode::resourceGroupScriptingStarted(const Ogre::String& groupName, size_t scriptCount)
+{
+    mResourceCount = scriptCount;
+    mResourceCurrent = 0;
+}
+
+void BaseRaceMode::scriptParseEnded(const Ogre::String& scriptName, bool skipped)
+{
+    //ranges from BaseRaceMode::initData
+    const float loaderMin = 0.2f;
+    const float loaderMax = 0.3f;
+    const float loaderDistance = loaderMax - loaderMin;
+
+    ++mResourceCurrent;
+
+    if(mLoaderListener)
+        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount));
+}
+
+void BaseRaceMode::resourceGroupLoadStarted(const Ogre::String& groupName, size_t resourceCount)
+{
+    mResourceCount = resourceCount;
+    mResourceCurrent = 0;
+}
+
+void BaseRaceMode::resourceLoadEnded()
+{
+    //ranges from BaseRaceMode::initData
+    const float loaderMin = 0.3f;
+    const float loaderMax = 0.4f;
+    const float loaderDistance = loaderMax - loaderMin;
+
+    ++mResourceCurrent;
+
+    if(mLoaderListener)
+        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount));
 }
 
 void BaseRaceMode::unloadResources()

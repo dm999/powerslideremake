@@ -2054,8 +2054,8 @@ bool mIsSwitchMode
 bool mIsInitialLoadPassed
 
 UIBackground mUIBackground
-CommonIncludes::shared_ptr&lt;UIBackgroundLoader&gt; mUILoader
-CommonIncludes::shared_ptr&lt;UIBackgroundLoader&gt; mUIUnloader
+CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgress&gt; mUILoader
+CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgress&gt; mUIUnloader
 
 
 CommonIncludes::shared_ptr&lt;BaseMenuMode&gt; mMenuMode
@@ -2129,10 +2129,10 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
     <node id="n41">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1204.869649495391" width="930.2499573032924" x="14204.875021348353" y="-4382.434824747697"/>
+          <y:Geometry height="1459.5066488419043" width="930.2499573032924" x="14204.875021348353" y="-4509.7533244209535"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1194.794921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="5.037363810195529">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1415.3125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="22.097074420951685">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2154,6 +2154,17 @@ void onLapFinished()override
 
 void preRenderTargetUpdate(const Ogre::RenderTargetEvent&amp; evt)override
 void postRenderTargetUpdate(const Ogre::RenderTargetEvent&amp; evt)override
+
+void resourceGroupScriptingStarted(const Ogre::String&amp; groupName, size_t scriptCount) override
+void scriptParseStarted(const Ogre::String&amp; scriptName, bool&amp; skipThisScript) override
+void scriptParseEnded(const Ogre::String&amp; scriptName, bool skipped) override
+void resourceGroupScriptingEnded(const Ogre::String&amp; groupName) override
+void resourceGroupLoadStarted(const Ogre::String&amp; groupName, size_t resourceCount) override
+void resourceGroupLoadEnded(const Ogre::String&amp; groupName) override
+void resourceLoadStarted(const Ogre::ResourcePtr&amp; resource) override
+void resourceLoadEnded(void) override
+void worldGeometryStageStarted(const Ogre::String&amp; description) override
+void worldGeometryStageEnded(void) override
 
 protected:
 
@@ -2198,7 +2209,7 @@ Ogre::SceneManager* mSceneMgrCarUI
 
 CommonIncludes::shared_ptr&lt;OgreBulletCollisions::DebugDrawer&gt; mDebugDrawer
 
-void initScene()
+void initScene(LoaderListener* loaderListener)
 void initTerrain(LoaderListener* loaderListener)
 void initModel()
 
@@ -2211,8 +2222,12 @@ void initWorld(const Ogre::Vector3 &amp;gravityVector = Ogre::Vector3(0.0f, -59.
 
 void deInitWorld()
 
-void loadResources()
-void unloadResources()</y:NodeLabel>
+void loadResources(LoaderListener* loaderListener)
+void unloadResources()
+
+LoaderListener* mLoaderListener
+size_t mResourceCount
+size_t mResourceCurrent</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2220,7 +2235,7 @@ void unloadResources()</y:NodeLabel>
     <node id="n42">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="42.828676372586415" width="182.67338922266129" x="14788.663305388667" y="-4521.414338186295"/>
+          <y:Geometry height="42.828676372586415" width="182.67338922266129" x="14818.663305388669" y="-4671.414338186293"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="154.076171875" x="14.29860867383104" y="4.713166311293207">LapUtils::Events

@@ -240,7 +240,7 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
     std::set<std::string> texturesNames;
 
     //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.2f;
+    const float loaderMin = 0.4f;
     const float loaderMax = 0.8f;
     const float loaderDistance = loaderMax - loaderMin;
 

@@ -28,7 +28,8 @@ class LoaderListener;
 class BaseRaceMode : 
     public BaseMode,
     public LapUtils::Events,
-    public Ogre::RenderTargetListener // for rear camera
+    public Ogre::RenderTargetListener,  // for rear camera
+    public Ogre::ResourceGroupListener  // for loader
 {
 public:
 
@@ -58,6 +59,18 @@ public:
     //rear camera listener
     void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
     void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
+
+    //ResourceGroupListener
+    void resourceGroupScriptingStarted(const Ogre::String& groupName, size_t scriptCount) override;
+    void scriptParseStarted(const Ogre::String& scriptName, bool& skipThisScript) override {}
+    void scriptParseEnded(const Ogre::String& scriptName, bool skipped) override;
+    void resourceGroupScriptingEnded(const Ogre::String& groupName) override {}
+    void resourceGroupLoadStarted(const Ogre::String& groupName, size_t resourceCount) override;
+    void resourceGroupLoadEnded(const Ogre::String& groupName) override {}
+    void resourceLoadStarted(const Ogre::ResourcePtr& resource) override {}
+    void resourceLoadEnded(void) override;
+    void worldGeometryStageStarted(const Ogre::String& description) override {}
+    void worldGeometryStageEnded(void) override {}
 
 protected:
 
@@ -106,7 +119,7 @@ private:
 
     CommonIncludes::shared_ptr<OgreBulletCollisions::DebugDrawer> mDebugDrawer;
 
-    void initScene();
+    void initScene(LoaderListener* loaderListener);
     void initTerrain(LoaderListener* loaderListener);
     void initModel();
 
@@ -119,8 +132,12 @@ private:
 
     void deInitWorld();
 
-    void loadResources();
+    void loadResources(LoaderListener* loaderListener);
     void unloadResources();
+
+    LoaderListener* mLoaderListener;
+    size_t mResourceCount;
+    size_t mResourceCurrent;
 };
 
 
