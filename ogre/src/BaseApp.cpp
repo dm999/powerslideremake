@@ -216,13 +216,28 @@ bool BaseApp::configure()
     Ogre::RenderSystem *selectedRenderSystem = rsList.at(0);
 
     mRoot->setRenderSystem(selectedRenderSystem);
-    selectedRenderSystem->setConfigOption("Full Screen", mLuaManager.ReadScalarString("Window.IsFullScreen", mPipeline));
-    selectedRenderSystem->setConfigOption("FSAA", mLuaManager.ReadScalarString("Window.FSAA", mPipeline));
-    selectedRenderSystem->setConfigOption("Colour Depth", "32");
-    selectedRenderSystem->setConfigOption("RTT Preferred Mode", "FBO");
-    selectedRenderSystem->setConfigOption("Video Mode", mLuaManager.ReadScalarString("Window.Resolution", mPipeline));
-    selectedRenderSystem->setConfigOption("VSync", mLuaManager.ReadScalarString("Window.VSync", mPipeline));
-    selectedRenderSystem->setConfigOption("VSync Interval", mLuaManager.ReadScalarString("Window.VSyncInterval", mPipeline));
+    Ogre::ConfigOptionMap& configOptions = selectedRenderSystem->getConfigOptions();
+    
+    if(configOptions.find("Full Screen") != configOptions.end())
+        selectedRenderSystem->setConfigOption("Full Screen", mLuaManager.ReadScalarString("Window.IsFullScreen", mPipeline));
+    
+    if(configOptions.find("FSAA") != configOptions.end())
+        selectedRenderSystem->setConfigOption("FSAA", mLuaManager.ReadScalarString("Window.FSAA", mPipeline));
+    
+    if(configOptions.find("Colour Depth") != configOptions.end())
+        selectedRenderSystem->setConfigOption("Colour Depth", "32");
+    
+    if(configOptions.find("RTT Preferred Mode") != configOptions.end())
+        selectedRenderSystem->setConfigOption("RTT Preferred Mode", "FBO");
+
+    if(configOptions.find("Video Mode") != configOptions.end())
+        selectedRenderSystem->setConfigOption("Video Mode", mLuaManager.ReadScalarString("Window.Resolution", mPipeline));
+
+    if(configOptions.find("VSync") != configOptions.end())
+        selectedRenderSystem->setConfigOption("VSync", mLuaManager.ReadScalarString("Window.VSync", mPipeline));
+
+    if(configOptions.find("VSync Interval") != configOptions.end())
+        selectedRenderSystem->setConfigOption("VSync Interval", mLuaManager.ReadScalarString("Window.VSyncInterval", mPipeline));
 
 
 
