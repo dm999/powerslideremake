@@ -218,7 +218,7 @@ if(ANDROID)
     target_link_libraries(PowerslideRebuild zlib)
     target_link_libraries(PowerslideRebuild zziplib)
     
-    target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
+    target_link_libraries(PowerslideRebuild Lua OIS)
 
     target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     

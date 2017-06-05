@@ -16,7 +16,7 @@
 
 struct DE2SingleBatch
 {
-    std::vector<unsigned int> mIndexBuffer;
+    std::vector<size_t> mIndexBuffer;
 
     std::string mTerrainMap;
 };
