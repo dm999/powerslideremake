@@ -2,15 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(OgreBullet)
 
-if(ANDROID)
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_ANDROID_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-else()
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-endif()
-
-set(OGRE_STATIC true)
-find_package(OGRE REQUIRED)
-
 set(INCLUDE_DIRS
         ../bullet
         ../bulletextras
@@ -21,23 +12,23 @@ if(ANDROID)
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_ANDROID_HOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
     )
             
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib)
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib/OGRE)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
 
 else()
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
     )
             
-    link_directories ($ENV{OGRE_HOME}/lib/Debug)
-    link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
-    link_directories ($ENV{OGRE_HOME}/lib/Release)
-    link_directories ($ENV{OGRE_HOME}/lib/Release/opt)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug/opt)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
 endif()
 
 include_directories(${INCLUDE_DIRS})

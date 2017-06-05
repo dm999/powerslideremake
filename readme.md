@@ -8,7 +8,7 @@
 To build the project you need:  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [MyGUI](https://github.com/MyGUI/mygui)  
-- [OpenAL](https://www.openal.org)  
+- [OpenAL](https://www.openal.org) (only if PowerslideRebuild_OPENAL ON)  
 
 Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Boost::asio.  
 

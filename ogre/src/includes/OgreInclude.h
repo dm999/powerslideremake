@@ -9,6 +9,5 @@
     #include "OgreGLPlugin.h"
 #endif
 #include "Plugins/ParticleFX/OgreParticleFXPlugin.h"
-#include "Plugins/OctreeSceneManager/OgreOctreePlugin.h"
 
 #endif

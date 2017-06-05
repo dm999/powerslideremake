@@ -469,7 +469,7 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
     }
 
     if(!checkRearCollision() && !checkFrontCollision())
-        mCarChassis->applyImpulse(Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -0.5f));
+        mCarChassis->applyImpulse(Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, -1.0f, -0.5f));
     else
         mCarChassis->applyImpulse(Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
 }

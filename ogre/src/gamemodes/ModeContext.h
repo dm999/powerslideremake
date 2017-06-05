@@ -32,11 +32,10 @@ public:
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState,
+        GameState& gameState
 #ifndef NO_OPENAL
-        SoundsProcesser& soundsProcesser,
+        ,SoundsProcesser& soundsProcesser
 #endif
-        MyGUI::Gui* gui, MyGUI::OgrePlatform* platform
     );
 
     ModeContext(const ModeContext& other);
@@ -85,9 +84,6 @@ private:
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;
 #endif
-
-    MyGUI::Gui* mGUI;
-    MyGUI::OgrePlatform* mPlatform;
 };
 
 #endif

@@ -12,7 +12,7 @@ MenuMode::MenuMode(const ModeContext& modeContext) :
 
 void MenuMode::doInitData(LoaderListener* loaderListener)
 {
-    mUIMainMenu->load(mModeContext.mTrayMgr, mModeContext.mGUI, mModeContext.mGameState, loaderListener);
+    mUIMainMenu->load(mModeContext.mTrayMgr, mModeContext.mGameState, loaderListener);
 }
 
 void MenuMode::doClearData()

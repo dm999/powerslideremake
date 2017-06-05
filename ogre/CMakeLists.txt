@@ -1,8 +1,3 @@
-# set variables
-# PowerslideRebuild_OGREHOME
-# PowerslideRebuild_MYGUIHOME
-# PowerslideRebuild_OPENALDIR (if PowerslideRebuild_OPENAL set)
-#
 # make sure debug & release versions of libs available (/MDd, /MD compilled for MSVC)
 # sample of naming
 # Ogre: OgreMainStatic_d / OgreMainStatic
@@ -10,18 +5,6 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(PowerslideRebuild)
-
-option(PowerslideRebuild_OPENAL "OpenAL build" ON)
-set(PowerslideRebuild_OGREHOME "" CACHE STRING "")
-set(PowerslideRebuild_OPENALDIR "" CACHE STRING "")
-set(PowerslideRebuild_MYGUIHOME "" CACHE STRING "")
-
-set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
-
-set(OGRE_STATIC true)
-
-find_package(OGRE REQUIRED)
-find_package(OIS REQUIRED)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -75,6 +58,8 @@ file(GLOB sources_modes_main_h src/gamemodes/*.h)
 file(GLOB sources_ui_main src/ui/*.cpp)
 file(GLOB sources_ui_main_h src/ui/*.h)
 
+file(GLOB sources_includes_main_h src/includes/*.h)
+
 if(WIN32)
     foreach( src_file ${sources_main} )
         message(STATUS ${src_file})
@@ -91,6 +76,8 @@ if(WIN32)
         )
     
     add_definitions(-Zm114)
+else()
+    add_definitions(-std=c++11)
 endif()
 
 list(APPEND sources ${sources_main})
@@ -127,20 +114,15 @@ list(APPEND sources ${sources_tools_main_h})
 list(APPEND sources ${sources_mesh_main_h})
 list(APPEND sources ${sources_modes_main_h})
 list(APPEND sources ${sources_ui_main_h})
+list(APPEND sources ${sources_includes_main_h})
 
 
 if(ANDROID)
-    add_definitions(-std=c++11)
-    
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
             ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GLES2
             ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
-            ${PowerslideRebuild_MYGUIHOME}/include/MYGUI
-            #${OGRE_RenderSystem_GL_INCLUDE_DIR}
-            #${OGRE_SAMPLES_INCLUDEPATH}
-            #${OGRE_Overlay_INCLUDE_DIRS}
     )
 else()
     include_directories( 
@@ -148,10 +130,6 @@ else()
             ${OGRE_INCLUDE_DIRS}
             ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
             ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
-            ${PowerslideRebuild_MYGUIHOME}/include/MYGUI
-            #${OGRE_RenderSystem_GL_INCLUDE_DIR}
-            #${OGRE_SAMPLES_INCLUDEPATH}
-            #${OGRE_Overlay_INCLUDE_DIRS}
     )
 endif()
 
@@ -173,17 +151,14 @@ endif()
 
 include_directories(../tools/jsonxx/src)
 
-if(ANDROID)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
-    #link_directories (${PowerslideRebuild_MYGUIHOME}/lib)
-else()
+link_directories (${PowerslideRebuild_OGREHOME}/lib)
+link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
+
+if(WIN32)
     link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug)
     link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug/opt)
     link_directories (${PowerslideRebuild_OGREHOME}/lib/Release)
     link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
-    #link_directories (${PowerslideRebuild_MYGUIHOME}/lib/Debug)
-    #link_directories (${PowerslideRebuild_MYGUIHOME}/lib/Release)
 endif()
 
 if(WIN32)
@@ -230,9 +205,6 @@ if(ANDROID)
         target_link_libraries(PowerslideRebuild MultiSlider)
     endif()
     
-    #target_link_libraries(PowerslideRebuild MyGUI.OgrePlatform)
-    #target_link_libraries(PowerslideRebuild MyGUIEngine)
-    
     target_link_libraries(PowerslideRebuild Jsonxx)
     
     if(PowerslideRebuild_OPENAL)
@@ -241,7 +213,6 @@ if(ANDROID)
     
     target_link_libraries(PowerslideRebuild RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
     target_link_libraries(PowerslideRebuild Plugin_ParticleFXStatic)
-    target_link_libraries(PowerslideRebuild Plugin_OctreeSceneManagerStatic)
     target_link_libraries(PowerslideRebuild freetype)
     target_link_libraries(PowerslideRebuild FreeImage)
     target_link_libraries(PowerslideRebuild zlib)
@@ -250,53 +221,78 @@ if(ANDROID)
     target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
 
     target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
-else()
-    if(PowerslideRebuild_MULTIPLAYER)
-        target_link_libraries(PowerslideRebuild MultiSlider)
+    
+else() # Not Android
+
+    if(WIN32)
+        if(PowerslideRebuild_MULTIPLAYER)
+            target_link_libraries(PowerslideRebuild MultiSlider)
+        endif()
+        
+        target_link_libraries(PowerslideRebuild Jsonxx)
+        
+        if(PowerslideRebuild_OPENAL)
+            target_link_libraries(PowerslideRebuild openal32)
+        endif()
+        
+        target_link_libraries(PowerslideRebuild general opengl32)
+        target_link_libraries(PowerslideRebuild general glu32)
+        
+        target_link_libraries(PowerslideRebuild debug OgreMainStatic_d)
+        target_link_libraries(PowerslideRebuild debug OgreOverlayStatic_d)
+        target_link_libraries(PowerslideRebuild debug RenderSystem_GLStatic_d)
+        target_link_libraries(PowerslideRebuild debug Plugin_ParticleFXStatic_d)
+        target_link_libraries(PowerslideRebuild debug freetype2311_d)
+        target_link_libraries(PowerslideRebuild debug FreeImaged)
+        target_link_libraries(PowerslideRebuild debug zlibd)
+        target_link_libraries(PowerslideRebuild debug zziplibd)
+        
+        
+
+        target_link_libraries(PowerslideRebuild optimized OgreMainStatic)
+        target_link_libraries(PowerslideRebuild optimized OgreOverlayStatic)
+        target_link_libraries(PowerslideRebuild optimized RenderSystem_GLStatic)
+        target_link_libraries(PowerslideRebuild optimized Plugin_ParticleFXStatic)
+        target_link_libraries(PowerslideRebuild optimized freetype2311)
+        target_link_libraries(PowerslideRebuild optimized FreeImage)
+        target_link_libraries(PowerslideRebuild optimized zlib)
+        target_link_libraries(PowerslideRebuild optimized zziplib)
+        
+        target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
+
+        target_link_libraries(PowerslideRebuild LinearMath)
+        target_link_libraries(PowerslideRebuild BulletCollision)
+        target_link_libraries(PowerslideRebuild BulletDynamics)
+        target_link_libraries(PowerslideRebuild ConvexDecomposition)
+
+        target_link_libraries(PowerslideRebuild OgreBullet)
+        
+    else()# Not Windows Not Android (Ubuntu)
+    
+        if(PowerslideRebuild_MULTIPLAYER)
+            target_link_libraries(PowerslideRebuild MultiSlider)
+        endif()
+        
+        target_link_libraries(PowerslideRebuild Jsonxx)
+        
+        if(PowerslideRebuild_OPENAL)
+            target_link_libraries(PowerslideRebuild openal32)
+        endif()
+
+
+        target_link_libraries(PowerslideRebuild RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic)
+        target_link_libraries(PowerslideRebuild GL GLU X11 Xrandr Xt Xaw Xext m dl pthread)
+        target_link_libraries(PowerslideRebuild Plugin_ParticleFXStatic)
+        target_link_libraries(PowerslideRebuild Plugin_OctreeSceneManagerStatic)
+        target_link_libraries(PowerslideRebuild freetype)
+        target_link_libraries(PowerslideRebuild FreeImage)
+        target_link_libraries(PowerslideRebuild zlib)
+        target_link_libraries(PowerslideRebuild zziplib)
+
+
+        
+        target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
+
+        target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     endif()
-    
-    #target_link_libraries(PowerslideRebuild debug MyGUI.OgrePlatform_d)
-    #target_link_libraries(PowerslideRebuild debug MyGUIEngine_d)
-    #target_link_libraries(PowerslideRebuild optimized MyGUI.OgrePlatform)
-    #target_link_libraries(PowerslideRebuild optimized MyGUIEngine)
-    
-    target_link_libraries(PowerslideRebuild Jsonxx)
-    
-    if(PowerslideRebuild_OPENAL)
-        target_link_libraries(PowerslideRebuild openal32)
-    endif()
-    
-    target_link_libraries(PowerslideRebuild general opengl32)
-    target_link_libraries(PowerslideRebuild general glu32)
-    
-    target_link_libraries(PowerslideRebuild debug OgreMainStatic_d)
-    target_link_libraries(PowerslideRebuild debug OgreOverlayStatic_d)
-    target_link_libraries(PowerslideRebuild debug RenderSystem_GLStatic_d)
-    target_link_libraries(PowerslideRebuild debug Plugin_ParticleFXStatic_d)
-    target_link_libraries(PowerslideRebuild debug Plugin_OctreeSceneManagerStatic_d)
-    target_link_libraries(PowerslideRebuild debug freetype2311_d)
-    target_link_libraries(PowerslideRebuild debug FreeImaged)
-    target_link_libraries(PowerslideRebuild debug zlibd)
-    target_link_libraries(PowerslideRebuild debug zziplibd)
-    
-    
-
-    target_link_libraries(PowerslideRebuild optimized OgreMainStatic)
-    target_link_libraries(PowerslideRebuild optimized OgreOverlayStatic)
-    target_link_libraries(PowerslideRebuild optimized RenderSystem_GLStatic)
-    target_link_libraries(PowerslideRebuild optimized Plugin_ParticleFXStatic)
-    target_link_libraries(PowerslideRebuild optimized Plugin_OctreeSceneManagerStatic)
-    target_link_libraries(PowerslideRebuild optimized freetype2311)
-    target_link_libraries(PowerslideRebuild optimized FreeImage)
-    target_link_libraries(PowerslideRebuild optimized zlib)
-    target_link_libraries(PowerslideRebuild optimized zziplib)
-    
-    target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
-
-    target_link_libraries(PowerslideRebuild LinearMath)
-    target_link_libraries(PowerslideRebuild BulletCollision)
-    target_link_libraries(PowerslideRebuild BulletDynamics)
-    target_link_libraries(PowerslideRebuild ConvexDecomposition)
-
-    target_link_libraries(PowerslideRebuild OgreBullet)
 endif()

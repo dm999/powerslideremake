@@ -4,7 +4,7 @@
 
 #include "../includes/OgreInclude.h"
 
-class CustomSceneManager : public Ogre::OctreeSceneManager
+class CustomSceneManager : public Ogre::DefaultSceneManager
 {
 private:
     std::vector<Ogre::Light *> mOrderedLightList;

@@ -24,12 +24,6 @@
     class AAssetManager;
 #endif
 
-namespace MyGUI
-{
-    class Gui;
-    class OgrePlatform;
-}
-
 class CustomSceneManagerFactory;
 class CustomTrayManager;
 class CustomOverlaySystem;
@@ -129,9 +123,6 @@ protected:
     // OgreBites
     CommonIncludes::shared_ptr<CustomTrayManager> mTrayMgr;
     bool mShutDown;
-
-    CommonIncludes::shared_ptr<MyGUI::Gui> mGUI;
-    CommonIncludes::shared_ptr<MyGUI::OgrePlatform> mPlatform;
 
 private:
 

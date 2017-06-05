@@ -2,8 +2,6 @@
 
 #include "UIMainMenu.h"
 
-#include "MyGUI.h"
-
 #include "../gamelogic/GameModeSwitcher.h"
 
 #include "../listeners/LoaderListener.h"
@@ -107,7 +105,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
         loaderListener->loadState(0.9f);
 }
 
-void UIMainMenu::load(CustomTrayManager* trayMgr, MyGUI::Gui* gui, const GameState& gameState, LoaderListener* loaderListener)
+void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener)
 {
     trayMgr->setListener(this);
 

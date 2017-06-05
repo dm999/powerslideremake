@@ -5,12 +5,6 @@
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
 
-#ifdef _MSC_VER
-#include <windows.h>
-#else
-#include <thread>
-#endif
-
 struct AIData
 {
     Ogre::Vector3 pos;
@@ -100,11 +94,7 @@ public:
 
     static void Sleep(size_t milliseconds)
     {
-#ifdef _MSC_VER
-        ::Sleep(milliseconds);
-#else
-        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-#endif
+        SLEEP(milliseconds);
     }
 
 private:

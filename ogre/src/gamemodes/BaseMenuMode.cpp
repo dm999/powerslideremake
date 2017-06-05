@@ -4,9 +4,6 @@
 
 #include "../gamelogic/RacingGridGeneration.h"
 
-#include "MyGUI.h"
-#include "MyGUI_OgrePlatform.h"
-
 #include "../customs/CustomTrayManager.h"
 #include "../customs/CustomOverlaySystem.h"
 

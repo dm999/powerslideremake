@@ -2,9 +2,6 @@
 
 #include "BaseApp.h"
 
-#include "MyGUI.h"
-#include "MyGUI_OgrePlatform.h"
-
 #include "InputHandler.h"
 #include "tools/OgreTools.h"
 #include "tools/Conversions.h"
@@ -46,6 +43,7 @@ namespace
     lua_State * mPipeline = NULL;
     BaseApp * baseApp = NULL;
 
+#if 0
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     //https://github.com/MyGUI/mygui/blob/master/Common/Input/OIS/InputManager.cpp
     MyGUI::Char translateWin32Text(MyGUI::KeyCode kc)
@@ -111,6 +109,7 @@ namespace
 
         return 0;
     }
+#endif
 #endif
 }
 
@@ -188,9 +187,6 @@ BaseApp::~BaseApp()
     baseApp = NULL;
     deInitLua();
 
-    mGUI.reset();
-    mPlatform.reset();
-
     mTrayMgr.reset();
 
     //Remove ourself as a Window listener
@@ -214,7 +210,6 @@ bool BaseApp::configure()
 #else
     Ogre::Root::getSingleton().installPlugin(new Ogre::GLPlugin());
 #endif
-    Ogre::Root::getSingleton().installPlugin(new Ogre::OctreePlugin());
     Ogre::Root::getSingleton().installPlugin(new Ogre::ParticleFXPlugin());
 
     const Ogre::RenderSystemList& rsList = mRoot->getAvailableRenderers();
@@ -682,11 +677,10 @@ ModeContext BaseApp::createModeContext()
         mInputHandler.get(),
         mTrayMgr.get(), mOverlaySystem.get(),
         mPipeline,
-        mGameState,
+        mGameState
 #ifndef NO_OPENAL
-        mSoundsProcesser,
+        ,mSoundsProcesser
 #endif
-        mGUI.get(), mPlatform.get()
     );
 }
 
@@ -849,7 +843,6 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager)
 
 
     mRoot->installPlugin(new Ogre::GLES2Plugin());
-    mRoot->installPlugin(new Ogre::OctreePlugin());
     mRoot->installPlugin(new Ogre::ParticleFXPlugin());
 
     const Ogre::RenderSystemList& rsList = mRoot->getAvailableRenderers();
@@ -901,9 +894,6 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
             mTrayMgr->hideCursor();
             //mTrayMgr->toggleAdvancedFrameStats();
-
-            //mPlatform.reset(new MyGUI::OgrePlatform());
-            //mGUI.reset(new MyGUI::Gui());
 
             LOGI("BaseApp[androidInitWindow]: Before create scene"); 
 

@@ -7,7 +7,7 @@
 
 const Ogre::String CustomSceneManagerFactory::FACTORY_TYPE_NAME = "CustomSceneManager";
 
-CustomSceneManager::CustomSceneManager(const Ogre::String& name) : OctreeSceneManager(name)
+CustomSceneManager::CustomSceneManager(const Ogre::String& name) : Ogre::DefaultSceneManager(name)
 {}
 
 Ogre::LightList CustomSceneManager::_getFullOrderedLightList()
@@ -64,7 +64,7 @@ Ogre::LightList CustomSceneManager::_getFullOrderedLightList()
 
 Ogre::Light* CustomSceneManager::createLight(const Ogre::String& name)
 {
-    Ogre::Light* newLight = Ogre::OctreeSceneManager::createLight(name);
+    Ogre::Light* newLight = Ogre::DefaultSceneManager::createLight(name);
     mOrderedLightList.push_back(newLight);
     return newLight;
 }

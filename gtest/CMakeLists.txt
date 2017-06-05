@@ -3,16 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(UT)
 
-if(ANDROID)
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_ANDROID_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-else()
-    set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
-endif()
-set(OGRE_STATIC true)
-
-find_package(OGRE REQUIRED)
-find_package(OIS REQUIRED)
-
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
@@ -25,7 +15,6 @@ list(APPEND sources ${sources_main_h})
 include_directories(include)
 include_directories(src/gtest)
 include_directories(../ogre/src)
-#include_directories(../boost)
 
 if(ANDROID)
 
@@ -34,25 +23,25 @@ if(ANDROID)
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_ANDROID_HOME}/include/OGRE/RenderSystems/GLES2
-            $ENV{OGRE_HOME}/include/OGRE/Overlay
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GLES2
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
     )
             
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib)
-    link_directories ($ENV{OGRE_ANDROID_HOME}/lib/OGRE)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
 
 else()
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
-            $ENV{OGRE_HOME}/include/OGRE/Overlay
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
     )
             
-    link_directories ($ENV{OGRE_HOME}/lib/Debug)
-    link_directories ($ENV{OGRE_HOME}/lib/Debug/opt)
-    link_directories ($ENV{OGRE_HOME}/lib/Release)
-    link_directories ($ENV{OGRE_HOME}/lib/Release/opt)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug/opt)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release)
+    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
 endif()
 
 add_executable(UT ${sources})
@@ -90,8 +79,6 @@ else()
     target_link_libraries(UT optimized FreeImage)
     target_link_libraries(UT optimized zlib)
     target_link_libraries(UT optimized zziplib)
-    
-    #target_link_libraries(UT BoostThread)
     
 endif()
 
