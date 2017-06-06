@@ -40,7 +40,7 @@ file(GLOB sources_col_h Collisions/include/*.h)
 file(GLOB sources_dyn Dynamics/src/*.cpp)
 file(GLOB sources_dyn_h Dynamics/include/*.h)
 
-if(WIN32)
+if(MSVC)
     foreach( src_file ${sources_col} )
         set_source_files_properties(${src_file} PROPERTIES COMPILE_FLAGS "/YuOgreBulletCollisions.h" )
     endforeach( src_file ${sources_col} )

@@ -60,7 +60,7 @@ file(GLOB sources_ui_main_h src/ui/*.h)
 
 file(GLOB sources_includes_main_h src/includes/*.h)
 
-if(WIN32)
+if(MSVC)
     foreach( src_file ${sources_main} )
         message(STATUS ${src_file})
         set_source_files_properties(
@@ -161,7 +161,7 @@ if(WIN32)
     link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
 endif()
 
-if(WIN32)
+if(MSVC)
 
     foreach(f ${sources})
         # Get the path of the file relative to ${CMAKE_HOME_DIRECTORY},
@@ -188,6 +188,17 @@ if(WIN32)
 
     add_executable( PowerslideRebuild WIN32 ${sources})
 else()
+
+    if(MINGW)
+    
+        list(APPEND sources src/res/PowerslideHD_Engine.ico)
+        list(APPEND sources src/res/PowerslideHD_Engine.rc2)
+        list(APPEND sources src/res/PowerslideHD_Engine.rc)
+    
+        set(CMAKE_RC_COMPILER_INIT windres)
+        ENABLE_LANGUAGE(RC)
+        set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -i <SOURCE> -o <OBJECT>")
+    endif()
 
     if(NOT ANDROID)
         add_executable( PowerslideRebuild ${sources})
@@ -235,37 +246,33 @@ else() # Not Android
             target_link_libraries(PowerslideRebuild openal32)
         endif()
         
-        target_link_libraries(PowerslideRebuild general opengl32)
-        target_link_libraries(PowerslideRebuild general glu32)
-        
+       
         target_link_libraries(PowerslideRebuild debug OgreMainStatic_d)
         target_link_libraries(PowerslideRebuild debug OgreOverlayStatic_d)
         target_link_libraries(PowerslideRebuild debug RenderSystem_GLStatic_d)
         target_link_libraries(PowerslideRebuild debug Plugin_ParticleFXStatic_d)
-        target_link_libraries(PowerslideRebuild debug freetype2311_d)
-        target_link_libraries(PowerslideRebuild debug FreeImaged)
-        target_link_libraries(PowerslideRebuild debug zlibd)
-        target_link_libraries(PowerslideRebuild debug zziplibd)
+        target_link_libraries(PowerslideRebuild debug freetype_d)
+        target_link_libraries(PowerslideRebuild debug FreeImage_d)
+        target_link_libraries(PowerslideRebuild debug zlib_d)
+        target_link_libraries(PowerslideRebuild debug zziplib_d)
         
         
 
+        target_link_libraries(PowerslideRebuild optimized RenderSystem_GLStatic)
         target_link_libraries(PowerslideRebuild optimized OgreMainStatic)
         target_link_libraries(PowerslideRebuild optimized OgreOverlayStatic)
-        target_link_libraries(PowerslideRebuild optimized RenderSystem_GLStatic)
         target_link_libraries(PowerslideRebuild optimized Plugin_ParticleFXStatic)
-        target_link_libraries(PowerslideRebuild optimized freetype2311)
+        target_link_libraries(PowerslideRebuild optimized freetype)
         target_link_libraries(PowerslideRebuild optimized FreeImage)
         target_link_libraries(PowerslideRebuild optimized zlib)
         target_link_libraries(PowerslideRebuild optimized zziplib)
         
-        target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
+        target_link_libraries(PowerslideRebuild general opengl32)
+        target_link_libraries(PowerslideRebuild general glu32)
+        
+        target_link_libraries(PowerslideRebuild Lua OIS)
 
-        target_link_libraries(PowerslideRebuild LinearMath)
-        target_link_libraries(PowerslideRebuild BulletCollision)
-        target_link_libraries(PowerslideRebuild BulletDynamics)
-        target_link_libraries(PowerslideRebuild ConvexDecomposition)
-
-        target_link_libraries(PowerslideRebuild OgreBullet)
+        target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
         
     else()# Not Windows Not Android (Ubuntu)
     
@@ -283,7 +290,6 @@ else() # Not Android
         target_link_libraries(PowerslideRebuild RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic)
         target_link_libraries(PowerslideRebuild GL GLU X11 Xrandr Xt Xaw Xext m dl pthread)
         target_link_libraries(PowerslideRebuild Plugin_ParticleFXStatic)
-        target_link_libraries(PowerslideRebuild Plugin_OctreeSceneManagerStatic)
         target_link_libraries(PowerslideRebuild freetype)
         target_link_libraries(PowerslideRebuild FreeImage)
         target_link_libraries(PowerslideRebuild zlib)
