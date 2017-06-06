@@ -282,7 +282,7 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
         }
 
         if(loaderListener)
-            loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()));
+            loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
     }
 }
 

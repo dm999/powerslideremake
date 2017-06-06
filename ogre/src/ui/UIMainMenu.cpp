@@ -47,7 +47,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 
     if(loaderListener)
-        loaderListener->loadState(0.5f);
+        loaderListener->loadState(0.5f, "textures loaded");
 
     {
         const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track10.bmp", "track11.bmp"};
@@ -102,7 +102,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
     }
 
     if(loaderListener)
-        loaderListener->loadState(0.9f);
+        loaderListener->loadState(0.9f, "all loaded");
 }
 
 void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener)

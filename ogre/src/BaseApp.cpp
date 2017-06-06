@@ -766,6 +766,7 @@ void BaseApp::touchUp(int id, float x, float y)
     state.X.abs = x;
     state.Y.abs = y;
     state.Z.abs = 0;
+    mousePressed(OIS::MultiTouchEvent(NULL, state));
     mouseReleased(OIS::MultiTouchEvent(NULL, state));
 
     if(/*cursorPos.x < 200.0f*/ id == mTouchLeftID)

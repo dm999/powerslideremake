@@ -5,7 +5,7 @@ class LoaderListener
 {
 public:
 
-    virtual void loadState(float percent) = 0;
+    virtual void loadState(float percent, const std::string& info) = 0;
 };
 
 

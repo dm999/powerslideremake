@@ -64,32 +64,32 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     mLoaderListener = loaderListener;
 
     if(loaderListener)
-        loaderListener->loadState(0.2f);
+        loaderListener->loadState(0.2f, "scene inited");
 
     loadResources(loaderListener);
 
     if(loaderListener)
-        loaderListener->loadState(0.4f);
+        loaderListener->loadState(0.4f, "resources loaded");
 
     initTerrain(loaderListener);
 
     if(loaderListener)
-        loaderListener->loadState(0.8f);
+        loaderListener->loadState(0.8f, "terrain loaded");
 
     initModel();
 
     if(loaderListener)
-        loaderListener->loadState(0.9f);
+        loaderListener->loadState(0.9f, "models loaded");
 
     initMisc();
 
     if(loaderListener)
-        loaderListener->loadState(0.95f);
+        loaderListener->loadState(0.95f, "misc loaded");
 
     initLightLists();
 
     if(loaderListener)
-        loaderListener->loadState(1.0f);
+        loaderListener->loadState(1.0f, "all loaded");
 
 #if SHOW_DETAILS_PANEL
     // create a params panel for displaying sample details
@@ -253,7 +253,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
     initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mModeContext.mPipeline), 0.0f));
 
     if(loaderListener)
-        loaderListener->loadState(0.1f);
+        loaderListener->loadState(0.1f, "world inited");
 
     //load data
     {
@@ -263,7 +263,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
     }
 
     if(loaderListener)
-        loaderListener->loadState(0.12f);
+        loaderListener->loadState(0.12f, "LLT loaded");
 
     {
         bool isDebugExclusion = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugExclusion", mModeContext.mPipeline);
@@ -271,12 +271,12 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
     }
 
     if(loaderListener)
-        loaderListener->loadState(0.13f);
+        loaderListener->loadState(0.13f, "Exclusions loaded");
 
     PHYLoader().load(mModeContext.mGameState);
 
     if(loaderListener)
-        loaderListener->loadState(0.14f);
+        loaderListener->loadState(0.14f, "PHY loaded");
 
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mModeContext.mPipeline);
@@ -352,7 +352,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
         AILoader().load(mModeContext.mGameState, mSceneMgr, isDebugAI);
 
         if(loaderListener)
-            loaderListener->loadState(0.18f);
+            loaderListener->loadState(0.18f, "AI loaded");
     }
 
     //init multiplayer
@@ -969,7 +969,7 @@ void BaseRaceMode::scriptParseEnded(const Ogre::String& scriptName, bool skipped
     ++mResourceCurrent;
 
     if(mLoaderListener)
-        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount));
+        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount), scriptName);
 }
 
 void BaseRaceMode::resourceGroupLoadStarted(const Ogre::String& groupName, size_t resourceCount)
@@ -988,7 +988,7 @@ void BaseRaceMode::resourceLoadEnded()
     ++mResourceCurrent;
 
     if(mLoaderListener)
-        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount));
+        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount), "resources loading");
 }
 
 void BaseRaceMode::unloadResources()

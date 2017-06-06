@@ -53,7 +53,7 @@ void BaseMenuMode::initData(LoaderListener* loaderListener)
     doInitData(loaderListener);
 
     if(loaderListener)
-        loaderListener->loadState(1.0f);
+        loaderListener->loadState(1.0f, "loaded");
 }
 
 void BaseMenuMode::initCamera()

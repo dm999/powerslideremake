@@ -49,7 +49,7 @@ public:
     GameMode getMode()const{return mGameMode;}
 
     //LoaderListener
-    void loadState(float percent) override;
+    void loadState(float percent, const std::string& info) override;
 
 private:
 

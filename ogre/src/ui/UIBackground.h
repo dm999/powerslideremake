@@ -21,6 +21,7 @@ protected:
 
     Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material);
     Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
+    Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
 
     ModeContext mModeContext;
@@ -56,7 +57,7 @@ public:
     void show();
     void hide();
 
-    void setPercent(float percent);
+    void setPercent(float percent, const std::string& info);
 
 private:
 
@@ -68,6 +69,8 @@ private:
     Ogre::PanelOverlayElement* mBegin;
     Ogre::PanelOverlayElement* mMiddle;
     Ogre::PanelOverlayElement* mEnd;
+
+    Ogre::TextAreaOverlayElement * mInfo;
 
     Ogre::String mMaterialNameEnd;
     Ogre::String mMaterialNameMiddle;

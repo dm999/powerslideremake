@@ -142,6 +142,26 @@ Ogre::PanelOverlayElement* UIBackground::createPanel(const Ogre::String& name, c
     return createPanel(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y, material);
 }
 
+Ogre::TextAreaOverlayElement* UIBackground::createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
+{
+    Ogre::TextAreaOverlayElement* res = NULL;
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+
+    res = (Ogre::TextAreaOverlayElement*)om.createOverlayElement("TextArea", name);
+    res->setMetricsMode(Ogre::GMM_PIXELS);
+    res->setWidth(width);
+    res->setHeight(height);
+    res->setTop(top);
+    res->setLeft(left);
+    res->setHorizontalAlignment(Ogre::GHA_LEFT);
+    res->setVerticalAlignment(Ogre::GVA_TOP);
+    res->show();
+
+    return res;
+}
+
+
 void UIBackground::show()
 {
     createCamera();
@@ -270,6 +290,7 @@ void UIBackgroundLoaderProgress::show()
     Ogre::Vector4 beginPos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft - 16.0f, mProgressTop, mProgressLeft, mProgressBottom);
     Ogre::Vector4 middlePos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft, mProgressTop, mProgressLeft + 1.0f, mProgressBottom);
     Ogre::Vector4 endPos = screenAdaptionRelative * Ogre::Vector4(mProgressLeft + 1.0f, mProgressTop, mProgressLeft + 16.0f, mProgressBottom);
+    Ogre::Vector4 infoPos = screenAdaptionRelative * Ogre::Vector4(320.0f, mProgressTop + 20.0f, 320.0f, mProgressTop + 20.0f);
 
 
     mBegin = createPanel("LoaderScreenProgressBegin", beginPos, mMaterialNameEnd);
@@ -292,6 +313,16 @@ void UIBackgroundLoaderProgress::show()
     mLoaderScreen->addChild(mEnd);
     mEnd->show();
 
+    mInfo = createTextArea("LoaderScreenProgressInfo", infoPos.z - infoPos.x, infoPos.w - infoPos.y, infoPos.x, infoPos.y); 
+    mInfo->setCaption("");
+    mInfo->setCharHeight(16.0f);
+    mInfo->setSpaceWidth(9.0f);
+    mInfo->setAlignment(Ogre::TextAreaOverlayElement::Center);
+    mInfo->setFontName("SdkTrays/Caption");
+    mInfo->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    mLoaderScreen->addChild(mInfo);
+    mInfo->show();
+
 
 
     mModeContext.mWindow->update(true);// update draw
@@ -299,6 +330,7 @@ void UIBackgroundLoaderProgress::show()
 
 void UIBackgroundLoaderProgress::hide()
 {
+    mLoaderScreen->removeChild(mInfo->getName());
     mLoaderScreen->removeChild(mBegin->getName());
     mLoaderScreen->removeChild(mMiddle->getName());
     mLoaderScreen->removeChild(mEnd->getName());
@@ -307,11 +339,12 @@ void UIBackgroundLoaderProgress::hide()
     om.destroyOverlayElement(mBegin);
     om.destroyOverlayElement(mMiddle);
     om.destroyOverlayElement(mEnd);
+    om.destroyOverlayElement(mInfo);
 
     UIBackground::hide();
 }
 
-void UIBackgroundLoaderProgress::setPercent(float percent)
+void UIBackgroundLoaderProgress::setPercent(float percent, const std::string& info)
 {
     mPercent = percent;
 
@@ -331,6 +364,8 @@ void UIBackgroundLoaderProgress::setPercent(float percent)
 
     mMiddle->setWidth(resWidth.x);
     mEnd->setLeft(resWidth.z + resWidth.x);
+
+    mInfo->setCaption(info);
 
     mModeContext.mWindow->update(true);// update draw
 }

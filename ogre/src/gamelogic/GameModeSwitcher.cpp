@@ -286,16 +286,16 @@ void GameModeSwitcher::clear()
     mPlayerMode.reset();
 }
 
-void GameModeSwitcher::loadState(float percent)
+void GameModeSwitcher::loadState(float percent, const std::string& info)
 {
     if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
     {
-        mUILoader->setPercent(percent);
+        mUILoader->setPercent(percent, info);
     }
 
     if(mGameMode == ModeMenu || mGameMode == ModeMenuMulti)
     {
         if(mIsInitialLoadPassed)
-            mUIUnloader->setPercent(percent);
+            mUIUnloader->setPercent(percent, info);
     }
 }

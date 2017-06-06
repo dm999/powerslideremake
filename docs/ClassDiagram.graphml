@@ -2019,10 +2019,10 @@ DWORD Length</y:NodeLabel>
     <node id="n38">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="626.1954152594963" width="807.9384596111427" x="12376.03077019443" y="-6253.097707629748"/>
+          <y:Geometry height="656.2883323547258" width="807.9384596111427" x="12376.03077019443" y="-6268.144166177362"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="9.723684192247674">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="10.068970864862422">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2042,6 +2042,8 @@ void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* c
 
 GameMode getMode()const
 
+void loadState(float percent, const std::string&amp; info) override
+
 
 private:
 
@@ -2054,7 +2056,7 @@ bool mIsSwitchMode
 bool mIsInitialLoadPassed
 
 UIBackground mUIBackground
-CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgress&gt; mUILoader
+CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgressTracks&gt; mUILoader
 CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgress&gt; mUIUnloader
 
 
