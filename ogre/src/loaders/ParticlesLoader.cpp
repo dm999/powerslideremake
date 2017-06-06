@@ -26,7 +26,7 @@ void ParticlesLoader::load(GameState& gameState) const
             Particle particle;
             PSParticle part;
 
-            char buf[1024];
+            char buf[1025];
             fileToLoad->readLine(buf, 1024);
             sscanf(buf, "%d %d %d %d %d %d\n", &part.R1, &part.G1, &part.B1, &part.R2, &part.G2, &part.B2);
 

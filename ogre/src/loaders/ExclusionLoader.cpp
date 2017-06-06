@@ -22,7 +22,7 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
             LightEclusion lightExcl;
 
             int count;
-            char buf[1024];
+            char buf[1025];
             fileToLoad->readLine(buf, 1024);
             int err = sscanf(buf, "%d\n", &count);
             if(err == 0) break;

@@ -30,7 +30,7 @@ void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, con
         for(size_t q = 0; q < 5; ++q)
         {
             char partName[256];
-            char buf[1024];
+            char buf[1025];
             fileToLoad->readLine(buf, 1024);
             sscanf(buf, "%s\n", partName);
 
@@ -69,7 +69,7 @@ std::vector<Ogre::Vector3> SUSLoader::readWheelSuspension(const Ogre::DataStream
     std::vector<Ogre::Vector3> res;
 
     size_t pointsAmount;
-    char buf[1024];
+    char buf[1025];
     fileToLoad->readLine(buf, 1024);
     sscanf(buf, "%d\n", &pointsAmount);
     for(size_t q = 0; q < pointsAmount; ++q)

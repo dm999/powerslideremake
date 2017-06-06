@@ -12,7 +12,7 @@ void TerrainLoader::load(GameState& gameState)
     Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "terrain.txt");
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        char buf[1024];
+        char buf[1025];
         fileToLoad->readLine(buf, 1024);
         for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &remapFriction[q]);
 
