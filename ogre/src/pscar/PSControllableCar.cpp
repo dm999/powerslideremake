@@ -215,9 +215,9 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mAirSpoilerImpulse.addPoint(0.0f, 0.0f);
     if(isAI)
-        mAirSpoilerImpulse.addPoint(200.0f, 50.0f);
+        mAirSpoilerImpulse.addPoint(200.0f, 30.0f);
     else
-        mAirSpoilerImpulse.addPoint(150.0f, 80.0f);
+        mAirSpoilerImpulse.addPoint(150.0f, 50.0f);
 }
 
 void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp, 

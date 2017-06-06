@@ -76,6 +76,7 @@ if(MSVC)
         )
     
     add_definitions(-Zm114)
+    add_definitions(/MP)
 else()
     add_definitions(-std=c++11)
 endif()
@@ -270,7 +271,10 @@ else() # Not Android
         target_link_libraries(PowerslideRebuild general opengl32)
         target_link_libraries(PowerslideRebuild general glu32)
         
-        target_link_libraries(PowerslideRebuild Lua OIS)
+        target_link_libraries(PowerslideRebuild Lua)
+        
+        target_link_libraries(PowerslideRebuild debug OIS_d)
+        target_link_libraries(PowerslideRebuild optimized OIS)
 
         target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
         

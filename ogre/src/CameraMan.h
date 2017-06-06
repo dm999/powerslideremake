@@ -43,7 +43,7 @@ public :
 private :
     OgreBulletDynamics::DynamicsWorld * mWorld;
 
-    bool checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3& To, Ogre::Vector3& collisionPoint)const;
+    bool checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3& To, Ogre::Vector3& collisionPoint, Ogre::Vector3& collisionNormal)const;
 
     Ogre::Camera* mCamera;
     Ogre::Camera* mRearCamera;

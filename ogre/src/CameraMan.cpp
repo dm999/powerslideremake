@@ -85,18 +85,35 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
             const float prolongFactor = 1.2f;
             Ogre::Vector3 camOffsetProlong = carPos + camRot * additionalRotYaw * (cameraDisplacement * prolongFactor);
             Ogre::Vector3 collisionPoint;
-            bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint);
+            Ogre::Vector3 collisionNormal;
+            bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint, collisionNormal);
             if(isContactsHappen)
             {
-                Ogre::Vector3 distanceFromCarToCollision = collisionPoint - carPos;
-                
-                //not too close
-                const float minDistanceThreshold = 15.0f;
-                float distanceFromCarToCollisionLength = distanceFromCarToCollision.length();
-                if(distanceFromCarToCollisionLength < minDistanceThreshold)
+
+                Ogre::Vector3 collisionPointStub;
+                Ogre::Vector3 collisionNormalStub;
+                Ogre::Vector3 positionAlongNormal = collisionPoint + collisionNormal;
+                bool isContactsHappenNormal = checkRayInBetween(carPos, positionAlongNormal, collisionPointStub, collisionNormalStub);
+                if(!isContactsHappenNormal)
                 {
-                    distanceFromCarToCollision *= (minDistanceThreshold / distanceFromCarToCollisionLength);
+                    collisionPoint = positionAlongNormal;
                 }
+                
+                Ogre::Vector3 distanceFromCarToCollision = collisionPoint - carPos;
+
+                if(isContactsHappenNormal)
+                {
+                    Ogre::Vector3 distanceFromCarToCollision = collisionPoint - carPos;
+                    
+                    //not too close
+                    const float minDistanceThreshold = 15.0f;
+                    float distanceFromCarToCollisionLength = distanceFromCarToCollision.length();
+                    if(distanceFromCarToCollisionLength < minDistanceThreshold)
+                    {
+                        distanceFromCarToCollision *= (minDistanceThreshold / distanceFromCarToCollisionLength);
+                    }
+                }
+
 
                 ray = distanceFromCarToCollision * 0.9f;
             }
@@ -127,7 +144,7 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
     }
 }
 
-bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3& To, Ogre::Vector3& collisionPoint)const
+bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3& To, Ogre::Vector3& collisionPoint, Ogre::Vector3& collisionNormal)const
 {
     Ogre::Vector3 shift = To - From;
 
@@ -154,6 +171,7 @@ bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3
                     {
                         minimalFraction = bulletCallback->m_hitFractions[q];
                         collisionPoint = OgreBulletCollisions::convert(bulletCallback->m_hitPointWorld[q]);
+                        collisionNormal = OgreBulletCollisions::convert(bulletCallback->m_hitNormalWorld[q]);
                     }
                 }
             }
