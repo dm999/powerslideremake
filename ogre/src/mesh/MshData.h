@@ -61,7 +61,7 @@ struct MSHData
     std::vector<Ogre::Vector3> plainTexCoords;
 
     std::vector<std::vector<unsigned short> > submeshesTriangleIndixesDiffuse;
-    std::vector<std::vector<size_t> > submeshesTriangleIndixesTerrainMaps;
+    std::vector<std::vector<unsigned int> > submeshesTriangleIndixesTerrainMaps;
 
     void preallocatePlainBuffer()
     {

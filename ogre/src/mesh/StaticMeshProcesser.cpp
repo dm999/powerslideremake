@@ -79,7 +79,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             //terrain maps data indices
             for(size_t qq = 0; qq < mshData.terrainMapCount; ++qq)
             {
-                std::vector<size_t> triPlainIndixes;
+                std::vector<unsigned int> triPlainIndixes;
 
                 for(size_t w = 0; w < mshData.triCount; ++w)
                 {
@@ -922,7 +922,7 @@ void StaticMeshProcesser::prepareBuffers(const MSHData& mshData)
 
 OgreBulletCollisions::TriangleMeshCollisionShape * StaticMeshProcesser::createTrimesh(DE2Part& part, DE2SingleBatch& batch)
 {
-    return new OgreBulletCollisions::TriangleMeshCollisionShape(&part.mVertexBuffer[0], part.mVertexBuffer.size(), reinterpret_cast<unsigned int *>(&batch.mIndexBuffer[0]), batch.mIndexBuffer.size());
+    return new OgreBulletCollisions::TriangleMeshCollisionShape(&part.mVertexBuffer[0], part.mVertexBuffer.size(), &batch.mIndexBuffer[0], batch.mIndexBuffer.size());
 }
 
 Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB)
@@ -963,9 +963,9 @@ Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int,
 
     const DE2SingleBatch& batch = getBatchByAddress(address);
 
-    size_t pointA = batch.mIndexBuffer[triIndex * 3 + 0];
-    size_t pointB = batch.mIndexBuffer[triIndex * 3 + 1];
-    size_t pointC = batch.mIndexBuffer[triIndex * 3 + 2];
+    unsigned int pointA = batch.mIndexBuffer[triIndex * 3 + 0];
+    unsigned int pointB = batch.mIndexBuffer[triIndex * 3 + 1];
+    unsigned int pointC = batch.mIndexBuffer[triIndex * 3 + 2];
 
     Ogre::Vector2 pA = Ogre::Vector2(mParts[address.first].mTexCoordsBuffer[pointA].x, mParts[address.first].mTexCoordsBuffer[pointA].y);
     Ogre::Vector2 pB = Ogre::Vector2(mParts[address.first].mTexCoordsBuffer[pointB].x, mParts[address.first].mTexCoordsBuffer[pointB].y);

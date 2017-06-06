@@ -12,6 +12,7 @@ extern "C"{
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <cstring>
 
 #include "../tools/Conversions.h"
 //---------------------------------------------------------------------------
