@@ -20,13 +20,13 @@ if(ANDROID)
 else()
     include_directories( 
             ${OGRE_INCLUDE_DIRS}
-            $ENV{OGRE_HOME}/include/OGRE/RenderSystems/GL
-            $ENV{OGRE_HOME}/include/OGRE/Overlay
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
     )
 endif()
 
-file(GLOB sources_main src/Main.cpp)
+file(GLOB MshToBin_sources_main src/Main.cpp)
 
-list(APPEND sources ${sources_main})
+list(APPEND MshToBin_sources ${MshToBin_sources_main})
 
-add_executable(MshToBin ${sources})
+add_executable(MshToBin ${MshToBin_sources})

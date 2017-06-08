@@ -133,7 +133,7 @@
     }
 #else
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if _MSC_VER
     INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 #else
     int main(int argc, char *argv[])
