@@ -310,3 +310,10 @@ else() # Not Android
         target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     endif()
 endif()
+
+if(WIN32)
+    install(FILES "${PowerslideRebuild_OGREHOME}/lib/Debug/OIS_d.dll" CONFIGURATIONS Debug DESTINATION .)
+    install(FILES "${PowerslideRebuild_OGREHOME}/lib/Release/OIS.dll" CONFIGURATIONS Release DESTINATION .)
+endif()
+
+install(TARGETS PowerslideRebuild DESTINATION .)

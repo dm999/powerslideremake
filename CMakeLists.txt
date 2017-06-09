@@ -8,11 +8,21 @@ project(PowerslideRebuild)
 
 option(PowerslideRebuild_OPENAL "OpenAL build" ON)
 option(PowerslideRebuild_MULTIPLAYER "Multiplayer build" ON)
-set(PowerslideRebuild_OGREHOME "" CACHE STRING "")
-set(PowerslideRebuild_OPENALDIR "" CACHE STRING "")
+set(PowerslideRebuild_OGREHOME "" CACHE PATH "")
+set(PowerslideRebuild_OPENALDIR "" CACHE PATH "")
 
 set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
+
+if(NOT PowerslideRebuild_OGREHOME STREQUAL "")
+    STRING(REGEX REPLACE "\\\\" "/" PowerslideRebuild_OGREHOME ${PowerslideRebuild_OGREHOME})
+endif()
+
+if(NOT PowerslideRebuild_OPENALDIR STREQUAL "")
+    STRING(REGEX REPLACE "\\\\" "/" PowerslideRebuild_OPENALDIR ${PowerslideRebuild_OPENALDIR})
+endif()
 
 set(OGRE_STATIC true)
 find_package(OGRE REQUIRED)

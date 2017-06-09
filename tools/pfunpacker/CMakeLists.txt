@@ -16,3 +16,9 @@ file(GLOB PFUnpacker_sources_main src/Main.cpp)
 list(APPEND PFUnpacker_sources ${PFUnpacker_sources_main})
 
 add_executable(PFUnpacker ${PFUnpacker_sources})
+
+file(WRITE ${CMAKE_INSTALL_PREFIX}/android/assets/assets/pf/unpack.bat "PFUnpacker --dst . --file ../../../../data.pf\nPFUnpacker --dst . --file ../../../../gameshell.pf\nPFUnpacker --dst . --file ../../../../store.pf\n") 
+file(WRITE ${CMAKE_INSTALL_PREFIX}/android/assets/assets/pf/unpack.sh "#!/bin/bash\nPFUnpacker --dst . --file ../../../../data.pf\nPFUnpacker --dst . --file ../../../../gameshell.pf\nPFUnpacker --dst . --file ../../../../store.pf\n") 
+
+install(TARGETS PFUnpacker DESTINATION .)
+install(TARGETS PFUnpacker DESTINATION ./android/assets/assets/pf)

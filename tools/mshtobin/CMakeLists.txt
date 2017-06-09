@@ -30,3 +30,5 @@ file(GLOB MshToBin_sources_main src/Main.cpp)
 list(APPEND MshToBin_sources ${MshToBin_sources_main})
 
 add_executable(MshToBin ${MshToBin_sources})
+
+install(TARGETS MshToBin DESTINATION .)

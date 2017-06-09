@@ -105,3 +105,4 @@ else() # Not Android
 endif()
 
 
+install(TARGETS UT DESTINATION .)
