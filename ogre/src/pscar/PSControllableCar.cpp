@@ -611,7 +611,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
         }
 
         if(mIsDisableMouse){
-            mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), mModelNode);
+            mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity());
         }
     }
 

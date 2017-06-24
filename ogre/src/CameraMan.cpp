@@ -16,7 +16,7 @@ CameraMan::CameraMan(Ogre::Camera* cam, OgreBulletDynamics::DynamicsWorld * worl
 {
 }
 
-void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::SceneNode * const target)
+void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity)
 {
     Ogre::Vector3 cameraDisplacement(0.0f, 0.0f, 0.0f);
 
@@ -68,11 +68,9 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
         Ogre::Quaternion camRot;
         Ogre::Degree rot;
 
-        Ogre::Plane worldPlane(Ogre::Vector3::UNIT_Y, 0.0f);
+        Ogre::Vector3 projectedOnXZPlane(forwardAxis.x, 0.0f, forwardAxis.z);
 
-        Ogre::Vector3 projectedOnPlane = worldPlane.projectVector(forwardAxis);
-
-        rot = Ogre::Degree(GetSignedAngle(projectedOnPlane, Ogre::Vector3::NEGATIVE_UNIT_Z));
+        rot = Ogre::Degree(GetSignedAngle(projectedOnXZPlane, Ogre::Vector3::NEGATIVE_UNIT_Z));
         camRot.FromAngleAxis(rot, Ogre::Vector3::UNIT_Y);
 
         Ogre::Vector3 camOffset = carPos + camRot * additionalRotYaw * cameraDisplacement;
@@ -121,14 +119,13 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
 #endif
 
 
-        mCamera->setAutoTracking(true, target, targetOffset);
         mCamera->setOrientation(Ogre::Quaternion::IDENTITY);
         mCamera->setPosition(carPos + ray);
+        mCamera->lookAt(carPos + targetOffset);
 
     }
     else
     {
-        mCamera->setAutoTracking(false);
         mCamera->setPosition(carPos);
         mCamera->lookAt(carPos + carRot * Ogre::Vector3(0.0f, 0.0f, -20.0f));
     }
