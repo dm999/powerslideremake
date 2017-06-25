@@ -78,7 +78,7 @@ public:
 
     bool androidOnBack();
 
-    void androidCreate(JNIEnv * env, jobject obj, jobject assetManager);
+    void androidCreate(JNIEnv * env, jobject obj, jobject assetManager, const std::string& dataDir);
     void androidDestroy();
     void androidInitWindow(JNIEnv * env, jobject obj,  jobject surface);
     void androidTerminateWindow();

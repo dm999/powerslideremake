@@ -826,9 +826,11 @@ bool BaseApp::androidOnBack()
     return ret;
 }
 
-void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager)
+void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, const std::string& dataDir)
 {
     LOGI("BaseApp[androidCreate]: Begin"); 
+
+    mGameState.setDataDir(dataDir);
 
 #ifndef NO_OPENAL
     mSoundsProcesser.initSoundSystem();

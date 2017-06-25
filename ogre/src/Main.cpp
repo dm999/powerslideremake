@@ -30,13 +30,17 @@
             return JNI_VERSION_1_4;
         }
 
-        JNIEXPORT void JNICALL 	Java_org_ogre3d_android_OgreActivityJNI_create(JNIEnv * env, jobject obj, jobject assetManager)
+        JNIEXPORT void JNICALL 	Java_org_ogre3d_android_OgreActivityJNI_create(JNIEnv * env, jobject obj, jobject assetManager, jstring dataDir)
         {
             try
             {
+                const char *dataDirStr = env->GetStringUTFChars(dataDir, 0);
+                std::string dataDirString = dataDirStr;
+                env->ReleaseStringUTFChars(dataDir, dataDirStr);
+
                 if(!gInit)
                 {
-                    base->androidCreate(env, obj, assetManager);
+                    base->androidCreate(env, obj, assetManager, dataDirString);
                     gInit = true;
                 }
             }

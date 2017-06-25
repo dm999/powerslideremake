@@ -156,6 +156,10 @@ public:
     void clearMultiplayerCarsHuman();
     void removeMultiplayerCarHuman(const std::string& playerName);
 
+#if defined(__ANDROID__)
+    void setDataDir(const std::string& dir){ mDataDir = dir; }
+#endif
+
 private:
 
     std::string mVersion;
@@ -223,6 +227,8 @@ private:
     static const int mMultiplayerMaxHumans = 11;
     PSMultiplayerCar mMultiplayerCarHuman[mMultiplayerMaxHumans];
     std::map<std::string, size_t> mMultiplayerCarHumanIndexes;
+
+    std::string mDataDir;//for android
 };
 
 #endif

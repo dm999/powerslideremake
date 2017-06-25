@@ -18,7 +18,7 @@ public:
     /**
      * file - data.pf
      */
-    bool init(const std::string& file);
+    bool init(const std::string& file, const std::string& dataDir = "");
 
     /**
      * opens packed file and offsets to proper location
@@ -30,17 +30,16 @@ public:
 
 private:
 
-#if !defined(__ANDROID__)
     typedef unsigned int DWORD;
 
     std::string mFileName;
+    std::string mDataDir;
 
     std::vector<PF::PackedFileItem> fileSystem;
 
     size_t findFile(const std::string& relativeDir, const std::string& file, size_t& fileSize) const;
 
     static std::string readString(const Ogre::DataStreamPtr& stream, DWORD& FilePos);
-#endif
 };
 
 #endif

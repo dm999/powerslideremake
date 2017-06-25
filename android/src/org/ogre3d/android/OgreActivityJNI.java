@@ -32,7 +32,7 @@ import android.view.Surface;
 import android.content.res.AssetManager;
 
 public class OgreActivityJNI {	
-	public native static void create(AssetManager mgr);	
+	public native static void create(AssetManager mgr, String dataDir);	
 	public native static void destroy();	
 	public native static void initWindow(Surface surface);
 	public native static void termWindow();

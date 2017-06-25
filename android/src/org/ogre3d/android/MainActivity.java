@@ -42,6 +42,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.content.res.AssetManager;
 import android.view.MotionEvent;
+import android.os.Environment;
 
 public class MainActivity extends Activity implements SensorEventListener {
 	protected Handler handler = null;
@@ -105,7 +106,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 						assetMgr = getResources().getAssets();
 					}
 					
-					OgreActivityJNI.create(assetMgr);
+                    //https://stackoverflow.com/questions/19568354/accessing-the-sdcard-location-or-getexternalstoragedirectory-in-native-code
+                    //https://stackoverflow.com/questions/21724706/how-to-get-my-android-device-internal-download-folder-path
+                    String dataDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+					OgreActivityJNI.create(assetMgr, dataDir);
 
 					renderer = new Runnable() {
 						public void run() {

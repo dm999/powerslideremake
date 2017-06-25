@@ -27,7 +27,8 @@ GameState::GameState() :
     mMultiplayerServerIP(""),
     mMultiplayerServerPort(8800),
     mMultiplayerAmountAI(0),
-    mMultiplayerBroadcastInterval(350)
+    mMultiplayerBroadcastInterval(350),
+    mDataDir("")
 {
 }
 
@@ -39,15 +40,15 @@ void GameState::initOriginalData()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
 
-    bool isLoaded = mPFLoaderData.init("data.pf");
+    bool isLoaded = mPFLoaderData.init("data.pf", mDataDir);
 
     if(isLoaded)
     {
-        isLoaded = mPFLoaderGameshell.init("gameshell.pf");
+        isLoaded = mPFLoaderGameshell.init("gameshell.pf", mDataDir);
 
         if(isLoaded)
         {
-            isLoaded = mPFLoaderStore.init("store.pf");
+            isLoaded = mPFLoaderStore.init("store.pf", mDataDir);
 
             if(isLoaded)
             {
