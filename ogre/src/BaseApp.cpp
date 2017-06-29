@@ -591,21 +591,21 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
     }
 }
 #else
-void BaseApp::mouseMoved(const OIS::MultiTouchEvent& arg)
+void BaseApp::touchMoved(const OIS::MultiTouchEvent& arg)
 {
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseMove(arg);
     }
 }
-void BaseApp::mousePressed(const OIS::MultiTouchEvent& arg)
+void BaseApp::touchPressed(const OIS::MultiTouchEvent& arg)
 {
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseDown(arg);
     }
 }
-void BaseApp::mouseReleased(const OIS::MultiTouchEvent& arg)
+void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
 {
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
@@ -731,24 +731,34 @@ void BaseApp::touchDown(int id, float x, float y)
     Ogre::Vector2 cursorPos(x, y);
 
     OIS::MultiTouchState state;
-    state.X.abs = x;
-    state.Y.abs = y;
+    static int prevX = x;
+    static int prevY = y;
+    state.X.abs = (int)x;
+    state.X.rel = state.X.abs - prevX;
+    state.Y.abs = (int)y;
+    state.Y.rel = state.Y.abs - prevY;
     state.Z.abs = 0;
-    mousePressed(OIS::MultiTouchEvent(NULL, state));
+    state.Z.rel = 0;
+    prevX = x;
+    prevY = y;
+    state.width = viewportWidth;
+    state.height = viewportHeight;
+    state.touchType = OIS::MT_Pressed;
+    touchPressed(OIS::MultiTouchEvent(NULL, state));
 
-    if(cursorPos.x < 200.0f)
+    if(cursorPos.x < (200.0f * viewportWidth / 1280.0f))
     {
         mTouchLeftID = id;
         keyDown(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
     }
 
-    if(cursorPos.x > viewportWidth - 200)
+    if(cursorPos.x > viewportWidth - (200.0f * viewportWidth / 1280.0f))
     {
         mTouchRightID = id;
         keyDown(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
     }
 
-    if(cursorPos.y > viewportHeight - 200)
+    if(cursorPos.y > viewportHeight - (200.0f * viewportHeight / 1024.0f))
     {
         mTouchDownID = id;
         keyDown(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
@@ -759,27 +769,35 @@ void BaseApp::touchUp(int id, float x, float y)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
-
-    Ogre::Vector2 cursorPos(x, y);
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
 
     OIS::MultiTouchState state;
-    state.X.abs = x;
-    state.Y.abs = y;
+    static int prevX = x;
+    static int prevY = y;
+    state.X.abs = (int)x;
+    state.X.rel = state.X.abs - prevX;
+    state.Y.abs = (int)y;
+    state.Y.rel = state.Y.abs - prevY;
     state.Z.abs = 0;
-    mousePressed(OIS::MultiTouchEvent(NULL, state));
-    mouseReleased(OIS::MultiTouchEvent(NULL, state));
+    state.Z.rel = 0;
+    prevX = x;
+    prevY = y;
+    state.width = viewportWidth;
+    state.height = viewportHeight;
+    state.touchType = OIS::MT_Released;
+    touchReleased(OIS::MultiTouchEvent(NULL, state));
 
-    if(/*cursorPos.x < 200.0f*/ id == mTouchLeftID)
+    if(id == mTouchLeftID)
     {
         keyUp(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
     }
 
-    if(/*cursorPos.x > viewportWidth - 200*/ id == mTouchRightID)
+    if(id == mTouchRightID)
     {
         keyUp(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
     }
 
-    if(/*cursorPos.x > viewportWidth - 200*/ id == mTouchDownID)
+    if(id == mTouchDownID)
     {
         keyUp(OIS::KeyEvent(NULL, OIS::KC_DOWN, 0));
     }
@@ -789,13 +807,24 @@ void BaseApp::touchMove(int id, float x, float y)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
 
     OIS::MultiTouchState state;
-    state.X.abs = x;
-    state.Y.abs = y;
+    static int prevX = x;
+    static int prevY = y;
+    state.X.abs = (int)x;
+    state.X.rel = state.X.abs - prevX;
+    state.Y.abs = (int)y;
+    state.Y.rel = state.Y.abs - prevY;
     state.Z.abs = 0;
+    state.Z.rel = 0;
+    prevX = x;
+    prevY = y;
+    state.width = viewportWidth;
+    state.height = viewportHeight;
+    state.touchType = OIS::MT_Moved;
 
-    mouseMoved(OIS::MultiTouchEvent(NULL, state));
+    touchMoved(OIS::MultiTouchEvent(NULL, state));
 }
 
 bool BaseApp::androidOnBack()

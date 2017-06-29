@@ -62,9 +62,9 @@ public:
     void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
     void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 #else
-    void mouseMoved(const OIS::MultiTouchEvent& arg);
-    void mousePressed(const OIS::MultiTouchEvent& arg);
-    void mouseReleased(const OIS::MultiTouchEvent& arg);
+    void touchMoved(const OIS::MultiTouchEvent& arg);
+    void touchPressed(const OIS::MultiTouchEvent& arg);
+    void touchReleased(const OIS::MultiTouchEvent& arg);
 #endif
 
     GameState& getGameState(){return mGameState;}

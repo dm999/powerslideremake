@@ -738,7 +738,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         mMiscText = createTextArea("MiscTextBox", miscTextWidth, miscTextHeight, miscTextLeft, miscTextTop); 
         mMiscText->setCaption("MISC");
-        mMiscText->setCharHeight(16.0f);
+        mMiscText->setCharHeight(16.0f * viewportHeight / 1024.0f);
         mMiscText->setSpaceWidth(9.0f);
         mMiscText->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mMiscText->setFontName("SdkTrays/Caption");
@@ -748,7 +748,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::Real miscTextRLeft = viewportWidth;
         mMiscTextRight = createTextArea("MiscTextBoxRight", miscTextWidth, miscTextHeight, miscTextRLeft, miscTextTop); 
         mMiscTextRight->setCaption("MISC");
-        mMiscTextRight->setCharHeight(16.0f);
+        mMiscTextRight->setCharHeight(16.0f * viewportHeight / 1024.0f);
         mMiscTextRight->setSpaceWidth(9.0f);
         mMiscTextRight->setAlignment(Ogre::TextAreaOverlayElement::Right);
         mMiscTextRight->setFontName("SdkTrays/Caption");
@@ -762,7 +762,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         {
             mMiscTextArray[q] = createTextArea("MiscTextBox" + Conversions::DMToString(q), miscTextWidth, miscTextHeight, miscTextLeft, miscTextTop + 16.0f * (q + 1)); 
             mMiscTextArray[q]->setCaption("MISC");
-            mMiscTextArray[q]->setCharHeight(16.0f);
+            mMiscTextArray[q]->setCharHeight(16.0f * viewportHeight / 1024.0f);
             mMiscTextArray[q]->setSpaceWidth(9.0f);
             mMiscTextArray[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
             mMiscTextArray[q]->setFontName("SdkTrays/Caption");
