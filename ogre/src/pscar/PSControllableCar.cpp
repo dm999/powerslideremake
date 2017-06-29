@@ -610,9 +610,18 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
             //mParticleNodeWheelBackR->setVisible(true);
         }
 
-        if(mIsDisableMouse){
+        if(mIsDisableMouse)
+        {
+            Ogre::Camera* cam = mCameraMan->getCamera();
+            cam->setAutoTracking(false);
             mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity());
         }
+        else
+        {
+            Ogre::Camera* cam = mCameraMan->getCamera();
+            cam->setAutoTracking(true, mModelNode);
+        }
+        
     }
 
     if(isRaceStarted && isRollOver())

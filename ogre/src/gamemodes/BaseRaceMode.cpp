@@ -142,7 +142,6 @@ void BaseRaceMode::initCamera()
 {
 
     mCamera = mSceneMgr->createCamera("PlayerCam");
-    mCamera->setAutoTracking(false);
     mCamera->setNearClipDistance(0.5f);
     Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
 
