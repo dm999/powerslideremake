@@ -35,7 +35,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "cursor.bmp", 
                                 "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
+                                Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
 #endif
 
     TextureLoader().load( pfLoaderGameshell, 
@@ -334,7 +334,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
 #endif
 
@@ -352,7 +352,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
 
         mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
         mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -377,7 +377,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -392,7 +392,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
@@ -427,7 +427,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -442,7 +442,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -457,7 +457,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -472,7 +472,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -487,7 +487,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {
@@ -502,7 +502,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
         {

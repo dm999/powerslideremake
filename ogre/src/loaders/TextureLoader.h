@@ -20,7 +20,8 @@ public:
                                     const Ogre::ColourValue& keyCol = Ogre::ColourValue::Black,
                                     float threshold = 0.003f,
                                     bool resize = false,
-                                    size_t newSize = 64) const;
+                                    size_t newSize = 64,
+                                    bool blackForTransparent = false) const;
 
 private:
 

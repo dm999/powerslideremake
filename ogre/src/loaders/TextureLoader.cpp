@@ -48,7 +48,8 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
                                             const Ogre::ColourValue& keyCol,
                                             float threshold,
                                             bool resize,
-                                            size_t newSize) const
+                                            size_t newSize,
+                                            bool blackForTransparent) const
 {
     Ogre::TexturePtr res;
 
@@ -88,6 +89,12 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
                     Ogre::ColourValue pixCol = srcImg.getColourAt (x, y, 0); 
                     Ogre::ColourValue diffCol = pixCol - keyCol; 
                     pixCol.a = ( (fabs(diffCol.r)<threshold) && (fabs(diffCol.g)<threshold) && (fabs(diffCol.b)<threshold) ) ? 0.0f : 1.0f; 
+                    if(blackForTransparent && pixCol.a == 0.0f)
+                    {
+                        pixCol.r = 0.0f;
+                        pixCol.g = 0.0f;
+                        pixCol.b = 0.0f;
+                    }
                     Ogre::PixelUtil::packColour (pixCol, targetTextureFormat, static_cast<void*> (pixelData + pxDataIndex) ); 
                     pxDataIndex += pxDataIndexStep; 
                 }

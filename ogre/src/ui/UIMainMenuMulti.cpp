@@ -29,7 +29,7 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "cursor.bmp", 
                                 "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
+                                Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
 #endif
 
     TextureLoader().load( pfLoaderGameshell, 
@@ -234,7 +234,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
         newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
 #endif
 
