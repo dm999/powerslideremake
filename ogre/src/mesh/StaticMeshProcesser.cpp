@@ -60,7 +60,14 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
     bool loadResult = false;
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
+        if(loaderListener)
+            loaderListener->loadState(0.3f, "DE2 reading");//0.3 from BaseRaceMode::initData
+
         loadResult = de2Loader.load(originalParts, fileToLoad);
+
+        if(loaderListener)
+            loaderListener->loadState(0.31f, "DE2 loaded");//0.3 from BaseRaceMode::initData
+
         fileToLoad->close();
 
         if(loadResult)
@@ -104,6 +111,9 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             mergeMSH(mshData, mapTexturesToMSHIndex, mergedMSH);
 
             mshData.clear();
+
+            if(loaderListener)
+                loaderListener->loadState(0.31f + 0.19f * static_cast<float>(q) / static_cast<float>(originalParts.size()), "parts loading");
         }
 
         //create textures
@@ -139,6 +149,9 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                 terrain = sceneMgr->createEntity(nodeName, nodeName, TEMP_RESOURCE_GROUP_NAME);
             }
             initPart(pipeline, sceneMgr, mainNode, isGlobalReset, gameState, terrain, terrainNode, centroid);
+
+            if(loaderListener)
+                loaderListener->loadState(0.7f + 0.1f * static_cast<float>(q) / static_cast<float>(mergedMSH.size()), "merged parts loading");
         }
     }
 }
@@ -240,8 +253,8 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
     std::set<std::string> texturesNames;
 
     //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.4f;
-    const float loaderMax = 0.8f;
+    const float loaderMin = 0.5f;
+    const float loaderMax = 0.7f;
     const float loaderDistance = loaderMax - loaderMin;
 
     //get unique names
@@ -838,11 +851,16 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
     return materialNames;
 }
 
-void StaticMeshProcesser::queryLights()
+void StaticMeshProcesser::queryLights(LoaderListener* loaderListener)
 {
     //d.polubotko: make sure light lists created during loading
     for(size_t q = 0; q < mTerrainNodes.size(); ++q)
+    {
         mTerrainNodes[q]->queryLights();
+
+        if(loaderListener)
+            loaderListener->loadState(0.95f + 0.05f * static_cast<float>(q) / static_cast<float>(mTerrainNodes.size()), "light list loading");//0.95f from BaseRaceMode::initData
+    }
 }
 
 bool StaticMeshProcesser::isRigidBodyStatic(const btCollisionObject * object, std::pair<int, int>& address)const

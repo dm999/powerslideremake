@@ -48,7 +48,7 @@ public :
                     OgreBulletDynamics::DynamicsWorld * world,
                     LoaderListener* loaderListener);
 
-    void queryLights();
+    void queryLights(LoaderListener* loaderListener);
 
     bool isRigidBodyStatic(const btCollisionObject * object, std::pair<int, int>& address) const;
 

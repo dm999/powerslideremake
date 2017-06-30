@@ -66,27 +66,27 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     if(loaderListener)
         loaderListener->loadState(0.2f, "scene inited");
 
-    loadResources(loaderListener);
+    loadResources();
 
     if(loaderListener)
-        loaderListener->loadState(0.4f, "resources loaded");
+        loaderListener->loadState(0.3f, "terrain loading");
 
     initTerrain(loaderListener);
 
     if(loaderListener)
-        loaderListener->loadState(0.8f, "terrain loaded");
+        loaderListener->loadState(0.8f, "models loading");
 
-    initModel();
+    initModel(loaderListener);
 
     if(loaderListener)
-        loaderListener->loadState(0.9f, "models loaded");
+        loaderListener->loadState(0.9f, "misc loading");
 
     initMisc();
 
     if(loaderListener)
-        loaderListener->loadState(0.95f, "misc loaded");
+        loaderListener->loadState(0.95f, "light list loading");
 
-    initLightLists();
+    initLightLists(loaderListener);
 
     if(loaderListener)
         loaderListener->loadState(1.0f, "all loaded");
@@ -224,10 +224,10 @@ void BaseRaceMode::restart()
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
     initScene(NULL);
     initTerrain(NULL);
-    initModel();
+    initModel(NULL);
     initMisc();
 
-    initLightLists();
+    initLightLists(NULL);
 }
 
 void BaseRaceMode::initScene(LoaderListener* loaderListener)
@@ -409,12 +409,12 @@ void BaseRaceMode::clearScene()
     mModeContext.mWindow->removeAllViewports();
 }
 
-void BaseRaceMode::initLightLists()
+void BaseRaceMode::initLightLists(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Enter");
 
     //d.polubotko: make sure light lists created during loading
-    mStaticMeshProcesser.queryLights();
+    mStaticMeshProcesser.queryLights(loaderListener);
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Exit");
 }
@@ -454,7 +454,7 @@ void BaseRaceMode::initTerrain(LoaderListener* loaderListener)
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Exit");
 }
 
-void BaseRaceMode::initModel()
+void BaseRaceMode::initModel(LoaderListener* loaderListener)
 {
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Enter");
@@ -474,8 +474,14 @@ void BaseRaceMode::initModel()
 
     mModelsPool.initModels(mSceneMgr, mModeContext.mGameState);
 
+    if(loaderListener)
+        loaderListener->loadState(0.8f, "player model loading");
+
     mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
+
+    if(loaderListener)
+        loaderListener->loadState(0.81f, "player model loaded");
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
 
@@ -492,6 +498,9 @@ void BaseRaceMode::initModel()
         mLapController.addCar(&aiCar);
 
         aiCar.getLapUtils().setEvents(NULL);
+
+        if(loaderListener)
+            loaderListener->loadState(0.81f + 0.09f * static_cast<float>(q) / static_cast<float>(mModeContext.mGameState.getAICount()), "ai model loaded");
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Exit");
@@ -922,7 +931,7 @@ void BaseRaceMode::processInternalTick(float timeStep)
     }
 }
 
-void BaseRaceMode::loadResources(LoaderListener* loaderListener)
+void BaseRaceMode::loadResources()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Enter");
 
@@ -963,7 +972,7 @@ void BaseRaceMode::scriptParseEnded(const Ogre::String& scriptName, bool skipped
 {
     //ranges from BaseRaceMode::initData
     const float loaderMin = 0.2f;
-    const float loaderMax = 0.3f;
+    const float loaderMax = 0.25f;
     const float loaderDistance = loaderMax - loaderMin;
 
     ++mResourceCurrent;
@@ -981,8 +990,8 @@ void BaseRaceMode::resourceGroupLoadStarted(const Ogre::String& groupName, size_
 void BaseRaceMode::resourceLoadEnded()
 {
     //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.3f;
-    const float loaderMax = 0.4f;
+    const float loaderMin = 0.25f;
+    const float loaderMax = 0.3f;
     const float loaderDistance = loaderMax - loaderMin;
 
     ++mResourceCurrent;

@@ -47,7 +47,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 
     if(loaderListener)
-        loaderListener->loadState(0.5f, "textures loaded");
+        loaderListener->loadState(0.2f, "backgrounds loaded");
 
     {
         const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track10.bmp", "track11.bmp"};
@@ -59,6 +59,9 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "OriginalTrack" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
         }
     }
+
+    if(loaderListener)
+        loaderListener->loadState(0.4f, "track textures loaded");
 
     {
         std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
@@ -97,12 +100,15 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                     "data/gameshell", carName, 
                                     "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
             }
+
+            if(loaderListener)
+                loaderListener->loadState(0.4f + 0.6f * (static_cast<float>(q + 1) / availableCharacters.size()), availableCharacters[q] + " loaded");
         }
 
     }
 
     if(loaderListener)
-        loaderListener->loadState(0.9f, "all loaded");
+        loaderListener->loadState(1.0f, "all loaded");
 }
 
 void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener)
