@@ -104,9 +104,9 @@
             }
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_renderOneFrame(JNIEnv * env, jobject obj)
+        JNIEXPORT jboolean JNICALL Java_org_ogre3d_android_OgreActivityJNI_renderOneFrame(JNIEnv * env, jobject obj)
         {
-            base->androidRenderOneFrame(env);
+            return base->androidRenderOneFrame(env);
         }
 
         JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_pause(JNIEnv * env, jobject obj)
@@ -132,7 +132,7 @@
 
         JNIEXPORT jboolean JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleBackPressed(JNIEnv* env, jobject obj)
         {
-            base->androidOnBack();
+            return base->androidOnBack();
         }
     }
 #else

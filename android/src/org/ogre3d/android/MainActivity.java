@@ -124,8 +124,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 								return;
 							}
 
-							if (initOGRE && wndCreate)
-								OgreActivityJNI.renderOneFrame();
+							if (initOGRE && wndCreate){
+								boolean isOver = OgreActivityJNI.renderOneFrame();
+                                if(isOver){
+                                    finish();
+                                    System.exit(0);
+                                }
+                            }
 
 							handler.post(this);
 						}

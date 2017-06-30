@@ -82,7 +82,7 @@ public:
     void androidDestroy();
     void androidInitWindow(JNIEnv * env, jobject obj,  jobject surface);
     void androidTerminateWindow();
-    void androidRenderOneFrame(JNIEnv * env);
+    bool androidRenderOneFrame(JNIEnv * env);
 
     void androidPause(JNIEnv * env);
 

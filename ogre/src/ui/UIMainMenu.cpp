@@ -31,10 +31,12 @@ UIMainMenu::~UIMainMenu()
 
 void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
+#if !defined(__ANDROID__)
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "cursor.bmp", 
                                 "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
                                 Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
+#endif
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "bg.bmp", 
@@ -318,6 +320,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 #endif
 
 
+#if !defined(__ANDROID__)
     //cursor
     {
         std::vector<Ogre::String> texName;
@@ -333,6 +336,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
     }
+#endif
 
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 

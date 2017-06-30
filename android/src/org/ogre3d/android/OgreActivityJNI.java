@@ -36,7 +36,7 @@ public class OgreActivityJNI {
 	public native static void destroy();	
 	public native static void initWindow(Surface surface);
 	public native static void termWindow();
-	public native static void renderOneFrame();
+	public native static boolean renderOneFrame();
     
     public native static void pause();
     

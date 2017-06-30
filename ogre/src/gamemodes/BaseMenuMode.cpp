@@ -82,7 +82,11 @@ void BaseMenuMode::initCamera()
     
 
     //mModeContext.mTrayMgr->showCursor();
+#if !defined(__ANDROID__)
     mModeContext.mTrayMgr->showCursor("Test/Cursor");
+#else
+    mModeContext.mTrayMgr->hideCursor();
+#endif
     //mModeContext.mTrayMgr->getCursorLayer()->setScale(0.75f, 0.75f);
     //mModeContext.mTrayMgr->getCursorContainer()->setPosition(mViewPort->getActualWidth() / 2.0f, mViewPort->getActualHeight() / 2.0f);
 

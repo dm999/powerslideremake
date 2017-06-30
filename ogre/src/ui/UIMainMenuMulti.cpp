@@ -25,10 +25,12 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
+#if !defined(__ANDROID__)
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "cursor.bmp", 
                                 "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
                                 Ogre::ColourValue(0.0f, 1.0f, 0.1f, 1.0f), 0.1f);
+#endif
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "m_chat.bmp", 
@@ -218,6 +220,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
     }
 
 
+#if !defined(__ANDROID__)
     //cursor
     {
         std::vector<Ogre::String> texName;
@@ -233,6 +236,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
     }
+#endif
 
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 

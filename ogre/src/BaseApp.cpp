@@ -994,14 +994,14 @@ void BaseApp::androidTerminateWindow()
     LOGI("BaseApp[androidTerminateWindow]: End"); 
 }
 
-void BaseApp::androidRenderOneFrame(JNIEnv * env)
+bool BaseApp::androidRenderOneFrame(JNIEnv * env)
 {
     if(mWindow != NULL && mWindow->isActive())
     {
         try
         {
             if(gVM->AttachCurrentThread(&env, NULL) < 0)
-                return;
+                return true;
 
             //swap buffers problem
             //http://www.ogre3d.org/forums/viewtopic.php?f=21&t=79898
@@ -1013,6 +1013,8 @@ void BaseApp::androidRenderOneFrame(JNIEnv * env)
             //gVM->DetachCurrentThread();
         }catch(Ogre::RenderingAPIException ex) {}
     }
+
+    return mShutDown;
 }
 
 void BaseApp::androidPause(JNIEnv * env)
