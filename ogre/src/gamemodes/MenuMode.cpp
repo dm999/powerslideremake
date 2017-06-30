@@ -20,6 +20,21 @@ void MenuMode::doClearData()
     mUIMainMenu->destroy(mModeContext.mTrayMgr);
 }
 
+void MenuMode::mousePressed(const Ogre::Vector2& pos)
+{
+    mUIMainMenu->mousePressed(pos);
+}
+
+void MenuMode::mouseReleased(const Ogre::Vector2& pos)
+{
+    mUIMainMenu->mouseReleased(pos);
+}
+
+void MenuMode::mouseMoved(const Ogre::Vector2& pos)
+{
+    mUIMainMenu->mouseMoved(pos);
+}
+
 #if defined(__ANDROID__)
 void MenuMode::reloadTextures()
 {

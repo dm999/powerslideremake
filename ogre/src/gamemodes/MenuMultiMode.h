@@ -22,6 +22,10 @@ public:
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
 
+    void mousePressed(const Ogre::Vector2& pos)override{}
+    void mouseReleased(const Ogre::Vector2& pos)override{}
+    void mouseMoved(const Ogre::Vector2& pos)override{}
+
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
 
     //multiplayer

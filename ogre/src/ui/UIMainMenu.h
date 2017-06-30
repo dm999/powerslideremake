@@ -34,7 +34,15 @@ public:
     virtual void buttonHit(OgreBites::Button* button);
     virtual void itemSelected(OgreBites::SelectMenu* menu);
 
+    void mousePressed(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos);
+
 private:
+
+    void panelHit(Ogre::PanelOverlayElement* panel);
+
+    void startRace();
 
     ModeContext mModeContext;
 
@@ -59,6 +67,9 @@ private:
     Ogre::PanelOverlayElement* mMainBackground;
     Ogre::PanelOverlayElement* mBackgroundA;
     Ogre::PanelOverlayElement* mBackgroundB;
+
+    static const int mControlsCount = 6;
+    Ogre::PanelOverlayElement* mControls[mControlsCount];
 };
 
 #endif

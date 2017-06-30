@@ -39,6 +39,10 @@ public:
 
     void tabPressed();
 
+    void mousePressed(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos);
+
 #if defined(__ANDROID__)
     //for UI only
     void reloadTextures();

@@ -7,7 +7,8 @@ ModeContext::ModeContext(
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState
+        GameState& gameState,
+        BaseApp * baseApp
 #ifndef NO_OPENAL
         ,SoundsProcesser& soundsProcesser
 #endif
@@ -16,7 +17,8 @@ ModeContext::ModeContext(
     mInputHandler(inputHandler),
     mTrayMgr(trayMgr), mOverlaySystem(overlaySystem),
     mPipeline(pipeline),
-    mGameState(gameState)
+    mGameState(gameState),
+    mBaseApp(baseApp)
 #ifndef NO_OPENAL
     ,mSoundsProcesser(soundsProcesser)
 #endif
@@ -28,7 +30,8 @@ ModeContext::ModeContext(const ModeContext& other)
         mTrayMgr(other.mTrayMgr), mOverlaySystem(other.mOverlaySystem),
         mPipeline(other.mPipeline),
         mGameModeSwitcher(other.mGameModeSwitcher),
-        mGameState(other.mGameState)
+        mGameState(other.mGameState),
+        mBaseApp(other.mBaseApp)
 #ifndef NO_OPENAL
         ,mSoundsProcesser(other.mSoundsProcesser)
 #endif

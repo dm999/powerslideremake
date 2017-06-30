@@ -15,6 +15,8 @@
 
 #include "../gamemodes/MenuMode.h"
 
+#include "../BaseApp.h"
+
 #ifndef NO_MULTIPLAYER
     #include "../multiplayer/MultiplayerRoomInfo.h"
 #endif
@@ -45,6 +47,37 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "tmgb.bmp", 
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
+
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "single.bmp", 
+                                "OriginalBackgroundSingle", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "desert.bmp", 
+                                "OriginalBackgroundDesert", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "wart.bmp", 
+                                "OriginalBackgroundWart", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "option.bmp", 
+                                "OriginalBackgroundOption", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "race.bmp", 
+                                "OriginalBackgroundRace", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "exit.bmp", 
+                                "OriginalBackgroundExit", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
 
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
@@ -375,6 +408,129 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mMainBackground->addChild(mBackgroundB);
     }
 
+    //controls
+    {
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundSingle");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundSingle", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundDesert");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundDesert", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundWart");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundWart", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundOption");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundOption", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundRace");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundRace", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundExit");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundExit", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
+        }
+
+        Ogre::Vector4 backgroundMode = screenAdaptionRelative * Ogre::Vector4(1.0f, 392.0f, 1.0f + 108.0f, 392.0f + 83.0f);
+        mControls[0] = createPanel("Mode", backgroundMode, "Test/BackgroundSingle");
+        mControls[0]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[0]);
+
+        Ogre::Vector4 backgroundTrack = screenAdaptionRelative * Ogre::Vector4(116.0f, 392.0f, 116.0f + 94.0f, 392.0f + 83.0f);
+        mControls[1] = createPanel("Track", backgroundTrack, "Test/BackgroundDesert");
+        mControls[1]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[1]);
+
+        Ogre::Vector4 backgroundCar = screenAdaptionRelative * Ogre::Vector4(212.0f, 392.0f, 212.0f + 106.0f, 392.0f + 83.0f);
+        mControls[2]= createPanel("Car", backgroundCar, "Test/BackgroundWart");
+        mControls[2]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[2]);
+
+        Ogre::Vector4 backgroundOption = screenAdaptionRelative * Ogre::Vector4(335.0f, 392.0f, 335.0f + 74.0f, 392.0f + 83.0f);
+        mControls[3] = createPanel("Option", backgroundOption, "Test/BackgroundOption");
+        mControls[3]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[3]);
+
+        Ogre::Vector4 backgroundRace = screenAdaptionRelative * Ogre::Vector4(435.0f, 392.0f, 435.0f + 81.0f, 392.0f + 83.0f);
+        mControls[4] = createPanel("Race", backgroundRace, "Test/BackgroundRace");
+        mControls[4]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[4]);
+
+        Ogre::Vector4 backgroundExit = screenAdaptionRelative * Ogre::Vector4(542.0f, 392.0f, 542.0f + 66.0f, 392.0f + 83.0f);
+        mControls[5] = createPanel("Exit", backgroundExit, "Test/BackgroundExit");
+        mControls[5]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mMainBackground->addChild(mControls[5]);
+    }
+
     //buttons
     {
         {
@@ -620,11 +776,7 @@ void UIMainMenu::buttonHit(OgreBites::Button* button)
 {
     if(button->getName() == "SinglePlayer")
     {
-        std::vector<std::string> playersCharacters;
-        playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
-        mMenuMode->recalculateCharacterNames(playersCharacters);
-
-        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+        startRace();
     }
 }
 
@@ -645,4 +797,54 @@ void UIMainMenu::itemSelected(OgreBites::SelectMenu* menu)
         else
             mModeContext.getGameState().setAICount(3);
     }
+}
+
+void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
+{
+}
+
+void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
+{
+    for(int q = 0; q < mControlsCount; ++q)
+    {
+        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        {
+            panelHit(mControls[q]);
+        }
+    }
+}
+
+void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
+{
+    for(int q = 0; q < mControlsCount; ++q)
+    {
+        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        {
+            mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+        }
+        else
+        {
+            mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        }
+    }
+}
+
+void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
+{
+    if(panel != NULL && panel->getName() == "Race")
+        startRace();
+
+    if(panel != NULL && panel->getName() == "Exit")
+    {
+        mModeContext.mBaseApp->setShutdown(true);
+    }
+}
+
+void UIMainMenu::startRace()
+{
+    std::vector<std::string> playersCharacters;
+    playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
+    mMenuMode->recalculateCharacterNames(playersCharacters);
+
+    mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
 }

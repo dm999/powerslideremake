@@ -22,6 +22,7 @@ class InputHandler;
 class CustomTrayManager;
 class CustomOverlaySystem;
 class GameModeSwitcher;
+class BaseApp;
 
 class ModeContext
 {
@@ -32,7 +33,8 @@ public:
         InputHandler* inputHandler,
         CustomTrayManager* trayMgr, CustomOverlaySystem* overlaySystem,
         lua_State * pipeline,
-        GameState& gameState
+        GameState& gameState,
+        BaseApp * baseApp
 #ifndef NO_OPENAL
         ,SoundsProcesser& soundsProcesser
 #endif
@@ -80,6 +82,8 @@ private:
     GameModeSwitcher* mGameModeSwitcher;
 
     GameState& mGameState;
+
+    BaseApp * mBaseApp;
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;

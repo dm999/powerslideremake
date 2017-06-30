@@ -16,6 +16,10 @@ public:
     void initCamera()override;
     void clearData()override;
 
+    virtual void mousePressed(const Ogre::Vector2& pos) = 0;
+    virtual void mouseReleased(const Ogre::Vector2& pos) = 0;
+    virtual void mouseMoved(const Ogre::Vector2& pos) = 0;
+
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 
     void recalculateCharacterNames(const std::vector<std::string>& playersCharacters);

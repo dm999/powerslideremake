@@ -247,6 +247,24 @@ void GameModeSwitcher::tabPressed()
 #endif
 }
 
+void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
+{
+    if(mMenuMode.get())
+        mMenuMode->mousePressed(pos);
+}
+
+void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
+{
+    if(mMenuMode.get())
+        mMenuMode->mouseReleased(pos);
+}
+
+void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
+{
+    if(mMenuMode.get())
+        mMenuMode->mouseMoved(pos);
+}
+
 #if defined(__ANDROID__)
 void GameModeSwitcher::reloadTextures()
 {

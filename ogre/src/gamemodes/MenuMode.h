@@ -27,6 +27,10 @@ public:
     void reloadTextures()override;
 #endif
 
+    void mousePressed(const Ogre::Vector2& pos)override;
+    void mouseReleased(const Ogre::Vector2& pos)override;
+    void mouseMoved(const Ogre::Vector2& pos)override;
+
 protected:
 
     void doInitData(LoaderListener* loaderListener)override;

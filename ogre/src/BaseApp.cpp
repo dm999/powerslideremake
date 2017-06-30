@@ -248,7 +248,7 @@ bool BaseApp::configure()
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        mWindow = mRoot->initialise(true, "Powerslide HD");
+        mWindow = mRoot->initialise(true, "Powerslide Remake");
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
       HWND hwnd;
@@ -568,6 +568,7 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseMove(arg);
+        mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
         //MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
     }
@@ -577,6 +578,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseDown(arg, id);
+        mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
         //MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
     }
@@ -586,6 +588,7 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseUp(arg, id);
+        mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
         //MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
     }
@@ -603,6 +606,7 @@ void BaseApp::touchPressed(const OIS::MultiTouchEvent& arg)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseDown(arg);
+        mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
     }
 }
 void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
@@ -610,6 +614,7 @@ void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseUp(arg);
+        mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
     }
 }
 #endif
@@ -692,7 +697,8 @@ ModeContext BaseApp::createModeContext()
         mInputHandler.get(),
         mTrayMgr.get(), mOverlaySystem.get(),
         mPipeline,
-        mGameState
+        mGameState,
+        this
 #ifndef NO_OPENAL
         ,mSoundsProcesser
 #endif
