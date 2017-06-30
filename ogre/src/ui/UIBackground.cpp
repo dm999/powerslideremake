@@ -315,7 +315,7 @@ void UIBackgroundLoaderProgress::show()
 
     mInfo = createTextArea("LoaderScreenProgressInfo", infoPos.z - infoPos.x, infoPos.w - infoPos.y, infoPos.x, infoPos.y); 
     mInfo->setCaption("");
-    mInfo->setCharHeight(16.0f);
+    mInfo->setCharHeight(16.0f * viewportHeight / 1024.0f);
     mInfo->setSpaceWidth(9.0f);
     mInfo->setAlignment(Ogre::TextAreaOverlayElement::Center);
     mInfo->setFontName("SdkTrays/Caption");

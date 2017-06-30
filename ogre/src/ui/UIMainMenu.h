@@ -70,6 +70,7 @@ private:
 
     static const int mControlsCount = 6;
     Ogre::PanelOverlayElement* mControls[mControlsCount];
+    Ogre::TextAreaOverlayElement * mControlsText[mControlsCount];
 };
 
 #endif

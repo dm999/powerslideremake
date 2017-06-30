@@ -338,9 +338,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     }
 #endif
 
-    //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 
-#if 1
     //main background
     {
         std::vector<Ogre::String> texName;
@@ -411,6 +409,9 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mBackgroundB->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundB);
     }
+
+    //explicitly load font
+    Ogre::FontManager::getSingleton().getByName("SdkTrays/Caption")->load();
 
     //controls
     {
@@ -504,37 +505,130 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             state->setTextureFiltering(Ogre::FO_NONE, Ogre::FO_NONE, Ogre::FO_NONE);
         }
 
-        Ogre::Vector4 backgroundMode = screenAdaptionRelative * Ogre::Vector4(1.0f, 392.0f, 1.0f + 108.0f, 392.0f + 83.0f);
-        mControls[0] = createPanel("Mode", backgroundMode, "Test/BackgroundSingle");
-        mControls[0]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[0]);
+        {
+            const float elemWidth = 108.0f;
+            Ogre::Vector4 backgroundMode = screenAdaptionRelative * Ogre::Vector4(1.0f, 392.0f, 1.0f + elemWidth, 392.0f + 83.0f);
+            mControls[0] = createPanel("Mode", backgroundMode, "Test/BackgroundSingle");
+            mControls[0]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[0]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[0] = createTextArea("ModeTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[0]->setCaption("MODE");
+            mControlsText[0]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[0]->setSpaceWidth(9.0f);
+            mControlsText[0]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[0]->setFontName("SdkTrays/Caption");
+            mControlsText[0]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[0]->hide();
+#endif
+            mControls[0]->addChild(mControlsText[0]);
+        }
 
-        Ogre::Vector4 backgroundTrack = screenAdaptionRelative * Ogre::Vector4(116.0f, 392.0f, 116.0f + 94.0f, 392.0f + 83.0f);
-        mControls[1] = createPanel("Track", backgroundTrack, "Test/BackgroundDesert");
-        mControls[1]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[1]);
 
-        Ogre::Vector4 backgroundCar = screenAdaptionRelative * Ogre::Vector4(212.0f, 392.0f, 212.0f + 106.0f, 392.0f + 83.0f);
-        mControls[2]= createPanel("Car", backgroundCar, "Test/BackgroundWart");
-        mControls[2]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[2]);
+        {
+            const float elemWidth = 94.0f;
+            Ogre::Vector4 backgroundTrack = screenAdaptionRelative * Ogre::Vector4(116.0f, 392.0f, 116.0f + elemWidth, 392.0f + 83.0f);
+            mControls[1] = createPanel("Track", backgroundTrack, "Test/BackgroundDesert");
+            mControls[1]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[1]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[1] = createTextArea("TracksTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[1]->setCaption("TRACKS");
+            mControlsText[1]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[1]->setSpaceWidth(9.0f);
+            mControlsText[1]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[1]->setFontName("SdkTrays/Caption");
+            mControlsText[1]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[1]->hide();
+#endif
+            mControls[1]->addChild(mControlsText[1]);
+        }
 
-        Ogre::Vector4 backgroundOption = screenAdaptionRelative * Ogre::Vector4(335.0f, 392.0f, 335.0f + 74.0f, 392.0f + 83.0f);
-        mControls[3] = createPanel("Option", backgroundOption, "Test/BackgroundOption");
-        mControls[3]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[3]);
+        {
+            const float elemWidth = 106.0f;
+            Ogre::Vector4 backgroundCar = screenAdaptionRelative * Ogre::Vector4(212.0f, 392.0f, 212.0f + elemWidth, 392.0f + 83.0f);
+            mControls[2]= createPanel("Car", backgroundCar, "Test/BackgroundWart");
+            mControls[2]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[2]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[2] = createTextArea("CarsTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[2]->setCaption("CARS");
+            mControlsText[2]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[2]->setSpaceWidth(9.0f);
+            mControlsText[2]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[2]->setFontName("SdkTrays/Caption");
+            mControlsText[2]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[2]->hide();
+#endif
+            mControls[2]->addChild(mControlsText[2]);
+        }
 
-        Ogre::Vector4 backgroundRace = screenAdaptionRelative * Ogre::Vector4(435.0f, 392.0f, 435.0f + 81.0f, 392.0f + 83.0f);
-        mControls[4] = createPanel("Race", backgroundRace, "Test/BackgroundRace");
-        mControls[4]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[4]);
+        {
+            const float elemWidth = 74.0f;
+            Ogre::Vector4 backgroundOption = screenAdaptionRelative * Ogre::Vector4(335.0f, 392.0f, 335.0f + elemWidth, 392.0f + 83.0f);
+            mControls[3] = createPanel("Option", backgroundOption, "Test/BackgroundOption");
+            mControls[3]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[3]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[3] = createTextArea("OptionTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[3]->setCaption("OPTIONS");
+            mControlsText[3]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[3]->setSpaceWidth(9.0f);
+            mControlsText[3]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[3]->setFontName("SdkTrays/Caption");
+            mControlsText[3]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[3]->hide();
+#endif
+            mControls[3]->addChild(mControlsText[3]);
+        }
 
-        Ogre::Vector4 backgroundExit = screenAdaptionRelative * Ogre::Vector4(542.0f, 392.0f, 542.0f + 66.0f, 392.0f + 83.0f);
-        mControls[5] = createPanel("Exit", backgroundExit, "Test/BackgroundExit");
-        mControls[5]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mMainBackground->addChild(mControls[5]);
-    }
+        {
+            const float elemWidth = 81.0f;
+            Ogre::Vector4 backgroundRace = screenAdaptionRelative * Ogre::Vector4(435.0f, 392.0f, 435.0f + elemWidth, 392.0f + 83.0f);
+            mControls[4] = createPanel("Race", backgroundRace, "Test/BackgroundRace");
+            mControls[4]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[4]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[4] = createTextArea("RaceTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[4]->setCaption("RACE");
+            mControlsText[4]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[4]->setSpaceWidth(9.0f);
+            mControlsText[4]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[4]->setFontName("SdkTrays/Caption");
+            mControlsText[4]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[4]->hide();
+#endif
+            mControls[4]->addChild(mControlsText[4]);
+        }
 
+        {
+            const float elemWidth = 66.0f;
+            Ogre::Vector4 backgroundExit = screenAdaptionRelative * Ogre::Vector4(542.0f, 392.0f, 542.0f + elemWidth, 392.0f + 83.0f);
+            mControls[5] = createPanel("Exit", backgroundExit, "Test/BackgroundExit");
+            mControls[5]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mMainBackground->addChild(mControls[5]);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
+            mControlsText[5] = createTextArea("ExitTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mControlsText[5]->setCaption("EXIT");
+            mControlsText[5]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mControlsText[5]->setSpaceWidth(9.0f);
+            mControlsText[5]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+            mControlsText[5]->setFontName("SdkTrays/Caption");
+            mControlsText[5]->setColour(Ogre::ColourValue::White);
+#if !defined(__ANDROID__)
+            mControlsText[5]->hide();
+#endif
+            mControls[5]->addChild(mControlsText[5]);
+        }
+    }//controls
+
+
+/*
     //buttons
     {
         {
@@ -593,8 +687,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             widget->getOverlayElement()->setLeft(trackList.x);
             widget->getOverlayElement()->setTop(trackList.y);
         }
-    }
-#endif
+    }*/
 }
 
 #if defined(__ANDROID__)
@@ -825,10 +918,12 @@ void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
         if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
         {
             mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+            mControlsText[q]->show();
         }
         else
         {
             mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mControlsText[q]->hide();
         }
     }
 }

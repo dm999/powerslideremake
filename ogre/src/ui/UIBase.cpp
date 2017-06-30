@@ -52,6 +52,11 @@ Ogre::TextAreaOverlayElement* UIBase::createTextArea(const Ogre::String& name, O
     return res;
 }
 
+Ogre::TextAreaOverlayElement* UIBase::createTextArea(const Ogre::String& name, const Ogre::Vector4& pos)
+{
+    return createTextArea(name, pos.z - pos.x, pos.w - pos.y, pos.x, pos.y);
+}
+
 OgreBites::Label* UIBase::createLabel(CustomTrayManager* trayMgr, OgreBites::TrayLocation trayLoc, const Ogre::String& name, const Ogre::String& caption, Ogre::Real width)
 {
     OgreBites::Label* res = trayMgr->createLabel(trayLoc, name, caption, width);
