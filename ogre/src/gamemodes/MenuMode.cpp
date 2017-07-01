@@ -35,6 +35,16 @@ void MenuMode::mouseMoved(const Ogre::Vector2& pos)
     mUIMainMenu->mouseMoved(pos);
 }
 
+bool MenuMode::isTopmostSubmenu() const
+{
+    return mUIMainMenu->isTopmostSubmenu();
+}
+
+void MenuMode::setTopmostSubmenu()
+{
+    mUIMainMenu->setTopmostSubmenu();
+}
+
 #if defined(__ANDROID__)
 void MenuMode::reloadTextures()
 {

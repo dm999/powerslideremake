@@ -10,6 +10,14 @@
 class MenuMode;
 class LoaderListener;
 
+enum SinglePlayerMenuStates{
+    State_SingleMulti,
+    State_Difficulty,
+    State_Track,
+    State_Car,
+    State_Character
+};
+
 class UIMainMenu : public UIBaseMenu
 {
 public:
@@ -19,28 +27,24 @@ public:
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener);
 
-#if 0
-    void processButtonClick(MyGUI::Widget* sender);
-    void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
-    void processItemSelected(MyGUI::Widget* sender, size_t index);
-    void processChangeComboBox(MyGUI::Widget* sender, size_t index);
-#endif
-
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
 #endif
-
-    //OgreBites::SdkTrayListener
-    virtual void buttonHit(OgreBites::Button* button);
-    virtual void itemSelected(OgreBites::SelectMenu* menu);
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos);
 
+    bool isTopmostSubmenu()const;
+    void setTopmostSubmenu();
+
 private:
 
     void createSpecificMaterials();
+    void createSpecificControls(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr);
+
+    void switchState(const SinglePlayerMenuStates& state);
+    void hideAll();
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
 
@@ -53,8 +57,25 @@ private:
     MenuMode * mMenuMode;
 
     Ogre::PanelOverlayElement* mMainBackground;
+
     Ogre::PanelOverlayElement* mBackgroundA;
     Ogre::PanelOverlayElement* mBackgroundB;
+
+    Ogre::TextAreaOverlayElement * mWindowTitle;
+
+    Ogre::TextAreaOverlayElement * mModeSingle;
+    Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice;
+    Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced;
+    Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
+    Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane;
+
+    std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
+    std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
+    std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
+
+    void checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
+
+    SinglePlayerMenuStates mCurrentState;
 };
 
 #endif

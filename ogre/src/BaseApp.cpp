@@ -535,7 +535,10 @@ void BaseApp::setShutdown(bool shutdown)
     }
     if(mGameModeSwitcher->getMode() == ModeMenu)
     {
-        mShutDown = true;
+        if(mGameModeSwitcher->isTopmostSubmenu())
+            mShutDown = true;
+        else
+            mGameModeSwitcher->setTopmostSubmenu();
     }
 }
 

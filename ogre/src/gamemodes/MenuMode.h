@@ -31,6 +31,9 @@ public:
     void mouseReleased(const Ogre::Vector2& pos)override;
     void mouseMoved(const Ogre::Vector2& pos)override;
 
+    bool isTopmostSubmenu()const override;
+    void setTopmostSubmenu()override;
+
 protected:
 
     void doInitData(LoaderListener* loaderListener)override;

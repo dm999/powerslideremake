@@ -52,6 +52,9 @@ public:
 
     GameMode getMode()const{return mGameMode;}
 
+    bool isTopmostSubmenu()const;
+    void setTopmostSubmenu();
+
     //LoaderListener
     void loadState(float percent, const std::string& info) override;
 

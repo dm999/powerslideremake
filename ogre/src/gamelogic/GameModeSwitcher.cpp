@@ -251,18 +251,33 @@ void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
 {
     if(mMenuMode.get())
         mMenuMode->mousePressed(pos);
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->mousePressed(pos);
+#endif
 }
 
 void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
 {
     if(mMenuMode.get())
         mMenuMode->mouseReleased(pos);
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->mouseReleased(pos);
+#endif
 }
 
 void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
 {
     if(mMenuMode.get())
         mMenuMode->mouseMoved(pos);
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->mouseMoved(pos);
+#endif
 }
 
 #if defined(__ANDROID__)
@@ -285,6 +300,32 @@ void GameModeSwitcher::processCollision(btManifoldPoint& cp, const btCollisionOb
 {
     if(mPlayerMode.get())
         mPlayerMode->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
+}
+
+bool GameModeSwitcher::isTopmostSubmenu()const
+{
+    bool ret = true;
+
+    if(mMenuMode.get())
+        ret = mMenuMode->isTopmostSubmenu();
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        ret = mMenuMultiMode->isTopmostSubmenu();
+#endif
+
+    return ret;
+}
+
+void GameModeSwitcher::setTopmostSubmenu()
+{
+    if(mMenuMode.get())
+        mMenuMode->setTopmostSubmenu();
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->setTopmostSubmenu();
+#endif
 }
 
 void GameModeSwitcher::clear()
