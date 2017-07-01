@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "UIBase.h"
+#include "UIBaseMenu.h"
 #include "MyGUI_KeyCode.h"
 
 #include "../gamemodes/ModeContext.h"
@@ -26,7 +26,7 @@ namespace MyGUI
 
 class MenuMultiMode;
 
-class UIMainMenuMulti : public UIBase
+class UIMainMenuMulti : public UIBaseMenu
 {
 public:
 

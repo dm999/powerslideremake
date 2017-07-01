@@ -25,16 +25,11 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
-#if !defined(__ANDROID__)
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "cursor.bmp", 
-                                "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
-#endif
-
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "m_chat.bmp", 
                                 "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
+
+    loadCommonTextures(pfLoaderGameshell);
 }
 
 void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
@@ -220,23 +215,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
     }
 
 
-#if !defined(__ANDROID__)
-    //cursor
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCursor");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
-                            "Test/DiffuseTransparent", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-#endif
+    createCommonMaterials();
 
     //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 

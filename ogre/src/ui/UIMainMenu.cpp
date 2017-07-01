@@ -31,13 +31,6 @@ UIMainMenu::~UIMainMenu()
 
 void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
-#if !defined(__ANDROID__)
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "cursor.bmp", 
-                                "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
-#endif
-
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "bg.bmp", 
                                 "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
@@ -50,36 +43,8 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
                                 "data/gameshell", "tmgb.bmp", 
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 
+    loadCommonTextures(pfLoaderGameshell);
 
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "single.bmp", 
-                                "OriginalBackgroundSingle", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "desert.bmp", 
-                                "OriginalBackgroundDesert", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "wart.bmp", 
-                                "OriginalBackgroundWart", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "option.bmp", 
-                                "OriginalBackgroundOption", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "race.bmp", 
-                                "OriginalBackgroundRace", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
-
-    TextureLoader().loadChroma( pfLoaderGameshell, 
-                                "data/gameshell", "exit.bmp", 
-                                "OriginalBackgroundExit", TEMP_RESOURCE_GROUP_NAME,
-                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
 
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
@@ -319,82 +284,17 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 #endif
 #endif
 
+    createCommonMaterials();
+    createSpecificMaterials();
 
-#if !defined(__ANDROID__)
-    //cursor
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCursor");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Cursor", 
-                            "Test/DiffuseTransparent", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-#endif
-
-
-    //main background
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalMainBackground");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-
         mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
         mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
         //mMainBackground->hide();
     }
 
-    //additional background (feryl)
     {
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundA");
-            //texName.push_back("OriginalCar0");
-            //texName.push_back("OriginalChar0_0");
-            //texName.push_back("OriginalTrack0");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundB");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundB", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
         Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
         //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 311.0f, 219.0f);
         //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 309.0f, 358.0f);
@@ -410,223 +310,14 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mMainBackground->addChild(mBackgroundB);
     }
 
-    //explicitly load font
-    Ogre::FontManager::getSingleton().getByName("SdkTrays/Caption")->load();
+    createControls(screenAdaptionRelative, mMainBackground);
 
-    //controls
-    {
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundSingle");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundSingle", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
 
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundDesert");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundDesert", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundWart");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundWart", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundOption");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundOption", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundRace");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundRace", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundExit");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundExit", 
-                                "Test/DiffuseTransparent", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            const float elemWidth = 108.0f;
-            Ogre::Vector4 backgroundMode = screenAdaptionRelative * Ogre::Vector4(1.0f, 392.0f, 1.0f + elemWidth, 392.0f + 83.0f);
-            mControls[0] = createPanel("Mode", backgroundMode, "Test/BackgroundSingle");
-            mControls[0]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[0]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[0] = createTextArea("ModeTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[0]->setCaption("MODE");
-            mControlsText[0]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[0]->setSpaceWidth(9.0f);
-            mControlsText[0]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[0]->setFontName("SdkTrays/Caption");
-            mControlsText[0]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[0]->hide();
-#endif
-            mControls[0]->addChild(mControlsText[0]);
-        }
-
-
-        {
-            const float elemWidth = 94.0f;
-            Ogre::Vector4 backgroundTrack = screenAdaptionRelative * Ogre::Vector4(116.0f, 392.0f, 116.0f + elemWidth, 392.0f + 83.0f);
-            mControls[1] = createPanel("Track", backgroundTrack, "Test/BackgroundDesert");
-            mControls[1]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[1]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[1] = createTextArea("TracksTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[1]->setCaption("TRACKS");
-            mControlsText[1]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[1]->setSpaceWidth(9.0f);
-            mControlsText[1]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[1]->setFontName("SdkTrays/Caption");
-            mControlsText[1]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[1]->hide();
-#endif
-            mControls[1]->addChild(mControlsText[1]);
-        }
-
-        {
-            const float elemWidth = 106.0f;
-            Ogre::Vector4 backgroundCar = screenAdaptionRelative * Ogre::Vector4(212.0f, 392.0f, 212.0f + elemWidth, 392.0f + 83.0f);
-            mControls[2]= createPanel("Car", backgroundCar, "Test/BackgroundWart");
-            mControls[2]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[2]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[2] = createTextArea("CarsTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[2]->setCaption("CARS");
-            mControlsText[2]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[2]->setSpaceWidth(9.0f);
-            mControlsText[2]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[2]->setFontName("SdkTrays/Caption");
-            mControlsText[2]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[2]->hide();
-#endif
-            mControls[2]->addChild(mControlsText[2]);
-        }
-
-        {
-            const float elemWidth = 74.0f;
-            Ogre::Vector4 backgroundOption = screenAdaptionRelative * Ogre::Vector4(335.0f, 392.0f, 335.0f + elemWidth, 392.0f + 83.0f);
-            mControls[3] = createPanel("Option", backgroundOption, "Test/BackgroundOption");
-            mControls[3]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[3]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[3] = createTextArea("OptionTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[3]->setCaption("OPTIONS");
-            mControlsText[3]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[3]->setSpaceWidth(9.0f);
-            mControlsText[3]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[3]->setFontName("SdkTrays/Caption");
-            mControlsText[3]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[3]->hide();
-#endif
-            mControls[3]->addChild(mControlsText[3]);
-        }
-
-        {
-            const float elemWidth = 81.0f;
-            Ogre::Vector4 backgroundRace = screenAdaptionRelative * Ogre::Vector4(435.0f, 392.0f, 435.0f + elemWidth, 392.0f + 83.0f);
-            mControls[4] = createPanel("Race", backgroundRace, "Test/BackgroundRace");
-            mControls[4]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[4]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[4] = createTextArea("RaceTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[4]->setCaption("RACE");
-            mControlsText[4]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[4]->setSpaceWidth(9.0f);
-            mControlsText[4]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[4]->setFontName("SdkTrays/Caption");
-            mControlsText[4]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[4]->hide();
-#endif
-            mControls[4]->addChild(mControlsText[4]);
-        }
-
-        {
-            const float elemWidth = 66.0f;
-            Ogre::Vector4 backgroundExit = screenAdaptionRelative * Ogre::Vector4(542.0f, 392.0f, 542.0f + elemWidth, 392.0f + 83.0f);
-            mControls[5] = createPanel("Exit", backgroundExit, "Test/BackgroundExit");
-            mControls[5]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mMainBackground->addChild(mControls[5]);
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(elemWidth / 2.0f, -15.0f, 0.0f, 0.0f);
-            mControlsText[5] = createTextArea("ExitTextBox", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mControlsText[5]->setCaption("EXIT");
-            mControlsText[5]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mControlsText[5]->setSpaceWidth(9.0f);
-            mControlsText[5]->setAlignment(Ogre::TextAreaOverlayElement::Center);
-            mControlsText[5]->setFontName("SdkTrays/Caption");
-            mControlsText[5]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
-            mControlsText[5]->hide();
-#endif
-            mControls[5]->addChild(mControlsText[5]);
-        }
-    }//controls
-
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+    selectCar(characterCar);
 
 /*
     //buttons
@@ -688,6 +379,62 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
             widget->getOverlayElement()->setTop(trackList.y);
         }
     }*/
+}
+
+void UIMainMenu::createSpecificMaterials()
+{
+
+    //main background
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalMainBackground");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    //additional background (feryl)
+    {
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundA");
+            //texName.push_back("OriginalCar0");
+            //texName.push_back("OriginalChar0_0");
+            //texName.push_back("OriginalTrack0");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundB");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundB", 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+    }
 }
 
 #if defined(__ANDROID__)
@@ -898,34 +645,17 @@ void UIMainMenu::itemSelected(OgreBites::SelectMenu* menu)
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
+    UIBaseMenu::mousePressed(pos);
 }
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
-    for(int q = 0; q < mControlsCount; ++q)
-    {
-        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
-        {
-            panelHit(mControls[q]);
-        }
-    }
+    UIBaseMenu::mouseReleased(pos);
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
 {
-    for(int q = 0; q < mControlsCount; ++q)
-    {
-        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
-        {
-            mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
-            mControlsText[q]->show();
-        }
-        else
-        {
-            mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mControlsText[q]->hide();
-        }
-    }
+    UIBaseMenu::mouseMoved(pos);
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)

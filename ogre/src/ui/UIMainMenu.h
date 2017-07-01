@@ -1,7 +1,7 @@
 #ifndef UIMAINMENU_H
 #define UIMAINMENU_H
 
-#include "UIBase.h"
+#include "UIBaseMenu.h"
 
 #include "../gamemodes/ModeContext.h"
 
@@ -10,7 +10,7 @@
 class MenuMode;
 class LoaderListener;
 
-class UIMainMenu : public UIBase
+class UIMainMenu : public UIBaseMenu
 {
 public:
 
@@ -40,7 +40,9 @@ public:
 
 private:
 
-    void panelHit(Ogre::PanelOverlayElement* panel);
+    void createSpecificMaterials();
+
+    void panelHit(Ogre::PanelOverlayElement* panel) override;
 
     void startRace();
 
@@ -50,27 +52,9 @@ private:
 
     MenuMode * mMenuMode;
 
-#if 0
-    MyGUI::ComboBox* mWidgetTrack;
-    MyGUI::ComboBox* mWidgetCar;
-    MyGUI::ComboBox* mWidgetCharacter;
-    MyGUI::ComboBox* mWidgetAICount;
-    MyGUI::ComboBox* mWidgetAIStrength;
-
-    MyGUI::EditBox* mWidgetIP;
-    MyGUI::EditBox* mWidgetRoom;
-    MyGUI::EditBox* mWidgetUserName;
-    MyGUI::ListBox* mWidgetRooms;
-    MyGUI::ListBox* mWidgetRoomPlayers;
-#endif
-
     Ogre::PanelOverlayElement* mMainBackground;
     Ogre::PanelOverlayElement* mBackgroundA;
     Ogre::PanelOverlayElement* mBackgroundB;
-
-    static const int mControlsCount = 6;
-    Ogre::PanelOverlayElement* mControls[mControlsCount];
-    Ogre::TextAreaOverlayElement * mControlsText[mControlsCount];
 };
 
 #endif

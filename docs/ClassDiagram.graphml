@@ -1582,7 +1582,7 @@ Ogre::Vector3 offset</y:NodeLabel>
     <node id="n27">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="16263.030019461887" y="-6576.479197446333"/>
+          <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="18157.646260160924" y="-6576.479197446333"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1635.830078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="-1.4358416161667265">&lt;&lt;UIRace.h&gt;&gt;
@@ -2415,7 +2415,7 @@ public:
     <node id="n48">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="332.5271921107915" width="1335.7948881910138" x="15412.102555904494" y="-7066.263596055396"/>
+          <y:Geometry height="332.5271921107915" width="1335.7948881910138" x="17306.71879660353" y="-7066.263596055396"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="312.724609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="1315.90234375" x="9.946272220506216" y="9.901291367896192">&lt;&lt;UIBase.h&gt;&gt;
@@ -2446,10 +2446,10 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="762.8658111458799" width="647.5257509874004" x="15246.2371245063" y="-6711.4329055729395"/>
+          <y:Geometry height="826.3163421305844" width="647.5257509874004" x="16416.2371245063" y="-6053.158171065292"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="753.759765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="4.5530227604394895">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="783.162109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="21.577116377791754">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2474,6 +2474,8 @@ void mouseReleased(const Ogre::Vector2&amp; pos)
 void mouseMoved(const Ogre::Vector2&amp; pos)
 
 private:
+
+void createSpecificMaterials()
 
 void panelHit(Ogre::PanelOverlayElement* panel)
 
@@ -2529,7 +2531,7 @@ Ogre::PanelOverlayElement* mBackgroundB</y:NodeLabel>
     <node id="n52">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="15551.678240195715" y="-5920.097146796503"/>
+          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="17291.678240195713" y="-5980.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
@@ -3104,7 +3106,7 @@ Ogre::Real mWheelsFriction</y:NodeLabel>
     <node id="n71">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="327.9348001234566" width="519.624060372907" x="17380.187969813545" y="-5983.967400061729"/>
+          <y:Geometry height="327.9348001234566" width="519.624060372907" x="19274.804210512582" y="-5983.967400061729"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="18.04933487395465" y="22.306267249228767">&lt;&lt;UIRaceMulti.h&gt;&gt;
@@ -3133,7 +3135,7 @@ MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
     <node id="n72">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="32.25791453345391" width="204.88871618483893" x="15977.55564190758" y="-7126.128957266727"/>
+          <y:Geometry height="32.25791453345391" width="204.88871618483893" x="17872.171882606617" y="-7126.128957266727"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="151.392578125" x="26.74806902991986" y="6.7783713292274115">OgreBites::SdkTrayListener</y:NodeLabel>
@@ -3154,6 +3156,45 @@ LoaderListener
 public:
 
 virtual void loadState() = 0</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n74">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="469.31317890729133" width="564.6254833569851" x="16877.687258321508" y="-6624.656589453645"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="19.48959726614612">&lt;&lt;UIBaseMenu.h&gt;&gt;
+
+UIBaseMenu
+
+public:
+
+protected:
+
+void selectTrack(const std::string&amp; trackName)
+void selectCar(const std::string&amp; carName)
+
+void loadCommonTextures()
+void createCommonMaterials()
+void createControls(const Ogre::Matrix4&amp; screenAdaptionRelative, Ogre::PanelOverlayElement* base)
+
+void mousePressed(const Ogre::Vector2&amp; pos)
+void mouseReleased(const Ogre::Vector2&amp; pos)
+void mouseMoved(const Ogre::Vector2&amp; pos)
+
+virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0
+
+static const int mControlsCount = 6
+Ogre::PanelOverlayElement* mControls[mControlsCount]
+Ogre::TextAreaOverlayElement * mControlsText[mControlsCount]
+
+private:
+
+std::map&lt;std::string, size_t&gt; mRemapTrack
+std::map&lt;std::string, size_t&gt; mRemapCar</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3658,7 +3699,7 @@ virtual void loadState() = 0</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e44" source="n49" target="n48">
+    <edge id="e44" source="n49" target="n74">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3708,7 +3749,7 @@ virtual void loadState() = 0</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e49" source="n52" target="n48">
+    <edge id="e49" source="n52" target="n74">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3919,6 +3960,16 @@ virtual void loadState() = 0</y:NodeLabel>
       </data>
     </edge>
     <edge id="e70" source="n48" target="n72">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e71" source="n74" target="n48">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
