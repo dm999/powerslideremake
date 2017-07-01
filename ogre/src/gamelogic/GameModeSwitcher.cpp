@@ -163,7 +163,7 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
-            mUILoader->show(mContext.getGameState().getTrackName());
+            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
             mUILoader->hide();
             mPlayerMode->initCamera();

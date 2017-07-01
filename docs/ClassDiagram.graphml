@@ -2452,10 +2452,10 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="884.7576206691292" width="647.5257509874004" x="16416.2371245063" y="-6082.378810334565"/>
+          <y:Geometry height="1101.1406288351254" width="647.5257509874004" x="16386.2371245063" y="-5980.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="841.966796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="21.39541189706506">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1106.587890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="-2.7236308949377417">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2482,6 +2482,11 @@ void mouseMoved(const Ogre::Vector2&amp; pos)
 bool isTopmostSubmenu()const
 void setTopmostSubmenu()
 
+protected:
+
+void selectTrack(const std::string&amp; trackName)
+void selectCar(const std::string&amp; carName)
+
 private:
 
 void createSpecificMaterials()
@@ -2491,6 +2496,10 @@ void panelHit(Ogre::PanelOverlayElement* panel)
 
 void startRace()
 
+void setTrackLogo(size_t index)
+void setCarLogo(size_t index)
+void setCharacterLogo(size_t index)
+
 ModeContext mModeContext
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
@@ -2498,8 +2507,13 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
 MenuMode * mMenuMode
 
 Ogre::PanelOverlayElement* mMainBackground
+
 Ogre::PanelOverlayElement* mBackgroundA
 Ogre::PanelOverlayElement* mBackgroundB
+
+Ogre::PanelOverlayElement* mBackgroundTrack
+Ogre::PanelOverlayElement* mBackgroundCar
+Ogre::PanelOverlayElement* mBackgroundCharacter
 
 Ogre::TextAreaOverlayElement * mWindowTitle
 
@@ -2509,7 +2523,11 @@ Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced
 Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert
 Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane
 
-void checkCursorOverLabel(const Ogre::Vector2&amp; pos, Ogre::TextAreaOverlayElement * label)
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mTracksLabels
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCarsLabels
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels
+
+bool checkCursorOverLabel(const Ogre::Vector2&amp; pos, Ogre::TextAreaOverlayElement * label)
 
 SinglePlayerMenuStates mCurrentState</y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -3182,7 +3200,7 @@ virtual void loadState() = 0</y:NodeLabel>
           <y:Geometry height="469.31317890729133" width="564.6254833569851" x="16877.687258321508" y="-6624.656589453645"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="19.48959726614612">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="400.931640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="34.19076914114521">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3206,8 +3224,6 @@ virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0
 static const int mControlsCount = 6
 Ogre::PanelOverlayElement* mControls[mControlsCount]
 Ogre::TextAreaOverlayElement * mControlsText[mControlsCount]
-
-private:
 
 std::map&lt;std::string, size_t&gt; mRemapTrack
 std::map&lt;std::string, size_t&gt; mRemapCar</y:NodeLabel>

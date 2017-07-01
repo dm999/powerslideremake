@@ -432,9 +432,108 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
     }
+
+    //AI strength
+    {
+        {
+            Ogre::String textureName = nameGenTextures.generate();
+            mMaterialAIEasyName = nameGenMaterials.generate();
+
+
+            TextureLoader().load(   loader, 
+                                "data/misc/loading", "easy-english.tga", 
+                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureName);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialAIEasyName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            Ogre::String textureName = nameGenTextures.generate();
+            mMaterialAIMediumName = nameGenMaterials.generate();
+
+
+            TextureLoader().load(   loader, 
+                                "data/misc/loading", "medium-english.tga", 
+                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureName);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialAIMediumName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            Ogre::String textureName = nameGenTextures.generate();
+            mMaterialAIHardName = nameGenMaterials.generate();
+
+
+            TextureLoader().load(   loader, 
+                                "data/misc/loading", "hard-english.tga", 
+                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureName);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialAIHardName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            Ogre::String textureName = nameGenTextures.generate();
+            mMaterialAIInsaneName = nameGenMaterials.generate();
+
+
+            TextureLoader().load(   loader, 
+                                "data/misc/loading", "insane-english.tga", 
+                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+            std::vector<Ogre::String> texName;
+            texName.push_back(textureName);
+
+            Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialAIInsaneName, 
+                                mMaterialName, 
+                                texName, 
+                                1.0f,
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+    }//AI strength
 }
 
-void UIBackgroundLoaderProgressTracks::show(const std::string& trackName)
+void UIBackgroundLoaderProgressTracks::show(const std::string& trackName, bool showAIStrength, AIStrength strength)
 {
     UIBackgroundLoaderProgress::show();
     
@@ -466,6 +565,32 @@ void UIBackgroundLoaderProgressTracks::show(const std::string& trackName)
     mTrackTitle->show();
 
 
+    mUIStrength = NULL;
+    if(showAIStrength)
+    {
+        Ogre::Vector4 uiStrengthPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 280.0f, 119.0f);
+
+        Ogre::String uiStrengthName = mMaterialAIEasyName;
+        switch(strength)
+        {
+            case Medium:
+                uiStrengthName = mMaterialAIMediumName;
+                break;
+            case Hard:
+                uiStrengthName = mMaterialAIHardName;
+                break;
+            case Insane:
+                uiStrengthName = mMaterialAIInsaneName;
+                break;
+        }
+        mUIStrength = createPanel("LoaderScreenProgressUIStrength", uiStrengthPos, uiStrengthName);
+        mUIStrength->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+        mLoaderScreen->addChild(mUIStrength);
+        mUIStrength->show();
+    }
+
+
     mModeContext.mWindow->update(true);// update draw
 }
 
@@ -473,10 +598,14 @@ void UIBackgroundLoaderProgressTracks::hide()
 {
     mLoaderScreen->removeChild(mTrack->getName());
     mLoaderScreen->removeChild(mTrackTitle->getName());
+    if(mUIStrength)
+        mLoaderScreen->removeChild(mUIStrength->getName());
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
     om.destroyOverlayElement(mTrack);
     om.destroyOverlayElement(mTrackTitle);
+    if(mUIStrength)
+        om.destroyOverlayElement(mUIStrength);
 
     UIBackgroundLoaderProgress::hide();
 }

@@ -15,6 +15,9 @@ public:
     UIBaseMenu();
     virtual ~UIBaseMenu(){}
 
+    static const size_t amountTracks = 12;
+    static const size_t amountCars = 7;
+
 protected:
 
     void selectTrack(const std::string& trackName);
@@ -33,8 +36,6 @@ protected:
     static const int mControlsCount = 6;
     Ogre::PanelOverlayElement* mControls[mControlsCount];
     Ogre::TextAreaOverlayElement * mControlsText[mControlsCount];
-
-private:
 
     std::map<std::string, size_t> mRemapTrack;
     std::map<std::string, size_t> mRemapCar;

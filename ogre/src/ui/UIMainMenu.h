@@ -38,6 +38,11 @@ public:
     bool isTopmostSubmenu()const;
     void setTopmostSubmenu();
 
+protected:
+
+    void selectTrack(const std::string& trackName);
+    void selectCar(const std::string& carName);
+
 private:
 
     void createSpecificMaterials();
@@ -50,6 +55,10 @@ private:
 
     void startRace();
 
+    void setTrackLogo(size_t index);
+    void setCarLogo(size_t index);
+    void setCharacterLogo(size_t index);
+
     ModeContext mModeContext;
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
@@ -60,6 +69,10 @@ private:
 
     Ogre::PanelOverlayElement* mBackgroundA;
     Ogre::PanelOverlayElement* mBackgroundB;
+
+    Ogre::PanelOverlayElement* mBackgroundTrack;
+    Ogre::PanelOverlayElement* mBackgroundCar;
+    Ogre::PanelOverlayElement* mBackgroundCharacter;
 
     Ogre::TextAreaOverlayElement * mWindowTitle;
 
@@ -73,7 +86,7 @@ private:
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
 
-    void checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
+    bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
 
     SinglePlayerMenuStates mCurrentState;
 };

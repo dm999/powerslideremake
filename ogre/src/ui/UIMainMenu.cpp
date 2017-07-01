@@ -55,9 +55,9 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
         loaderListener->loadState(0.2f, "backgrounds loaded");
 
     {
-        const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track10.bmp", "track11.bmp"};
+        const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track11.bmp", "track10.bmp"};
 
-        for(size_t q = 0; q < 12; ++q)
+        for(size_t q = 0; q < amountTracks; ++q)
         {
             TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", trackNames[q], 
@@ -69,6 +69,21 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
         loaderListener->loadState(0.4f, "track textures loaded");
 
     {
+
+        const char * carNames[] = {"car0_1.bmp", "car1_0.bmp", "car5_0.bmp", "car3_0.bmp", "car2_0.bmp", "car4_0.bmp", "car6_0.bmp"};
+        const char * carSNames[] = {"carst0.bmp", "carst1.bmp", "carst5.bmp", "carst3.bmp", "carst2.bmp", "carst4.bmp", "carst6.bmp"};
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", carNames[q], 
+                                "OriginalCar" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+
+            TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", carSNames[q], 
+                                "OriginalCarS" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+        }
+
         std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
         for (size_t q = 0; q < availableCharacters.size(); ++q)
         {
@@ -78,19 +93,7 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
             sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
 
             std::string carName = "car" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
-            std::string carsName = "carst" + Conversions::DMToString(carIndex) + ".bmp";
             std::string charName = "char" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
-
-            if(charIndex < 1)
-            {
-                TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", carName, 
-                                    "OriginalCar" + Conversions::DMToString(carIndex), TEMP_RESOURCE_GROUP_NAME);
-
-                TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", carsName, 
-                                    "OriginalCarS" + Conversions::DMToString(carIndex), TEMP_RESOURCE_GROUP_NAME);
-            }
 
             //supercar is different
             if(carIndex < 6)
@@ -135,92 +138,8 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[UIMainMenu::load]: viewport [" + Conversions::DMToString(viewportWidth) + "x" + Conversions::DMToString(viewportHeight) + "]");
 
 #if 0
-    {
-        Ogre::Vector4 backgroundAPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
-        Ogre::Vector4 backgroundBPos = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 102.0f, 217.0f);
-
-        MyGUI::ImageBox * mainBackground = gui->createWidget<MyGUI::ImageBox>("ImageBox", 0, 0, viewportWidth, viewportHeight, MyGUI::Align::Default, "Wallpaper");
-        mainBackground->setImageTexture("OriginalMainBackground");
-
-        MyGUI::ImageBox * backgroundA = gui->createWidget<MyGUI::ImageBox>("ImageBox", backgroundAPos.x, backgroundAPos.y, backgroundAPos.z, backgroundAPos.w, MyGUI::Align::Default, "Back");
-        backgroundA->setImageTexture("OriginalBackgroundA");
-
-        MyGUI::ImageBox * backgroundB = gui->createWidget<MyGUI::ImageBox>("ImageBox", backgroundBPos.x, backgroundBPos.y, backgroundBPos.z, backgroundBPos.w, MyGUI::Align::Default, "Back");
-        backgroundB->setImageTexture("OriginalBackgroundB");
-    }
 
     {
-        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(320.0f, 50.0f, 40.0f, 12.0f);
-
-        MyGUI::ButtonPtr widget = gui->createWidget<MyGUI::Button>("Button", pos.x, pos.y, pos.z, pos.w, MyGUI::Align::Default, "Middle");
-        widget->setCaption("Single");
-        widget->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
-
-
-        //track
-        Ogre::Vector4 posTrack = screenAdaptionRelative * Ogre::Vector4(360.0f, 50.0f, 60.0f, 12.0f);
-        mWidgetTrack = gui->createWidget<MyGUI::ComboBox>("ComboBox", posTrack.x, posTrack.y, posTrack.z, posTrack.w, MyGUI::Align::Default, "Middle");
-
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-
-        size_t itemToSelect = 0;
-        for(size_t q = 0; q < availTracks.size(); ++q)
-        {
-            mWidgetTrack->addItem(strPowerslide.getTrackTitle(availTracks[q]));
-
-            if(availTracks[q] == mModeContext.getGameState().getTrackNameAsOriginal())
-                itemToSelect = q;
-        }
-
-        mWidgetTrack->setIndexSelected(itemToSelect);
-
-        mWidgetTrack->setEditReadOnly(true);
-        mWidgetTrack->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-
-
-        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-        //car
-        Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(420.0f, 50.0f, 60.0f, 12.0f);
-        mWidgetCar = gui->createWidget<MyGUI::ComboBox>("ComboBox", posCar.x, posCar.y, posCar.z, posCar.w, MyGUI::Align::Default, "Middle");
-
-        itemToSelect = 0;
-        for(size_t q = 0; q < availCars.size(); ++q)
-        {
-            mWidgetCar->addItem(strPowerslide.getCarTitle(availCars[q]));
-
-            if(availCars[q] == characterCar)
-                itemToSelect = q;
-        }
-        mWidgetCar->setIndexSelected(itemToSelect);
-        mWidgetCar->setEditReadOnly(true);
-        mWidgetCar->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-
-
-        //character
-        Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(480.0f, 50.0f, 60.0f, 12.0f);
-        mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
-
-        itemToSelect = 0;
-        for(size_t q = 0; q < availChars.size(); ++q)
-        {
-            mWidgetCharacter->addItem(strPowerslide.getCharacterTitle(availChars[q]));
-
-            if(availChars[q] == mModeContext.getGameState().getPlayerCar().getCharacterName())
-                itemToSelect = q;
-        }
-        mWidgetCharacter->setIndexSelected(itemToSelect);
-
-        mWidgetCharacter->setEditReadOnly(true);
-        mWidgetCharacter->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-
-
-
         Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(540.0f, 50.0f, 30.0f, 12.0f);
         mWidgetAICount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAI.x, posAI.y, posAI.z, posAI.w, MyGUI::Align::Default, "Middle");
         for(size_t q = 3; q <= 11; ++q)
@@ -231,19 +150,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mWidgetAICount->setIndexSelected(mModeContext.getGameState().getAICount() - 3);
         mWidgetAICount->setEditReadOnly(true);
         mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-
-
-        Ogre::Vector4 posAIStrength = screenAdaptionRelative * Ogre::Vector4(570.0f, 50.0f, 30.0f, 12.0f);
-        mWidgetAIStrength = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAIStrength.x, posAIStrength.y, posAIStrength.z, posAIStrength.w, MyGUI::Align::Default, "Middle");
-        mWidgetAIStrength->addItem("Novice");
-        mWidgetAIStrength->addItem("Advanced");
-        mWidgetAIStrength->addItem("Expert");
-        mWidgetAIStrength->addItem("Insane");
-
-        mWidgetAIStrength->setIndexSelected(mModeContext.getGameState().getAIStrength());
-        mWidgetAIStrength->setEditReadOnly(true);
-        mWidgetAIStrength->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-
     }
 
 #ifndef NO_MULTIPLAYER
@@ -331,9 +237,6 @@ void UIMainMenu::createSpecificMaterials()
         {
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalBackgroundA");
-            //texName.push_back("OriginalCar0");
-            //texName.push_back("OriginalChar0_0");
-            //texName.push_back("OriginalTrack0");
             Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
                                 "Test/Diffuse", 
                                 texName, 
@@ -361,6 +264,60 @@ void UIMainMenu::createSpecificMaterials()
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
     }
+
+    for(size_t q = 0; q < amountTracks; ++q)
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalTrack" + Conversions::DMToString(q));
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Track_" + Conversions::DMToString(q), 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalCar" + Conversions::DMToString(q));
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Car_" + Conversions::DMToString(q), 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+    for (size_t q = 0; q < availableCharacters.size(); ++q)
+    {
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
+        size_t carIndex = 0;
+        size_t charIndex = 0;
+        sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
+
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_" + Conversions::DMToString(q), 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
 }
 
 void UIMainMenu::createSpecificControls(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr)
@@ -378,9 +335,6 @@ void UIMainMenu::createSpecificControls(const Ogre::Matrix4& screenAdaptionRelat
 
     {
         Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
-        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 311.0f, 219.0f);
-        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 309.0f, 358.0f);
-        //Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 313.0f, 218.0f);
         Ogre::Vector4 backgroundB = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 197.0f + 102.0f, 217.0f);
 
         mBackgroundA = createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
@@ -390,6 +344,30 @@ void UIMainMenu::createSpecificControls(const Ogre::Matrix4& screenAdaptionRelat
         mBackgroundB = createPanel("BackgroundB", backgroundB, "Test/BackgroundB");
         mBackgroundB->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundB);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 313.0f, 218.0f);
+
+        mBackgroundTrack = createPanel("BackgroundTrack", background, "Test/Background_Track_0");
+        mBackgroundTrack->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundTrack);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 311.0f, 219.0f);
+
+        mBackgroundCar = createPanel("BackgroundCar", background, "Test/Background_Car_0");
+        mBackgroundCar->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundCar);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 309.0f, 358.0f);
+
+        mBackgroundCharacter = createPanel("BackgroundCharacter", background, "Test/Background_Character_0");
+        mBackgroundCharacter->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundCharacter);
     }
 
     {
@@ -519,7 +497,7 @@ void UIMainMenu::createSpecificControls(const Ogre::Matrix4& screenAdaptionRelat
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
         mCharactersLabels.push_back(NULL);
         mCharactersLabels[q] = createTextArea("MainWindowCharacterLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCharactersLabels[q]->setCaption(strPowerslide.getCarTitle(availCars[q]));
+        mCharactersLabels[q]->setCaption("");
         mCharactersLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
         mCharactersLabels[q]->setSpaceWidth(9.0f);
         mCharactersLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
@@ -829,13 +807,37 @@ void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
 
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
-        checkCursorOverLabel(pos, mTracksLabels[q]);
+    {
+        bool isOver = checkCursorOverLabel(pos, mTracksLabels[q]);
+        if(isOver)
+        {
+            setTrackLogo(q);
+        }
+    }
 
     for(size_t q = 0; q < mCarsLabels.size(); ++q)
-        checkCursorOverLabel(pos, mCarsLabels[q]);
+    {
+        bool isOver = checkCursorOverLabel(pos, mCarsLabels[q]);
+        if(isOver)
+        {
+            setCarLogo(q);
+        }
+    }
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-        checkCursorOverLabel(pos, mCharactersLabels[q]);
+    {
+        bool isOver = checkCursorOverLabel(pos, mCharactersLabels[q]);
+        if(isOver)
+        {
+            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+            std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+            for (size_t w = 0; w < availableCharacters.size(); ++w)
+            {
+                if(strPowerslide.getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
+                    setCharacterLogo(w);
+            }
+        }
+    }
 }
 
 bool UIMainMenu::isTopmostSubmenu()const
@@ -848,16 +850,63 @@ void UIMainMenu::setTopmostSubmenu()
     switchState(State_SingleMulti);
 }
 
-void UIMainMenu::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)
+void UIMainMenu::selectTrack(const std::string& trackName)
 {
+    UIBaseMenu::selectTrack(trackName);
+
+    if(mRemapTrack.find(trackName) != mRemapTrack.end())
+    {
+        setTrackLogo(mRemapTrack[trackName]);
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+void UIMainMenu::selectCar(const std::string& carName)
+{
+    UIBaseMenu::selectCar(carName);
+
+    if(mRemapCar.find(carName) != mRemapCar.end())
+    {
+        setCarLogo(mRemapCar[carName]);
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+void UIMainMenu::setTrackLogo(size_t index)
+{
+    mBackgroundTrack->setMaterialName("Test/Background_Track_" + Conversions::DMToString(index));
+}
+
+void UIMainMenu::setCarLogo(size_t index)
+{
+    mBackgroundCar->setMaterialName("Test/Background_Car_" + Conversions::DMToString(index));
+}
+
+void UIMainMenu::setCharacterLogo(size_t index)
+{
+    mBackgroundCharacter->setMaterialName("Test/Background_Character_" + Conversions::DMToString(index));
+}
+
+bool UIMainMenu::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)
+{
+    bool ret = false;
     if(label->isVisible() && OgreBites::Widget::isCursorOver(label, pos, 0))
     {
+        ret = true;
         label->setColour(Ogre::ColourValue::White);
     }
     else
     {
         label->setColour(inactiveLabel);
     }
+
+    return ret;
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -894,6 +943,16 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 {
     hideAll();
 
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::string character = mModeContext.getGameState().getPlayerCar().getCharacterName();
+    std::string characterCar = strPowerslide.getCarFromCharacter(character);
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
     switch(state)
     {
     case State_SingleMulti:
@@ -915,23 +974,43 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_Track:
+        mBackgroundTrack->show();
         mWindowTitle->setCaption("Select Track");
         for(size_t q = 0; q < mTracksLabels.size(); ++q)
             mTracksLabels[q]->show();
+        setTrackLogo(mRemapTrack[mModeContext.mGameState.getTrackNameAsOriginal()]);
         break;
 
     case State_Car:
+        mBackgroundCar->show();
         mWindowTitle->setCaption("Select Car");
         for(size_t q = 0; q < mCarsLabels.size(); ++q)
             mCarsLabels[q]->show();
+        setCarLogo(mRemapCar[characterCar]);
         break;
 
     case State_Character:
+        if(characterCar == "supercar")
+        {
+            mBackgroundCharacter->setHeight(219.0f * viewportHeight / 480.0f);
+            mBackgroundCharacter->setWidth(311.0f * viewportWidth / 640.0f);
+        }
+        else
+        {
+            mBackgroundCharacter->setHeight(358.0f * viewportHeight / 480.0f);
+            mBackgroundCharacter->setWidth(309.0f * viewportWidth / 640.0f);
+        }
+        mBackgroundCharacter->show();
         mWindowTitle->setCaption("Select Character");
         for(size_t q = 0; q < mCharactersLabels.size(); ++q)
         {
             if(mCharactersLabels[q]->getCaption() != "")
                 mCharactersLabels[q]->show();
+        }
+        for (size_t q = 0; q < availableCharacters.size(); ++q)
+        {
+            if(strPowerslide.getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getCaption().asUTF8())
+                setCharacterLogo(q);
         }
         break;
     }
@@ -943,6 +1022,10 @@ void UIMainMenu::hideAll()
 {
     mBackgroundA->hide();
     mBackgroundB->hide();
+
+    mBackgroundTrack->hide();
+    mBackgroundCar->hide();
+    mBackgroundCharacter->hide();
 
     mModeSingle->hide();
     mModeSingleDifficultyNovice->hide();

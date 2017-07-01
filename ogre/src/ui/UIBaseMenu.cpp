@@ -9,11 +9,8 @@
 #include "../tools/Conversions.h"
 
 namespace{
-    const size_t amountTracks = 12;
-    const size_t amountCars = 7;
-
     //order based on mRemapTrack
-    const std::string controlTracksFiles[amountTracks] = {
+    const std::string controlTracksFiles[UIBaseMenu::amountTracks] = {
         "desert.bmp", "speedway.bmp", "track.bmp", 
         "mount.bmp", "mines.bmp", "alpine.bmp", 
         "city.bmp", "underg.bmp", "stunt.bmp", 
@@ -21,7 +18,7 @@ namespace{
     };
 
     //order based on mRemapCar
-    const std::string controlCarsFiles[amountTracks] = {
+    const std::string controlCarsFiles[UIBaseMenu::amountTracks] = {
         "wart.bmp", "heave.bmp", "pickup.bmp",
         "sabre.bmp", "orc.bmp", "skeeto.bmp",
         "truck.bmp"

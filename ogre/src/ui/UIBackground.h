@@ -87,15 +87,20 @@ public:
         const std::string& path, const std::string& fileName,
         float progressTop, float progressBottom, float progressLeft, float progressRight);
 
-    void show(const std::string& trackName);
+    void show(const std::string& trackName, bool showAIStrength, AIStrength strength);
     void hide();
 
 private:
 
     std::map<std::string, Ogre::String> mMaterialTrackNames;
     std::map<std::string, Ogre::String> mMaterialTrackTitlesNames;
+    Ogre::String mMaterialAIEasyName;
+    Ogre::String mMaterialAIMediumName;
+    Ogre::String mMaterialAIHardName;
+    Ogre::String mMaterialAIInsaneName;
     Ogre::PanelOverlayElement* mTrack;
     Ogre::PanelOverlayElement* mTrackTitle;
+    Ogre::PanelOverlayElement* mUIStrength;
 };
 
 #endif
