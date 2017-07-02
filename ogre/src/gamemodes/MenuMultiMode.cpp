@@ -1,4 +1,3 @@
-#include "../pcheader.h"
 
 #ifndef NO_MULTIPLAYER
 

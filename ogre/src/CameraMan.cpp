@@ -1,4 +1,3 @@
-#include "pcheader.h"
 
 #include "CameraMan.h"
 #include "tools/Conversions.h"

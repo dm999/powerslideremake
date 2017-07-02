@@ -1,4 +1,3 @@
-#include "../pcheader.h"
 
 #include "UIMainMenu.h"
 
@@ -147,16 +146,6 @@ void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
 {
     MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
 
-    if(senderButton->getCaption() == "Single")
-    {
-
-        std::vector<std::string> playersCharacters;
-        playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
-        mMenuMode->recalculateCharacterNames(playersCharacters);
-
-        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
-    }
-
 #ifndef NO_MULTIPLAYER
     if(senderButton->getCaption() == "Multi Join")
     {
@@ -251,50 +240,6 @@ void UIMainMenu::processItemSelected(MyGUI::Widget* sender, size_t index)
 
 void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
 {
-    if(sender == mWidgetTrack)
-    {
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-        mModeContext.getGameState().setRaceParameters(availTracks[index], mModeContext.getGameState().getAIStrength());
-        if(
-            mModeContext.getGameState().getTrackName() == "stunt track"         ||
-            mModeContext.getGameState().getTrackName() == "luge track"          ||
-            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
-            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
-            )
-            mModeContext.getGameState().setAICount(0);
-    }
-
-    if(sender == mWidgetCar)
-    {
-        mWidgetCharacter->deleteAllItems();
-
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-        std::string characterCar = availCars[index];
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-        for(size_t q = 0; q < availChars.size(); ++q)
-        {
-            mWidgetCharacter->addItem(strPowerslide.getCharacterTitle(availChars[q]));
-        }
-
-        mWidgetCharacter->setIndexSelected(0);
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
-    }
-
-    if(sender == mWidgetCharacter)
-    {
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-
-        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[index]);
-    }
-
     if(sender == mWidgetAICount)
     {
         mModeContext.getGameState().setAICount(index + 3);
@@ -305,11 +250,6 @@ void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
             mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
             )
             mModeContext.getGameState().setAICount(0);
-    }
-
-    if(sender == mWidgetAIStrength)
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(index), mModeContext.getGameState().getLapsCount());
     }
 }
 #endif

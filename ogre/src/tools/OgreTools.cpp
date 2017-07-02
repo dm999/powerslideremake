@@ -1,4 +1,3 @@
-#include "../pcheader.h"
 
 #include "OgreTools.h"
 #include "Tools.h"
@@ -666,7 +665,7 @@ Ogre::Vector3 RGBToXYZ(Ogre::Vector3 RGB, float gamma)
     RGB.y = RGB.y * 100.0f;
     RGB.z = RGB.z * 100.0f;
 
-    //Observer. = 2.0°, Illuminant = D65
+    //Observer. = 2.0?, Illuminant = D65
     float X = RGB.x * 0.4124f + RGB.y * 0.3576f + RGB.z * 0.1805f;
     float Y = RGB.x * 0.2126f + RGB.y * 0.7152f + RGB.z * 0.0722f;
     float Z = RGB.x * 0.0193f + RGB.y * 0.1192f + RGB.z * 0.9505f;

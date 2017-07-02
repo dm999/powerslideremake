@@ -1,4 +1,3 @@
-#include "../pcheader.h"
 
 #include "TEXLoader.h"
 

@@ -13,7 +13,6 @@
 //unicode support added from
 //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=42630
 
-#include "../pcheader.h"
 
 #include "MovableText.h"
 

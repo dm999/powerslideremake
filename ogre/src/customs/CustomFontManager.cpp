@@ -1,4 +1,3 @@
-#include "../pcheader.h"
 
 #include "CustomFontManager.h"
 #include "CustomFont.h"

@@ -4,6 +4,9 @@
 
 cmake_minimum_required(VERSION 2.8)
 
+#https://github.com/larsch/cmake-precompiled-header
+include(../PrecompiledHeader.cmake)
+
 project(PowerslideRemake)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -61,20 +64,7 @@ file(GLOB PowerslideRemake_sources_ui_main_h src/ui/*.h)
 file(GLOB PowerslideRemake_sources_includes_main_h src/includes/*.h)
 
 if(MSVC)
-    foreach( src_file ${PowerslideRemake_sources_main} )
-        message(STATUS ${src_file})
-        set_source_files_properties(
-            ${src_file}
-            PROPERTIES
-            COMPILE_FLAGS "/Yupcheader.h"
-            )
-    endforeach( src_file ${sources_main} )
-    
-    set_source_files_properties(src/pcheader.cpp
-        PROPERTIES
-        COMPILE_FLAGS "/Ycpcheader.h"
-        )
-    
+    add_definitions(-FI pcheader.h)
     add_definitions(-Zm114)
     add_definitions(/MP)
 else()
@@ -98,6 +88,26 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main})
+
+
+#PCH
+if(MSVC)
+    foreach( src_file ${PowerslideRemake_sources} )
+        set_source_files_properties(
+            ${src_file}
+            PROPERTIES
+            COMPILE_FLAGS "/Yupcheader.h"
+            )
+    endforeach( src_file ${sources_main} )
+    
+    set_source_files_properties(src/pcheader.cpp
+        PROPERTIES
+        COMPILE_FLAGS "/Ycpcheader.h"
+        )
+endif()
+#PCH END
+
+
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_lua_main_h})
 if(PowerslideRemake_OPENAL)
@@ -216,6 +226,7 @@ if(ANDROID)
     
     
     add_library( PowerslideRemake SHARED ${PowerslideRemake_sources})
+    add_precompiled_header(PowerslideRemake src/pcheader.h SOURCE_CXX src/pcheader.cpp FORCEINCLUDE)
     
     if(PowerslideRemake_MULTIPLAYER)
         target_link_libraries(PowerslideRemake MultiSlider)
