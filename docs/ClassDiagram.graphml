@@ -3155,10 +3155,10 @@ virtual void loadState() = 0</y:NodeLabel>
     <node id="n74">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="469.31317890729133" width="564.6254833569851" x="16877.687258321508" y="-6624.656589453645"/>
+          <y:Geometry height="517.4020023904368" width="564.6254833569851" x="16877.687258321508" y="-6648.701001195219"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="19.48959726614521">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="14.131665257717941">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3186,7 +3186,11 @@ Ogre::TextAreaOverlayElement * mControlsText[mControlsCount]
 std::map&lt;std::string, size_t&gt; mRemapTrack
 std::map&lt;std::string, size_t&gt; mRemapCar
 
-ModeContext mModeContext</y:NodeLabel>
+ModeContext mModeContext
+
+private:
+
+bool mControlClicked[mControlsCount]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

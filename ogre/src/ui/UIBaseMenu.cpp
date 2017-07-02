@@ -28,6 +28,8 @@ namespace{
 UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
     : mModeContext(modeContext)
 {
+    memset(mControlClicked, 0, sizeof(bool) * mControlsCount);
+
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("speedway track", 1));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("dam", 2));
@@ -334,14 +336,26 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
 
 void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
 {
+    for(int q = 0; q < mControlsCount; ++q)
+    {
+        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        {
+            mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+            mControlClicked[q] = true;
+        }
+    }
 }
 
 void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
 {
     for(int q = 0; q < mControlsCount; ++q)
     {
+        mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+        mControlClicked[q] = false;
+
         if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
         {
+            mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
             panelHit(mControls[q]);
         }
     }
@@ -353,7 +367,10 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
     {
         if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
         {
-            mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+            if(mControlClicked[q])
+                mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+            else
+                mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
             mControlsText[q]->show();
         }
         else

@@ -43,6 +43,9 @@ protected:
     std::map<std::string, size_t> mRemapCar;
 
     ModeContext mModeContext;
+
+private:
+    bool mControlClicked[mControlsCount];
 };
 
 #endif
