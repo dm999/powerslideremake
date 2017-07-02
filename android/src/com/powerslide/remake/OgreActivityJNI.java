@@ -26,7 +26,7 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-package org.ogre3d.android;
+package com.powerslide.remake;
 
 import android.view.Surface;
 import android.content.res.AssetManager;

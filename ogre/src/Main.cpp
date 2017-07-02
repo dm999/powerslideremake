@@ -30,7 +30,7 @@
             return JNI_VERSION_1_4;
         }
 
-        JNIEXPORT void JNICALL 	Java_org_ogre3d_android_OgreActivityJNI_create(JNIEnv * env, jobject obj, jobject assetManager, jstring dataDir)
+        JNIEXPORT void JNICALL 	Java_com_powerslide_remake_OgreActivityJNI_create(JNIEnv * env, jobject obj, jobject assetManager, jstring dataDir)
         {
             try
             {
@@ -56,7 +56,7 @@
             }
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_destroy(JNIEnv * env, jobject obj)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_destroy(JNIEnv * env, jobject obj)
         {
             if(gInit)
             {
@@ -71,7 +71,7 @@
             }
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_initWindow(JNIEnv * env, jobject obj,  jobject surface)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_initWindow(JNIEnv * env, jobject obj,  jobject surface)
         {
             if(surface)
             {
@@ -92,7 +92,7 @@
             }
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_termWindow(JNIEnv * env, jobject obj)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_termWindow(JNIEnv * env, jobject obj)
         {
             try
             {
@@ -104,33 +104,33 @@
             }
         }
 
-        JNIEXPORT jboolean JNICALL Java_org_ogre3d_android_OgreActivityJNI_renderOneFrame(JNIEnv * env, jobject obj)
+        JNIEXPORT jboolean JNICALL Java_com_powerslide_remake_OgreActivityJNI_renderOneFrame(JNIEnv * env, jobject obj)
         {
             return base->androidRenderOneFrame(env);
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_pause(JNIEnv * env, jobject obj)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_pause(JNIEnv * env, jobject obj)
         {
             base->androidPause(env);
         }
 
         //http://www.ogre3d.org/forums/viewtopic.php?f=21&t=80571
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleActionDown(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleActionDown(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
         {
             base->touchDown(pID, pX, pY);
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleActionUp(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleActionUp(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
         {
             base->touchUp(pID, pX, pY);
         }
 
-        JNIEXPORT void JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleActionMove(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleActionMove(JNIEnv* env, jobject obj, jint pID, jfloat pX, jfloat pY)
         {
             base->touchMove(pID, pX, pY);
         }
 
-        JNIEXPORT jboolean JNICALL Java_org_ogre3d_android_OgreActivityJNI_handleBackPressed(JNIEnv* env, jobject obj)
+        JNIEXPORT jboolean JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleBackPressed(JNIEnv* env, jobject obj)
         {
             return base->androidOnBack();
         }

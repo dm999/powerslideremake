@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.ogre3d.jni"
+    package="com.powerslide.remake"
     android:versionCode="1"
     android:versionName="1.0" 
 	android:installLocation="auto">
@@ -10,9 +10,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:label="PowerslideRebuild" android:icon="@drawable/ic_launcher"  android:hasCode="true">
-        <activity android:name="org.ogre3d.android.MainActivity" 
-                  android:label="PowerslideRebuild"
+    <application android:label="PowerslideRemake" android:icon="@drawable/ic_launcher"  android:hasCode="true">
+        <activity android:name="com.powerslide.remake.MainActivity" 
+                  android:label="PowerslideRemake"
                   android:configChanges="orientation|screenSize|keyboardHidden"
 		   android:debuggable="true"
 		  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"

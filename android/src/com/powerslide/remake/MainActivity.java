@@ -26,9 +26,9 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-package org.ogre3d.android;
+package com.powerslide.remake;
 
-import org.ogre3d.android.OgreActivityJNI;
+import com.powerslide.remake.OgreActivityJNI;
 
 import android.app.Activity;
 import android.hardware.Sensor;
@@ -274,6 +274,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	static {
         System.loadLibrary("openal");
-		System.loadLibrary("PowerslideRebuild");
+		System.loadLibrary("PowerslideRemake");
 	}
 }
