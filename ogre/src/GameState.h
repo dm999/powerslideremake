@@ -22,6 +22,15 @@ enum GameMode
     ModeRaceMulti,
 };
 
+enum SinglePlayerMenuStates
+{
+    State_SingleMulti,
+    State_Difficulty,
+    State_Track,
+    State_Car,
+    State_Character
+};
+
 enum AIStrength
 {
     Easy    = 0,

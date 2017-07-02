@@ -25,7 +25,8 @@ namespace{
     };
 }
 
-UIBaseMenu::UIBaseMenu()
+UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
+    : mModeContext(modeContext)
 {
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("speedway track", 1));

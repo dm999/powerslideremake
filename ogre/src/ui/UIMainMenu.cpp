@@ -21,12 +21,8 @@
     #include "../multiplayer/MultiplayerRoomInfo.h"
 #endif
 
-namespace{
-    Ogre::ColourValue inactiveLabel(0.51f, 0.51f, 0.51f);
-}
-
 UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)
-    : mModeContext(modeContext),
+    : UIMainMenuLabels(modeContext),
     mMenuMode(menuMode),
     mCurrentState(State_SingleMulti)
 {}
@@ -36,84 +32,9 @@ UIMainMenu::~UIMainMenu()
 
 void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
-    TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "bg.bmp", 
-                                "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
-
-    TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "tmga.bmp", 
-                                "OriginalBackgroundA", TEMP_RESOURCE_GROUP_NAME);
-
-    TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "tmgb.bmp", 
-                                "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
-
     loadCommonTextures(pfLoaderGameshell);
 
-
-    if(loaderListener)
-        loaderListener->loadState(0.2f, "backgrounds loaded");
-
-    {
-        const char * trackNames[] = {"track1.bmp", "track0.bmp", "track4.bmp", "track7.bmp", "track5.bmp", "track3.bmp", "track2.bmp", "track6.bmp", "track9.bmp", "track8.bmp", "track11.bmp", "track10.bmp"};
-
-        for(size_t q = 0; q < amountTracks; ++q)
-        {
-            TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", trackNames[q], 
-                                "OriginalTrack" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
-        }
-    }
-
-    if(loaderListener)
-        loaderListener->loadState(0.4f, "track textures loaded");
-
-    {
-
-        const char * carNames[] = {"car0_1.bmp", "car1_0.bmp", "car5_0.bmp", "car3_0.bmp", "car2_0.bmp", "car4_0.bmp", "car6_0.bmp"};
-        const char * carSNames[] = {"carst0.bmp", "carst1.bmp", "carst5.bmp", "carst3.bmp", "carst2.bmp", "carst4.bmp", "carst6.bmp"};
-
-        for(size_t q = 0; q < amountCars; ++q)
-        {
-            TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", carNames[q], 
-                                "OriginalCar" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
-
-            TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", carSNames[q], 
-                                "OriginalCarS" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
-        }
-
-        std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-        for (size_t q = 0; q < availableCharacters.size(); ++q)
-        {
-            std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
-            size_t carIndex = 0;
-            size_t charIndex = 0;
-            sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
-
-            std::string carName = "car" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
-            std::string charName = "char" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
-
-            //supercar is different
-            if(carIndex < 6)
-            {
-                TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", charName, 
-                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
-            }
-            else
-            {
-                TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", carName, 
-                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
-            }
-
-            if(loaderListener)
-                loaderListener->loadState(0.4f + 0.6f * (static_cast<float>(q + 1) / availableCharacters.size()), availableCharacters[q] + " loaded");
-        }
-
-    }
+    createBackgroundTextures(pfLoaderGameshell, loaderListener);
 
     if(loaderListener)
         loaderListener->loadState(1.0f, "all loaded");
@@ -196,11 +117,12 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 #endif
 
     createCommonMaterials();
-    createSpecificMaterials();
+    createBackgroundMaterials();
 
 
-    createSpecificControls(screenAdaptionRelative, trayMgr);//init mMainBackground for further usage
-    createControls(screenAdaptionRelative, mMainBackground);
+    createBackgroundUI(screenAdaptionRelative, trayMgr);//init mMainBackground for further usage
+    createLabels(screenAdaptionRelative);
+    createControls(screenAdaptionRelative, getMainBackground());
 
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
@@ -211,301 +133,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     selectCar(characterCar);
 
     switchState(State_SingleMulti);
-}
-
-void UIMainMenu::createSpecificMaterials()
-{
-
-    //main background
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalMainBackground");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    //additional background (feryl)
-    {
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundA");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundB");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundB", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-    }
-
-    for(size_t q = 0; q < amountTracks; ++q)
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalTrack" + Conversions::DMToString(q));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Track_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    for(size_t q = 0; q < amountCars; ++q)
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCar" + Conversions::DMToString(q));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Car_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-    for (size_t q = 0; q < availableCharacters.size(); ++q)
-    {
-        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
-        size_t carIndex = 0;
-        size_t charIndex = 0;
-        sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
-
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-}
-
-void UIMainMenu::createSpecificControls(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr)
-{
-
-    Ogre::Real viewportWidth = screenAdaptionRelative[0][0] * 640.0f; 
-    Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
-
-    {
-        mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
-        mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
-        //mMainBackground->hide();
-    }
-
-    {
-        Ogre::Vector4 backgroundA = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 197.0f, 328.0f);
-        Ogre::Vector4 backgroundB = screenAdaptionRelative * Ogre::Vector4(197.0f, 0.0f, 197.0f + 102.0f, 217.0f);
-
-        mBackgroundA = createPanel("BackgroundA", backgroundA, "Test/BackgroundA");
-        mBackgroundA->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        mMainBackground->addChild(mBackgroundA);
-
-        mBackgroundB = createPanel("BackgroundB", backgroundB, "Test/BackgroundB");
-        mBackgroundB->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        mMainBackground->addChild(mBackgroundB);
-    }
-
-    {
-        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 313.0f, 218.0f);
-
-        mBackgroundTrack = createPanel("BackgroundTrack", background, "Test/Background_Track_0");
-        mBackgroundTrack->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        mMainBackground->addChild(mBackgroundTrack);
-    }
-
-    {
-        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 311.0f, 219.0f);
-
-        mBackgroundCar = createPanel("BackgroundCar", background, "Test/Background_Car_0");
-        mBackgroundCar->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        mMainBackground->addChild(mBackgroundCar);
-    }
-
-    {
-        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 309.0f, 358.0f);
-
-        mBackgroundCharacter = createPanel("BackgroundCharacter", background, "Test/Background_Character_0");
-        mBackgroundCharacter->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        mMainBackground->addChild(mBackgroundCharacter);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 10.0f, 0.0f, 0.0f);
-        mWindowTitle = createTextArea("MainWindowTitle", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mWindowTitle->setCaption("Game Mode");
-        mWindowTitle->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mWindowTitle->setSpaceWidth(9.0f);
-        mWindowTitle->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mWindowTitle->setFontName("SdkTrays/Caption");
-        mWindowTitle->setColour(Ogre::ColourValue::White);
-        mMainBackground->addChild(mWindowTitle);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 107.0f, 0.0f, 0.0f);
-        mModeSingle = createTextArea("MainWindowSingle", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingle->setCaption("Single Player");
-        mModeSingle->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mModeSingle->setSpaceWidth(9.0f);
-        mModeSingle->setHeight(46.0f * viewportHeight / 1024.0f);
-        mModeSingle->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingle->setFontName("SdkTrays/Caption");
-        mModeSingle->setColour(inactiveLabel);
-        mMainBackground->addChild(mModeSingle);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyNovice = createTextArea("MainWindowSingleDiffNovice", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyNovice->setCaption("Novice");
-        mModeSingleDifficultyNovice->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyNovice->setSpaceWidth(9.0f);
-        mModeSingleDifficultyNovice->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyNovice->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyNovice->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyNovice->setColour(inactiveLabel);
-        mMainBackground->addChild(mModeSingleDifficultyNovice);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 213.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyAdvanced = createTextArea("MainWindowSingleDiffAdv", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyAdvanced->setCaption("Advanced");
-        mModeSingleDifficultyAdvanced->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyAdvanced->setSpaceWidth(9.0f);
-        mModeSingleDifficultyAdvanced->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyAdvanced->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyAdvanced->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyAdvanced->setColour(inactiveLabel);
-        mMainBackground->addChild(mModeSingleDifficultyAdvanced);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 233.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyExpert = createTextArea("MainWindowSingleDiffExpert", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyExpert->setCaption("Expert");
-        mModeSingleDifficultyExpert->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyExpert->setSpaceWidth(9.0f);
-        mModeSingleDifficultyExpert->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyExpert->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyExpert->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyExpert->setColour(inactiveLabel);
-        mMainBackground->addChild(mModeSingleDifficultyExpert);
-    }
-
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 253.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyInsane = createTextArea("MainWindowSingleDiffInsane", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyInsane->setCaption("Insane");
-        mModeSingleDifficultyInsane->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyInsane->setSpaceWidth(9.0f);
-        mModeSingleDifficultyInsane->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyInsane->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyInsane->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyInsane->setColour(inactiveLabel);
-        mMainBackground->addChild(mModeSingleDifficultyInsane);
-    }
-
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-
-    mTracksLabels.clear();
-
-    for(size_t q = 0; q < availTracks.size(); ++q)
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 56.0f + q * 25.0f, 0.0f, 0.0f);
-        mTracksLabels.push_back(NULL);
-        mTracksLabels[q] = createTextArea("MainWindowTrackLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mTracksLabels[q]->setCaption(strPowerslide.getTrackTitle(availTracks[q]));
-        mTracksLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mTracksLabels[q]->setSpaceWidth(9.0f);
-        mTracksLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mTracksLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mTracksLabels[q]->setFontName("SdkTrays/Caption");
-        mTracksLabels[q]->setColour(inactiveLabel);
-        mMainBackground->addChild(mTracksLabels[q]);
-    }
-
-    mCarsLabels.clear();
-
-    for(size_t q = 0; q < availCars.size(); ++q)
-    {
-        Ogre::Vector4 pos(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);
-            if(q > 2)
-                pos.y += 15;
-            if(q > 5)
-                pos.y += 15;
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * pos;
-        mCarsLabels.push_back(NULL);
-        mCarsLabels[q] = createTextArea("MainWindowCarLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCarsLabels[q]->setCaption(strPowerslide.getCarTitle(availCars[q]));
-        mCarsLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mCarsLabels[q]->setSpaceWidth(9.0f);
-        mCarsLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mCarsLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mCarsLabels[q]->setFontName("SdkTrays/Caption");
-        mCarsLabels[q]->setColour(inactiveLabel);
-        mMainBackground->addChild(mCarsLabels[q]);
-    }
-
-    mCharactersLabels.clear();
-
-    for(size_t q = 0; q < 7; ++q)//maximum available is 7
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
-        mCharactersLabels.push_back(NULL);
-        mCharactersLabels[q] = createTextArea("MainWindowCharacterLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCharactersLabels[q]->setCaption("");
-        mCharactersLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mCharactersLabels[q]->setSpaceWidth(9.0f);
-        mCharactersLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mCharactersLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mCharactersLabels[q]->setFontName("SdkTrays/Caption");
-        mCharactersLabels[q]->setColour(inactiveLabel);
-        mMainBackground->addChild(mCharactersLabels[q]);
-    }
 }
 
 #if defined(__ANDROID__)
@@ -694,150 +321,12 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
-    UIBaseMenu::mouseReleased(pos);
-
-    if(mModeSingle->isVisible() && OgreBites::Widget::isCursorOver(mModeSingle, pos, 0))
-    {
-        switchState(State_Difficulty);
-        return;
-    }
-
-    if(mModeSingleDifficultyNovice->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyNovice, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
-        return;
-    }
-
-    if(mModeSingleDifficultyAdvanced->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyAdvanced, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
-        return;
-    }
-
-    if(mModeSingleDifficultyExpert->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyExpert, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
-        return;
-    }
-
-    if(mModeSingleDifficultyInsane->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyInsane, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
-        return;
-    }
-
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-    {
-        if(mTracksLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mTracksLabels[q], pos, 0))
-        {
-            mModeContext.getGameState().setRaceParameters(availTracks[q], mModeContext.getGameState().getAIStrength());
-            if(
-                mModeContext.getGameState().getTrackName() == "stunt track"         ||
-                mModeContext.getGameState().getTrackName() == "luge track"          ||
-                mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
-                mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
-                )
-                mModeContext.getGameState().setAICount(0);
-
-            selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
-
-            switchState(State_Car);
-            return;
-        }
-    }
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-    {
-        if(mCarsLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mCarsLabels[q], pos, 0))
-        {
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(availCars[q]);
-            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
-
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-            selectCar(characterCar);
-
-            for(size_t q = 0; q < 7; ++q)
-            {
-                if(q < availChars.size())
-                    mCharactersLabels[q]->setCaption(strPowerslide.getCharacterTitle(availChars[q]));
-                else
-                    mCharactersLabels[q]->setCaption("");
-            }
-
-            switchState(State_Character);
-            return;
-        }
-    }
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-    {
-        if(mCharactersLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mCharactersLabels[q], pos, 0))
-        {
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
-
-            //switchState(State_Race);
-            startRace();
-            return;
-        }
-    }
+    UIMainMenuLabels::mouseReleased(pos);
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
 {
-    UIBaseMenu::mouseMoved(pos);
-
-    checkCursorOverLabel(pos, mModeSingle);
-    checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
-    checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
-    checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
-    checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
-
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-    {
-        bool isOver = checkCursorOverLabel(pos, mTracksLabels[q]);
-        if(isOver)
-        {
-            setTrackLogo(q);
-        }
-    }
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-    {
-        bool isOver = checkCursorOverLabel(pos, mCarsLabels[q]);
-        if(isOver)
-        {
-            setCarLogo(q);
-        }
-    }
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-    {
-        bool isOver = checkCursorOverLabel(pos, mCharactersLabels[q]);
-        if(isOver)
-        {
-            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-            std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-            for (size_t w = 0; w < availableCharacters.size(); ++w)
-            {
-                if(strPowerslide.getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
-                    setCharacterLogo(w);
-            }
-        }
-    }
+    UIMainMenuLabels::mouseMoved(pos);
 }
 
 bool UIMainMenu::isTopmostSubmenu()const
@@ -848,65 +337,6 @@ bool UIMainMenu::isTopmostSubmenu()const
 void UIMainMenu::setTopmostSubmenu()
 {
     switchState(State_SingleMulti);
-}
-
-void UIMainMenu::selectTrack(const std::string& trackName)
-{
-    UIBaseMenu::selectTrack(trackName);
-
-    if(mRemapTrack.find(trackName) != mRemapTrack.end())
-    {
-        setTrackLogo(mRemapTrack[trackName]);
-    }
-    else
-    {
-        assert(false);
-    }
-}
-
-void UIMainMenu::selectCar(const std::string& carName)
-{
-    UIBaseMenu::selectCar(carName);
-
-    if(mRemapCar.find(carName) != mRemapCar.end())
-    {
-        setCarLogo(mRemapCar[carName]);
-    }
-    else
-    {
-        assert(false);
-    }
-}
-
-void UIMainMenu::setTrackLogo(size_t index)
-{
-    mBackgroundTrack->setMaterialName("Test/Background_Track_" + Conversions::DMToString(index));
-}
-
-void UIMainMenu::setCarLogo(size_t index)
-{
-    mBackgroundCar->setMaterialName("Test/Background_Car_" + Conversions::DMToString(index));
-}
-
-void UIMainMenu::setCharacterLogo(size_t index)
-{
-    mBackgroundCharacter->setMaterialName("Test/Background_Character_" + Conversions::DMToString(index));
-}
-
-bool UIMainMenu::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)
-{
-    bool ret = false;
-    if(label->isVisible() && OgreBites::Widget::isCursorOver(label, pos, 0))
-    {
-        ret = true;
-        label->setColour(Ogre::ColourValue::White);
-    }
-    else
-    {
-        label->setColour(inactiveLabel);
-    }
-
-    return ret;
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -943,75 +373,39 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 {
     hideAll();
 
-    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
-    Ogre::Real viewportWidth = om.getViewportWidth(); 
-    Ogre::Real viewportHeight = om.getViewportHeight(); 
-
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::string character = mModeContext.getGameState().getPlayerCar().getCharacterName();
-    std::string characterCar = strPowerslide.getCarFromCharacter(character);
-    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
     switch(state)
     {
     case State_SingleMulti:
-        mWindowTitle->setCaption("Game Mode");
-        mModeSingle->show();
-        mBackgroundA->show();
-        mBackgroundB->show();
+        setWindowTitle("Game Mode");
+        showModeSingle();
+        showBackgrounds();
         break;
 
     case State_Difficulty:
-        mWindowTitle->setCaption("Game Mode");
-        mModeSingle->show();
-        mModeSingleDifficultyNovice->show();
-        mModeSingleDifficultyAdvanced->show();
-        mModeSingleDifficultyExpert->show();
-        mModeSingleDifficultyInsane->show();
-        mBackgroundA->show();
-        mBackgroundB->show();
+        setWindowTitle("Game Mode");
+        showModeSingle();
+        showModeDifficulty();
+        showBackgrounds();
         break;
 
     case State_Track:
-        mBackgroundTrack->show();
-        mWindowTitle->setCaption("Select Track");
-        for(size_t q = 0; q < mTracksLabels.size(); ++q)
-            mTracksLabels[q]->show();
-        setTrackLogo(mRemapTrack[mModeContext.mGameState.getTrackNameAsOriginal()]);
+        showBackgroundTrack();
+        setWindowTitle("Select Track");
+        showTrackLabels();
+        setCurrentTrackLogo();
         break;
 
     case State_Car:
-        mBackgroundCar->show();
-        mWindowTitle->setCaption("Select Car");
-        for(size_t q = 0; q < mCarsLabels.size(); ++q)
-            mCarsLabels[q]->show();
-        setCarLogo(mRemapCar[characterCar]);
+        showBackgroundCar();
+        setWindowTitle("Select Car");
+        showCarLabels();
+        setCurrentCarLogo();
         break;
 
     case State_Character:
-        if(characterCar == "supercar")
-        {
-            mBackgroundCharacter->setHeight(219.0f * viewportHeight / 480.0f);
-            mBackgroundCharacter->setWidth(311.0f * viewportWidth / 640.0f);
-        }
-        else
-        {
-            mBackgroundCharacter->setHeight(358.0f * viewportHeight / 480.0f);
-            mBackgroundCharacter->setWidth(309.0f * viewportWidth / 640.0f);
-        }
-        mBackgroundCharacter->show();
-        mWindowTitle->setCaption("Select Character");
-        for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-        {
-            if(mCharactersLabels[q]->getCaption() != "")
-                mCharactersLabels[q]->show();
-        }
-        for (size_t q = 0; q < availableCharacters.size(); ++q)
-        {
-            if(strPowerslide.getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getCaption().asUTF8())
-                setCharacterLogo(q);
-        }
+        showBackgroundCharacter();
+        setWindowTitle("Select Character");
+        showCharacterLabels();
         break;
     }
 
@@ -1020,25 +414,6 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
 void UIMainMenu::hideAll()
 {
-    mBackgroundA->hide();
-    mBackgroundB->hide();
-
-    mBackgroundTrack->hide();
-    mBackgroundCar->hide();
-    mBackgroundCharacter->hide();
-
-    mModeSingle->hide();
-    mModeSingleDifficultyNovice->hide();
-    mModeSingleDifficultyAdvanced->hide();
-    mModeSingleDifficultyExpert->hide();
-    mModeSingleDifficultyInsane->hide();
-
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-        mTracksLabels[q]->hide();
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-        mCarsLabels[q]->hide();
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-        mCharactersLabels[q]->hide();
+    hideAllBackgrounds();
+    hideAllLabels();
 }

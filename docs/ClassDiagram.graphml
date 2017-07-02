@@ -2452,10 +2452,10 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1101.1406288351254" width="647.5257509874004" x="16386.2371245063" y="-5980.097146796503"/>
+          <y:Geometry height="647.1771259017924" width="694.4874926701536" x="16272.756253664924" y="-4433.588562950896"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1106.587890625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="7.917172368699539" y="-2.7236308949377417">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="64.31805513839572">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2463,17 +2463,9 @@ public:
 
 void load(CustomTrayManager* trayMgr, const GameState&amp; gameState, LoaderListener* loaderListener)
 
-void processButtonClick(MyGUI::Widget* sender)
-void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
-void processItemSelected(MyGUI::Widget* sender, size_t index)
-void processChangeComboBox(MyGUI::Widget* sender, size_t index)
-
 #if defined(__ANDROID__)
     void reloadTextures(const GameState&amp; gameState)
 #endif
-
-virtual void buttonHit(OgreBites::Button* button)
-virtual void itemSelected(OgreBites::SelectMenu* menu)
 
 void mousePressed(const Ogre::Vector2&amp; pos)
 void mouseReleased(const Ogre::Vector2&amp; pos)
@@ -2484,50 +2476,18 @@ void setTopmostSubmenu()
 
 protected:
 
-void selectTrack(const std::string&amp; trackName)
-void selectCar(const std::string&amp; carName)
+void switchState(const SinglePlayerMenuStates&amp; state)override
+void startRace()override
 
 private:
 
-void createSpecificMaterials()
-void createSpecificControls(const Ogre::Matrix4&amp; screenAdaptionRelative, CustomTrayManager* trayMgr)
+void hideAll()
 
-void panelHit(Ogre::PanelOverlayElement* panel)
-
-void startRace()
-
-void setTrackLogo(size_t index)
-void setCarLogo(size_t index)
-void setCharacterLogo(size_t index)
-
-ModeContext mModeContext
+void panelHit(Ogre::PanelOverlayElement* panel) override
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
 
 MenuMode * mMenuMode
-
-Ogre::PanelOverlayElement* mMainBackground
-
-Ogre::PanelOverlayElement* mBackgroundA
-Ogre::PanelOverlayElement* mBackgroundB
-
-Ogre::PanelOverlayElement* mBackgroundTrack
-Ogre::PanelOverlayElement* mBackgroundCar
-Ogre::PanelOverlayElement* mBackgroundCharacter
-
-Ogre::TextAreaOverlayElement * mWindowTitle
-
-Ogre::TextAreaOverlayElement * mModeSingle
-Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice
-Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced
-Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert
-Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane
-
-std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mTracksLabels
-std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCarsLabels
-std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels
-
-bool checkCursorOverLabel(const Ogre::Vector2&amp; pos, Ogre::TextAreaOverlayElement * label)
 
 SinglePlayerMenuStates mCurrentState</y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -2562,7 +2522,7 @@ SinglePlayerMenuStates mCurrentState</y:NodeLabel>
           <y:Geometry height="680.1942935930047" width="576.6435196085708" x="17291.678240195713" y="-5980.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.37937699178474" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="22.021951484002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
@@ -2582,8 +2542,6 @@ void onStartNotPossible()
 void addEvent(const std::string&amp; eventItem, bool isMessage = false)
 
 private:
-
-ModeContext mModeContext
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
 
@@ -3198,9 +3156,9 @@ virtual void loadState() = 0</y:NodeLabel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="469.31317890729133" width="564.6254833569851" x="16877.687258321508" y="-6624.656589453645"/>
-          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="400.931640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="34.19076914114521">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="19.48959726614521">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3226,7 +3184,107 @@ Ogre::PanelOverlayElement* mControls[mControlsCount]
 Ogre::TextAreaOverlayElement * mControlsText[mControlsCount]
 
 std::map&lt;std::string, size_t&gt; mRemapTrack
-std::map&lt;std::string, size_t&gt; mRemapCar</y:NodeLabel>
+std::map&lt;std::string, size_t&gt; mRemapCar
+
+ModeContext mModeContext</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n75">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="612.4045651713595" width="547.3407020641766" x="16346.329648967912" y="-5316.20228258568"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="17.529431023179313">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+
+UIMainMenuLabels
+
+
+protected:
+
+void createLabels(const Ogre::Matrix4&amp; screenAdaptionRelative)
+
+void mouseReleased(const Ogre::Vector2&amp; pos)
+void mouseMoved(const Ogre::Vector2&amp; pos)
+
+virtual void switchState(const SinglePlayerMenuStates&amp; state) = 0
+virtual void startRace() = 0
+
+void setWindowTitle(const std::string&amp; title)
+
+void showModeSingle()
+void showModeDifficulty()
+void showTrackLabels()
+void showCarLabels()
+void showCharacterLabels()
+void hideAllLabels()
+
+private:
+
+bool checkCursorOverLabel(const Ogre::Vector2&amp; pos, Ogre::TextAreaOverlayElement * label)
+
+Ogre::TextAreaOverlayElement * mWindowTitle
+
+Ogre::TextAreaOverlayElement * mModeSingle
+Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice
+Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced
+Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert
+Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane
+
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mTracksLabels
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCarsLabels
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n76">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="567.0942070450192" width="668.951993450451" x="16285.524003274775" y="-6043.547103522509"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="2.2248378975100422">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
+
+UIMainMenuBackground
+
+protected:
+
+void createBackgroundTextures(const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
+void createBackgroundMaterials()
+void createBackgroundUI(const Ogre::Matrix4&amp; screenAdaptionRelative, CustomTrayManager* trayMgr)
+
+void setCurrentTrackLogo()
+void setTrackLogo(size_t index)
+void setCurrentCarLogo()
+void setCarLogo(size_t index)
+void setCharacterLogo(size_t index)
+
+void selectTrack(const std::string&amp; trackName)
+void selectCar(const std::string&amp; carName)
+
+Ogre::PanelOverlayElement* getMainBackground()
+
+void showBackgrounds()
+void showBackgroundTrack()
+void showBackgroundCar()
+void showBackgroundCharacter()
+void hideAllBackgrounds()
+
+private:
+
+Ogre::PanelOverlayElement* mMainBackground
+
+Ogre::PanelOverlayElement* mBackgroundA
+Ogre::PanelOverlayElement* mBackgroundB
+
+Ogre::PanelOverlayElement* mBackgroundTrack
+Ogre::PanelOverlayElement* mBackgroundCar
+Ogre::PanelOverlayElement* mBackgroundCharacter
+
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3731,7 +3789,7 @@ std::map&lt;std::string, size_t&gt; mRemapCar</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e44" source="n49" target="n74">
+    <edge id="e44" source="n76" target="n74">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4002,6 +4060,26 @@ std::map&lt;std::string, size_t&gt; mRemapCar</y:NodeLabel>
       </data>
     </edge>
     <edge id="e71" source="n74" target="n48">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e72" source="n49" target="n75">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e73" source="n75" target="n76">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

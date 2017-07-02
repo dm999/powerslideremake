@@ -19,7 +19,7 @@
 #include "../multiplayer/MultiplayerControllerSlave.h"
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
-    : mModeContext(modeContext),
+    : UIBaseMenu(modeContext),
     mMenuMultiMode(menuMultiMode)
 {}
 

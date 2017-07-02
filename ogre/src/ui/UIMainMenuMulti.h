@@ -53,8 +53,6 @@ public:
 
 private:
 
-    ModeContext mModeContext;
-
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
     void updateRoomState(const std::string& playerMessage = "")const;

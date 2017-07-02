@@ -3,6 +3,8 @@
 
 #include "UIBase.h"
 
+#include "../gamemodes/ModeContext.h"
+
 class PFLoader;
 
 namespace Ogre{
@@ -12,7 +14,7 @@ namespace Ogre{
 class UIBaseMenu : public UIBase
 {
 public:
-    UIBaseMenu();
+    UIBaseMenu(const ModeContext& modeContext);
     virtual ~UIBaseMenu(){}
 
     static const size_t amountTracks = 12;
@@ -39,6 +41,8 @@ protected:
 
     std::map<std::string, size_t> mRemapTrack;
     std::map<std::string, size_t> mRemapCar;
+
+    ModeContext mModeContext;
 };
 
 #endif
