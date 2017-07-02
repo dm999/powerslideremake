@@ -4,64 +4,64 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(PowerslideRebuild)
+project(PowerslideRemake)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-file(GLOB PowerslideRebuild_sources_main src/*.cpp)
-file(GLOB PowerslideRebuild_sources_main_h src/*.h)
+file(GLOB PowerslideRemake_sources_main src/*.cpp)
+file(GLOB PowerslideRemake_sources_main_h src/*.h)
 
-file(GLOB PowerslideRebuild_sources_lua_main src/lua/*.cpp)
-file(GLOB PowerslideRebuild_sources_lua_main_h src/lua/*.h)
+file(GLOB PowerslideRemake_sources_lua_main src/lua/*.cpp)
+file(GLOB PowerslideRemake_sources_lua_main_h src/lua/*.h)
 
-if(PowerslideRebuild_OPENAL)
+if(PowerslideRemake_OPENAL)
     message(STATUS "OpenAL enabled")
-    file(GLOB PowerslideRebuild_sources_openal_main src/OpenAL/*.cpp)
-    file(GLOB PowerslideRebuild_sources_openal_main_h src/OpenAL/*.h)
+    file(GLOB PowerslideRemake_sources_openal_main src/OpenAL/*.cpp)
+    file(GLOB PowerslideRemake_sources_openal_main_h src/OpenAL/*.h)
 else()
     add_definitions(-DNO_OPENAL)
 endif()
 
-if(PowerslideRebuild_MULTIPLAYER)
+if(PowerslideRemake_MULTIPLAYER)
     message(STATUS "Multiplayer enabled")
-    file(GLOB PowerslideRebuild_sources_multiplayer_main src/multiplayer/*.cpp)
-    file(GLOB PowerslideRebuild_sources_multiplayer_main_h src/multiplayer/*.h)
+    file(GLOB PowerslideRemake_sources_multiplayer_main src/multiplayer/*.cpp)
+    file(GLOB PowerslideRemake_sources_multiplayer_main_h src/multiplayer/*.h)
 else()
     add_definitions(-DNO_MULTIPLAYER)
 endif()
 
-file(GLOB PowerslideRebuild_sources_loaders_main src/loaders/*.cpp)
-file(GLOB PowerslideRebuild_sources_loaders_main_h src/loaders/*.h)
+file(GLOB PowerslideRemake_sources_loaders_main src/loaders/*.cpp)
+file(GLOB PowerslideRemake_sources_loaders_main_h src/loaders/*.h)
 
-file(GLOB PowerslideRebuild_sources_logic_main src/gamelogic/*.cpp)
-file(GLOB PowerslideRebuild_sources_logic_main_h src/gamelogic/*.h)
+file(GLOB PowerslideRemake_sources_logic_main src/gamelogic/*.cpp)
+file(GLOB PowerslideRemake_sources_logic_main_h src/gamelogic/*.h)
 
-file(GLOB PowerslideRebuild_sources_customs_main src/customs/*.cpp)
-file(GLOB PowerslideRebuild_sources_customs_main_h src/customs/*.h)
+file(GLOB PowerslideRemake_sources_customs_main src/customs/*.cpp)
+file(GLOB PowerslideRemake_sources_customs_main_h src/customs/*.h)
 
-file(GLOB PowerslideRebuild_sources_pscar_main src/pscar/*.cpp)
-file(GLOB PowerslideRebuild_sources_pscar_main_h src/pscar/*.h)
+file(GLOB PowerslideRemake_sources_pscar_main src/pscar/*.cpp)
+file(GLOB PowerslideRemake_sources_pscar_main_h src/pscar/*.h)
 
-file(GLOB PowerslideRebuild_sources_listeners_main src/listeners/*.cpp)
-file(GLOB PowerslideRebuild_sources_listeners_main_h src/listeners/*.h)
+file(GLOB PowerslideRemake_sources_listeners_main src/listeners/*.cpp)
+file(GLOB PowerslideRemake_sources_listeners_main_h src/listeners/*.h)
 
-file(GLOB PowerslideRebuild_sources_tools_main src/tools/*.cpp)
-file(GLOB PowerslideRebuild_sources_tools_main_h src/tools/*.h)
+file(GLOB PowerslideRemake_sources_tools_main src/tools/*.cpp)
+file(GLOB PowerslideRemake_sources_tools_main_h src/tools/*.h)
 
-file(GLOB PowerslideRebuild_sources_mesh_main src/mesh/*.cpp)
-file(GLOB PowerslideRebuild_sources_mesh_main_h src/mesh/*.h)
+file(GLOB PowerslideRemake_sources_mesh_main src/mesh/*.cpp)
+file(GLOB PowerslideRemake_sources_mesh_main_h src/mesh/*.h)
 
-file(GLOB PowerslideRebuild_sources_modes_main src/gamemodes/*.cpp)
-file(GLOB PowerslideRebuild_sources_modes_main_h src/gamemodes/*.h)
+file(GLOB PowerslideRemake_sources_modes_main src/gamemodes/*.cpp)
+file(GLOB PowerslideRemake_sources_modes_main_h src/gamemodes/*.h)
 
-file(GLOB PowerslideRebuild_sources_ui_main src/ui/*.cpp)
-file(GLOB PowerslideRebuild_sources_ui_main_h src/ui/*.h)
+file(GLOB PowerslideRemake_sources_ui_main src/ui/*.cpp)
+file(GLOB PowerslideRemake_sources_ui_main_h src/ui/*.h)
 
-file(GLOB PowerslideRebuild_sources_includes_main_h src/includes/*.h)
+file(GLOB PowerslideRemake_sources_includes_main_h src/includes/*.h)
 
 if(MSVC)
-    foreach( src_file ${PowerslideRebuild_sources_main} )
+    foreach( src_file ${PowerslideRemake_sources_main} )
         message(STATUS ${src_file})
         set_source_files_properties(
             ${src_file}
@@ -81,56 +81,56 @@ else()
     add_definitions(-std=c++11)
 endif()
 
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_lua_main})
-if(PowerslideRebuild_OPENAL)
-    list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_openal_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_lua_main})
+if(PowerslideRemake_OPENAL)
+    list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_openal_main})
 endif()
-if(PowerslideRebuild_MULTIPLAYER)
-    list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_multiplayer_main})
+if(PowerslideRemake_MULTIPLAYER)
+    list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_multiplayer_main})
 endif()
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_loaders_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_logic_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_customs_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_pscar_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_listeners_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_tools_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_mesh_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_modes_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_ui_main})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_lua_main_h})
-if(PowerslideRebuild_OPENAL)
-    list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_openal_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_loaders_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_logic_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_customs_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_pscar_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_listeners_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_lua_main_h})
+if(PowerslideRemake_OPENAL)
+    list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_openal_main_h})
 endif()
-if(PowerslideRebuild_MULTIPLAYER)
-    list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_multiplayer_main_h})
+if(PowerslideRemake_MULTIPLAYER)
+    list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_multiplayer_main_h})
 endif()
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_loaders_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_logic_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_customs_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_pscar_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_listeners_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_tools_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_mesh_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_modes_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_ui_main_h})
-list(APPEND PowerslideRebuild_sources ${PowerslideRebuild_sources_includes_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_loaders_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_logic_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_customs_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_pscar_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_listeners_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_includes_main_h})
 
 
 if(ANDROID)
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GLES2
-            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
+            ${PowerslideRemake_OGREHOME}/include/OGRE/RenderSystems/GLES2
+            ${PowerslideRemake_OGREHOME}/include/OGRE/Overlay
     )
 else()
     include_directories( 
             ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
-            ${PowerslideRebuild_OGREHOME}/include/OGRE/RenderSystems/GL
-            ${PowerslideRebuild_OGREHOME}/include/OGRE/Overlay
+            ${PowerslideRemake_OGREHOME}/include/OGRE/RenderSystems/GL
+            ${PowerslideRemake_OGREHOME}/include/OGRE/Overlay
     )
 endif()
 
@@ -141,30 +141,30 @@ include_directories(../bullet ../bulletextras)
 include_directories(../ogrebullet/Collisions/include)
 include_directories(../ogrebullet/Dynamics/include)
 
-if(PowerslideRebuild_MULTIPLAYER)
+if(PowerslideRemake_MULTIPLAYER)
     include_directories(../multislider/client/source)
 endif()
 
-if(PowerslideRebuild_OPENAL)
-    include_directories(${PowerslideRebuild_OPENALDIR}/include)
-    link_directories (${PowerslideRebuild_OPENALDIR}/lib)
+if(PowerslideRemake_OPENAL)
+    include_directories(${PowerslideRemake_OPENALDIR}/include)
+    link_directories (${PowerslideRemake_OPENALDIR}/lib)
 endif()
 
 include_directories(../tools/jsonxx/src)
 
-link_directories (${PowerslideRebuild_OGREHOME}/lib)
-link_directories (${PowerslideRebuild_OGREHOME}/lib/OGRE)
+link_directories (${PowerslideRemake_OGREHOME}/lib)
+link_directories (${PowerslideRemake_OGREHOME}/lib/OGRE)
 
 if(WIN32)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib/Debug/opt)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release)
-    link_directories (${PowerslideRebuild_OGREHOME}/lib/Release/opt)
+    link_directories (${PowerslideRemake_OGREHOME}/lib/Debug)
+    link_directories (${PowerslideRemake_OGREHOME}/lib/Debug/opt)
+    link_directories (${PowerslideRemake_OGREHOME}/lib/Release)
+    link_directories (${PowerslideRemake_OGREHOME}/lib/Release/opt)
 endif()
 
 if(MSVC)
 
-    foreach(f ${PowerslideRebuild_sources})
+    foreach(f ${PowerslideRemake_sources})
         # Get the path of the file relative to ${CMAKE_HOME_DIRECTORY},
         # then alter it (not compulsory)
         file(RELATIVE_PATH SRCGR ${CMAKE_HOME_DIRECTORY} ${f})
@@ -178,23 +178,23 @@ if(MSVC)
         source_group("${SRCGR}" FILES ${f})
     endforeach()
     
-    list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.ico)
-    list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.rc2)
-    list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.rc)
+    list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.ico)
+    list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc2)
+    list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc)
     
     source_group("Resource Files" FILES src/res/PowerslideHD_Engine.ico)
     source_group("Resource Files" FILES src/res/PowerslideHD_Engine.rc2)
     source_group("Resource Files" FILES src/res/PowerslideHD_Engine.rc)
     
 
-    add_executable( PowerslideRebuild WIN32 ${PowerslideRebuild_sources})
+    add_executable( PowerslideRemake WIN32 ${PowerslideRemake_sources})
 else()
 
     if(MINGW)
     
-        list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.ico)
-        list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.rc2)
-        list(APPEND PowerslideRebuild_sources src/res/PowerslideHD_Engine.rc)
+        list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.ico)
+        list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc2)
+        list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc)
     
         set(CMAKE_RC_COMPILER_INIT windres)
         ENABLE_LANGUAGE(RC)
@@ -203,9 +203,9 @@ else()
 
     if(NOT ANDROID)
         if(WIN32)
-            add_executable( PowerslideRebuild WIN32 ${PowerslideRebuild_sources})
+            add_executable( PowerslideRemake WIN32 ${PowerslideRemake_sources})
         else()
-            add_executable( PowerslideRebuild ${PowerslideRebuild_sources})
+            add_executable( PowerslideRemake ${PowerslideRemake_sources})
         endif()
     endif()
 endif()
@@ -215,105 +215,105 @@ endif()
 if(ANDROID)
     
     
-    add_library( PowerslideRebuild SHARED ${PowerslideRebuild_sources})
+    add_library( PowerslideRemake SHARED ${PowerslideRemake_sources})
     
-    if(PowerslideRebuild_MULTIPLAYER)
-        target_link_libraries(PowerslideRebuild MultiSlider)
+    if(PowerslideRemake_MULTIPLAYER)
+        target_link_libraries(PowerslideRemake MultiSlider)
     endif()
     
-    target_link_libraries(PowerslideRebuild Jsonxx)
+    target_link_libraries(PowerslideRemake Jsonxx)
     
-    if(PowerslideRebuild_OPENAL)
-        target_link_libraries(PowerslideRebuild openal)
+    if(PowerslideRemake_OPENAL)
+        target_link_libraries(PowerslideRemake openal)
     endif()
     
-    target_link_libraries(PowerslideRebuild RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
-    target_link_libraries(PowerslideRebuild Plugin_ParticleFXStatic)
-    target_link_libraries(PowerslideRebuild freetype)
-    target_link_libraries(PowerslideRebuild FreeImage)
-    target_link_libraries(PowerslideRebuild zlib)
-    target_link_libraries(PowerslideRebuild zziplib)
+    target_link_libraries(PowerslideRemake RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
+    target_link_libraries(PowerslideRemake Plugin_ParticleFXStatic)
+    target_link_libraries(PowerslideRemake freetype)
+    target_link_libraries(PowerslideRemake FreeImage)
+    target_link_libraries(PowerslideRemake zlib)
+    target_link_libraries(PowerslideRemake zziplib)
     
-    target_link_libraries(PowerslideRebuild Lua OIS)
+    target_link_libraries(PowerslideRemake Lua OIS)
 
-    target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+    target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     
 else() # Not Android
 
     if(WIN32)
-        if(PowerslideRebuild_MULTIPLAYER)
-            target_link_libraries(PowerslideRebuild MultiSlider)
+        if(PowerslideRemake_MULTIPLAYER)
+            target_link_libraries(PowerslideRemake MultiSlider)
         endif()
         
-        target_link_libraries(PowerslideRebuild Jsonxx)
+        target_link_libraries(PowerslideRemake Jsonxx)
         
-        if(PowerslideRebuild_OPENAL)
-            target_link_libraries(PowerslideRebuild openal32)
+        if(PowerslideRemake_OPENAL)
+            target_link_libraries(PowerslideRemake openal32)
         endif()
         
        
-        target_link_libraries(PowerslideRebuild debug OgreMainStatic_d)
-        target_link_libraries(PowerslideRebuild debug OgreOverlayStatic_d)
-        target_link_libraries(PowerslideRebuild debug RenderSystem_GLStatic_d)
-        target_link_libraries(PowerslideRebuild debug Plugin_ParticleFXStatic_d)
-        target_link_libraries(PowerslideRebuild debug freetype_d)
-        target_link_libraries(PowerslideRebuild debug FreeImage_d)
-        target_link_libraries(PowerslideRebuild debug zlib_d)
-        target_link_libraries(PowerslideRebuild debug zziplib_d)
+        target_link_libraries(PowerslideRemake debug OgreMainStatic_d)
+        target_link_libraries(PowerslideRemake debug OgreOverlayStatic_d)
+        target_link_libraries(PowerslideRemake debug RenderSystem_GLStatic_d)
+        target_link_libraries(PowerslideRemake debug Plugin_ParticleFXStatic_d)
+        target_link_libraries(PowerslideRemake debug freetype_d)
+        target_link_libraries(PowerslideRemake debug FreeImage_d)
+        target_link_libraries(PowerslideRemake debug zlib_d)
+        target_link_libraries(PowerslideRemake debug zziplib_d)
         
         
 
-        target_link_libraries(PowerslideRebuild optimized RenderSystem_GLStatic)
-        target_link_libraries(PowerslideRebuild optimized OgreMainStatic)
-        target_link_libraries(PowerslideRebuild optimized OgreOverlayStatic)
-        target_link_libraries(PowerslideRebuild optimized Plugin_ParticleFXStatic)
-        target_link_libraries(PowerslideRebuild optimized freetype)
-        target_link_libraries(PowerslideRebuild optimized FreeImage)
-        target_link_libraries(PowerslideRebuild optimized zlib)
-        target_link_libraries(PowerslideRebuild optimized zziplib)
+        target_link_libraries(PowerslideRemake optimized RenderSystem_GLStatic)
+        target_link_libraries(PowerslideRemake optimized OgreMainStatic)
+        target_link_libraries(PowerslideRemake optimized OgreOverlayStatic)
+        target_link_libraries(PowerslideRemake optimized Plugin_ParticleFXStatic)
+        target_link_libraries(PowerslideRemake optimized freetype)
+        target_link_libraries(PowerslideRemake optimized FreeImage)
+        target_link_libraries(PowerslideRemake optimized zlib)
+        target_link_libraries(PowerslideRemake optimized zziplib)
         
-        target_link_libraries(PowerslideRebuild general opengl32)
-        target_link_libraries(PowerslideRebuild general glu32)
+        target_link_libraries(PowerslideRemake general opengl32)
+        target_link_libraries(PowerslideRemake general glu32)
         
-        target_link_libraries(PowerslideRebuild Lua)
+        target_link_libraries(PowerslideRemake Lua)
         
-        target_link_libraries(PowerslideRebuild debug OIS_d)
-        target_link_libraries(PowerslideRebuild optimized OIS)
+        target_link_libraries(PowerslideRemake debug OIS_d)
+        target_link_libraries(PowerslideRemake optimized OIS)
 
-        target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+        target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
         
     else()# Not Windows Not Android (Ubuntu)
     
-        if(PowerslideRebuild_MULTIPLAYER)
-            target_link_libraries(PowerslideRebuild MultiSlider)
+        if(PowerslideRemake_MULTIPLAYER)
+            target_link_libraries(PowerslideRemake MultiSlider)
         endif()
         
-        target_link_libraries(PowerslideRebuild Jsonxx)
+        target_link_libraries(PowerslideRemake Jsonxx)
         
-        if(PowerslideRebuild_OPENAL)
-            target_link_libraries(PowerslideRebuild openal32)
+        if(PowerslideRemake_OPENAL)
+            target_link_libraries(PowerslideRemake openal32)
         endif()
 
 
-        target_link_libraries(PowerslideRebuild RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic)
-        target_link_libraries(PowerslideRebuild GL GLU X11 Xrandr Xt Xaw Xext m dl pthread)
-        target_link_libraries(PowerslideRebuild Plugin_ParticleFXStatic)
-        target_link_libraries(PowerslideRebuild freetype)
-        target_link_libraries(PowerslideRebuild FreeImage)
-        target_link_libraries(PowerslideRebuild zlib)
-        target_link_libraries(PowerslideRebuild zziplib)
+        target_link_libraries(PowerslideRemake RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic)
+        target_link_libraries(PowerslideRemake GL GLU X11 Xrandr Xt Xaw Xext m dl pthread)
+        target_link_libraries(PowerslideRemake Plugin_ParticleFXStatic)
+        target_link_libraries(PowerslideRemake freetype)
+        target_link_libraries(PowerslideRemake FreeImage)
+        target_link_libraries(PowerslideRemake zlib)
+        target_link_libraries(PowerslideRemake zziplib)
 
 
         
-        target_link_libraries(PowerslideRebuild Lua ${OIS_LIBRARIES})
+        target_link_libraries(PowerslideRemake Lua ${OIS_LIBRARIES})
 
-        target_link_libraries(PowerslideRebuild OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+        target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     endif()
 endif()
 
 if(WIN32)
-    install(FILES "${PowerslideRebuild_OGREHOME}/lib/Debug/OIS_d.dll" CONFIGURATIONS Debug DESTINATION .)
-    install(FILES "${PowerslideRebuild_OGREHOME}/lib/Release/OIS.dll" CONFIGURATIONS Release DESTINATION .)
+    install(FILES "${PowerslideRemake_OGREHOME}/lib/Debug/OIS_d.dll" CONFIGURATIONS Debug DESTINATION .)
+    install(FILES "${PowerslideRemake_OGREHOME}/lib/Release/OIS.dll" CONFIGURATIONS Release DESTINATION .)
 endif()
 
-install(TARGETS PowerslideRebuild DESTINATION .)
+install(TARGETS PowerslideRemake DESTINATION .)

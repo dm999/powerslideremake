@@ -22,7 +22,7 @@
 #endif
 
 namespace{
-    Ogre::ColourValue inactiveLabel(0.8f, 0.8f, 0.8f);
+    Ogre::ColourValue inactiveLabel(0.51f, 0.51f, 0.51f);
 }
 
 UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)

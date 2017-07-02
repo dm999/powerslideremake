@@ -1,27 +1,27 @@
 # set variables
-# PowerslideRebuild_OGREHOME
-# PowerslideRebuild_OPENALDIR (if PowerslideRebuild_OPENAL set)
+# PowerslideRemake_OGREHOME
+# PowerslideRemake_OPENALDIR (if PowerslideRemake_OPENAL set)
 
 cmake_minimum_required(VERSION 2.8)
 
-project(PowerslideRebuild)
+project(PowerslideRemake)
 
-option(PowerslideRebuild_OPENAL "OpenAL build" ON)
-option(PowerslideRebuild_MULTIPLAYER "Multiplayer build" ON)
-set(PowerslideRebuild_OGREHOME "" CACHE PATH "")
-set(PowerslideRebuild_OPENALDIR "" CACHE PATH "")
+option(PowerslideRemake_OPENAL "OpenAL build" ON)
+option(PowerslideRemake_MULTIPLAYER "Multiplayer build" ON)
+set(PowerslideRemake_OGREHOME "" CACHE PATH "")
+set(PowerslideRemake_OPENALDIR "" CACHE PATH "")
 
-set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
-set(CMAKE_MODULE_PATH "${PowerslideRebuild_OGREHOME}/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH "${PowerslideRemake_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH "${PowerslideRemake_OGREHOME}/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
 
-if(NOT PowerslideRebuild_OGREHOME STREQUAL "")
-    STRING(REGEX REPLACE "\\\\" "/" PowerslideRebuild_OGREHOME ${PowerslideRebuild_OGREHOME})
+if(NOT PowerslideRemake_OGREHOME STREQUAL "")
+    STRING(REGEX REPLACE "\\\\" "/" PowerslideRemake_OGREHOME ${PowerslideRemake_OGREHOME})
 endif()
 
-if(NOT PowerslideRebuild_OPENALDIR STREQUAL "")
-    STRING(REGEX REPLACE "\\\\" "/" PowerslideRebuild_OPENALDIR ${PowerslideRebuild_OPENALDIR})
+if(NOT PowerslideRemake_OPENALDIR STREQUAL "")
+    STRING(REGEX REPLACE "\\\\" "/" PowerslideRemake_OPENALDIR ${PowerslideRemake_OPENALDIR})
 endif()
 
 set(OGRE_STATIC true)
@@ -39,7 +39,7 @@ add_subdirectory (ogre)
 add_subdirectory (ogrebullet)
 add_subdirectory (bullet)
 add_subdirectory (bulletextras)
-if(PowerslideRebuild_MULTIPLAYER)
+if(PowerslideRemake_MULTIPLAYER)
     add_subdirectory (multislider/client)
 endif()
 if(NOT ANDROID)

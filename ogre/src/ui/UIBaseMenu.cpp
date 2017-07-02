@@ -234,9 +234,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[0]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[0]->setFontName("SdkTrays/Caption");
             mControlsText[0]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[0]->hide();
-#endif
             mControls[0]->addChild(mControlsText[0]);
         }
 
@@ -255,9 +253,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[1]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[1]->setFontName("SdkTrays/Caption");
             mControlsText[1]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[1]->hide();
-#endif
             mControls[1]->addChild(mControlsText[1]);
         }
 
@@ -275,9 +271,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[2]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[2]->setFontName("SdkTrays/Caption");
             mControlsText[2]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[2]->hide();
-#endif
             mControls[2]->addChild(mControlsText[2]);
         }
 
@@ -295,9 +289,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[3]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[3]->setFontName("SdkTrays/Caption");
             mControlsText[3]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[3]->hide();
-#endif
             mControls[3]->addChild(mControlsText[3]);
         }
 
@@ -315,9 +307,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[4]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[4]->setFontName("SdkTrays/Caption");
             mControlsText[4]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[4]->hide();
-#endif
             mControls[4]->addChild(mControlsText[4]);
         }
 
@@ -335,9 +325,7 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControlsText[5]->setAlignment(Ogre::TextAreaOverlayElement::Center);
             mControlsText[5]->setFontName("SdkTrays/Caption");
             mControlsText[5]->setColour(Ogre::ColourValue::White);
-#if !defined(__ANDROID__)
             mControlsText[5]->hide();
-#endif
             mControls[5]->addChild(mControlsText[5]);
         }
     }//controls

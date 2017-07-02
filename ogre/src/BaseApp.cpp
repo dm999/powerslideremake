@@ -602,6 +602,7 @@ void BaseApp::touchMoved(const OIS::MultiTouchEvent& arg)
     if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
     {
         mTrayMgr->injectMouseMove(arg);
+        mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
     }
 }
 void BaseApp::touchPressed(const OIS::MultiTouchEvent& arg)
