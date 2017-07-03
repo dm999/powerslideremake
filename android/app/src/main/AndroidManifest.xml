@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.powerslide.remake"
     android:versionCode="1"
-    android:versionName="1.0" 
+    android:versionName="1.18" 
 	android:installLocation="auto">
 
     <uses-sdk android:minSdkVersion="16" /> 
@@ -10,11 +10,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:label="PowerslideRemake" android:icon="@drawable/ic_launcher"  android:hasCode="true">
+    <application android:label="Powerslide Remake" android:icon="@drawable/ic_launcher"  android:hasCode="true">
         <activity android:name="com.powerslide.remake.MainActivity" 
-                  android:label="PowerslideRemake"
+                  android:label="Powerslide Remake"
                   android:configChanges="orientation|screenSize|keyboardHidden"
-		   android:debuggable="true"
 		  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
           android:screenOrientation="landscape">
             <intent-filter>

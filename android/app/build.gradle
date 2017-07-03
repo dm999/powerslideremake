@@ -1,0 +1,27 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 16
+    buildToolsVersion "25.0.0"
+    
+    defaultConfig {
+        setProperty("archivesBaseName", "PowerslideRemake")
+    }
+    
+    sourceSets {
+        main {
+            jniLibs{
+                jniLibs.srcDirs = ['jniLibs']
+            }
+            assets {
+                srcDir "src/main/assets"
+            }
+            java {
+                    srcDir "src/main/java"
+            }
+            res {
+                srcDir "src/main/res"
+            }
+        }
+    }
+}
