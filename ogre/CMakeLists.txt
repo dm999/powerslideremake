@@ -63,14 +63,6 @@ file(GLOB PowerslideRemake_sources_ui_main_h src/ui/*.h)
 
 file(GLOB PowerslideRemake_sources_includes_main_h src/includes/*.h)
 
-if(MSVC)
-    add_definitions(-FI pcheader.h)
-    add_definitions(-Zm114)
-    add_definitions(/MP)
-else()
-    add_definitions(-std=c++11)
-endif()
-
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_lua_main})
 if(PowerslideRemake_OPENAL)
@@ -90,13 +82,15 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main})
 
 
-#PCH
 if(MSVC)
+    add_definitions(-Zm114)
+    add_definitions(/MP)
+    
     foreach( src_file ${PowerslideRemake_sources} )
         set_source_files_properties(
             ${src_file}
             PROPERTIES
-            COMPILE_FLAGS "/Yupcheader.h"
+            COMPILE_FLAGS "/Yupcheader.h /FIpcheader.h"
             )
     endforeach( src_file ${sources_main} )
     
@@ -104,8 +98,10 @@ if(MSVC)
         PROPERTIES
         COMPILE_FLAGS "/Ycpcheader.h"
         )
+else()
+    add_definitions(-std=c++11)
 endif()
-#PCH END
+
 
 
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main_h})
@@ -214,8 +210,10 @@ else()
     if(NOT ANDROID)
         if(WIN32)
             add_executable( PowerslideRemake WIN32 ${PowerslideRemake_sources})
+            add_precompiled_header(PowerslideRemake src/pcheader.h SOURCE_CXX src/pcheader.cpp FORCEINCLUDE)
         else()
             add_executable( PowerslideRemake ${PowerslideRemake_sources})
+            add_precompiled_header(PowerslideRemake src/pcheader.h SOURCE_CXX src/pcheader.cpp FORCEINCLUDE)
         endif()
     endif()
 endif()
