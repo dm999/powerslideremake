@@ -24,4 +24,19 @@ android {
             }
         }
     }
+    
+    signingConfigs {
+       release {
+           storeFile file("release-key.keystore")
+           storePassword 'megasaxon'
+           keyAlias 'powerslide'
+           keyPassword 'megasaxon'
+       }
+    }
+    
+    buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+    }
 }
