@@ -30,6 +30,11 @@ package com.powerslide.remake;
 
 import com.powerslide.remake.OgreActivityJNI;
 
+import java.io.File;
+import android.content.DialogInterface;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -45,147 +50,178 @@ import android.view.MotionEvent;
 import android.os.Environment;
 
 public class MainActivity extends Activity implements SensorEventListener {
-	protected Handler handler = null;
-	protected SurfaceView surfaceView = null;
-	protected Surface lastSurface = null;
+    protected Handler handler = null;
+    protected SurfaceView surfaceView = null;
+    protected Surface lastSurface = null;
 
-	private Runnable renderer = null;
-	private boolean paused = false;
-	private boolean initOGRE = false;
-	private AssetManager assetMgr = null;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		handler = new Handler();
-		sysInit();
-	}
-
-	@Override
-	protected void onPause() {
+    private Runnable renderer = null;
+    private boolean paused = false;
+    private boolean initOGRE = false;
+    private AssetManager assetMgr = null;
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         
-		super.onPause();
+        handler = new Handler();
+        sysInit();
+    }
+
+    @Override
+    protected void onPause() {
+        
+        super.onPause();
         
         Runnable pauser = new Runnable() {
-			public void run() {
-				OgreActivityJNI.pause();
-			}
-		};
+            public void run() {
+                OgreActivityJNI.pause();
+            }
+        };
         handler.post(pauser);
         
-		handler.removeCallbacks(renderer);
-		paused = true;
-	}
+        handler.removeCallbacks(renderer);
+        paused = true;
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		paused = false;
-		handler.post(renderer);
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        paused = false;
+        handler.post(renderer);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-		Runnable destroyer = new Runnable() {
-			public void run() {
-				OgreActivityJNI.destroy();
-			}
-		};
-		handler.post(destroyer);
-	}
+        Runnable destroyer = new Runnable() {
+            public void run() {
+                OgreActivityJNI.destroy();
+            }
+        };
+        handler.post(destroyer);
+    }
 
-	private void sysInit() {
-		final Runnable initRunnable = new Runnable() {
-			public void run() {
-				if (!initOGRE) {
-					initOGRE = true;
-					
-					if(assetMgr == null) {
-						assetMgr = getResources().getAssets();
-					}
-					
+    private void sysInit() {
+        final Runnable initRunnable = new Runnable() {
+            public void run() {
+                if (!initOGRE) {
+                    initOGRE = true;
+                    
+                    if(assetMgr == null) {
+                        assetMgr = getResources().getAssets();
+                    }
+                    
                     //https://stackoverflow.com/questions/19568354/accessing-the-sdcard-location-or-getexternalstoragedirectory-in-native-code
                     //https://stackoverflow.com/questions/21724706/how-to-get-my-android-device-internal-download-folder-path
                     String dataDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-					OgreActivityJNI.create(assetMgr, dataDir);
+                    OgreActivityJNI.create(assetMgr, dataDir);
 
-					renderer = new Runnable() {
-						public void run() {
+                    renderer = new Runnable() {
+                        public void run() {
 
-							if (paused)
-								return;
+                            if (paused)
+                                return;
 
-							if (!wndCreate && lastSurface != null) {
-								wndCreate = true;
-								OgreActivityJNI.initWindow(lastSurface);
-								handler.post(this);
-								return;
-							}
+                            if (!wndCreate && lastSurface != null) {
+                                wndCreate = true;
+                                OgreActivityJNI.initWindow(lastSurface);
+                                handler.post(this);
+                                return;
+                            }
 
-							if (initOGRE && wndCreate){
-								boolean isOver = OgreActivityJNI.renderOneFrame();
+                            if (initOGRE && wndCreate){
+                                boolean isOver = OgreActivityJNI.renderOneFrame();
                                 if(isOver){
                                     finish();
                                     System.exit(0);
                                 }
                             }
 
-							handler.post(this);
-						}
-					};
+                            handler.post(this);
+                        }
+                    };
 
-					handler.post(renderer);
-				}
-			}
+                    handler.post(renderer);
+                }
+            }
 
-		};
+        };
 
-		SurfaceView view = new SurfaceView(this);
-		SurfaceHolder holder = view.getHolder();
-		// holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
-		surfaceView = view;
+        SurfaceView view = new SurfaceView(this);
+        SurfaceHolder holder = view.getHolder();
+        // holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+        surfaceView = view;
 
-		holder.addCallback(new Callback() {
-			public void surfaceCreated(SurfaceHolder holder) {
-				if (holder.getSurface() != null
-						&& holder.getSurface().isValid()) {
-					lastSurface = holder.getSurface();
-					handler.post(initRunnable);
-				}
-			}
+        holder.addCallback(new Callback() {
+            public void surfaceCreated(SurfaceHolder holder) {
+                
+                //check data files presence
+                String dataDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+                
+                File fileData = new File(dataDir + "/powerslide/data.pf");
+                File fileGameshell = new File(dataDir + "/powerslide/gameshell.pf");
+                File fileStore = new File(dataDir + "/powerslide/store.pf");
+                
+                if(!fileData.exists() || !fileGameshell.exists() || !fileStore.exists()){
+                    
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("No data");
+                    String alertStr = "";
+                    
+                    if(!fileData.exists())alertStr+="data.pf ";
+                    if(!fileGameshell.exists())alertStr+="gameshell.pf ";
+                    if(!fileStore.exists())alertStr+="store.pf";
+                        
+                    alertDialog.setMessage("Data files (" + alertStr.trim() + ") not found in [external storage/powerslide/]");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                                System.exit(0);
+                            }
+                        });
+                    alertDialog.show();
+                }
+                else{
+                    if (holder.getSurface() != null && holder.getSurface().isValid()) {
+                        lastSurface = holder.getSurface();
+                        handler.post(initRunnable);
+                    }
+                }
+            }
 
-			public void surfaceDestroyed(SurfaceHolder holder) {
-				if (initOGRE && wndCreate) {
-					wndCreate = false;
-					lastSurface = null;
-					handler.post(new Runnable() {
-						public void run() {
-							OgreActivityJNI.termWindow();
-						}
-					});
-				}
-			}
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                if (initOGRE && wndCreate) {
+                    wndCreate = false;
+                    lastSurface = null;
+                    handler.post(new Runnable() {
+                        public void run() {
+                            OgreActivityJNI.termWindow();
+                        }
+                    });
+                }
+            }
 
-			public void surfaceChanged(SurfaceHolder holder, int format,
-					int width, int height) {
+            public void surfaceChanged(SurfaceHolder holder, int format,
+                    int width, int height) {
 
-			}
-		});
-		setContentView(surfaceView);
-	}
+            }
+        });
+        setContentView(surfaceView);
+    }
 
-	boolean wndCreate = false;
+    boolean wndCreate = false;
 
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-	}
+    }
 
-	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-		}
-	}
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        }
+    }
     
     public boolean onTouchEvent(MotionEvent event) {
         
@@ -272,8 +308,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
     }
 
-	static {
+    static {
         System.loadLibrary("openal");
-		System.loadLibrary("PowerslideRemake");
-	}
+        System.loadLibrary("PowerslideRemake");
+    }
 }
