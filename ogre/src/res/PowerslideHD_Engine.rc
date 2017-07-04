@@ -47,13 +47,13 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "CompanyName", "Rascal\0"
-            VALUE "FileDescription", "Powerslide Rebuild Application\0"
+            VALUE "FileDescription", "Powerslide Remake Application\0"
             VALUE "FileVersion", "1, 18, 0, 0\0"
             VALUE "InternalName", "PSHD\0"
             VALUE "LegalCopyright", "Copyright (C) 2020\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "PowerslideRebuild.EXE\0"
-            VALUE "ProductName", "Powerslide Rebuild\0"
+            VALUE "OriginalFilename", "PowerslideRemake.EXE\0"
+            VALUE "ProductName", "Powerslide Remake\0"
             VALUE "ProductVersion", "1, 18, 0, 0\0"
         END
     END
