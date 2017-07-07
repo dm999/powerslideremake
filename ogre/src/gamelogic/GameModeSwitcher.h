@@ -58,6 +58,10 @@ public:
     //LoaderListener
     void loadState(float percent, const std::string& info) override;
 
+    /**
+     * indicates resources loaded
+     */
+    bool isLoadPassed()const {return mIsLoadPassed;}
 private:
 
     ModeContext mContext;
@@ -67,6 +71,7 @@ private:
     bool mIsSwitchMode;
 
     bool mIsInitialLoadPassed;
+    bool mIsLoadPassed;
 
     UIBackground mUIBackground;
     CommonIncludes::shared_ptr<UIBackgroundLoaderProgressTracks> mUILoader;

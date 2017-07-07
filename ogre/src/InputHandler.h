@@ -49,6 +49,11 @@ public:
     InputHandler(Ogre::RenderWindow* mWindow, BaseApp * app);
     virtual ~InputHandler(){}
 
+    /**
+     * consume input for controllers during loading process
+     */
+    void capture(){mInputContext.capture();}
+
     void capture(const Ogre::FrameEvent& evt, 
                 Ogre::SceneNode * modelNode, Ogre::Light * globalLight, Ogre::Light * shadowLight,
                 float shadowLightDistanceFromCar,

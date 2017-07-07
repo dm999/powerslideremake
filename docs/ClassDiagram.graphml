@@ -472,7 +472,7 @@ static Ogre::NameGenerator nameGenMaterials</y:NodeLabel>
           <y:Geometry height="2147.889618372409" width="1178.2932695893192" x="9820.853365205341" y="-7013.944809186205"/>
           <y:Fill color="#FF00FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1062.484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="542.702621686205">&lt;&lt;BaseApp.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1518.220703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="800.998046875" x="188.6476113571589" y="314.834457623705">&lt;&lt;BaseApp.h&gt;&gt;
 
 BaseApp
 
@@ -490,15 +490,46 @@ void parseFile(const std::string&amp; fileName)
 
 void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
-void setShutdown(bool shutdown)
+bool setShutdown()
 void keyDown(OIS::KeyCode key)
 void keyUp(OIS::KeyCode key)
 
-void mouseMoved(const OIS::MouseEvent &amp;arg)
-void mousePressed(const OIS::MouseEvent &amp;arg, OIS::MouseButtonID id)
-void mouseReleased(const OIS::MouseEvent &amp;arg, OIS::MouseButtonID id)
+#if !defined(__ANDROID__)
+    void mouseMoved(const OIS::MouseEvent &amp;arg)
+    void mousePressed(const OIS::MouseEvent &amp;arg, OIS::MouseButtonID id)
+    void mouseReleased(const OIS::MouseEvent &amp;arg, OIS::MouseButtonID id)
+#else
+    void touchMoved(const OIS::MultiTouchEvent&amp; arg)
+    void touchPressed(const OIS::MultiTouchEvent&amp; arg)
+    void touchReleased(const OIS::MultiTouchEvent&amp; arg)
+#endif
 
 GameState&amp; getGameState()
+
+#if defined(__ANDROID__)
+    Ogre::DataStreamPtr openAPKFile(const Ogre::String&amp; fileName)
+
+    void touchDown(int id, float x, float y)
+    void touchUp(int id, float x, float y)
+    void touchMove(int id, float x, float y)
+
+    bool androidOnBack()
+
+    void androidCreate(JNIEnv * env, jobject obj, jobject assetManager, const std::string&amp; dataDir)
+    void androidDestroy()
+    void androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
+    void androidTerminateWindow()
+    bool androidRenderOneFrame(JNIEnv * env)
+
+    void androidPause(JNIEnv * env)
+
+    AAssetManager* mAssetMgr
+    JavaVM* gVM
+
+    int mTouchLeftID
+    int mTouchRightID
+    int mTouchDownID
+#endif
 
 protected:
 
@@ -821,7 +852,7 @@ Ogre::Real segmentLength</y:NodeLabel>
           <y:Geometry height="294.29827496582675" width="324.39163948067244" x="6977.804180259664" y="-3867.1491374829125"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="271.45703125" x="26.467304115336447" y="34.89034842041292">&lt;&lt;LinearController.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="271.45703125" x="26.467304115336447" y="34.890348420413375">&lt;&lt;LinearController.h&gt;&gt;
 
 template &lt;typename T&gt;
 LinearController
@@ -1922,7 +1953,7 @@ Ogre::Real lapPosition</y:NodeLabel>
           <y:Geometry height="153.58870974598676" width="196.10560797422204" x="4941.9471960128885" y="-2896.794354872993"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="171.759765625" x="12.172921174611474" y="23.34025331049361">&lt;&lt;LapUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="171.759765625" x="12.172921174611474" y="23.340253310493154">&lt;&lt;LapUtils.h&gt;&gt;
 
 LapUtils::class Events
 
@@ -2019,10 +2050,10 @@ DWORD Length</y:NodeLabel>
     <node id="n38">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="746.4548763856228" width="807.9384596111427" x="12376.03077019443" y="-6313.227438192811"/>
+          <y:Geometry height="794.5229655438898" width="807.9384596111427" x="12376.03077019443" y="-6337.261482771944"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="3.6981413178109506">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="13.03101402194443">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2051,6 +2082,7 @@ void setTopmostSubmenu()
 
 void loadState(float percent, const std::string&amp; info) override
 
+bool isLoadPassed()const
 
 private:
 
@@ -2061,6 +2093,7 @@ GameMode mGameModeNext
 bool mIsSwitchMode
 
 bool mIsInitialLoadPassed
+bool mIsLoadPassed
 
 UIBackground mUIBackground
 CommonIncludes::shared_ptr&lt;UIBackgroundLoaderProgressTracks&gt; mUILoader
@@ -2115,7 +2148,7 @@ Ogre::Camera* mCamera</y:NodeLabel>
           <y:Geometry height="367.0635691028974" width="440.92708914224704" x="13549.536455428877" y="-6812.984101392109"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="342.126953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="343.462890625" x="48.73209925862284" y="12.468307988948254">&lt;&lt;MenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="342.126953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="343.462890625" x="48.73209925862284" y="12.468307988949164">&lt;&lt;MenuMode.h&gt;&gt;
 
 MenuMode
 
@@ -2575,7 +2608,7 @@ MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Geometry height="823.1329556481205" width="980.3836661963628" x="13579.80816690182" y="-6351.566477824061"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="783.162109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="19.985423136559803">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="783.162109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="19.985423136560712">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -3158,7 +3191,7 @@ virtual void loadState() = 0</y:NodeLabel>
           <y:Geometry height="517.4020023904368" width="564.6254833569851" x="18223.07101762247" y="-7158.701001195219"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="14.131665257717941">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="14.13166525771885">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3201,7 +3234,7 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
           <y:Geometry height="612.4045651713595" width="547.3407020641766" x="17691.713408268875" y="-5826.20228258568"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="17.529431023179313">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="17.529431023180223">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3250,7 +3283,7 @@ std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels</y:NodeLabel
           <y:Geometry height="567.0942070450192" width="668.951993450451" x="17630.907762575738" y="-6553.547103522509"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="2.2248378975100422">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="2.2248378975091327">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
 
 UIMainMenuBackground
 

@@ -296,7 +296,7 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
 
     if(panel != NULL && panel->getName() == "Exit")
     {
-        mModeContext.mBaseApp->setShutdown(true);
+        mModeContext.mBaseApp->setShutdown();
     }
 }
 

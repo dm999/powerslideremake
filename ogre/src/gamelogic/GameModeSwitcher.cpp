@@ -14,10 +14,13 @@
     #include "../multiplayer/MultiplayerController.h"
 #endif
 
+#include "../InputHandler.h"
+
 GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     : mContext(modeContext),
     mGameMode(ModeMenu), mIsSwitchMode(false),
     mIsInitialLoadPassed(false),
+    mIsLoadPassed(true),
     mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp")
 {
 
@@ -131,9 +134,11 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMode.reset(new MenuMode(mContext));
+                mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
                 mUIUnloader->hide();
+                mIsLoadPassed = true;
                 mMenuMode->initCamera();
             }
 
@@ -146,7 +151,11 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
+                mIsLoadPassed = false;
+                mUIUnloader->show();
                 mMenuMultiMode->initData(this);
+                mUIUnloader->hide();
+                mIsLoadPassed = true;
                 mMenuMultiMode->initCamera();
             }
 #endif
@@ -162,14 +171,16 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mIsLoadPassed = false;
             mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
             mUILoader->hide();
+            mIsLoadPassed = true;
             mPlayerMode->initCamera();
         }
 
 #ifndef NO_MULTIPLAYER
-        //main menu multi -> race
+        //main menu multi -> race multi
         if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeRaceMulti)
         {
             mIsSwitchMode = false;
@@ -179,7 +190,11 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
+            mIsLoadPassed = false;
+            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
+            mUILoader->hide();
+            mIsLoadPassed = true;
             mPlayerMode->initCamera();
             static_cast<MultiPlayerMode *>(mPlayerMode.get())->prepareDataForSession(multiplayerSessionStartInfo);
         }
@@ -346,6 +361,10 @@ void GameModeSwitcher::clear()
 
 void GameModeSwitcher::loadState(float percent, const std::string& info)
 {
+    //consume input events
+    if(mIsInitialLoadPassed)
+        mContext.mInputHandler->capture();
+
     if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
     {
         mUILoader->setPercent(percent, info);

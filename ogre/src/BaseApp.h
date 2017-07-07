@@ -53,7 +53,7 @@ public:
     void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
     //controls
-    void setShutdown(bool shutdown);
+    bool setShutdown();
     void keyDown(const OIS::KeyEvent &arg );
     void keyUp(const OIS::KeyEvent &arg );
 

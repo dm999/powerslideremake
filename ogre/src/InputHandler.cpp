@@ -91,7 +91,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     if (arg.key == OIS::KC_ESCAPE)
     {
         if(noSpecialKey())
-            baseApp->setShutdown(true);
+            baseApp->setShutdown();
     }
     else if (arg.key == OIS::KC_F4)
     {

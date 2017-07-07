@@ -515,7 +515,7 @@ void BaseApp::dropCamera()
     }
 }
 
-void BaseApp::setShutdown(bool shutdown)
+bool BaseApp::setShutdown()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
@@ -523,15 +523,21 @@ void BaseApp::setShutdown(bool shutdown)
         mGameModeSwitcher->getMode() == ModeRaceMulti
     )
     {
-        if(
-            mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-            mGameModeSwitcher->getMode() == ModeMenuMulti
+
+        if( mGameModeSwitcher->getMode() == ModeRaceSingle  &&
+            mGameModeSwitcher->isLoadPassed()
             )
             mGameModeSwitcher->switchMode(ModeMenu);
 
-        if(mGameModeSwitcher->getMode() == ModeRaceMulti)
+        if(mGameModeSwitcher->getMode() == ModeMenuMulti)
+            mGameModeSwitcher->switchMode(ModeMenu);
+
+        if( mGameModeSwitcher->getMode() == ModeRaceMulti   &&
+            mGameModeSwitcher->isLoadPassed()
+            )
             mGameModeSwitcher->switchMode(ModeMenuMulti);
     }
+
     if(mGameModeSwitcher->getMode() == ModeMenu)
     {
         if(mGameModeSwitcher->isTopmostSubmenu())
@@ -539,6 +545,8 @@ void BaseApp::setShutdown(bool shutdown)
         else
             mGameModeSwitcher->setTopmostSubmenu();
     }
+
+    return mShutDown;
 }
 
 void BaseApp::keyDown(const OIS::KeyEvent &arg )
@@ -838,30 +846,7 @@ void BaseApp::touchMove(int id, float x, float y)
 
 bool BaseApp::androidOnBack()
 {
-    bool ret = false;
-
-    if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeMenuMulti   ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
-    )
-    {
-        if(
-            mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-            mGameModeSwitcher->getMode() == ModeMenuMulti
-            )
-            mGameModeSwitcher->switchMode(ModeMenu);
-
-        if(mGameModeSwitcher->getMode() == ModeRaceMulti)
-            mGameModeSwitcher->switchMode(ModeMenuMulti);
-    }
-
-    if(mGameModeSwitcher->getMode() == ModeMenu)
-    {
-        ret = true;
-    }
-
-    return ret;
+    return setShutdown();
 }
 
 void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, const std::string& dataDir)
