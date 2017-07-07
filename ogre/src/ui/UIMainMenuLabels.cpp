@@ -3,6 +3,8 @@
 
 #include "../tools/Conversions.h"
 
+#include "../BaseApp.h"
+
 namespace{
     Ogre::ColourValue inactiveLabel(0.51f, 0.51f, 0.51f);
 }
@@ -147,6 +149,58 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mCharactersLabels[q]->setColour(inactiveLabel);
         getMainBackground()->addChild(mCharactersLabels[q]);
     }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
+        mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mStartingGridTimeLabel->setCaption("5");
+        mStartingGridTimeLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mStartingGridTimeLabel->setSpaceWidth(9.0f);
+        mStartingGridTimeLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mStartingGridTimeLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mStartingGridTimeLabel->setFontName("SdkTrays/Caption");
+        mStartingGridTimeLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mStartingGridTimeLabel);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(236.0f, 198.0f, 0.0f, 0.0f);
+        mGameExitLabel = createTextArea("MainWindowExitGame", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mGameExitLabel->setCaption("Exit the game?");
+        mGameExitLabel->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitLabel->setSpaceWidth(9.0f);
+        mGameExitLabel->setHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mGameExitLabel->setFontName("SdkTrays/Caption");
+        mGameExitLabel->setColour(inactiveLabel);
+        getMainBackground()->addChild(mGameExitLabel);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(270.0f, 252.0f, 0.0f, 0.0f);
+        mGameExitYesLabel = createTextArea("MainWindowExitGameYes", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mGameExitYesLabel->setCaption("YES");
+        mGameExitYesLabel->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitYesLabel->setSpaceWidth(9.0f);
+        mGameExitYesLabel->setHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitYesLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mGameExitYesLabel->setFontName("SdkTrays/Caption");
+        mGameExitYesLabel->setColour(inactiveLabel);
+        getMainBackground()->addChild(mGameExitYesLabel);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(334.0f, 252.0f, 0.0f, 0.0f);
+        mGameExitNoLabel = createTextArea("MainWindowExitGameNo", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mGameExitNoLabel->setCaption("NO");
+        mGameExitNoLabel->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitNoLabel->setSpaceWidth(9.0f);
+        mGameExitNoLabel->setHeight(46.0f * viewportHeight / 1024.0f);
+        mGameExitNoLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mGameExitNoLabel->setFontName("SdkTrays/Caption");
+        mGameExitNoLabel->setColour(inactiveLabel);
+        getMainBackground()->addChild(mGameExitNoLabel);
+    }
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -246,10 +300,21 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
             mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
 
-            //switchState(State_Race);
-            startRace();
+            switchState(State_StartingGrid);
             return;
         }
+    }
+
+    if(mGameExitYesLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitYesLabel, pos, 0))
+    {
+        mModeContext.getBaseApp()->setShutdown(false);
+        return;
+    }
+
+    if(mGameExitNoLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitNoLabel, pos, 0))
+    {
+        switchState(State_SingleMulti);
+        return;
     }
 }
 
@@ -295,6 +360,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
             }
         }
     }
+
+    checkCursorOverLabel(pos, mGameExitYesLabel);
+    checkCursorOverLabel(pos, mGameExitNoLabel);
 }
 
 void UIMainMenuLabels::showModeDifficulty()
@@ -337,6 +405,13 @@ void UIMainMenuLabels::showCharacterLabels()
     }
 }
 
+void UIMainMenuLabels::showGameExitLabels()
+{
+    mGameExitLabel->show();
+    mGameExitYesLabel->show();
+    mGameExitNoLabel->show();
+}
+
 void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
@@ -353,6 +428,12 @@ void UIMainMenuLabels::hideAllLabels()
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
         mCharactersLabels[q]->hide();
+
+    mStartingGridTimeLabel->hide();
+
+    mGameExitLabel->hide();
+    mGameExitYesLabel->hide();
+    mGameExitNoLabel->hide();
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

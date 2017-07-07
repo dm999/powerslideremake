@@ -52,6 +52,8 @@ public:
 
     CustomTrayManager* getTrayManager(){return mTrayMgr;}
 
+    BaseApp* getBaseApp(){return mBaseApp;}
+
     friend class GameModeSwitcher;
     friend class BaseMenuMode;
     friend class MenuMode;

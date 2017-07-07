@@ -26,7 +26,7 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
 
     mContext.setGameModeSwitcher(this);
 
-    mMenuMode.reset(new MenuMode(mContext));
+    mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
     mUIBackground.show();
     mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
     mUIUnloader.reset(new UIBackgroundLoaderProgress(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f));
@@ -133,7 +133,7 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMode.reset(new MenuMode(mContext));
+                mMenuMode.reset(new MenuMode(mContext, State_Podium));
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -316,19 +316,30 @@ void GameModeSwitcher::processCollision(btManifoldPoint& cp, const btCollisionOb
         mPlayerMode->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
 }
 
-bool GameModeSwitcher::isTopmostSubmenu()const
+bool GameModeSwitcher::isExitSubmenu()const
 {
     bool ret = true;
 
     if(mMenuMode.get())
-        ret = mMenuMode->isTopmostSubmenu();
+        ret = mMenuMode->isExitSubmenu();
 
 #ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
-        ret = mMenuMultiMode->isTopmostSubmenu();
+        ret = mMenuMultiMode->isExitSubmenu();
 #endif
 
     return ret;
+}
+
+void GameModeSwitcher::setExitSubmenu()
+{
+    if(mMenuMode.get())
+        mMenuMode->setExitSubmenu();
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->setExitSubmenu();
+#endif
 }
 
 void GameModeSwitcher::setTopmostSubmenu()

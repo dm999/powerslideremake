@@ -3,10 +3,10 @@
 
 #include "../ui/UIMainMenu.h"
 
-MenuMode::MenuMode(const ModeContext& modeContext) :
+MenuMode::MenuMode(const ModeContext& modeContext, SinglePlayerMenuStates state) :
     BaseMenuMode(modeContext, true)
 {
-    mUIMainMenu.reset(new UIMainMenu(modeContext, this));
+    mUIMainMenu.reset(new UIMainMenu(modeContext, this, state));
 }
 
 void MenuMode::doInitData(LoaderListener* loaderListener)
@@ -17,6 +17,11 @@ void MenuMode::doInitData(LoaderListener* loaderListener)
 void MenuMode::doClearData()
 {
     mUIMainMenu->destroy(mModeContext.mTrayMgr);
+}
+
+void MenuMode::frameStarted(const Ogre::FrameEvent &evt)
+{
+    mUIMainMenu->frameStarted(evt);
 }
 
 void MenuMode::mousePressed(const Ogre::Vector2& pos)
@@ -34,9 +39,14 @@ void MenuMode::mouseMoved(const Ogre::Vector2& pos)
     mUIMainMenu->mouseMoved(pos);
 }
 
-bool MenuMode::isTopmostSubmenu() const
+bool MenuMode::isExitSubmenu() const
 {
-    return mUIMainMenu->isTopmostSubmenu();
+    return mUIMainMenu->isExitSubmenu();
+}
+
+void MenuMode::setExitSubmenu()
+{
+    mUIMainMenu->setExitSubmenu();
 }
 
 void MenuMode::setTopmostSubmenu()

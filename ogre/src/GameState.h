@@ -28,7 +28,10 @@ enum SinglePlayerMenuStates
     State_Difficulty,
     State_Track,
     State_Car,
-    State_Character
+    State_Character,
+    State_StartingGrid,
+    State_Podium,
+    State_ExitGame
 };
 
 enum AIStrength

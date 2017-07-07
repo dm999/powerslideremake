@@ -490,7 +490,7 @@ void parseFile(const std::string&amp; fileName)
 
 void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
 
-bool setShutdown()
+bool setShutdown(bool isOnEsc)
 void keyDown(OIS::KeyCode key)
 void keyUp(OIS::KeyCode key)
 
@@ -2053,7 +2053,7 @@ DWORD Length</y:NodeLabel>
           <y:Geometry height="794.5229655438898" width="807.9384596111427" x="12376.03077019443" y="-6337.261482771944"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="13.03101402194443">&lt;&lt;GameModeSwitcher.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="783.162109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="797.6640625" x="5.137198555570649" y="5.680428084444429">&lt;&lt;GameModeSwitcher.h&gt;&gt;
 
 GameModeSwitcher
 
@@ -2077,7 +2077,8 @@ void processCollision(btManifoldPoint&amp; cp, const btCollisionObjectWrapper* c
 
 GameMode getMode()const
 
-bool isTopmostSubmenu()const
+bool isExitSubmenu()const
+void setExitSubmenu()
 void setTopmostSubmenu()
 
 void loadState(float percent, const std::string&amp; info) override
@@ -2148,7 +2149,7 @@ Ogre::Camera* mCamera</y:NodeLabel>
           <y:Geometry height="367.0635691028974" width="440.92708914224704" x="13549.536455428877" y="-6812.984101392109"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="342.126953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="343.462890625" x="48.73209925862284" y="12.468307988949164">&lt;&lt;MenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="343.462890625" x="48.73209925862284" y="5.117722051449164">&lt;&lt;MenuMode.h&gt;&gt;
 
 MenuMode
 
@@ -2160,8 +2161,9 @@ void mousePressed(const Ogre::Vector2&amp; pos)
 void mouseReleased(const Ogre::Vector2&amp; pos)
 void mouseMoved(const Ogre::Vector2&amp; pos)override
 
-bool isTopmostSubmenu()const
-void setTopmostSubmenu()
+bool isExitSubmenu()const override
+void setExitSubmenu()override
+void setTopmostSubmenu()override
 
 protected:
 
@@ -2299,7 +2301,7 @@ Ogre::RenderTargetListener</y:NodeLabel>
           <y:Geometry height="545.2130126738275" width="399.02319879457855" x="14980.488400602711" y="-8252.606506336913"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="13.335998524413299">&lt;&lt;ModeContext.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="-1.3651733505867014">&lt;&lt;ModeContext.h&gt;&gt;
 
 ModeContext
 
@@ -2312,6 +2314,8 @@ GameState&amp; getGameState()
 const GameState&amp; getGameState() const
 
 CustomTrayManager* getTrayManager()
+
+BaseApp* getBaseApp()
 
 private:
 
@@ -2488,13 +2492,15 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
           <y:Geometry height="647.1771259017924" width="694.4874926701536" x="17618.140012965887" y="-4943.588562950896"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="64.31805513839572">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="20.21453951339572">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
 public:
 
 void load(CustomTrayManager* trayMgr, const GameState&amp; gameState, LoaderListener* loaderListener)
+
+void frameStarted(const Ogre::FrameEvent &amp;evt) override
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState&amp; gameState)
@@ -2504,7 +2510,8 @@ void mousePressed(const Ogre::Vector2&amp; pos)
 void mouseReleased(const Ogre::Vector2&amp; pos)
 void mouseMoved(const Ogre::Vector2&amp; pos)
 
-bool isTopmostSubmenu()const
+bool isExitSubmenu()const
+void setExitSubmenu()
 void setTopmostSubmenu()
 
 protected:
@@ -2519,6 +2526,9 @@ void hideAll()
 void panelHit(Ogre::PanelOverlayElement* panel) override
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
+
+Ogre::Timer mStartingGridTimer
+bool mIsInStartingGrid
 
 MenuMode * mMenuMode
 
@@ -2555,13 +2565,15 @@ SinglePlayerMenuStates mCurrentState</y:NodeLabel>
           <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18637.061999496676" y="-6490.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="22.021951484002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
 public:
 
 void load(MyGUI::Gui* gui, const GameState&amp; gameState)
+
+void frameStarted(const Ogre::FrameEvent &amp;evt) override
 
 void processButtonClick(MyGUI::Widget* sender)
 void processChangeComboBox(MyGUI::Widget* sender, size_t index)
@@ -2608,7 +2620,7 @@ MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
           <y:Geometry height="823.1329556481205" width="980.3836661963628" x="13579.80816690182" y="-6351.566477824061"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="783.162109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="19.985423136560712">&lt;&lt;MenuMultiMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="797.86328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="979.814453125" x="0.284606535680723" y="12.634837199060712">&lt;&lt;MenuMultiMode.h&gt;&gt;
 
 MenuMultiMode
 
@@ -2620,7 +2632,8 @@ void mousePressed(const Ogre::Vector2&amp; pos)override
 void mouseReleased(const Ogre::Vector2&amp; pos)override
 void mouseMoved(const Ogre::Vector2&amp; pos)override
 
-bool isTopmostSubmenu()const override
+bool isExitSubmenu()const override
+void setExitSubmenu()override
 void setTopmostSubmenu()override
 
 CommonIncludes::shared_ptr&lt;MultiplayerController&gt; getMultiplayerController()
@@ -2729,7 +2742,7 @@ size_t mLapsCount</y:NodeLabel>
           <y:Geometry height="425.4154179409593" width="457.29192897408666" x="13841.354035512957" y="-7562.70770897048"/>
           <y:Fill color="#FFFF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="400.931640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="12.241888657979871">&lt;&lt;BaseMenuMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="4.891302720479871">&lt;&lt;BaseMenuMode.h&gt;&gt;
 
 BaseMenuMode
 
@@ -2743,7 +2756,8 @@ virtual void mousePressed(const Ogre::Vector2&amp; pos) = 0
 virtual void mouseReleased(const Ogre::Vector2&amp; pos) = 0
 virtual void mouseMoved(const Ogre::Vector2&amp; pos) = 0
 
-virtual bool isTopmostSubmenu()const = 0
+virtual bool isExitSubmenu()const = 0
+virtual void setExitSubmenu() = 0
 virtual void setTopmostSubmenu() = 0
 
 virtual void frameRenderingQueued(const Ogre::FrameEvent&amp; evt)override
@@ -3188,14 +3202,19 @@ virtual void loadState() = 0</y:NodeLabel>
     <node id="n74">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="517.4020023904368" width="564.6254833569851" x="18223.07101762247" y="-7158.701001195219"/>
+          <y:Geometry height="586.8336867301559" width="564.6254833569851" x="18223.07101762247" y="-7193.4168433650775"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="489.138671875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="14.13166525771885">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="12.094577740078421">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
 public:
+
+virtual void frameStarted(const Ogre::FrameEvent &amp;evt) = 0
+
+static const size_t amountTracks = 12
+static const size_t amountCars = 7
 
 protected:
 
@@ -3231,10 +3250,10 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
     <node id="n75">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="612.4045651713595" width="547.3407020641766" x="17691.713408268875" y="-5826.20228258568"/>
+          <y:Geometry height="739.2509115612329" width="547.3407020641766" x="17691.713408268875" y="-5889.625455780617"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="17.529431023180223">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="22.147916718116903">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3250,12 +3269,14 @@ virtual void switchState(const SinglePlayerMenuStates&amp; state) = 0
 virtual void startRace() = 0
 
 void setWindowTitle(const std::string&amp; title)
+void setStartingGridTime(const std::string&amp; title)
 
 void showModeSingle()
 void showModeDifficulty()
 void showTrackLabels()
 void showCarLabels()
 void showCharacterLabels()
+void showGameExitLabels()
 void hideAllLabels()
 
 private:
@@ -3272,7 +3293,13 @@ Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane
 
 std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mTracksLabels
 std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCarsLabels
-std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels</y:NodeLabel>
+std::vector&lt;Ogre::TextAreaOverlayElement *&gt; mCharactersLabels
+
+Ogre::TextAreaOverlayElement * mStartingGridTimeLabel
+
+Ogre::TextAreaOverlayElement * mGameExitLabel
+Ogre::TextAreaOverlayElement * mGameExitYesLabel
+Ogre::TextAreaOverlayElement * mGameExitNoLabel</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

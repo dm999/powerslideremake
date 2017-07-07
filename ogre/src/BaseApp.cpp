@@ -515,7 +515,7 @@ void BaseApp::dropCamera()
     }
 }
 
-bool BaseApp::setShutdown()
+bool BaseApp::setShutdown(bool isOnEsc)
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
@@ -538,12 +538,19 @@ bool BaseApp::setShutdown()
             mGameModeSwitcher->switchMode(ModeMenuMulti);
     }
 
-    if(mGameModeSwitcher->getMode() == ModeMenu)
+    if( mGameModeSwitcher->getMode() == ModeMenu    &&
+        mGameModeSwitcher->isLoadPassed()
+        )
     {
-        if(mGameModeSwitcher->isTopmostSubmenu())
-            mShutDown = true;
+        if(mGameModeSwitcher->isExitSubmenu())
+        {
+            if(!isOnEsc)
+                mShutDown = true;
+            else
+                mGameModeSwitcher->setTopmostSubmenu();
+        }
         else
-            mGameModeSwitcher->setTopmostSubmenu();
+            mGameModeSwitcher->setExitSubmenu();
     }
 
     return mShutDown;
@@ -846,7 +853,7 @@ void BaseApp::touchMove(int id, float x, float y)
 
 bool BaseApp::androidOnBack()
 {
-    return setShutdown();
+    return setShutdown(true);
 }
 
 void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, const std::string& dataDir)

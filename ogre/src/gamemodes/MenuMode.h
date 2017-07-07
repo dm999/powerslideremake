@@ -17,10 +17,10 @@ class MenuMode :
 {
 public:
 
-    MenuMode(const ModeContext& modeContext);
+    MenuMode(const ModeContext& modeContext, SinglePlayerMenuStates state);
     virtual ~MenuMode(){}
 
-    void frameStarted(const Ogre::FrameEvent &evt)override{}
+    void frameStarted(const Ogre::FrameEvent &evt)override;
 
 #if defined(__ANDROID__)
     //for UI only
@@ -31,7 +31,8 @@ public:
     void mouseReleased(const Ogre::Vector2& pos)override;
     void mouseMoved(const Ogre::Vector2& pos)override;
 
-    bool isTopmostSubmenu()const override;
+    bool isExitSubmenu()const override;
+    void setExitSubmenu()override;
     void setTopmostSubmenu()override;
 
 protected:

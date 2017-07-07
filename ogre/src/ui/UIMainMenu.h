@@ -12,10 +12,12 @@ class UIMainMenu : public UIMainMenuLabels
 {
 public:
 
-    UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode);
+    UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, SinglePlayerMenuStates state);
     ~UIMainMenu();
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener);
+
+    void frameStarted(const Ogre::FrameEvent &evt) override;
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
@@ -25,7 +27,8 @@ public:
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos);
 
-    bool isTopmostSubmenu()const;
+    bool isExitSubmenu()const;
+    void setExitSubmenu();
     void setTopmostSubmenu();
 
 protected:
@@ -40,6 +43,9 @@ private:
     void panelHit(Ogre::PanelOverlayElement* panel) override;
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
+
+    Ogre::Timer mStartingGridTimer;
+    bool mIsInStartingGrid;
 
     MenuMode * mMenuMode;
 

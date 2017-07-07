@@ -17,6 +17,8 @@ public:
     UIBaseMenu(const ModeContext& modeContext);
     virtual ~UIBaseMenu(){}
 
+    virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;
+
     static const size_t amountTracks = 12;
     static const size_t amountCars = 7;
 

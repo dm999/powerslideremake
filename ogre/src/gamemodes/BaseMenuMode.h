@@ -20,7 +20,8 @@ public:
     virtual void mouseReleased(const Ogre::Vector2& pos) = 0;
     virtual void mouseMoved(const Ogre::Vector2& pos) = 0;
 
-    virtual bool isTopmostSubmenu()const = 0;
+    virtual bool isExitSubmenu()const = 0;
+    virtual void setExitSubmenu() = 0;
     virtual void setTopmostSubmenu() = 0;
 
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;

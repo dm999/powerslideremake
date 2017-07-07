@@ -52,7 +52,8 @@ public:
 
     GameMode getMode()const{return mGameMode;}
 
-    bool isTopmostSubmenu()const;
+    bool isExitSubmenu()const;
+    void setExitSubmenu();
     void setTopmostSubmenu();
 
     //LoaderListener

@@ -35,6 +35,8 @@ public:
 
     void load(MyGUI::Gui* gui, const GameState& gameState);
 
+    void frameStarted(const Ogre::FrameEvent &evt) override {}
+
     void processButtonClick(MyGUI::Widget* sender);
     void processChangeComboBox(MyGUI::Widget* sender, size_t index);
     void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);

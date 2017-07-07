@@ -20,12 +20,15 @@ protected:
     virtual void startRace() = 0;
 
     void setWindowTitle(const std::string& title){mWindowTitle->setCaption(title);}
+    void setStartingGridTime(const std::string& title){mStartingGridTimeLabel->setCaption(title);}
 
     void showModeSingle(){mModeSingle->show();}
     void showModeDifficulty();
     void showTrackLabels();
     void showCarLabels();
     void showCharacterLabels();
+    void showStartingGridTimer(){mStartingGridTimeLabel->show();}
+    void showGameExitLabels();
     void hideAllLabels();
 
 private:
@@ -43,6 +46,12 @@ private:
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
+
+    Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
+
+    Ogre::TextAreaOverlayElement * mGameExitLabel;
+    Ogre::TextAreaOverlayElement * mGameExitYesLabel;
+    Ogre::TextAreaOverlayElement * mGameExitNoLabel;
 };
 
 #endif

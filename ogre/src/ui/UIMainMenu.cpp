@@ -20,10 +20,11 @@
     #include "../multiplayer/MultiplayerRoomInfo.h"
 #endif
 
-UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode)
+UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, SinglePlayerMenuStates state)
     : UIMainMenuLabels(modeContext),
+    mIsInStartingGrid(false),
     mMenuMode(menuMode),
-    mCurrentState(State_SingleMulti)
+    mCurrentState(state)
 {}
 
 UIMainMenu::~UIMainMenu()
@@ -131,7 +132,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     characterCar = strPowerslide.getBaseCarFromCar(characterCar);
     selectCar(characterCar);
 
-    switchState(State_SingleMulti);
+    switchState(mCurrentState);
 }
 
 #if defined(__ANDROID__)
@@ -254,6 +255,20 @@ void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
 }
 #endif
 
+void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
+{
+    if(mCurrentState == State_StartingGrid)
+    {
+        unsigned long time = mStartingGridTimer.getMilliseconds();
+        const unsigned long threshold = 5000; //ms
+        setStartingGridTime(Conversions::DMToString((threshold - time + 999) / 1000));
+        if(time >= threshold)
+        {
+            startRace();
+        }
+    }
+}
+
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
@@ -269,9 +284,14 @@ void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
     UIMainMenuLabels::mouseMoved(pos);
 }
 
-bool UIMainMenu::isTopmostSubmenu()const
+bool UIMainMenu::isExitSubmenu()const
 {
-    return mCurrentState == State_SingleMulti;
+    return mCurrentState == State_ExitGame;
+}
+
+void UIMainMenu::setExitSubmenu()
+{
+    switchState(State_ExitGame);
 }
 
 void UIMainMenu::setTopmostSubmenu()
@@ -292,20 +312,16 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
         switchState(State_Car);
 
     if(panel != NULL && panel->getName() == "Race")
-        startRace();
+        switchState(State_StartingGrid);
 
     if(panel != NULL && panel->getName() == "Exit")
     {
-        mModeContext.mBaseApp->setShutdown();
+        mModeContext.mBaseApp->setShutdown(true);
     }
 }
 
 void UIMainMenu::startRace()
 {
-    std::vector<std::string> playersCharacters;
-    playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
-    mMenuMode->recalculateCharacterNames(playersCharacters);
-
     mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
 }
 
@@ -346,6 +362,34 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showBackgroundCharacter();
         setWindowTitle("Select Character");
         showCharacterLabels();
+        break;
+
+    case State_StartingGrid:
+        if(mIsInStartingGrid)
+        {
+            mIsInStartingGrid = false;
+            startRace();
+            break;
+        }
+        mIsInStartingGrid = true;
+        {
+            std::vector<std::string> playersCharacters;
+            playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            mMenuMode->recalculateCharacterNames(playersCharacters);
+        }
+        mStartingGridTimer.reset();
+        setWindowTitle("Starting Grid");
+        showStartingGridTimer();
+        break;
+
+    case State_Podium:
+        setWindowTitle("Podium");
+        break;
+
+    case State_ExitGame:
+        mIsInStartingGrid = false;
+        showGameExitLabels();
+        setWindowTitle("");
         break;
     }
 
