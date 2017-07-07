@@ -201,6 +201,31 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mGameExitNoLabel->setColour(inactiveLabel);
         getMainBackground()->addChild(mGameExitNoLabel);
     }
+
+    for(size_t q = 0, u = 0, l = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        Ogre::Vector4 textBoxPos;
+        if(q % 2 == 0)
+        {
+            textBoxPos = screenAdaptionRelative * Ogre::Vector4(u * 100.0f + 1.0f, 59.0f, 0.0f, 0.0f);
+            ++u;
+        }
+        else
+        {
+            textBoxPos = screenAdaptionRelative * Ogre::Vector4(l * 100.0f + 1.0f + 40.0f, 209.0f, 0.0f, 0.0f);
+            ++l;
+        }
+        textBoxPos.y -= 11.0f * viewportHeight / 1024.0f;
+        mRaceGridCharactersLabel[q] = createTextArea("MainWindowStartingGrid_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mRaceGridCharactersLabel[q]->setCaption(Conversions::DMToString(q + 1));
+        mRaceGridCharactersLabel[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mRaceGridCharactersLabel[q]->setSpaceWidth(9.0f);
+        mRaceGridCharactersLabel[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+        mRaceGridCharactersLabel[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mRaceGridCharactersLabel[q]->setFontName("SdkTrays/Caption");
+        mRaceGridCharactersLabel[q]->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mRaceGridCharactersLabel[q]);
+    }
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -412,6 +437,14 @@ void UIMainMenuLabels::showGameExitLabels()
     mGameExitNoLabel->show();
 }
 
+void UIMainMenuLabels::showRaceGridCharactersLabels()
+{
+    for(size_t q = 0; q < mModeContext.getGameState().getAICount() + 1; ++q)
+    {
+        mRaceGridCharactersLabel[q]->show();
+    }
+}
+
 void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
@@ -434,6 +467,11 @@ void UIMainMenuLabels::hideAllLabels()
     mGameExitLabel->hide();
     mGameExitYesLabel->hide();
     mGameExitNoLabel->hide();
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        mRaceGridCharactersLabel[q]->hide();
+    }
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

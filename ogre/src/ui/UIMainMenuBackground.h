@@ -32,6 +32,7 @@ protected:
     void showBackgroundTrack(){mBackgroundTrack->show();}
     void showBackgroundCar(){mBackgroundCar->show();}
     void showBackgroundCharacter();
+    void showBackgroundCharacterSmall();
     void hideAllBackgrounds();
 
 private:
@@ -44,6 +45,8 @@ private:
     Ogre::PanelOverlayElement* mBackgroundTrack;
     Ogre::PanelOverlayElement* mBackgroundCar;
     Ogre::PanelOverlayElement* mBackgroundCharacter;
+
+    Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax];
 
 };
 

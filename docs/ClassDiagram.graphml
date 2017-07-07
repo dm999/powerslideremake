@@ -1141,7 +1141,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2797.22265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="79.98535468086084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2811.923828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="72.63476874336084">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1172,7 +1172,8 @@ PSAICar&amp; getAICar(size_t index)
 const PSPlayerCar&amp; getPlayerCar() const
 PSPlayerCar&amp; getPlayerCar()
 
-int getMaxAI()const
+static const size_t mRaceGridCarsMax = 12
+static const int mAIMax = 11
 
 void setAICount(size_t opponentsAmount)
 size_t getAICount()const
@@ -3253,7 +3254,7 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
           <y:Geometry height="739.2509115612329" width="547.3407020641766" x="17691.713408268875" y="-5889.625455780617"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="508.890625" x="19.225038532087638" y="22.147916718116903">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="514.181640625" x="16.579530719587638" y="7.446744843116903">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3299,7 +3300,9 @@ Ogre::TextAreaOverlayElement * mStartingGridTimeLabel
 
 Ogre::TextAreaOverlayElement * mGameExitLabel
 Ogre::TextAreaOverlayElement * mGameExitYesLabel
-Ogre::TextAreaOverlayElement * mGameExitNoLabel</y:NodeLabel>
+Ogre::TextAreaOverlayElement * mGameExitNoLabel
+
+Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3307,10 +3310,10 @@ Ogre::TextAreaOverlayElement * mGameExitNoLabel</y:NodeLabel>
     <node id="n76">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="567.0942070450192" width="668.951993450451" x="17630.907762575738" y="-6553.547103522509"/>
+          <y:Geometry height="591.1282516241545" width="668.951993450451" x="17630.907762575738" y="-6565.564125812078"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="2.2248378975091327">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="6.891274249576782">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
 
 UIMainMenuBackground
 
@@ -3348,7 +3351,7 @@ Ogre::PanelOverlayElement* mBackgroundTrack
 Ogre::PanelOverlayElement* mBackgroundCar
 Ogre::PanelOverlayElement* mBackgroundCharacter
 
-</y:NodeLabel>
+Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

@@ -29,6 +29,7 @@ protected:
     void showCharacterLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showGameExitLabels();
+    void showRaceGridCharactersLabels();
     void hideAllLabels();
 
 private:
@@ -52,6 +53,8 @@ private:
     Ogre::TextAreaOverlayElement * mGameExitLabel;
     Ogre::TextAreaOverlayElement * mGameExitYesLabel;
     Ogre::TextAreaOverlayElement * mGameExitNoLabel;
+
+    Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax];
 };
 
 #endif

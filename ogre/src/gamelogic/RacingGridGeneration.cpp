@@ -1,6 +1,8 @@
 
 #include "RacingGridGeneration.h"
 
+#include "../GameState.h"
+
 std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, const std::vector<std::string>& playersCharacters) const
 {
     std::vector<std::string> res;
@@ -41,7 +43,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
         if(found != res.end())
         {
             size_t newCharIndex = 0;
-            while(newCharIndex < 12)
+            while(newCharIndex < GameState::mRaceGridCarsMax)
             {
                 std::string newCharName = availableCharacters[aiIndexes[newCharIndex]];
                 if(newCharName != playerCharacter)

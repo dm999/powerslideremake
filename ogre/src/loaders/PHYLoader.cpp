@@ -7,7 +7,7 @@ void PHYLoader::load(GameState& gameState) const
 {
     gameState.getTrackPositions().clear();
 
-    for(int q = 0; q < (gameState.getMaxAI() + 1); ++q)
+    for(int q = 0; q < (GameState::mAIMax + 1); ++q)
     {
         Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
         if(fileToLoad.get() && fileToLoad->isReadable())

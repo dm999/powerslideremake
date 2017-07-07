@@ -67,6 +67,7 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
             std::string carName = "car" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
             std::string charName = "char" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
+            std::string charSmallName = "char" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + "s.bmp";
 
             //supercar is different
             if(carIndex < 6)
@@ -81,6 +82,11 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                     "data/gameshell", carName, 
                                     "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
             }
+
+            //supercar not different for small characters
+            TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", charSmallName, 
+                                "OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
 
             if(loaderListener)
                 loaderListener->loadState(0.4f + 0.6f * (static_cast<float>(q + 1) / availableCharacters.size()), availableCharacters[q] + " loaded");
@@ -182,18 +188,35 @@ void UIMainMenuBackground::createBackgroundMaterials()
         size_t charIndex = 0;
         sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
 
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_" + Conversions::DMToString(q), 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_Small_" + Conversions::DMToString(q), 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
     }
 }
 
@@ -245,6 +268,26 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         mBackgroundCharacter = createPanel("BackgroundCharacter", background, "Test/Background_Character_0");
         mBackgroundCharacter->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundCharacter);
+    }
+
+    for(size_t q = 0, u = 0, l = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        Ogre::Vector4 background;
+
+        if(q % 2 == 0)
+        {
+            background = screenAdaptionRelative * Ogre::Vector4(u * 100.0f, 59.0f, u * 100.0f + 83.0f, 59.0f + 130.0f);
+            ++u;
+        }
+        else
+        {
+            background = screenAdaptionRelative * Ogre::Vector4(l * 100.0f + 40.0f, 209.0f, l * 100.0f + 40.0f + 83.0f, 209.0f + 130.0f);
+            l++;
+        }
+
+        mBackgroundCharacterSmall[q] = createPanel("BackgroundCharacter_" + Conversions::DMToString(q), background, "Test/Background_Character_Small_0");
+        mBackgroundCharacterSmall[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundCharacterSmall[q]);
     }
 }
 
@@ -333,6 +376,36 @@ void UIMainMenuBackground::showBackgroundCharacter()
     mBackgroundCharacter->show();
 }
 
+void UIMainMenuBackground::showBackgroundCharacterSmall()
+{
+
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+
+    std::vector<std::string> aiNames;
+    for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
+    {
+        aiNames.push_back(mModeContext.getGameState().getAICar(q).getCharacterName());
+    }
+
+    for(size_t q = 0; q < mModeContext.getGameState().getAICount() + 1; ++q)
+    {
+        if(q < aiNames.size())
+        {
+            std::vector<std::string>::const_iterator i = std::find(availableCharacters.begin(), availableCharacters.end(), aiNames[q]);
+            size_t charIndex = i - availableCharacters.begin();
+            mBackgroundCharacterSmall[q]->setMaterialName("Test/Background_Character_Small_" + Conversions::DMToString(charIndex));
+        }
+        else
+        {
+            std::vector<std::string>::const_iterator i = std::find(availableCharacters.begin(), availableCharacters.end(), mModeContext.getGameState().getPlayerCar().getCharacterName());
+            size_t charIndex = i - availableCharacters.begin();
+            mBackgroundCharacterSmall[q]->setMaterialName("Test/Background_Character_Small_" + Conversions::DMToString(charIndex));
+        }
+
+        mBackgroundCharacterSmall[q]->show();
+    }
+}
+
 void UIMainMenuBackground::hideAllBackgrounds()
 {
     mBackgroundA->hide(); 
@@ -341,4 +414,9 @@ void UIMainMenuBackground::hideAllBackgrounds()
     mBackgroundTrack->hide();
     mBackgroundCar->hide();
     mBackgroundCharacter->hide();
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        mBackgroundCharacterSmall[q]->hide();
+    }
 }

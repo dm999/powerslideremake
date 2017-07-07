@@ -295,7 +295,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                 }
             }
 
-            for(int w = 0; w < gameState.getMaxAI(); ++w)
+            for(int w = 0; w < GameState::mAIMax; ++w)
             {
                 gameState.getAICar(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
             }

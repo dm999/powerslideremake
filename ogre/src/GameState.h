@@ -81,7 +81,8 @@ public:
     const PSPlayerCar& getPlayerCar() const;
     PSPlayerCar& getPlayerCar();
 
-    int getMaxAI()const{return mAIMax;}
+    static const size_t mRaceGridCarsMax = 12;
+    static const int mAIMax = 11;
 
     void setAICount(size_t opponentsAmount);
     size_t getAICount()const{return mAiOpponentsAmount;}
@@ -185,8 +186,6 @@ private:
     PFLoader mPFLoaderStore;
     STRPowerslide mSTRPowerslide;
     STRRacecrud mSTRRacecrud;
-
-    static const int mAIMax = 11;
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;

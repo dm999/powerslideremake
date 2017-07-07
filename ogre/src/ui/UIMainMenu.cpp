@@ -377,6 +377,8 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());
             mMenuMode->recalculateCharacterNames(playersCharacters);
         }
+        showBackgroundCharacterSmall();
+        showRaceGridCharactersLabels();
         mStartingGridTimer.reset();
         setWindowTitle("Starting Grid");
         showStartingGridTimer();
