@@ -389,6 +389,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_ExitGame:
+        showBackgroundExitSign();
         mIsInStartingGrid = false;
         showGameExitLabels();
         setWindowTitle("");

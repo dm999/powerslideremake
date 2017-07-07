@@ -3251,7 +3251,7 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
     <node id="n75">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="739.2509115612329" width="547.3407020641766" x="17691.713408268875" y="-5889.625455780617"/>
+          <y:Geometry height="739.2509115612329" width="547.3407020641766" x="17691.713408268875" y="-5799.625455780617"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="514.181640625" x="16.579530719587638" y="7.446744843116903">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
@@ -3310,10 +3310,10 @@ Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCars
     <node id="n76">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="591.1282516241545" width="668.951993450451" x="17630.907762575738" y="-6565.564125812078"/>
+          <y:Geometry height="687.2644299406902" width="668.951993450451" x="17630.907762575738" y="-6553.632214970345"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="6.891274249576782">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="32.90760559534465">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
 
 UIMainMenuBackground
 
@@ -3338,6 +3338,7 @@ void showBackgrounds()
 void showBackgroundTrack()
 void showBackgroundCar()
 void showBackgroundCharacter()
+void showBackgroundExitSign()
 void hideAllBackgrounds()
 
 private:
@@ -3351,7 +3352,9 @@ Ogre::PanelOverlayElement* mBackgroundTrack
 Ogre::PanelOverlayElement* mBackgroundCar
 Ogre::PanelOverlayElement* mBackgroundCharacter
 
-Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax]</y:NodeLabel>
+Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax]
+
+Ogre::PanelOverlayElement* mBackgroundExitSign</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

@@ -94,6 +94,10 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
     }
 
+    TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "exitsign.bmp", 
+        "OriginalExitSign", TEMP_RESOURCE_GROUP_NAME);
+
 }
 
 void UIMainMenuBackground::createBackgroundMaterials()
@@ -218,6 +222,21 @@ void UIMainMenuBackground::createBackgroundMaterials()
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
     }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalExitSign");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_ExitSign", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
 }
 
 void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr)
@@ -288,6 +307,14 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         mBackgroundCharacterSmall[q] = createPanel("BackgroundCharacter_" + Conversions::DMToString(q), background, "Test/Background_Character_Small_0");
         mBackgroundCharacterSmall[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundCharacterSmall[q]);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(20.0f, 45.0f, 20.0f + 290.0f, 45.0f + 322.0f);
+
+        mBackgroundExitSign = createPanel("BackgroundExitSign", background, "Test/Background_ExitSign");
+        mBackgroundExitSign->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundExitSign);
     }
 }
 
@@ -419,4 +446,6 @@ void UIMainMenuBackground::hideAllBackgrounds()
     {
         mBackgroundCharacterSmall[q]->hide();
     }
+
+    mBackgroundExitSign->hide();
 }
