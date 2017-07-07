@@ -469,7 +469,8 @@ void BaseApp::enablePause()
 
 void BaseApp::tabPressed()
 {
-    mGameModeSwitcher->tabPressed();
+    if(mGameModeSwitcher->isLoadPassed())
+        mGameModeSwitcher->tabPressed();
 }
 
 void BaseApp::switchRenderType()
@@ -550,7 +551,8 @@ bool BaseApp::setShutdown(bool isOnEsc)
                 mGameModeSwitcher->setTopmostSubmenu();
         }
         else
-            mGameModeSwitcher->setExitSubmenu();
+            if(isOnEsc)
+                mGameModeSwitcher->setExitSubmenu();
     }
 
     return mShutDown;
@@ -558,81 +560,105 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
 void BaseApp::keyDown(const OIS::KeyEvent &arg )
 {
-    if(!mGameState.isGamePaused())
-        mGameState.getPlayerCar().keyDown(arg.key);
+    if(mGameModeSwitcher->isLoadPassed())
+    {
+        if(!mGameState.isGamePaused())
+            mGameState.getPlayerCar().keyDown(arg.key);
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-    //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
-        //MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), translateWin32Text(MyGUI::KeyCode::Enum(arg.key)));
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            //MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), translateWin32Text(MyGUI::KeyCode::Enum(arg.key)));
 #else
-    //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
-        //MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            //MyGUI::InputManager::getInstance().injectKeyPress(MyGUI::KeyCode::Enum(arg.key), arg.text);
 #endif
+    }
     
 }
 
 void BaseApp::keyUp(const OIS::KeyEvent &arg )
 {
-    mGameState.getPlayerCar().keyUp(arg.key);
+    if(mGameModeSwitcher->isLoadPassed())
+    {
+        mGameState.getPlayerCar().keyUp(arg.key);
 
-    //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
-        //MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            //MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
+    }
 }
 
 #if !defined(__ANDROID__)
 void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseMove(arg);
-        mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseMove(arg);
+            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
-        //MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
+            //MyGUI::InputManager::getInstance().injectMouseMove(arg.state.X.abs, arg.state.Y.abs, arg.state.Z.abs);
+        }
     }
 }
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseDown(arg, id);
-        mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseDown(arg, id);
+            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
-        //MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+            //MyGUI::InputManager::getInstance().injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+        }
     }
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseUp(arg, id);
-        mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseUp(arg, id);
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
 
-        //MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+            //MyGUI::InputManager::getInstance().injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
+        }
     }
 }
 #else
 void BaseApp::touchMoved(const OIS::MultiTouchEvent& arg)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseMove(arg);
-        mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseMove(arg);
+            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        }
     }
 }
 void BaseApp::touchPressed(const OIS::MultiTouchEvent& arg)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseDown(arg);
-        mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseDown(arg);
+            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        }
     }
 }
 void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
 {
-    if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+    if(mGameModeSwitcher->isLoadPassed())
     {
-        mTrayMgr->injectMouseUp(arg);
-        mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->injectMouseUp(arg);
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        }
     }
 }
 #endif

@@ -67,6 +67,7 @@ public:
     bool getBrake(){return mBrakeEnabled;}
 
     LapUtils& getLapUtils(){return mLapUtils;}
+    const LapUtils& getLapUtils()const{return mLapUtils;}
 
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
 

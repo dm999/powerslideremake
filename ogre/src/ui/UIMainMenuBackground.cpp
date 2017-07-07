@@ -94,9 +94,28 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
     }
 
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "grid" + Conversions::DMToString(q) +".bmp", 
+        "OriginalGrid" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+    }
+
     TextureLoader().load( pfLoaderGameshell, 
         "data/gameshell", "exitsign.bmp", 
         "OriginalExitSign", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "1st.bmp", 
+        "Original1st", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "2nd.bmp", 
+        "Original2nd", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "3rd.bmp", 
+        "Original3rd", TEMP_RESOURCE_GROUP_NAME);
 
 }
 
@@ -223,10 +242,71 @@ void UIMainMenuBackground::createBackgroundMaterials()
         }
     }
 
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalGrid" + Conversions::DMToString(q));
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Grid_" + Conversions::DMToString(q), 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
     {
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalExitSign");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_ExitSign", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("Original1st");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_1st", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("Original2nd");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_2nd", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("Original3rd");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_3rd", 
                             "Test/Diffuse", 
                             texName, 
                             1.0f,
@@ -315,6 +395,52 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         mBackgroundExitSign = createPanel("BackgroundExitSign", background, "Test/Background_ExitSign");
         mBackgroundExitSign->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundExitSign);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(17.0f, 29.0f, 17.0f + 96.0f, 29.0f + 80.0f);
+
+        mBackground1st = createPanel("Background1st", background, "Test/Background_1st");
+        mBackground1st->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackground1st);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(205.0f, 100.0f, 205.0f + 78.0f, 100.0f + 76.0f);
+
+        mBackground2nd = createPanel("Background2nd", background, "Test/Background_2nd");
+        mBackground2nd->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackground2nd);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(52.0f, 216.0f, 52.0f + 63.0f, 216.0f + 65.0f);
+
+        mBackground3rd = createPanel("Background3rd", background, "Test/Background_3rd");
+        mBackground3rd->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackground3rd);
+    }
+
+    for(size_t q = 0; q < mPodiumCharacters; ++q)
+    {
+        Ogre::Vector4 background;
+        
+        if(q == 0)
+            background = screenAdaptionRelative * Ogre::Vector4(57.0f, 21.0f, 57.0f + 83.0f, 21.0f + 130.0f);
+        if(q == 1)
+            background = screenAdaptionRelative * Ogre::Vector4(-15.0f, 53.0f, -15.0f + 83.0f, 53.0f + 130.0f);
+        if(q == 2)
+            background = screenAdaptionRelative * Ogre::Vector4(48.0f, -16.0f, 48.0f + 83.0f, -16.0f + 130.0f);
+
+        mBackgroundCharacterSmallPodium[q] = createPanel("BackgroundCharacterPodium_" + Conversions::DMToString(q), background, "Test/Background_Character_Small_0");
+        mBackgroundCharacterSmallPodium[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+
+        if(q == 0)
+            mBackground1st->addChild(mBackgroundCharacterSmallPodium[q]);
+        if(q == 1)
+            mBackground2nd->addChild(mBackgroundCharacterSmallPodium[q]);
+        if(q == 2)
+            mBackground3rd->addChild(mBackgroundCharacterSmallPodium[q]);
     }
 }
 
@@ -431,6 +557,26 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
 
         mBackgroundCharacterSmall[q]->show();
     }
+
+    for(size_t q = mModeContext.getGameState().getAICount() + 1; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        mBackgroundCharacterSmall[q]->setMaterialName("Test/Background_Grid_" + Conversions::DMToString(q));
+        mBackgroundCharacterSmall[q]->show();
+    }
+}
+
+void UIMainMenuBackground::showBackgroundCharacterSmallPodium(const finishBoard_v& finishBoard)
+{
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+
+    for(size_t q = 0; q < mPodiumCharacters; ++q)
+    {
+        std::vector<std::string>::const_iterator i = std::find(availableCharacters.begin(), availableCharacters.end(), finishBoard[q].mCharName);
+        size_t charIndex = i - availableCharacters.begin();
+        mBackgroundCharacterSmallPodium[q]->setMaterialName("Test/Background_Character_Small_" + Conversions::DMToString(charIndex));
+
+        mBackgroundCharacterSmallPodium[q]->show();
+    }
 }
 
 void UIMainMenuBackground::hideAllBackgrounds()
@@ -448,4 +594,13 @@ void UIMainMenuBackground::hideAllBackgrounds()
     }
 
     mBackgroundExitSign->hide();
+
+    mBackground1st->hide();
+    mBackground2nd->hide();
+    mBackground3rd->hide();
+
+    for(size_t q = 0; q < mPodiumCharacters; ++q)
+    {
+        mBackgroundCharacterSmallPodium[q]->hide();
+    }
 }

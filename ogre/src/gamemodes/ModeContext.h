@@ -4,6 +4,8 @@
 #include "../GameState.h"
 #include "../SoundsProcesser.h"
 
+#include "../gamelogic/LapController.h"
+
 namespace Ogre
 {
     class Root;
@@ -54,6 +56,9 @@ public:
 
     BaseApp* getBaseApp(){return mBaseApp;}
 
+    void setLapController(const LapController& lapController){mLapController = lapController;}
+    const LapController& getLapController() const{return mLapController;}
+
     friend class GameModeSwitcher;
     friend class BaseMenuMode;
     friend class MenuMode;
@@ -86,6 +91,8 @@ private:
     GameState& mGameState;
 
     BaseApp * mBaseApp;
+
+    LapController mLapController;
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;

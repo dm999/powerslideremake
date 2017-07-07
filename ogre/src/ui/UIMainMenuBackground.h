@@ -34,6 +34,8 @@ protected:
     void showBackgroundCharacter();
     void showBackgroundCharacterSmall();
     void showBackgroundExitSign(){mBackgroundExitSign->show();}
+    void showBackgroundFirstSecondThird(){mBackground1st->show();mBackground2nd->show();mBackground3rd->show();}
+    void showBackgroundCharacterSmallPodium(const finishBoard_v& finishBoard);
     void hideAllBackgrounds();
 
 private:
@@ -50,6 +52,12 @@ private:
     Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax];
 
     Ogre::PanelOverlayElement* mBackgroundExitSign;
+
+    Ogre::PanelOverlayElement* mBackground1st;
+    Ogre::PanelOverlayElement* mBackground2nd;
+    Ogre::PanelOverlayElement* mBackground3rd;
+
+    Ogre::PanelOverlayElement* mBackgroundCharacterSmallPodium[mPodiumCharacters];
 
 };
 

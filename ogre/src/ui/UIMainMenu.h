@@ -44,6 +44,8 @@ private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
 
+    finishBoard_v prepareFinishBoard()const;
+
     Ogre::Timer mStartingGridTimer;
     bool mIsInStartingGrid;
 

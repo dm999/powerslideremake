@@ -132,6 +132,14 @@ std::string GameState::getTrackNameAsOriginal() const
     return res;
 }
 
+const PSAICar& GameState::getAICar(size_t index)const
+{
+    if(index >= mAIMax)
+        assert(false && "GameState::getAICar");
+
+    return mPSCar[index];
+}
+
 PSAICar& GameState::getAICar(size_t index)
 {
     if(index >= mAIMax)

@@ -11,6 +11,21 @@ namespace Ogre{
     class PanelOverlayElement;
 }
 
+struct finishBoardElement
+{
+    size_t mPos;
+    bool mIsPlayer;
+    float mRaceTime;
+    std::string mCharName;
+
+    finishBoardElement(size_t pos, bool isPlayer, float raceTime, const std::string& charName)
+        : mPos(pos), mIsPlayer(isPlayer), mRaceTime(raceTime), mCharName(charName){}
+
+    bool operator< (const finishBoardElement& other)const{return mPos < other.mPos;}
+};
+
+typedef std::vector<finishBoardElement> finishBoard_v;
+
 class UIBaseMenu : public UIBase
 {
 public:
@@ -45,6 +60,8 @@ protected:
     std::map<std::string, size_t> mRemapCar;
 
     ModeContext mModeContext;
+
+    static const size_t mPodiumCharacters = 3;
 
 private:
     bool mControlClicked[mControlsCount];

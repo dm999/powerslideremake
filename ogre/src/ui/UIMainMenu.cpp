@@ -325,6 +325,57 @@ void UIMainMenu::startRace()
     mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
 }
 
+finishBoard_v UIMainMenu::prepareFinishBoard()const
+{
+    finishBoard_v ret;
+
+    LapController lapController = mModeContext.getLapController();
+    size_t lap = mModeContext.getGameState().getPlayerCar().getLapUtils().getCurrentLap() - 1;
+
+    if(lap == mModeContext.getGameState().getLapsCount())//race finished
+    {
+        //player
+        ret.push_back(finishBoardElement(
+            lapController.getTotalPosition(0), 
+            true, 
+            mModeContext.getGameState().getPlayerCar().getLapUtils().getTotalTime(),
+            mModeContext.getGameState().getPlayerCar().getCharacterName()
+            ));
+
+        for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
+        {
+            ret.push_back(finishBoardElement(
+                lapController.getTotalPosition(q + 1), 
+                false, 
+                mModeContext.getGameState().getAICar(q).getLapUtils().getTotalTime(),
+                mModeContext.getGameState().getAICar(q).getCharacterName()));
+        }
+    }
+    else
+    {
+        //player
+        ret.push_back(finishBoardElement(
+            mModeContext.getGameState().getAICount(), 
+            true, 
+            0.0f,
+            mModeContext.getGameState().getPlayerCar().getCharacterName()
+            ));
+
+        for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
+        {
+            ret.push_back(finishBoardElement(
+                q, 
+                false, 
+                0.0f,
+                mModeContext.getGameState().getAICar(q).getCharacterName()));
+        }
+    }
+
+    std::sort(ret.begin(), ret.end());
+
+    return ret;
+}
+
 void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 {
     hideAll();
@@ -332,12 +383,14 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     switch(state)
     {
     case State_SingleMulti:
+        mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
         showModeSingle();
         showBackgrounds();
         break;
 
     case State_Difficulty:
+        mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
         showModeSingle();
         showModeDifficulty();
@@ -345,6 +398,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_Track:
+        mIsInStartingGrid = false;
         showBackgroundTrack();
         setWindowTitle("Select Track");
         showTrackLabels();
@@ -352,6 +406,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_Car:
+        mIsInStartingGrid = false;
         showBackgroundCar();
         setWindowTitle("Select Car");
         showCarLabels();
@@ -359,6 +414,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_Character:
+        mIsInStartingGrid = false;
         showBackgroundCharacter();
         setWindowTitle("Select Character");
         showCharacterLabels();
@@ -385,12 +441,19 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         break;
 
     case State_Podium:
+        mIsInStartingGrid = false;
+        showBackgroundFirstSecondThird();
+        {
+            finishBoard_v finishBoard = prepareFinishBoard();
+            showBackgroundCharacterSmallPodium(finishBoard);
+            showPodiumLabels(finishBoard);
+        }
         setWindowTitle("Podium");
         break;
 
     case State_ExitGame:
-        showBackgroundExitSign();
         mIsInStartingGrid = false;
+        showBackgroundExitSign();
         showGameExitLabels();
         setWindowTitle("");
         break;

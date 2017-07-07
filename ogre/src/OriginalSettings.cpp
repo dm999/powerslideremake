@@ -252,7 +252,7 @@ std::string STRPowerslide::getCarTitle(const std::string& car)const
     return res;
 }
 
-std::string STRPowerslide::getCharacterTitle(const std::string& character)const
+std::string STRPowerslide::getCharacterTitle(const std::string& character)
 {
     std::map<std::string, std::string> originalToTitle;
     originalToTitle["frantic"] = "Fran Tick";

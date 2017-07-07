@@ -118,6 +118,18 @@ void GameModeSwitcher::frameEnded()
         }
 #endif
 
+        //extract lap data after race
+        if(mGameMode == ModeRaceSingle && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
+        {
+            mContext.setLapController(mPlayerMode->getLapController());
+        }
+#ifndef NO_MULTIPLAYER
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit)
+        {
+            mContext.setLapController(mPlayerMode->getLapController());
+        }
+#endif
+
         //clear all modes
         clear();
 

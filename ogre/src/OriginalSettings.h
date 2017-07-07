@@ -70,7 +70,7 @@ public:
     std::vector<std::string> getCharactersByBaseCar(const std::string& car)const;
     std::string getTrackTitle(const std::string& track)const;
     std::string getCarTitle(const std::string& car)const;
-    std::string getCharacterTitle(const std::string& character)const;
+    static std::string getCharacterTitle(const std::string& character);
 
     Ogre::Vector2 getFogStartEnd(const std::string& trackName) const;
     Ogre::ColourValue getTrackSkyColor(const std::string& trackName) const;

@@ -597,7 +597,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2253.279296875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="14.983424857301543">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2267.98046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="7.632838919801543">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -646,6 +646,7 @@ bool getAcceleration()
 bool getBrake()
 
 LapUtils&amp; getLapUtils()
+const LapUtils&amp; getLapUtils()const
 
 const PSCarEngine&amp; getCarEngine()const
 
@@ -2184,7 +2185,7 @@ CommonIncludes::shared_ptr&lt;UIMainMenu&gt; mUIMainMenu</y:NodeLabel>
           <y:Geometry height="1459.5066488419043" width="930.2499573032924" x="14204.875021348353" y="-4509.7533244209535"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1415.3125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="22.097074420951685">&lt;&lt;BaseRaceMode.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1444.71484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="873.015625" x="28.617166151645506" y="7.395902545951685">&lt;&lt;BaseRaceMode.h&gt;&gt;
 
 BaseRaceMode
 
@@ -2217,6 +2218,8 @@ void resourceLoadStarted(const Ogre::ResourcePtr&amp; resource) override
 void resourceLoadEnded(void) override
 void worldGeometryStageStarted(const Ogre::String&amp; description) override
 void worldGeometryStageEnded(void) override
+
+LapController getLapController() const
 
 protected:
 
@@ -2299,10 +2302,10 @@ Ogre::RenderTargetListener</y:NodeLabel>
     <node id="n43">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="545.2130126738275" width="399.02319879457855" x="14980.488400602711" y="-8252.606506336913"/>
+          <y:Geometry height="654.7014379787715" width="399.02319879457855" x="14980.488400602711" y="-8307.350718989386"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="-1.3651733505867014">&lt;&lt;ModeContext.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="384.818359375" x="7.102419709788592" y="16.626109614386223">&lt;&lt;ModeContext.h&gt;&gt;
 
 ModeContext
 
@@ -2317,6 +2320,9 @@ const GameState&amp; getGameState() const
 CustomTrayManager* getTrayManager()
 
 BaseApp* getBaseApp()
+
+void setLapController(const LapController&amp; lapController)
+const LapController&amp; getLapController() const
 
 private:
 
@@ -2337,6 +2343,8 @@ GameModeSwitcher* mGameModeSwitcher
 GameState&amp; mGameState
 
 BaseApp * mBaseApp
+
+LapController mLapController
 
 SoundsProcesser&amp; mSoundsProcesser</y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -2490,10 +2498,10 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="647.1771259017924" width="694.4874926701536" x="17618.140012965887" y="-4943.588562950896"/>
+          <y:Geometry height="647.1771259017924" width="694.4874926701536" x="17618.140012965887" y="-4673.588562950896"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="20.21453951339572">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="5.513367638395721">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2527,6 +2535,8 @@ void hideAll()
 void panelHit(Ogre::PanelOverlayElement* panel) override
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
+
+finishBoard_v prepareFinishBoard()const
 
 Ogre::Timer mStartingGridTimer
 bool mIsInStartingGrid
@@ -3203,10 +3213,10 @@ virtual void loadState() = 0</y:NodeLabel>
     <node id="n74">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="586.8336867301559" width="564.6254833569851" x="18223.07101762247" y="-7193.4168433650775"/>
+          <y:Geometry height="603.5239954656654" width="564.6254833569851" x="18223.07101762247" y="-7201.761997732832"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="12.094577740078421">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="5.738560232832242">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3241,6 +3251,8 @@ std::map&lt;std::string, size_t&gt; mRemapCar
 
 ModeContext mModeContext
 
+static const size_t mPodiumCharacters = 3
+
 private:
 
 bool mControlClicked[mControlsCount]</y:NodeLabel>
@@ -3251,10 +3263,10 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
     <node id="n75">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="739.2509115612329" width="547.3407020641766" x="17691.713408268875" y="-5799.625455780617"/>
+          <y:Geometry height="956.305038604788" width="547.3407020641766" x="17691.713408268875" y="-5698.152519302394"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="514.181640625" x="16.579530719587638" y="7.446744843116903">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="915.47265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="528.87109375" x="9.234804157087638" y="20.416191177393557">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3278,6 +3290,8 @@ void showTrackLabels()
 void showCarLabels()
 void showCharacterLabels()
 void showGameExitLabels()
+void showRaceGridCharactersLabels()
+void showPodiumLabels(const finishBoard_v&amp; finishBoard)
 void hideAllLabels()
 
 private:
@@ -3302,7 +3316,18 @@ Ogre::TextAreaOverlayElement * mGameExitLabel
 Ogre::TextAreaOverlayElement * mGameExitYesLabel
 Ogre::TextAreaOverlayElement * mGameExitNoLabel
 
-Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax]</y:NodeLabel>
+Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax]
+
+Ogre::TextAreaOverlayElement * mPodiumCharactersFirstSecondThirdLabel[mPodiumCharacters]
+
+Ogre::TextAreaOverlayElement * mPodiumTableTitle1Label
+Ogre::TextAreaOverlayElement * mPodiumTableTitle2Label
+Ogre::TextAreaOverlayElement * mPodiumTableTitle3Label
+Ogre::TextAreaOverlayElement * mPodiumTableTitle4Label
+Ogre::TextAreaOverlayElement * mPodiumTable1Label[GameState::mRaceGridCarsMax]
+Ogre::TextAreaOverlayElement * mPodiumTable2Label[GameState::mRaceGridCarsMax]
+Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax]
+Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3310,10 +3335,10 @@ Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCars
     <node id="n76">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="687.2644299406902" width="668.951993450451" x="17630.907762575738" y="-6553.632214970345"/>
+          <y:Geometry height="749.8530876988525" width="627.226221611681" x="17651.770648495123" y="-6494.926543849426"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="55.69377016272483" y="32.90760559534465">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="557.564453125" x="34.830884243339824" y="5.397246974425798">&lt;&lt;UIMainMenuBackground.h&gt;&gt;
 
 UIMainMenuBackground
 
@@ -3339,6 +3364,8 @@ void showBackgroundTrack()
 void showBackgroundCar()
 void showBackgroundCharacter()
 void showBackgroundExitSign()
+void showBackgroundFirstSecondThird()
+void showBackgroundCharacterSmallPodium(const finishBoard_v&amp; finishBoard)
 void hideAllBackgrounds()
 
 private:
@@ -3354,7 +3381,13 @@ Ogre::PanelOverlayElement* mBackgroundCharacter
 
 Ogre::PanelOverlayElement* mBackgroundCharacterSmall[GameState::mRaceGridCarsMax]
 
-Ogre::PanelOverlayElement* mBackgroundExitSign</y:NodeLabel>
+Ogre::PanelOverlayElement* mBackgroundExitSign
+
+Ogre::PanelOverlayElement* mBackground1st
+Ogre::PanelOverlayElement* mBackground2nd
+Ogre::PanelOverlayElement* mBackground3rd
+
+Ogre::PanelOverlayElement* mBackgroundCharacterSmallPodium[mPodiumCharacters]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3388,6 +3421,40 @@ Ogre::PanelOverlayElement* mBackgroundExitSign</y:NodeLabel>
           <y:Fill color="#FF0000" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="80" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="102.0078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="444.234375" x="45.971697578157546" y="22.173242194927298">gamemodes</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n80">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="32.25791453345391" width="119.4343354590302" x="15510.282832270485" y="-7996.1289572667265"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="76.041015625" x="21.696659917015495" y="6.778371329226502">LapController</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n81">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="227.28607574621765" width="341.643972612595" x="17679.1780136937" y="-7013.643037873109"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="195.115234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="252.47265625" x="44.58565818129864" y="16.08542068560928">&lt;&lt;UIBaseMenu.h&gt;&gt;
+
+finishBoard
+
+size_t mPos
+bool mIsPlayer
+float mRaceTime
+std::string mCharName
+
+
+bool operator&lt; (const finishBoard&amp; other)const
+
+typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -4188,6 +4255,26 @@ Ogre::PanelOverlayElement* mBackgroundExitSign</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e74" source="n80" target="n43">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e75" source="n74" target="n81">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

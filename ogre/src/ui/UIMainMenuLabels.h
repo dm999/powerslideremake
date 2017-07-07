@@ -30,6 +30,7 @@ protected:
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showGameExitLabels();
     void showRaceGridCharactersLabels();
+    void showPodiumLabels(const finishBoard_v& finishBoard);
     void hideAllLabels();
 
 private:
@@ -55,6 +56,16 @@ private:
     Ogre::TextAreaOverlayElement * mGameExitNoLabel;
 
     Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax];
+
+    Ogre::TextAreaOverlayElement * mPodiumCharactersFirstSecondThirdLabel[mPodiumCharacters];
+    Ogre::TextAreaOverlayElement * mPodiumTableTitle1Label;
+    Ogre::TextAreaOverlayElement * mPodiumTableTitle2Label;
+    Ogre::TextAreaOverlayElement * mPodiumTableTitle3Label;
+    Ogre::TextAreaOverlayElement * mPodiumTableTitle4Label;
+    Ogre::TextAreaOverlayElement * mPodiumTable1Label[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mPodiumTable2Label[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
 };
 
 #endif

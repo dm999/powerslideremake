@@ -72,6 +72,8 @@ public:
     void worldGeometryStageStarted(const Ogre::String& description) override {}
     void worldGeometryStageEnded(void) override {}
 
+    LapController getLapController() const {return mLapController;}
+
 protected:
 
     StaticMeshProcesser mStaticMeshProcesser;
