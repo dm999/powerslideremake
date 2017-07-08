@@ -83,6 +83,9 @@ void BaseMenuMode::initCamera()
     //mModeContext.mTrayMgr->showCursor();
 #if !defined(__ANDROID__)
     mModeContext.mTrayMgr->showCursor("Test/Cursor");
+    Ogre::OverlayElement* cursor = mModeContext.mTrayMgr->getCursorImage();
+    cursor->setWidth(24.0f);
+    cursor->setHeight(24.0f);
 #else
     mModeContext.mTrayMgr->hideCursor();
 #endif
