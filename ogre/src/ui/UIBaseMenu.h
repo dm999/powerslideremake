@@ -16,10 +16,11 @@ struct finishBoardElement
     size_t mPos;
     bool mIsPlayer;
     float mRaceTime;
+    float mBestLapTime;
     std::string mCharName;
 
-    finishBoardElement(size_t pos, bool isPlayer, float raceTime, const std::string& charName)
-        : mPos(pos), mIsPlayer(isPlayer), mRaceTime(raceTime), mCharName(charName){}
+    finishBoardElement(size_t pos, bool isPlayer, float raceTime, float bestLapTime, const std::string& charName)
+        : mPos(pos), mIsPlayer(isPlayer), mRaceTime(raceTime), mBestLapTime(bestLapTime), mCharName(charName){}
 
     bool operator< (const finishBoardElement& other)const{return mPos < other.mPos;}
 };

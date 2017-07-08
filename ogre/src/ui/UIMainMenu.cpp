@@ -339,6 +339,7 @@ finishBoard_v UIMainMenu::prepareFinishBoard()const
             lapController.getTotalPosition(0), 
             true, 
             mModeContext.getGameState().getPlayerCar().getLapUtils().getTotalTime(),
+            mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime(),
             mModeContext.getGameState().getPlayerCar().getCharacterName()
             ));
 
@@ -348,6 +349,7 @@ finishBoard_v UIMainMenu::prepareFinishBoard()const
                 lapController.getTotalPosition(q + 1), 
                 false, 
                 mModeContext.getGameState().getAICar(q).getLapUtils().getTotalTime(),
+                mModeContext.getGameState().getAICar(q).getLapUtils().getBestLapTime(),
                 mModeContext.getGameState().getAICar(q).getCharacterName()));
         }
     }
@@ -358,6 +360,7 @@ finishBoard_v UIMainMenu::prepareFinishBoard()const
             mModeContext.getGameState().getAICount(), 
             true, 
             0.0f,
+            mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime(),
             mModeContext.getGameState().getPlayerCar().getCharacterName()
             ));
 
@@ -367,6 +370,7 @@ finishBoard_v UIMainMenu::prepareFinishBoard()const
                 q, 
                 false, 
                 0.0f,
+                mModeContext.getGameState().getAICar(q).getLapUtils().getBestLapTime(),
                 mModeContext.getGameState().getAICar(q).getCharacterName()));
         }
     }

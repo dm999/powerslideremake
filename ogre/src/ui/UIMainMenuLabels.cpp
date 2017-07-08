@@ -604,7 +604,10 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
         else
             mPodiumTable3Label[q]->setCaption("DNF");
 
-        mPodiumTable4Label[q]->setCaption("N/A");
+        if(finishBoard[q].mBestLapTime != 0.0f)
+            mPodiumTable4Label[q]->setCaption(Tools::SecondsToString(finishBoard[q].mBestLapTime));
+        else
+            mPodiumTable4Label[q]->setCaption("N/A");
 
         mPodiumTable1Label[q]->show();
         mPodiumTable2Label[q]->show();

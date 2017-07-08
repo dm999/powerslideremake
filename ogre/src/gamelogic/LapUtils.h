@@ -30,6 +30,7 @@ public:
     Ogre::Real getTotalTime()const {return mTotalTime;}
     Ogre::Real getLastLapTime()const {return mLastLapTime;}
     Ogre::Real getLapTime()const {return mLapTime;}
+    Ogre::Real getBestLapTime()const {return mBestLapTime;}
     Ogre::Real getLapPosition()const {return mLapPosition;}
     size_t getCurrentLap()const{return mCurrentLap;}
 
@@ -65,6 +66,7 @@ private:
     Ogre::Real mTotalTime;
     Ogre::Real mLastLapTime;
     Ogre::Real mLapTime;
+    Ogre::Real mBestLapTime;
     Ogre::Real mLapPosition;
     bool mIsLapPosInited;
 

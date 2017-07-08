@@ -6,7 +6,7 @@
 
 LapUtils::LapUtils() : 
     mIsDebugLLT(false),
-    mTotalTime(0.0f), mLastLapTime(0.0f), mLapTime(0.0f),
+    mTotalTime(0.0f), mLastLapTime(0.0f), mLapTime(0.0f), mBestLapTime(0.0f),
     mIsLapPosInited(false),
     mLapPosition(0.0f),
     mCurrentLap(0),
@@ -66,6 +66,7 @@ void LapUtils::setData( const std::vector<Ogre::Vector3>& pos,
     mTotalTime = 0.0f;
     mLastLapTime = 0.0f;
     mLapTime = 0.0f;
+    mBestLapTime = 0.0f;
     mLapPosition = 0.0f;
     mIsLapPosInited = false;
     mCurrentLap = 0;
@@ -223,6 +224,9 @@ void LapUtils::calcLapTime(size_t minIndex)
 
         mLastLapTime = mLapTime;
         mTotalTime += mLastLapTime;
+
+        if(mBestLapTime == 0.0f || mBestLapTime > mLastLapTime)
+            mBestLapTime = mLastLapTime;
 
         ++mCurrentLap;
 

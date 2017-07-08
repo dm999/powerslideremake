@@ -761,7 +761,7 @@ Ogre::Real mBackRRollResistance</y:NodeLabel>
           <y:Geometry height="997.0122632485554" width="561.972219492834" x="5209.013890253583" y="-3528.5061316242773"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="974.27734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="515.546875" x="23.21267224641724" y="11.367459749277714">&lt;&lt;LapUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="988.978515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="515.546875" x="23.21267224641724" y="4.016873811777714">&lt;&lt;LapUtils.h&gt;&gt;
 
 LapUtils
 
@@ -806,6 +806,7 @@ Ogre::Timer mAfterFinishLinePassTimer
 
 Ogre::Real mLastLapTime
 Ogre::Real mLapTime
+Ogre::Real mBestLapTime
 Ogre::Real mLapPosition
 bool mIsLapPosInited
 
