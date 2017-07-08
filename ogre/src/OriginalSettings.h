@@ -101,4 +101,17 @@ public:
 private:
 };
 
+/**
+ * Parser of original racetimes.str
+ */
+class STRRacetimes : public STRSettings
+{
+public:
+    STRRacetimes(){}
+
+    void parse(const PFLoader& pfLoaderStore);
+
+private:
+};
+
 #endif

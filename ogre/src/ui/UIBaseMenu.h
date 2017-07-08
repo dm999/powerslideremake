@@ -23,6 +23,9 @@ struct finishBoardElement
         : mPos(pos), mIsPlayer(isPlayer), mRaceTime(raceTime), mBestLapTime(bestLapTime), mCharName(charName){}
 
     bool operator< (const finishBoardElement& other)const{return mPos < other.mPos;}
+
+    static bool sortByRaceTime(const finishBoardElement& a, const finishBoardElement& b){return a.mRaceTime < b.mRaceTime;}
+    static bool findPlayer(const finishBoardElement& other){return other.mIsPlayer;}
 };
 
 typedef std::vector<finishBoardElement> finishBoard_v;

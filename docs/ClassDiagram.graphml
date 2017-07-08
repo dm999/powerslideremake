@@ -761,7 +761,7 @@ Ogre::Real mBackRRollResistance</y:NodeLabel>
           <y:Geometry height="997.0122632485554" width="561.972219492834" x="5209.013890253583" y="-3528.5061316242773"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="988.978515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="515.546875" x="23.21267224641724" y="4.016873811777714">&lt;&lt;LapUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1003.6796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="515.546875" x="23.21267224641724" y="-3.333712125722286">&lt;&lt;LapUtils.h&gt;&gt;
 
 LapUtils
 
@@ -773,6 +773,7 @@ Ogre::Quaternion getArrowOrientation(const Ogre::Vector3&amp; carPos, Ogre::Vect
 
 Ogre::Real getLastLapTime()const
 Ogre::Real getLapTime()const
+Ogre::Real getBestLapTime()const
 Ogre::Real getLapPosition()const
 size_t getCurrentLap()const
 
@@ -1143,7 +1144,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2811.923828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="72.63476874336084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2841.326171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="57.93359686836084">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1163,6 +1164,7 @@ const PFLoader&amp; getPFLoaderGameshell() const
 const PFLoader&amp; getPFLoaderStore() const
 const STRPowerslide&amp; getSTRPowerslide() const
 const STRRacecrud&amp; getSTRRacecrud() const
+const STRRacetimes&amp; getSTRRacetimes() const
 
 std::string getTrackName() const
 std::string getTrackNameAsOriginal() const
@@ -1280,6 +1282,7 @@ PFLoader mPFLoaderGameshell
 PFLoader mPFLoaderStore
 STRPowerslide mSTRPowerslide
 STRRacecrud mSTRRacecrud
+STRRacetimes mSTRRacetimes
 
 static const int mAIMax = 11
 
@@ -3440,20 +3443,24 @@ Ogre::PanelOverlayElement* mBackgroundCharacterSmallPodium[mPodiumCharacters]</y
     <node id="n81">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="227.28607574621765" width="341.643972612595" x="17679.1780136937" y="-7013.643037873109"/>
+          <y:Geometry height="263.38200616479935" width="498.05967109311814" x="17600.97016445344" y="-7031.6910030824"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="195.115234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="252.47265625" x="44.58565818129864" y="16.08542068560928">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="253.919921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.87890625" x="12.590382421560207" y="4.73104214490013">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 finishBoard
 
 size_t mPos
 bool mIsPlayer
 float mRaceTime
+float mBestLapTime
 std::string mCharName
 
 
 bool operator&lt; (const finishBoard&amp; other)const
+
+static bool sortByRaceTime(const finishBoardElement&amp; a, const finishBoardElement&amp; b)
+static bool findPlayer(const finishBoardElement&amp; other)
 
 typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
           <y:Shape type="rectangle"/>

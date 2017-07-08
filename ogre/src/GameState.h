@@ -69,6 +69,7 @@ public:
     const PFLoader& getPFLoaderStore() const;
     const STRPowerslide& getSTRPowerslide() const;
     const STRRacecrud& getSTRRacecrud() const;
+    const STRRacetimes& getSTRRacetimes() const;
 
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
@@ -186,6 +187,7 @@ private:
     PFLoader mPFLoaderStore;
     STRPowerslide mSTRPowerslide;
     STRRacecrud mSTRRacecrud;
+    STRRacetimes mSTRRacetimes;
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;

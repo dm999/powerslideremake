@@ -53,6 +53,7 @@ void GameState::initOriginalData()
             {
                 mSTRPowerslide.parse(mPFLoaderStore);
                 mSTRRacecrud.parse(mPFLoaderStore);
+                mSTRRacetimes.parse(mPFLoaderStore);
 
                 mOriginalDataInited = true;
             }
@@ -120,6 +121,12 @@ const STRRacecrud& GameState::getSTRRacecrud() const
 {
     assert(mOriginalDataInited);
     return mSTRRacecrud;
+}
+
+const STRRacetimes& GameState::getSTRRacetimes() const
+{
+    assert(mOriginalDataInited);
+    return mSTRRacetimes;
 }
 
 std::string GameState::getTrackNameAsOriginal() const

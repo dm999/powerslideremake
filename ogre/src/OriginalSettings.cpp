@@ -495,3 +495,8 @@ void STRRacecrud::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "data/misc", "racecrud.str");
 }
+
+void STRRacetimes::parse(const PFLoader& pfLoaderStore)
+{
+    STRSettings::parse(pfLoaderStore, "data/misc", "racetimes.str");
+}
