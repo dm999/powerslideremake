@@ -13,9 +13,11 @@ CameraMan::CameraMan(Ogre::Camera* cam, OgreBulletDynamics::DynamicsWorld * worl
     mCamera(cam),
     mCamPositonType(CameraPosition_ChassisC)
 {
+    mSpeedToFOV.addPoint(120.0f, 85.0f);
+    mSpeedToFOV.addPoint(250.0f, 100.0f);
 }
 
-void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity)
+void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::Real alignedVelocity)
 {
     Ogre::Vector3 cameraDisplacement(0.0f, 0.0f, 0.0f);
 
@@ -128,6 +130,10 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
         mCamera->setPosition(carPos);
         mCamera->lookAt(carPos + carRot * Ogre::Vector3(0.0f, 0.0f, -20.0f));
     }
+
+    float fov = mSpeedToFOV.getVal(alignedVelocity);
+    if(mCamera)
+        mCamera->setFOVy(Ogre::Degree(fov));
 
 
 

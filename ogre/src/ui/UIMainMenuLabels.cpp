@@ -578,7 +578,10 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
 {
     std::string playerName = "Dima";//d.polubotko: FIXME - add player name
 
-    for(size_t q = 0; q < mPodiumCharacters; ++q)
+    size_t podiumChars = mPodiumCharacters;
+    if(finishBoard.size() < podiumChars) podiumChars = finishBoard.size();
+
+    for(size_t q = 0; q < podiumChars; ++q)
     {
         if(finishBoard[q].mIsPlayer)
             mPodiumCharactersFirstSecondThirdLabel[q]->setCaption(playerName);

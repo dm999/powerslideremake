@@ -5,6 +5,8 @@
 #include "includes/OISInclude.h"
 #include "SdkCameraMan.h"
 
+#include "tools/LinearController.h"
+
 class BaseApp;
 
 namespace OgreBulletDynamics
@@ -31,7 +33,7 @@ public :
 
     virtual ~CameraMan() {}
 
-    virtual void setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity);
+    virtual void setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::Real alignedVelocity);
 
     void setRearCamera(Ogre::Camera* cam){mRearCamera = cam;}
 
@@ -49,6 +51,8 @@ private :
     Ogre::Camera* mRearCamera;
 
     CameraPositions mCamPositonType;
+
+    LinearController<float> mSpeedToFOV;
 };
 
 #endif
