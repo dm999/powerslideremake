@@ -1,0 +1,19 @@
+SdkTrays/Caption
+{
+    type        truetype
+    source      DejaVuSans.ttf
+    size        15
+    resolution  96
+    code_points 32-126
+    code_points 1025-1105
+}
+
+SdkTrays/Value
+{
+    type        truetype
+    source      ctrl_freak.ttf
+    size        20
+    resolution  96
+    code_points 32-126
+    code_points 1025-1105
+}
