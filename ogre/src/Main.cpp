@@ -129,6 +129,13 @@
             base->touchMove(pID, pX, pY);
         }
 
+        JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleKeyUp(JNIEnv* env, jobject obj, jint pKeyCode, jint _text)
+        {
+            //http://www.ogre3d.org/forums/viewtopic.php?f=21&t=80571
+            OIS::KeyEvent evt(NULL, OIS::KeyCode(pKeyCode), _text);
+            base->keyUp(evt);
+        }
+
         JNIEXPORT jboolean JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleBackPressed(JNIEnv* env, jobject obj)
         {
             return base->androidOnBack();

@@ -34,6 +34,9 @@ import java.io.File;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 import android.app.Activity;
 import android.hardware.Sensor;
@@ -258,6 +261,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             handler.post(new Runnable() {
                 public void run() {
                     OgreActivityJNI.handleActionUp(idPointerUp, xPointerUp, yPointerUp);
+                    //showKeyboard();
                 }
             });
             break;
@@ -297,6 +301,17 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
         return true;
     }
+    
+    @Override
+    public boolean onKeyUp(final int keyCode, final KeyEvent event) {
+        handler.post(new Runnable() {
+            public void run() {
+                OgreActivityJNI.handleKeyUp(keyCode, event.getUnicodeChar());
+            }
+        });
+        
+        return super.onKeyUp(keyCode, event);
+    }
 
 
     @Override
@@ -306,6 +321,18 @@ public class MainActivity extends Activity implements SensorEventListener {
             finish();
             System.exit(0);
         }
+    }
+    
+    public void showKeyboard()
+    {
+        InputMethodManager imm = ( InputMethodManager )getSystemService( Context.INPUT_METHOD_SERVICE );
+        imm.showSoftInput( this.getWindow().getDecorView(), InputMethodManager.SHOW_FORCED );
+    }
+
+    public void hideKeyboard()
+    {
+        InputMethodManager imm = ( InputMethodManager )getSystemService( Context.INPUT_METHOD_SERVICE );
+        imm.hideSoftInputFromWindow( this.getWindow().getDecorView().getWindowToken(), 0 );
     }
 
     static {
