@@ -28,7 +28,11 @@ public:
 
 private:
 
+    void adjustCaptionLength();
+
     Ogre::DisplayString mCaption;
+    Ogre::DisplayString mCaptionToDisplay;
+
     bool mIsShown;
     bool mIsCaretShown;
     bool mIsActive;

@@ -123,7 +123,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     createLabels(screenAdaptionRelative);
     createControls(screenAdaptionRelative, getMainBackground());
 
-    mEditBox.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 240.0f, true);
+    mEditBox.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 240.0f);
     mEditBox2.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 265.0f);
 
 

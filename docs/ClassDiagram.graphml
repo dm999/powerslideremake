@@ -3471,10 +3471,10 @@ typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
     <node id="n81">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="661.5011478092356" width="429.7688027360905" x="19105.115598631954" y="-5340.750573904617"/>
+          <y:Geometry height="712.7737762447223" width="352.85986008286045" x="19143.57006995857" y="-5366.386888122361"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="72.48498730554638" y="20.02596452961734">&lt;&lt;UIEditBox.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="34.03051597893136" y="16.259934997360688">&lt;&lt;UIEditBox.h&gt;&gt;
 
 UIEditBox
 
@@ -3494,7 +3494,11 @@ void hide()
 
 private:
 
+void adjustCaptionLength()
+
 Ogre::DisplayString mCaption
+Ogre::DisplayString mCaptionToDisplay
+
 bool mIsShown
 bool mIsCaretShown
 bool mIsActive

@@ -10,7 +10,7 @@ Ogre::NameGenerator UIEditBox::nameGenPanel("UIEditBox/Panel");
 Ogre::NameGenerator UIEditBox::nameGenText("UIEditBox/Text");
 
 
-UIEditBox::UIEditBox() : mCaption("Test"), 
+UIEditBox::UIEditBox() : mCaption(""), mCaptionToDisplay(""),
     mIsShown(true), mIsCaretShown(true), mIsActive(false),
     mBackground(NULL), mText(NULL),
     mCaretSize(9.0f)
@@ -100,9 +100,9 @@ void UIEditBox::frameStarted(const Ogre::FrameEvent &evt)
         if(mText)
         {
             if(mIsCaretShown && mIsActive)
-                mText->setCaption(mCaption + "|");
+                mText->setCaption(mCaptionToDisplay + "|");
             else
-                mText->setCaption(mCaption);
+                mText->setCaption(mCaptionToDisplay);
         }
     }
 }
@@ -117,7 +117,7 @@ void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
             {
                 mText->setWidth(0);
                 mCaption = mCaption.substr(0, mCaption.length() - 1);
-                mText->setCaption(mCaption);
+                adjustCaptionLength();
             }
         }
         else if (
@@ -161,18 +161,37 @@ void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         {}
         else
         {
-            float width = mText->getWidth();
-            if(width < (mBackground->getWidth() - mCaretSize))
-                mCaption = mCaption.asWStr() + _char;
+            mCaption = mCaption.asWStr() + _char;
+            adjustCaptionLength();
         }
+    }
+}
+
+void UIEditBox::adjustCaptionLength()
+{
+    mCaptionToDisplay = mCaption;
+    mText->setWidth(0);
+    mText->setCaption(mCaptionToDisplay);
+    mText->_update();
+    float width = mText->getWidth();
+    while(width >= (mBackground->getWidth() - mCaretSize))
+    {
+        mCaptionToDisplay = mCaptionToDisplay.substr(1, mCaptionToDisplay.length());
+        mText->setWidth(0);
+        mText->setCaption(mCaptionToDisplay);
+        mText->_update();
+        width = mText->getWidth();
     }
 }
 
 void UIEditBox::mouseReleased(const Ogre::Vector2& pos)
 {
-
     if(mBackground && mIsShown && OgreBites::Widget::isCursorOver(mBackground, pos, 0))
+    {
         mIsActive = true;
+        mIsCaretShown = true;
+        mBlinkTimer.reset();
+    }
     else
         mIsActive = false;
 }
