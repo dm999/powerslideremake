@@ -27,6 +27,8 @@ public:
     void reloadTextures()override;
 #endif
 
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char )override;
+
     void mousePressed(const Ogre::Vector2& pos)override;
     void mouseReleased(const Ogre::Vector2& pos)override;
     void mouseMoved(const Ogre::Vector2& pos)override;

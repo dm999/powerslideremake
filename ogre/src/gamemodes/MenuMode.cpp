@@ -24,6 +24,11 @@ void MenuMode::frameStarted(const Ogre::FrameEvent &evt)
     mUIMainMenu->frameStarted(evt);
 }
 
+void MenuMode::keyUp(MyGUI::KeyCode _key, wchar_t _char )
+{
+    mUIMainMenu->keyUp(_key, _char);
+}
+
 void MenuMode::mousePressed(const Ogre::Vector2& pos)
 {
     mUIMainMenu->mousePressed(pos);

@@ -3,6 +3,7 @@
 
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
+#include "../includes/MyGUI_KeyCode.h"
 
 #include "../listeners/LoaderListener.h"
 
@@ -38,6 +39,8 @@ public:
     void restartRace();
 
     void tabPressed();
+
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char );
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);

@@ -569,20 +569,16 @@ void UIMainMenuBackground::showBackgroundCharacterSmallPodium(const finishBoard_
 {
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
 
-    size_t podiumChars = mPodiumCharacters;
-    if(finishBoard.size() < podiumChars)
+    size_t podiumChars = std::min(finishBoard.size(), mPodiumCharacters);
+
+    if(podiumChars == 1)
     {
-        podiumChars = finishBoard.size();
-
-        if(podiumChars < 2)
-        {
-            mBackground2nd->hide();
-            mBackground3rd->hide();
-        }
-
-        if(podiumChars == 2)
-            mBackground3rd->hide();
+        mBackground2nd->hide();
+        mBackground3rd->hide();
     }
+
+    if(podiumChars == 2)
+        mBackground3rd->hide();
 
     for(size_t q = 0; q < podiumChars; ++q)
     {

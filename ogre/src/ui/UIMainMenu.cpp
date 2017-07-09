@@ -43,8 +43,6 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
 
 void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener)
 {
-    trayMgr->setListener(this);
-
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
@@ -124,6 +122,9 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     createBackgroundUI(screenAdaptionRelative, trayMgr);//init mMainBackground for further usage
     createLabels(screenAdaptionRelative);
     createControls(screenAdaptionRelative, getMainBackground());
+
+    mEditBox.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 240.0f, true);
+    mEditBox2.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 265.0f);
 
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
@@ -268,11 +269,22 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
             startRace();
         }
     }
+
+    mEditBox.frameStarted(evt);
+    mEditBox2.frameStarted(evt);
+}
+
+void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
+{
+    mEditBox.keyUp(_key, _char);
+    mEditBox2.keyUp(_key, _char);
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
+    mEditBox.mouseReleased(pos);
+    mEditBox2.mouseReleased(pos);
 }
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
@@ -298,6 +310,13 @@ void UIMainMenu::setExitSubmenu()
 void UIMainMenu::setTopmostSubmenu()
 {
     switchState(State_SingleMulti);
+}
+
+void UIMainMenu::destroy(CustomTrayManager* trayMgr)
+{
+    UIBase::destroy(trayMgr);
+    mEditBox.destroy(trayMgr);
+    mEditBox2.destroy(trayMgr);
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -420,6 +439,8 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         setWindowTitle("Game Mode");
         showModeSingle();
         showBackgrounds();
+        mEditBox.show();
+        mEditBox2.show();
         break;
 
     case State_Difficulty:
@@ -499,4 +520,6 @@ void UIMainMenu::hideAll()
 {
     hideAllBackgrounds();
     hideAllLabels();
+    mEditBox.hide();
+    mEditBox2.hide();
 }

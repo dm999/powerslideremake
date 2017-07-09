@@ -1,0 +1,202 @@
+#include "UIEditBox.h"
+
+#include "../../loaders/TextureLoader.h"
+
+#include "../../tools/OgreTools.h"
+
+Ogre::NameGenerator UIEditBox::nameGenTextures("UIEditBox/Texture");
+Ogre::NameGenerator UIEditBox::nameGenMaterials("UIEditBox/Material");
+Ogre::NameGenerator UIEditBox::nameGenPanel("UIEditBox/Panel");
+Ogre::NameGenerator UIEditBox::nameGenText("UIEditBox/Text");
+
+
+UIEditBox::UIEditBox() : mCaption("Test"), 
+    mIsShown(true), mIsCaretShown(true), mIsActive(false),
+    mBackground(NULL), mText(NULL),
+    mCaretSize(9.0f)
+{
+    mTextureName = nameGenTextures.generate();
+    mMaterialName = nameGenMaterials.generate();
+    mPanelName = nameGenPanel.generate();
+    mTextName = nameGenText.generate();
+}
+
+void UIEditBox::init(const PFLoader& pfLoaderGameshell, 
+                     const Ogre::Matrix4& screenAdaptionRelative, 
+                     Ogre::PanelOverlayElement* mainBackground,
+                     float left, float top,
+                     bool isActive)
+{
+    Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
+
+    mIsActive = isActive;
+
+    TextureLoader().load( pfLoaderGameshell, 
+        "data/gameshell", "session.bmp", 
+        mTextureName, TEMP_RESOURCE_GROUP_NAME);
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back(mTextureName);
+        Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialName, 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(left, top, left + 170.0f, top + 22.0f);
+
+        mBackground = createPanel(mPanelName, background, mMaterialName);
+        mBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mainBackground->addChild(mBackground);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(2.0f, 0.0f, 0.0f, 0.0f);
+        mText = createTextArea(mTextName, 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mText->setCaption(mCaption);
+        mText->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mText->setSpaceWidth(9.0f);
+        mText->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mText->setFontName("SdkTrays/Caption");
+        mText->setColour(Ogre::ColourValue::White);
+        mBackground->addChild(mText);
+
+        mCaretSize = 46.0f * viewportHeight / 1024.0f;
+    }
+}
+
+void UIEditBox::frameStarted(const Ogre::FrameEvent &evt)
+{
+    const unsigned long blinkThreshold = 500; //ms
+    if(mIsShown)
+    {
+        if(mIsCaretShown)
+        {
+            unsigned long lastBlink = mBlinkTimer.getMilliseconds();
+            if(lastBlink >= blinkThreshold)
+            {
+                mIsCaretShown = false;
+                mBlinkTimer.reset();
+            }
+        }
+        else
+        {
+            unsigned long lastBlink = mBlinkTimer.getMilliseconds();
+            if(lastBlink >= blinkThreshold)
+            {
+                mIsCaretShown = true;
+                mBlinkTimer.reset();
+            }
+        }
+
+        if(mText)
+        {
+            if(mIsCaretShown && mIsActive)
+                mText->setCaption(mCaption + "|");
+            else
+                mText->setCaption(mCaption);
+        }
+    }
+}
+
+void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
+{
+    if(mIsActive)
+    {
+        if (_key == MyGUI::KeyCode::Backspace)
+        {
+            if(mCaption.length() > 0)
+            {
+                mText->setWidth(0);
+                mCaption = mCaption.substr(0, mCaption.length() - 1);
+                mText->setCaption(mCaption);
+            }
+        }
+        else if (
+            _key == MyGUI::KeyCode::None            ||
+            _key == MyGUI::KeyCode::Escape          ||
+            _key == MyGUI::KeyCode::Delete          ||
+            _key == MyGUI::KeyCode::Insert          ||
+            _key == MyGUI::KeyCode::Return          ||
+            _key == MyGUI::KeyCode::NumpadEnter     ||
+            _key == MyGUI::KeyCode::ArrowRight      ||
+            _key == MyGUI::KeyCode::ArrowLeft       ||
+            _key == MyGUI::KeyCode::ArrowUp         ||
+            _key == MyGUI::KeyCode::ArrowDown       ||
+            _key == MyGUI::KeyCode::Home            ||
+            _key == MyGUI::KeyCode::End             ||
+            _key == MyGUI::KeyCode::Tab             ||
+            _key == MyGUI::KeyCode::PageUp          ||
+            _key == MyGUI::KeyCode::PageDown        ||
+            _key == MyGUI::KeyCode::LeftControl     ||
+            _key == MyGUI::KeyCode::RightControl    ||
+            _key == MyGUI::KeyCode::LeftShift       ||
+            _key == MyGUI::KeyCode::RightShift      ||
+            _key == MyGUI::KeyCode::LeftAlt         ||
+            _key == MyGUI::KeyCode::RightAlt        ||
+            _key == MyGUI::KeyCode::F1              ||
+            _key == MyGUI::KeyCode::F2              ||
+            _key == MyGUI::KeyCode::F3              ||
+            _key == MyGUI::KeyCode::F4              ||
+            _key == MyGUI::KeyCode::F5              ||
+            _key == MyGUI::KeyCode::F6              ||
+            _key == MyGUI::KeyCode::F7              ||
+            _key == MyGUI::KeyCode::F8              ||
+            _key == MyGUI::KeyCode::F9              ||
+            _key == MyGUI::KeyCode::F10             ||
+            _key == MyGUI::KeyCode::F11             ||
+            _key == MyGUI::KeyCode::F12             ||
+            _key == MyGUI::KeyCode::Capital         ||
+            _key == MyGUI::KeyCode::NumLock         ||
+            _key == MyGUI::KeyCode::ScrollLock
+            )
+        {}
+        else
+        {
+            float width = mText->getWidth();
+            if(width < (mBackground->getWidth() - mCaretSize))
+                mCaption = mCaption.asWStr() + _char;
+        }
+    }
+}
+
+void UIEditBox::mouseReleased(const Ogre::Vector2& pos)
+{
+
+    if(mBackground && mIsShown && OgreBites::Widget::isCursorOver(mBackground, pos, 0))
+        mIsActive = true;
+    else
+        mIsActive = false;
+}
+
+void UIEditBox::show()
+{
+    if(mBackground)
+        mBackground->show();
+
+    if(mText)
+        mText->show();
+
+    mIsShown = true;
+    mIsCaretShown = true;
+    mBlinkTimer.reset();
+}
+
+void UIEditBox::hide()
+{
+    if(mBackground)
+        mBackground->hide();
+
+    if(mText)
+        mText->hide();
+
+    mIsShown = false;
+}

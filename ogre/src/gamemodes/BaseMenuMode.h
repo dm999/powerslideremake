@@ -3,6 +3,8 @@
 
 #include "BaseMode.h"
 
+#include "../includes/MyGUI_KeyCode.h"
+
 class LoaderListener;
 
 class BaseMenuMode : public BaseMode
@@ -15,6 +17,8 @@ public:
     void initData(LoaderListener* loaderListener)override;
     void initCamera()override;
     void clearData()override;
+
+    virtual void keyUp(MyGUI::KeyCode _key, wchar_t _char ) = 0;
 
     virtual void mousePressed(const Ogre::Vector2& pos) = 0;
     virtual void mouseReleased(const Ogre::Vector2& pos) = 0;

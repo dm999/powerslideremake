@@ -273,6 +273,17 @@ void GameModeSwitcher::tabPressed()
 #endif
 }
 
+void GameModeSwitcher::keyUp(MyGUI::KeyCode _key, wchar_t _char )
+{
+    if(mMenuMode.get())
+        mMenuMode->keyUp(_key, _char);
+
+#ifndef NO_MULTIPLAYER
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->keyUp(_key, _char);
+#endif
+}
+
 void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
 {
     if(mMenuMode.get())

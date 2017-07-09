@@ -17,6 +17,7 @@
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#include "includes/MyGUI_KeyCode.h"
 #include "res/resource.h"
 #endif
 
@@ -42,10 +43,9 @@ namespace
     lua_State * mPipeline = NULL;
     BaseApp * baseApp = NULL;
 
-#if 0
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     //https://github.com/MyGUI/mygui/blob/master/Common/Input/OIS/InputManager.cpp
-    MyGUI::Char translateWin32Text(MyGUI::KeyCode kc)
+    wchar_t translateWin32Text(MyGUI::KeyCode kc)
     {
         static WCHAR deadKey = 0;
 
@@ -108,7 +108,6 @@ namespace
 
         return 0;
     }
-#endif
 #endif
 }
 
@@ -581,6 +580,12 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
     if(mGameModeSwitcher->isLoadPassed())
     {
         mGameState.getPlayerCar().keyUp(arg.key);
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), translateWin32Text(MyGUI::KeyCode::Enum(arg.key)));
+#else
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), arg.text);
+#endif
 
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
             //MyGUI::InputManager::getInstance().injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));

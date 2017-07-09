@@ -5,6 +5,8 @@
 
 #include "../GameState.h"
 
+#include "elements/UIEditBox.h"
+
 class MenuMode;
 class LoaderListener;
 
@@ -23,6 +25,8 @@ public:
     void reloadTextures(const GameState& gameState);
 #endif
 
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char);
+
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos);
@@ -30,6 +34,8 @@ public:
     bool isExitSubmenu()const;
     void setExitSubmenu();
     void setTopmostSubmenu();
+
+    virtual void destroy(CustomTrayManager* trayMgr);
 
 protected:
 
@@ -52,6 +58,9 @@ private:
     MenuMode * mMenuMode;
 
     SinglePlayerMenuStates mCurrentState;
+
+    UIEditBox mEditBox;
+    UIEditBox mEditBox2;
 };
 
 #endif

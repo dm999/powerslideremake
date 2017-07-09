@@ -61,6 +61,9 @@ file(GLOB PowerslideRemake_sources_modes_main_h src/gamemodes/*.h)
 file(GLOB PowerslideRemake_sources_ui_main src/ui/*.cpp)
 file(GLOB PowerslideRemake_sources_ui_main_h src/ui/*.h)
 
+file(GLOB PowerslideRemake_sources_ui_elements src/ui/elements/*.cpp)
+file(GLOB PowerslideRemake_sources_ui_elements_h src/ui/elements/*.h)
+
 file(GLOB PowerslideRemake_sources_includes_main_h src/includes/*.h)
 
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_main})
@@ -80,6 +83,7 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_elements})
 
 
 if(MSVC)
@@ -121,6 +125,7 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_elements_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_includes_main_h})
 
 

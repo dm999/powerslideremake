@@ -17,6 +17,7 @@ To build project you need:
 
 ### Sources ###
 "Powerslide remake" also depends and/or includes sources of such open sourced projects as:  
+- [MyGUI](https://github.com/MyGUI/mygui)  
 - [Bullet](http://bulletphysics.org/wordpress/)  
 - [Ogre Bullet](http://www.ogre3d.org/tikiwiki/OgreBullet)  
 - [Lua](https://www.lua.org/)  
