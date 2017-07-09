@@ -10,8 +10,9 @@ Ogre::NameGenerator UIEditBox::nameGenPanel("UIEditBox/Panel");
 Ogre::NameGenerator UIEditBox::nameGenText("UIEditBox/Text");
 
 
-UIEditBox::UIEditBox() : mCaption(""), mCaptionToDisplay(""),
+UIEditBox::UIEditBox(size_t maxSymbols) : mCaption(""), mCaptionToDisplay(""),
     mIsShown(true), mIsCaretShown(true), mIsActive(false),
+    mMaxSymbols(maxSymbols),
     mBackground(NULL), mText(NULL),
     mCaretSize(9.0f)
 {
@@ -21,18 +22,10 @@ UIEditBox::UIEditBox() : mCaption(""), mCaptionToDisplay(""),
     mTextName = nameGenText.generate();
 }
 
-void UIEditBox::init(const PFLoader& pfLoaderGameshell, 
-                     const Ogre::Matrix4& screenAdaptionRelative, 
-                     Ogre::PanelOverlayElement* mainBackground,
-                     float left, float top,
-                     bool isActive)
+void UIEditBox::loadBackground(const PFLoader& pfLoaderGameshell, const std::string& filename)
 {
-    Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
-
-    mIsActive = isActive;
-
     TextureLoader().load( pfLoaderGameshell, 
-        "data/gameshell", "session.bmp", 
+        "data/gameshell", filename, 
         mTextureName, TEMP_RESOURCE_GROUP_NAME);
 
     {
@@ -49,9 +42,25 @@ void UIEditBox::init(const PFLoader& pfLoaderGameshell,
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
+}
+
+void UIEditBox::setBackgroundMaterial(const std::string& name)
+{
+    mMaterialName = name;
+}
+
+void UIEditBox::init(const Ogre::Matrix4& screenAdaptionRelative, 
+                     Ogre::PanelOverlayElement* mainBackground,
+                     const Ogre::Vector4& dimensions,
+                     Ogre::Real fontSize, 
+                     bool isActive)
+{
+    Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
+
+    mIsActive = isActive;
 
     {
-        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(left, top, left + 170.0f, top + 22.0f);
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(dimensions.x, dimensions.y, dimensions.x + dimensions.z, dimensions.y + dimensions.w);
 
         mBackground = createPanel(mPanelName, background, mMaterialName);
         mBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -62,14 +71,14 @@ void UIEditBox::init(const PFLoader& pfLoaderGameshell,
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(2.0f, 0.0f, 0.0f, 0.0f);
         mText = createTextArea(mTextName, 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mText->setCaption(mCaption);
-        mText->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mText->setCharHeight(fontSize * viewportHeight / 1024.0f);
         mText->setSpaceWidth(9.0f);
         mText->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mText->setFontName("SdkTrays/Caption");
         mText->setColour(Ogre::ColourValue::White);
         mBackground->addChild(mText);
 
-        mCaretSize = 46.0f * viewportHeight / 1024.0f;
+        mCaretSize = (fontSize / 2.0f) * viewportHeight / 1024.0f;
     }
 }
 
@@ -161,8 +170,11 @@ void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         {}
         else
         {
-            mCaption = mCaption.asWStr() + _char;
-            adjustCaptionLength();
+            if(mCaption.length() < mMaxSymbols)
+            {
+                mCaption = mCaption.asWStr() + _char;
+                adjustCaptionLength();
+            }
         }
     }
 }

@@ -51,6 +51,14 @@ UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
     mRemapCar.insert(std::make_pair<std::string, size_t>("supercar", 6));
 }
 
+void UIBaseMenu::loadColorTextures()
+{
+    TextureLoader().generate("CustomBackgroundBlack");
+    TextureLoader().generate("CustomBackgroundBlackTransparent", 64, 64, Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.5f));
+    TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
+    TextureLoader().generate("CustomBackgroundRedTransparent", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 0.5f));
+}
+
 void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
 {
 #if !defined(__ANDROID__)
@@ -59,6 +67,8 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 "OriginalCursor", TEMP_RESOURCE_GROUP_NAME, 
                                 Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
 #endif
+
+    loadColorTextures();
 
     TextureLoader().loadChroma( pfLoaderGameshell, 
                                 "data/gameshell", "single.bmp", 
@@ -97,6 +107,69 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
 }
 
+void UIBaseMenu::createColorMaterials()
+{
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("CustomBackgroundBlack");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundBlack", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("CustomBackgroundBlackTransparent");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundBlackTransparent", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("CustomBackgroundRed");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundRed", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("CustomBackgroundRedTransparent");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundRedTransparent", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+}
+
 void UIBaseMenu::createCommonMaterials()
 {
 #if !defined(__ANDROID__)
@@ -116,6 +189,8 @@ void UIBaseMenu::createCommonMaterials()
         state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
 #endif
+
+    createColorMaterials();
 
     //explicitly load font
     Ogre::FontManager::getSingleton().getByName("SdkTrays/Caption")->load();

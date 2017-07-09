@@ -11,13 +11,17 @@ class UIEditBox : public UIBase
 {
 public:
 
-    UIEditBox();
+    UIEditBox(size_t maxSymbols = 256);
     virtual ~UIEditBox(){}
 
-    void init(const PFLoader& pfLoaderGameshell, 
-        const Ogre::Matrix4& screenAdaptionRelative, 
+    void loadBackground(const PFLoader& pfLoaderGameshell, const std::string& filename);
+    void setBackgroundMaterial(const std::string& name);
+
+    void init(const Ogre::Matrix4& screenAdaptionRelative, 
         Ogre::PanelOverlayElement* mainBackground, 
-        float left, float top, bool isActive = false);
+        const Ogre::Vector4& dimensions, // original sizes (640x480), before adaptation
+        Ogre::Real fontSize, // original sizes (640x480), before adaptation
+        bool isActive = false);
 
     void frameStarted(const Ogre::FrameEvent &evt);
     void keyUp(MyGUI::KeyCode _key, wchar_t _char);
@@ -42,6 +46,8 @@ private:
 
     Ogre::String mPanelName;
     Ogre::String mTextName;
+
+    size_t mMaxSymbols;
 
     Ogre::PanelOverlayElement* mBackground;
     Ogre::TextAreaOverlayElement * mText;

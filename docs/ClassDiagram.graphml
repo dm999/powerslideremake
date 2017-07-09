@@ -3218,10 +3218,10 @@ virtual void loadState() = 0</y:NodeLabel>
     <node id="n73">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="603.5239954656654" width="564.6254833569851" x="18223.07101762247" y="-7201.761997732832"/>
+          <y:Geometry height="663.6091069135009" width="564.6254833569851" x="18223.07101762247" y="-7231.80455345675"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="5.738560232832242">&lt;&lt;UIBaseMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="636.150390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="548.25390625" x="8.185788553491875" y="13.72935814425">&lt;&lt;UIBaseMenu.h&gt;&gt;
 
 UIBaseMenu
 
@@ -3259,6 +3259,9 @@ ModeContext mModeContext
 static const size_t mPodiumCharacters = 3
 
 private:
+
+void loadColorTextures()
+void createColorMaterials()
 
 bool mControlClicked[mControlsCount]</y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -3471,19 +3474,23 @@ typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
     <node id="n81">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="712.7737762447223" width="352.85986008286045" x="19143.57006995857" y="-5366.386888122361"/>
+          <y:Geometry height="776.196949439659" width="516.4248856908503" x="19061.787557154574" y="-5398.098474719829"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="284.798828125" x="34.03051597893136" y="16.259934997360688">&lt;&lt;UIEditBox.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.251953125" x="22.086466282926267" y="3.868005969829028">&lt;&lt;UIEditBox.h&gt;&gt;
 
 UIEditBox
 
 public:
 
-void init(const PFLoader&amp; pfLoaderGameshell, 
-        const Ogre::Matrix4&amp; screenAdaptionRelative, 
+void loadBackground(const PFLoader&amp; pfLoaderGameshell, const std::string&amp; filename)
+void setBackgroundMaterial(const std::string&amp; name)
+
+void init(const Ogre::Matrix4&amp; screenAdaptionRelative, 
         Ogre::PanelOverlayElement* mainBackground, 
-        float left, float top, bool isActive = false)
+        const Ogre::Vector4&amp; dimensions,
+        Ogre::Real fontSize,
+        bool isActive = false)
 
 void frameStarted(const Ogre::FrameEvent &amp;evt)
 void keyUp(MyGUI::KeyCode _key, wchar_t _char)
@@ -3508,6 +3515,8 @@ Ogre::String mMaterialName
 
 Ogre::String mPanelName
 Ogre::String mTextName
+
+size_t mMaxSymbols
 
 Ogre::PanelOverlayElement* mBackground
 Ogre::TextAreaOverlayElement * mText

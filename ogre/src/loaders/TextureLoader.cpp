@@ -4,6 +4,33 @@
 #include "TextureLoader.h"
 #include "../tools/OgreTools.h"
 
+Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::uint width, Ogre::uint height, const Ogre::ColourValue& keyCol, const Ogre::String& group) const
+{
+    Ogre::TexturePtr res;
+
+    const Ogre::PixelFormat targetTextureFormat = Ogre::PF_A8R8G8B8;
+    Ogre::uchar* pixelData = OGRE_ALLOC_T (Ogre::uchar, Ogre::PixelUtil::getMemorySize (width, height, 1, targetTextureFormat), Ogre::MEMCATEGORY_GENERAL);
+    Ogre::ulong pxDataIndex = 0, pxDataIndexStep = Ogre::PixelUtil::getNumElemBytes (targetTextureFormat); 
+
+    for(Ogre::uint y = 0; y < height; ++y) 
+    { 
+        for(Ogre::uint x = 0; x < width; ++x) 
+        { 
+            Ogre::PixelUtil::packColour (keyCol, targetTextureFormat, static_cast<void*> (pixelData + pxDataIndex) ); 
+            pxDataIndex += pxDataIndexStep; 
+        }
+    }
+
+    Ogre::Image img;
+    img.loadDynamicImage (pixelData, width, height, 1, targetTextureFormat, true); 
+
+    res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
+
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TextureLoader::generate]");
+
+    return res;
+}
+
 Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
 {
     Ogre::TexturePtr res;

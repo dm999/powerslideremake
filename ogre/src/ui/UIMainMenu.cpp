@@ -25,7 +25,8 @@ UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, Sing
     : UIMainMenuLabels(modeContext),
     mIsInStartingGrid(false),
     mMenuMode(menuMode),
-    mCurrentState(state)
+    mCurrentState(state),
+    mEditBox(10)
 {}
 
 UIMainMenu::~UIMainMenu()
@@ -123,8 +124,11 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     createLabels(screenAdaptionRelative);
     createControls(screenAdaptionRelative, getMainBackground());
 
-    mEditBox.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 240.0f);
-    mEditBox2.init(gameState.getPFLoaderGameshell(), screenAdaptionRelative, getMainBackground(), 320.0f, 265.0f);
+    //mEditBox.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
+    mEditBox.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 200.0f, 250.0f, 42.0f), 86.0f);
+    mEditBox2.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBox2.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 265.0f, 170.0f, 22.0f), 46.0f);
 
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());

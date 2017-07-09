@@ -68,6 +68,10 @@ protected:
     static const size_t mPodiumCharacters = 3;
 
 private:
+
+    void loadColorTextures();
+    void createColorMaterials();
+
     bool mControlClicked[mControlsCount];
 };
 
