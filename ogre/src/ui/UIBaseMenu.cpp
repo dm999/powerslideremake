@@ -24,6 +24,10 @@ namespace{
     };
 }
 
+#ifndef _MSC_VER
+    const size_t UIBaseMenu::mPodiumCharacters;
+#endif
+
 UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
     : mModeContext(modeContext)
 {
