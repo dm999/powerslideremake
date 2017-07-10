@@ -950,12 +950,16 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
     if (nativeWnd && mRoot.get())
     {
 
+        AConfiguration* config = AConfiguration_new();
+        AConfiguration_fromAssetManager(config, mAssetMgr); 
+
         if (!mWindow) 
         {
             LOGI("BaseApp[androidInitWindow]: Before window creating"); 
 
             Ogre::NameValuePairList opt;
             opt["externalWindowHandle"] = Ogre::StringConverter::toString((int)nativeWnd);
+            opt["androidConfig"] = Ogre::StringConverter::toString((int)config); 
             mWindow = Ogre::Root::getSingleton().createRenderWindow("OgreWindow", 0, 0, false, &opt);
 
             mInputHandler.reset(new InputHandler(mWindow, this));
@@ -992,14 +996,58 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
         {
             LOGI("BaseApp[androidInitWindow]: Before _createInternalResources"); 
 
-            //mLuaManager.CallFunction_0_0("main", mPipeline);
-            //mLuaManager.CallFunction_0_0("create", mPipeline);
+            static_cast<Ogre::AndroidEGLWindow*>(mWindow)->_createInternalResources(nativeWnd, config);
 
-            //initLightLists();
+            //http://www.ogre3d.org/forums/viewtopic.php?f=21&t=78172&hilit=android+texture
+            {
+                Ogre::TextureManager& m = Ogre::TextureManager::getSingleton();
+                std::vector<std::string> tempTextures;
 
-            static_cast<Ogre::AndroidEGLWindow*>(mWindow)->_createInternalResources(nativeWnd, NULL);
-            mGameModeSwitcher->reloadTextures();
+                Ogre::TextureManager::ResourceMapIterator rmi = m.getResourceIterator();
+                for(Ogre::TextureManager::ResourceHandleMap::const_iterator i = rmi.begin(); i != rmi.end(); ++i)
+                {
+                    //LOGI("BaseApp[androidInitWindow]: %s %s %d %d", i->second->getName().c_str(), i->second->getGroup().c_str(), i->second->isReloadable(), i->second->getLoadingState()); 
+                    if(i->second->getGroup() == TEMP_RESOURCE_GROUP_NAME)
+                    {
+                        tempTextures.push_back(i->second->getName().c_str());
+                    }
+                }
+
+                for(size_t q = 0; q < tempTextures.size(); ++q)
+                {
+                    if(tempTextures[q] != "RearViewMirrorTex")
+                        m.remove(tempTextures[q]);
+                }
+
+                mGameModeSwitcher->reloadTextures();
+            }
+
+            {
+                Ogre::MaterialManager& m = Ogre::MaterialManager::getSingleton();
+
+                Ogre::MaterialManager::ResourceMapIterator rmi = m.getResourceIterator();
+                for(Ogre::MaterialManager::ResourceHandleMap::const_iterator i = rmi.begin(); i != rmi.end(); ++i)
+                {
+                    if(i->second->getGroup() == TEMP_RESOURCE_GROUP_NAME)
+                    {
+                        unsigned short textUnitStates = static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getNumTextureUnitStates();
+                        for(unsigned short q = 0; q < textUnitStates; ++q)
+                        {
+                            std::string textureName = static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getTextureUnitState(q)->getTextureName();
+                            try{
+                                static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getTextureUnitState(q)->setTexture(Ogre::TextureManager::getSingleton().getByName(textureName, TEMP_RESOURCE_GROUP_NAME));
+                            }
+                            catch(...){}
+                        }
+
+                        i->second->reload();
+                    }
+                }
+            }
+
         }
+
+        AConfiguration_delete(config); 
     }
 
     LOGI("BaseApp[androidInitWindow]: End"); 

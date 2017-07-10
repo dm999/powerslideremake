@@ -29,12 +29,10 @@ UIRace::UIRace() :
 void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 {
 
+    loadMisc(gameState, gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
+
     //startlight
     {
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", TEMP_RESOURCE_GROUP_NAME);
-
         {
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalStartReadyL");
@@ -67,10 +65,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     }
 
     {
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", TEMP_RESOURCE_GROUP_NAME);
-
         {
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalStartSetL");
@@ -103,10 +97,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     }
 
     {
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", TEMP_RESOURCE_GROUP_NAME);
-
         {
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalStartGoL");
@@ -236,10 +226,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard
     {
-        std::string dashTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "dash file", "max_dash.tga");
-        std::transform(dashTexture.begin(), dashTexture.end(), dashTexture.begin(), ::tolower);
-        TextureLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashTexture, "OriginalDash", TEMP_RESOURCE_GROUP_NAME);
-
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalDash");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/DashboardWarthog", 
@@ -252,11 +238,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //dashboard position
     {
-        std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCar().getCharacterName() + " parameters", "dash texture", "max_m_3.tex");
-        std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
-        dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", TEMP_RESOURCE_GROUP_NAME);
-
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalDashPosition");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/DashboardWarthogPosition", 
@@ -338,12 +319,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //tacho
     {
-        std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
-        std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
-        tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME);
-        //TEXLoader().loadChroma(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME, Ogre::ColourValue::White);
-
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalTacho");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/TachoFrantic", 
@@ -472,8 +447,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     //font
     {
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", TEMP_RESOURCE_GROUP_NAME);
-
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalFont");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/DashFont", 
@@ -606,8 +579,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mDashLapTime6->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
         dashboard->addChild(mDashLapTime6);
     }
-
-    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
     //paused
     {
@@ -884,7 +855,7 @@ void UIRace::setVisibleFinishSign(bool isVisible, size_t finishPos)
 void UIRace::reloadTextures(const GameState& gameState)
 {
     loadDashboardCars(gameState);
-    loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
+    loadMisc(gameState, gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 }
 #endif
 
@@ -910,11 +881,49 @@ void UIRace::loadDashboardCars(const GameState& gameState)
     }
 }
 
-void UIRace::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
+void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
 #if defined(__ANDROID__)
         LOGI("UIRace[loadMisc]: Begin"); 
 #endif
+
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", TEMP_RESOURCE_GROUP_NAME);
+
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", TEMP_RESOURCE_GROUP_NAME);
+
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", TEMP_RESOURCE_GROUP_NAME);
+
+    //dashboard
+    {
+        std::string dashTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "dash file", "max_dash.tga");
+        std::transform(dashTexture.begin(), dashTexture.end(), dashTexture.begin(), ::tolower);
+        TextureLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashTexture, "OriginalDash", TEMP_RESOURCE_GROUP_NAME);
+    }
+
+    //dashboard position
+    {
+        std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCar().getCharacterName() + " parameters", "dash texture", "max_m_3.tex");
+        std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
+        dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", TEMP_RESOURCE_GROUP_NAME);
+    }
+
+    //tacho
+    {
+        std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
+        std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
+        tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME);
+        //TEXLoader().loadChroma(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME, Ogre::ColourValue::White);
+    }
+
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", TEMP_RESOURCE_GROUP_NAME);
 
     Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( pfLoaderData, 
                                 "data/misc", "paused_bg.tga", 

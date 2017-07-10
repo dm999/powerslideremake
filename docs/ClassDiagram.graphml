@@ -1457,10 +1457,10 @@ static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
     <node id="n24">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1710.4154565810131" width="869.3089261662258" x="12615.345536916888" y="-4635.207728290507"/>
+          <y:Geometry height="1840.8084935771822" width="869.3089261662258" x="12615.345536916888" y="-4700.404246788591"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1709.3359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="0.5397595405065658">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1841.646484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="-0.418995398908919">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 StaticMeshProcesser
 
@@ -1497,9 +1497,18 @@ void setFrictionRemapArray(const std::vector&lt;size_t&gt;&amp; remap)
 void setLatutuideFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
 void setLongtitudeFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
 
+#if defined(__ANDROID__)
+    void loadTextures(const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
+#endif
+
 private:
 
 void loadTextures(const std::vector&lt;MSHData&gt;&amp; mergedMSH, const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
+void loadTextures(const std::set&lt;std::string&gt;&amp; texturesNames, const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
+
+#if defined(__ANDROID__)
+    std::set&lt;std::string&gt; mTexturesNames
+#endif
 
 void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File&amp; de2, GameState&amp; gameState)
 
@@ -1622,7 +1631,7 @@ Ogre::Vector3 offset</y:NodeLabel>
           <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="19503.030019461887" y="-7086.479197446333"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1635.830078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="-1.4358416161667265">&lt;&lt;UIRace.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="-16.137013491166726">&lt;&lt;UIRace.h&gt;&gt;
 
 UIRace
 
@@ -1671,14 +1680,16 @@ void setRearViewMirrorPanelShow(bool isShow)
 static Ogre::PanelOverlayElement* createPanel(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String&amp; material)
 static Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String&amp; name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 
-void reloadTextures()
+#if defined(__ANDROID__)
+    void reloadTextures()
+#endif
 
 private:
 
 bool mLoaded
 
-void loadDashboardCars()
-void loadMisc()
+void loadDashboardCars(const GameState&amp; gameState)
+void loadMisc(const GameState&amp; gameState, const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell)
 
 Ogre::PanelOverlayElement* mBeforeStartPanel1
 Ogre::PanelOverlayElement* mBeforeStartPanel2

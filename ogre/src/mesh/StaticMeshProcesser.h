@@ -70,9 +70,18 @@ public :
     void setLatutuideFrictionArray(const std::vector<float>& frictions);
     void setLongtitudeFrictionArray(const std::vector<float>& frictions);
 
+#if defined(__ANDROID__)
+    void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
+#endif
+
 private:
 
     void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
+    void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
+
+#if defined(__ANDROID__)
+    std::set<std::string> mTexturesNames;
+#endif
 
     void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File& de2, GameState& gameState);
 

@@ -251,11 +251,6 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
 {
     std::set<std::string> texturesNames;
 
-    //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.5f;
-    const float loaderMax = 0.7f;
-    const float loaderDistance = loaderMax - loaderMin;
-
     //get unique names
     for(size_t q = 0; q < mergedMSH.size(); ++q)
     {
@@ -264,6 +259,20 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
             texturesNames.insert(mergedMSH[q].textureNames[w]);
         }
     }
+
+#if defined(__ANDROID__)
+    mTexturesNames = texturesNames;
+#endif
+
+    loadTextures(texturesNames, pfloader, trackName, loaderListener);
+}
+
+void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
+{
+    //ranges from BaseRaceMode::initData
+    const float loaderMin = 0.5f;
+    const float loaderMax = 0.7f;
+    const float loaderDistance = loaderMax - loaderMin;
 
     size_t loadedAmount = 0;
 
@@ -297,6 +306,13 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
     }
 }
+
+#if defined(__ANDROID__)
+void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
+{
+    loadTextures(mTexturesNames, pfloader, trackName, loaderListener);
+}
+#endif
 
 void StaticMeshProcesser::mergeMSH(const MSHData& mshData, std::map<std::string, mergedInfo>& mapTexturesToMSHIndex, std::vector<MSHData>& mergedMSH)const
 {

@@ -75,7 +75,7 @@ private:
     bool mLoaded;
 
     void loadDashboardCars(const GameState& gameState);
-    void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+    void loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyL;
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyC;

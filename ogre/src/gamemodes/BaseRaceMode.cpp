@@ -833,6 +833,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 #if defined(__ANDROID__)
 void BaseRaceMode::reloadTextures()
 {
+    std::string pfFolderName = mModeContext.mGameState.getSTRPowerslide().getBaseDir(mModeContext.mGameState.getTrackName());
+    mStaticMeshProcesser.loadTextures( mModeContext.mGameState.getPFLoaderData(), pfFolderName, NULL);
+
     mUIRace->reloadTextures(mModeContext.mGameState);
 }
 #endif
