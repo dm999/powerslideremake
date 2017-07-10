@@ -1018,9 +1018,9 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
                     if(tempTextures[q] != "RearViewMirrorTex")
                         m.remove(tempTextures[q]);
                 }
-
-                mGameModeSwitcher->reloadTextures();
             }
+
+            mGameModeSwitcher->reloadTextures();
 
             {
                 Ogre::MaterialManager& m = Ogre::MaterialManager::getSingleton();

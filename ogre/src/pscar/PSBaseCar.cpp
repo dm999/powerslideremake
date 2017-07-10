@@ -66,24 +66,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     DMLuaManager luaManager;
 
-    std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
-
-    std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
-    std::set<char> delim;
-    delim.insert('\\');
-    std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
-    std::string carPath = pathComponents[pathComponents.size() - 1];
-
-    modelsPool->getCopyOfVehicle(gameState, carName, mModelEntity);
-
     std::string genTextureName = nameGenTextures.generate();
-
-    //load car texture
-    {
-        std::string carSkinName = gameState.getSTRPowerslide().getValue(carName + " parameters", "texture name", "feral max texture");
-        carSkinName += "_m_1.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, genTextureName);
-    }
+    std::string carPath;
+    std::string carName = loadTexture(gameState, genTextureName, carPath);
+    modelsPool->getCopyOfVehicle(gameState, carName, mModelEntity);
 
     bool isAttenuateExcludeBox = luaManager.ReadScalarBool("Model.IsAttenuateExcludeBox", pipeline);
 
@@ -528,3 +514,36 @@ void PSBaseCar::setVisibility(bool isVisible)
         mModelEntity[q]->setVisible(isVisible);
     }
 }
+
+std::string PSBaseCar::loadTexture(const GameState& gameState, const std::string& textureName, std::string& carPath)
+{
+
+    std::string carName = gameState.getSTRPowerslide().getValue(mCharacterName + " parameters", "car", "feral max");
+
+    std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
+    std::set<char> delim;
+    delim.insert('\\');
+    std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
+    carPath = pathComponents[pathComponents.size() - 1];
+
+#if defined(__ANDROID__)
+    mTextureName = textureName;
+#endif
+
+    //load car texture
+    {
+        std::string carSkinName = gameState.getSTRPowerslide().getValue(carName + " parameters", "texture name", "feral max texture");
+        carSkinName += "_m_1.tex";
+        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, textureName);
+    }
+
+    return carName;
+}
+
+#if defined(__ANDROID__)
+void PSBaseCar::reloadTextures(const GameState& gameState)
+{
+    std::string carPath;
+    loadTexture(gameState, mTextureName, carPath);
+}
+#endif

@@ -833,6 +833,16 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 #if defined(__ANDROID__)
 void BaseRaceMode::reloadTextures()
 {
+    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
+    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow");
+
+    mModeContext.mGameState.getPlayerCar().reloadTextures(mModeContext.mGameState);
+
+    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    {
+        mModeContext.mGameState.getAICar(q).reloadTextures(mModeContext.mGameState);
+    }
+
     std::string pfFolderName = mModeContext.mGameState.getSTRPowerslide().getBaseDir(mModeContext.mGameState.getTrackName());
     mStaticMeshProcesser.loadTextures( mModeContext.mGameState.getPFLoaderData(), pfFolderName, NULL);
 

@@ -72,6 +72,10 @@ public:
 
     void setVisibility(bool isVisible);
 
+#if defined(__ANDROID__)
+    void reloadTextures(const GameState& gameState);
+#endif
+
 protected:
 
     virtual void processSounds(const Ogre::FrameEvent &evt) = 0;
@@ -123,6 +127,12 @@ protected:
 private:
 
     void initSuspension(const GameState& gameState);
+
+    std::string loadTexture(const GameState& gameState, const std::string& textureName, std::string& carPath);
+
+#if defined(__ANDROID__)
+    std::string mTextureName;
+#endif
 
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenTextures;

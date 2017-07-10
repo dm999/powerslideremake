@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1474.1171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="168.974373899925">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="73.41675671242501">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -393,6 +393,12 @@ virtual Ogre::Real getLapPosition() const = 0
 GameCars getCarType() const
 void setCarType(GameCars&amp; car)
 
+void setVisibility(bool isVisible)
+
+#if defined(__ANDROID__)
+    void reloadTextures(const GameState&amp; gameState)
+#endif
+
 protected:
 
 virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
@@ -439,7 +445,14 @@ private:
 
 void initSuspension(lua_State * pipeline)
 
-static Ogre::NameGenerator nameGenMaterials</y:NodeLabel>
+std::string loadTexture(const GameState&amp; gameState, const std::string&amp; textureName, std::string&amp; carPath)
+
+#if defined(__ANDROID__)
+    std::string mTextureName
+#endif
+
+static Ogre::NameGenerator nameGenMaterials
+static Ogre::NameGenerator nameGenTextures</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
