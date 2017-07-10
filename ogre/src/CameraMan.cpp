@@ -81,11 +81,13 @@ void CameraMan::setYawPitchDist(const Ogre::Quaternion& carRot, const Ogre::Vect
 #if 1
         //perform collision correction
         {
+            const float contractFactor = 0.2f;
             const float prolongFactor = 1.2f;
+            Ogre::Vector3 camOffsetContract = carPos + camRot * additionalRotYaw * (cameraDisplacement * contractFactor);
             Ogre::Vector3 camOffsetProlong = carPos + camRot * additionalRotYaw * (cameraDisplacement * prolongFactor);
             Ogre::Vector3 collisionPoint;
             Ogre::Vector3 collisionNormal;
-            bool isContactsHappen = checkRayInBetween(carPos, camOffsetProlong, collisionPoint, collisionNormal);
+            bool isContactsHappen = checkRayInBetween(camOffsetContract, camOffsetProlong, collisionPoint, collisionNormal);
             if(isContactsHappen)
             {
 
