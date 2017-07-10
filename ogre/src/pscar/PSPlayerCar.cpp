@@ -53,7 +53,7 @@ void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
 
     Ogre::Real rotationIntensity = 1.0f;
 
-    if(projectedVel < 0.0f && mBrakeEnabled)
+    if(projectedVel < 0.0f/* && mBrakeEnabled*/)
     {
         if (mSteeringLeft && checkFrontCollision())
         {
