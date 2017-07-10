@@ -320,6 +320,9 @@ void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
 #if defined(__ANDROID__)
 void GameModeSwitcher::reloadTextures()
 {
+    mUILoader->reloadTextures(mContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga");
+    mUIUnloader->reloadTextures(mContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga");
+
     if(mMenuMode.get())
         mMenuMode->reloadTextures();
 

@@ -81,6 +81,9 @@ UIBackground::UIBackground(const ModeContext& modeContext,
     mMaterialName = nameGenMaterials.generate();
 
     Ogre::String textureName = nameGenTextures.generate();
+#if defined(__ANDROID__)
+    mTextureName = textureName;
+#endif
 
     TextureLoader().load(   loader, 
                             path, fileName, 
@@ -190,6 +193,15 @@ void UIBackground::hide()
     destroyCamera();
 }
 
+#if defined(__ANDROID__)
+void UIBackground::reloadTextures(const PFLoader& loader, const std::string& path, const std::string& fileName)
+{
+    TextureLoader().load(   loader, 
+                            path, fileName, 
+                            mTextureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+}
+#endif
+
 void UIBackground::createCamera()
 {
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
@@ -224,6 +236,11 @@ UIBackgroundLoaderProgress::UIBackgroundLoaderProgress(const ModeContext& modeCo
 {
     Ogre::String textureNameEnd = nameGenTextures.generate();
     Ogre::String textureNameMiddle = nameGenTextures.generate();
+
+#if defined(__ANDROID__)
+    mTextureNameEnd = textureNameEnd;
+    mTextureNameMiddle = textureNameMiddle;
+#endif
 
     mMaterialNameEnd = nameGenMaterials.generate();
     mMaterialNameMiddle = nameGenMaterials.generate();
@@ -369,6 +386,21 @@ void UIBackgroundLoaderProgress::setPercent(float percent, const std::string& in
     mModeContext.mWindow->update(true);// update draw
 }
 
+#if defined(__ANDROID__)
+void UIBackgroundLoaderProgress::reloadTextures(const PFLoader& loader, const std::string& path, const std::string& fileName)
+{
+    UIBackground::reloadTextures(loader, path, fileName);
+
+    TextureLoader().load(   loader, 
+                            "data/misc/loading", "end.tga", 
+                            mTextureNameEnd, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load(   loader, 
+                            "data/misc/loading", "middle.tga", 
+                            mTextureNameMiddle, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+}
+#endif
+
 UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeContext& modeContext, 
                            const PFLoader& loader,
                            const std::string& path, const std::string& fileName,
@@ -384,6 +416,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
 
         Ogre::String textureName = nameGenTextures.generate();
         Ogre::String textureNameTitle = nameGenTextures.generate();
+#if defined(__ANDROID__)
+        mTextureTrackNames.push_back(textureName);
+        mTextureTrackTitlesNames.push_back(textureNameTitle);
+#endif
 
         Ogre::String materialName = nameGenMaterials.generate();
         mMaterialTrackNames.insert(std::make_pair(availTracks[q], materialName));
@@ -436,6 +472,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
     {
         {
             Ogre::String textureName = nameGenTextures.generate();
+#if defined(__ANDROID__)
+            mTextureAIEasyName = textureName;
+#endif
+
             mMaterialAIEasyName = nameGenMaterials.generate();
 
 
@@ -460,6 +500,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
 
         {
             Ogre::String textureName = nameGenTextures.generate();
+#if defined(__ANDROID__)
+            mTextureAIMediumName = textureName;
+#endif
+
             mMaterialAIMediumName = nameGenMaterials.generate();
 
 
@@ -484,6 +528,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
 
         {
             Ogre::String textureName = nameGenTextures.generate();
+#if defined(__ANDROID__)
+            mTextureAIHardName = textureName;
+#endif
+
             mMaterialAIHardName = nameGenMaterials.generate();
 
 
@@ -508,6 +556,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
 
         {
             Ogre::String textureName = nameGenTextures.generate();
+#if defined(__ANDROID__)
+            mTextureAIInsaneName = textureName;
+#endif
+
             mMaterialAIInsaneName = nameGenMaterials.generate();
 
 
@@ -608,3 +660,42 @@ void UIBackgroundLoaderProgressTracks::hide()
 
     UIBackgroundLoaderProgress::hide();
 }
+
+#if defined(__ANDROID__)
+void UIBackgroundLoaderProgressTracks::reloadTextures(const PFLoader& loader, const std::string& path, const std::string& fileName)
+{
+    UIBackgroundLoaderProgress::reloadTextures(loader, path, fileName);
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    for(size_t q = 0; q < availTracks.size(); ++q)
+    {
+        std::string loadingFilePath = "data/tracks/" + strPowerslide.getBaseDir(availTracks[q]) + "/misc/loading";
+
+        TextureLoader().load(   loader, 
+                                loadingFilePath, "loading.tga", 
+                                mTextureTrackNames[q], Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load(   loader, 
+                                loadingFilePath, "text-english.tga", 
+                                mTextureTrackTitlesNames[q], Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+    }
+
+    TextureLoader().load(   loader, 
+                        "data/misc/loading", "easy-english.tga", 
+                        mTextureAIEasyName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load(   loader, 
+                        "data/misc/loading", "medium-english.tga", 
+                        mTextureAIMediumName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load(   loader, 
+                        "data/misc/loading", "hard-english.tga", 
+                        mTextureAIHardName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load(   loader, 
+                        "data/misc/loading", "insane-english.tga", 
+                        mTextureAIInsaneName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+}
+#endif

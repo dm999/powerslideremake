@@ -1007,7 +1007,8 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
                 for(Ogre::TextureManager::ResourceHandleMap::const_iterator i = rmi.begin(); i != rmi.end(); ++i)
                 {
                     //LOGI("BaseApp[androidInitWindow]: %s %s %d %d", i->second->getName().c_str(), i->second->getGroup().c_str(), i->second->isReloadable(), i->second->getLoadingState()); 
-                    if(i->second->getGroup() == TEMP_RESOURCE_GROUP_NAME)
+                    if( i->second->getGroup() == TEMP_RESOURCE_GROUP_NAME || 
+                        !i->second->isReloadable())//UIBackground
                     {
                         tempTextures.push_back(i->second->getName().c_str());
                     }
@@ -1041,6 +1042,27 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
                         }
 
                         i->second->reload();
+                    }
+
+                    //UIBackground
+                    if(i->second->getGroup() == Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME)
+                    {
+                        bool toReload = false;
+                        unsigned short textUnitStates = static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getNumTextureUnitStates();
+                        for(unsigned short q = 0; q < textUnitStates; ++q)
+                        {
+                            std::string textureName = static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getTextureUnitState(q)->getTextureName();
+                            if(textureName.find("Loaders/Texture") != std::string::npos)
+                            {
+                                toReload = true;
+                                try{
+                                    static_cast<Ogre::Material*>(i->second.get())->getTechnique(0)->getPass(0)->getTextureUnitState(q)->setTexture(Ogre::TextureManager::getSingleton().getByName(textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME));
+                                }
+                                catch(...){}
+                            }
+                        }
+                        if(toReload)
+                            i->second->reload();
                     }
                 }
             }
