@@ -109,6 +109,31 @@ namespace
         return 0;
     }
 #endif
+
+    wchar_t OISToWCharT(const OIS::KeyEvent& _arg)
+    {
+        wchar_t text = (wchar_t)_arg.text;
+        MyGUI::KeyCode key = MyGUI::KeyCode::Enum(_arg.key);
+        int scan_code = key.getValue();
+
+        if (scan_code > 70 && scan_code < 84)
+        {
+            static wchar_t nums[13] = { 55, 56, 57, 45, 52, 53, 54, 43, 49, 50, 51, 48, 46 };
+            text = nums[scan_code-71];
+        }
+        else if (key == MyGUI::KeyCode::Divide)
+        {
+            text = '/';
+        }
+        else
+        {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+            text = translateWin32Text(key);
+#endif
+        }
+
+        return text;
+    }
 }
 
 extern ContactAddedCallback gContactAddedCallback;
@@ -581,10 +606,10 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
     {
         mGameState.getPlayerCar().keyUp(arg.key);
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), translateWin32Text(MyGUI::KeyCode::Enum(arg.key)));
+#if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), mInputHandler->getInputContext().mKeyboard->getAsString(arg.key)[0]);
 #else
-        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), arg.text);
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), OISToWCharT(arg));
 #endif
 
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti || mGameModeSwitcher->getMode() == ModeRaceMulti)
