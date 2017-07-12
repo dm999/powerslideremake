@@ -2,7 +2,7 @@
 
 #include "GameState.h"
 
-#define GAMEVERSION "1.18.0"
+#include "PowerslideRemakeConfig.h"
 
 GameState::GameState() :
     mVersion(GAMEVERSION),

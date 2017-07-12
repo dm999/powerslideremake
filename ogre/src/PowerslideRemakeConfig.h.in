@@ -1,0 +1,14 @@
+#ifndef POWERSLIDEREMAKECONFIG_H
+#define POWERSLIDEREMAKECONFIG_H
+
+// the configured options and settings for PowerslideRemake
+#define PowerslideRemake_VERSION_MAJOR @PowerslideRemake_VERSION_MAJOR@
+#define PowerslideRemake_VERSION_MINOR @PowerslideRemake_VERSION_MINOR@
+#define PowerslideRemake_VERSION_BUILD @PowerslideRemake_VERSION_BUILD@
+#define PowerslideRemake_VERSION_BUILD_SHA @PowerslideRemake_VERSION_BUILD_SHA@
+
+#define QU(x) #x
+#define QUH(x) QU(x)
+#define GAMEVERSION QUH(PowerslideRemake_VERSION_MAJOR) "." QUH(PowerslideRemake_VERSION_MINOR) "." QUH(PowerslideRemake_VERSION_BUILD) " Build " QUH(PowerslideRemake_VERSION_BUILD_SHA)
+
+#endif

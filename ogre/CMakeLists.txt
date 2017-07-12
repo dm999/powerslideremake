@@ -5,9 +5,26 @@
 cmake_minimum_required(VERSION 2.8)
 
 #https://github.com/larsch/cmake-precompiled-header
-include(../PrecompiledHeader.cmake)
+include(cmake/PrecompiledHeader.cmake)
 
 project(PowerslideRemake)
+
+#version
+set (PowerslideRemake_VERSION_MAJOR 1)
+set (PowerslideRemake_VERSION_MINOR 18)
+set (PowerslideRemake_VERSION_BUILD 0)
+find_package(Git)
+if(GIT_FOUND)
+    execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE DESCRIBE_BUILD
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(SUBSTRING ${DESCRIBE_BUILD} 0 6 PowerslideRemake_VERSION_BUILD_SHA)
+endif()
+configure_file ("${PROJECT_SOURCE_DIR}/src/PowerslideRemakeConfig.h.in" "${PROJECT_BINARY_DIR}/PowerslideRemakeConfig.h")
+configure_file ("${PROJECT_SOURCE_DIR}/src/res/PowerslideHD_Engine.rc.in" "${PROJECT_BINARY_DIR}/PowerslideHD_Engine.rc")
+include_directories("${PROJECT_BINARY_DIR}")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
@@ -191,7 +208,7 @@ if(MSVC)
     
     list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.ico)
     list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc2)
-    list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc)
+    list(APPEND PowerslideRemake_sources ${PROJECT_BINARY_DIR}/PowerslideHD_Engine.rc)
     
     source_group("Resource Files" FILES src/res/PowerslideHD_Engine.ico)
     source_group("Resource Files" FILES src/res/PowerslideHD_Engine.rc2)
@@ -205,7 +222,7 @@ else()
     
         list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.ico)
         list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc2)
-        list(APPEND PowerslideRemake_sources src/res/PowerslideHD_Engine.rc)
+        list(APPEND PowerslideRemake_sources ${PROJECT_BINARY_DIR}/PowerslideHD_Engine.rc)
     
         set(CMAKE_RC_COMPILER_INIT windres)
         ENABLE_LANGUAGE(RC)

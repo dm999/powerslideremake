@@ -1,7 +1,7 @@
 //Microsoft Developer Studio generated resource script.
 //
 
-#include "resource.h"
+#include "@PROJECT_SOURCE_DIR@/src/res/resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -30,8 +30,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,18,0,0
- PRODUCTVERSION 1,18,0,0
+ FILEVERSION @PowerslideRemake_VERSION_MAJOR@,@PowerslideRemake_VERSION_MINOR@,@PowerslideRemake_VERSION_BUILD@,0
+ PRODUCTVERSION @PowerslideRemake_VERSION_MAJOR@,@PowerslideRemake_VERSION_MINOR@,@PowerslideRemake_VERSION_BUILD@,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -48,13 +48,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Rascal\0"
             VALUE "FileDescription", "Powerslide Remake Application\0"
-            VALUE "FileVersion", "1, 18, 0, 0\0"
+            VALUE "FileVersion", "@PowerslideRemake_VERSION_MAJOR@, @PowerslideRemake_VERSION_MINOR@, @PowerslideRemake_VERSION_BUILD@, 0\0"
             VALUE "InternalName", "PSHD\0"
             VALUE "LegalCopyright", "Copyright (C) 2020\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "PowerslideRemake.EXE\0"
             VALUE "ProductName", "Powerslide Remake\0"
-            VALUE "ProductVersion", "1, 18, 0, 0\0"
+            VALUE "ProductVersion", "@PowerslideRemake_VERSION_MAJOR@, @PowerslideRemake_VERSION_MINOR@, @PowerslideRemake_VERSION_BUILD@, 0\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -72,7 +72,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MAIN_ICON           ICON    DISCARDABLE     "PowerslideHD_Engine.ico"
+IDI_MAIN_ICON           ICON    DISCARDABLE     "@PROJECT_SOURCE_DIR@/src/res/PowerslideHD_Engine.ico"
 
 
 #endif    // English (U.S.) resources
@@ -95,7 +95,7 @@ IDI_MAIN_ICON           ICON    DISCARDABLE     "PowerslideHD_Engine.ico"
 LANGUAGE 9, 1
 #pragma code_page(1252)
 #endif //_WIN32
-#include "PowerslideHD_Engine.rc2"  // non-Microsoft Visual C++ edited resources
+#include "@PROJECT_SOURCE_DIR@/src/res/PowerslideHD_Engine.rc2"  // non-Microsoft Visual C++ edited resources
 #ifdef _MSC_VER
 #include "afxres.rc"         // Standard components
 #endif
