@@ -47,6 +47,16 @@ void AIUtils::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* s
 
     }
 
+    {
+        AIDataSegment segment;
+        segment.posA = aiData[aiData.size() - 1].pos;
+        segment.posB = aiData[0].pos;
+        segment.dirA = aiData[aiData.size() - 1].dir;
+        segment.dirB = aiData[0].dir;
+        segment.segmentLength = segment.posA.distance(segment.posB);
+        mAIDataSegments.push_back(segment);
+    }
+
     //splinePoints.push_back(aiData[aiData.size() - 1].pos);
     //splinePoints.push_back(aiData[0].pos);
     mSpline.addPoint(aiData[aiData.size() - 1].pos);

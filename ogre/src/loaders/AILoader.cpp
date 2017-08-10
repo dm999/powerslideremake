@@ -77,6 +77,8 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
             if(isDebugAI)
             {
+                Ogre::SimpleSpline spline;
+
                 for(size_t q = 0; q < aIData.size(); ++q)
                 {
                     //spheres
@@ -99,6 +101,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                      
                     manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
 
+                    spline.addPoint(aIData[q].pos);
 
                     manual->position(aIData[q].pos);
                     manual->position(aIData[q].pos + aIData[q].dir * length);
@@ -112,6 +115,8 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                 }
 
+                spline.addPoint(aIData[0].pos);
+
                 //lines
                 Ogre::String debugDirName = mNameGenNodes.generate();
                 Ogre::ManualObject * manual =  sceneMgr->createManualObject(debugDirName); 
@@ -119,12 +124,27 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
                 for(size_t q = 0; q < aIData.size() - 1; ++q)
                 {
+#if 1
                     manual->position(aIData[q].pos);
                     manual->position(aIData[q + 1].pos);
+#else
+                    for(float w = 0; w < 1.0f; w += 0.1f)
+                    {
+                        manual->position(spline.interpolate(q, w));
+                        manual->position(spline.interpolate(q, w + 0.1f));
+                    }
+#endif
                 }
-
+#if 1
                 manual->position(aIData[aIData.size() - 1].pos);
                 manual->position(aIData[0].pos);
+#else
+                for(float w = 0; w < 1.0f; w += 0.1f)
+                {
+                    manual->position(spline.interpolate(aIData.size() - 1, w));
+                    manual->position(spline.interpolate(aIData.size() - 1, w + 0.1f));
+                }
+#endif
                 manual->end(); 
                 manual->setCastShadows(false);
                 lltDirNode->attachObject(manual);
