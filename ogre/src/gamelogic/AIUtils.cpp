@@ -63,7 +63,7 @@ void AIUtils::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* s
 
     if(mIsDebugAI)
     {
-        Ogre::Real scale = 0.2f;
+        Ogre::Real scale = 0.02f;
         Ogre::Entity * debugSphere = sceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
         debugSphere->setMaterialName("BaseWhiteNoLighting");
         mDebugSphereNode = sceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -226,7 +226,8 @@ Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3
 
 
     //res = mSpline->ComputePoint(frac, nextSegment, nextSegment + 1);
-    res = mSpline.interpolate(nextSegment, frac);
+    //res = mSpline.interpolate(nextSegment, frac);
+    res = Ogre::Math::lerp(mAIDataSegments[nextSegment].posA, mAIDataSegments[nextSegment].posB, frac);
 
     towardDir = mAIDataSegments[nextSegment].dirB;
 

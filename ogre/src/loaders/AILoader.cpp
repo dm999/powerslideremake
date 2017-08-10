@@ -109,7 +109,25 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                     manual->end(); 
                     manual->setCastShadows(false);
                     lltDirNode->attachObject(manual);
+
                 }
+
+                //lines
+                Ogre::String debugDirName = mNameGenNodes.generate();
+                Ogre::ManualObject * manual =  sceneMgr->createManualObject(debugDirName); 
+                Ogre::SceneNode* lltDirNode = sceneMgr->getRootSceneNode()->createChildSceneNode(debugDirName); 
+                manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
+                for(size_t q = 0; q < aIData.size() - 1; ++q)
+                {
+                    manual->position(aIData[q].pos);
+                    manual->position(aIData[q + 1].pos);
+                }
+
+                manual->position(aIData[aIData.size() - 1].pos);
+                manual->position(aIData[0].pos);
+                manual->end(); 
+                manual->setCastShadows(false);
+                lltDirNode->attachObject(manual);
             }
 
             fileToLoad->close();
