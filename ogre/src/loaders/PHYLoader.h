@@ -14,10 +14,6 @@ public:
     PHYLoader(){}
 
     void load(GameState& gameState) const;
-
-private:
-
-    void loadVector(const Ogre::DataStreamPtr& stream, float data[3]) const;
 };
 
 #endif

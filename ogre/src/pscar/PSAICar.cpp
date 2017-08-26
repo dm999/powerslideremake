@@ -139,9 +139,9 @@ void PSAICar::clearAIData()
     mAIUtils.clear();
 }
 
-void PSAICar::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void PSAICar::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 {
-    mAIUtils.setAIData(aiData, sceneMgr, isDebugAI);
+    mAIUtils.setAIData(aiWhole, sceneMgr, isDebugAI);
 }
 
 void PSAICar::raceStarted()

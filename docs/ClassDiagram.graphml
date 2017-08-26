@@ -1012,7 +1012,7 @@ virtual void processWheelsCollision(    btManifoldPoint&amp; cp,
 
 void performAICorrection(bool isGamePaused)
 void clearAIData()
-void setAIData(const std::vector&lt;AIData&gt;&amp; aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void raceStarted()
 
 private:
@@ -1027,16 +1027,16 @@ Ogre::Real mSteeringImpulse</y:NodeLabel>
     <node id="n14">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="547.7689846801022" width="559.2261582433434" x="7370.386920878328" y="-1533.8844923400507"/>
+          <y:Geometry height="571.1354169098156" width="552.9672924675265" x="7463.5163537662365" y="-1545.5677084549075"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="533.2421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="544.275390625" x="7.4753838091719444" y="7.263398590051111">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="492.23828125" x="30.364505608763466" y="4.245442829907915">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIUtils
 
 public:
 
-void setAIData(const std::vector&lt;AIData&gt;&amp; aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void clear()
 
 void performAICorrection(PSAICar* aiCar, bool isGamePaused)
@@ -1065,7 +1065,9 @@ Ogre::Timer mTimerAIStuck
 Ogre::Timer mTimerReverse
 Ogre::Real mAIDistanceLength
 Ogre::Vector3 mPrevPos
-bool mIsReverseEnabled</y:NodeLabel>
+bool mIsReverseEnabled
+
+AIWhole mAIWhole</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -1073,15 +1075,16 @@ bool mIsReverseEnabled</y:NodeLabel>
     <node id="n15">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8003.848496040967" y="-1502.1600845421988"/>
+          <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8273.848496040966" y="-1502.1600845421988"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="148.087890625" x="22.107558646533107" y="8.705982979699229">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="184.78515625" x="3.758925834033107" y="1.355397042199229">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIDataSegment
 
 Ogre::Vector3 posA, posB
-Ogre::Vector3 dirA, dirB
+Ogre::Vector3 tangentA, tangentB
+Ogre::Vector3 magicA, magicB
 Ogre::Real segmentLength</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
@@ -1090,15 +1093,16 @@ Ogre::Real segmentLength</y:NodeLabel>
     <node id="n16">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="99.6364724597579" width="125.65702703153647" x="8037.171486484232" y="-1309.8182362298785"/>
+          <y:Geometry height="111.66844926595195" width="136.59518776444156" x="8301.70240611778" y="-1105.834224632976"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="101.3828125" x="12.137107265768464" y="3.7147206048789485">&lt;&lt;Tools.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="122.072265625" x="7.261461069721008" y="2.3801230704759746">&lt;&lt;Tools.h&gt;&gt;
 
 AIData
 
 Ogre::Vector3 pos
-Ogre::Vector3 dir</y:NodeLabel>
+Ogre::Vector3 tangent
+Ogre::Vector3 magic</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3557,6 +3561,30 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n82">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="212.61143649831365" width="241.81089403309443" x="8249.094552983452" y="-1366.3057182491568"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="209.81640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="232.111328125" x="4.849782954046532" y="1.3975151241568256">&lt;&lt;Tools.h&gt;&gt;
+
+AIWhole
+
+//slot
+std::vector&lt;std::vector&lt;float&gt; &gt; slotMatrix
+std::vector&lt;std::vector&lt;float&gt; &gt; activation
+std::vector&lt;std::vector&lt;size_t&gt; &gt; remapper
+
+//rec
+std::vector&lt;AIData&gt; aiData
+size_t hackType
+float hack1
+float hack2</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:PolyLineEdge>
@@ -3732,22 +3760,12 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="none"/>
+          <y:Arrows source="diamond" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e12" source="n14" target="n16">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="none"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e13" source="n17" target="n13">
+    <edge id="e12" source="n17" target="n13">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3757,7 +3775,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e14" source="n4" target="n18">
+    <edge id="e13" source="n4" target="n18">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3767,7 +3785,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e15" source="n18" target="n19">
+    <edge id="e14" source="n18" target="n19">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3777,7 +3795,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e16" source="n18" target="n20">
+    <edge id="e15" source="n18" target="n20">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3787,7 +3805,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e17" source="n21" target="n22">
+    <edge id="e16" source="n21" target="n22">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3797,7 +3815,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e18" source="n24" target="n26">
+    <edge id="e17" source="n24" target="n26">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3807,7 +3825,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e19" source="n24" target="n25">
+    <edge id="e18" source="n24" target="n25">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3817,7 +3835,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e20" source="n4" target="n28">
+    <edge id="e19" source="n4" target="n28">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3827,7 +3845,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e21" source="n29" target="n30">
+    <edge id="e20" source="n29" target="n30">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3837,7 +3855,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e22" source="n29" target="n31">
+    <edge id="e21" source="n29" target="n31">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3847,7 +3865,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e23" source="n29" target="n32">
+    <edge id="e22" source="n29" target="n32">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3857,7 +3875,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e24" source="n7" target="n33">
+    <edge id="e23" source="n7" target="n33">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3867,7 +3885,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e25" source="n24" target="n34">
+    <edge id="e24" source="n24" target="n34">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3877,7 +3895,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e26" source="n24" target="n35">
+    <edge id="e25" source="n24" target="n35">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3887,7 +3905,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e27" source="n18" target="n36">
+    <edge id="e26" source="n18" target="n36">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3897,7 +3915,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e28" source="n36" target="n37">
+    <edge id="e27" source="n36" target="n37">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3907,7 +3925,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e29" source="n38" target="n4">
+    <edge id="e28" source="n38" target="n4">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3917,7 +3935,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e30" source="n40" target="n58">
+    <edge id="e29" source="n40" target="n58">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3927,7 +3945,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e31" source="n41" target="n39">
+    <edge id="e30" source="n41" target="n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3937,7 +3955,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e32" source="n40" target="n38">
+    <edge id="e31" source="n40" target="n38">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3947,7 +3965,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e33" source="n41" target="n38">
+    <edge id="e32" source="n41" target="n38">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3957,7 +3975,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e34" source="n41" target="n42">
+    <edge id="e33" source="n41" target="n42">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3967,7 +3985,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e35" source="n43" target="n39">
+    <edge id="e34" source="n43" target="n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3977,7 +3995,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e36" source="n44" target="n38">
+    <edge id="e35" source="n44" target="n38">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3987,7 +4005,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e37" source="n45" target="n41">
+    <edge id="e36" source="n45" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -3997,7 +4015,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e38" source="n46" target="n41">
+    <edge id="e37" source="n46" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4007,7 +4025,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e39" source="n4" target="n47">
+    <edge id="e38" source="n4" target="n47">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4017,7 +4035,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e40" source="n29" target="n45">
+    <edge id="e39" source="n29" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4027,7 +4045,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e41" source="n24" target="n41">
+    <edge id="e40" source="n24" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4037,7 +4055,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e42" source="n21" target="n41">
+    <edge id="e41" source="n21" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4047,7 +4065,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e43" source="n23" target="n41">
+    <edge id="e42" source="n23" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4057,7 +4075,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e44" source="n75" target="n73">
+    <edge id="e43" source="n75" target="n73">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4067,7 +4085,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e45" source="n27" target="n48">
+    <edge id="e44" source="n27" target="n48">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4077,7 +4095,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e46" source="n50" target="n40">
+    <edge id="e45" source="n50" target="n40">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4087,7 +4105,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e47" source="n51" target="n41">
+    <edge id="e46" source="n51" target="n41">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4097,7 +4115,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e48" source="n38" target="n72">
+    <edge id="e47" source="n38" target="n72">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4107,7 +4125,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e49" source="n52" target="n73">
+    <edge id="e48" source="n52" target="n73">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4117,7 +4135,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e50" source="n54" target="n53">
+    <edge id="e49" source="n54" target="n53">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4127,7 +4145,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e51" source="n53" target="n58">
+    <edge id="e50" source="n53" target="n58">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4137,7 +4155,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e52" source="n53" target="n38">
+    <edge id="e51" source="n53" target="n38">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4147,7 +4165,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e53" source="n55" target="n29">
+    <edge id="e52" source="n55" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4157,7 +4175,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e54" source="n45" target="n56">
+    <edge id="e53" source="n45" target="n56">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4167,7 +4185,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e55" source="n53" target="n57">
+    <edge id="e54" source="n53" target="n57">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4177,7 +4195,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e56" source="n58" target="n39">
+    <edge id="e55" source="n58" target="n39">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4187,7 +4205,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e57" source="n60" target="n29">
+    <edge id="e56" source="n60" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4197,7 +4215,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e58" source="n59" target="n29">
+    <edge id="e57" source="n59" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4207,7 +4225,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e59" source="n61" target="n29">
+    <edge id="e58" source="n61" target="n29">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4217,7 +4235,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e60" source="n63" target="n62">
+    <edge id="e59" source="n63" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4227,7 +4245,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e61" source="n64" target="n62">
+    <edge id="e60" source="n64" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4237,7 +4255,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e62" source="n64" target="n18">
+    <edge id="e61" source="n64" target="n18">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4247,7 +4265,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e63" source="n63" target="n18">
+    <edge id="e62" source="n63" target="n18">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4257,7 +4275,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e64" source="n65" target="n62">
+    <edge id="e63" source="n65" target="n62">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4267,7 +4285,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e65" source="n66" target="n45">
+    <edge id="e64" source="n66" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4277,7 +4295,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e66" source="n67" target="n17">
+    <edge id="e65" source="n67" target="n17">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4287,7 +4305,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e67" source="n1" target="n68">
+    <edge id="e66" source="n1" target="n68">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4297,7 +4315,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e68" source="n69" target="n68">
+    <edge id="e67" source="n69" target="n68">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4307,7 +4325,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e69" source="n70" target="n45">
+    <edge id="e68" source="n70" target="n45">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4317,7 +4335,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e70" source="n73" target="n48">
+    <edge id="e69" source="n73" target="n48">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4327,7 +4345,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e71" source="n49" target="n74">
+    <edge id="e70" source="n49" target="n74">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4337,7 +4355,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e72" source="n74" target="n75">
+    <edge id="e71" source="n74" target="n75">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4347,7 +4365,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e73" source="n79" target="n43">
+    <edge id="e72" source="n79" target="n43">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4357,7 +4375,7 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e74" source="n73" target="n80">
+    <edge id="e73" source="n73" target="n80">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4367,12 +4385,32 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e75" source="n81" target="n48">
+    <edge id="e74" source="n81" target="n48">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e75" source="n16" target="n82">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e76" source="n82" target="n14">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

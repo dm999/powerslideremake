@@ -151,7 +151,7 @@ private:
 
 protected:
 
-    float mSteering;
+    float mSteering;//steering in angles (deg)
     bool mSteeringLeft;
     bool mSteeringRight;
     bool mBrakeEnabled;

@@ -12,7 +12,8 @@ class PSAICar;
 struct AIDataSegment
 {
     Ogre::Vector3 posA, posB;
-    Ogre::Vector3 dirA, dirB;
+    Ogre::Vector3 tangentA, tangentB;
+    Ogre::Vector3 magicA, magicB;
     Ogre::Real segmentLength;
 };
 
@@ -23,7 +24,7 @@ public:
     AIUtils();
     ~AIUtils(){}
 
-    void setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI);
+    void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void clear();
 
     void performAICorrection(PSAICar* aiCar, bool isGamePaused);
@@ -58,6 +59,8 @@ private:
     Ogre::Real mAIDistanceLength;
     Ogre::Vector3 mPrevPos;
     bool mIsReverseEnabled;
+
+    AIWhole mAIWhole;
 };
 
 #endif

@@ -37,7 +37,7 @@ public:
 
     void performAICorrection(bool isGamePaused);
     void clearAIData();
-    void setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI);
+    void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
 
 private:

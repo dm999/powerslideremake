@@ -8,8 +8,22 @@
 struct AIData
 {
     Ogre::Vector3 pos;
-    Ogre::Vector3 dir;
-    Ogre::Vector3 dir2;
+    Ogre::Vector3 tangent;
+    Ogre::Vector3 magic;
+};
+
+struct AIWhole
+{
+    //slot
+    std::vector<std::vector<float> > slotMatrix;
+    std::vector<std::vector<float> > activation;
+    std::vector<std::vector<size_t> > remapper;
+
+    //rec
+    std::vector<AIData> aiData;
+    size_t hackType;
+    float hack1;
+    float hack2;
 };
 
 struct Exclusion

@@ -17,20 +17,28 @@ void PHYLoader::load(GameState& gameState) const
             DWORD something;
             fileToLoad->read(&something, 4);
 
-            float rotX[3];
-            float rotY[3];
-            float rotZ[3];
-            float pos[3];
+            Ogre::Vector3 rotX;
+            Ogre::Vector3 rotY;
+            Ogre::Vector3 rotZ;
+            Ogre::Vector3 pos;
+            Ogre::Vector3 forceRot;
+            Ogre::Vector3 forceTrans;
+            Ogre::Vector3 forceRotIncr;
+            Ogre::Vector3 forceTransIncr;
 
-            loadVector(fileToLoad, rotX);   // rotation matrix
-            loadVector(fileToLoad, rotY);   // rotation matrix
-            loadVector(fileToLoad, rotZ);   // rotation matrix
-            loadVector(fileToLoad, pos);    // car position in track grid
+            fileToLoad->read(&rotX, 4 * 3);
+            fileToLoad->read(&rotY, 4 * 3);
+            fileToLoad->read(&rotZ, 4 * 3);
+            fileToLoad->read(&pos, 4 * 3);
+            fileToLoad->read(&forceRot, 4 * 3);
+            fileToLoad->read(&forceTrans, 4 * 3);
+            fileToLoad->read(&forceRotIncr, 4 * 3);
+            fileToLoad->read(&forceTransIncr, 4 * 3);
 
             Ogre::Matrix4 transform(
-                rotX[0], rotY[0], rotZ[0], pos[0],
-                rotX[1], rotY[1], rotZ[1], pos[1],
-                rotX[2], rotY[2], rotZ[2], -pos[2],
+                rotX.x, rotY.x, rotZ.x, pos.x,
+                rotX.y, rotY.y, rotZ.y, pos.y,
+                rotX.z, rotY.z, rotZ.z, -pos.z,
                 0.0f, 0.0f, 0.0f, 1.0f);
 
             gameState.getTrackPositions().push_back(transform);
@@ -39,13 +47,4 @@ void PHYLoader::load(GameState& gameState) const
         }
         else {assert(false && "No PHY file");}
     }
-}
-
-void PHYLoader::loadVector(const Ogre::DataStreamPtr& stream, float data[3]) const
-{
-    stream->read(&data[0], 4);
-    stream->read(&data[1], 4);
-    stream->read(&data[2], 4);
-
-    //fprintf(ff, "%10.4f %10.4f %10.4f\n", data[0], data[1], data[2]);
 }

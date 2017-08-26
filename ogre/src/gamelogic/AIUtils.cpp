@@ -21,8 +21,10 @@ AIUtils::AIUtils() :
 {
 }
 
-void AIUtils::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* sceneMgr, bool isDebugAI)
+void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 {
+    mAIWhole = aiWhole;
+
     //std::vector<Ogre::Vector3> splinePoints;
 
     mAIDistanceLength = 0.0f;
@@ -32,35 +34,39 @@ void AIUtils::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* s
 
     mSpline.clear();
 
-    for(size_t q = 0; q < aiData.size() - 1; ++q)
+    for(size_t q = 0; q < aiWhole.aiData.size() - 1; ++q)
     {
         AIDataSegment segment;
-        segment.posA = aiData[q + 0].pos;
-        segment.posB = aiData[q + 1].pos;
-        segment.dirA = aiData[q + 0].dir;
-        segment.dirB = aiData[q + 1].dir;
+        segment.posA = aiWhole.aiData[q + 0].pos;
+        segment.posB = aiWhole.aiData[q + 1].pos;
+        segment.tangentA = aiWhole.aiData[q + 0].tangent;
+        segment.tangentB = aiWhole.aiData[q + 1].tangent;
+        segment.magicA = aiWhole.aiData[q + 0].magic;
+        segment.magicB = aiWhole.aiData[q + 1].magic;
         segment.segmentLength = segment.posA.distance(segment.posB);
         mAIDataSegments.push_back(segment);
 
         //splinePoints.push_back(aiData[q].pos);
-        mSpline.addPoint(aiData[q].pos);
+        mSpline.addPoint(aiWhole.aiData[q].pos);
 
     }
 
     {
         AIDataSegment segment;
-        segment.posA = aiData[aiData.size() - 1].pos;
-        segment.posB = aiData[0].pos;
-        segment.dirA = aiData[aiData.size() - 1].dir;
-        segment.dirB = aiData[0].dir;
+        segment.posA = aiWhole.aiData[aiWhole.aiData.size() - 1].pos;
+        segment.posB = aiWhole.aiData[0].pos;
+        segment.tangentA = aiWhole.aiData[aiWhole.aiData.size() - 1].tangent;
+        segment.tangentB = aiWhole.aiData[0].tangent;
+        segment.magicA = aiWhole.aiData[aiWhole.aiData.size() - 1].magic;
+        segment.magicB = aiWhole.aiData[0].magic;
         segment.segmentLength = segment.posA.distance(segment.posB);
         mAIDataSegments.push_back(segment);
     }
 
-    //splinePoints.push_back(aiData[aiData.size() - 1].pos);
-    //splinePoints.push_back(aiData[0].pos);
-    mSpline.addPoint(aiData[aiData.size() - 1].pos);
-    mSpline.addPoint(aiData[0].pos);
+    //splinePoints.push_back(aiWhole.aiData[aiData.size() - 1].pos);
+    //splinePoints.push_back(aiWhole.aiData[0].pos);
+    mSpline.addPoint(aiWhole.aiData[aiWhole.aiData.size() - 1].pos);
+    mSpline.addPoint(aiWhole.aiData[0].pos);
 
     //mSpline.reset(new KochanekBartelsSpline(splinePoints));
 
@@ -78,7 +84,7 @@ void AIUtils::setAIData(const std::vector<AIData>& aiData, Ogre::SceneManager* s
         debugSphere->setMaterialName("BaseWhiteNoLighting");
         mDebugSphereNode = sceneMgr->getRootSceneNode()->createChildSceneNode();
         mDebugSphereNode->attachObject(debugSphere);
-        mDebugSphereNode->setPosition(aiData[0].pos);
+        mDebugSphereNode->setPosition(aiWhole.aiData[0].pos);
         mDebugSphereNode->setScale(scale, scale, scale);
         debugSphere->setCastShadows(false);
     }
@@ -239,7 +245,7 @@ Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3
     //res = mSpline.interpolate(nextSegment, frac);
     res = Ogre::Math::lerp(mAIDataSegments[nextSegment].posA, mAIDataSegments[nextSegment].posB, frac);
 
-    towardDir = mAIDataSegments[nextSegment].dirB;
+    towardDir = mAIDataSegments[nextSegment].tangentB;
 
     /*
     Ogre::Vector3 nextSegmentDir = mAIDataSegments[nextSegment].posB - mAIDataSegments[nextSegment].posA;
