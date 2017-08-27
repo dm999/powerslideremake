@@ -1028,10 +1028,10 @@ Ogre::Real mSteeringImpulse</y:NodeLabel>
     <node id="n14">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="571.1354169098156" width="552.9672924675265" x="7463.5163537662365" y="-1545.5677084549075"/>
+          <y:Geometry height="758.9013901842984" width="703.1800710871116" x="7388.409964456444" y="-1639.4506950921486"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="492.23828125" x="30.364505608763466" y="4.245442829907915">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="9.921398217149317">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIUtils
 
@@ -1068,7 +1068,19 @@ Ogre::Real mAIDistanceLength
 Ogre::Vector3 mPrevPos
 bool mIsReverseEnabled
 
-AIWhole mAIWhole</y:NodeLabel>
+//NN based functions
+void calcFeatures(PSAICar* aiCar)
+float inference()
+
+size_t getClosestSplinePoint(const Ogre::Vector3&amp; carPos) const
+size_t getFracIndex(size_t closestSplineIndex, const Ogre::Vector3&amp; carPos, float &amp; frac) const
+
+SplineFeatures getSplineFeatures(const Ogre::Vector3&amp; carPos, float frac, size_t fracIndex, float feature3, float feature4) const
+
+void mulSlotMatrix(size_t fromRow, size_t toRow)
+
+AIWhole mAIWhole
+Ogre::Vector3 mField17</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3586,6 +3598,23 @@ float hack2</y:NodeLabel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n83">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="133.01481260268906" width="260.8868895961091" x="7609.556555201945" y="-786.5074063013445"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="92.20703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="208.80859375" x="26.03914792305477" y="20.40389067634453">&lt;&lt;AIUtils.h&gt;&gt;
+
+SplineFeatures
+
+Ogre::Vector3 out6, out7, out12, out13
+float out8, out9, out10, out11
+</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:PolyLineEdge>
@@ -4412,6 +4441,16 @@ float hack2</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e77" source="n83" target="n14">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

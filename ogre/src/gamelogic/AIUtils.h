@@ -79,6 +79,8 @@ private:
         float frac, size_t fracIndex, 
         float feature3, float feature4) const;
 
+    void mulSlotMatrix(size_t fromRow, size_t toRow);
+
     AIWhole mAIWhole;
     Ogre::Vector3 mField17;
 };

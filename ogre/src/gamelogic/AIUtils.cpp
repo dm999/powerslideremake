@@ -155,7 +155,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
 
 
         //left or right
-        if(proj < 0.99f)
+        //if(proj < 0.99f)
         {
             Ogre::Vector3 dirToPointProj = dirToPoint;
             dirToPointProj.y = 0.0f;
@@ -164,14 +164,15 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
             Ogre::Real steerImpulse = Ogre::Math::Abs(steerAngle) / 2.0f;
             steerImpulse = Ogre::Math::Clamp(steerImpulse, 0.0f, 30.0f);
 
-            if(steerAngle < 0.0f)
+            //if(steerAngle < 0.0f)
+            if(steeringVal > 0.0f)
             {
-                aiCar->setSteeringUmpulse(steerImpulse);
+                aiCar->setSteeringUmpulse(steerImpulse * steeringVal);
                 aiCar->setSteerLeft(true);
             }
             else
             {
-                aiCar->setSteeringUmpulse(steerImpulse);
+                aiCar->setSteeringUmpulse(steerImpulse * -steeringVal);
                 aiCar->setSteerRight(true);
             }
         }
@@ -495,7 +496,76 @@ float AIUtils::inference()
 {
     float res = 0.0f;
 
+    mulSlotMatrix(20, mAIWhole.slotMatrix.size() - 1);
+    mulSlotMatrix(16, 19);
+
+    float acceleration = Ogre::Math::Clamp(mAIWhole.slotMatrix[16][0], -1.0f, 1.0f);
+    float steering = Ogre::Math::Clamp(mAIWhole.slotMatrix[17][0], -1.0f, 1.0f);
+
+    res = steering;
+
     return res;
+}
+
+void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)
+{
+    for(size_t q = fromRow; q <= toRow; ++q)
+    {
+        Ogre::Vector3 partACoeffs(
+            mAIWhole.slotMatrix[q][2] + mAIWhole.slotMatrix[q][5],
+            mAIWhole.slotMatrix[q][8] + mAIWhole.slotMatrix[q][11],
+            mAIWhole.slotMatrix[q][14] + mAIWhole.slotMatrix[q][17]
+            );
+
+        Ogre::Vector2 partBCoeffs(
+            mAIWhole.slotMatrix[q][20] + mAIWhole.slotMatrix[q][23],
+            mAIWhole.slotMatrix[q][26] + mAIWhole.slotMatrix[q][29]
+            );
+
+        Ogre::Vector3 partAFeatures(
+            mAIWhole.slotMatrix[mAIWhole.remapper[q][0]][0],
+            mAIWhole.slotMatrix[mAIWhole.remapper[q][1]][0],
+            mAIWhole.slotMatrix[mAIWhole.remapper[q][2]][0]
+            );
+
+        Ogre::Vector2 partBFeatures(
+            mAIWhole.slotMatrix[mAIWhole.remapper[q][3]][0],
+            mAIWhole.slotMatrix[mAIWhole.remapper[q][4]][0]
+        );
+
+        float activation = mAIWhole.activation[mAIWhole.remapper[q][5]][0];
+        float activation2 = mAIWhole.activation[mAIWhole.remapper[q][5]][29];
+
+        float rowRes = (partACoeffs.dotProduct(partAFeatures) + partBCoeffs.dotProduct(partBFeatures)) * activation;
+
+        float multiplier = -1.0f;
+        if(rowRes >= 0.0f)multiplier = 1.0f;
+        else rowRes = -rowRes;
+
+        if(rowRes == 0.0f)rowRes = 0.000099999997f;
+
+        if(rowRes < 20.0f)
+        {
+            float integer;
+            modf(rowRes, &integer);
+            size_t index = static_cast<size_t>(integer);
+
+            float activation3 = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 9];
+            float activation4 = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 10];
+
+            mAIWhole.slotMatrix[q][0] = ((1.0f - (rowRes - integer)) * activation3 + (rowRes - integer) * activation4) * multiplier;
+        }
+        else
+        {
+            mAIWhole.slotMatrix[q][0] = activation2 * multiplier;
+        }
+
+        mAIWhole.slotMatrix[q][5]   = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][3] * mAIWhole.slotMatrix[mAIWhole.remapper[q][0]][0] + mAIWhole.slotMatrix[q][5]) * mAIWhole.slotMatrix[q][4];
+        mAIWhole.slotMatrix[q][11]  = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][9] * mAIWhole.slotMatrix[mAIWhole.remapper[q][1]][0] + mAIWhole.slotMatrix[q][11]) * mAIWhole.slotMatrix[q][10];
+        mAIWhole.slotMatrix[q][17]  = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][15] * mAIWhole.slotMatrix[mAIWhole.remapper[q][2]][0] + mAIWhole.slotMatrix[q][17]) * mAIWhole.slotMatrix[q][16];
+        mAIWhole.slotMatrix[q][23]  = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][21] * mAIWhole.slotMatrix[mAIWhole.remapper[q][3]][0] + mAIWhole.slotMatrix[q][23]) * mAIWhole.slotMatrix[q][22];
+        mAIWhole.slotMatrix[q][29]  = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][27] * mAIWhole.slotMatrix[mAIWhole.remapper[q][4]][0] + mAIWhole.slotMatrix[q][29]) * mAIWhole.slotMatrix[q][28];
+    }
 }
 
 size_t AIUtils::getClosestSplinePoint(const Ogre::Vector3& carPos) const
