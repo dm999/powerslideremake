@@ -9,7 +9,9 @@ float Tools::randomSmallValue()
 {
     float ret = 0.0f;
 
-    ret = rand() * 0.000061037019f - 1.0f;
+    const float den = 1.0f / 16383.5f;
+
+    ret = rand() * den - 1.0f;
 
     return ret;
 }

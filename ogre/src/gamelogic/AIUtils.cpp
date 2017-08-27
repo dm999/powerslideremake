@@ -472,15 +472,15 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
         mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
     }
 
-    mAIWhole.slotMatrix[0][0] = atan2(carRotV[2].dotProduct(splineFeatures.out6), carRotV[0].dotProduct(splineFeatures.out6)) * splineFeatures.out8;
-    mAIWhole.slotMatrix[1][0] = atan2(carRotV[2].dotProduct(splineFeatures.out7), carRotV[0].dotProduct(splineFeatures.out7)) * splineFeatures.out9;
+    mAIWhole.slotMatrix[0][0] = atan2(carRotV[0].dotProduct(splineFeatures.out6), carRotV[2].dotProduct(splineFeatures.out6)) * splineFeatures.out8;
+    mAIWhole.slotMatrix[1][0] = atan2(carRotV[0].dotProduct(splineFeatures.out7), carRotV[2].dotProduct(splineFeatures.out7)) * splineFeatures.out9;
     
     float v34 = 1.0f / sqrt(carRotV[2].z * carRotV[2].z + (-carRotV[2].x * -carRotV[2].x));
     float v57 = v34 * carRotV[2].z;
     float v59 = v34 * -carRotV[2].x;
     mAIWhole.slotMatrix[4][0] = carRotV[1].x * v57 + carRotV[1].z * v59;
     mAIWhole.slotMatrix[5][0] = carRotV[2].y;
-    mAIWhole.slotMatrix[5][0] = carRotV[1].y;
+    mAIWhole.slotMatrix[6][0] = carRotV[1].y;
     mAIWhole.slotMatrix[7][0] = carRotV[2].dotProduct(mField17) * 15.0f;
 
     mAIWhole.slotMatrix[11][0] = 1.0f;
