@@ -167,12 +167,12 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
             //if(steerAngle < 0.0f)
             if(steeringVal > 0.0f)
             {
-                aiCar->setSteeringUmpulse(steerImpulse * steeringVal);
+                aiCar->setSteeringUmpulse(30.0f * steeringVal);
                 aiCar->setSteerLeft(true);
             }
             else
             {
-                aiCar->setSteeringUmpulse(steerImpulse * -steeringVal);
+                aiCar->setSteeringUmpulse(30.0f * -steeringVal);
                 aiCar->setSteerRight(true);
             }
         }
@@ -432,6 +432,9 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     Ogre::Matrix3 carRot;
     aiCar->getModelNode()->getOrientation().ToRotationMatrix(carRot);
     Ogre::Vector3 carRotV[3];//original data is left hand
+    //carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], carRot[2][0]);
+    //carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], carRot[2][1]);
+    //carRotV[2] = Ogre::Vector3(carRot[0][2], carRot[1][2], carRot[2][2]);
     carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
@@ -462,6 +465,11 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     else
     {
         //d.polubotko: TODO
+        mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
+        mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
+        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearForce) * psInvCarMass;
+        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
+        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
     }
 
     mAIWhole.slotMatrix[0][0] = atan2(carRotV[2].dotProduct(splineFeatures.out6), carRotV[0].dotProduct(splineFeatures.out6)) * splineFeatures.out8;

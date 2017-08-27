@@ -23,10 +23,10 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
         break;
     }
 
-    for(size_t w = 0; w < gameState.getAICount(); ++w)
+    std::vector<AIWhole> aiWhole;
+    for(size_t w = 0; w < GameState::mRaceGridCarsMax; ++w)
     {
-
-        AIWhole aiWhole;
+        aiWhole.push_back(AIWhole());
 
         typedef unsigned int DWORD;
 
@@ -42,21 +42,21 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 DWORD slotMatrixSize = someBuf[2];
 
 
-                aiWhole.slotMatrix.resize(slotMatrixSize);
-                aiWhole.activation.resize(5);
-                aiWhole.remapper.resize(slotMatrixSize);
+                aiWhole[w].slotMatrix.resize(slotMatrixSize);
+                aiWhole[w].activation.resize(5);
+                aiWhole[w].remapper.resize(slotMatrixSize);
 
                 for(size_t q = 0; q < slotMatrixSize; ++q)
                 {
-                    aiWhole.slotMatrix[q].resize(39);
-                    fileToLoad->read(&aiWhole.slotMatrix[q][0], 4 * 39);
-                    aiWhole.slotMatrix[q][0] += Tools::randomSmallValue();
+                    aiWhole[w].slotMatrix[q].resize(39);
+                    fileToLoad->read(&aiWhole[w].slotMatrix[q][0], 4 * 39);
+                    aiWhole[w].slotMatrix[q][0] += Tools::randomSmallValue();
                 }
 
                 for(size_t q = 0; q < 5; ++q)
                 {
-                    aiWhole.activation[q].resize(31);
-                    fileToLoad->read(&aiWhole.activation[q][0], 4 * 31);
+                    aiWhole[w].activation[q].resize(31);
+                    fileToLoad->read(&aiWhole[w].activation[q][0], 4 * 31);
                 }
 
                 for(size_t q = 0; q < 2; ++q)
@@ -89,8 +89,8 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                 for(size_t q = 0; q < slotMatrixSize; ++q)
                 {
-                    aiWhole.remapper[q].resize(6);
-                    fileToLoad->read(&aiWhole.remapper[q][0], 4 * 6);
+                    aiWhole[w].remapper[q].resize(6);
+                    fileToLoad->read(&aiWhole[w].remapper[q][0], 4 * 6);
                 }
 
 
@@ -109,9 +109,9 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 float someBuf[9];
                 fileToLoad->read(someBuf, 4 * 9);
 
-                aiWhole.hackType = *reinterpret_cast<int *>(&someBuf[1]);
-                aiWhole.hack1 = someBuf[6];
-                aiWhole.hack2 = someBuf[7];
+                aiWhole[w].hackType = *reinterpret_cast<int *>(&someBuf[1]);
+                aiWhole[w].hack1 = someBuf[6];
+                aiWhole[w].hack2 = someBuf[7];
 
                 DWORD someData;
                 fileToLoad->read(&someData, 4);
@@ -140,7 +140,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                         aiData.magic.y = someBuf2[7];
                         aiData.magic.z = -someBuf2[8];
 
-                        aiWhole.aiData.push_back(aiData);
+                        aiWhole[w].aiData.push_back(aiData);
                     }
 
                     fileToLoad->read(&someData, 4);
@@ -150,7 +150,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 {
                     Ogre::SimpleSpline spline;
 
-                    for(size_t q = 0; q < aiWhole.aiData.size(); ++q)
+                    for(size_t q = 0; q < aiWhole[w].aiData.size(); ++q)
                     {
                         //spheres
                         Ogre::Real scale = 0.1f;
@@ -159,7 +159,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                         debugSphere->setMaterialName("BaseWhiteNoLighting");
                         Ogre::SceneNode * debugSphereNode = sceneMgr->getRootSceneNode()->createChildSceneNode(debugSphereName);
                         debugSphereNode->attachObject(debugSphere);
-                        debugSphereNode->setPosition(aiWhole.aiData[q].pos);
+                        debugSphereNode->setPosition(aiWhole[w].aiData[q].pos);
                         debugSphereNode->setScale(scale, scale, scale);
                         debugSphere->setCastShadows(false);
 
@@ -172,13 +172,13 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                          
                         manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
 
-                        spline.addPoint(aiWhole.aiData[q].pos);
+                        spline.addPoint(aiWhole[w].aiData[q].pos);
 
-                        manual->position(aiWhole.aiData[q].pos);
-                        manual->position(aiWhole.aiData[q].pos + aiWhole.aiData[q].tangent * length);
+                        manual->position(aiWhole[w].aiData[q].pos);
+                        manual->position(aiWhole[w].aiData[q].pos + aiWhole[w].aiData[q].tangent * length);
 
-                        manual->position(aiWhole.aiData[q].pos);
-                        manual->position(aiWhole.aiData[q].pos + aiWhole.aiData[q].magic * length);
+                        manual->position(aiWhole[w].aiData[q].pos);
+                        manual->position(aiWhole[w].aiData[q].pos + aiWhole[w].aiData[q].magic * length);
 
                         manual->end(); 
                         manual->setCastShadows(false);
@@ -186,18 +186,18 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                     }
 
-                    spline.addPoint(aiWhole.aiData[0].pos);
+                    spline.addPoint(aiWhole[w].aiData[0].pos);
 
                     //lines
                     Ogre::String debugDirName = mNameGenNodes.generate();
                     Ogre::ManualObject * manual =  sceneMgr->createManualObject(debugDirName); 
                     Ogre::SceneNode* lltDirNode = sceneMgr->getRootSceneNode()->createChildSceneNode(debugDirName); 
                     manual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
-                    for(size_t q = 0; q < aiWhole.aiData.size() - 1; ++q)
+                    for(size_t q = 0; q < aiWhole[w].aiData.size() - 1; ++q)
                     {
 #if 1
-                        manual->position(aiWhole.aiData[q].pos);
-                        manual->position(aiWhole.aiData[q + 1].pos);
+                        manual->position(aiWhole[w].aiData[q].pos);
+                        manual->position(aiWhole[w].aiData[q + 1].pos);
 #else
                         for(float w = 0; w < 1.0f; w += 0.1f)
                         {
@@ -207,13 +207,13 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 #endif
                     }
 #if 1
-                    manual->position(aiWhole.aiData[aiWhole.aiData.size() - 1].pos);
-                    manual->position(aiWhole.aiData[0].pos);
+                    manual->position(aiWhole[w].aiData[aiWhole[w].aiData.size() - 1].pos);
+                    manual->position(aiWhole[w].aiData[0].pos);
 #else
                     for(float w = 0; w < 1.0f; w += 0.1f)
                     {
-                        manual->position(spline.interpolate(aiWhole.aiData.size() - 1, w));
-                        manual->position(spline.interpolate(aiWhole.aiData.size() - 1, w + 0.1f));
+                        manual->position(spline.interpolate(aiWhole[w].aiData.size() - 1, w));
+                        manual->position(spline.interpolate(aiWhole[w].aiData.size() - 1, w + 0.1f));
                     }
 #endif
                     manual->end(); 
@@ -226,6 +226,13 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
             }
         }//read REC END
 
-        gameState.getAICar(w).setAIData(aiWhole, sceneMgr, isDebugAI);
+    }
+
+    for(size_t w = 0; w < gameState.getAICount(); ++w)
+    {
+        if(w != 2)
+            gameState.getAICar(w).setAIData(aiWhole[w], sceneMgr, isDebugAI);
+        else
+            gameState.getAICar(w).setAIData(aiWhole[6], sceneMgr, isDebugAI);
     }
 }
