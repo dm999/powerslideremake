@@ -2,6 +2,7 @@
 #include "AIUtils.h"
 
 #include "../tools/OgreTools.h"
+#include "../tools/Tools.h"
 
 #include "../pscar/PSAICar.h"
 
@@ -24,6 +25,8 @@ AIUtils::AIUtils() :
 void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 {
     mAIWhole = aiWhole;
+
+    mField17 = Ogre::Vector3::ZERO;
 
     //std::vector<Ogre::Vector3> splinePoints;
 
@@ -411,6 +414,10 @@ void AIUtils::getClosestSegment(const Ogre::Vector3& carPos, size_t& indexPrev, 
 
 void AIUtils::calcFeatures(PSAICar* aiCar)
 {
+    const float psCarMass = 45.0f;
+    const float psInvCarMass = 1.0f / psCarMass;
+
+
     float feature3 = mAIWhole.slotMatrix[18][0];
 
     if(mAIWhole.hackType == 1)feature3 += 1.0f;
@@ -423,12 +430,13 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
 
     Ogre::Matrix3 carRot;
     aiCar->getModelNode()->getOrientation().ToRotationMatrix(carRot);
-    Ogre::Vector3 carRotV[3];
+    Ogre::Vector3 carRotV[3];//original data is left hand
     carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
     Ogre::Vector3 carLinearForce = aiCar->getLinearForce();
+    carLinearForce.z = -carLinearForce.z;//original data is left hand
 
 
     size_t closestSplineIndex = getClosestSplinePoint(carPos);
@@ -444,13 +452,43 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
 
     if(mAIWhole.hackType == 1)
     {
+        mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
+        mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
+        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearForce) * psInvCarMass;
+        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
+        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
     }
     else
     {
         //d.polubotko: TODO
     }
 
-    int a = 12;
+    mAIWhole.slotMatrix[0][0] = atan2(carRotV[2].dotProduct(splineFeatures.out6), carRotV[0].dotProduct(splineFeatures.out6)) * splineFeatures.out8;
+    mAIWhole.slotMatrix[1][0] = atan2(carRotV[2].dotProduct(splineFeatures.out7), carRotV[0].dotProduct(splineFeatures.out7)) * splineFeatures.out9;
+    
+    float v34 = 1.0f / sqrt(carRotV[2].z * carRotV[2].z + (-carRotV[2].x * -carRotV[2].x));
+    float v57 = v34 * carRotV[2].z;
+    float v59 = v34 * -carRotV[2].x;
+    mAIWhole.slotMatrix[4][0] = carRotV[1].x * v57 + carRotV[1].z * v59;
+    mAIWhole.slotMatrix[5][0] = carRotV[2].y;
+    mAIWhole.slotMatrix[5][0] = carRotV[1].y;
+    mAIWhole.slotMatrix[7][0] = carRotV[2].dotProduct(mField17) * 15.0f;
+
+    mAIWhole.slotMatrix[11][0] = 1.0f;
+    mAIWhole.slotMatrix[12][0] = Tools::randomSmallValue();
+
+    if(false)
+    {
+        //d.polubotko: TODO overtake
+    }
+    else
+    {
+        mAIWhole.slotMatrix[13][0] = 0.0f;
+        mAIWhole.slotMatrix[14][0] = 0.0f;
+        mAIWhole.slotMatrix[15][0] = 0.0f;
+    }
+
+    mField17 = carRotV[0];
 }
 
 float AIUtils::inference()
@@ -535,7 +573,7 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
 
     if(mAIWhole.hack1 > 0.0 || mAIWhole.hack2 > 0.0)
     {
-        //d.polubotko: TODO
+        //d.polubotko: TODO physics hack
     }
 
     float f3Frac = feature3 + frac;

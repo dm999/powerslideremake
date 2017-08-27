@@ -80,6 +80,8 @@ class Tools
 {
 public:
 
+    static float randomSmallValue();
+
     template <typename T>
     static T lerp(const T& src, const T& dst, float step)
     {

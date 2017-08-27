@@ -16,6 +16,7 @@ void CustomRigidBody::setTransform(const btTransform& worldTrans)
 
     Ogre::Vector3 pos = OgreBulletCollisions::convert(worldTrans.getOrigin());
 
+    //Ogre::Vector3 velocity = getLinearVelocity();//already scaled to spf
     Ogre::Vector3 velocity = mPrevPos - pos;
     mPrevPos = pos;
 

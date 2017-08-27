@@ -80,6 +80,7 @@ private:
         float feature3, float feature4) const;
 
     AIWhole mAIWhole;
+    Ogre::Vector3 mField17;
 };
 
 #endif

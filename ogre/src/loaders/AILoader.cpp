@@ -50,6 +50,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 {
                     aiWhole.slotMatrix[q].resize(39);
                     fileToLoad->read(&aiWhole.slotMatrix[q][0], 4 * 39);
+                    aiWhole.slotMatrix[q][0] += Tools::randomSmallValue();
                 }
 
                 for(size_t q = 0; q < 5; ++q)
