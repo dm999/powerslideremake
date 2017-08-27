@@ -623,10 +623,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
             if(!mModeContext.mGameState.getRaceFinished())
                 mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
 
-            if(mModeContext.mGameState.getRaceStarted())
-            {
-                mModeContext.mGameState.getAICar(q).performAICorrection(mModeContext.mGameState.isGamePaused());
-            }
+            mModeContext.mGameState.getAICar(q).performAICorrection(mModeContext.mGameState.getRaceStarted(), mModeContext.mGameState.isGamePaused());
             mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
         }
 

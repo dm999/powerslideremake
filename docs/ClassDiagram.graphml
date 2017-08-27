@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="73.41675671242501">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1679.93359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="66.06617077492501">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -369,6 +369,7 @@ Ogre::Vector3 getAngularVelocity()const
 Ogre::Real getAlignedVelocity()const
 Ogre::Real getLateralVelocity()const
 Ogre::Vector3 getForwardAxis()const
+Ogre::Vector3 getLinearForce()const
 
 Ogre::SceneNode* getModelNode()
 
@@ -1010,7 +1011,7 @@ virtual void processWheelsCollision(    btManifoldPoint&amp; cp,
                                     StaticMeshProcesser&amp; processer,
                                     int triIndex)
 
-void performAICorrection(bool isGamePaused)
+void performAICorrection(bool isRaceStarted, bool isGamePaused)
 void clearAIData()
 void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void raceStarted()
@@ -1039,7 +1040,7 @@ public:
 void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void clear()
 
-void performAICorrection(PSAICar* aiCar, bool isGamePaused)
+void performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGamePaused)
 
 void setSpeedCoeff(Ogre::Real speedCoeff)
 
@@ -3095,7 +3096,7 @@ void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaterni
 
 OgreBulletDynamics::DynamicsWorld * mWorld
 
-CommonIncludes::shared_ptr&lt;OgreBulletDynamics::RigidBody&gt; mCarChassis
+CommonIncludes::shared_ptr&lt;CustomRigidBody&gt; mCarChassis
 CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelFrontL
 CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelFrontR
 CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelBackL

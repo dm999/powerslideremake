@@ -5,6 +5,7 @@
 
 #include "../mesh/StaticMeshProcesser.h"
 
+#include "../customs/CustomRigidBody.h"
 #include "../customs/CustomRigidBodyWheel.h"
 
 #include "../lua/DMLuaManager.h"

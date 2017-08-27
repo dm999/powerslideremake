@@ -373,6 +373,11 @@ Ogre::Vector3 PSBaseCar::getForwardAxis()const
     return rot * Ogre::Vector3::NEGATIVE_UNIT_Z;
 }
 
+Ogre::Vector3 PSBaseCar::getLinearForce()const
+{
+    return mCarChassis->getLinearForce();
+}
+
 void PSBaseCar::initSuspension(const GameState& gameState)
 {
 

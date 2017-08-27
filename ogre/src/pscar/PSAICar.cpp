@@ -129,9 +129,9 @@ void PSAICar::adjustWheelsFriction(StaticMeshProcesser& processer)
 }
 #endif
 
-void PSAICar::performAICorrection(bool isGamePaused)
+void PSAICar::performAICorrection(bool isRaceStarted, bool isGamePaused)
 {
-    mAIUtils.performAICorrection(this, isGamePaused);
+    mAIUtils.performAICorrection(this, isRaceStarted, isGamePaused);
 }
 
 void PSAICar::clearAIData()

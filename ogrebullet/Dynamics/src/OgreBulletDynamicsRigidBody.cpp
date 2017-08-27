@@ -245,6 +245,11 @@ namespace OgreBulletDynamics
         getBulletRigidBody()->applyForce(convert(impulse), convert(position));
     }
     // -------------------------------------------------------------------------
+    Ogre::Vector3 RigidBody::getTotalForce() const
+    {
+        return convert(getBulletRigidBody()->getTotalForce());
+    }
+    // -------------------------------------------------------------------------
     void RigidBody::setCenterOfMass(const Ogre::Vector3 &center, const Ogre::Quaternion& rot)
     {
         btTransform transform(OgreBulletCollisions::convert(rot),

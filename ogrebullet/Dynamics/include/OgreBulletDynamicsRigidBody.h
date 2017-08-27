@@ -104,6 +104,7 @@ namespace OgreBulletDynamics
 
         void applyImpulse(const Ogre::Vector3 &impulse, const Ogre::Vector3 &position);
         void applyForce(const Ogre::Vector3 &impulse, const Ogre::Vector3 &position);
+        Ogre::Vector3 getTotalForce() const;
 
 
         inline btRigidBody *getBulletRigidBody() const;

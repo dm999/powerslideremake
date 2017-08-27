@@ -7,6 +7,8 @@
 #include "../loaders/PFLoader.h"
 #include "../OriginalSettings.h"
 
+#include "../customs/CustomRigidBody.h"
+
 struct lua_State;
 
 class StaticMeshProcesser;
@@ -46,6 +48,7 @@ public:
     Ogre::Real getAlignedVelocity()const;
     Ogre::Real getLateralVelocity()const;
     Ogre::Vector3 getForwardAxis()const;
+    Ogre::Vector3 getLinearForce()const;
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
 
@@ -62,7 +65,7 @@ public:
     unsigned char getBackRWheelColliderIndex(){return mWheelBackRColliderIndex;}
     unsigned char getChassisColliderIndex(){return mChassisColliderIndex;}
 
-    const OgreBulletDynamics::RigidBody& getChassis()const{return *mCarChassis;}
+    const CustomRigidBody& getChassis()const{return *mCarChassis;}
 
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;

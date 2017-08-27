@@ -5,6 +5,7 @@
 #include "../includes/OgreBulletInclude.h"
 #include "../includes/CommonIncludes.h"
 
+class CustomRigidBody;
 class CustomRigidBodyWheel;
 
 struct InitialVehicleSetup
@@ -78,7 +79,7 @@ protected:
 
     OgreBulletDynamics::DynamicsWorld * mWorld;
 
-    CommonIncludes::shared_ptr<OgreBulletDynamics::RigidBody> mCarChassis;
+    CommonIncludes::shared_ptr<CustomRigidBody> mCarChassis;
     CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontL;
     CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontR;
     CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelBackL;

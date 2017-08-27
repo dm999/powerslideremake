@@ -1,6 +1,7 @@
 
 #include "PSBaseVehicle.h"
 
+#include "../customs/CustomRigidBody.h"
 #include "../customs/CustomRigidBodyWheel.h"
 
 Ogre::NameGenerator PSBaseVehicle::nameGenNodes("Scene/Node/Vehicle/Name");
@@ -115,7 +116,7 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
     }
 
 
-    mCarChassis.reset(new OgreBulletDynamics::RigidBody(nameGenNodes.generate(), mWorld));
+    mCarChassis.reset(new CustomRigidBody(nameGenNodes.generate(), mWorld));
     //mCarChassis = new OgreBulletDynamics::RigidBody("carChassis", mWorld, 0, 1);//no collision with static mesh
 
     mCarChassis->setShape ( modelNode, 

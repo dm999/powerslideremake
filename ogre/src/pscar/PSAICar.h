@@ -35,7 +35,7 @@ public:
                                     StaticMeshProcesser& processer,
                                     int triIndex);
 
-    void performAICorrection(bool isGamePaused);
+    void performAICorrection(bool isRaceStarted, bool isGamePaused);
     void clearAIData();
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
