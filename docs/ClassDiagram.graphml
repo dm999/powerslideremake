@@ -1031,7 +1031,7 @@ Ogre::Real mSteeringImpulse</y:NodeLabel>
           <y:Geometry height="758.9013901842984" width="703.1800710871116" x="7388.409964456444" y="-1639.4506950921486"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="9.921398217149317">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="31.97315602964909">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIUtils
 
@@ -1047,9 +1047,6 @@ void setSpeedCoeff(Ogre::Real speedCoeff)
 void raceStarted()
 
 private:
-
-bool mIsDebugAI
-Ogre::SceneNode * mDebugSphereNode
 
 Ogre::Real mSpeedCoeff
 
@@ -1070,7 +1067,7 @@ bool mIsReverseEnabled
 
 //NN based functions
 void calcFeatures(PSAICar* aiCar)
-float inference()
+void inference(float&amp; steering, float&amp; acceleration)
 
 size_t getClosestSplinePoint(const Ogre::Vector3&amp; carPos) const
 size_t getFracIndex(size_t closestSplineIndex, const Ogre::Vector3&amp; carPos, float &amp; frac) const
@@ -1091,7 +1088,7 @@ Ogre::Vector3 mField17</y:NodeLabel>
           <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8273.848496040966" y="-1502.1600845421988"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="184.78515625" x="3.758925834033107" y="1.355397042199229">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="184.78515625" x="3.7589258340321976" y="1.355397042199229">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIDataSegment
 
@@ -1109,7 +1106,7 @@ Ogre::Real segmentLength</y:NodeLabel>
           <y:Geometry height="111.66844926595195" width="136.59518776444156" x="8301.70240611778" y="-1105.834224632976"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="122.072265625" x="7.261461069721008" y="2.3801230704759746">&lt;&lt;Tools.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="106.908203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="122.072265625" x="7.261461069720099" y="2.3801230704759746">&lt;&lt;Tools.h&gt;&gt;
 
 AIData
 

@@ -7,7 +7,6 @@
 #include "../tools/Tools.h"
 
 class PSAICar;
-//class KochanekBartelsSpline;
 
 struct AIDataSegment
 {
@@ -35,9 +34,6 @@ public:
 
 private:
 
-    bool mIsDebugAI;
-    Ogre::SceneNode * mDebugSphereNode;
-
     Ogre::Real mSpeedCoeff;
 
     //CommonIncludes::shared_ptr<KochanekBartelsSpline> mSpline;
@@ -62,7 +58,7 @@ private:
 
     //NN based functions
     void calcFeatures(PSAICar* aiCar);
-    float inference();//return steering (-1.0 right, 1.0 left)
+    void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;
     size_t getFracIndex(size_t closestSplineIndex, const Ogre::Vector3& carPos, float & frac) const;
@@ -82,7 +78,7 @@ private:
     void mulSlotMatrix(size_t fromRow, size_t toRow);
 
     AIWhole mAIWhole;
-    Ogre::Vector3 mField17;
+    Ogre::Vector3 mPrevRot;
 };
 
 #endif

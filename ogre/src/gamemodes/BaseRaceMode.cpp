@@ -331,11 +331,11 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 20.0f;
+            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.2f;
-            if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
+            if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 0.2f;
+            if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 0.2f;
         }
 
         Ogre::Real speedCoeffMinLimit = speedCoeff - 0.1f;

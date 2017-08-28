@@ -6,16 +6,13 @@
 
 #include "../pscar/PSAICar.h"
 
-//#include "KochanekBartelsSpline.h"
-
 namespace
 {
     const float aiMaxSpeed = 300.0f;
 }
 
 AIUtils::AIUtils() :
-        mIsDebugAI(false),
-        mSpeedCoeff(1.0f),
+         mSpeedCoeff(1.0f),
         mAIDistanceLength(0.0f),
         mPrevPos(Ogre::Vector3::ZERO),
         mIsReverseEnabled(false)
@@ -26,7 +23,7 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
 {
     mAIWhole = aiWhole;
 
-    mField17 = Ogre::Vector3::ZERO;
+    mPrevRot = Ogre::Vector3::ZERO;
 
     //std::vector<Ogre::Vector3> splinePoints;
 
@@ -79,26 +76,8 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
         mAIWhole.aiData[q].magic.z = -mAIWhole.aiData[q].magic.z;
     }
 
-    //mSpline.reset(new KochanekBartelsSpline(splinePoints));
-
     mPrevClosestSegmentInited = false;
     mPrevClosestSegmentIndex = 0;
-
-    mDebugSphereNode = NULL;
-
-    mIsDebugAI = isDebugAI;
-
-    if(mIsDebugAI)
-    {
-        Ogre::Real scale = 0.02f;
-        Ogre::Entity * debugSphere = sceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
-        debugSphere->setMaterialName("BaseWhiteNoLighting");
-        mDebugSphereNode = sceneMgr->getRootSceneNode()->createChildSceneNode();
-        mDebugSphereNode->attachObject(debugSphere);
-        mDebugSphereNode->setPosition(aiWhole.aiData[0].pos);
-        mDebugSphereNode->setScale(scale, scale, scale);
-        debugSphere->setCastShadows(false);
-    }
 }
 
 void AIUtils::clear()
@@ -109,8 +88,11 @@ void AIUtils::clear()
 void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGamePaused)
 {
 
+    float steeringVal;
+    float accelerationVal;
+
     calcFeatures(aiCar);
-    float steeringVal = inference();
+    inference(steeringVal, accelerationVal);
 
     if(isRaceStarted)
     {
@@ -129,58 +111,31 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
         mPrevPos = carPos;
         mAIDistanceLength += Ogre::Math::Abs(lastDistance);
 
-        //size_t towardPointIndex;
         Ogre::Vector3 towardDir;
         Ogre::Vector3 towardPoint = getTowardPoint(carPos, towardDir);
 
         Ogre::Real speedCoeff = carDirOriginal.dotProduct(towardDir);
         speedCoeff = Ogre::Math::Clamp(speedCoeff, 0.2f, 1.0f);
 
-        if(mIsDebugAI)
-        {
-            mDebugSphereNode->setPosition(towardPoint);
-        }
-        //Ogre::Vector3 dirToPointHint = mAIData[towardPointIndex].dir;
-        //dirToPointHint.y = 0.0f;
-
-        Ogre::Vector3 dirToPoint = towardPoint - carPos;
-        dirToPoint.normalise();
-        dirToPoint.y = 0.0f;
-        //dirToPoint = (dirToPoint + dirToPointHint) / 2.0f;
-
-        Ogre::Real proj = dirToPoint.dotProduct(carDir);
-
         aiCar->setSteerLeft(false);
         aiCar->setSteerRight(false);
 
+        const float maxSteerImpulse = 30.0f;
 
-        //left or right
-        //if(proj < 0.99f)
+        if(steeringVal > 0.0f)
         {
-            Ogre::Vector3 dirToPointProj = dirToPoint;
-            dirToPointProj.y = 0.0f;
-
-            Ogre::Real steerAngle = GetSignedAngle(carDir, dirToPoint);
-            Ogre::Real steerImpulse = Ogre::Math::Abs(steerAngle) / 2.0f;
-            steerImpulse = Ogre::Math::Clamp(steerImpulse, 0.0f, 30.0f);
-
-            //if(steerAngle < 0.0f)
-            if(steeringVal > 0.0f)
-            {
-                aiCar->setSteeringUmpulse(30.0f * steeringVal);
-                aiCar->setSteerLeft(true);
-            }
-            else
-            {
-                aiCar->setSteeringUmpulse(30.0f * -steeringVal);
-                aiCar->setSteerRight(true);
-            }
+            aiCar->setSteeringUmpulse(maxSteerImpulse * steeringVal);
+            aiCar->setSteerLeft(true);
+        }
+        else
+        {
+            aiCar->setSteeringUmpulse(maxSteerImpulse * -steeringVal);
+            aiCar->setSteerRight(true);
         }
 
 
         //speed
         Ogre::Real aiSpeed = aiCar->getAlignedVelocity();
-        //Ogre::Real aiSpeed = aiCar->getLinearVelocity().length();
 
         aiCar->setAcceleration(false);
         aiCar->setBrake(false);
@@ -207,7 +162,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
                 aiCar->setBrake(true);
             }
 
-            if(aiSpeed < (aiMaxSpeed * mSpeedCoeff/* * speedCoeff*/))
+            if(aiSpeed < (aiMaxSpeed * mSpeedCoeff))
             {
                 aiCar->setAcceleration(true);
             }
@@ -237,10 +192,6 @@ Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3
 
     Ogre::Real frac = distToStart / mAIDataSegments[segment].segmentLength;
 
-    //Ogre::Vector3 segmentDir = mAIDataSegments[segment].posB - mAIDataSegments[segment].posA;
-    //segmentDir.normalise();
-    //res = mAIDataSegments[segment].posA + segmentDir * segmentLength * frac;
-
     size_t nextSegment = segment;
 
     const Ogre::Real distFromCar = 0.5f;
@@ -259,17 +210,9 @@ Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3
     }
 
 
-    //res = mSpline->ComputePoint(frac, nextSegment, nextSegment + 1);
-    //res = mSpline.interpolate(nextSegment, frac);
     res = Ogre::Math::lerp(mAIDataSegments[nextSegment].posA, mAIDataSegments[nextSegment].posB, frac);
 
     towardDir = mAIDataSegments[nextSegment].tangentB;
-
-    /*
-    Ogre::Vector3 nextSegmentDir = mAIDataSegments[nextSegment].posB - mAIDataSegments[nextSegment].posA;
-    nextSegmentDir.normalise();
-    Ogre::Real nextSegmentLength = mAIDataSegments[nextSegment].segmentLength;
-    res = mAIDataSegments[nextSegment].posA + nextSegmentDir * nextSegmentLength * frac;*/
 
     return res;
 }
@@ -346,73 +289,6 @@ void AIUtils::raceStarted()
     mTimerAIStuck.reset();
 }
 
-#if 0
-Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, size_t& towardPointIndex)const
-{
-
-    // ---prev-----[car]-------cur---------ahead----
-
-    size_t indexPrev, indexCur, indexAhead;
-    getClosestSegment(carPos, indexPrev, indexCur, indexAhead);
-
-    Ogre::Real curSegmentLength = mAIData[indexPrev].pos.distance(mAIData[indexCur].pos);
-    Ogre::Real aheadSegmentLength = mAIData[indexCur].pos.distance(mAIData[indexAhead].pos);
-
-    Ogre::Vector3 prevPos = mAIData[indexPrev].pos;
-    Ogre::Vector3 curPos = mAIData[indexCur].pos;
-    Ogre::Vector3 aheadPos = mAIData[indexAhead].pos;
-
-    Ogre::Real toPrevPosDist = prevPos.distance(carPos);
-    Ogre::Real toCurPosDist = curPos.distance(carPos);
-    Ogre::Real toAheadPosDist = aheadPos.distance(carPos);
-
-
-    Ogre::Real fracToCurSegment = toCurPosDist / toPrevPosDist;
-    Ogre::Real fracToAheadSegment = toCurPosDist / toAheadPosDist;
-
-    const Ogre::Real switchThreshold = 1.0f; // more far
-    //const Ogre::Real switchThreshold = 0.5f;
-
-    if(fracToCurSegment < switchThreshold)
-    {
-        towardPointIndex = indexAhead;
-    }
-    else
-    {
-        towardPointIndex = indexCur;
-    }
-
-    return mAIData[towardPointIndex].pos;
-}
-
-void AIUtils::getClosestSegment(const Ogre::Vector3& carPos, size_t& indexPrev, size_t& indexCur, size_t& indexAhead)const
-{
-    Ogre::Real minDist = 100000.0f;
-    size_t minIndex = 0;
-
-    for(size_t q = 0; q < mAIData.size(); ++q)
-    {
-        Ogre::Real dist = carPos.distance(mAIData[q].pos);
-        if(dist < minDist)
-        {
-            minDist = dist;
-            minIndex = q;
-        }
-    }
-
-    size_t minIndexAhead = minIndex + 1;
-    int minIndexPrev = minIndex - 1;
-
-    if(minIndexAhead == mAIData.size()) minIndexAhead = 0;
-    if(minIndexPrev < 0) minIndexPrev = mAIData.size() - 1;
-
-    indexPrev = minIndexPrev;
-    indexCur = minIndex;
-    indexAhead = minIndexAhead;
-}
-#endif
-
-
 void AIUtils::calcFeatures(PSAICar* aiCar)
 {
     const float psCarMass = 45.0f;
@@ -421,8 +297,14 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
 
     float feature3 = mAIWhole.slotMatrix[18][0];
 
-    if(mAIWhole.hackType == 1)feature3 += 1.0f;
-    else feature3 += 0.25f;
+    if(mAIWhole.hackType == 1)
+    {
+        feature3 += 1.0f;
+    }
+    else
+    {
+        feature3 += 0.25f;
+    }
 
     float feature4 = mAIWhole.slotMatrix[19][0] + 1.0f;
 
@@ -432,9 +314,6 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     Ogre::Matrix3 carRot;
     aiCar->getModelNode()->getOrientation().ToRotationMatrix(carRot);
     Ogre::Vector3 carRotV[3];//original data is left hand
-    //carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], carRot[2][0]);
-    //carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], carRot[2][1]);
-    //carRotV[2] = Ogre::Vector3(carRot[0][2], carRot[1][2], carRot[2][2]);
     carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
@@ -481,7 +360,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     mAIWhole.slotMatrix[4][0] = carRotV[1].x * v57 + carRotV[1].z * v59;
     mAIWhole.slotMatrix[5][0] = carRotV[2].y;
     mAIWhole.slotMatrix[6][0] = carRotV[1].y;
-    mAIWhole.slotMatrix[7][0] = carRotV[2].dotProduct(mField17) * 15.0f;
+    mAIWhole.slotMatrix[7][0] = carRotV[2].dotProduct(mPrevRot) * 15.0f;
 
     mAIWhole.slotMatrix[11][0] = 1.0f;
     mAIWhole.slotMatrix[12][0] = Tools::randomSmallValue();
@@ -497,22 +376,16 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
         mAIWhole.slotMatrix[15][0] = 0.0f;
     }
 
-    mField17 = carRotV[0];
+    mPrevRot = carRotV[0];
 }
 
-float AIUtils::inference()
+void AIUtils::inference(float& steering, float& acceleration)
 {
-    float res = 0.0f;
-
     mulSlotMatrix(20, mAIWhole.slotMatrix.size() - 1);
     mulSlotMatrix(16, 19);
 
-    float acceleration = Ogre::Math::Clamp(mAIWhole.slotMatrix[16][0], -1.0f, 1.0f);
-    float steering = Ogre::Math::Clamp(mAIWhole.slotMatrix[17][0], -1.0f, 1.0f);
-
-    res = steering;
-
-    return res;
+    acceleration = Ogre::Math::Clamp(mAIWhole.slotMatrix[16][0], -1.0f, 1.0f);
+    steering = Ogre::Math::Clamp(mAIWhole.slotMatrix[17][0], -1.0f, 1.0f);
 }
 
 void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)
@@ -542,7 +415,6 @@ void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)
         );
 
         float activation = mAIWhole.activation[mAIWhole.remapper[q][5]][0];
-        float activation2 = mAIWhole.activation[mAIWhole.remapper[q][5]][29];
 
         float rowRes = (partACoeffs.dotProduct(partAFeatures) + partBCoeffs.dotProduct(partBFeatures)) * activation;
 
@@ -550,22 +422,22 @@ void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)
         if(rowRes >= 0.0f)multiplier = 1.0f;
         else rowRes = -rowRes;
 
-        if(rowRes == 0.0f)rowRes = 0.000099999997f;
+        if(rowRes == 0.0f)rowRes = 0.0001f;
 
         if(rowRes < 20.0f)
         {
-            float integer;
-            modf(rowRes, &integer);
+            double integer;
+            float frac = static_cast<float>(modf(rowRes, &integer));
             size_t index = static_cast<size_t>(integer);
 
-            float activation3 = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 9];
-            float activation4 = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 10];
+            const float activationMin = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 9];
+            const float activationMax = mAIWhole.activation[mAIWhole.remapper[q][5]][index + 10];
 
-            mAIWhole.slotMatrix[q][0] = ((1.0f - (rowRes - integer)) * activation3 + (rowRes - integer) * activation4) * multiplier;
+            mAIWhole.slotMatrix[q][0] = Tools::lerp(activationMin, activationMax, frac) * multiplier;
         }
         else
         {
-            mAIWhole.slotMatrix[q][0] = activation2 * multiplier;
+            mAIWhole.slotMatrix[q][0] = mAIWhole.activation[mAIWhole.remapper[q][5]][29] * multiplier;
         }
 
         mAIWhole.slotMatrix[q][5]   = (mAIWhole.slotMatrix[q][0] * mAIWhole.slotMatrix[q][3] * mAIWhole.slotMatrix[mAIWhole.remapper[q][0]][0] + mAIWhole.slotMatrix[q][5]) * mAIWhole.slotMatrix[q][4];
