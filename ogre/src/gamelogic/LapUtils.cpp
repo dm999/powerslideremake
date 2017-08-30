@@ -267,44 +267,13 @@ size_t LapUtils::getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& p
     }
     else
     {
-        const int range = 5;
-        const size_t rangeAmount = range * 2;
-        std::vector<size_t> closestRange(rangeAmount);
+        res = getRelativeClosestSegment(carPos);
+        pointInLineRes = ProjectPointOnLine(carPos, mLLTDataSegments[res].posA, mLLTDataSegments[res].posB);
+        minDist = pointInLineRes.distance(carPos);
 
-        int dataSegmentsLength = mLLTDataSegments.size();
-
-        size_t index = 0;
-        for(int q = -range; q < range; ++q, ++index)
-        {
-            int rangeIndex = mPrevClosestSegmentIndex + q;
-            
-            if(rangeIndex < 0)
-            {
-                rangeIndex = dataSegmentsLength + rangeIndex;
-            }
-            if(rangeIndex >= dataSegmentsLength)
-            {
-                rangeIndex = rangeIndex - dataSegmentsLength;
-            }
-
-            closestRange[index] = rangeIndex;
-        }
-
-        for(size_t q = 0; q < rangeAmount; ++q)
-        {
-            Ogre::Vector3 pointInLine = ProjectPointOnLine(carPos, mLLTDataSegments[closestRange[q]].posA, mLLTDataSegments[closestRange[q]].posB);
-            Ogre::Real dist = pointInLine.distance(carPos);
-
-            if(dist < minDist)
-            {
-                pointInLineRes = pointInLine;
-                minDist = dist;
-                res = closestRange[q];
-            }
-        }
 
         //if we are too far away from prev point run global search
-        if(minDist > 100.0f)
+        if(minDist > 200.0f)
         {
             mPrevClosestSegmentInited = false;
         }
@@ -313,6 +282,51 @@ size_t LapUtils::getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& p
     mPrevClosestSegmentIndex = res;
 
     return res;
+}
+
+size_t LapUtils::getRelativeClosestSegment(const Ogre::Vector3& carPos)
+{
+    size_t ret = mPrevClosestSegmentIndex;
+
+    size_t indexCur = mPrevClosestSegmentIndex;
+    size_t indexNext = mPrevClosestSegmentIndex + 1;
+    size_t indexPrev = mPrevClosestSegmentIndex - 1;
+
+    if(indexNext >= mLLTDataSegments.size()) indexNext = 0;
+    if(indexCur == 0) indexPrev = mLLTDataSegments.size() - 1;
+
+    float distCur = carPos.squaredDistance(ProjectPointOnLine(carPos, mLLTDataSegments[indexCur].posA, mLLTDataSegments[indexCur].posB));
+    float distNext = carPos.squaredDistance(ProjectPointOnLine(carPos, mLLTDataSegments[indexNext].posA, mLLTDataSegments[indexNext].posB));
+    float distPrev = carPos.squaredDistance(ProjectPointOnLine(carPos, mLLTDataSegments[indexPrev].posA, mLLTDataSegments[indexPrev].posB));
+
+    if(distNext > distCur)
+    {
+        while(distPrev < distCur)
+        {
+            distCur = distPrev;
+            ret = indexPrev;
+            
+            if(indexPrev == 0) indexPrev = mLLTDataSegments.size() - 1;
+            else --indexPrev;
+
+            distPrev = carPos.squaredDistance(ProjectPointOnLine(carPos, mLLTDataSegments[indexPrev].posA, mLLTDataSegments[indexPrev].posB));
+        }
+    }
+    else
+    {
+        while(distNext < distCur)
+        {
+            distCur = distNext;
+            ret = indexNext;
+            
+            ++indexNext;
+            if(indexNext >= mLLTDataSegments.size()) indexNext = 0;
+
+            distNext = carPos.squaredDistance(ProjectPointOnLine(carPos, mLLTDataSegments[indexNext].posA, mLLTDataSegments[indexNext].posB));
+        }
+    }
+
+    return ret;
 }
 
 /**

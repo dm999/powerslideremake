@@ -58,6 +58,7 @@ private:
     void calcLapTime(size_t minIndex);
 
     size_t getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& pointInLineRes);
+    size_t getRelativeClosestSegment(const Ogre::Vector3& carPos);
 
     PausedTimer mLapTimer;
 
