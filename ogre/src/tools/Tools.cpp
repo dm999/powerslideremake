@@ -5,17 +5,6 @@
     #pragma warning(disable:4996)
 #endif
 
-float Tools::randomSmallValue()
-{
-    float ret = 0.0f;
-
-    const float den = 1.0f / 16383.5f;
-
-    ret = rand() * den - 1.0f;
-
-    return ret;
-}
-
 bool Tools::CheckSphereIntersectionWithTriangle(const Ogre::Vector3& sphereCenter, Ogre::Real sphereRadius, const OgreTriangle& triangle)
 {
     //http://realtimecollisiondetection.net/blog/?p=103

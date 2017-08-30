@@ -3,6 +3,7 @@
 
 #include "../tools/OgreTools.h"
 #include "../tools/Tools.h"
+#include "../tools/Randomizer.h"
 
 #include "../pscar/PSAICar.h"
 
@@ -372,7 +373,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     mAIWhole.slotMatrix[7][0] = carRotV[2].dotProduct(mPrevRot) * 15.0f;
 
     mAIWhole.slotMatrix[11][0] = 1.0f;
-    mAIWhole.slotMatrix[12][0] = Tools::randomSmallValue();
+    mAIWhole.slotMatrix[12][0] = Randomizer::GetInstance().GetRandomFloat(-1.0f, 1.0f);
 
     if(false)
     {
