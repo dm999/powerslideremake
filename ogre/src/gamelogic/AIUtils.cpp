@@ -22,6 +22,7 @@ AIUtils::AIUtils() :
 void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 {
     mAIWhole = aiWhole;
+    mIsPrevClosestSplineIndexInited = false;
 
     mPrevRot = Ogre::Vector3::ZERO;
 
@@ -91,6 +92,15 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
     float steeringVal;
     float accelerationVal;
 
+    Ogre::Vector3 carPos = aiCar->getModelNode()->getPosition();
+
+    if(!mIsPrevClosestSplineIndexInited)
+    {
+        //original data is left hand, convert for AI
+        mPrevClosestSplineIndex = getClosestSplinePoint(Ogre::Vector3(carPos.x, carPos.y, -carPos.z));
+        mIsPrevClosestSplineIndexInited = true;
+    }
+
     calcFeatures(aiCar);
     inference(steeringVal, accelerationVal);
 
@@ -105,7 +115,6 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
         Ogre::Vector3 carDir = aiCar->getForwardAxis();
         Ogre::Vector3 carDirOriginal = carDir;
         carDir.y = 0.0f;
-        Ogre::Vector3 carPos = aiCar->getModelNode()->getPosition();
         
         Ogre::Real lastDistance = carDir.dotProduct(carPos - mPrevPos);
         mPrevPos = carPos;
@@ -322,7 +331,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     carLinearForce.z = -carLinearForce.z;//original data is left hand
 
 
-    size_t closestSplineIndex = getClosestSplinePoint(carPos);
+    size_t closestSplineIndex = getRelativeClosestSplinePoint(carPos);
 
     float frac = 0.0f;
     size_t splineFracIndex = getFracIndex(closestSplineIndex, carPos, frac);
@@ -424,6 +433,7 @@ void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)
 
         if(rowRes == 0.0f)rowRes = 0.0001f;
 
+        //index selection
         if(rowRes < 20.0f)
         {
             double integer;
@@ -455,13 +465,60 @@ size_t AIUtils::getClosestSplinePoint(const Ogre::Vector3& carPos) const
     float minDist = std::numeric_limits<float>::max();
     for(size_t q = 0; q < mAIWhole.aiData.size(); ++q)
     {
-        float dist = carPos.distance(mAIWhole.aiData[q].pos);
+        float dist = carPos.squaredDistance(mAIWhole.aiData[q].pos);
         if(dist < minDist)
         {
             ret = q;
             minDist = dist;
         }
     }
+
+    return ret;
+}
+
+size_t AIUtils::getRelativeClosestSplinePoint(const Ogre::Vector3& carPos)
+{
+    size_t ret = mPrevClosestSplineIndex;
+
+    size_t indexCur = mPrevClosestSplineIndex;
+    size_t indexNext = mPrevClosestSplineIndex + 1;
+    size_t indexPrev = mPrevClosestSplineIndex - 1;
+
+    if(indexNext >= mAIWhole.aiData.size()) indexNext = 0;
+    if(indexCur == 0) indexPrev = mAIWhole.aiData.size() - 1;
+
+    float distCur = carPos.squaredDistance(mAIWhole.aiData[indexCur].pos);
+    float distNext = carPos.squaredDistance(mAIWhole.aiData[indexNext].pos);
+    float distPrev = carPos.squaredDistance(mAIWhole.aiData[indexPrev].pos);
+
+    if(distNext > distCur)
+    {
+        while(distPrev < distCur)
+        {
+            distCur = distPrev;
+            ret = indexPrev;
+            
+            if(indexPrev == 0) indexPrev = mAIWhole.aiData.size() - 1;
+            else --indexPrev;
+
+            distPrev = carPos.squaredDistance(mAIWhole.aiData[indexPrev].pos);
+        }
+    }
+    else
+    {
+        do
+        {
+            distCur = distNext;
+            ret = indexNext;
+            
+            ++indexNext;
+            if(indexNext >= mAIWhole.aiData.size()) indexNext = 0;
+
+            distNext = carPos.squaredDistance(mAIWhole.aiData[indexNext].pos);
+        }while(distNext < distCur);
+    }
+
+    mPrevClosestSplineIndex = ret;
 
     return ret;
 }

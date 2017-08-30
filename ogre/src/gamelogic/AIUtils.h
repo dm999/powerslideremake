@@ -61,6 +61,7 @@ private:
     void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;
+    size_t getRelativeClosestSplinePoint(const Ogre::Vector3& carPos);
     size_t getFracIndex(size_t closestSplineIndex, const Ogre::Vector3& carPos, float & frac) const;
 
     struct SplineFeatures{
@@ -77,6 +78,8 @@ private:
 
     void mulSlotMatrix(size_t fromRow, size_t toRow);
 
+    size_t mPrevClosestSplineIndex;
+    bool mIsPrevClosestSplineIndexInited;
     AIWhole mAIWhole;
     Ogre::Vector3 mPrevRot;
 };

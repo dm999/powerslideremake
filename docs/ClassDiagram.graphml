@@ -1031,7 +1031,7 @@ Ogre::Real mSteeringImpulse</y:NodeLabel>
           <y:Geometry height="758.9013901842984" width="703.1800710871116" x="7388.409964456444" y="-1639.4506950921486"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="31.97315602964909">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="9.92139821714909">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIUtils
 
@@ -1070,14 +1070,17 @@ void calcFeatures(PSAICar* aiCar)
 void inference(float&amp; steering, float&amp; acceleration)
 
 size_t getClosestSplinePoint(const Ogre::Vector3&amp; carPos) const
+size_t getRelativeClosestSplinePoint(const Ogre::Vector3&amp; carPos)
 size_t getFracIndex(size_t closestSplineIndex, const Ogre::Vector3&amp; carPos, float &amp; frac) const
 
 SplineFeatures getSplineFeatures(const Ogre::Vector3&amp; carPos, float frac, size_t fracIndex, float feature3, float feature4) const
 
 void mulSlotMatrix(size_t fromRow, size_t toRow)
 
+size_t mPrevClosestSplineIndex
+bool mIsPrevClosestSplineIndexInited
 AIWhole mAIWhole
-Ogre::Vector3 mField17</y:NodeLabel>
+Ogre::Vector3 mPrevRot</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
