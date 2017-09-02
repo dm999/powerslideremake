@@ -40,11 +40,16 @@ public:
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
 
+    void setSlotIndex(size_t index){mSlotIndex = index;}
+    size_t getSlotIndex() const {return mSlotIndex;}
+
 private:
 
     //virtual void adjustWheelsFriction(StaticMeshProcesser& processer);
 
     AIUtils mAIUtils;
+
+    size_t mSlotIndex;
 
     Ogre::Real mSteeringImpulse;
 };

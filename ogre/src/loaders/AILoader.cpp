@@ -232,9 +232,6 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
     for(size_t w = 0; w < gameState.getAICount(); ++w)
     {
-        if(w != 2)
-            gameState.getAICar(w).setAIData(aiWhole[w], sceneMgr, isDebugAI);
-        else
-            gameState.getAICar(w).setAIData(aiWhole[6], sceneMgr, isDebugAI);
+        gameState.getAICar(w).setAIData(aiWhole[gameState.getAICar(w).getSlotIndex()], sceneMgr, isDebugAI);
     }
 }

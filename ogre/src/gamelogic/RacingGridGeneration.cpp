@@ -3,9 +3,16 @@
 
 #include "../GameState.h"
 
-std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, const std::vector<std::string>& playersCharacters) const
+namespace{
+    //dword_4C3970
+    size_t slotRemapper[]={0, 1, 5, 1, 2, 6, 4, 2, 3, 4, 7, 7, 0, 3, 8, 9, 3, 4, 9, 1, 6, 10, 11, 5, 8, 2, 7, 8, 9, 6, 5, 0};
+}
+
+
+std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, const std::vector<std::string>& playersCharacters, std::vector<size_t>& resAISlot) const
 {
     std::vector<std::string> res;
+    resAISlot.clear();
 
     std::vector<size_t> aiIndexes;
 
@@ -34,6 +41,14 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
         res.push_back(availableCharacters[aiIndexes[gameState.getAICount() - q - 1]]);
     }
 
+    for(size_t q = 0; q < gameState.getAICount(); ++q)
+    {
+        if(gameState.getAIStrength() == Insane)
+            resAISlot.push_back(getSlotInsaneIndex(aiIndexes[gameState.getAICount() - q - 1]));
+        else
+            resAISlot.push_back(getSlotIndex(aiIndexes[gameState.getAICount() - q - 1]));
+    }
+
     //solve collision
     for(size_t q = 0; q < playersCharacters.size(); ++q)
     {
@@ -52,6 +67,13 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
                     if(foundMore == res.end())
                     {
                         (*found) = newCharName;
+
+                        size_t foundIndex = found - res.begin();
+                        if(gameState.getAIStrength() == Insane)
+                            resAISlot[foundIndex] = getSlotInsaneIndex(aiIndexes[newCharIndex]);
+                        else
+                            resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
+
                         break;
                     }
                 }
@@ -129,4 +151,33 @@ std::vector<size_t> RacingGridGeneration::getHardIndexes() const
     aiIndexes.push_back(5);
 
     return aiIndexes;
+}
+
+size_t RacingGridGeneration::getSlotIndex(size_t index) const
+{
+    return slotRemapper[index];
+}
+
+size_t RacingGridGeneration::getSlotInsaneIndex(size_t index) const
+{
+    size_t ret = 0;
+
+    //sub_40F2A0
+    switch(index)
+    {
+    case 29: ret = 6; break;
+    case 26: ret = 7; break;
+    case 6: ret = 4; break;
+    case 13: ret = 3; break;
+    case 27: ret = 8; break;
+    case 25: ret = 2; break;
+    case 28: ret = 9; break;
+    case 19: ret = 1; break;
+    case 30: ret = 5; break;
+    case 16: ret = 10; break;
+    case 5: ret = 11; break;
+    default : ret = 0;
+    }
+
+    return ret;
 }

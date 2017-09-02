@@ -984,10 +984,10 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
     <node id="n13">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1567.4543197495614"/>
+          <y:Geometry height="660.3062792597098" width="652.036857551991" x="6513.981571224004" y="-1590.1531396298544"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="33.48264006206182">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="19.428530254854877">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -1019,9 +1019,14 @@ void performAICorrection(bool isRaceStarted, bool isGamePaused)
 void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void raceStarted()
 
+void setSlotIndex(size_t index)
+size_t getSlotIndex() const 
+
 private:
 
 AIUtils mAIUtils
+
+size_t mSlotIndex
 
 Ogre::Real mSteeringImpulse</y:NodeLabel>
           <y:Shape type="rectangle"/>
