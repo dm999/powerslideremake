@@ -22,7 +22,7 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
 {
     mLastTimeOfUpdate = 0;
 
-    PSAICar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isPossesCamera);
+    PSAICar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, Ogre::Vector3::ZERO, isPossesCamera);
 
     if(isHuman)
     {

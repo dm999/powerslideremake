@@ -343,7 +343,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
         fabs(feature3), fabs(feature4)
         );
 
-    if(mAIWhole.hackType == 1)
+    //if(mAIWhole.hackType == 1)
     {
         mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
         mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
@@ -351,15 +351,32 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
         mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
         mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
     }
+#if 0
     else
     {
-        //d.polubotko: TODO
-        mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
-        mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
-        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearForce) * psInvCarMass;
-        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
-        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
+        float forceLen = carLinearForce.length();
+        float accel = psInvCarMass * forceLen * 0.333f;
+
+        mAIWhole.slotMatrix[2][0] = splineFeatures.out10 - accel;
+        mAIWhole.slotMatrix[3][0] = splineFeatures.out11 - accel;
+
+        Ogre::Vector3 valA, valB;
+        if(accel <= 0.0f)
+        {
+            valA = Ogre::Vector3::ZERO;
+            valB = Ogre::Vector3::ZERO;
+        }
+        else
+        {
+            valA = carLinearForce / forceLen;
+            valB = valA.crossProduct(carRotV[1]);
+        }
+
+        mAIWhole.slotMatrix[8][0]   = atan2(carRotV[2].dotProduct(valB), carRotV[2].dotProduct(valA));
+        mAIWhole.slotMatrix[9][0]   = atan2(splineFeatures.out12.dotProduct(valB), splineFeatures.out12.dotProduct(valA));
+        mAIWhole.slotMatrix[10][0]  = atan2(splineFeatures.out13.dotProduct(valB), splineFeatures.out13.dotProduct(valA));
     }
+#endif
 
     mAIWhole.slotMatrix[0][0] = atan2(carRotV[0].dotProduct(splineFeatures.out6), carRotV[2].dotProduct(splineFeatures.out6)) * splineFeatures.out8;
     mAIWhole.slotMatrix[1][0] = atan2(carRotV[0].dotProduct(splineFeatures.out7), carRotV[2].dotProduct(splineFeatures.out7)) * splineFeatures.out9;
@@ -375,6 +392,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     mAIWhole.slotMatrix[11][0] = 1.0f;
     mAIWhole.slotMatrix[12][0] = Randomizer::GetInstance().GetRandomFloat(-1.0f, 1.0f);
 
+    //overtake logic
     if(false)
     {
         //d.polubotko: TODO overtake
@@ -538,7 +556,7 @@ size_t AIUtils::getFracIndex(size_t closestSplineIndex, const Ogre::Vector3& car
     Ogre::Vector3 diffClosest = (carPos - mAIWhole.aiData[closestSplineIndex].pos) * mAIWhole.aiData[closestSplineIndex].tangent;
     float diffClosestVal = diffClosest.x + diffClosest.y + diffClosest.z;
 
-    if(diffClosestVal < 0.0f)
+    if(diffClosestVal <= 0.0f)
     {
         Ogre::Vector3 diffPrev = (carPos - mAIWhole.aiData[closestSplineIndexPrev].pos) * mAIWhole.aiData[closestSplineIndexPrev].tangent;
         float diffPrevVal = diffPrev.x + diffPrev.y + diffPrev.z;

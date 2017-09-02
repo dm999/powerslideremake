@@ -6,6 +6,7 @@
 void PHYLoader::load(GameState& gameState) const
 {
     gameState.getTrackPositions().clear();
+    gameState.getTrackOriginalForcesLinear().clear();
 
     for(int q = 0; q < (GameState::mAIMax + 1); ++q)
     {
@@ -22,18 +23,18 @@ void PHYLoader::load(GameState& gameState) const
             Ogre::Vector3 rotZ;
             Ogre::Vector3 pos;
             Ogre::Vector3 forceRot;
-            Ogre::Vector3 forceTrans;
+            Ogre::Vector3 forceLinear;
             Ogre::Vector3 forceRotIncr;
-            Ogre::Vector3 forceTransIncr;
+            Ogre::Vector3 forceLinearIncr;
 
             fileToLoad->read(&rotX, 4 * 3);
             fileToLoad->read(&rotY, 4 * 3);
             fileToLoad->read(&rotZ, 4 * 3);
             fileToLoad->read(&pos, 4 * 3);
             fileToLoad->read(&forceRot, 4 * 3);
-            fileToLoad->read(&forceTrans, 4 * 3);
+            fileToLoad->read(&forceLinear, 4 * 3);
             fileToLoad->read(&forceRotIncr, 4 * 3);
-            fileToLoad->read(&forceTransIncr, 4 * 3);
+            fileToLoad->read(&forceLinearIncr, 4 * 3);
 
             Ogre::Matrix4 transform(
                 rotX.x, rotY.x, rotZ.x, pos.x,
@@ -42,6 +43,7 @@ void PHYLoader::load(GameState& gameState) const
                 0.0f, 0.0f, 0.0f, 1.0f);
 
             gameState.getTrackPositions().push_back(transform);
+            gameState.getTrackOriginalForcesLinear().push_back(Ogre::Vector3(forceLinear.x, forceLinear.y, -forceLinear.z));
 
             fileToLoad->close();
         }

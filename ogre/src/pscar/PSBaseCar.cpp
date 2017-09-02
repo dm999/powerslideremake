@@ -21,7 +21,8 @@
 #include "../GameState.h"
 
 namespace{
-    Ogre::Vector3 gridShift(0.0f, 1.0f, 0.0f);
+    //Ogre::Vector3 gridShift(0.0f, 1.0f, 0.0f);
+    Ogre::Vector3 gridShift(0.0f, 0.0f, 0.0f);
 }
 
 Ogre::NameGenerator PSBaseCar::nameGenMaterials("Scene/Material/Vehicle/Name");
@@ -57,6 +58,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
+                            const Ogre::Vector3& initialForcesLinear,
                             bool isAI)
 {
 
@@ -292,6 +294,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mWheelsRMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline);
     initialVehicleSetup.mWheelsRestitution = luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline);
     initialVehicleSetup.mWheelsFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline);
+
+    initialVehicleSetup.mInitialForcesLinear = initialForcesLinear;
 
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);
 

@@ -491,7 +491,9 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         bool isCam = (q == (mModeContext.mGameState.getAICount() - 1));
         if(!isCamToAI)
             isCam = false;
-        aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacters[q], mModeContext.mGameState.getTrackPositions()[q], isCam);
+        aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacters[q], 
+            mModeContext.mGameState.getTrackPositions()[q], mModeContext.mGameState.getTrackOriginalForcesLinear()[q], 
+            isCam);
         aiCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
         mLapController.addCar(&aiCar);

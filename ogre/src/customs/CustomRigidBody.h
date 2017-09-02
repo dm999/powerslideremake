@@ -9,6 +9,7 @@ class CustomRigidBody : public OgreBulletDynamics::RigidBody
 public: 
     CustomRigidBody(const Ogre::String &name,
                     OgreBulletDynamics::DynamicsWorld *world,
+                    const Ogre::Vector3& initialForcesLinear,
                     const short collisionGroup = 0,
                     const short collisionMask = 0);
 
@@ -16,7 +17,7 @@ public:
 
     virtual void setTransform(const btTransform& worldTrans);
 
-    Ogre::Vector3 getLinearForce() const {return mLinearForce;}
+    Ogre::Vector3 getLinearForce() const;
 
 private:
 

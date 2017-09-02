@@ -116,7 +116,7 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
     }
 
 
-    mCarChassis.reset(new CustomRigidBody(nameGenNodes.generate(), mWorld));
+    mCarChassis.reset(new CustomRigidBody(nameGenNodes.generate(), mWorld, mInitialVehicleSetup.mInitialForcesLinear));
     //mCarChassis = new OgreBulletDynamics::RigidBody("carChassis", mWorld, 0, 1);//no collision with static mesh
 
     mCarChassis->setShape ( modelNode, 

@@ -68,6 +68,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     OgreBulletDynamics::DynamicsWorld * world,
                                     const std::string& characterName,
                                     const Ogre::Matrix4& transform,
+                                    const Ogre::Vector3& initialForcesLinear,
                                     bool isPossesCamera,
                                     bool isAI)
 {
@@ -90,7 +91,9 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mParticles = gameState.getParticles();
 
-    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isAI);
+    PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
+        transform, initialForcesLinear,
+        isAI);
 
     {
         std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");

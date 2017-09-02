@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1679.93359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="66.06617077492501">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1694.634765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="58.71558483742501">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -355,6 +355,7 @@ virtual void initModel( lua_State * pipeline,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
+                            const Ogre::Vector3&amp; initialForcesLinear,
                             bool isAI)
 
 // for multiplayer
@@ -611,7 +612,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2267.98046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="7.632838919801543">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2282.681640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="0.28225298230154294">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -623,6 +624,7 @@ virtual void initModel( lua_State * pipeline,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
+                            const Ogre::Vector3&amp; initialForcesLinear,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera,
                             bool isAI = true)
@@ -984,7 +986,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1567.4543197495614"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="33.48264006206182">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="26.13205412456182">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -996,6 +998,7 @@ virtual void initModel( lua_State * pipeline,
                             OgreBulletDynamics::DynamicsWorld * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
+                            const Ogre::Vector3&amp; initialForcesLinear,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera)
 
@@ -1174,7 +1177,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2841.326171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="57.93359686836084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2870.728515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="43.23242499336084">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1222,6 +1225,7 @@ std::vector&lt;LightEclusion&gt;&amp; getExclusions()
 const std::vector&lt;LightEclusion&gt;&amp; getExclusions()const
 
 std::vector&lt;Ogre::Matrix4&gt;&amp; getTrackPositions()
+std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalForcesLinear()
 
 HierarchyNode&amp; getHierarchyNode()
 
@@ -1326,6 +1330,7 @@ Ogre::ManualObject* mLLTObject
 std::vector&lt;LightEclusion&gt; mLightExclusions
 
 std::vector&lt;Ogre::Matrix4&gt; mTrackPositions
+std::vector&lt;Ogre::Vector3&gt; mTrackOriginalForcesLinear
 
 HierarchyNode mBaseHierarchyNode
 

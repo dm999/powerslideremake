@@ -17,11 +17,14 @@ void PSAICar::initModel(    lua_State * pipeline,
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
+                            const Ogre::Vector3& initialForcesLinear,
                             bool isPossesCamera)
 {
     mSteeringImpulse = 0.0f;
 
-    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isPossesCamera);
+    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
+        transform, initialForcesLinear,
+        isPossesCamera);
 }
 
 void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)

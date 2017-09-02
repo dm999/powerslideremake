@@ -30,7 +30,9 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
 
     mSteeringAngleVelocity = 0.0f;
 
-    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, transform, isPossesCamera, false);
+    PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
+        transform, Ogre::Vector3::ZERO,
+        isPossesCamera, false);
 
 
     DMLuaManager luaManager;

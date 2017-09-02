@@ -28,6 +28,7 @@ public:
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
+                            const Ogre::Vector3& initialForcesLinear,
                             bool isPossesCamera,
                             bool isAI = true);
 
