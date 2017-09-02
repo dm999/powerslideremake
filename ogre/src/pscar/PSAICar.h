@@ -37,7 +37,6 @@ public:
                                     int triIndex);
 
     void performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused);
-    void clearAIData();
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
 

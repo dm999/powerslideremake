@@ -342,8 +342,6 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
         for(size_t w = 0; w < mModeContext.mGameState.getAICount(); ++w)
         {
-            mModeContext.mGameState.getAICar(w).clearAIData();
-
             mModeContext.mGameState.getAICar(w).setLateralStabilizationCoeff(lateralStabilizationCoeff);
             mModeContext.mGameState.getAICar(w).setSpeedCoeff(Randomizer::GetInstance().GetRandomFloat(speedCoeffMinLimit, speedCoeff));
         }

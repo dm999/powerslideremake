@@ -29,48 +29,10 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
 
     mPrevRot = Ogre::Vector3::ZERO;
 
-    //std::vector<Ogre::Vector3> splinePoints;
-
     mAIDistanceLength = 0.0f;
     mPrevPos = Ogre::Vector3::ZERO;
     mTimerAIStuck.reset();
     mIsReverseEnabled = false;
-
-    mSpline.clear();
-
-    for(size_t q = 0; q < aiWhole.aiData.size() - 1; ++q)
-    {
-        AIDataSegment segment;
-        segment.posA = aiWhole.aiData[q + 0].pos;
-        segment.posB = aiWhole.aiData[q + 1].pos;
-        segment.tangentA = aiWhole.aiData[q + 0].tangent;
-        segment.tangentB = aiWhole.aiData[q + 1].tangent;
-        segment.magicA = aiWhole.aiData[q + 0].magic;
-        segment.magicB = aiWhole.aiData[q + 1].magic;
-        segment.segmentLength = segment.posA.distance(segment.posB);
-        mAIDataSegments.push_back(segment);
-
-        //splinePoints.push_back(aiData[q].pos);
-        mSpline.addPoint(aiWhole.aiData[q].pos);
-
-    }
-
-    {
-        AIDataSegment segment;
-        segment.posA = aiWhole.aiData[aiWhole.aiData.size() - 1].pos;
-        segment.posB = aiWhole.aiData[0].pos;
-        segment.tangentA = aiWhole.aiData[aiWhole.aiData.size() - 1].tangent;
-        segment.tangentB = aiWhole.aiData[0].tangent;
-        segment.magicA = aiWhole.aiData[aiWhole.aiData.size() - 1].magic;
-        segment.magicB = aiWhole.aiData[0].magic;
-        segment.segmentLength = segment.posA.distance(segment.posB);
-        mAIDataSegments.push_back(segment);
-    }
-
-    //splinePoints.push_back(aiWhole.aiData[aiData.size() - 1].pos);
-    //splinePoints.push_back(aiWhole.aiData[0].pos);
-    mSpline.addPoint(aiWhole.aiData[aiWhole.aiData.size() - 1].pos);
-    mSpline.addPoint(aiWhole.aiData[0].pos);
 
     //original data is left hand, convert for AI
     for(size_t q = 0; q < aiWhole.aiData.size(); ++q)
@@ -79,14 +41,6 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
         mAIWhole.aiData[q].tangent.z = -mAIWhole.aiData[q].tangent.z;
         mAIWhole.aiData[q].magic.z = -mAIWhole.aiData[q].magic.z;
     }
-
-    mPrevClosestSegmentInited = false;
-    mPrevClosestSegmentIndex = 0;
-}
-
-void AIUtils::clear()
-{
-    mAIDataSegments.clear();
 }
 
 void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused)
@@ -106,6 +60,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
 
     calcFeatures(aiCar, gameState);
     inference(steeringVal, accelerationVal);
+    adjustInferenceResults(steeringVal, accelerationVal, gameState.getTrackName() == "mineshaft");
 
     if(isRaceStarted)
     {
@@ -122,12 +77,6 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         Ogre::Real lastDistance = carDir.dotProduct(carPos - mPrevPos);
         mPrevPos = carPos;
         mAIDistanceLength += Ogre::Math::Abs(lastDistance);
-
-        Ogre::Vector3 towardDir;
-        Ogre::Vector3 towardPoint = getTowardPoint(carPos, towardDir);
-
-        Ogre::Real speedCoeff = carDirOriginal.dotProduct(towardDir);
-        speedCoeff = Ogre::Math::Clamp(speedCoeff, 0.2f, 1.0f);
 
         aiCar->setSteerLeft(false);
         aiCar->setSteerRight(false);
@@ -146,9 +95,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         }
 
 
-        //speed
-        Ogre::Real aiSpeed = aiCar->getAlignedVelocity();
-
+        //acceleration
         aiCar->setAcceleration(false);
         aiCar->setBrake(false);
 
@@ -169,14 +116,17 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
 
         if(!mIsReverseEnabled)
         {
-            if(aiSpeed >100.0f && speedCoeff < 0.5f)
+            if(accelerationVal < 0.0f)
             {
                 aiCar->setBrake(true);
             }
-
-            if(aiSpeed < (aiMaxSpeed * mSpeedCoeff))
+            else
             {
-                aiCar->setAcceleration(true);
+                Ogre::Real aiSpeed = aiCar->getAlignedVelocity();
+                if(aiSpeed < (aiMaxSpeed * mSpeedCoeff * accelerationVal))
+                {
+                    aiCar->setAcceleration(true);
+                }
             }
         }
 
@@ -192,108 +142,6 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         }
     }
 
-}
-
-Ogre::Vector3 AIUtils::getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3& towardDir)
-{
-    Ogre::Vector3 res;
-
-    Ogre::Vector3 pointInLine;
-    size_t segment = getClosestSegment(carPos, pointInLine);
-    Ogre::Real distToStart = pointInLine.distance(mAIDataSegments[segment].posA);
-
-    Ogre::Real frac = distToStart / mAIDataSegments[segment].segmentLength;
-
-    size_t nextSegment = segment;
-
-    const Ogre::Real distFromCar = 0.5f;
-    if(frac > (1.0f - distFromCar))
-    {
-        ++nextSegment;
-        if(nextSegment == mAIDataSegments.size())
-        {
-            nextSegment = 0;
-        }
-        frac -= (1.0f - distFromCar);
-    }
-    else
-    {
-        frac += distFromCar;
-    }
-
-
-    res = Ogre::Math::lerp(mAIDataSegments[nextSegment].posA, mAIDataSegments[nextSegment].posB, frac);
-
-    towardDir = mAIDataSegments[nextSegment].tangentB;
-
-    return res;
-}
-
-size_t AIUtils::getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& pointInLineRes)
-{
-    size_t res = 0;
-
-    Ogre::Real minDist = 10000.0f;
-
-    if(!mPrevClosestSegmentInited)
-    {
-        for(size_t q = 0; q < mAIDataSegments.size(); ++q)
-        {
-            Ogre::Vector3 pointInLine = ProjectPointOnLine(carPos, mAIDataSegments[q].posA, mAIDataSegments[q].posB);
-            Ogre::Real dist = pointInLine.distance(carPos);
-
-            if(dist < minDist)
-            {
-                pointInLineRes = pointInLine;
-                minDist = dist;
-                res = q;
-            }
-        }
-
-        mPrevClosestSegmentInited = true;
-    }
-    else
-    {
-        const int range = 5;
-        const size_t rangeAmount = range * 2;
-        std::vector<size_t> closestRange(rangeAmount);
-
-        int dataSegmentsLength = mAIDataSegments.size();
-
-        size_t index = 0;
-        for(int q = -range; q < range; ++q, ++index)
-        {
-            int rangeIndex = mPrevClosestSegmentIndex + q;
-            
-            if(rangeIndex < 0)
-            {
-                rangeIndex = dataSegmentsLength + rangeIndex;
-            }
-            if(rangeIndex >= dataSegmentsLength)
-            {
-                rangeIndex = rangeIndex - dataSegmentsLength;
-            }
-
-            closestRange[index] = rangeIndex;
-        }
-
-        for(size_t q = 0; q < rangeAmount; ++q)
-        {
-            Ogre::Vector3 pointInLine = ProjectPointOnLine(carPos, mAIDataSegments[closestRange[q]].posA, mAIDataSegments[closestRange[q]].posB);
-            Ogre::Real dist = pointInLine.distance(carPos);
-
-            if(dist < minDist)
-            {
-                pointInLineRes = pointInLine;
-                minDist = dist;
-                res = closestRange[q];
-            }
-        }
-    }
-    
-    mPrevClosestSegmentIndex = res;
-
-    return res;
 }
 
 void AIUtils::raceStarted()
@@ -460,13 +308,42 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
     mPrevRot = carRotV[0];
 }
 
+void AIUtils::adjustInferenceResults(float& steering, float& acceleration, bool isMineshafted) const
+{
+    if(acceleration > mAIWhole.speedCoeff)
+        acceleration = mAIWhole.speedCoeff;
+
+    if(isMineshafted)
+    {
+        if(mPrevClosestSplineIndex > 46 && mPrevClosestSplineIndex <= 50)
+            acceleration = 1.0f;
+    }
+
+    if(acceleration > 1.0f) acceleration = 1.0f;
+
+    if(acceleration < 0.0f)
+    {
+        if(mAIWhole.hackType <= 2)
+        {
+            acceleration = 0.0f;//go by inertia
+        }
+        else
+        {
+            acceleration = Ogre::Math::Clamp(acceleration, -1.0f, 1.0f);
+        }
+    }
+
+
+    steering = Ogre::Math::Clamp(steering, -1.0f, 1.0f);
+}
+
 void AIUtils::inference(float& steering, float& acceleration)
 {
     mulSlotMatrix(20, mAIWhole.slotMatrix.size() - 1);
     mulSlotMatrix(16, 19);
 
-    acceleration = Ogre::Math::Clamp(mAIWhole.slotMatrix[16][0], -1.0f, 1.0f);
-    steering = Ogre::Math::Clamp(mAIWhole.slotMatrix[17][0], -1.0f, 1.0f);
+    acceleration = mAIWhole.slotMatrix[16][0];
+    steering = mAIWhole.slotMatrix[17][0];
 }
 
 void AIUtils::mulSlotMatrix(size_t fromRow, size_t toRow)

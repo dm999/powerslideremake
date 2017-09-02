@@ -25,7 +25,6 @@ public:
     ~AIUtils(){}
 
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
-    void clear();
 
     void performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused);
 
@@ -37,20 +36,6 @@ private:
 
     Ogre::Real mSpeedCoeff;
 
-    //CommonIncludes::shared_ptr<KochanekBartelsSpline> mSpline;
-    Ogre::SimpleSpline mSpline;
-
-    bool mPrevClosestSegmentInited;
-    size_t mPrevClosestSegmentIndex;
-    std::vector<AIDataSegment> mAIDataSegments;
-
-    Ogre::Vector3 getTowardPoint(const Ogre::Vector3& carPos, Ogre::Vector3& towardDir);
-    size_t getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& pointInLineRes);
-
-    //Ogre::Vector3 getTowardPoint(const Ogre::Vector3& carPos, size_t& towardPointIndex)const;
-
-    //void getClosestSegment(const Ogre::Vector3& carPos, size_t& indexPrev, size_t& indexCur, size_t& indexAhead)const;
-
     Ogre::Timer mTimerAIStuck;
     Ogre::Timer mTimerReverse;
     Ogre::Real mAIDistanceLength;
@@ -60,6 +45,7 @@ private:
     //NN based functions
     void calcFeatures(PSAICar* aiCar, const GameState& gameState);
     void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
+    void adjustInferenceResults(float& steering, float& acceleration, bool isMineshafted) const;
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;
     size_t getRelativeClosestSplinePoint(const Ogre::Vector3& carPos);

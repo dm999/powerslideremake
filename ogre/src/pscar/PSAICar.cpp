@@ -137,11 +137,6 @@ void PSAICar::performAICorrection(const GameState& gameState, bool isRaceStarted
     mAIUtils.performAICorrection(this, gameState, isRaceStarted, isGamePaused);
 }
 
-void PSAICar::clearAIData()
-{
-    mAIUtils.clear();
-}
-
 void PSAICar::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 {
     mAIUtils.setAIData(aiWhole, sceneMgr, isDebugAI);

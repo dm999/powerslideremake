@@ -987,7 +987,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="614.9086394991236" width="652.036857551991" x="6513.981571224004" y="-1567.4543197495614"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="26.13205412456182">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="547.943359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="33.48264006206182">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -1016,7 +1016,6 @@ virtual void processWheelsCollision(    btManifoldPoint&amp; cp,
                                     int triIndex)
 
 void performAICorrection(bool isRaceStarted, bool isGamePaused)
-void clearAIData()
 void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
 void raceStarted()
 
@@ -1035,14 +1034,13 @@ Ogre::Real mSteeringImpulse</y:NodeLabel>
           <y:Geometry height="758.9013901842984" width="703.1800710871116" x="7388.409964456444" y="-1639.4506950921486"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="9.92139821714909">&lt;&lt;AIUtils.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="677.681640625" x="12.749215231056041" y="83.42725759214909">&lt;&lt;AIUtils.h&gt;&gt;
 
 AIUtils
 
 public:
 
 void setAIData(const AIWhole&amp; aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)
-void clear()
 
 void performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGamePaused)
 
@@ -1053,15 +1051,6 @@ void raceStarted()
 private:
 
 Ogre::Real mSpeedCoeff
-
-Ogre::SimpleSpline mSpline
-
-bool mPrevClosestSegmentInited
-size_t mPrevClosestSegmentIndex
-std::vector&lt;AIDataSegment&gt; mAIDataSegments
-
-Ogre::Vector3 getTowardPoint(const Ogre::Vector3&amp; carPos, Ogre::Vector3&amp; towardDir)
-size_t getClosestSegment(const Ogre::Vector3&amp; carPos, Ogre::Vector3&amp; pointInLineRes)
 
 Ogre::Timer mTimerAIStuck
 Ogre::Timer mTimerReverse
@@ -1092,7 +1081,7 @@ Ogre::Vector3 mPrevRot</y:NodeLabel>
     <node id="n15">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8273.848496040966" y="-1502.1600845421988"/>
+          <y:Geometry height="124.32016908439846" width="192.30300791806576" x="8273.848496040966" y="-1592.1600845421992"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="121.609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="184.78515625" x="3.7589258340321976" y="1.355397042199229">&lt;&lt;AIUtils.h&gt;&gt;
@@ -3583,10 +3572,10 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
     <node id="n82">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="224.57504979992655" width="241.81089403309443" x="8249.094552983452" y="-1372.2875248999633"/>
+          <y:Geometry height="247.81864135734668" width="241.81089403309443" x="8249.094552983452" y="-1383.9093206786733"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="232.111328125" x="4.849782954046532" y="0.02873583746327313">&lt;&lt;Tools.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="239.21875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="232.111328125" x="4.849782954046532" y="4.299945678673339">&lt;&lt;Tools.h&gt;&gt;
 
 AIWhole
 
@@ -3599,6 +3588,7 @@ std::vector&lt;std::vector&lt;size_t&gt; &gt; remapper
 //rec
 std::vector&lt;AIData&gt; aiData
 size_t hackType
+float speedCoeff
 float hack1
 float hack2</y:NodeLabel>
           <y:Shape type="rectangle"/>
