@@ -52,6 +52,7 @@ public:
     Ogre::Vector3 getLinearForce()const;
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
+    Ogre::SceneNode* getModelNode() const{return mModelNode;}
 
     void clear()override;
 

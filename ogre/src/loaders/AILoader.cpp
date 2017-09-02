@@ -51,7 +51,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 {
                     aiWhole[w].slotMatrix[q].resize(39);
                     fileToLoad->read(&aiWhole[w].slotMatrix[q][0], 4 * 39);
-                    //aiWhole[w].slotMatrix[q][0] += Randomizer::GetInstance().GetRandomFloat(-1.0f, 1.0f);
+                    aiWhole[w].slotMatrix[q][0] += Randomizer::GetInstance().GetRandomFloat(-1.0f, 1.0f);
                 }
 
                 for(size_t q = 0; q < 5; ++q)
@@ -84,8 +84,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 }
 
                 {
-                    float someBufMore[3];
-                    fileToLoad->read(someBufMore, 4 * 3);
+                    fileToLoad->read(&aiWhole[w].multiplier, 4 * 3);
                 }
 
                 for(size_t q = 0; q < slotMatrixSize; ++q)

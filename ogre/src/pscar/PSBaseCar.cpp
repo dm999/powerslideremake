@@ -21,8 +21,7 @@
 #include "../GameState.h"
 
 namespace{
-    //Ogre::Vector3 gridShift(0.0f, 1.0f, 0.0f);
-    Ogre::Vector3 gridShift(0.0f, 0.0f, 0.0f);
+    Ogre::Vector3 gridShift(0.0f, 1.0f, 0.0f);
 }
 
 Ogre::NameGenerator PSBaseCar::nameGenMaterials("Scene/Material/Vehicle/Name");

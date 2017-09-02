@@ -1,6 +1,8 @@
 
 #include "AIUtils.h"
 
+#include "../GameState.h"
+
 #include "../tools/OgreTools.h"
 #include "../tools/Tools.h"
 #include "../tools/Randomizer.h"
@@ -87,7 +89,7 @@ void AIUtils::clear()
     mAIDataSegments.clear();
 }
 
-void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGamePaused)
+void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused)
 {
 
     float steeringVal;
@@ -102,7 +104,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGam
         mIsPrevClosestSplineIndexInited = true;
     }
 
-    calcFeatures(aiCar);
+    calcFeatures(aiCar, gameState);
     inference(steeringVal, accelerationVal);
 
     if(isRaceStarted)
@@ -299,7 +301,7 @@ void AIUtils::raceStarted()
     mTimerAIStuck.reset();
 }
 
-void AIUtils::calcFeatures(PSAICar* aiCar)
+void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
 {
     const float psCarMass = 45.0f;
     const float psInvCarMass = 1.0f / psCarMass;
@@ -393,9 +395,60 @@ void AIUtils::calcFeatures(PSAICar* aiCar)
     mAIWhole.slotMatrix[12][0] = Randomizer::GetInstance().GetRandomFloat(-1.0f, 1.0f);
 
     //overtake logic
-    if(false)
+    bool isNeedToOvertake = false;
+    int closestOtherCarIndex = 0;
+
+    std::vector<const PSBaseCar*> cars;
+    cars.reserve(GameState::mRaceGridCarsMax);
+
+    for(size_t q = 0; q < gameState.getAICount(); ++q)
     {
-        //d.polubotko: TODO overtake
+        cars.push_back(&gameState.getAICar(q));
+    }
+    cars.push_back(&gameState.getPlayerCar());
+
+    float minSqDist = std::numeric_limits<float>::max();
+
+    for(size_t q = 0; q < cars.size(); ++q)
+    {
+        Ogre::Vector3 otherPos = cars[q]->getModelNode()->getPosition();
+        otherPos.z = -otherPos.z;//original data is left hand
+
+        Ogre::Vector3 posDiff = otherPos - carPos;
+
+        if(carRotV[2].dotProduct(posDiff) > 0.0f)
+        {
+            float sqDist = posDiff.squaredLength();
+
+            if(sqDist < minSqDist && sqDist != 0.0f)
+            {
+                isNeedToOvertake = true;
+                closestOtherCarIndex = q;
+                minSqDist = sqDist;
+            }
+        }
+    }
+
+    if(isNeedToOvertake)
+    {
+        Ogre::Vector3 otherPos = cars[closestOtherCarIndex]->getModelNode()->getPosition();
+        otherPos.z = -otherPos.z;//original data is left hand
+
+        Ogre::Vector3 posDiff = otherPos - carPos;
+
+        mAIWhole.slotMatrix[13][0] = atan2(carRotV[0].dotProduct(posDiff), carRotV[2].dotProduct(posDiff));
+        
+        mAIWhole.slotMatrix[15][0] = mAIWhole.slotMatrix[13][0] + Ogre::Math::PI;
+        if(mAIWhole.slotMatrix[15][0] > Ogre::Math::PI)
+            mAIWhole.slotMatrix[15][0] -= Ogre::Math::TWO_PI;
+        mAIWhole.slotMatrix[15][0] *= 0.5f;
+
+        float diffLen = posDiff.length();
+        if(diffLen <= 0.0f) diffLen = 0.0001f;
+
+        mAIWhole.slotMatrix[14][0] = 25.0f / diffLen;
+        mAIWhole.slotMatrix[13][0] *= Ogre::Math::Pow(mAIWhole.slotMatrix[14][0], mAIWhole.multiplier.x);
+        mAIWhole.slotMatrix[15][0] *= Ogre::Math::Pow(mAIWhole.slotMatrix[14][0], mAIWhole.multiplier.x);
     }
     else
     {

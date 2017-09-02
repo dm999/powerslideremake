@@ -7,6 +7,7 @@
 #include "../tools/Tools.h"
 
 class PSAICar;
+class GameState;
 
 struct AIDataSegment
 {
@@ -26,7 +27,7 @@ public:
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void clear();
 
-    void performAICorrection(PSAICar* aiCar, bool isRaceStarted, bool isGamePaused);
+    void performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused);
 
     void setSpeedCoeff(Ogre::Real speedCoeff){mSpeedCoeff = speedCoeff;}
 
@@ -57,7 +58,7 @@ private:
     bool mIsReverseEnabled;
 
     //NN based functions
-    void calcFeatures(PSAICar* aiCar);
+    void calcFeatures(PSAICar* aiCar, const GameState& gameState);
     void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;

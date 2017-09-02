@@ -340,7 +340,7 @@
           <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1694.634765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="58.71558483742501">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1709.3359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="51.36499889992501">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -373,6 +373,7 @@ Ogre::Vector3 getForwardAxis()const
 Ogre::Vector3 getLinearForce()const
 
 Ogre::SceneNode* getModelNode()
+Ogre::SceneNode* getModelNode() const
 
 void clear() override
 
@@ -3582,16 +3583,17 @@ static Ogre::NameGenerator nameGenText</y:NodeLabel>
     <node id="n82">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="212.61143649831365" width="241.81089403309443" x="8249.094552983452" y="-1366.3057182491568"/>
+          <y:Geometry height="224.57504979992655" width="241.81089403309443" x="8249.094552983452" y="-1372.2875248999633"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="209.81640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="232.111328125" x="4.849782954046532" y="1.3975151241568256">&lt;&lt;Tools.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="232.111328125" x="4.849782954046532" y="0.02873583746327313">&lt;&lt;Tools.h&gt;&gt;
 
 AIWhole
 
 //slot
 std::vector&lt;std::vector&lt;float&gt; &gt; slotMatrix
 std::vector&lt;std::vector&lt;float&gt; &gt; activation
+Ogre::Vector3 multiplier
 std::vector&lt;std::vector&lt;size_t&gt; &gt; remapper
 
 //rec

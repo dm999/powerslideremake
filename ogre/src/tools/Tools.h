@@ -17,6 +17,7 @@ struct AIWhole
     //slot
     std::vector<std::vector<float> > slotMatrix;
     std::vector<std::vector<float> > activation;
+    Ogre::Vector3 multiplier;
     std::vector<std::vector<size_t> > remapper;
 
     //rec
