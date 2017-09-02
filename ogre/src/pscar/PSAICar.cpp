@@ -21,6 +21,7 @@ void PSAICar::initModel(    lua_State * pipeline,
                             bool isPossesCamera)
 {
     mSteeringImpulse = 0.0f;
+    mSteeringValue = 0.0f;
 
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         transform, initialForcesLinear,
@@ -131,6 +132,11 @@ void PSAICar::adjustWheelsFriction(StaticMeshProcesser& processer)
     mCarWheelBackR->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
 }
 #endif
+
+void PSAICar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
+{
+    mSteering = mSteeringMax * mSteeringValue;
+}
 
 void PSAICar::performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused)
 {

@@ -43,9 +43,14 @@ public:
     void setSlotIndex(size_t index){mSlotIndex = index;}
     size_t getSlotIndex() const {return mSlotIndex;}
 
+    void setSteering(float value){mSteeringValue = value;}
+
+
 private:
 
-    //virtual void adjustWheelsFriction(StaticMeshProcesser& processer);
+    virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt) override;
+
+    float mSteeringValue;
 
     AIUtils mAIUtils;
 

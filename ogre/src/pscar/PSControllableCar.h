@@ -184,7 +184,7 @@ protected:
 
     private:
 
-    void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt);
+    virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt);
 
     Ogre::Real mBackLRollResistance;
     Ogre::Real mBackRRollResistance;

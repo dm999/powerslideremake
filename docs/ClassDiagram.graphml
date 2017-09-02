@@ -764,7 +764,7 @@ void setWheelCollisionHappenBackR()
 
 private:
 
-void adjustFrontWheelsAngle(const Ogre::FrameEvent &amp;evt)
+virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &amp;evt)
 
 Ogre::Real mBackLRollResistance
 Ogre::Real mBackRRollResistance</y:NodeLabel>
@@ -984,10 +984,10 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
     <node id="n13">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="660.3062792597098" width="652.036857551991" x="6513.981571224004" y="-1590.1531396298544"/>
+          <y:Geometry height="719.0561660087035" width="652.036857551991" x="6513.981571224004" y="-1619.5280830043512"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="19.428530254854877">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="709.65625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="4.699958004351629">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -1022,7 +1022,13 @@ void raceStarted()
 void setSlotIndex(size_t index)
 size_t getSlotIndex() const 
 
+void setSteering(float value)
+
 private:
+
+virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &amp;evt)
+
+float mSteeringValue
 
 AIUtils mAIUtils
 

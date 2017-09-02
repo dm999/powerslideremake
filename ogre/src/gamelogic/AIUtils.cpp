@@ -83,6 +83,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
 
         const float maxSteerImpulse = 30.0f;
 
+        aiCar->setSteering(steeringVal);
         if(steeringVal > 0.0f)
         {
             aiCar->setSteeringUmpulse(maxSteerImpulse * steeringVal);

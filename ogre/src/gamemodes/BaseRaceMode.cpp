@@ -289,8 +289,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             speedCoeff = 0.7f;
             lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.7f;
-            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
+            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.7f;
@@ -302,8 +302,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             speedCoeff = 0.9f;
             lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.8f;
-            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
+            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.8f;
@@ -315,8 +315,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             speedCoeff = 1.0f;
             lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
+            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 1.0f;
@@ -328,8 +328,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             speedCoeff = 0.6f;
             lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.2f;
-            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.2f;
+            if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
+            if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.2f;
