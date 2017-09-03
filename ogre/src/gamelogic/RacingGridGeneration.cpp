@@ -14,39 +14,40 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
     std::vector<std::string> res;
     resAISlot.clear();
 
+    std::vector<size_t> aiLinearIndexes;
     std::vector<size_t> aiIndexes;
 
     switch(gameState.getAIStrength())
     {
     case Medium :
-        //aiIndexes = gameState.getSTRPowerslide().getArrayValue("", "medium racin characters ids");
+        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
         aiIndexes = getMediumIndexes();
         break;
     case Hard :
-        //aiIndexes = gameState.getSTRPowerslide().getArrayValue("", "hard racin characters ids");
+        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
         aiIndexes = getHardIndexes();
         break;
     case Insane :
-        //aiIndexes = gameState.getSTRPowerslide().getArrayValue("", "evolve racin characters ids");
+        aiLinearIndexes = getLinearInsaneIndexes(gameState.getAICount());
         aiIndexes = getHardIndexes();
         break;
     default:
-        //aiIndexes = gameState.getSTRPowerslide().getArrayValue("", "easy racin characters ids");
+        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
         aiIndexes = getEasyIndexes();
     }
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
 
     for(size_t q = 0; q < gameState.getAICount(); ++q)
     {
-        res.push_back(availableCharacters[aiIndexes[gameState.getAICount() - q - 1]]);
+        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]]);
     }
 
     for(size_t q = 0; q < gameState.getAICount(); ++q)
     {
         if(gameState.getAIStrength() == Insane)
-            resAISlot.push_back(getSlotInsaneIndex(aiIndexes[gameState.getAICount() - q - 1]));
+            resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]));
         else
-            resAISlot.push_back(getSlotIndex(aiIndexes[gameState.getAICount() - q - 1]));
+            resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]));
     }
 
     //solve collision
@@ -181,3 +182,486 @@ size_t RacingGridGeneration::getSlotInsaneIndex(size_t index) const
 
     return ret;
 }
+
+std::vector<size_t> RacingGridGeneration::getLinearIndexes(size_t aiAmount) const
+{
+    std::vector<size_t> aiLinearIndexes;
+
+    switch(aiAmount)
+    {
+    case 3:
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(10);
+        break;
+    case 4:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(10);
+        break;
+    case 5:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(11);
+        break;
+    case 6:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(10);
+        aiLinearIndexes.push_back(11);
+        break;
+    case 7:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(10);
+        break;
+    case 8:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(10);
+        aiLinearIndexes.push_back(11);
+        break;
+    case 9:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(11);
+        break;
+    case 10:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(11);
+        break;
+    case 11:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(10);
+        break;
+    default:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(10);
+        aiLinearIndexes.push_back(11);
+    }
+
+    return aiLinearIndexes;
+}
+
+std::vector<size_t> RacingGridGeneration::getLinearInsaneIndexes(size_t aiAmount) const
+{
+    std::vector<size_t> aiLinearIndexes;
+
+    switch(aiAmount)
+    {
+    case 3:
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(8);
+        break;
+    case 4:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(8);
+        break;
+    case 5:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(8);
+        break;
+    case 6:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(9);
+        break;
+    case 7:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(9);
+        break;
+    case 8:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        break;
+    case 9:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        break;
+    case 10:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(10);
+        break;
+    case 11:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(10);
+        break;
+    default:
+        aiLinearIndexes.push_back(0);
+        aiLinearIndexes.push_back(1);
+        aiLinearIndexes.push_back(2);
+        aiLinearIndexes.push_back(3);
+        aiLinearIndexes.push_back(4);
+        aiLinearIndexes.push_back(5);
+        aiLinearIndexes.push_back(6);
+        aiLinearIndexes.push_back(7);
+        aiLinearIndexes.push_back(8);
+        aiLinearIndexes.push_back(9);
+        aiLinearIndexes.push_back(10);
+        aiLinearIndexes.push_back(11);
+    }
+
+    return aiLinearIndexes;
+}
+
+/*
+//easy/medium/hard
+dd 0//3ai
+dd 4
+dd 9
+dd 0
+dd 1//
+dd 3
+dd 0Ah
+dd 0
+
+dd 0//4ai
+dd 1
+dd 4
+dd 0Bh
+dd 0//
+dd 2
+dd 5
+dd 0Ah
+
+dd 0//5ai
+dd 1
+dd 4
+dd 7
+dd 0Bh
+dd 0
+dd 0//
+dd 1
+dd 5
+dd 6
+dd 0Bh
+dd 0
+
+dd 0//6ai
+dd 1
+dd 3
+dd 7
+dd 9
+dd 0Bh
+dd 0//
+dd 1
+dd 4
+dd 6
+dd 0Ah
+dd 0Bh
+
+dd 0//7ai
+dd 1
+dd 2
+dd 4
+dd 6
+dd 9
+dd 0Bh
+dd 0
+dd 0//
+dd 1
+dd 2
+dd 5
+dd 7
+dd 8
+dd 0Ah
+dd 0
+
+dd 0//8ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 6
+dd 9
+dd 0Bh
+dd 0//
+dd 1
+dd 2
+dd 4
+dd 5
+dd 7
+dd 0Ah
+dd 0Bh
+
+dd 0//9ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 8
+dd 0Ah
+dd 0
+dd 0//
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 7
+dd 9
+dd 0Bh
+dd 0
+
+dd 0//10ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 0Ah
+dd 0Bh
+dd 0//
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 8
+dd 9
+dd 0Bh
+
+dd 0//11ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 8
+dd 9
+dd 0Ah
+dd 0
+
+
+
+//insane
+dd 0//3 AI
+dd 4
+dd 9
+dd 0
+dd 1//
+dd 3
+dd 8
+dd 0
+
+dd 0//4ai
+dd 1
+dd 4
+dd 9
+dd 0//
+dd 2
+dd 5
+dd 8
+
+dd 0//5ai
+dd 1
+dd 4
+dd 7
+dd 9
+dd 0
+dd 0//
+dd 1
+dd 5
+dd 6
+dd 8
+dd 0
+
+dd 0//6ai
+dd 1
+dd 3
+dd 5
+dd 7
+dd 8
+dd 0//
+dd 1
+dd 4
+dd 6
+dd 7
+dd 9
+
+dd 0//7ai
+dd 1
+dd 2
+dd 3
+dd 6
+dd 8
+dd 9
+dd 0
+dd 0//
+dd 1
+dd 2
+dd 4
+dd 5
+dd 7
+dd 9
+dd 0
+
+dd 0//8ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 8
+dd 9
+dd 0//
+dd 1
+dd 2
+dd 4
+dd 5
+dd 6
+dd 7
+dd 9
+
+dd 0//9ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 8
+dd 0
+dd 0//
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 7
+dd 8
+dd 9
+dd 0
+
+dd 0//10ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 8
+dd 9
+dd 0//
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 8
+dd 0Ah
+
+dd 0//11 ai
+dd 1
+dd 2
+dd 3
+dd 4
+dd 5
+dd 6
+dd 7
+dd 8
+dd 9
+dd 0Ah
+dd 0
+
+*/
