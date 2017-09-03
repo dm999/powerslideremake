@@ -212,7 +212,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
         mAIWhole.slotMatrix[3][0] = splineFeatures.out11 - accel;
 
         Ogre::Vector3 valA, valB;
-        if(accel <= 0.0f)
+        if(forceLen == 0.0f)
         {
             valA = Ogre::Vector3::ZERO;
             valB = Ogre::Vector3::ZERO;
@@ -335,7 +335,7 @@ void AIUtils::adjustInferenceResults(float& steering, float& acceleration, bool 
     }
 
 
-    steering = Ogre::Math::Clamp(steering, -1.0f, 1.0f);
+    steering = Ogre::Math::Clamp(steering, -0.95f, 0.95f);
 }
 
 void AIUtils::inference(float& steering, float& acceleration)
@@ -547,7 +547,7 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
     float f3FracModQube = f3FracMod * f3FracMod * f3FracMod;
 
     float f4FracModSquare = f4FracMod * f4FracMod;
-    float f4FracModQube = f4FracMod * f4FracMod * f3FracMod;
+    float f4FracModQube = f4FracMod * f4FracMod * f4FracMod;
 
     const size_t splinePoints = mAIWhole.aiData.size();
 
