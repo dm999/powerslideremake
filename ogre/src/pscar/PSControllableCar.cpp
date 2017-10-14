@@ -20,6 +20,8 @@ namespace
     const float defaultLowPitch = 0.25f;
     const float defaultMidPitch = 0.15f;
     const float defaultHighPitch = 0.5f;
+
+    const float carMaxSpeed = 300.0f;
 }
 
 Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material/Particles/Name");
@@ -47,10 +49,10 @@ PSControllableCar::PSControllableCar() :
     mDriveImpulse.addPoint(120.0f, 18.0f);
     mDriveImpulse.addPoint(200.0f, 15.0f);
     mDriveImpulse.addPoint(240.0f, 6.0f);
-    mDriveImpulse.addPoint(300.0f, 0.0f);
+    mDriveImpulse.addPoint(carMaxSpeed, 0.0f);
 
     mResistanceImpulse.addPoint(160.0f, 0.0f);
-    mResistanceImpulse.addPoint(300.0f, 20.0f);
+    mResistanceImpulse.addPoint(carMaxSpeed, 20.0f);
 
     mGroundSpoilerImpulse.addPoint(0.0f, 0.0f);
     mGroundSpoilerImpulse.addPoint(200.0f, 15.0f);
@@ -94,6 +96,23 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         transform, initialForcesLinear,
         isAI);
+
+#if 0
+    //debug force
+    {
+        mManual =  sceneMgr->createManualObject(); 
+        Ogre::Vector3 carLinearForce = getLinearForce();
+
+        mManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
+
+        mManual->position(Ogre::Vector3::ZERO);
+        mManual->position(carLinearForce * 15.0f);
+
+        mManual->end(); 
+        mManual->setCastShadows(false);
+        mModelNode->attachObject(mManual);
+    }
+#endif
 
     {
         std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
@@ -561,6 +580,20 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
 
     cleanWheelsCollisionsFlags();
+
+#if 0
+    //debug force
+    {
+        Ogre::Vector3 carLinearForce = getLinearForce();
+
+        mManual->beginUpdate(0);
+
+        mManual->position(Ogre::Vector3::ZERO);
+        mManual->position(rot.Inverse() * carLinearForce * 15.0f);
+
+        mManual->end(); 
+    }
+#endif
 }
 
 void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)

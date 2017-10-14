@@ -111,6 +111,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                 //someBuf[0] == 12345
                 aiWhole[w].hackType = *reinterpret_cast<int *>(&someBuf[1]);
+                //aiWhole[w].hackType = 1;
                 aiWhole[w].speedCoeff = someBuf[2];
                 aiWhole[w].hack1 = someBuf[6];
                 aiWhole[w].hack2 = someBuf[7];

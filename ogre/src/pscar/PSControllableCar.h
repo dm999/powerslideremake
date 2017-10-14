@@ -188,6 +188,8 @@ protected:
 
     Ogre::Real mBackLRollResistance;
     Ogre::Real mBackRRollResistance;
+
+    //Ogre::ManualObject * mManual;
 };
 
 #endif

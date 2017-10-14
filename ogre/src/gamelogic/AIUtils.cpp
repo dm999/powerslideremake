@@ -81,7 +81,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         aiCar->setSteerLeft(false);
         aiCar->setSteerRight(false);
 
-        const float maxSteerImpulse = 30.0f;
+        const float maxSteerImpulse = 20.0f;
 
         aiCar->setSteering(steeringVal);
         if(steeringVal > 0.0f)
@@ -194,7 +194,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
         fabs(feature3), fabs(feature4)
         );
 
-    //if(mAIWhole.hackType == 1)
+    if(mAIWhole.hackType == 1)
     {
         mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
         mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
@@ -202,7 +202,6 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
         mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
         mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
     }
-#if 0
     else
     {
         float forceLen = carLinearForce.length();
@@ -227,7 +226,6 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
         mAIWhole.slotMatrix[9][0]   = atan2(splineFeatures.out12.dotProduct(valB), splineFeatures.out12.dotProduct(valA));
         mAIWhole.slotMatrix[10][0]  = atan2(splineFeatures.out13.dotProduct(valB), splineFeatures.out13.dotProduct(valA));
     }
-#endif
 
     mAIWhole.slotMatrix[0][0] = atan2(carRotV[0].dotProduct(splineFeatures.out6), carRotV[2].dotProduct(splineFeatures.out6)) * splineFeatures.out8;
     mAIWhole.slotMatrix[1][0] = atan2(carRotV[0].dotProduct(splineFeatures.out7), carRotV[2].dotProduct(splineFeatures.out7)) * splineFeatures.out9;
