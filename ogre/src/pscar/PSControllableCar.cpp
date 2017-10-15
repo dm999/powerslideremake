@@ -97,23 +97,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         transform, initialForcesLinear,
         isAI);
 
-#if 0
-    //debug force
-    {
-        mManual =  sceneMgr->createManualObject(); 
-        Ogre::Vector3 carLinearForce = getLinearForce();
-
-        mManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
-
-        mManual->position(Ogre::Vector3::ZERO);
-        mManual->position(carLinearForce * 15.0f);
-
-        mManual->end(); 
-        mManual->setCastShadows(false);
-        mModelNode->attachObject(mManual);
-    }
-#endif
-
     {
         std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
         std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
@@ -580,20 +563,6 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
 
     cleanWheelsCollisionsFlags();
-
-#if 0
-    //debug force
-    {
-        Ogre::Vector3 carLinearForce = getLinearForce();
-
-        mManual->beginUpdate(0);
-
-        mManual->position(Ogre::Vector3::ZERO);
-        mManual->position(rot.Inverse() * carLinearForce * 15.0f);
-
-        mManual->end(); 
-    }
-#endif
 }
 
 void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
