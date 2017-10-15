@@ -37,7 +37,7 @@ void CustomRigidBody::setTransform(const btTransform& worldTrans)
 
     const float psCarMass = 45.0f;
 
-    mLinearImpulse = velocity * psCarMass * 0.001f;//d.polubotko: should be reduced otherwise NN saturates
+    mLinearImpulse = velocity * psCarMass * 0.005f;//d.polubotko: should be reduced otherwise NN saturates
 }
 
 Ogre::Vector3 CustomRigidBody::getLinearImpulse() const
