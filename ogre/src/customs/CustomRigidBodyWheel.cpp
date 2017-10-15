@@ -95,6 +95,7 @@ bool CustomRigidBodyWheel::checkCollisionWithStatic(const Ogre::Vector3& newWhee
 
     if(mPrevPosition != newWheelPos)
     {
+        //d.polubotko: check if center of sphere appeared on other side of static object
         btCollisionWorld::ClosestRayResultCallback rayCallback(OgreBulletCollisions::convert(mPrevPosition),OgreBulletCollisions::convert(newWheelPos));
         static_cast<OgreBulletDynamics::DynamicsWorld *>(mWorld)->getBulletDynamicsWorld()->rayTest(OgreBulletCollisions::convert(mPrevPosition), OgreBulletCollisions::convert(newWheelPos), rayCallback);
         if (rayCallback.hasHit())
