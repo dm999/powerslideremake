@@ -35,7 +35,7 @@ public:
                             OgreBulletDynamics::DynamicsWorld * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
-                            const Ogre::Vector3& initialForcesLinear,
+                            const Ogre::Vector3& initialImpulseLinear,
                             bool isAI);
 
     void repositionVehicle(const Ogre::Matrix4& transform); // for multiplayer

@@ -52,7 +52,7 @@ struct InitialVehicleSetup
     Ogre::Real mWheelsRestitution;
     Ogre::Real mWheelsFriction;
 
-    Ogre::Vector3 mInitialForcesLinear;
+    Ogre::Vector3 mInitialImpulseLinear;
 };
 
 /**

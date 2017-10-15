@@ -100,7 +100,7 @@ public:
     const std::vector<LightEclusion>& getExclusions()const{return mLightExclusions;}
 
     std::vector<Ogre::Matrix4>& getTrackPositions(){return mTrackPositions;}
-    std::vector<Ogre::Vector3>& getTrackOriginalForcesLinear(){return mTrackOriginalForcesLinear;}
+    std::vector<Ogre::Vector3>& getTrackOriginalImpulseLinear(){return mTrackOriginalImpulseLinear;}
 
     std::vector<Particle>& getParticles(){return mParticles;}
     const std::vector<Particle>& getParticles()const{return mParticles;}
@@ -202,7 +202,7 @@ private:
     std::vector<LightEclusion> mLightExclusions;
 
     std::vector<Ogre::Matrix4> mTrackPositions;
-    std::vector<Ogre::Vector3> mTrackOriginalForcesLinear;
+    std::vector<Ogre::Vector3> mTrackOriginalImpulseLinear;
 
     std::vector<Particle> mParticles;
 

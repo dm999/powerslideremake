@@ -1226,7 +1226,7 @@ std::vector&lt;LightEclusion&gt;&amp; getExclusions()
 const std::vector&lt;LightEclusion&gt;&amp; getExclusions()const
 
 std::vector&lt;Ogre::Matrix4&gt;&amp; getTrackPositions()
-std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalForcesLinear()
+std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalImpulseLinear()
 
 HierarchyNode&amp; getHierarchyNode()
 
@@ -1331,7 +1331,7 @@ Ogre::ManualObject* mLLTObject
 std::vector&lt;LightEclusion&gt; mLightExclusions
 
 std::vector&lt;Ogre::Matrix4&gt; mTrackPositions
-std::vector&lt;Ogre::Vector3&gt; mTrackOriginalForcesLinear
+std::vector&lt;Ogre::Vector3&gt; mTrackOriginalImpulseLinear
 
 HierarchyNode mBaseHierarchyNode
 
@@ -3156,7 +3156,7 @@ CommonIncludes::shared_ptr&lt;OgreBulletCollisions::SphereCollisionShape&gt; mWh
           <y:Geometry height="733.3753734265165" width="370.78469139349863" x="6894.6076543032505" y="-7176.687686713258"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="231.4375" x="69.67359569674954" y="33.91131952575779">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="231.4375" x="69.67359569674954" y="19.21014765075779">&lt;&lt;PSBaseVehicle.h&gt;&gt;
 
 InitialVehicleSetup
 
@@ -3200,7 +3200,9 @@ Ogre::Real mChassisFriction
 Ogre::Real mWheelsFMass
 Ogre::Real mWheelsRMass
 Ogre::Real mWheelsRestitution
-Ogre::Real mWheelsFriction</y:NodeLabel>
+Ogre::Real mWheelsFriction
+
+Ogre::Vector3 mInitialImpulseLinear</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
