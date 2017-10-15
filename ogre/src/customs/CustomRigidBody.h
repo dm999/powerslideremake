@@ -17,14 +17,11 @@ public:
 
     virtual void setTransform(const btTransform& worldTrans);
 
-    Ogre::Vector3 getLinearForce() const;
+    Ogre::Vector3 getLinearImpulse() const;
 
 private:
 
-    Ogre::Vector3 mPrevPos;
-    Ogre::Vector3 mPrevVel;
-
-    Ogre::Vector3 mLinearForce;
+    Ogre::Vector3 mLinearImpulse;
 };
 
 #endif

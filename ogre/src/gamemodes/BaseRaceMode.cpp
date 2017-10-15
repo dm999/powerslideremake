@@ -286,7 +286,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
         switch(mModeContext.mGameState.getAIStrength())
         {
         case Medium :
-            speedCoeff = 0.7f;
+            speedCoeff = 0.55f;
             lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
@@ -299,7 +299,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         case Hard :
-            speedCoeff = 0.9f;
+            speedCoeff = 0.6f;
             lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
@@ -312,7 +312,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         case Insane :
-            speedCoeff = 1.0f;
+            speedCoeff = 0.7f;
             lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
@@ -325,7 +325,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
             break;
         default:
-            speedCoeff = 0.6f;
+            speedCoeff = 0.5f;
             lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 0.2f;
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;

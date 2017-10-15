@@ -49,7 +49,7 @@ public:
     Ogre::Real getAlignedVelocity()const;
     Ogre::Real getLateralVelocity()const;
     Ogre::Vector3 getForwardAxis()const;
-    Ogre::Vector3 getLinearForce()const;
+    Ogre::Vector3 getLinearImpulse()const;
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
     Ogre::SceneNode* getModelNode() const{return mModelNode;}

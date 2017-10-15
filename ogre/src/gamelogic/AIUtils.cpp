@@ -179,8 +179,8 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
-    Ogre::Vector3 carLinearForce = aiCar->getLinearForce();
-    carLinearForce.z = -carLinearForce.z;//original data is left hand
+    Ogre::Vector3 carLinearImpulse = aiCar->getLinearImpulse();
+    carLinearImpulse.z = -carLinearImpulse.z;//original data is left hand
 
 
     size_t closestSplineIndex = getRelativeClosestSplinePoint(carPos);
@@ -198,27 +198,27 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
     {
         mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
         mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
-        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearForce) * psInvCarMass;
-        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearForce) * psInvCarMass;
-        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearForce) * psInvCarMass;
+        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearImpulse) * psInvCarMass;
+        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearImpulse) * psInvCarMass;
+        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearImpulse) * psInvCarMass;
     }
     else
     {
-        float forceLen = carLinearForce.length();
-        float accel = psInvCarMass * forceLen * 0.333f;
+        float impulseLen = carLinearImpulse.length();
+        float velocity = psInvCarMass * impulseLen * 0.333f;
 
-        mAIWhole.slotMatrix[2][0] = splineFeatures.out10 - accel;
-        mAIWhole.slotMatrix[3][0] = splineFeatures.out11 - accel;
+        mAIWhole.slotMatrix[2][0] = splineFeatures.out10 - velocity;
+        mAIWhole.slotMatrix[3][0] = splineFeatures.out11 - velocity;
 
         Ogre::Vector3 valA, valB;
-        if(forceLen == 0.0f)
+        if(impulseLen == 0.0f)
         {
             valA = Ogre::Vector3::ZERO;
             valB = Ogre::Vector3::ZERO;
         }
         else
         {
-            valA = carLinearForce / forceLen;
+            valA = carLinearImpulse / impulseLen;
             valB = valA.crossProduct(carRotV[1]);
         }
 
