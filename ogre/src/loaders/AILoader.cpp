@@ -115,6 +115,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 aiWhole[w].speedCoeff = someBuf[2];
                 aiWhole[w].hack1 = someBuf[6];
                 aiWhole[w].hack2 = someBuf[7];
+                aiWhole[w].hackMultiplier = someBuf[8];
 
                 DWORD someData;
                 fileToLoad->read(&someData, 4);

@@ -12,6 +12,8 @@
 namespace
 {
     const float aiMaxSpeed = 300.0f;
+    const float psCarMass = 45.0f;
+    const float psInvCarMass = 1.0f / psCarMass;
 }
 
 AIUtils::AIUtils() :
@@ -152,10 +154,6 @@ void AIUtils::raceStarted()
 
 void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
 {
-    const float psCarMass = 45.0f;
-    const float psInvCarMass = 1.0f / psCarMass;
-
-
     float feature3 = mAIWhole.slotMatrix[18][0];
 
     if(mAIWhole.hackType == 1)
@@ -190,9 +188,12 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
 
     SplineFeatures splineFeatures = getSplineFeatures(
         carPos, 
+        carLinearImpulse,
         frac, splineFracIndex, 
         fabs(feature3), fabs(feature4)
         );
+
+    aiCar->setAIImpulseHelper(Ogre::Vector2(splineFeatures.impulseAdjuster.x, -splineFeatures.impulseAdjuster.y));//original data is left hand
 
     if(mAIWhole.hackType == 1)
     {
@@ -521,20 +522,91 @@ size_t AIUtils::getFracIndex(size_t closestSplineIndex, const Ogre::Vector3& car
 
 AIUtils::SplineFeatures AIUtils::getSplineFeatures(
     const Ogre::Vector3& carPos, 
+    const Ogre::Vector3& linearImpulse,
     float frac, size_t fracIndex, 
     float feature3, float feature4) const
 {
     SplineFeatures ret;
 
+    const size_t splinePoints = mAIWhole.aiData.size();
+
+    double integer;
+
     if(mAIWhole.hack1 > 0.0 || mAIWhole.hack2 > 0.0)
     {
-        //d.polubotko: TODO physics hack
+        float v17 = frac - 0.050000001f;
+
+        float fracMod = static_cast<float>(modf(v17, &integer));
+        size_t fracInt = static_cast<size_t>(integer);
+
+        float fracModSquare = fracMod * fracMod;
+        float fracModCube = fracMod * fracMod * fracMod;
+
+        float coeff1 = fracModCube * -0.5f  + fracMod * -0.5f       + fracModSquare;
+        float coeff2 = fracModCube * 1.5f   + fracModSquare * -2.5f + 1.0f;
+        float coeff3 = fracModCube * -1.5f  + fracMod * 0.5f        + fracModSquare + fracModSquare;
+        float coeff4 = fracModCube * 0.5f   + fracModSquare * -0.5f;
+
+        const AIData& p1 = mAIWhole.aiData[(fracIndex + fracInt  + splinePoints - 1) % splinePoints];
+        const AIData& p2 = mAIWhole.aiData[(fracIndex + fracInt) % splinePoints];
+        const AIData& p3 = mAIWhole.aiData[(fracIndex + fracInt + 1) % splinePoints];
+        const AIData& p4 = mAIWhole.aiData[(fracIndex + fracInt + 2) % splinePoints];
+
+        Ogre::Vector4 px(p1.pos.x, p2.pos.x, p3.pos.x, p4.pos.x);
+        Ogre::Vector4 py(p1.pos.y, p2.pos.y, p3.pos.y, p4.pos.y);
+        Ogre::Vector4 pz(p1.pos.z, p2.pos.z, p3.pos.z, p4.pos.z);
+
+        Ogre::Vector4 co(coeff1, coeff2, coeff3, coeff4);
+
+        Ogre::Vector3 tmpRes;
+        tmpRes.x = px.dotProduct(co);
+        tmpRes.y = py.dotProduct(co);
+        tmpRes.z = pz.dotProduct(co);
+
+        Ogre::Vector3 tmpDiff = tmpRes - carPos;
+
+        if(mAIWhole.hack1 > 0.0)
+        {
+            float multiplier = 0.0f;
+
+            float sqLen = tmpDiff.squaredLength();
+
+            if(sqLen <= 4900.0f) multiplier = 1.0f;
+            else multiplier = 70.0f / sqrt(sqLen);
+
+            float multiplier2 = multiplier * linearImpulse.length() * mAIWhole.hack1 * 45.0f;
+
+            ret.impulseAdjuster = multiplier2 * Ogre::Vector2(tmpDiff.x, tmpDiff.z);
+        }
+        if(mAIWhole.hack2 > 0.0)
+        {
+            Ogre::Vector4 tx(p1.tangent.x, p2.tangent.x, p3.tangent.x, p4.tangent.x);
+            Ogre::Vector4 tz(p1.tangent.z, p2.tangent.z, p3.tangent.z, p4.tangent.z);
+
+            Ogre::Vector2 tmpRes2;
+            tmpRes2.x = tx.dotProduct(co);
+            tmpRes2.y = tz.dotProduct(co);
+
+            tmpRes2 -= 1.0f;//d.polubotko: no other options?
+
+            float multiplier = 0.0f;
+
+            if(tmpRes2.dotProduct(Ogre::Vector2(tmpDiff.x, tmpDiff.z)) <= 0.0f)
+            {
+                multiplier = linearImpulse.length() * mAIWhole.hack2 / (Ogre::Vector2(tmpDiff.x, tmpDiff.z).squaredLength() * mAIWhole.hackMultiplier + 1.0f);
+            }
+            else
+            {
+                multiplier = linearImpulse.length() * mAIWhole.hack2;
+            }
+
+            ret.impulseAdjuster = multiplier * tmpRes2;
+        }
     }
 
     float f3Frac = feature3 + frac;
     float f4Frac = feature4 + frac;
 
-    double integer;
     float f3FracMod = static_cast<float>(modf(f3Frac, &integer));
     size_t f3FracInt = static_cast<size_t>(integer);
 
@@ -546,8 +618,6 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
 
     float f4FracModSquare = f4FracMod * f4FracMod;
     float f4FracModQube = f4FracMod * f4FracMod * f4FracMod;
-
-    const size_t splinePoints = mAIWhole.aiData.size();
 
     const AIData& f3p1 = mAIWhole.aiData[(fracIndex + f3FracInt + splinePoints - 1) % splinePoints];
     const AIData& f3p2 = mAIWhole.aiData[(fracIndex + f3FracInt) % splinePoints];

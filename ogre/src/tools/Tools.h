@@ -26,6 +26,7 @@ struct AIWhole
     float speedCoeff;
     float hack1;
     float hack2;
+    float hackMultiplier;
 };
 
 struct Exclusion

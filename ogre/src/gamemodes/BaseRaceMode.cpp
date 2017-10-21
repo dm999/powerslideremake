@@ -292,8 +292,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.7f;
-            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.7f;
+            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.4f;
+            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.6f;
             if(mModeContext.mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.4f;
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
@@ -305,8 +305,8 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.8f;
-            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.8f;
+            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.5f;
+            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.7f;
             if(mModeContext.mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.6f;
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;
@@ -317,9 +317,9 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
             if(mModeContext.mGameState.getTrackName() == "desert track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "speedway track") lateralStabilizationCoeff = 0.0f;
             if(mModeContext.mGameState.getTrackName() == "speedway night track") lateralStabilizationCoeff = 0.0f;
-            if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 1.0f;
-            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 1.0f;
+            if(mModeContext.mGameState.getTrackName() == "dam") lateralStabilizationCoeff = 0.6f;
+            if(mModeContext.mGameState.getTrackName() == "mountain forest track") lateralStabilizationCoeff = 0.6f;
+            if(mModeContext.mGameState.getTrackName() == "mineshaft") lateralStabilizationCoeff = 0.8f;
             if(mModeContext.mGameState.getTrackName() == "alpine track") lateralStabilizationCoeff = 1.0f;
             if(mModeContext.mGameState.getTrackName() == "city track") lateralStabilizationCoeff = 1.6f;
             if(mModeContext.mGameState.getTrackName() == "nutopia track") lateralStabilizationCoeff = 1.4f;

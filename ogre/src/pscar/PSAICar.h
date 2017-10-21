@@ -27,6 +27,7 @@ public:
     virtual void processInternalTick(float timeStep, bool isRaceStarted)override;
 
     void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff){mLateralStabilizationCoeff = linearStabilizationCoeff;}
+    void setAIImpulseHelper(const Ogre::Vector2& aiImpulseHelper){mAIImpulseHelper = aiImpulseHelper;}
     void setSpeedCoeff(Ogre::Real speedCoeff){mAIUtils.setSpeedCoeff(speedCoeff);}
 
     void setSteeringUmpulse(Ogre::Real impulse){mSteeringImpulse = impulse;}

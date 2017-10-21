@@ -54,12 +54,14 @@ private:
     struct SplineFeatures{
         Ogre::Vector3 out6, out7, out12, out13;
         float out8, out9, out10, out11;
+        Ogre::Vector2 impulseAdjuster;
 
-        SplineFeatures() : out12(Ogre::Vector3::ZERO), out13(Ogre::Vector3::ZERO){}
+        SplineFeatures() : out12(Ogre::Vector3::ZERO), out13(Ogre::Vector3::ZERO), impulseAdjuster(Ogre::Vector2::ZERO){}
     };
 
     SplineFeatures getSplineFeatures(
         const Ogre::Vector3& carPos, 
+        const Ogre::Vector3& linearImpulse,
         float frac, size_t fracIndex, 
         float feature3, float feature4) const;
 

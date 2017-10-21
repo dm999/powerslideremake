@@ -613,7 +613,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2282.681640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="0.28225298230154294">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2297.3828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-7.068332955198457">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -752,6 +752,7 @@ float mSteeringMaxRad
 float mSteeringIncrement
 
 Ogre::Real mLateralStabilizationCoeff
+Ogre::Vector2 mAIImpulseHelper
 
 CameraMan * mCameraMan
 
@@ -987,7 +988,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="719.0561660087035" width="652.036857551991" x="6513.981571224004" y="-1619.5280830043512"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="709.65625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="4.699958004351629">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="-2.650627933148371">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -1006,6 +1007,7 @@ virtual void initModel( lua_State * pipeline,
 virtual void processInternalTick(float timeStep, bool isRaceStarted) override
 
 void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff)
+void setAIImpulseHelper(const Ogre::Vector2&amp; aiImpulseHelper)
 void setSpeedCoeff(Ogre::Real speedCoeff)
 
 void setSteeringUmpulse(Ogre::Real impulse)

@@ -41,14 +41,15 @@ PSControllableCar::PSControllableCar() :
     mAccelEnabled(false),
     mSteeringIncrement(2.0f),
     mLateralStabilizationCoeff(0.2f),
+    mAIImpulseHelper(Ogre::Vector2::ZERO),
     mWheelRotationalAngle(0.0f)
 {
     mDriveImpulse.addPoint(-100.0f, 0.0f);
     mDriveImpulse.addPoint(0.0f, 25.0f);
     mDriveImpulse.addPoint(60.0f, 20.0f);
     mDriveImpulse.addPoint(120.0f, 18.0f);
-    mDriveImpulse.addPoint(200.0f, 15.0f);
-    mDriveImpulse.addPoint(240.0f, 6.0f);
+    mDriveImpulse.addPoint(200.0f, 6.0f);
+    mDriveImpulse.addPoint(240.0f, 3.0f);
     mDriveImpulse.addPoint(carMaxSpeed, 0.0f);
 
     mResistanceImpulse.addPoint(160.0f, 0.0f);
@@ -96,6 +97,22 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         transform, initialForcesLinear,
         isAI);
+
+#if 0
+    //debug impulse
+    {
+        mManual =  sceneMgr->createManualObject(); 
+
+        mManual->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST); 
+
+        mManual->position(Ogre::Vector3::ZERO);
+        mManual->position(Ogre::Vector3::ZERO);
+
+        mManual->end(); 
+        mManual->setCastShadows(false);
+        mModelNode->attachObject(mManual);
+    }
+#endif
 
     {
         std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
@@ -461,7 +478,32 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
             mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
             mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
 
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+            if(!mIsAI)
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+            else
+            {
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+
+                //if(mAIImpulseHelper == Ogre::Vector2::ZERO)
+                    //mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+                //else
+                {
+                    //mCarChassis->applyImpulse(rot * Ogre::Vector3(mAIImpulseHelper.x, 0.0f, 0.0f), Ogre::Vector3::ZERO);
+                    //mCarChassis->applyImpulse(Ogre::Vector3(mAIImpulseHelper.x, 0.0f, mAIImpulseHelper.y) * 20.0f, Ogre::Vector3::ZERO);
+                }
+#if 0
+                //debug impulse
+                {
+                    mManual->beginUpdate(0);
+
+                    mManual->position(Ogre::Vector3::ZERO);
+                    mManual->position(Ogre::Vector3(mAIImpulseHelper.x, 0.0f, mAIImpulseHelper.y) * 200.0f);
+                    //mManual->position(rot.Inverse() * Ogre::Vector3(mAIImpulseHelper.x, 0.0f, mAIImpulseHelper.y) * 15.0f);
+
+                    mManual->end(); 
+                }
+#endif
+            }
         }
     }
 

@@ -165,6 +165,7 @@ protected:
     float mSteeringIncrement;   // steering sensivity
 
     Ogre::Real mLateralStabilizationCoeff;   // additional impulse to prevent turn over
+    Ogre::Vector2 mAIImpulseHelper;
 
     CameraMan * mCameraMan;
 
@@ -188,6 +189,8 @@ protected:
 
     Ogre::Real mBackLRollResistance;
     Ogre::Real mBackRRollResistance;
+
+    //Ogre::ManualObject * mManual;
 };
 
 #endif
