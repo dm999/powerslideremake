@@ -565,7 +565,7 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
 
         Ogre::Vector3 tmpDiff = tmpRes - carPos;
 
-        if(mAIWhole.hack1 > 0.0)
+        if(mAIWhole.hack1 > 0.0)//mineshafted
         {
             float multiplier = 0.0f;
 
@@ -578,7 +578,7 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
 
             ret.impulseAdjuster = multiplier2 * Ogre::Vector2(tmpDiff.x, tmpDiff.z);
         }
-        if(mAIWhole.hack2 > 0.0)
+        if(mAIWhole.hack2 > 0.0)//dam, city
         {
             Ogre::Vector4 tx(p1.tangent.x, p2.tangent.x, p3.tangent.x, p4.tangent.x);
             Ogre::Vector4 tz(p1.tangent.z, p2.tangent.z, p3.tangent.z, p4.tangent.z);

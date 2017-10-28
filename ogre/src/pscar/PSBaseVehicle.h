@@ -110,6 +110,7 @@ private:
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontRShape;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontLShape;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mChassisBodyShape;
+    CommonIncludes::shared_ptr<OgreBulletCollisions::BoxCollisionShape> mChassisBodyShapeBox;
 
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeFront;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeBack;

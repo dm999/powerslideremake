@@ -81,6 +81,7 @@ void PSBaseVehicle::removeFromWorld()
     mRoofFrontRShape.reset();
     mRoofFrontLShape.reset();
     mChassisBodyShape.reset();
+    mChassisBodyShapeBox.reset();
     mCompoundShape.reset();
 
     mWheelShapeFront.reset();
@@ -101,6 +102,7 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
     mCompoundShape.reset(new OgreBulletCollisions::CompoundCollisionShape());
 
     {
+#if 1
         mRoofBackRShape.reset(new OgreBulletCollisions::SphereCollisionShape(mInitialVehicleSetup.mRoofBackRadius));
         mRoofBackLShape.reset(new OgreBulletCollisions::SphereCollisionShape(mInitialVehicleSetup.mRoofBackRadius));
         mCompoundShape->addChildShape(mRoofBackRShape.get(), mInitialVehicleSetup.mRoofBackPos);
@@ -113,6 +115,10 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
 
         mChassisBodyShape.reset(new OgreBulletCollisions::SphereCollisionShape(mInitialVehicleSetup.mBodyRadius));
         mCompoundShape->addChildShape(mChassisBodyShape.get(), mInitialVehicleSetup.mBodyBasePos);
+#else
+        mChassisBodyShapeBox.reset(new OgreBulletCollisions::BoxCollisionShape(Ogre::Vector3(3.0f, 1.0f, 6.0f)));
+        mCompoundShape->addChildShape(mChassisBodyShapeBox.get(), Ogre::Vector3(0.0f, 1.0f, 0.0f));
+#endif
     }
 
 
@@ -136,6 +142,8 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
     mWheelShapeFront.reset(new OgreBulletCollisions::SphereCollisionShape(mInitialVehicleSetup.mWheelRadius.x));
     mWheelShapeBack.reset(new OgreBulletCollisions::SphereCollisionShape(mInitialVehicleSetup.mWheelRadius.y));
 
+    //http://bulletphysics.org/mediawiki-1.5.8/index.php/Collision_Filtering#Filtering_collisions_using_masks
+    //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=5449
     mCarWheelFrontL.reset(new CustomRigidBodyWheel(nameGenNodes.generate(), mWorld, modelNode, mInitialVehicleSetup.mConnectionPointFLWheel, true, 1, 2));// don`t collide with other car
     mCarWheelFrontR.reset(new CustomRigidBodyWheel(nameGenNodes.generate(), mWorld, modelNode, mInitialVehicleSetup.mConnectionPointFRWheel, true, 1, 2));// don`t collide with other car
     mCarWheelBackL.reset(new CustomRigidBodyWheel(nameGenNodes.generate(), mWorld, modelNode, mInitialVehicleSetup.mConnectionPointRLWheel, false, 1, 2));// don`t collide with other car
