@@ -171,14 +171,13 @@ include_directories(../ogrebullet/Dynamics/include)
 
 if(PowerslideRemake_MULTIPLAYER)
     include_directories(../multislider/client/source)
+    include_directories(../tools/jsonxx/src)
 endif()
 
 if(PowerslideRemake_OPENAL)
     include_directories(${PowerslideRemake_OPENALDIR}/include)
     link_directories (${PowerslideRemake_OPENALDIR}/lib)
 endif()
-
-include_directories(../tools/jsonxx/src)
 
 link_directories (${PowerslideRemake_OGREHOME}/lib)
 link_directories (${PowerslideRemake_OGREHOME}/lib/OGRE)
@@ -250,9 +249,9 @@ if(ANDROID)
     
     if(PowerslideRemake_MULTIPLAYER)
         target_link_libraries(PowerslideRemake MultiSlider)
+        target_link_libraries(PowerslideRemake Jsonxx)
     endif()
     
-    target_link_libraries(PowerslideRemake Jsonxx)
     
     if(PowerslideRemake_OPENAL)
         target_link_libraries(PowerslideRemake openal)
@@ -274,9 +273,9 @@ else() # Not Android
     if(WIN32)
         if(PowerslideRemake_MULTIPLAYER)
             target_link_libraries(PowerslideRemake MultiSlider)
+            target_link_libraries(PowerslideRemake Jsonxx)
         endif()
         
-        target_link_libraries(PowerslideRemake Jsonxx)
         
         if(PowerslideRemake_OPENAL)
             target_link_libraries(PowerslideRemake openal32)
@@ -317,9 +316,9 @@ else() # Not Android
     
         if(PowerslideRemake_MULTIPLAYER)
             target_link_libraries(PowerslideRemake MultiSlider)
+            target_link_libraries(PowerslideRemake Jsonxx)
         endif()
         
-        target_link_libraries(PowerslideRemake Jsonxx)
         
         if(PowerslideRemake_OPENAL)
             target_link_libraries(PowerslideRemake openal32)
