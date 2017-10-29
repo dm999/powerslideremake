@@ -5,7 +5,6 @@
 #include <string>
 
 #include "UIBase.h"
-#include "MyGUI_KeyCode.h"
 
 #include "../gamemodes/ModeContext.h"
 
@@ -29,11 +28,11 @@ public:
     UIRaceMulti(const ModeContext& modeContext, MultiPlayerMode * multiPlayerMode);
     ~UIRaceMulti(){}
 
-    void load(MyGUI::Gui* gui, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, const GameState& gameState);
 
     void switchVisibleMessageWidget();
 
-    void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
+    //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
 
 private:
 
@@ -41,7 +40,7 @@ private:
 
     MultiPlayerMode * mMultiPlayerMode;
 
-    MyGUI::EditBox* mWidgetMessage;
+    //MyGUI::EditBox* mWidgetMessage;
 };
 
 #endif

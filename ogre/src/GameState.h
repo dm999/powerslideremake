@@ -17,14 +17,15 @@
 enum GameMode
 {
     ModeMenu,
-    ModeMenuMulti,
+    ModeMenuMulti,          // after connection happen
     ModeRaceSingle,
     ModeRaceMulti,
 };
 
-enum SinglePlayerMenuStates
+enum SinglePlayerMenuStates // multiplayer menus too but before connection happen
 {
     State_SingleMulti,
+    State_Multi,
     State_Difficulty,
     State_Track,
     State_Car,

@@ -38,6 +38,21 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mModeSingle);
     }
 
+#ifndef NO_MULTIPLAYER
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 137.0f, 0.0f, 0.0f);
+        mModeMulti = createTextArea("MainWindowMulti", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMulti->setCaption("Multi Player");
+        mModeMulti->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMulti->setSpaceWidth(9.0f);
+        mModeMulti->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMulti->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMulti->setFontName("SdkTrays/Caption");
+        mModeMulti->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMulti);
+    }
+#endif
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
         mModeSingleDifficultyNovice = createTextArea("MainWindowSingleDiffNovice", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -367,6 +382,14 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+#ifndef NO_MULTIPLAYER
+    if(mModeMulti->isVisible() && OgreBites::Widget::isCursorOver(mModeMulti, pos, 0))
+    {
+        switchState(State_Multi);
+        return;
+    }
+#endif
+
     if(mModeSingleDifficultyNovice->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyNovice, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
@@ -477,6 +500,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     UIBaseMenu::mouseMoved(pos);
 
     checkCursorOverLabel(pos, mModeSingle);
+#ifndef NO_MULTIPLAYER
+    checkCursorOverLabel(pos, mModeMulti);
+#endif
     checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
     checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
     checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
@@ -517,6 +543,14 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
+}
+
+void UIMainMenuLabels::showModeSingleMulti()
+{
+    mModeSingle->show();
+#ifndef NO_MULTIPLAYER
+    mModeMulti->show();
+#endif
 }
 
 void UIMainMenuLabels::showModeDifficulty()
@@ -622,6 +656,9 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
 void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
+#ifndef NO_MULTIPLAYER
+    mModeMulti->hide();
+#endif
     mModeSingleDifficultyNovice->hide();
     mModeSingleDifficultyAdvanced->hide();
     mModeSingleDifficultyExpert->hide();

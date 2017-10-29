@@ -220,7 +220,7 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
-            mMenuMode.reset(new MenuMode(mContext));
+            mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
             mMenuMode->initData(this);
             mMenuMode->initCamera();
         }
@@ -242,7 +242,7 @@ void GameModeSwitcher::frameEnded()
             {
                 clear();
                 mGameMode = ModeMenu;
-                mMenuMode.reset(new MenuMode(mContext));
+                mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
                 mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }

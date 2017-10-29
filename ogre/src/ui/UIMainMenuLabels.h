@@ -22,7 +22,9 @@ protected:
     void setWindowTitle(const std::string& title){mWindowTitle->setCaption(title);}
     void setStartingGridTime(const std::string& title){mStartingGridTimeLabel->setCaption(title);}
 
+    void showModeSingleMulti();
     void showModeSingle(){mModeSingle->show();}
+    void showModeMulti(){mModeMulti->show();}
     void showModeDifficulty();
     void showTrackLabels();
     void showCarLabels();
@@ -40,6 +42,7 @@ private:
     Ogre::TextAreaOverlayElement * mWindowTitle;
 
     Ogre::TextAreaOverlayElement * mModeSingle;
+    Ogre::TextAreaOverlayElement * mModeMulti;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;

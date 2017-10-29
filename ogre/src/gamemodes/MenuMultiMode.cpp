@@ -50,7 +50,7 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonInclude
 
 void MenuMultiMode::doInitData(LoaderListener* loaderListener)
 {
-    mUIMainMenuMulti->load(mModeContext.mGUI, mModeContext.mGameState);
+    mUIMainMenuMulti->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 
     //do room operations after UI created
 

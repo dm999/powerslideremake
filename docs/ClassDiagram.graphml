@@ -1666,16 +1666,16 @@ Ogre::Vector3 offset</y:NodeLabel>
     <node id="n27">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1632.9583948926665" width="1013.939961076228" x="19503.030019461887" y="-7086.479197446333"/>
+          <y:Geometry height="1704.6745652405589" width="1013.939961076228" x="19653.030019461887" y="-5082.337282620279"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="-16.137013491166726">&lt;&lt;UIRace.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="19.72107168277944">&lt;&lt;UIRace.h&gt;&gt;
 
 UIRace
 
 public:
 
-void load(CustomTrayManager* trayMgr)
+void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
 
 void showBeforeStart1()
 void showBeforeStart2()
@@ -2634,22 +2634,18 @@ SinglePlayerMenuStates mCurrentState</y:NodeLabel>
     <node id="n52">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18637.061999496676" y="-6490.097146796503"/>
+          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18461.678240195713" y="-4570.097146796502"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="7.320779609002784">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="161.68308429650187">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 
 public:
 
-void load(MyGUI::Gui* gui, const GameState&amp; gameState)
+void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
 
 void frameStarted(const Ogre::FrameEvent &amp;evt) override
-
-void processButtonClick(MyGUI::Widget* sender)
-void processChangeComboBox(MyGUI::Widget* sender, size_t index)
-void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
 
 void setMiscText(const std::string&amp; text, const Ogre::ColourValue&amp; color = Ogre::ColourValue::White)
 
@@ -2665,23 +2661,7 @@ void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGame
 void updateRoomState(const std::string&amp; playerMessage = "")const
 
 MenuMultiMode * mMenuMultiMode
-
-MyGUI::Button* mWidgetJoin
-MyGUI::Button* mWidgetStart
-MyGUI::ComboBox* mWidgetTrack
-MyGUI::ComboBox* mWidgetCar
-MyGUI::ComboBox* mWidgetCharacter
-MyGUI::ComboBox* mWidgetAICount
-MyGUI::ComboBox* mWidgetAIStrength
-MyGUI::ComboBox* mWidgetLapsCount
-MyGUI::ComboBox* mWidgetBroadcast
-
-MyGUI::EditBox* mWidgetMessage
-MyGUI::Button* mWidgetSendMessage
-
-MyGUI::TextBox* mWidgetPingLabel
-
-MyGUI::ListBox* mWidgetEvents</y:NodeLabel>
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3223,18 +3203,16 @@ Ogre::Vector3 mInitialImpulseLinear</y:NodeLabel>
     <node id="n71">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="327.9348001234566" width="519.624060372907" x="20620.187969813545" y="-6493.967400061729"/>
+          <y:Geometry height="327.9348001234566" width="519.624060372907" x="20770.187969813545" y="-4453.967400061729"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="483.525390625" x="18.04933487395465" y="22.306267249228767">&lt;&lt;UIRaceMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="390.162109375" x="64.73097549895465" y="51.70861099922877">&lt;&lt;UIRaceMulti.h&gt;&gt;
 
 UIRaceMulti
 
 public:
 
-void load(MyGUI::Gui* gui, const GameState&amp; gameState)
-
-void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
+void load(CustomTrayManager* trayMgr, const GameState&amp; gameState)
 
 void switchVisibleMessageWidget()
 
@@ -3243,8 +3221,7 @@ private:
 ModeContext mModeContext
 
 MultiPlayerMode * mMultiPlayerMode
-
-MyGUI::EditBox* mWidgetMessage</y:NodeLabel>
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3325,7 +3302,7 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
           <y:Geometry height="956.305038604788" width="547.3407020641766" x="17691.713408268875" y="-5698.152519302394"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="915.47265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="528.87109375" x="9.234804157087638" y="20.416191177393557">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="528.87109375" x="9.234804157087638" y="-1.6355666351064428">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3343,7 +3320,9 @@ virtual void startRace() = 0
 void setWindowTitle(const std::string&amp; title)
 void setStartingGridTime(const std::string&amp; title)
 
+void showModeSingleMulti()
 void showModeSingle()
+void showModeMulti()
 void showModeDifficulty()
 void showTrackLabels()
 void showCarLabels()
@@ -3360,6 +3339,7 @@ bool checkCursorOverLabel(const Ogre::Vector2&amp; pos, Ogre::TextAreaOverlayEle
 Ogre::TextAreaOverlayElement * mWindowTitle
 
 Ogre::TextAreaOverlayElement * mModeSingle
+Ogre::TextAreaOverlayElement * mModeMulti
 Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice
 Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced
 Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert
@@ -3525,7 +3505,7 @@ typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
     <node id="n81">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="776.196949439659" width="516.4248856908503" x="19061.787557154574" y="-5398.098474719829"/>
+          <y:Geometry height="776.196949439659" width="516.4248856908503" x="19781.787557154574" y="-7168.098474719829"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.251953125" x="22.086466282926267" y="3.868005969829028">&lt;&lt;UIEditBox.h&gt;&gt;

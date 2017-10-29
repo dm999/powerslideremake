@@ -3,8 +3,6 @@
 
 #include "UIMainMenuMulti.h"
 
-#include "MyGUI.h"
-
 #include "../tools/OgreTools.h"
 #include "../tools/Conversions.h"
 
@@ -31,7 +29,7 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
     loadCommonTextures(pfLoaderGameshell);
 }
 
-void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
+void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -45,7 +43,7 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
 
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
-
+#if 0
     {
         MyGUI::ImageBox * mainBackground = gui->createWidget<MyGUI::ImageBox>("ImageBox", 0, 0, viewportWidth, viewportHeight, MyGUI::Align::Default, "Wallpaper");
         mainBackground->setImageTexture("OriginalMainBackground");
@@ -212,11 +210,9 @@ void UIMainMenuMulti::load(MyGUI::Gui* gui, const GameState& gameState)
             mWidgetEvents->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
         }
     }
-
+#endif
 
     createCommonMaterials();
-
-    //MyGUI::PointerManager::getInstance().getByName("arrow")->setResourceName();
 
 }
 
@@ -227,6 +223,7 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 }
 #endif
 
+#if 0
 void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
 {
     if(sender == mWidgetStart)
@@ -400,29 +397,33 @@ void UIMainMenuMulti::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key,
         }
     }
 }
+#endif
 
 void UIMainMenuMulti::onStartPossible()
 {
-    mWidgetStart->setEnabled(true);
+    //mWidgetStart->setEnabled(true);
 }
 
 void UIMainMenuMulti::onStartNotPossible()
 {
-    mWidgetStart->setEnabled(false);
+    //mWidgetStart->setEnabled(false);
 }
 
 void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 {
+    /*
     if(isMessage)
         mWidgetEvents->insertItem(0, "#FF0000" + eventItem);
     else
         mWidgetEvents->insertItem(0, "#FFFFFF" + eventItem);
 
     mWidgetEvents->setScrollPosition(0);
+    */
 }
 
 void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 {
+#if 0
     bool changeToReady = true;
     if(mWidgetJoin->getCaption() == "Ready")
         changeToReady = false;
@@ -452,13 +453,20 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 
         bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
     }
+#endif
 }
 
 void UIMainMenuMulti::setMiscText(const std::string& text, const Ogre::ColourValue& color)
 {
+    /*
     std::string textColor = OgreColorToString(color);
     textColor = "#" + textColor;
     mWidgetPingLabel->setCaption(textColor + text);
+    */
+}
+
+void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
+{
 }
 
 #endif

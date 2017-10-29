@@ -12,9 +12,6 @@
 #include "../ui/UIRace.h"
 #include "../ui/UIRaceMulti.h"
 
-#include "MyGUI.h"
-#include "MyGUI_OgrePlatform.h"
-
 class MultiplayerAILapFinishController : public LapUtils::Events
 {
 public:
@@ -136,18 +133,21 @@ void MultiPlayerMode::customClearScene()
 
 void MultiPlayerMode::customInitUI()
 {
+    /*
     mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
     mModeContext.mGUI->initialise();
 
     MyGUI::PointerManager::getInstance().setVisible(false);
-
-    mUIRaceMulti->load(mModeContext.mGUI, mModeContext.mGameState);
+*/
+    mUIRaceMulti->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 }
 
 void MultiPlayerMode::customClearUI()
 {
+    /*
     mModeContext.mGUI->shutdown();
     mModeContext.mPlatform->shutdown();
+    */
 }
 
 void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)

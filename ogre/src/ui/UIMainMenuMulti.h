@@ -6,23 +6,11 @@
 #include <string>
 
 #include "UIBaseMenu.h"
-#include "MyGUI_KeyCode.h"
 
 #include "../gamemodes/ModeContext.h"
 
 
 #include "../GameState.h"
-
-namespace MyGUI
-{
-    class Gui;
-    class Widget;
-    class Button;
-    class ComboBox;
-    class ListBox;
-    class EditBox;
-    class TextBox;
-}
 
 class MenuMultiMode;
 
@@ -33,13 +21,13 @@ public:
     UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode);
     ~UIMainMenuMulti(){}
 
-    void load(MyGUI::Gui* gui, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, const GameState& gameState);
 
     void frameStarted(const Ogre::FrameEvent &evt) override {}
 
-    void processButtonClick(MyGUI::Widget* sender);
-    void processChangeComboBox(MyGUI::Widget* sender, size_t index);
-    void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
+    //void processButtonClick(MyGUI::Widget* sender);
+    //void processChangeComboBox(MyGUI::Widget* sender, size_t index);
+    //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
 
     void setMiscText(const std::string& text, const Ogre::ColourValue& color = Ogre::ColourValue::White);
 
@@ -59,8 +47,11 @@ private:
 
     void updateRoomState(const std::string& playerMessage = "")const;
 
+    void panelHit(Ogre::PanelOverlayElement* panel) override;
+
     MenuMultiMode * mMenuMultiMode;
 
+    /*
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;
     MyGUI::ComboBox* mWidgetTrack;
@@ -77,6 +68,7 @@ private:
     MyGUI::TextBox* mWidgetPingLabel;
 
     MyGUI::ListBox* mWidgetEvents;
+    */
 };
 #endif
 #endif

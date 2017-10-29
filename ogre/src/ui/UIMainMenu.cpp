@@ -441,7 +441,14 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_SingleMulti:
         mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
-        showModeSingle();
+        showModeSingleMulti();
+        showBackgrounds();
+        break;
+
+    case State_Multi:
+        mIsInStartingGrid = false;
+        setWindowTitle("Game Mode");
+        showModeMulti();
         showBackgrounds();
         mEditBox.show();
         mEditBox2.show();
