@@ -2,18 +2,20 @@
 
 ### Goal ###
 
-"Powerslide remake" is a project aimed to rebuild main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment and multiplayer gaming.
+"Powerslide remake" remakes main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment, advanced AI based on neural network, multiplayer gaming. It has been implemented using programmable rendering pipeline and crossplatform (windows, linux, android) ready.
 
 ### Build ###
 To build the project you need:  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org) (only if PowerslideRemake_OPENAL ON)  
+- [Boost](https://www.boost.org) (only if PowerslideRemake_MULTIPLAYER ON)  
 
 Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Boost::asio.  
 
 To build project you need:  
 - Set CMake variable PowerslideRemake_OGREHOME - path to Ogre includes & binaries (for example C:\Program Files\OGRE\1_9_0)  
 - Set CMake variable PowerslideRemake_OPENALDIR (only if PowerslideRemake_OPENAL ON) - path to OpenAL includes & binaries (for example C:\Program Files\OpenAL)  
+- Set CMake variable PowerslideRemake_BOOSTHOME (only if PowerslideRemake_MULTIPLAYER ON) - path to Boost includes & binaries for libs [system, date_time, regex] builded statically (for example C:\Boost)  
 
 ### Sources ###
 "Powerslide remake" also depends and/or includes sources of such open sourced projects as:  
@@ -29,8 +31,9 @@ To build project you need:
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
 ### Run ###
-To run builded project you need to support original game assets (packed files *.pf). Game assets could be found on original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
+To run builded project you need to support original game assets (packed files - pf). Game assets could be found on original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
 You need to have: data.pf, gameshell.pf, store.pf. Place them in the folder with builded application.  
+For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
 
 ### License ###
 The MIT License (MIT)  

@@ -12,6 +12,17 @@
 #include <string>
 #include <memory>
 
+#ifdef _MSC_VER 
+    #if (_MSC_VER > 1500)   // vc2010
+        #include <thread>
+    #endif
+    #if (_MSC_VER == 1500)  // vc2008
+    #endif
+#else
+    #include <chrono>
+    #include <thread>
+#endif
+
 #if defined(_MSC_VER) && (_MSC_VER < 1800)
 typedef          __int8  int8_t;
 typedef          __int16 int16_t;
@@ -26,6 +37,20 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "LibInterface.h"
+
+namespace multislider
+{
+#ifdef _MSC_VER 
+    #if (_MSC_VER > 1500)
+        #define SLEEP_MULTI(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
+    #endif
+    #if (_MSC_VER == 1500)
+        #define SLEEP_MULTI(milliseconds) ::Sleep(milliseconds)
+    #endif
+#else
+    #define SLEEP_MULTI(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
+#endif
+}
 
 #if defined(_MSC_VER) && (_MSC_VER < 1800)
 namespace multislider

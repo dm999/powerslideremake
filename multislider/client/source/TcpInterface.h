@@ -9,7 +9,6 @@
 #define _MULTI_SLIDER_TCP_INTERFACE_H_
 
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
 
 #include "CommonIncludes.h"
 #include "Utility.h"
@@ -84,7 +83,7 @@ namespace multislider
                     break;
                 }
                 if (timeoutMilliseconds > 0) {
-                    boost::this_thread::sleep_for(boost::chrono::milliseconds(attemptsTimeoutMilliseconds));
+                    SLEEP_MULTI(attemptsTimeoutMilliseconds);
                     time += attemptsTimeoutMilliseconds;
                 }
                 else {

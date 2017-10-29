@@ -2,7 +2,7 @@
 #define _MULTI_SLIDER_PINGER_H_
 
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
+#include <boost/bind.hpp>
 
 #include "icmp_header.hpp"
 #include "ipv4_header.hpp"

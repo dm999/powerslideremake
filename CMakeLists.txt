@@ -1,6 +1,7 @@
 # set variables
 # PowerslideRemake_OGREHOME
 # PowerslideRemake_OPENALDIR (if PowerslideRemake_OPENAL set)
+# PowerslideRemake_BOOSTHOME (if PowerslideRemake_MULTIPLAYER set)
 
 cmake_minimum_required(VERSION 2.8)
 
@@ -10,6 +11,7 @@ option(PowerslideRemake_OPENAL "OpenAL build" ON)
 option(PowerslideRemake_MULTIPLAYER "Multiplayer build" ON)
 set(PowerslideRemake_OGREHOME "" CACHE PATH "")
 set(PowerslideRemake_OPENALDIR "" CACHE PATH "")
+set(PowerslideRemake_BOOSTHOME "" CACHE PATH "")
 
 set(CMAKE_MODULE_PATH "${PowerslideRemake_OGREHOME}/CMake/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${PowerslideRemake_OGREHOME}/lib/OGRE/cmake/;${CMAKE_MODULE_PATH}")
@@ -22,6 +24,10 @@ endif()
 
 if(NOT PowerslideRemake_OPENALDIR STREQUAL "")
     STRING(REGEX REPLACE "\\\\" "/" PowerslideRemake_OPENALDIR ${PowerslideRemake_OPENALDIR})
+endif()
+
+if(NOT PowerslideRemake_BOOSTHOME STREQUAL "")
+    STRING(REGEX REPLACE "\\\\" "/" PowerslideRemake_BOOSTHOME ${PowerslideRemake_BOOSTHOME})
 endif()
 
 set(OGRE_STATIC true)
