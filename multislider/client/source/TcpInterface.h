@@ -14,6 +14,13 @@
 #include "Utility.h"
 #include "Pinger.h"
 
+#if defined(__ANDROID__)
+    #include <android/log.h>
+
+    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+#endif
+
 namespace multislider
 {
     /**
@@ -45,6 +52,10 @@ namespace multislider
 
         bool connect(const std::string & ip, uint16_t port)
         {
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: begin");
+#endif
+
             boost::system::error_code err;
 
             boost::asio::ip::address::from_string( ip, err );
@@ -52,19 +63,44 @@ namespace multislider
                 return false;
             }
 
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: adress checked");
+#endif
+
             boost::asio::ip::tcp::resolver resolver(mIoService);
             boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(), ip, to_string(port));
             mEndpoint = *resolver.resolve(query, err);
             if (err) {
                 return false;
             }
+
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: resolver created");
+#endif
+
             mAsioSocket.open(boost::asio::ip::tcp::v4(), err);
             if (err) {
                 return false;
             }
+
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: port opened");
+#endif
+
             mAsioSocket.connect(mEndpoint, err);
 
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: connection performed");
+#endif
+
+            //d.polubotko: icmp seems not allowed on android?
+#if !defined(__ANDROID__)
             mPinger.reset(new Pinger(mIoServicePinger, ip.c_str()));
+#endif
+
+#if defined(__ANDROID__)
+            LOGI("TcpInterface[connect]: end"); 
+#endif
 
             return !err;
         }

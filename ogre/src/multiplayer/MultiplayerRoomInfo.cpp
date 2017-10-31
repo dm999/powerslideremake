@@ -4,6 +4,13 @@
 #include "MultiSlider.h"
 #include "CommonIncludes.h"
 
+#if defined(__ANDROID__)
+    #include <android/log.h>
+
+    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+#endif
+
 bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::string>& roomsDesc, std::vector<std::pair<size_t, size_t> >& players)const
 {
 
@@ -31,6 +38,10 @@ bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::
     {
         (void)err;
         res = false;
+
+#if defined(__ANDROID__)
+        LOGE("MultiplayerRoomInfo[getRoomsList]: error - %s", err.what()); 
+#endif
     }
 
     return res;
