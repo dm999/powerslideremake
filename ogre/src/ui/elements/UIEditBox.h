@@ -11,6 +11,11 @@ class UIEditBox : public UIBase
 {
 public:
 
+    enum EditBoxCharType{
+        Any,
+        IP
+    };
+
     UIEditBox(size_t maxSymbols = 256);
     virtual ~UIEditBox(){}
 
@@ -27,12 +32,23 @@ public:
     void keyUp(MyGUI::KeyCode _key, wchar_t _char);
     void mouseReleased(const Ogre::Vector2& pos);
 
+    void setText(const Ogre::DisplayString& str);
+    Ogre::DisplayString getText() const { return mCaption;}
+
+    void setColor(const Ogre::ColourValue& color);
+
+    void setCharType(EditBoxCharType type) {mCharType = type;}
+
     void show();
     void hide();
+
+    Ogre::String getMaterialName()const {return mMaterialName;}
 
 private:
 
     void adjustCaptionLength();
+
+    bool isLegalCharacter(MyGUI::KeyCode _key) const;
 
     Ogre::DisplayString mCaption;
     Ogre::DisplayString mCaptionToDisplay;
@@ -55,6 +71,8 @@ private:
     Ogre::Real mCaretSize;
 
     Ogre::Timer mBlinkTimer;
+
+    EditBoxCharType mCharType;
 
     static Ogre::NameGenerator nameGenTextures;
     static Ogre::NameGenerator nameGenMaterials;

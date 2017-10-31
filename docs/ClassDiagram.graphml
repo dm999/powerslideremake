@@ -1666,7 +1666,7 @@ Ogre::Vector3 offset</y:NodeLabel>
     <node id="n27">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1704.6745652405589" width="1013.939961076228" x="19653.030019461887" y="-5082.337282620279"/>
+          <y:Geometry height="1704.6745652405589" width="1013.939961076228" x="19623.030019461887" y="-4812.337282620279"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1665.232421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="925.75" x="44.094980538113305" y="19.72107168277944">&lt;&lt;UIRace.h&gt;&gt;
@@ -2555,10 +2555,10 @@ std::vector&lt;OgreBites::Widget*&gt; mCreatedWidgets</y:NodeLabel>
     <node id="n49">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="743.3133042183272" width="694.4874926701536" x="17622.756253664924" y="-4601.656652109164"/>
+          <y:Geometry height="848.5919416313536" width="694.4874926701536" x="17618.140012965887" y="-4384.295970815677"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="24.179113046663588">&lt;&lt;UIMainMenu.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="856.66796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="631.69140625" x="31.39804321007614" y="-4.03801355932319">&lt;&lt;UIMainMenu.h&gt;&gt;
 
 UIMainMenu
 
@@ -2597,6 +2597,10 @@ void panelHit(Ogre::PanelOverlayElement* panel) override
 
 void loadMisc(const PFLoader&amp; pfLoaderData, const PFLoader&amp; pfLoaderGameshell, LoaderListener* loaderListener)
 
+void connectToServer()
+void createRoom()
+void joinRoom()
+
 finishBoard_v prepareFinishBoard()const
 
 Ogre::Timer mStartingGridTimer
@@ -2604,7 +2608,15 @@ bool mIsInStartingGrid
 
 MenuMode * mMenuMode
 
-SinglePlayerMenuStates mCurrentState</y:NodeLabel>
+SinglePlayerMenuStates mCurrentState
+
+UIEditBox mEditBoxIP
+UIEditBox mEditBoxUserName
+UIEditBox mEditBoxRoomName
+
+OgreBites::SelectMenu* mRoomsTable
+
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -2634,7 +2646,7 @@ SinglePlayerMenuStates mCurrentState</y:NodeLabel>
     <node id="n52">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18461.678240195713" y="-4570.097146796502"/>
+          <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18461.678240195713" y="-4300.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="161.68308429650187">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
@@ -3203,7 +3215,7 @@ Ogre::Vector3 mInitialImpulseLinear</y:NodeLabel>
     <node id="n71">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="327.9348001234566" width="519.624060372907" x="20770.187969813545" y="-4453.967400061729"/>
+          <y:Geometry height="327.9348001234566" width="519.624060372907" x="20740.187969813545" y="-4183.967400061729"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="224.517578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="390.162109375" x="64.73097549895465" y="51.70861099922877">&lt;&lt;UIRaceMulti.h&gt;&gt;
@@ -3299,10 +3311,10 @@ bool mControlClicked[mControlsCount]</y:NodeLabel>
     <node id="n74">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="956.305038604788" width="547.3407020641766" x="17691.713408268875" y="-5698.152519302394"/>
+          <y:Geometry height="1130.6262486623773" width="547.3407020641766" x="17691.713408268875" y="-5695.313124331189"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="528.87109375" x="9.234804157087638" y="-1.6355666351064428">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1077.185546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="528.87109375" x="9.234804157087638" y="26.7203508936891">&lt;&lt;UIMainMenuLabels.h&gt;&gt;
 
 UIMainMenuLabels
 
@@ -3330,6 +3342,7 @@ void showCharacterLabels()
 void showGameExitLabels()
 void showRaceGridCharactersLabels()
 void showPodiumLabels(const finishBoard_v&amp; finishBoard)
+void showMultiIPLabels()
 void hideAllLabels()
 
 private:
@@ -3366,7 +3379,14 @@ Ogre::TextAreaOverlayElement * mPodiumTableTitle4Label
 Ogre::TextAreaOverlayElement * mPodiumTable1Label[GameState::mRaceGridCarsMax]
 Ogre::TextAreaOverlayElement * mPodiumTable2Label[GameState::mRaceGridCarsMax]
 Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax]
-Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax]</y:NodeLabel>
+Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax]
+
+Ogre::TextAreaOverlayElement * mModeMultiIP
+Ogre::TextAreaOverlayElement * mModeMultiConnect
+Ogre::TextAreaOverlayElement * mModeMultiUserName
+Ogre::TextAreaOverlayElement * mModeMultiRoomName
+Ogre::TextAreaOverlayElement * mModeMultiCreateRoom
+Ogre::TextAreaOverlayElement * mModeMultiJoinRoom</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3505,10 +3525,10 @@ typedef std::vector&lt;finishBoard&gt; finishBoard_v</y:NodeLabel>
     <node id="n81">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="776.196949439659" width="516.4248856908503" x="19781.787557154574" y="-7168.098474719829"/>
+          <y:Geometry height="1116.6596405423961" width="516.4248856908503" x="19781.787557154574" y="-7158.329820271198"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.251953125" x="22.086466282926267" y="3.868005969829028">&lt;&lt;UIEditBox.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="959.576171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="472.251953125" x="22.086466282926267" y="78.5417343336976">&lt;&lt;UIEditBox.h&gt;&gt;
 
 UIEditBox
 
@@ -3527,12 +3547,23 @@ void frameStarted(const Ogre::FrameEvent &amp;evt)
 void keyUp(MyGUI::KeyCode _key, wchar_t _char)
 void mouseReleased(const Ogre::Vector2&amp; pos)
 
+void setText(const Ogre::DisplayString&amp; str)
+Ogre::DisplayString getText() const
+
+void setColor(const Ogre::ColourValue&amp; color)
+
+void setCharType(EditBoxCharType type)
+
 void show()
 void hide()
+
+Ogre::String getMaterialName()const
 
 private:
 
 void adjustCaptionLength()
+
+bool isLegalCharacter(MyGUI::KeyCode _key) const
 
 Ogre::DisplayString mCaption
 Ogre::DisplayString mCaptionToDisplay
@@ -3555,6 +3586,8 @@ Ogre::TextAreaOverlayElement * mText
 Ogre::Real mCaretSize
 
 Ogre::Timer mBlinkTimer
+
+EditBoxCharType mCharType
 
 static Ogre::NameGenerator nameGenTextures
 static Ogre::NameGenerator nameGenMaterials

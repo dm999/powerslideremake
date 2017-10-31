@@ -46,6 +46,12 @@ namespace multislider
         bool connect(const std::string & ip, uint16_t port)
         {
             boost::system::error_code err;
+
+            boost::asio::ip::address::from_string( ip, err );
+            if (err) {
+                return false;
+            }
+
             boost::asio::ip::tcp::resolver resolver(mIoService);
             boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(), ip, to_string(port));
             mEndpoint = *resolver.resolve(query, err);

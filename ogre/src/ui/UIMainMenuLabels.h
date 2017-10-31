@@ -33,6 +33,7 @@ protected:
     void showGameExitLabels();
     void showRaceGridCharactersLabels();
     void showPodiumLabels(const finishBoard_v& finishBoard);
+    void showMultiIPLabels();
     void hideAllLabels();
 
 private:
@@ -69,6 +70,13 @@ private:
     Ogre::TextAreaOverlayElement * mPodiumTable2Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
+
+    Ogre::TextAreaOverlayElement * mModeMultiIP;
+    Ogre::TextAreaOverlayElement * mModeMultiConnect;
+    Ogre::TextAreaOverlayElement * mModeMultiUserName;
+    Ogre::TextAreaOverlayElement * mModeMultiRoomName;
+    Ogre::TextAreaOverlayElement * mModeMultiCreateRoom;
+    Ogre::TextAreaOverlayElement * mModeMultiJoinRoom;
 };
 
 #endif

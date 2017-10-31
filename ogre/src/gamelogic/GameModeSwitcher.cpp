@@ -220,9 +220,11 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
+            mIsInitialLoadPassed = false;//to disable unloader progress
             mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
             mMenuMode->initData(this);
             mMenuMode->initCamera();
+            mIsInitialLoadPassed = true;
         }
 
         //main menu single -> multi main menu
@@ -232,6 +234,7 @@ void GameModeSwitcher::frameEnded()
 
             mGameMode = mGameModeNext;
 
+            mIsInitialLoadPassed = false;//to disable unloader progress
             mMenuMultiMode.reset(new MenuMultiMode(mContext));
             mMenuMultiMode->initData(this);
             mMenuMultiMode->initCamera();
@@ -246,6 +249,7 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }
+            mIsInitialLoadPassed = true;
         }
 #endif
     }

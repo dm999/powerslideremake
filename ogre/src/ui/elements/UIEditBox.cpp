@@ -14,7 +14,8 @@ UIEditBox::UIEditBox(size_t maxSymbols) : mCaption(""), mCaptionToDisplay(""),
     mIsShown(true), mIsCaretShown(true), mIsActive(false),
     mMaxSymbols(maxSymbols),
     mBackground(NULL), mText(NULL),
-    mCaretSize(9.0f)
+    mCaretSize(9.0f),
+    mCharType(Any)
 {
     mTextureName = nameGenTextures.generate();
     mMaterialName = nameGenMaterials.generate();
@@ -129,46 +130,7 @@ void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
                 adjustCaptionLength();
             }
         }
-        else if (
-            _key == MyGUI::KeyCode::None            ||
-            _key == MyGUI::KeyCode::Escape          ||
-            _key == MyGUI::KeyCode::Delete          ||
-            _key == MyGUI::KeyCode::Insert          ||
-            _key == MyGUI::KeyCode::Return          ||
-            _key == MyGUI::KeyCode::NumpadEnter     ||
-            _key == MyGUI::KeyCode::ArrowRight      ||
-            _key == MyGUI::KeyCode::ArrowLeft       ||
-            _key == MyGUI::KeyCode::ArrowUp         ||
-            _key == MyGUI::KeyCode::ArrowDown       ||
-            _key == MyGUI::KeyCode::Home            ||
-            _key == MyGUI::KeyCode::End             ||
-            _key == MyGUI::KeyCode::Tab             ||
-            _key == MyGUI::KeyCode::PageUp          ||
-            _key == MyGUI::KeyCode::PageDown        ||
-            _key == MyGUI::KeyCode::LeftControl     ||
-            _key == MyGUI::KeyCode::RightControl    ||
-            _key == MyGUI::KeyCode::LeftShift       ||
-            _key == MyGUI::KeyCode::RightShift      ||
-            _key == MyGUI::KeyCode::LeftAlt         ||
-            _key == MyGUI::KeyCode::RightAlt        ||
-            _key == MyGUI::KeyCode::F1              ||
-            _key == MyGUI::KeyCode::F2              ||
-            _key == MyGUI::KeyCode::F3              ||
-            _key == MyGUI::KeyCode::F4              ||
-            _key == MyGUI::KeyCode::F5              ||
-            _key == MyGUI::KeyCode::F6              ||
-            _key == MyGUI::KeyCode::F7              ||
-            _key == MyGUI::KeyCode::F8              ||
-            _key == MyGUI::KeyCode::F9              ||
-            _key == MyGUI::KeyCode::F10             ||
-            _key == MyGUI::KeyCode::F11             ||
-            _key == MyGUI::KeyCode::F12             ||
-            _key == MyGUI::KeyCode::Capital         ||
-            _key == MyGUI::KeyCode::NumLock         ||
-            _key == MyGUI::KeyCode::ScrollLock
-            )
-        {}
-        else
+        else if (isLegalCharacter(_key))
         {
             if(mCaption.length() < mMaxSymbols)
             {
@@ -196,6 +158,63 @@ void UIEditBox::adjustCaptionLength()
     }
 }
 
+bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
+{
+    bool ret = false;
+
+    if(mCharType == Any)
+    {
+        if(
+            _key != MyGUI::KeyCode::None            &&
+            _key != MyGUI::KeyCode::Escape          &&
+            _key != MyGUI::KeyCode::Delete          &&
+            _key != MyGUI::KeyCode::Insert          &&
+            _key != MyGUI::KeyCode::Return          &&
+            _key != MyGUI::KeyCode::NumpadEnter     &&
+            _key != MyGUI::KeyCode::ArrowRight      &&
+            _key != MyGUI::KeyCode::ArrowLeft       &&
+            _key != MyGUI::KeyCode::ArrowUp         &&
+            _key != MyGUI::KeyCode::ArrowDown       &&
+            _key != MyGUI::KeyCode::Home            &&
+            _key != MyGUI::KeyCode::End             &&
+            _key != MyGUI::KeyCode::Tab             &&
+            _key != MyGUI::KeyCode::PageUp          &&
+            _key != MyGUI::KeyCode::PageDown        &&
+            _key != MyGUI::KeyCode::LeftControl     &&
+            _key != MyGUI::KeyCode::RightControl    &&
+            _key != MyGUI::KeyCode::LeftShift       &&
+            _key != MyGUI::KeyCode::RightShift      &&
+            _key != MyGUI::KeyCode::LeftAlt         &&
+            _key != MyGUI::KeyCode::RightAlt        &&
+            _key != MyGUI::KeyCode::F1              &&
+            _key != MyGUI::KeyCode::F2              &&
+            _key != MyGUI::KeyCode::F3              &&
+            _key != MyGUI::KeyCode::F4              &&
+            _key != MyGUI::KeyCode::F5              &&
+            _key != MyGUI::KeyCode::F6              &&
+            _key != MyGUI::KeyCode::F7              &&
+            _key != MyGUI::KeyCode::F8              &&
+            _key != MyGUI::KeyCode::F9              &&
+            _key != MyGUI::KeyCode::F10             &&
+            _key != MyGUI::KeyCode::F11             &&
+            _key != MyGUI::KeyCode::F12             &&
+            _key != MyGUI::KeyCode::Capital         &&
+            _key != MyGUI::KeyCode::NumLock         &&
+            _key != MyGUI::KeyCode::ScrollLock
+        ) ret = true;
+    }
+
+    if(mCharType == IP)
+    {
+        if(
+            _key == MyGUI::KeyCode::Period  ||
+            (_key >= MyGUI::KeyCode::One && _key <= MyGUI::KeyCode::Zero)
+        ) ret = true;
+    }
+
+    return ret;
+}
+
 void UIEditBox::mouseReleased(const Ogre::Vector2& pos)
 {
     if(mBackground && mIsShown && OgreBites::Widget::isCursorOver(mBackground, pos, 0))
@@ -206,6 +225,21 @@ void UIEditBox::mouseReleased(const Ogre::Vector2& pos)
     }
     else
         mIsActive = false;
+}
+
+void UIEditBox::setText(const Ogre::DisplayString& str)
+{
+    mCaption = str;
+
+    if(mCaption.length() < mMaxSymbols)
+    {
+        adjustCaptionLength();
+    }
+}
+
+void UIEditBox::setColor(const Ogre::ColourValue& color)
+{
+    mText->setColour(color);
 }
 
 void UIEditBox::show()

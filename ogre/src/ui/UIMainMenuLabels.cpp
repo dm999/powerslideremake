@@ -51,6 +51,84 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMulti->setColour(inactiveLabel);
         getMainBackground()->addChild(mModeMulti);
     }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 160.0f, 0.0f, 0.0f);
+        mModeMultiIP = createTextArea("MainWindowMultiIP", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiIP->setCaption("Server IP:");
+        mModeMultiIP->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiIP->setSpaceWidth(9.0f);
+        mModeMultiIP->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiIP->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiIP->setFontName("SdkTrays/Caption");
+        mModeMultiIP->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiIP);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 200.0f, 0.0f, 0.0f);
+        mModeMultiConnect = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiConnect->setCaption("Check");
+        mModeMultiConnect->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiConnect->setSpaceWidth(9.0f);
+        mModeMultiConnect->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiConnect->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiConnect->setFontName("SdkTrays/Caption");
+        mModeMultiConnect->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiConnect);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 240.0f, 0.0f, 0.0f);
+        mModeMultiUserName = createTextArea("MainWindowMultiUserName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiUserName->setCaption("User Name:");
+        mModeMultiUserName->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiUserName->setSpaceWidth(9.0f);
+        mModeMultiUserName->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiUserName->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiUserName->setFontName("SdkTrays/Caption");
+        mModeMultiUserName->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiUserName);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 290.0f, 0.0f, 0.0f);
+        mModeMultiRoomName = createTextArea("MainWindowMultiRoomName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiRoomName->setCaption("Room Name:");
+        mModeMultiRoomName->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiRoomName->setSpaceWidth(9.0f);
+        mModeMultiRoomName->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiRoomName->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiRoomName->setFontName("SdkTrays/Caption");
+        mModeMultiRoomName->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiRoomName);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 350.0f, 0.0f, 0.0f);
+        mModeMultiCreateRoom = createTextArea("MainWindowMultiCreateRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiCreateRoom->setCaption("Create Room");
+        mModeMultiCreateRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiCreateRoom->setSpaceWidth(9.0f);
+        mModeMultiCreateRoom->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiCreateRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiCreateRoom->setFontName("SdkTrays/Caption");
+        mModeMultiCreateRoom->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiCreateRoom);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(420.0f, 350.0f, 0.0f, 0.0f);
+        mModeMultiJoinRoom = createTextArea("MainWindowMultiJoinRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiJoinRoom->setCaption("Join Room");
+        mModeMultiJoinRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiJoinRoom->setSpaceWidth(9.0f);
+        mModeMultiJoinRoom->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiJoinRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiJoinRoom->setFontName("SdkTrays/Caption");
+        mModeMultiJoinRoom->setColour(inactiveLabel);
+        getMainBackground()->addChild(mModeMultiJoinRoom);
+    }
 #endif
 
     {
@@ -388,6 +466,24 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         switchState(State_Multi);
         return;
     }
+
+    if(mModeMultiConnect->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiConnect, pos, 0))
+    {
+        switchState(State_MultiConnect);
+        return;
+    }
+
+    if(mModeMultiCreateRoom->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiCreateRoom, pos, 0))
+    {
+        switchState(State_MultiCreateRoom);
+        return;
+    }
+
+    if(mModeMultiJoinRoom->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiJoinRoom, pos, 0))
+    {
+        switchState(State_MultiJoinRoom);
+        return;
+    }
 #endif
 
     if(mModeSingleDifficultyNovice->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyNovice, pos, 0))
@@ -502,6 +598,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingle);
 #ifndef NO_MULTIPLAYER
     checkCursorOverLabel(pos, mModeMulti);
+    checkCursorOverLabel(pos, mModeMultiConnect);
+    checkCursorOverLabel(pos, mModeMultiCreateRoom);
+    checkCursorOverLabel(pos, mModeMultiJoinRoom);
 #endif
     checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
     checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
@@ -653,11 +752,27 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
     }
 }
 
+void UIMainMenuLabels::showMultiIPLabels()
+{
+    mModeMultiIP->show();
+    mModeMultiConnect->show();
+    mModeMultiUserName->show();
+    mModeMultiRoomName->show();
+    mModeMultiCreateRoom->show();
+    mModeMultiJoinRoom->show();
+}
+
 void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
 #ifndef NO_MULTIPLAYER
     mModeMulti->hide();
+    mModeMultiIP->hide();
+    mModeMultiConnect->hide();
+    mModeMultiUserName->hide();
+    mModeMultiRoomName->hide();
+    mModeMultiCreateRoom->hide();
+    mModeMultiJoinRoom->hide();
 #endif
     mModeSingleDifficultyNovice->hide();
     mModeSingleDifficultyAdvanced->hide();

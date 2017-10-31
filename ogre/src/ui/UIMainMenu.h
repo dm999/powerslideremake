@@ -50,6 +50,10 @@ private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
 
+    void connectToServer();
+    void createRoom();
+    void joinRoom();
+
     finishBoard_v prepareFinishBoard()const;
 
     Ogre::Timer mStartingGridTimer;
@@ -60,7 +64,11 @@ private:
     SinglePlayerMenuStates mCurrentState;
 
     UIEditBox mEditBox;
-    UIEditBox mEditBox2;
+    UIEditBox mEditBoxIP;
+    UIEditBox mEditBoxUserName;
+    UIEditBox mEditBoxRoomName;
+
+    OgreBites::SelectMenu* mRoomsTable;
 };
 
 #endif

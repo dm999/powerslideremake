@@ -127,8 +127,21 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     //mEditBox.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
     mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
     mEditBox.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 200.0f, 250.0f, 42.0f), 86.0f);
-    mEditBox2.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
-    mEditBox2.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 265.0f, 170.0f, 22.0f), 46.0f);
+    mEditBoxIP.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBoxIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 175.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxIP.setCharType(UIEditBox::IP);
+    mEditBoxIP.setText("78.47.85.155");//d.polubotko: FIXME
+
+    mEditBoxUserName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
+    mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 250.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxUserName.setText("DM");//d.polubotko: FIXME
+
+    mEditBoxRoomName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
+    mEditBoxRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxRoomName.setText("Powerslide!");//d.polubotko: FIXME
+
+    mRoomsTable = createSelectMenu(trayMgr, OgreBites::TL_NONE, "roomsTable", "Rooms", 100.0f, 20, Ogre::StringVector());
+    mRoomsTable->hide();
 
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
@@ -148,119 +161,6 @@ void UIMainMenu::reloadTextures(const GameState& gameState)
 }
 #endif
 
-#if 0
-void UIMainMenu::processButtonClick(MyGUI::Widget* sender)
-{
-    MyGUI::Button * senderButton = static_cast<MyGUI::Button *>(sender);
-
-#ifndef NO_MULTIPLAYER
-    if(senderButton->getCaption() == "Multi Join")
-    {
-        if(mWidgetRooms->getIndexSelected() == MyGUI::ITEM_NONE)
-        {
-            mWidgetRooms->deleteAllItems();
-            mWidgetRoomPlayers->deleteAllItems();
-
-            std::string ip = mWidgetIP->getCaption();
-            if(!ip.empty())
-            {
-                std::vector<std::string> rooms;
-                std::vector<std::string> roomsDesc;
-                std::vector<std::pair<size_t, size_t> > playersInServerRooms;
-                bool isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, roomsDesc, playersInServerRooms);
-                if(isConnected)
-                {
-                    for(size_t q = 0; q < rooms.size(); ++q)
-                    {
-                        if((playersInServerRooms[q].first + playersInServerRooms[q].second) < 12)
-                        {
-                            mWidgetRooms->addItem("#00FF00" + rooms[q]);
-                            mWidgetRoomPlayers->addItem("#00FF00" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
-                        }
-                        else
-                        {
-                            mWidgetRooms->addItem("#FF0000" + rooms[q]);
-                            mWidgetRoomPlayers->addItem("#FF0000" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
-                        }
-                    }
-                }
-                else
-                {
-                    mWidgetIP->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
-                }
-            }
-        }
-        else
-        {
-            if(mWidgetUserName->getCaption() != "")
-            {
-                mModeContext.mGameState.setMultiplayerMaster(false);
-                mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
-
-                //remove color data from room name
-                std::string roomName = mWidgetRooms->getItemNameAt(mWidgetRooms->getIndexSelected());
-                roomName = roomName.substr(7, roomName.size());
-                mModeContext.mGameState.setMultiplayerRoomName(roomName);
-
-                mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
-                mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
-            }
-            else
-            {
-                mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
-            }
-        }
-    }
-
-    if(senderButton->getCaption() == "Multi Host")
-    {
-        if(mWidgetUserName->getCaption() != "")
-        {
-            mModeContext.mGameState.setMultiplayerMaster(true);
-            mModeContext.mGameState.setMultiplayerServerIP(mWidgetIP->getCaption());
-            mModeContext.mGameState.setMultiplayerRoomName(mWidgetRoom->getCaption());
-            mModeContext.mGameState.setMultiplayerUserName(mWidgetUserName->getCaption());
-            mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
-        }
-        else
-        {
-            mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
-        }
-    }
-#endif
-}
-
-void UIMainMenu::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
-{
-    if(sender == mWidgetIP)
-    {
-        mWidgetIP->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-    }
-}
-
-void UIMainMenu::processItemSelected(MyGUI::Widget* sender, size_t index)
-{
-    if(sender == mWidgetRooms)
-    {
-    }
-}
-
-void UIMainMenu::processChangeComboBox(MyGUI::Widget* sender, size_t index)
-{
-    if(sender == mWidgetAICount)
-    {
-        mModeContext.getGameState().setAICount(index + 3);
-        if(
-            mModeContext.getGameState().getTrackName() == "stunt track"         ||
-            mModeContext.getGameState().getTrackName() == "luge track"          ||
-            mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
-            mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
-            )
-            mModeContext.getGameState().setAICount(0);
-    }
-}
-#endif
-
 void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
 {
     if(mCurrentState == State_StartingGrid)
@@ -275,20 +175,26 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
     }
 
     mEditBox.frameStarted(evt);
-    mEditBox2.frameStarted(evt);
+    mEditBoxIP.frameStarted(evt);
+    mEditBoxUserName.frameStarted(evt);
+    mEditBoxRoomName.frameStarted(evt);
 }
 
 void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
     mEditBox.keyUp(_key, _char);
-    mEditBox2.keyUp(_key, _char);
+    mEditBoxIP.keyUp(_key, _char);
+    mEditBoxUserName.keyUp(_key, _char);
+    mEditBoxRoomName.keyUp(_key, _char);
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
     mEditBox.mouseReleased(pos);
-    mEditBox2.mouseReleased(pos);
+    mEditBoxIP.mouseReleased(pos);
+    mEditBoxUserName.mouseReleased(pos);
+    mEditBoxRoomName.mouseReleased(pos);
 }
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
@@ -320,7 +226,9 @@ void UIMainMenu::destroy(CustomTrayManager* trayMgr)
 {
     UIBase::destroy(trayMgr);
     mEditBox.destroy(trayMgr);
-    mEditBox2.destroy(trayMgr);
+    mEditBoxIP.destroy(trayMgr);
+    mEditBoxUserName.destroy(trayMgr);
+    mEditBoxRoomName.destroy(trayMgr);
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -449,9 +357,33 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
         showModeMulti();
+        showMultiIPLabels();
         showBackgrounds();
-        mEditBox.show();
-        mEditBox2.show();
+        //mEditBox.show();
+        mEditBoxIP.show();
+        mEditBoxUserName.show();
+        mEditBoxRoomName.show();
+        break;
+
+    case State_MultiConnect:
+        mIsInStartingGrid = false;
+        setWindowTitle("Game Mode");
+        showModeMulti();
+        showMultiIPLabels();
+        showBackgrounds();
+        //mEditBox.show();
+        mEditBoxIP.show();
+        mEditBoxUserName.show();
+        mEditBoxRoomName.show();
+        connectToServer();
+        break;
+
+    case State_MultiCreateRoom:
+        createRoom();
+        break;
+
+    case State_MultiJoinRoom:
+        joinRoom();
         break;
 
     case State_Difficulty:
@@ -532,5 +464,97 @@ void UIMainMenu::hideAll()
     hideAllBackgrounds();
     hideAllLabels();
     mEditBox.hide();
-    mEditBox2.hide();
+    mEditBoxIP.hide();
+    mEditBoxUserName.hide();
+    mEditBoxRoomName.hide();
+    mRoomsTable->hide();
+}
+
+void UIMainMenu::connectToServer()
+{
+    mEditBoxIP.setColor(Ogre::ColourValue::White);
+    mRoomsTable->hide();
+
+    std::string ip = mEditBoxIP.getText().asUTF8();
+    if(!ip.empty())
+    {
+        std::vector<std::string> rooms;
+        std::vector<std::string> roomsDesc;
+        std::vector<std::pair<size_t, size_t> > playersInServerRooms;
+        bool isConnected = false;
+        
+        try{
+            isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, roomsDesc, playersInServerRooms);
+        }catch(...){
+        }
+
+        if(isConnected)
+        {
+            mEditBoxIP.setColor(Ogre::ColourValue::Green);
+            mRoomsTable->clearItems();
+            mRoomsTable->show();
+
+            for(size_t q = 0; q < rooms.size(); ++q)
+            {
+                if((playersInServerRooms[q].first + playersInServerRooms[q].second) < 12)
+                {
+                    mRoomsTable->addItem(rooms[q]);
+                    //mWidgetRooms->addItem("#00FF00" + rooms[q]);
+                    //mWidgetRoomPlayers->addItem("#00FF00" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
+                }
+                else
+                {
+                    mRoomsTable->addItem(rooms[q]);
+                    //mWidgetRooms->addItem("#FF0000" + rooms[q]);
+                    //mWidgetRoomPlayers->addItem("#FF0000" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
+                }
+            }
+        }
+        else
+        {
+            mEditBoxIP.setColor(Ogre::ColourValue::Red);
+        }
+    }
+}
+
+void UIMainMenu::createRoom()
+{
+    std::string serverIP = mEditBoxIP.getText().asUTF8();
+    std::string roomName = mEditBoxRoomName.getText().asUTF8();
+    std::string userName = mEditBoxUserName.getText().asUTF8();
+
+    if(!serverIP.empty() && !roomName.empty() && !userName.empty())
+    {
+        mModeContext.mGameState.setMultiplayerMaster(true);
+        mModeContext.mGameState.setMultiplayerServerIP(serverIP);
+        mModeContext.mGameState.setMultiplayerRoomName(roomName);
+        mModeContext.mGameState.setMultiplayerUserName(userName);
+        mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+    }
+    else
+    {
+        switchState(State_Multi);
+        //mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+    }
+}
+
+void UIMainMenu::joinRoom()
+{
+    std::string serverIP = mEditBoxIP.getText().asUTF8();
+    std::string roomName = mRoomsTable->getSelectedItem();
+    std::string userName = mEditBoxUserName.getText().asUTF8();
+
+    if(!serverIP.empty() && !roomName.empty() && !userName.empty())
+    {
+        mModeContext.mGameState.setMultiplayerMaster(false);
+        mModeContext.mGameState.setMultiplayerServerIP(serverIP);
+        mModeContext.mGameState.setMultiplayerRoomName(roomName);
+        mModeContext.mGameState.setMultiplayerUserName(userName);
+        mModeContext.getGameModeSwitcher()->switchMode(ModeMenuMulti);
+    }
+    else
+    {
+        switchState(State_Multi);
+        //mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+    }
 }
