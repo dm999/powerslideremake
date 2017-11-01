@@ -16,13 +16,13 @@ namespace multislider
     class LobbyCallback
     {
     public:
-        MULTISLIDER_EXPORT static const uint8_t FLAG_IS_EJECTED;               ///< The player was ejected from the room
-        MULTISLIDER_EXPORT static const uint8_t FLAG_JOINED;                   ///< Somebody joined the room
-        MULTISLIDER_EXPORT static const uint8_t FLAG_LEFT;                     ///< Somebody left the room
-        MULTISLIDER_EXPORT static const uint8_t FLAG_NEW_HOST;                 ///< Room has a new host
-        MULTISLIDER_EXPORT static const uint8_t FLAG_RECONFIGURED_BY_HOST;     ///< Room has been reconfigured by host
-        MULTISLIDER_EXPORT static const uint8_t FLAG_RECONFIGURE_FAIL;         ///< Couldn't change room parameters
-        MULTISLIDER_EXPORT static const uint8_t FLAG_ROOM_CLOSED_BY_HOST;      ///< The player was ejected because the room was closed by host
+        static const uint8_t FLAG_IS_EJECTED;               ///< The player was ejected from the room
+        static const uint8_t FLAG_JOINED;                   ///< Somebody joined the room
+        static const uint8_t FLAG_LEFT;                     ///< Somebody left the room
+        static const uint8_t FLAG_NEW_HOST;                 ///< Room has a new host
+        static const uint8_t FLAG_RECONFIGURED_BY_HOST;     ///< Room has been reconfigured by host
+        static const uint8_t FLAG_RECONFIGURE_FAIL;         ///< Couldn't change room parameters
+        static const uint8_t FLAG_ROOM_CLOSED_BY_HOST;      ///< The player was ejected because the room was closed by host
 
         virtual ~LobbyCallback() 
         { }

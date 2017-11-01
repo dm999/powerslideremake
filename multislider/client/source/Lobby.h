@@ -59,10 +59,10 @@ namespace multislider
         //-------------------------------------------------------
 
     public:
-        MULTISLIDER_EXPORT
+        
         Lobby(const std::string & serverIp, uint16_t serverPort);
 
-        MULTISLIDER_EXPORT
+        
         ~Lobby();
 
         /**
@@ -74,7 +74,7 @@ namespace multislider
          *  @param playersReserved number of reserved players slots in the room (0 <= playersReserved < playersLimit)
          *  @param callback callback for host events, can't be null
          */
-        MULTISLIDER_EXPORT
+        
         Status createRoom(const std::string & playerName, const std::string & roomName, const std::string & description, uint32_t playersLimit, uint32_t playersReserved, LobbyCallback* callback);
 
         /**
@@ -87,7 +87,7 @@ namespace multislider
          *  @param callback callback for host events, can't be null
          *  @param userParameter arbitrary user data
          */
-        MULTISLIDER_EXPORT
+        
         Status createRoom(const std::string & playerName, const std::string & roomName, const std::string & description, uint32_t playersLimit, uint32_t playersReserved, const std::string & userParameter, LobbyCallback* callback);
          
         /**
@@ -97,13 +97,13 @@ namespace multislider
          * @param playersLimit new players limit (should be >= 1)
          * @param new number of reserved players (0 <= playersReserved < playersLimit)
          */
-        MULTISLIDER_EXPORT
+        
         void reconfigure(uint32_t playersLimit, uint32_t playersReserved);
 
         /**
          *  Get a list of all opened rooms on the server
          */
-        MULTISLIDER_EXPORT
+        
         const std::vector<RoomInfo>& getRooms() const;
 
         /**
@@ -112,7 +112,7 @@ namespace multislider
          *  @param room reference to the room info to join
          *  @param callback callback for client events, can't be null
          */
-        MULTISLIDER_EXPORT
+        
         Status joinRoom(const std::string & playerName, const RoomInfo & room, LobbyCallback* callback);
 
         //-------------------------------------------------------
@@ -121,26 +121,26 @@ namespace multislider
         /**
          *  Eject player from the room
          */
-        MULTISLIDER_EXPORT
+        
         void eject(const std::string & playerName);
 
         /**
          *  Close the current room
          */
-        MULTISLIDER_EXPORT
+        
         void closeRoom();
 
         /**
          *  Start game session for all joined players
          */
-        MULTISLIDER_EXPORT
+        
         void startSession();
 
         /**
          *  Start game session for all joined players
          *  @param sessionData user data passed to all players on session start
          */
-        MULTISLIDER_EXPORT
+        
         void startSession(const std::string & sessionData);
 
         //-------------------------------------------------------
@@ -150,7 +150,7 @@ namespace multislider
          *  Leave the current room
          *  After leaving Client instance can't be reused for another room
          */
-        MULTISLIDER_EXPORT
+        
         void leaveRoom();
 
         /**
@@ -158,20 +158,20 @@ namespace multislider
          *  @param message User's message
          *  @param toSelf Send message to self as well
          */
-        MULTISLIDER_EXPORT
+        
         void say(const std::string & message, bool toSelf);
 
         /**
          *  Check incoming broadcast messages and call callback for the each message
          *  @return number of processed messages
          */
-        MULTISLIDER_EXPORT
+        
         uint32_t receive();
 
-        MULTISLIDER_EXPORT
+        
         size_t getLastPing()const;
 
-        MULTISLIDER_EXPORT
+        
         void pollPing();
 
         //-------------------------------------------------------

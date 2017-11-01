@@ -36,8 +36,6 @@ typedef unsigned __int64 uint64_t;
 #include <cstdint>
 #endif
 
-#include "LibInterface.h"
-
 namespace multislider
 {
 #ifdef _MSC_VER 

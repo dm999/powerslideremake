@@ -274,6 +274,7 @@ else() # Not Android
         if(PowerslideRemake_MULTIPLAYER)
             target_link_libraries(PowerslideRemake MultiSlider)
             target_link_libraries(PowerslideRemake Jsonxx)
+            target_link_libraries(PowerslideRemake ws2_32)
         endif()
         
         
