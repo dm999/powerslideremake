@@ -472,6 +472,7 @@ void UIMainMenu::hideAll()
 
 void UIMainMenu::connectToServer()
 {
+#ifndef NO_MULTIPLAYER
     mEditBoxIP.setColor(Ogre::ColourValue::White);
     mRoomsTable->hide();
 
@@ -515,6 +516,7 @@ void UIMainMenu::connectToServer()
             mEditBoxIP.setColor(Ogre::ColourValue::Red);
         }
     }
+#endif
 }
 
 void UIMainMenu::createRoom()
