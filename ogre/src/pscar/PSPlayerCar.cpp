@@ -192,6 +192,12 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
     case OIS::KC_UP: 
         setAcceleration(true);
         break;
+    case OIS::KC_A: 
+        mCarEngine.gearUp();
+        break;
+    case OIS::KC_Z: 
+        mCarEngine.gearDown();
+        break;
     default:
         break;
     }

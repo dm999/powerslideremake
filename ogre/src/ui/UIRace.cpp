@@ -1242,6 +1242,7 @@ void UIRace::setCurrentLap(unsigned short lap, unsigned short totallap)
 void UIRace::setCarGear(unsigned char gear)
 {
     if(gear == 255) gear = 'r';
+    if(gear == 0) gear = 'n';
 
     std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(gear);
     std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(gear);

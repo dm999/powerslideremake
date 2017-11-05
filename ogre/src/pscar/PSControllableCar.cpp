@@ -116,12 +116,12 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     {
         //transmission params
-        float gearRevRatio = getCarParameter("", "gear rev ratio");
-        Ogre::Vector4 revRatio = getCarArray4Parameter("", "rev ratio");
-        Ogre::Vector4 changeDown = getCarArray4Parameter("", "change down");
-        Ogre::Vector4 changeUp = getCarArray4Parameter("", "change up");
-
-        mCarEngine.init(gearRevRatio, revRatio, changeDown, changeUp);
+        mCarEngine.init(getCarParameter("", "idle revs start"), 
+                        getCarParameter("", "idle revs end"), 
+                        getCarParameter("", "gear rev ratio"), 
+                        getCarArray4Parameter("", "rev ratio"), 
+                        getCarArray4Parameter("", "change down"), 
+                        getCarArray4Parameter("", "change up"));
 
         //steering params
         //todo
@@ -426,7 +426,8 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
     {
         if(checkRearCollision() || checkFrontCollision())
         {
-#if defined(__ANDROID__)
+//#if defined(__ANDROID__)
+#if 1
             if(!mIsAI)
             {
                 if(projectedVel > 10.0f)
@@ -461,8 +462,17 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
             const Ogre::Real backLRollImpulse = 1.0f - mBackLRollResistance / reduceRollResistance;
             const Ogre::Real backRRollImpulse = 1.0f - mBackRRollResistance / reduceRollResistance;
 
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
-            mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
+            if(mCarEngine.getCurrentGear() > 0)//forward
+            {
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backLRollImpulse), rot * Ogre::Vector3(-6, -2, 4));
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, -wheelsPushImpulse * carSlopeCoefficient * backRRollImpulse), rot * Ogre::Vector3(6, -2, 4));
+            }
+            if(mCarEngine.getCurrentGear() == -1)//R
+            {
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(6, -2, 4));
+                mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, wheelsPushImpulse * carAntiSlopeCoefficient), rot * Ogre::Vector3(-6, -2, 4));
+            }
+
 
             if(!mIsAI)
                 mCarChassis->applyImpulse(rot * Ogre::Vector3(lateralVel * mLateralStabilizationCoeff, 0.0f, 0.0f), Ogre::Vector3::ZERO);
@@ -548,7 +558,7 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     mWheelRotationalAngle += wheelRotationalIncrement * 80.0f;
 
     //wheels rotation by engine addition
-    if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted)
+    if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted && mCarEngine.getCurrentGear() != 0)
     {
         Ogre::Real rotAngleAddition = mWheelsRotationByEngineAddition.getVal(projectedVel);
         if(mBrakeEnabled && rotAngleAddition > 0.0f) rotAngleAddition *= -1.0f;

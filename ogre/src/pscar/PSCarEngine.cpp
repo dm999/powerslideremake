@@ -1,21 +1,22 @@
 
 #include "PSCarEngine.h"
 
+namespace{
+    const Ogre::Real engineMinRPM = 0.0f;
+    const Ogre::Real engineMaxRPM = 10000.0f;
+}
+
 PSCarEngine::PSCarEngine() :
     mCurrentGear(1),
-    mEngineRPM(0.0f),
-    mEngineMinRPM(0.0f),
-    mEngineMaxRPM(10000.0f)
-{
-}
+    mEngineRPM(0.0f)
+{}
 
 
-PSCarEngine::~PSCarEngine()
+void PSCarEngine::init(Ogre::Real idleRevsStart, Ogre::Real idleRevsEnd, float gearRevRatio, Ogre::Vector4 revRatio, Ogre::Vector4 changeDown, Ogre::Vector4 changeUp)
 {
-}
+    mEngineIdleRevsStart = idleRevsStart;
+    mEngineIdleRevsEnd = idleRevsEnd;
 
-void PSCarEngine::init(float gearRevRatio, Ogre::Vector4 revRatio, Ogre::Vector4 changeDown, Ogre::Vector4 changeUp)
-{
     mGearRatioMain = gearRevRatio;
 
     mGearRatio[0] = revRatio.x;
@@ -51,30 +52,68 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         isReverse = true;
     }
 
-    const Ogre::Real wheelRadius = 4.2f;
-    Ogre::Real wheelRotation = projectedVel / (wheelRadius * 2.0f * Ogre::Math::PI / 1000.0f);
-    wheelRotation /= 60.0f; // rpm
+    float throttle = isThrottle ? 1.0f : 0.0f;
 
     if(isTraction)
     {
-        if(!isBrake)
+        Ogre::Real velocityIdle = mGearRatioMain * mGearRatio[0] * mEngineIdleRevsEnd;
+
+        if(mCurrentGear <= 0)
         {
-            if(mCurrentGear < 0) mCurrentGear = 1;
-            mEngineRPM = (wheelRotation / mGearRatioMain) / mGearRatio[mCurrentGear - 1];
-            if(mEngineRPM < mEngineMinRPM)
-                mEngineRPM = mEngineMinRPM;
+            if(mCurrentGear == 0) // N
+            {
+                mEngineRPM = mEngineRPM * 0.975f - (mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
+            }
+            else // R
+            {
+                if(projectedVel > velocityIdle)
+                {
+                    mEngineRPM = projectedVel / (mGearRatioMain * mGearRatio[0]);
+                }
+                else
+                {
+                    mEngineRPM = projectedVel / velocityIdle * (mEngineIdleRevsEnd - mEngineIdleRevsStart) + mEngineIdleRevsStart;
+                }
+                
+            }
         }
         else
         {
-            mEngineRPM = (wheelRotation / mGearRatioMain) / 0.4f;
-            if(mEngineRPM < mEngineMinRPM)
-                mEngineRPM = mEngineMinRPM;
+            if(projectedVel > velocityIdle)
+            {
+                mEngineRPM = projectedVel / (mGearRatioMain * mGearRatio[mCurrentGear - 1]);
+            }
+            else
+            {
+                mEngineRPM = projectedVel / velocityIdle * (mEngineIdleRevsEnd - mEngineIdleRevsStart) + mEngineIdleRevsStart;
+            }
         }
 
-        if(isThrottle || isBrake)
+        //auto transmission
+        if(mCurrentGear > 0)
         {
-            if(mEngineRPM < 3000.0f)
-                mEngineRPM = 3000.0f;
+            if(mEngineRPM < mChangeDown[mCurrentGear - 1])
+            {
+                --mCurrentGear;
+            }
+            if(mEngineRPM > mChangeUp[mCurrentGear - 1])
+            {
+                ++mCurrentGear;
+            }
+        }
+        if(mCurrentGear >= 1)
+        {
+            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mGearCount);
+        }
+
+/*
+        if(!isBrake)
+        {
+            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 0, mGearCount);
+        }
+        else
+        {
+            mCurrentGear = -1;
         }
 
         if(!isBrake)
@@ -95,20 +134,29 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         {
             mCurrentGear = -1;
         }
+        */
+    }
+    else //N
+    {
+        mEngineRPM = mEngineRPM * 0.975f - (mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
+    }
+
+    mEngineRPM = Ogre::Math::Clamp(mEngineRPM, engineMinRPM, engineMaxRPM);
+}
+
+void PSCarEngine::gearUp()
+{
+    if(mCurrentGear <= 0 && mCurrentGear <= mGearCount) ++mCurrentGear;
+}
+
+void PSCarEngine::gearDown()
+{
+    if(mCurrentGear > 1)
+    {
+        mCurrentGear = 0;
     }
     else
     {
-        if(isThrottle || isBrake)
-        {
-            Ogre::Real accel = mEngineMaxRPM / Ogre::Math::Clamp(mEngineRPM, 1000.0f, mEngineMaxRPM);
-            mEngineRPM += accel * 5000.0f * spf; 
-            
-        }
-        else
-        {
-            mEngineRPM -= 5.0f * 5000.0f * spf; 
-        }
+        if(mCurrentGear > -1) --mCurrentGear;
     }
-
-    mEngineRPM = Ogre::Math::Clamp(mEngineRPM, mEngineMinRPM, mEngineMaxRPM);
 }

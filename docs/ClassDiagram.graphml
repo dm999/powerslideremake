@@ -907,10 +907,10 @@ std::vector&lt;T&gt; mValues</y:NodeLabel>
     <node id="n10">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="465.38591301053384" width="634.8664667849475" x="6822.566766607526" y="-3262.6929565052665"/>
+          <y:Geometry height="503.26387795300525" width="634.8664667849475" x="6822.566766607526" y="-3281.631938976502"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="611.599609375" x="11.633428704973994" y="24.87655025526692">&lt;&lt;PSCarEngine.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="611.599609375" x="11.633428704973994" y="14.413188976502624">&lt;&lt;PSCarEngine.h&gt;&gt;
 
 PSCarEngine
 
@@ -923,6 +923,9 @@ void process(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTrac
 int getCurrentGear()const
 Ogre::Real getEngineRPM()const
 
+void gearUp()
+void gearDown()
+
 private:
 
 static const int mGearCount = 4
@@ -934,8 +937,9 @@ Ogre::Real mChangeDown[mGearCount]
 
 int mCurrentGear
 Ogre::Real mEngineRPM
-Ogre::Real mEngineMinRPM
-Ogre::Real mEngineMaxRPM
+
+Ogre::Real mEngineIdleRevsStart
+Ogre::Real mEngineIdleRevsEnd
 
 void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, Ogre::Real spf)</y:NodeLabel>
           <y:Shape type="rectangle"/>
