@@ -115,38 +115,24 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 #endif
 
     {
-        std::string carName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "car", "feral max");
-        std::string de2Path = gameState.getSTRPowerslide().getValue(carName + " parameters", "base directory", "feral max");
-        std::set<char> delim;
-        delim.insert('\\');
-        std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
-        std::string carPath = pathComponents[pathComponents.size() - 1];
-
-        STRSettings carSettings;
-        carSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
-
-        STRSettings trackSettings;
-        trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "params.str");
-
-        STRSettings defaultSettings;
-        defaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");
-
-        float gearRevRatio = getCarParameter(carSettings, trackSettings, defaultSettings, "", "gear rev ratio");
-        Ogre::Vector4 revRatio = getCarArray4Parameter(carSettings, trackSettings, defaultSettings, "", "rev ratio");
-        Ogre::Vector4 changeDown = getCarArray4Parameter(carSettings, trackSettings, defaultSettings, "", "change down");
-        Ogre::Vector4 changeUp = getCarArray4Parameter(carSettings, trackSettings, defaultSettings, "", "change up");
+        //transmission params
+        float gearRevRatio = getCarParameter("", "gear rev ratio");
+        Ogre::Vector4 revRatio = getCarArray4Parameter("", "rev ratio");
+        Ogre::Vector4 changeDown = getCarArray4Parameter("", "change down");
+        Ogre::Vector4 changeUp = getCarArray4Parameter("", "change up");
 
         mCarEngine.init(gearRevRatio, revRatio, changeDown, changeUp);
 
+        //steering params
+        //todo
+
         //sound params
-        STRSettings soundSettings;
-        soundSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "graphs.str");
-        std::vector<std::string> freqLow = soundSettings.getArrayValue("", "frequency 0");
-        std::vector<std::string> freqMid = soundSettings.getArrayValue("", "frequency 1");
-        std::vector<std::string> freqHigh = soundSettings.getArrayValue("", "frequency 2");
-        std::vector<std::string> volLow = soundSettings.getArrayValue("", "volume 0");
-        std::vector<std::string> volMid = soundSettings.getArrayValue("", "volume 1");
-        std::vector<std::string> volHigh = soundSettings.getArrayValue("", "volume 2");
+        std::vector<std::string> freqLow = getCarArrayValueParameter("", "frequency 0");
+        std::vector<std::string> freqMid = getCarArrayValueParameter("", "frequency 1");
+        std::vector<std::string> freqHigh = getCarArrayValueParameter("", "frequency 2");
+        std::vector<std::string> volLow = getCarArrayValueParameter("", "volume 0");
+        std::vector<std::string> volMid = getCarArrayValueParameter("", "volume 1");
+        std::vector<std::string> volHigh = getCarArrayValueParameter("", "volume 2");
         assert(freqLow.size() == 11);
         assert(freqMid.size() == 11);
         assert(freqHigh.size() == 11);
@@ -154,9 +140,9 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         assert(volMid.size() == 11);
         assert(volHigh.size() == 11);
 
-        float hscale0 = soundSettings.getFloatValue("", "frequency 0 hscale");
-        float hscale1 = soundSettings.getFloatValue("", "frequency 1 hscale");
-        float hscale2 = soundSettings.getFloatValue("", "frequency 2 hscale");
+        float hscale0 = getCarParameter("", "frequency 0 hscale", true);
+        float hscale1 = getCarParameter("", "frequency 1 hscale", true);
+        float hscale2 = getCarParameter("", "frequency 2 hscale", true);
 
         mPitchValueLow.clear();
         mPitchValueMid.clear();

@@ -58,7 +58,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiIP->setCaption("Server IP:");
         mModeMultiIP->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiIP->setSpaceWidth(9.0f);
-        mModeMultiIP->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiIP->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiIP->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiIP->setFontName("SdkTrays/Caption");
         mModeMultiIP->setColour(inactiveLabel);
@@ -68,10 +68,10 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 200.0f, 0.0f, 0.0f);
         mModeMultiConnect = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeMultiConnect->setCaption("Check");
+        mModeMultiConnect->setCaption("Get List of Rooms");
         mModeMultiConnect->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiConnect->setSpaceWidth(9.0f);
-        mModeMultiConnect->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiConnect->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiConnect->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiConnect->setFontName("SdkTrays/Caption");
         mModeMultiConnect->setColour(inactiveLabel);
@@ -84,7 +84,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiUserName->setCaption("User Name:");
         mModeMultiUserName->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiUserName->setSpaceWidth(9.0f);
-        mModeMultiUserName->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiUserName->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiUserName->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiUserName->setFontName("SdkTrays/Caption");
         mModeMultiUserName->setColour(inactiveLabel);
@@ -97,7 +97,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiRoomName->setCaption("Room Name:");
         mModeMultiRoomName->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiRoomName->setSpaceWidth(9.0f);
-        mModeMultiRoomName->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiRoomName->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiRoomName->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiRoomName->setFontName("SdkTrays/Caption");
         mModeMultiRoomName->setColour(inactiveLabel);
@@ -110,7 +110,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiCreateRoom->setCaption("Create Room");
         mModeMultiCreateRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiCreateRoom->setSpaceWidth(9.0f);
-        mModeMultiCreateRoom->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiCreateRoom->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiCreateRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiCreateRoom->setFontName("SdkTrays/Caption");
         mModeMultiCreateRoom->setColour(inactiveLabel);
@@ -123,7 +123,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiJoinRoom->setCaption("Join Room");
         mModeMultiJoinRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiJoinRoom->setSpaceWidth(9.0f);
-        mModeMultiJoinRoom->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMultiJoinRoom->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiJoinRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiJoinRoom->setFontName("SdkTrays/Caption");
         mModeMultiJoinRoom->setColour(inactiveLabel);

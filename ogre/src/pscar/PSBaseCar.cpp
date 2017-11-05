@@ -201,19 +201,19 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mModelNode->setOrientation(rot);
     mModelNode->setPosition(transform.getTrans() + gridShift);
 
+    //init parms
+    mCarSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
+    mTrackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "params.str");
+    mDefaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");
 
-    STRSettings carSettings;
-    carSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
-
-    STRSettings trackSettings;
-    trackSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "params.str");
-
-    STRSettings defaultSettings;
-    defaultSettings.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "params.str");
+    //init splines
+    mCarSplines.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "graphs.str");
+    mTrackSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "graphs.str");
+    mDefaultSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "graphs.str");
 
     //load wheels offsets
     {
-        mBackROriginalPos = carSettings.getArray3Value("", "wheelbase back");
+        mBackROriginalPos = mCarSettings.getArray3Value("", "wheelbase back");
         mBackROriginalPos.z = -mBackROriginalPos.z;
 
         mBackLOriginalPos = mBackROriginalPos;
@@ -223,7 +223,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         mWheelNodes[1]->setPosition(mBackLOriginalPos);
 
 
-        mFrontROriginalPos = carSettings.getArray3Value("", "wheelbase front");
+        mFrontROriginalPos = mCarSettings.getArray3Value("", "wheelbase front");
         mFrontROriginalPos.z = -mFrontROriginalPos.z;
 
         mFrontLOriginalPos = mFrontROriginalPos;
@@ -248,22 +248,22 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mConnectionPointFRWheel = mFrontROriginalPos;
     initialVehicleSetup.mConnectionPointFLWheel = mFrontLOriginalPos;
 
-    initialVehicleSetup.mRoofBackRadius = carSettings.getFloatValue("", "roof back radius");
-    Ogre::Vector3 roofBack = carSettings.getArray3Value("", "roof back");
+    initialVehicleSetup.mRoofBackRadius = mCarSettings.getFloatValue("", "roof back radius");
+    Ogre::Vector3 roofBack = mCarSettings.getArray3Value("", "roof back");
     roofBack.z = -roofBack.z;
     initialVehicleSetup.mRoofBackPos = roofBack;
 
-    initialVehicleSetup.mRoofFrontRadius = carSettings.getFloatValue("", "roof front radius");
-    Ogre::Vector3 roofFront = carSettings.getArray3Value("", "roof front");
+    initialVehicleSetup.mRoofFrontRadius = mCarSettings.getFloatValue("", "roof front radius");
+    Ogre::Vector3 roofFront = mCarSettings.getArray3Value("", "roof front");
     roofFront.z = -roofFront.z;
     initialVehicleSetup.mRoofFrontPos = roofFront;
 
-    initialVehicleSetup.mBodyRadius = carSettings.getFloatValue("", "body radius");
-    Ogre::Vector3 bodyBase = carSettings.getArray3Value("", "body base 0");
+    initialVehicleSetup.mBodyRadius = mCarSettings.getFloatValue("", "body radius");
+    Ogre::Vector3 bodyBase = mCarSettings.getArray3Value("", "body base 0");
     bodyBase.z = -bodyBase.z;
     initialVehicleSetup.mBodyBasePos = bodyBase;
 
-    initialVehicleSetup.mWheelRadius = carSettings.getArray2Value("", "wheel radii");
+    initialVehicleSetup.mWheelRadius = mCarSettings.getArray2Value("", "wheel radii");
 
     initialVehicleSetup.mAnisotropicFriction = Ogre::Vector3(
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.x", pipeline),
@@ -273,7 +273,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     initialVehicleSetup.mRollingFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.RollingFriction", pipeline);
 
-    initialVehicleSetup.mMaxTravel = -getCarParameter(carSettings, trackSettings, defaultSettings, "", "max travel");
+    initialVehicleSetup.mMaxTravel = -getCarParameter("", "max travel");
 
     initialVehicleSetup.mWheelsFSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline);
     initialVehicleSetup.mWheelsFSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline);
@@ -282,10 +282,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mLimitSpringParamsF = luaManager.ReadScalarBool("Model.Physics.Wheels.Front.LimitSpringParams", pipeline);
     initialVehicleSetup.mLimitSpringParamsR = luaManager.ReadScalarBool("Model.Physics.Wheels.Rear.LimitSpringParams", pipeline);
 
-    initialVehicleSetup.mAirDensityLinear = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density translation");
-    initialVehicleSetup.mAirDensityAngular = getCarParameter(carSettings, trackSettings, defaultSettings, "", "air density rotation");
+    initialVehicleSetup.mAirDensityLinear = getCarParameter("", "air density translation");
+    initialVehicleSetup.mAirDensityAngular = getCarParameter("", "air density rotation");
 
-    initialVehicleSetup.mChassisMass = getCarParameter(carSettings, trackSettings, defaultSettings, "", "mass");
+    initialVehicleSetup.mChassisMass = getCarParameter("", "mass");
     initialVehicleSetup.mChassisRestitution = luaManager.ReadScalarFloat("Model.Physics.Chassis.Restitution", pipeline);
     initialVehicleSetup.mChassisFriction = luaManager.ReadScalarFloat("Model.Physics.Chassis.Friction", pipeline);
 
@@ -479,36 +479,70 @@ void PSBaseCar::stopSounds()
 #endif
 }
 
-float PSBaseCar::getCarParameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const
+float PSBaseCar::getCarParameter(const std::string& section, const std::string& key, bool isSpline) const
 {
     float res = 0.0f;
 
     bool isFoundVal = false;
-    res = carSettings.getFloatValue(section, key, isFoundVal);
-    if(!isFoundVal)
+
+    if(!isSpline)
     {
-        res = trackSettings.getFloatValue(section, key, isFoundVal);
+        res = mCarSettings.getFloatValue(section, key, isFoundVal);
         if(!isFoundVal)
         {
-            res = defaultSettings.getFloatValue(section, key, isFoundVal);
+            res = mTrackSettings.getFloatValue(section, key, isFoundVal);
+            if(!isFoundVal)
+            {
+                res = mDefaultSettings.getFloatValue(section, key, isFoundVal);
+            }
+        }
+    }
+    else
+    {
+        res = mCarSplines.getFloatValue(section, key, isFoundVal);
+        if(!isFoundVal)
+        {
+            res = mTrackSplines.getFloatValue(section, key, isFoundVal);
+            if(!isFoundVal)
+            {
+                res = mDefaultSplines.getFloatValue(section, key, isFoundVal);
+            }
         }
     }
 
     return res;
 }
 
-Ogre::Vector4 PSBaseCar::getCarArray4Parameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const
+Ogre::Vector4 PSBaseCar::getCarArray4Parameter(const std::string& section, const std::string& key) const
 {
     Ogre::Vector4 res = Ogre::Vector4::ZERO;
 
     bool isFoundVal = false;
-    res = carSettings.getArray4Value(section, key, isFoundVal);
+    res = mCarSettings.getArray4Value(section, key, isFoundVal);
     if(!isFoundVal)
     {
-        res = trackSettings.getArray4Value(section, key, isFoundVal);
+        res = mTrackSettings.getArray4Value(section, key, isFoundVal);
         if(!isFoundVal)
         {
-            res = defaultSettings.getArray4Value(section, key, isFoundVal);
+            res = mDefaultSettings.getArray4Value(section, key, isFoundVal);
+        }
+    }
+
+    return res;
+}
+
+std::vector<std::string> PSBaseCar::getCarArrayValueParameter(const std::string& section, const std::string& key) const
+{
+    std::vector<std::string> res;
+
+    bool isFoundVal = false;
+    res = mCarSplines.getArrayValue(section, key, isFoundVal);
+    if(!isFoundVal)
+    {
+        res = mTrackSplines.getArrayValue(section, key, isFoundVal);
+        if(!isFoundVal)
+        {
+            res = mDefaultSplines.getArrayValue(section, key, isFoundVal);
         }
     }
 

@@ -337,10 +337,10 @@
     <node id="n1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1812.0659352998496" width="735.5387943622018" x="5962.2306028189" y="-6306.032967649925"/>
+          <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1709.3359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="51.36499889992501">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1885.75" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="30.412876993802456">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -408,6 +408,10 @@ virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
 
 void stopSounds()
 
+float getCarParameter(const std::string&amp; section, const std::string&amp; key, bool isSpline = false) const
+Ogre::Vector4 getCarArray4Parameter(const std::string&amp; section, const std::string&amp; key) const
+std::vector&lt;std::string&gt; getCarArrayValueParameter(const std::string&amp; section, const std::string&amp; key) const
+
 bool mIsAI
 
 Ogre::SceneNode* mModelNode
@@ -453,6 +457,14 @@ std::string loadTexture(const GameState&amp; gameState, const std::string&amp; t
 #if defined(__ANDROID__)
     std::string mTextureName
 #endif
+
+STRSettings mCarSettings
+STRSettings mTrackSettings
+STRSettings mDefaultSettings
+
+STRSettings mCarSplines
+STRSettings mTrackSplines
+STRSettings mDefaultSplines
 
 static Ogre::NameGenerator nameGenMaterials
 static Ogre::NameGenerator nameGenTextures</y:NodeLabel>
@@ -2649,7 +2661,7 @@ OgreBites::SelectMenu* mRoomsTable
           <y:Geometry height="680.1942935930047" width="576.6435196085708" x="18461.678240195713" y="-4300.097146796503"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="161.68308429650187">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="541.884765625" x="17.379376991786557" y="161.68308429650278">&lt;&lt;UIMainMenuMulti.h&gt;&gt;
 
 UIMainMenuMulti
 

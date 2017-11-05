@@ -87,8 +87,9 @@ protected:
 
     void stopSounds();
 
-    float getCarParameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const;
-    Ogre::Vector4 getCarArray4Parameter(const STRSettings& carSettings, const STRSettings& trackSettings, const STRSettings& defaultSettings, const std::string& section, const std::string& key) const;
+    float getCarParameter(const std::string& section, const std::string& key, bool isSpline = false) const;
+    Ogre::Vector4 getCarArray4Parameter(const std::string& section, const std::string& key) const;
+    std::vector<std::string> getCarArrayValueParameter(const std::string& section, const std::string& key) const;
 
     bool mIsAI;
 
@@ -138,6 +139,16 @@ private:
 #if defined(__ANDROID__)
     std::string mTextureName;
 #endif
+
+    //param.str
+    STRSettings mCarSettings;
+    STRSettings mTrackSettings;
+    STRSettings mDefaultSettings;
+
+    //graphs.str
+    STRSettings mCarSplines;
+    STRSettings mTrackSplines;
+    STRSettings mDefaultSplines;
 
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenTextures;
