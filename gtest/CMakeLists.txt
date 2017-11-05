@@ -6,7 +6,7 @@ project(UT)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-file(GLOB sources_main src/gtest/src/gtest-all.cc src/*.cpp ../ogre/src/tools/Tools.cpp ../ogre/src/tools/OgreTools.cpp  ../ogre/src/tools/KochanekBartelsSpline.cpp)
+file(GLOB sources_main src/gtest/src/gtest-all.cc src/*.cpp ../ogre/src/tools/Tools.cpp ../ogre/src/tools/OgreTools.cpp  ../ogre/src/tools/KochanekBartelsSpline.cpp ../ogre/src/tools/PSSpline.cpp)
 file(GLOB sources_main_h include/gtest/*.h)
 
 list(APPEND sources ${sources_main})

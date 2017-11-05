@@ -105,36 +105,6 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         {
             mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mGearCount);
         }
-
-/*
-        if(!isBrake)
-        {
-            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 0, mGearCount);
-        }
-        else
-        {
-            mCurrentGear = -1;
-        }
-
-        if(!isBrake)
-        {
-            if(mEngineRPM > mChangeUp[mCurrentGear - 1])
-            {
-                ++mCurrentGear;
-            }
-
-            if(mEngineRPM < mChangeDown[mCurrentGear - 1])
-            {
-                --mCurrentGear;
-            }
-
-            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mGearCount);
-        }
-        else
-        {
-            mCurrentGear = -1;
-        }
-        */
     }
     else //N
     {
