@@ -625,7 +625,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2297.3828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-7.068332955198457">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2312.083984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-14.418918892698457">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -722,7 +722,8 @@ LinearController&lt;float&gt; mGroundSpoilerImpulse
 LinearController&lt;float&gt; mAirSpoilerImpulse
 LinearController&lt;float&gt; mWheelsRotationByEngineAddition
 
-Ogre::Real mWheelRotationalAngle
+Ogre::Real mWheelRotationalAngleF
+Ogre::Real mWheelRotationalAngleB
 
 protected:
 

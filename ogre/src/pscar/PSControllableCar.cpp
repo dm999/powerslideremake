@@ -22,6 +22,9 @@ namespace
     const float defaultHighPitch = 0.5f;
 
     const float carMaxSpeed = 300.0f;
+
+    const float psCarMass = 45.0f;
+    const float psInvCarMass = 1.0f / psCarMass;
 }
 
 Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material/Particles/Name");
@@ -42,7 +45,8 @@ PSControllableCar::PSControllableCar() :
     mSteeringIncrement(2.0f),
     mLateralStabilizationCoeff(0.2f),
     mAIImpulseHelper(Ogre::Vector2::ZERO),
-    mWheelRotationalAngle(0.0f)
+    mWheelRotationalAngleF(0.0f),
+    mWheelRotationalAngleB(0.0f)
 {
     mDriveImpulse.addPoint(-100.0f, 0.0f);
     mDriveImpulse.addPoint(0.0f, 25.0f);
@@ -90,7 +94,8 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     if(!isAI)
         mAccelEnabled = true;
 #endif
-    mWheelRotationalAngle = 0.0f;
+    mWheelRotationalAngleF = 0.0f;
+    mWheelRotationalAngleB = 0.0f;
 
     mParticles = gameState.getParticles();
 
@@ -552,17 +557,11 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
     Ogre::Real projectedVel = getAlignedVelocity();
 
 
-    const Ogre::Real wheelRadius = 2.0f;
-    Ogre::Real projectedDist = projectedVel * evt.timeSinceLastFrame;
-    Ogre::Real wheelRotationalIncrement = projectedDist / wheelRadius;
-    mWheelRotationalAngle += wheelRotationalIncrement * 80.0f;
-
     //wheels rotation by engine addition
     if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted && mCarEngine.getCurrentGear() != 0)
     {
         Ogre::Real rotAngleAddition = mWheelsRotationByEngineAddition.getVal(projectedVel);
         if(mBrakeEnabled && rotAngleAddition > 0.0f) rotAngleAddition *= -1.0f;
-        mWheelRotationalAngle += rotAngleAddition;
 
         if(!mParticles.empty())
         {
@@ -578,17 +577,40 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
     adjustFrontWheelsAngle(evt);
 
+    mWheelRotationalAngleF += projectedVel * psInvCarMass * 1.27f / mInitialVehicleSetup.mWheelRadius.x;
+    mWheelRotationalAngleB += projectedVel * psInvCarMass * 1.27f / mInitialVehicleSetup.mWheelRadius.y;
 
-    Ogre::Quaternion rotDrive;
-    rotDrive.FromAngleAxis(Ogre::Degree(-mWheelRotationalAngle), Ogre::Vector3(1.0f, 0.0f, 0.0f));
+    if(mWheelRotationalAngleF <= -Ogre::Math::TWO_PI)
+    {
+        mWheelRotationalAngleF += Ogre::Math::TWO_PI;
+    }
+    else
+    {
+        mWheelRotationalAngleF -= Ogre::Math::TWO_PI;
+    }
+
+    if(mWheelRotationalAngleB <= -Ogre::Math::TWO_PI)
+    {
+        mWheelRotationalAngleB += Ogre::Math::TWO_PI;
+    }
+    else
+    {
+        mWheelRotationalAngleB -= Ogre::Math::TWO_PI;
+    }
+
+    Ogre::Quaternion rotDriveF;
+    rotDriveF.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngleF), Ogre::Vector3(1.0f, 0.0f, 0.0f));
+
+    Ogre::Quaternion rotDriveB;
+    rotDriveB.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngleB), Ogre::Vector3(1.0f, 0.0f, 0.0f));
 
     Ogre::Quaternion turnWheel;
     turnWheel.FromAngleAxis(Ogre::Degree(mSteering), Ogre::Vector3(0.0f, 1.0f, 0.0f));
 
     if(isRaceStarted)
     {
-        mCarWheelFrontL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDrive));
-        mCarWheelFrontR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDrive));
+        mCarWheelFrontL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDriveF));
+        mCarWheelFrontR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDriveF));
     }
     else
     {
@@ -596,8 +618,8 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
         mWheelNodes[3]->setOrientation(rot * turnWheel);
     }
 
-    mCarWheelBackL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
-    mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDrive));
+    mCarWheelBackL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDriveB));
+    mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDriveB));
 
 
     cleanWheelsCollisionsFlags();

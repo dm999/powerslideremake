@@ -123,7 +123,8 @@ private:
     LinearController<float> mAirSpoilerImpulse;
     LinearController<float> mWheelsRotationByEngineAddition;
 
-    Ogre::Real mWheelRotationalAngle;
+    Ogre::Real mWheelRotationalAngleF;
+    Ogre::Real mWheelRotationalAngleB;
 
 protected:
 
