@@ -296,6 +296,19 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     initialVehicleSetup.mInitialImpulseLinear = initialImpulseLinear;
 
+    //position wheels
+    {
+        mWheelNodes[0]->setOrientation(initialVehicleSetup.mChassisRot);
+        mWheelNodes[1]->setOrientation(initialVehicleSetup.mChassisRot);
+        mWheelNodes[2]->setOrientation(initialVehicleSetup.mChassisRot);
+        mWheelNodes[3]->setOrientation(initialVehicleSetup.mChassisRot);
+
+        mWheelNodes[0]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointRRWheel);
+        mWheelNodes[1]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointRLWheel);
+        mWheelNodes[2]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointFRWheel);
+        mWheelNodes[3]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointFLWheel);
+    }
+
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);
 
 }

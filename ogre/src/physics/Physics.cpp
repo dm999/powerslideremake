@@ -59,20 +59,20 @@ void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
 
     pGroundShape->setMargin(0.2f);
 
-    CommonIncludes::shared_ptr<btMotionState> motionState = CommonIncludes::shared_ptr<btMotionState>(new btDefaultMotionState());
-    mStaticMotionStates.push_back(motionState);
+    CommonIncludes::shared_ptr<btCollisionObject> collisionObject = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
+    collisionObject->setCollisionShape(pGroundShape);
+    collisionObject->setRestitution(bodyRestitution);
+    collisionObject->setFriction(bodyFriction);
+    collisionObject->setRollingFriction(bodyRollingFriction);
+    collisionObject->getWorldTransform().setOrigin(PhysicsTools::convert(part.offset));
+    collisionObject->getWorldTransform().setRotation(PhysicsTools::convert(Ogre::Quaternion::IDENTITY));
+    collisionObject->setCollisionFlags(collisionObject->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 
-    const btScalar zeroMass(0.f);
-    CommonIncludes::shared_ptr<btRigidBody> body = CommonIncludes::shared_ptr<btRigidBody>(new btRigidBody(zeroMass, motionState.get(), pGroundShape));
-    body->setRestitution(bodyRestitution);
-    body->setFriction(bodyFriction);
-    body->setRollingFriction(bodyRollingFriction);
-    body->getWorldTransform().setOrigin(PhysicsTools::convert(part.offset));
-    body->getWorldTransform().setRotation(PhysicsTools::convert(Ogre::Quaternion::IDENTITY));
-    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-    mStaticRigidBodies.push_back(body);
+    mStaticCollisionObjects.push_back(collisionObject);
 
-    mStaticBodies.insert(std::make_pair(body.get(), std::make_pair(partIndex, batchIndex)));
+    mGameWorld->mCollisionWorld.addCollisionObject(collisionObject.get());
+
+    mStaticBodies.insert(std::make_pair(collisionObject.get(), std::make_pair(partIndex, batchIndex)));
 }
 
 bool Physics::isRigidBodyStatic(const btCollisionObject * object, std::pair<int, int>& address)const

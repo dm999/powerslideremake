@@ -9,6 +9,5 @@
 #include "BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
 
 #include "btBulletCollisionCommon.h"
-#include "btBulletDynamicsCommon.h"
 
 #endif

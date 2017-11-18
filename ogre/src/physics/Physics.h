@@ -16,8 +16,7 @@ struct DE2Part;
 class btCollisionObject;
 class btCollisionShape;
 class btTriangleMesh;
-class btRigidBody;
-class btMotionState;
+class btCollisionObject;
 
 class Physics
 {
@@ -43,8 +42,7 @@ private:
 
     std::vector<CommonIncludes::shared_ptr<btTriangleMesh>> mStaticTriMeshes;
     std::vector<CommonIncludes::shared_ptr<btCollisionShape>> mStaticCollisionShapes;
-    std::vector<CommonIncludes::shared_ptr<btRigidBody>> mStaticRigidBodies;
-    std::vector<CommonIncludes::shared_ptr<btMotionState>> mStaticMotionStates;
+    std::vector<CommonIncludes::shared_ptr<btCollisionObject>> mStaticCollisionObjects;
 
     typedef std::map<const btCollisionObject *, std::pair<int, int> > bodies;
     bodies mStaticBodies;

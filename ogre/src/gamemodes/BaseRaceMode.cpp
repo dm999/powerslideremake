@@ -32,12 +32,13 @@
 namespace
 {
     //http://bulletphysics.org/mediawiki-1.5.8/index.php/Code_Snippets
+    /*
     void internalTickCallback(btDynamicsWorld *world, btScalar timeStep)
     {
         BaseRaceMode * pBaseRaceMode = reinterpret_cast<BaseRaceMode *>(world->getWorldUserInfo());
         if(pBaseRaceMode)
             pBaseRaceMode->processInternalTick(timeStep);
-    }
+    }*/
 }
 
 BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :

@@ -3660,7 +3660,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="148.28253659710663">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="155.63312253460663">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3682,8 +3682,7 @@ void createTrimesh(const DE2Part&amp; part, const DE2SingleBatch&amp; batch)
 
 std::vector&lt;CommonIncludes::shared_ptr&lt;btTriangleMesh&gt;&gt; mStaticTriMeshes
 std::vector&lt;CommonIncludes::shared_ptr&lt;btCollisionShape&gt;&gt; mStaticCollisionShapes
-std::vector&lt;CommonIncludes::shared_ptr&lt;btRigidBody&gt;&gt; mStaticRigidBodies
-std::vector&lt;CommonIncludes::shared_ptr&lt;btMotionState&gt;&gt; mStaticMotionStates
+std::vector&lt;CommonIncludes::shared_ptr&lt;btCollisionObject&gt;&gt; mStaticCollisionObjects
 
 typedef std::map&lt;const btCollisionObject *, std::pair&lt;int, int&gt; &gt; bodies
 bodies mStaticBodies
