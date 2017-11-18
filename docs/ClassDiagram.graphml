@@ -3662,7 +3662,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="140.93195065960663">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="74.77667722210663">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3678,6 +3678,14 @@ void addPart(const DE2Part&amp; part, const DE2SingleBatch&amp; batch,
 
 bool isRigidBodyStatic(const btCollisionObject * object, std::pair&lt;int, int&gt;&amp; address) const
 
+void launchRay(btCollisionWorld::AllHitsRayResultCallback &amp;rayresult) const
+
+void addVehicle(const PSBaseVehicle * vehiclePtr, Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis)
+void removeVehicle(const PSBaseVehicle * vehiclePtr)
+
+void addCollisionObject(btCollisionObject* object)
+void removeCollisionObject(btCollisionObject* object)
+
 private:
 
 void createTrimesh(const DE2Part&amp; part, const DE2SingleBatch&amp; batch)
@@ -3691,7 +3699,8 @@ bodies mStaticBodies
 
 CommonIncludes::shared_ptr&lt;GameWorld&gt; mGameWorld
 
-std::vector&lt;CommonIncludes::shared_ptr&lt;PhysicsVehicle&gt;&gt; mVehicles</y:NodeLabel>
+typedef std::map&lt;const PSBaseVehicle *, CommonIncludes::shared_ptr&lt;PhysicsVehicle&gt; &gt; vehicles
+vehicles mVehicles</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3699,10 +3708,10 @@ std::vector&lt;CommonIncludes::shared_ptr&lt;PhysicsVehicle&gt;&gt; mVehicles</y
     <node id="n85">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="272.92841949804097" width="549.8481067828084" x="12745.075946608596" y="-1546.4642097490205"/>
+          <y:Geometry height="424.44027926792796" width="549.8481067828084" x="12745.075946608596" y="-1622.220139633964"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="209.81640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="272.13671875" x="138.8556940164035" y="31.556006624020483">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="386.23046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.205078125" x="95.8215143289035" y="19.10490525896398">&lt;&lt;Physics.h&gt;&gt;
 
 PhysicsVehicle
 
@@ -3714,8 +3723,20 @@ void shiftPos(const Ogre::Vector3&amp; shiftAmount)
 
 protected:
 
+Physics* mPhysics
+
 Ogre::SceneNode *mWheelNodes[wheelsAmount]
-Ogre::SceneNode *mChassis</y:NodeLabel>
+Ogre::SceneNode *mChassis
+
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeRL
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeRR
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeFL
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeFR
+
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRL
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRR
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFL
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFR</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

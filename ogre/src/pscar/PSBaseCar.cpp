@@ -263,7 +263,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     bodyBase.z = -bodyBase.z;
     initialVehicleSetup.mBodyBasePos = bodyBase;
 
-    initialVehicleSetup.mWheelRadius = mCarSettings.getArray2Value("", "wheel radii");
+    Ogre::Vector2 wheelRadius = mCarSettings.getArray2Value("", "wheel radii");
+    initialVehicleSetup.mWheelRadiusFront = wheelRadius.x;
+    initialVehicleSetup.mWheelRadiusBack = wheelRadius.y;
 
     initialVehicleSetup.mAnisotropicFriction = Ogre::Vector3(
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.x", pipeline),

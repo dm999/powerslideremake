@@ -9,7 +9,6 @@
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
 #include "BulletCollision/CollisionShapes/btEmptyShape.h"
-#include "BulletCollision/CollisionShapes/btSphereShape.h"
 #include "BulletCollision/CollisionShapes/btTriangleMesh.h"
 
 #include "../tools/PhysicsTools.h"
@@ -31,6 +30,9 @@ struct GameWorld
         mCollisionWorld(&mDispatcher, &mBroadphase, &mCollisionConfiguration)
     {}
 
+    ~GameWorld()
+    {}
+
     btDefaultCollisionConfiguration mCollisionConfiguration;
     btCollisionDispatcher mDispatcher;
     btAxisSweep3 mBroadphase;
@@ -42,9 +44,15 @@ Physics::Physics()
     : mGameWorld(new GameWorld())
 {}
 
+Physics::~Physics()
+{}
+
 void Physics::timeStep()
 {
-    
+    mGameWorld->mCollisionWorld.performDiscreteCollisionDetection();
+    const int numManifolds = mGameWorld->mCollisionWorld.getDispatcher()->getNumManifolds();
+
+
     for(vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
         (*i).second->shiftPos(Ogre::Vector3(0.0f, 0.01f, 0.0f));
@@ -77,7 +85,7 @@ void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
 
     mStaticCollisionObjects.push_back(collisionObject);
 
-    mGameWorld->mCollisionWorld.addCollisionObject(collisionObject.get());
+    mGameWorld->mCollisionWorld.addCollisionObject(collisionObject.get(), btBroadphaseProxy::StaticFilter, btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
 
     mStaticBodies.insert(std::make_pair(collisionObject.get(), std::make_pair(partIndex, batchIndex)));
 }
@@ -126,14 +134,14 @@ void Physics::createTrimesh(const DE2Part& part, const DE2SingleBatch& batch)
     mStaticCollisionShapes.push_back(shape);
 }
 
-void Physics::addVehicle(const PSBaseVehicle * vehiclePtr,
+void Physics::addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
                         Ogre::SceneNode *wheelNodes[PhysicsVehicle::mWheelsAmount], Ogre::SceneNode *chassis)
 {
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
 
     if(found == mVehicles.end())
     {
-        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(wheelNodes, chassis));
+        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, initialVehicleSetup, wheelNodes, chassis));
         mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
     }
 }
@@ -142,4 +150,14 @@ void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
 {
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
     mVehicles.erase(found);
+}
+
+void Physics::addCollisionObject(btCollisionObject* object)
+{
+    mGameWorld->mCollisionWorld.addCollisionObject(object);
+}
+
+void Physics::removeCollisionObject(btCollisionObject* object)
+{
+    mGameWorld->mCollisionWorld.removeCollisionObject(object);
 }

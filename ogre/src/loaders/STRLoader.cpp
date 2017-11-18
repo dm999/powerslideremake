@@ -26,7 +26,7 @@ std::string STRLoader::load(const PFLoader& pfLoader, const std::string& relativ
 
         res = oss.str();
     }
-    else {assert(false && "No STR file");}
+    //else {assert(false && "No STR file");}
 
     return res;
 }

@@ -11,7 +11,7 @@ void STRSettings::parse(const PFLoader& pfLoaderStore, const std::string& relati
     STRLoader strLoader;
     std::string str = strLoader.load(pfLoaderStore, relativeDir, fileName);
 
-    assert(!str.empty());
+    //assert(!str.empty());
 
     //https://github.com/brofield/simpleini
     mSTR.Reset();

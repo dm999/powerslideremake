@@ -756,10 +756,10 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre:
 {
     Ogre::Vector3 wheelBackLPos = mWheelNodes[1]->getPosition();
     Ogre::Vector3 wheelBackRPos = mWheelNodes[0]->getPosition();
-    Ogre::Vector3 particlesShift = rot * (Ogre::Vector3::NEGATIVE_UNIT_Z * mInitialVehicleSetup.mWheelRadius.y);
+    Ogre::Vector3 particlesShift = rot * (Ogre::Vector3::NEGATIVE_UNIT_Z * mInitialVehicleSetup.mWheelRadiusBack);
     Ogre::Vector3 particlesDir = rot * Ogre::Vector3(0.0f, 1.0f, 0.1f);
-    wheelBackLPos.y -= mInitialVehicleSetup.mWheelRadius.y / 1.5f;
-    wheelBackRPos.y -= mInitialVehicleSetup.mWheelRadius.y / 1.5f;
+    wheelBackLPos.y -= mInitialVehicleSetup.mWheelRadiusBack / 1.5f;
+    wheelBackRPos.y -= mInitialVehicleSetup.mWheelRadiusBack / 1.5f;
     wheelBackLPos -= particlesShift;
     wheelBackRPos -= particlesShift;
     mParticleNodeWheelBackL->setPosition(wheelBackLPos);

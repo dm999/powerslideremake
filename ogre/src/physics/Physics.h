@@ -20,12 +20,14 @@ class btCollisionObject;
 
 class PSBaseVehicle;
 class PhysicsVehicle;
+struct InitialVehicleSetup;
 
 class Physics
 {
 public:
 
     Physics();
+    ~Physics();
 
     void timeStep();
 
@@ -39,10 +41,13 @@ public:
 
     void launchRay(btCollisionWorld::AllHitsRayResultCallback &rayresult) const;
 
-    void addVehicle(const PSBaseVehicle * vehiclePtr, 
+    void addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);
+
+    void addCollisionObject(btCollisionObject* object);
+    void removeCollisionObject(btCollisionObject* object);
 
 private:
 

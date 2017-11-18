@@ -95,7 +95,7 @@ void PSBaseVehicle::removeFromWorld()
 
 void PSBaseVehicle::addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 {
-    mWorld->addVehicle(this, wheelNodes, modelNode);
+    mWorld->addVehicle(mInitialVehicleSetup, this, wheelNodes, modelNode);
     addRigidsToWorld(modelNode, wheelNodes);
     addSpringsToWorld();
 }
