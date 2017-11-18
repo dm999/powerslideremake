@@ -16,6 +16,8 @@
 
 #include "../mesh/StaticMeshProcesser.h"
 
+#include "PhysicsVehicle.h"
+
 namespace
 {
     const float aabbMax = 10000.0f; // world collisions max aabb
@@ -42,6 +44,11 @@ Physics::Physics()
 
 void Physics::timeStep()
 {
+    
+    for(vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+    {
+        (*i).second->shiftPos(Ogre::Vector3(0.0f, 0.01f, 0.0f));
+    }
 }
 
 void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
@@ -117,4 +124,22 @@ void Physics::createTrimesh(const DE2Part& part, const DE2SingleBatch& batch)
 
     mStaticTriMeshes.push_back(triMesh);
     mStaticCollisionShapes.push_back(shape);
+}
+
+void Physics::addVehicle(const PSBaseVehicle * vehiclePtr,
+                        Ogre::SceneNode *wheelNodes[PhysicsVehicle::mWheelsAmount], Ogre::SceneNode *chassis)
+{
+    vehicles::const_iterator found = mVehicles.find(vehiclePtr);
+
+    if(found == mVehicles.end())
+    {
+        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(wheelNodes, chassis));
+        mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
+    }
+}
+
+void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
+{
+    vehicles::const_iterator found = mVehicles.find(vehiclePtr);
+    mVehicles.erase(found);
 }

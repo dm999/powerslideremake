@@ -4,10 +4,12 @@
 #include "../customs/CustomRigidBody.h"
 #include "../customs/CustomRigidBodyWheel.h"
 
+#include "../physics/Physics.h"
+
 Ogre::NameGenerator PSBaseVehicle::nameGenNodes("Scene/Node/Vehicle/Name");
 
 void PSBaseVehicle::initPhysicalModel(Physics * world, 
-    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
+    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[mWheelsAmount], 
     const InitialVehicleSetup& initialVehicleSetup)
 {
     mWorld = world;
@@ -37,6 +39,7 @@ void PSBaseVehicle::clear()
 
 void PSBaseVehicle::removeFromWorld()
 {
+    mWorld->removeVehicle(this);
 #if 0
     if(mSixDofSpringFrontL.get())
         mWorld->removeConstraint(mSixDofSpringFrontL.get());
@@ -92,6 +95,7 @@ void PSBaseVehicle::removeFromWorld()
 
 void PSBaseVehicle::addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 {
+    mWorld->addVehicle(this, wheelNodes, modelNode);
     addRigidsToWorld(modelNode, wheelNodes);
     addSpringsToWorld();
 }

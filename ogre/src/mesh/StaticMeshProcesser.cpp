@@ -1043,7 +1043,7 @@ unsigned char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, i
     if(terrainMap != "")
     {
         std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> >::const_iterator im = mTerrainMaps.find(terrainMap);
-        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = im->second;
+        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = (*im).second;
         const Ogre::Image * const image = imagePtr.get();
 
         if(image != NULL)

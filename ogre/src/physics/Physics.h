@@ -18,6 +18,9 @@ class btCollisionShape;
 class btTriangleMesh;
 class btCollisionObject;
 
+class PSBaseVehicle;
+class PhysicsVehicle;
+
 class Physics
 {
 public:
@@ -36,6 +39,11 @@ public:
 
     void launchRay(btCollisionWorld::AllHitsRayResultCallback &rayresult) const;
 
+    void addVehicle(const PSBaseVehicle * vehiclePtr, 
+        Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis
+        );
+    void removeVehicle(const PSBaseVehicle * vehiclePtr);
+
 private:
 
     void createTrimesh(const DE2Part& part, const DE2SingleBatch& batch);
@@ -48,6 +56,9 @@ private:
     bodies mStaticBodies;
 
     CommonIncludes::shared_ptr<GameWorld> mGameWorld;
+
+    typedef std::map<const PSBaseVehicle *, CommonIncludes::shared_ptr<PhysicsVehicle> > vehicles;
+    vehicles mVehicles;
 };
 
 #endif

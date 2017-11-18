@@ -70,8 +70,10 @@ public:
 
 protected:
 
+    static const int mWheelsAmount = 4;
+
     void initPhysicalModel(Physics * world, 
-        Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
+        Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[mWheelsAmount], 
         const InitialVehicleSetup& initialVehicleSetup);
 
     /**

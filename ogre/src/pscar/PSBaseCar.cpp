@@ -154,7 +154,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         }
     }
 
-    for(size_t q = 0; q < 5; ++q)
+    for(int q = 0; q < mWheelsAmount + 1; ++q)
     {
         Ogre::SceneNode* modelNode = mainNode->createChildSceneNode();
 

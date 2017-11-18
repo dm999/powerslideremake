@@ -105,8 +105,8 @@ protected:
     Ogre::Vector3 mBackROriginalPos;
 
 
-    Ogre::Entity * mWheelEntitys[4];
-    Ogre::SceneNode *mWheelNodes[4];
+    Ogre::Entity * mWheelEntitys[mWheelsAmount];
+    Ogre::SceneNode *mWheelNodes[mWheelsAmount];
 
 
 

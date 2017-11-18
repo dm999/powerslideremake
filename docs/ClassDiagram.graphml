@@ -426,8 +426,8 @@ Ogre::Vector3 mBackLOriginalPos
 Ogre::Vector3 mBackROriginalPos
 
 
-Ogre::Entity * mWheelEntitys[4]
-Ogre::SceneNode *mWheelNodes[4]
+Ogre::Entity * mWheelEntitys[mWheelsAmount]
+Ogre::SceneNode *mWheelNodes[mWheelsAmount]
 
 std::string mWheelFrontLColliderString
 std::string mWheelFrontRColliderString
@@ -3104,7 +3104,7 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
           <y:Geometry height="788.4836915201113" width="894.8936264315575" x="5882.553186784221" y="-7204.241845760056"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="871.1171875" x="11.888219465779002" y="24.712548885056094">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="871.1171875" x="11.888219465779002" y="10.011377010056094">&lt;&lt;PSBaseVehicle.h&gt;&gt;
 
 PSBaseVehicle
 
@@ -3113,6 +3113,8 @@ public:
 virtual void clear()
 
 protected:
+
+static const int mWheelsAmount = 4
 
 void initPhysicalModel(Physics * world, 
     Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
@@ -3660,7 +3662,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="155.63312253460663">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="140.93195065960663">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3687,7 +3689,33 @@ std::vector&lt;CommonIncludes::shared_ptr&lt;btCollisionObject&gt;&gt; mStaticCo
 typedef std::map&lt;const btCollisionObject *, std::pair&lt;int, int&gt; &gt; bodies
 bodies mStaticBodies
 
-CommonIncludes::shared_ptr&lt;GameWorld&gt; mGameWorld</y:NodeLabel>
+CommonIncludes::shared_ptr&lt;GameWorld&gt; mGameWorld
+
+std::vector&lt;CommonIncludes::shared_ptr&lt;PhysicsVehicle&gt;&gt; mVehicles</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n85">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="272.92841949804097" width="549.8481067828084" x="12745.075946608596" y="-1546.4642097490205"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="209.81640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="272.13671875" x="138.8556940164035" y="31.556006624020483">&lt;&lt;Physics.h&gt;&gt;
+
+PhysicsVehicle
+
+public:
+
+static const int mWheelsAmount = 4
+
+void shiftPos(const Ogre::Vector3&amp; shiftAmount)
+
+protected:
+
+Ogre::SceneNode *mWheelNodes[wheelsAmount]
+Ogre::SceneNode *mChassis</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -4533,6 +4561,16 @@ CommonIncludes::shared_ptr&lt;GameWorld&gt; mGameWorld</y:NodeLabel>
       </data>
     </edge>
     <edge id="e78" source="n84" target="n41">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e79" source="n85" target="n84">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
