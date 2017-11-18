@@ -14,7 +14,7 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             bool isPossesCamera,
@@ -42,11 +42,13 @@ void PSMultiplayerCar::clear()
 
 void PSMultiplayerCar::setModelVelocity(const Ogre::Vector3& linear, const Ogre::Vector3& angular)
 {
+#if 0
     if(mModelNode)
     {
         mCarChassis->setLinearVelocity(linear);
         mCarChassis->setAngularVelocity(angular);
     }
+#endif
 }
 
 void PSMultiplayerCar::removeFromScene(Ogre::SceneManager* sceneMgr)

@@ -157,14 +157,14 @@ void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollis
         //AI
         for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
         {
-            mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+            mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
         }
 
         //human
         std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
         for(size_t q = 0; q < playerNames.size(); ++q)
         {
-            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
         }
     }
 }

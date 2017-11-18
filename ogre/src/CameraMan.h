@@ -8,12 +8,7 @@
 #include "tools/LinearController.h"
 
 class BaseApp;
-
-namespace OgreBulletDynamics
-{
-    class RigidBody;
-    class DynamicsWorld;
-}
+class Physics;
 
 class btPairCachingGhostObject;
 class btOverlappingPairCallback;
@@ -29,7 +24,7 @@ enum CameraPositions
 class CameraMan
 {
 public :
-    CameraMan(Ogre::Camera* cam, OgreBulletDynamics::DynamicsWorld * world, Ogre::SceneManager* sceneMgr);
+    CameraMan(Ogre::Camera* cam, Physics * world, Ogre::SceneManager* sceneMgr);
 
     virtual ~CameraMan() {}
 
@@ -43,7 +38,7 @@ public :
     CameraPositions getCameraPositionType()const{return mCamPositonType;}
 
 private :
-    OgreBulletDynamics::DynamicsWorld * mWorld;
+    Physics * mWorld;
 
     bool checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3& To, Ogre::Vector3& collisionPoint, Ogre::Vector3& collisionNormal)const;
 

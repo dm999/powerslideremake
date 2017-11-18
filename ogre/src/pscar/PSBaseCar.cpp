@@ -54,7 +54,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialImpulseLinear,
@@ -348,37 +348,43 @@ void PSBaseCar::clear()
 Ogre::Real PSBaseCar::getAlignedVelocity()const
 {
     Ogre::Real res = 0.0f;
+    /*
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
     Ogre::Vector3 carVelocity = getLinearVelocity();
     Ogre::Vector3 carOrientation = getForwardAxis();
 
     res = carOrientation.dotProduct(carVelocity);
-
+*/
     return res;
 }
 
 Ogre::Real PSBaseCar::getLateralVelocity()const
 {
     Ogre::Real res = 0.0f;
+    /*
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
     Ogre::Vector3 carVelocity = getLinearVelocity();
 
     Ogre::Vector3 carOrientation = rot * Ogre::Vector3::NEGATIVE_UNIT_X;
 
     res = carOrientation.dotProduct(carVelocity);
-
+*/
     return res;
 }
 
 Ogre::Vector3 PSBaseCar::getForwardAxis()const
 {
+    /*
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
     return rot * Ogre::Vector3::NEGATIVE_UNIT_Z;
+    */
+    return Ogre::Vector3::ZERO;
 }
 
 Ogre::Vector3 PSBaseCar::getLinearImpulse()const
 {
-    return mCarChassis->getLinearImpulse();
+    //return mCarChassis->getLinearImpulse();
+    return Ogre::Vector3::ZERO;
 }
 
 void PSBaseCar::initSuspension(const GameState& gameState)

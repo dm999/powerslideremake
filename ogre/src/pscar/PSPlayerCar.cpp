@@ -22,7 +22,7 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
                                 const GameState& gameState,
                                 Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                                 ModelsPool* modelsPool,
-                                OgreBulletDynamics::DynamicsWorld * world,
+                                Physics * world,
                                 const std::string& characterName,
                                 const Ogre::Matrix4& transform,
                                 bool isPossesCamera)
@@ -45,6 +45,7 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
 
 void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
 {
+#if 0
     PSControllableCar::processInternalTick(timeStep, isRaceStarted);
 
     Ogre::Real spfFake = 1.5f;
@@ -81,6 +82,7 @@ void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
         //mCarChassis->setAngularVelocity(rot * Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * rotationIntensity * spfFake);
         mCarChassis->applyImpulse(rot * Ogre::Vector3(-mSteeringAngleVelocity * rotationIntensity * spfFake * 10.0f, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -15.0f));
     }
+#endif
 }
 
 bool PSPlayerCar::checkOverSteer()
@@ -232,6 +234,7 @@ bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar, const btCollisionO
 {
     bool res = false;
 
+#if 0
     if(     colObj0Wrap->getCollisionObject() == mCarChassis->getBulletRigidBody()          &&
             colObj1Wrap->getCollisionObject() == otherCar.getChassis().getBulletRigidBody() ||
             colObj1Wrap->getCollisionObject() == mCarChassis->getBulletRigidBody()          &&
@@ -240,6 +243,6 @@ bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar, const btCollisionO
     {
         res = true;
     }
-
+#endif
     return res;
 }

@@ -6,7 +6,7 @@
 
 Ogre::NameGenerator PSBaseVehicle::nameGenNodes("Scene/Node/Vehicle/Name");
 
-void PSBaseVehicle::initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, 
+void PSBaseVehicle::initPhysicalModel(Physics * world, 
     Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
     const InitialVehicleSetup& initialVehicleSetup)
 {
@@ -37,6 +37,7 @@ void PSBaseVehicle::clear()
 
 void PSBaseVehicle::removeFromWorld()
 {
+#if 0
     if(mSixDofSpringFrontL.get())
         mWorld->removeConstraint(mSixDofSpringFrontL.get());
 
@@ -86,7 +87,7 @@ void PSBaseVehicle::removeFromWorld()
 
     mWheelShapeFront.reset();
     mWheelShapeBack.reset();
-
+#endif
 }
 
 void PSBaseVehicle::addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
@@ -98,7 +99,7 @@ void PSBaseVehicle::addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *whee
 
 void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 {
-
+#if 0
     mCompoundShape.reset(new OgreBulletCollisions::CompoundCollisionShape());
 
     {
@@ -202,12 +203,12 @@ void PSBaseVehicle::addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode
     mCarWheelFrontR->disableDeactivation ();
     mCarWheelBackL->disableDeactivation ();
     mCarWheelBackR->disableDeactivation ();
-
+#endif
 }
 
 void PSBaseVehicle::addSpringsToWorld()
 {
-
+#if 0
     {
         //http://bulletphysics.org/mediawiki-1.5.8/index.php/Constraints
         //http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=8284
@@ -264,4 +265,5 @@ void PSBaseVehicle::addSpringsToWorld()
         mSixDofSpringBackR->setEquilibriumPoint(1, mInitialVehicleSetup.mMaxTravel);
         mWorld->addConstraint(mSixDofSpringBackR.get(), true);
     }
+#endif
 }

@@ -25,7 +25,7 @@ public:
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialForcesLinear,
@@ -34,17 +34,19 @@ public:
 
     void setCameraMan(CameraMan * cameraMan){mCameraMan = cameraMan;}
 
-    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, StaticMeshProcesser& processer, bool isRaceStarted);
+    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted);
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted);
 
     virtual void processWheelsCollision(    btManifoldPoint& cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser& processer,
+                                    const Physics* physicsProcesser,
+                                    const StaticMeshProcesser& processer,
                                     int triIndex);
 
     virtual void processChassisCollision(    btManifoldPoint& cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser& processer,
+                                    const Physics* physicsProcesser,
+                                    const StaticMeshProcesser& processer,
                                     int triIndex);
 
     /**
@@ -142,7 +144,7 @@ private:
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
-    virtual void adjustWheelsFriction(StaticMeshProcesser& processer);
+    virtual void adjustWheelsFriction(const StaticMeshProcesser& processer);
     void adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition);
 
     bool isRollOver();

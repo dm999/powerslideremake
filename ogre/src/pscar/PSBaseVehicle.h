@@ -2,11 +2,11 @@
 #define PSBASEVEHICLE_H
 
 #include "../includes/OgreInclude.h"
-#include "../includes/OgreBulletInclude.h"
 #include "../includes/CommonIncludes.h"
 
 class CustomRigidBody;
 class CustomRigidBodyWheel;
+class Physics;
 
 struct InitialVehicleSetup
 {
@@ -69,7 +69,7 @@ public:
 
 protected:
 
-    void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, 
+    void initPhysicalModel(Physics * world, 
         Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
         const InitialVehicleSetup& initialVehicleSetup);
 
@@ -79,8 +79,8 @@ protected:
      */
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
-    OgreBulletDynamics::DynamicsWorld * mWorld;
-
+    Physics * mWorld;
+#if 0
     CommonIncludes::shared_ptr<CustomRigidBody> mCarChassis;
     CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontL;
     CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontR;
@@ -91,7 +91,7 @@ protected:
     CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringFrontR;
     CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackL;
     CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackR;
-
+#endif
     InitialVehicleSetup mInitialVehicleSetup;
 
     static Ogre::NameGenerator nameGenNodes;
@@ -103,7 +103,7 @@ private:
 
     void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
     void addSpringsToWorld();
-
+#if 0
     CommonIncludes::shared_ptr<OgreBulletCollisions::CompoundCollisionShape> mCompoundShape;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackRShape;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackLShape;
@@ -114,7 +114,7 @@ private:
 
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeFront;
     CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeBack;
-
+#endif
 };
 
 #endif

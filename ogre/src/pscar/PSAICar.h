@@ -18,7 +18,7 @@ public:
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialForcesLinear,
@@ -34,7 +34,8 @@ public:
 
     virtual void processWheelsCollision(    btManifoldPoint& cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser& processer,
+                                    const Physics * physicsProcesser,
+                                    const StaticMeshProcesser& processer,
                                     int triIndex);
 
     void performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused);

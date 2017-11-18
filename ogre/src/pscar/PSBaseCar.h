@@ -11,9 +11,9 @@
 
 struct lua_State;
 
-class StaticMeshProcesser;
 class ModelsPool;
-
+class Physics;
+class StaticMeshProcesser;
 class OpenALSource;
 
 class GameState;
@@ -25,14 +25,14 @@ public:
     PSBaseCar();
     virtual ~PSBaseCar(){}
 
-    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, StaticMeshProcesser& processer, bool isRaceStarted) = 0;
+    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted) = 0;
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt);
 
     virtual void initModel( lua_State * pipeline, 
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialImpulseLinear,
@@ -44,8 +44,8 @@ public:
     void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();
 
-    Ogre::Vector3 getLinearVelocity()const{return mCarChassis->getLinearVelocity();}
-    Ogre::Vector3 getAngularVelocity()const{return mCarChassis->getAngularVelocity();}
+    Ogre::Vector3 getLinearVelocity()const{return Ogre::Vector3::ZERO;/*mCarChassis->getLinearVelocity();*/}
+    Ogre::Vector3 getAngularVelocity()const{return Ogre::Vector3::ZERO;/*fmCarChassis->getAngularVelocity();*/}
     Ogre::Real getAlignedVelocity()const;
     Ogre::Real getLateralVelocity()const;
     Ogre::Vector3 getForwardAxis()const;
@@ -67,7 +67,7 @@ public:
     unsigned char getBackRWheelColliderIndex(){return mWheelBackRColliderIndex;}
     unsigned char getChassisColliderIndex(){return mChassisColliderIndex;}
 
-    const CustomRigidBody& getChassis()const{return *mCarChassis;}
+    //const CustomRigidBody& getChassis()const{return *mCarChassis;}
 
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;

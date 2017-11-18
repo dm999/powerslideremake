@@ -340,19 +340,19 @@
           <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1885.75" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="696.607421875" x="19.46568624360043" y="30.412876993802456">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1885.75" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="30.412876993802456">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
 public:
 
-virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, StaticMeshProcesser&amp; processer, bool isRaceStarted) = 0
+virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, const StaticMeshProcesser&amp; processer, bool isRaceStarted) = 0
 virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt)
 
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const Ogre::Vector3&amp; initialForcesLinear,
@@ -625,7 +625,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2312.083984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-14.418918892698457">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2341.486328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-29.120090767698457">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -634,7 +634,7 @@ public:
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const Ogre::Vector3&amp; initialForcesLinear,
@@ -649,12 +649,14 @@ virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt, bool isRa
 
 virtual void processWheelsCollision(    btManifoldPoint&amp; cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser&amp; processer,
+                                    const Physics* physicsProcesser,
+                                    const StaticMeshProcesser&amp; processer,
                                     int triIndex)
 
 virtual void processChassisCollision(    btManifoldPoint&amp; cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser&amp; processer,
+                                    const Physics* physicsProcesser,
+                                    const StaticMeshProcesser&amp; processer,
                                     int triIndex)
 
 virtual void processInternalTick(float timeStep, bool isRaceStarted)
@@ -962,7 +964,7 @@ public:
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const std::vector&lt;Particle&gt;&amp; particles,
@@ -1014,7 +1016,7 @@ public:
 virtual void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const Ogre::Vector3&amp; initialForcesLinear,
@@ -1031,7 +1033,7 @@ void setSteeringUmpulse(Ogre::Real impulse)
 
 virtual void processWheelsCollision(    btManifoldPoint&amp; cp, 
                                     const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    StaticMeshProcesser&amp; processer,
+                                    const Physics* processer,
                                     int triIndex)
 
 void performAICorrection(bool isRaceStarted, bool isGamePaused)
@@ -1158,7 +1160,7 @@ public:
 void initModel( lua_State * pipeline, 
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
                             const std::vector&lt;Particle&gt;&amp; particles,
@@ -1515,7 +1517,7 @@ static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
           <y:Geometry height="1840.8084935771822" width="869.3089261662258" x="12615.345536916888" y="-4700.404246788591"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1841.646484375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="-0.418995398908919">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1768.140625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="36.33393428859108">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 StaticMeshProcesser
 
@@ -1532,8 +1534,6 @@ void initParts( lua_State * pipeline,
 
 void queryLights()
 
-bool isRigidBodyStatic(const btCollisionObject * object, std::pair&lt;int, int&gt;&amp; address) const
-
 void deinit()
 
 void checkIsVertexArraySupported()
@@ -1545,8 +1545,8 @@ const DE2Part&amp; getPartAddress(std::pair&lt;int, int&gt; address)const
 
 unsigned char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
 
-Ogre::Real getLatitudeFriction(unsigned char terrainType)
-Ogre::Real getLongtitudeFriction(unsigned char terrainType)
+Ogre::Real getLatitudeFriction(unsigned char terrainType) const
+Ogre::Real getLongtitudeFriction(unsigned char terrainType) const
 
 void setFrictionRemapArray(const std::vector&lt;size_t&gt;&amp; remap)
 void setLatutuideFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
@@ -1615,9 +1615,6 @@ std::vector&lt;std::string&gt; loadWithoutVertexArray(    lua_State * pipeline,
                                                         const std::vector&lt;std::string&gt;&amp; noLightTextures,
                                                         const Ogre::String&amp; ovverideMaterialName,
                                                         MSHData&amp; mshData)
-
-typedef std::map&lt;const btCollisionObject *, std::pair&lt;int, int&gt; &gt; bodies
-bodies mBodies
 
 static Ogre::NameGenerator nameGenRigidBodies
 
@@ -3117,13 +3114,13 @@ virtual void clear()
 
 protected:
 
-void initPhysicalModel(OgreBulletDynamics::DynamicsWorld * world, 
+void initPhysicalModel(Physics * world, 
     Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
     const InitialVehicleSetup&amp; initialVehicleSetup)
 
 void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 
-OgreBulletDynamics::DynamicsWorld * mWorld
+Physics * mWorld
 
 CommonIncludes::shared_ptr&lt;CustomRigidBody&gt; mCarChassis
 CommonIncludes::shared_ptr&lt;CustomRigidBodyWheel&gt; mCarWheelFrontL
@@ -3653,6 +3650,45 @@ SplineFeatures
 Ogre::Vector3 out6, out7, out12, out13
 float out8, out9, out10, out11
 </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n84">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="430.333984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="478.234375" x="195.5372755831122" y="148.28253659710663">&lt;&lt;Physics.h&gt;&gt;
+
+Physics
+
+public:
+
+void timeStep()
+
+void addPart(const DE2Part&amp; part, const DE2SingleBatch&amp; batch,
+                size_t partIndex, size_t batchIndex,
+                const Ogre::Real bodyRestitution, 
+                const Ogre::Real bodyFriction,
+                const Ogre::Real bodyRollingFriction)
+
+bool isRigidBodyStatic(const btCollisionObject * object, std::pair&lt;int, int&gt;&amp; address) const
+
+private:
+
+void createTrimesh(const DE2Part&amp; part, const DE2SingleBatch&amp; batch)
+
+std::vector&lt;CommonIncludes::shared_ptr&lt;btTriangleMesh&gt;&gt; mStaticTriMeshes
+std::vector&lt;CommonIncludes::shared_ptr&lt;btCollisionShape&gt;&gt; mStaticCollisionShapes
+std::vector&lt;CommonIncludes::shared_ptr&lt;btRigidBody&gt;&gt; mStaticRigidBodies
+std::vector&lt;CommonIncludes::shared_ptr&lt;btMotionState&gt;&gt; mStaticMotionStates
+
+typedef std::map&lt;const btCollisionObject *, std::pair&lt;int, int&gt; &gt; bodies
+bodies mStaticBodies
+
+CommonIncludes::shared_ptr&lt;GameWorld&gt; mGameWorld</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -4493,6 +4529,16 @@ float out8, out9, out10, out11
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e78" source="n84" target="n41">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

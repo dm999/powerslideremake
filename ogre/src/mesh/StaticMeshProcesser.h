@@ -3,12 +3,9 @@
 #define STATICMESHPROCESSER_H
 
 #include "../includes/OgreInclude.h"
-#include "../includes/OgreBulletInclude.h"
 #include "../includes/CommonIncludes.h"
 
 #include "MshData.h"
-
-#include "BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h"
 
 #include "../GameState.h"
 #include "../loaders/DE2.h"
@@ -33,6 +30,7 @@ struct DE2Part
 
 struct lua_State;
 class LoaderListener;
+class Physics;
 
 class StaticMeshProcesser
 {
@@ -45,14 +43,12 @@ public :
                     Ogre::SceneNode* mainNode,
                     bool isGlobalReset,
                     GameState& gameState, 
-                    OgreBulletDynamics::DynamicsWorld * world,
+                    Physics * world,
                     LoaderListener* loaderListener);
 
     void queryLights(LoaderListener* loaderListener);
 
-    bool isRigidBodyStatic(const btCollisionObject * object, std::pair<int, int>& address) const;
-
-    void deinit() {mParts.clear(); mBodies.clear(); mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
+    void deinit() {mParts.clear(); mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
 
     void checkIsVertexArraySupported();
 
@@ -61,10 +57,10 @@ public :
     const DE2SingleBatch& getBatchByAddress(std::pair<int, int> address)const {return mParts[address.first].mBatches[address.second];}
     const DE2Part& getPartAddress(std::pair<int, int> address)const {return mParts[address.first];}
 
-    unsigned char getTerrainType(std::pair<int, int> address, int triIndex, const btVector3& ptB);
+    unsigned char getTerrainType(std::pair<int, int> address, int triIndex, const btVector3& ptB) const;
 
-    Ogre::Real getLatitudeFriction(unsigned char terrainType);
-    Ogre::Real getLongtitudeFriction(unsigned char terrainType);
+    Ogre::Real getLatitudeFriction(unsigned char terrainType) const;
+    Ogre::Real getLongtitudeFriction(unsigned char terrainType) const;
 
     void setFrictionRemapArray(const std::vector<size_t>& remap);
     void setLatutuideFrictionArray(const std::vector<float>& frictions);
@@ -85,12 +81,12 @@ private:
 
     void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File& de2, GameState& gameState);
 
-    void addStaticTrimesh(   OgreBulletDynamics::DynamicsWorld * world,
-                                                        const Ogre::Vector3& offset,
-                                                        const Ogre::Real bodyRestitution, 
-                                                        const Ogre::Real bodyFriction,
-                                                        const Ogre::Real bodyRollingFriction,
-                                                        const MSHData& mshData);
+    void addStaticTrimesh(  Physics * world,
+                            const Ogre::Vector3& offset,
+                            const Ogre::Real bodyRestitution, 
+                            const Ogre::Real bodyFriction,
+                            const Ogre::Real bodyRollingFriction,
+                            const MSHData& mshData);
 
     void initPart(  lua_State * pipeline, 
                     Ogre::SceneManager* sceneMgr, 
@@ -126,7 +122,7 @@ private:
     /**
      * return - return in range [0, 1]
     */
-    Ogre::Vector2 getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const btVector3& ptB);
+    Ogre::Vector2 getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const btVector3& ptB) const;
 
     std::vector<Ogre::Entity*> mTerrainNodes;
     Ogre::NameGenerator mNameGenMaterials;
@@ -167,9 +163,6 @@ private:
                                                         const Ogre::ColourValue& ambient,
                                                         bool isFogEnabled);
 
-    typedef std::map<const btCollisionObject *, std::pair<int, int> > bodies;
-    bodies mBodies;
-
     static Ogre::NameGenerator nameGenRigidBodies;
 
     size_t mPlainIndices;
@@ -180,11 +173,7 @@ private:
 
     void prepareBuffers(const MSHData& mshData);
 
-    OgreBulletCollisions::TriangleMeshCollisionShape * createTrimesh(DE2Part& part, DE2SingleBatch& batch);
-
-    btVoronoiSimplexSolver mSimplexSolver; // to find barycentric
-
-    Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB);
+    Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB) const;
 
     std::vector<size_t> mFrictionRemap;
     std::vector<float> mLatitudeFrictions;

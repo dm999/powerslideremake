@@ -1,9 +1,11 @@
 
 #include "PSAICar.h"
 
+#include "../physics/Physics.h"
+#include "../mesh/StaticMeshProcesser.h"
+
 #include "../customs/CustomRigidBodyWheel.h"
 #include "../tools/Conversions.h"
-#include "../mesh/StaticMeshProcesser.h"
 
 PSAICar::PSAICar() :
     mSteeringImpulse(0.0f)
@@ -14,7 +16,7 @@ void PSAICar::initModel(    lua_State * pipeline,
                             const GameState& gameState,
                             Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                             ModelsPool* modelsPool,
-                            OgreBulletDynamics::DynamicsWorld * world,
+                            Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialForcesLinear,
@@ -30,6 +32,7 @@ void PSAICar::initModel(    lua_State * pipeline,
 
 void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)
 {
+#if 0
     PSControllableCar::processInternalTick(timeStep, isRaceStarted);
 
     Ogre::Real spfFake = 1.5f;
@@ -52,22 +55,24 @@ void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)
             mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
         }
     }
+#endif
 }
 
 void PSAICar::processWheelsCollision(   btManifoldPoint& cp, 
                                             const btCollisionObjectWrapper* colObj0Wrap, 
                                             const btCollisionObjectWrapper* colObj1Wrap,
-                                            StaticMeshProcesser& processer,
+                                            const Physics * physicsProcesser,
+                                            const StaticMeshProcesser& processer,
                                             int triIndex)
 {
-
+#if 0
     Ogre::Vector3 linearVel = getLinearVelocity();
     Ogre::Real speed = linearVel.length();
     linearVel.normalise();
 
     std::pair<int, int> address;
 
-    if(processer.isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
+    if(physicsProcesser->isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
     {
 
         if(colObj0Wrap->getCollisionObject() == mCarWheelFrontL->getBulletRigidBody())
@@ -114,24 +119,8 @@ void PSAICar::processWheelsCollision(   btManifoldPoint& cp,
             mWheelBackRColliderIndex = terrainType;
         }
     }
-}
-
-#if 0
-void PSAICar::adjustWheelsFriction(StaticMeshProcesser& processer)
-{
-    Ogre::Vector3 anisotropicFriction;
-    Ogre::Real latitudeFriction = 1.0f;
-    Ogre::Real longtitudeFriction = 0.0f;
-    anisotropicFriction.x = latitudeFriction;
-    anisotropicFriction.y = longtitudeFriction;
-    anisotropicFriction.z = longtitudeFriction;
-
-    mCarWheelFrontL->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
-    mCarWheelFrontR->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
-    mCarWheelBackL->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
-    mCarWheelBackR->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
-}
 #endif
+}
 
 void PSAICar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
 {

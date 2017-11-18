@@ -2,6 +2,7 @@
 #include "StaticMeshProcesser.h"
 
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
+#include "../physics/Physics.h"
 
 #include "../lua/DMLuaManager.h"
 
@@ -39,7 +40,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                     Ogre::SceneNode* mainNode,
                                     bool isGlobalReset,
                                     GameState& gameState,
-                                    OgreBulletDynamics::DynamicsWorld * world,
+                                    Physics * world,
                                     LoaderListener* loaderListener)
 {
     checkIsVertexArraySupported();
@@ -878,30 +879,12 @@ void StaticMeshProcesser::queryLights(LoaderListener* loaderListener)
     }
 }
 
-bool StaticMeshProcesser::isRigidBodyStatic(const btCollisionObject * object, std::pair<int, int>& address)const
-{
-    bool res = false;
-
-    if(!mBodies.empty())
-    {
-        bodies::const_iterator i = mBodies.find(object);
-
-        if(i != mBodies.end())
-        {
-            address = (*i).second;
-            res = true;
-        }
-    }
-
-    return res;
-}
-
-void StaticMeshProcesser::addStaticTrimesh(  OgreBulletDynamics::DynamicsWorld * world,
-                                                            const Ogre::Vector3& offset,
-                                                            const Ogre::Real bodyRestitution, 
-                                                            const Ogre::Real bodyFriction,
-                                                            const Ogre::Real bodyRollingFriction,
-                                                            const MSHData& mshData)
+void StaticMeshProcesser::addStaticTrimesh( Physics * world,
+                                            const Ogre::Vector3& offset,
+                                            const Ogre::Real bodyRestitution, 
+                                            const Ogre::Real bodyFriction,
+                                            const Ogre::Real bodyRollingFriction,
+                                            const MSHData& mshData)
 {
     //TODO (d.polubotko): consider vertices weilding
     prepareBuffers(mshData);
@@ -917,19 +900,9 @@ void StaticMeshProcesser::addStaticTrimesh(  OgreBulletDynamics::DynamicsWorld *
 
     for(size_t w = 0; w < mParts[lastPart].mBatches.size(); ++w)
     {
-        OgreBulletCollisions::TriangleMeshCollisionShape *sceneTriMeshShape = createTrimesh(mParts[lastPart], mParts[lastPart].mBatches[w]);
-
-        btBvhTriangleMeshShape * pGroundShape = static_cast<btBvhTriangleMeshShape*>(sceneTriMeshShape->getBulletShape());
-        btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
-        btGenerateInternalEdgeInfo(pGroundShape, triangleInfoMap);
-
-        sceneTriMeshShape->getBulletShape()->setMargin(0.2f);
-        OgreBulletDynamics::RigidBody *sceneRigid = new OgreBulletDynamics::RigidBody(nameGenRigidBodies.generate(), world);
-        sceneRigid->setStaticShape(sceneTriMeshShape, bodyRestitution, bodyFriction, bodyRollingFriction, mParts[lastPart].offset);
-
-        sceneRigid->getBulletRigidBody()->setCollisionFlags(sceneRigid->getBulletRigidBody()->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
-
-        mBodies.insert(std::make_pair(sceneRigid->getBulletRigidBody(), std::make_pair(lastPart, w)));
+        world->addPart( mParts[lastPart], mParts[lastPart].mBatches[w],
+                        lastPart, w, 
+                        bodyRestitution, bodyFriction, bodyRollingFriction);
     }
 }
 
@@ -953,12 +926,7 @@ void StaticMeshProcesser::prepareBuffers(const MSHData& mshData)
     mParts.push_back(part);
 }
 
-OgreBulletCollisions::TriangleMeshCollisionShape * StaticMeshProcesser::createTrimesh(DE2Part& part, DE2SingleBatch& batch)
-{
-    return new OgreBulletCollisions::TriangleMeshCollisionShape(&part.mVertexBuffer[0], part.mVertexBuffer.size(), &batch.mIndexBuffer[0], batch.mIndexBuffer.size());
-}
-
-Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB)
+Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
 {
     Ogre::Vector3 res(Ogre::Vector3::ZERO);
 
@@ -976,7 +944,8 @@ Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, i
     //Ogre::Vector3 point = OgreBulletCollisions::convert(ptB);
 
     btSubSimplexClosestResult result;
-    mSimplexSolver.closestPtPointTriangle(ptB, OgreBulletCollisions::convert(pA), OgreBulletCollisions::convert(pB), OgreBulletCollisions::convert(pC), result);
+    btVoronoiSimplexSolver simplexSolver;
+    simplexSolver.closestPtPointTriangle(ptB, OgreBulletCollisions::convert(pA), OgreBulletCollisions::convert(pB), OgreBulletCollisions::convert(pC), result);
     
     if(result.isValid())
     {
@@ -988,7 +957,7 @@ Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, i
     return res;
 }
 
-Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const btVector3& ptB)
+Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
 {
     Ogre::Vector2 res;
 
@@ -1064,15 +1033,16 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
     }
 }
 
-unsigned char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const btVector3& ptB)
+unsigned char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
 {
     unsigned char res = 0;
 
     std::string terrainMap = getBatchByAddress(address).mTerrainMap;
     if(terrainMap != "")
     {
-        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = mTerrainMaps[terrainMap];
-        Ogre::Image * image = imagePtr.get();
+        std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> >::const_iterator im = mTerrainMaps.find(terrainMap);
+        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = im->second;
+        const Ogre::Image * const image = imagePtr.get();
 
         if(image != NULL)
         {
@@ -1099,7 +1069,7 @@ unsigned char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, i
     return res;
 }
 
-Ogre::Real StaticMeshProcesser::getLatitudeFriction(unsigned char terrainType)
+Ogre::Real StaticMeshProcesser::getLatitudeFriction(unsigned char terrainType) const
 {
     Ogre::Real res = 0.5f;
 
@@ -1109,7 +1079,7 @@ Ogre::Real StaticMeshProcesser::getLatitudeFriction(unsigned char terrainType)
     return res;
 }
 
-Ogre::Real StaticMeshProcesser::getLongtitudeFriction(unsigned char terrainType)
+Ogre::Real StaticMeshProcesser::getLongtitudeFriction(unsigned char terrainType) const
 {
     Ogre::Real res = 0.05f;
 

@@ -4,10 +4,10 @@
 #include "tools/Tools.h"
 #include "BaseApp.h"
 #include "tools/OgreTools.h"
+#include "physics/Physics.h"
+#include "tools/PhysicsTools.h"
 
-#include "BulletCollision/CollisionDispatch/btGhostObject.h"
-
-CameraMan::CameraMan(Ogre::Camera* cam, OgreBulletDynamics::DynamicsWorld * world, Ogre::SceneManager* sceneMgr) 
+CameraMan::CameraMan(Ogre::Camera* cam, Physics * world, Ogre::SceneManager* sceneMgr) 
 : mWorld(world),
     mRearCamera(NULL),
     mCamera(cam),
@@ -158,29 +158,26 @@ bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3
 
     Ogre::Real minimalFraction = 1.0f;
 
-    OgreBulletCollisions::CollisionAllRayResultCallback callback(Ogre::Ray(From, shift.normalisedCopy()), mWorld, shiftAmount);
+    Ogre::Ray ray(From, shift.normalisedCopy());
+
+    btCollisionWorld::AllHitsRayResultCallback callback(PhysicsTools::convert(ray.getOrigin()), PhysicsTools::convert(ray.getPoint(shiftAmount)));
     mWorld->launchRay(callback);
-    if(callback.doesCollide())
+    if(callback.hasHit())
     {
-        btCollisionWorld::AllHitsRayResultCallback * bulletCallback = callback.getBulletAllRayResultCallback();
-        if(bulletCallback)
+        for(int q = 0; q < callback.m_collisionObjects.size(); ++q)
         {
-            for(int q = 0; q < bulletCallback->m_collisionObjects.size(); ++q)
+            const btRigidBody* object = static_cast<const btRigidBody*>(callback.m_collisionObjects[q]);
+            if(object && object->getInvMass() == 0.0f)//collision only with static
             {
-                const btRigidBody* object = static_cast<const btRigidBody*>(bulletCallback->m_collisionObjects[q]);
-                if(object && object->getInvMass() == 0.0f)//collision only with static
+                res = true;
+                if(callback.m_hitFractions[q] < minimalFraction)
                 {
-                    res = true;
-                    if(bulletCallback->m_hitFractions[q] < minimalFraction)
-                    {
-                        minimalFraction = bulletCallback->m_hitFractions[q];
-                        collisionPoint = OgreBulletCollisions::convert(bulletCallback->m_hitPointWorld[q]);
-                        collisionNormal = OgreBulletCollisions::convert(bulletCallback->m_hitNormalWorld[q]);
-                    }
+                    minimalFraction = callback.m_hitFractions[q];
+                    collisionPoint = PhysicsTools::convert(callback.m_hitPointWorld[q]);
+                    collisionNormal = PhysicsTools::convert(callback.m_hitNormalWorld[q]);
                 }
             }
         }
-        
     }
 
     return res;

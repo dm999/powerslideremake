@@ -1,5 +1,5 @@
-#ifndef ToolsH
-#define ToolsH
+#ifndef OGRETOOLS_H
+#define OGRETOOLS_H
 
 #include "../includes/OgreInclude.h"
 

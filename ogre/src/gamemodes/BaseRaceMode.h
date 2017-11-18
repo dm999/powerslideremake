@@ -5,13 +5,14 @@
 
 #include "../lua/DMLuaManager.h"
 
-#include "../includes/OgreBulletInclude.h"
 #include "../includes/CommonIncludes.h"
 
 #include "../mesh/StaticMeshProcesser.h"
 #include "../mesh/ModelsPool.h"
 
 #include "../gamelogic/LapController.h"
+
+#include "../physics/Physics.h"
 
 class CameraMan;
 class UIRace;
@@ -83,7 +84,7 @@ protected:
 
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
-    CommonIncludes::shared_ptr<OgreBulletDynamics::DynamicsWorld> mWorld;
+    CommonIncludes::shared_ptr<Physics> mWorld;
 
     CommonIncludes::shared_ptr<UIRace> mUIRace;
 
@@ -118,8 +119,6 @@ private:
     Ogre::Camera* mRearCamera;
 
     Ogre::SceneManager* mSceneMgrCarUI;
-
-    CommonIncludes::shared_ptr<OgreBulletCollisions::DebugDrawer> mDebugDrawer;
 
     void initScene(LoaderListener* loaderListener);
     void initTerrain(LoaderListener* loaderListener);

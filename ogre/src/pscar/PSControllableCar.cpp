@@ -2,6 +2,9 @@
 #include "PSControllableCar.h"
 
 #include "../mesh/StaticMeshProcesser.h"
+#include "../physics/Physics.h"
+
+#include "../GameState.h"
 
 #include "../customs/CustomRigidBodyWheel.h"
 #include "../CameraMan.h"
@@ -72,7 +75,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     const GameState& gameState,
                                     Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
                                     ModelsPool* modelsPool,
-                                    OgreBulletDynamics::DynamicsWorld * world,
+                                    Physics * world,
                                     const std::string& characterName,
                                     const Ogre::Matrix4& transform,
                                     const Ogre::Vector3& initialForcesLinear,
@@ -235,10 +238,11 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp, 
                                             const btCollisionObjectWrapper* colObj0Wrap, 
                                             const btCollisionObjectWrapper* colObj1Wrap,
-                                            StaticMeshProcesser& processer,
+                                            const Physics* physicsProcesser,
+                                            const StaticMeshProcesser& processer,
                                             int triIndex)
 {
-
+#if 0
     Ogre::Vector3 normalOnStatic = OgreBulletCollisions::convert(cp.m_normalWorldOnB);
     Ogre::Vector3 linearVel = getLinearVelocity();
     Ogre::Real speed = linearVel.length();
@@ -254,7 +258,7 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
 
     std::pair<int, int> address;
 
-    if(processer.isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
+    if(physicsProcesser->isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
     {
 
         if(colObj0Wrap->getCollisionObject() == mCarWheelFrontL->getBulletRigidBody())
@@ -388,29 +392,34 @@ void PSControllableCar::processWheelsCollision(   btManifoldPoint& cp,
             }
         }
     }
+#endif
 }
 
 void PSControllableCar::processChassisCollision(   btManifoldPoint& cp, 
                                             const btCollisionObjectWrapper* colObj0Wrap, 
                                             const btCollisionObjectWrapper* colObj1Wrap,
-                                            StaticMeshProcesser& processer,
+                                            const Physics * physicsProcesser,
+                                            const StaticMeshProcesser& processer,
                                             int triIndex)
 {
+#if 0
     if(colObj0Wrap->getCollisionObject() == mCarChassis->getBulletRigidBody())
     {
         std::pair<int, int> address;
 
-        if(processer.isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
+        if(physicsProcesser->isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
         {
             mChassisCollision = true;
             unsigned char terrainType = processer.getTerrainType(address, triIndex, cp.getPositionWorldOnB());
             mChassisColliderIndex = terrainType;
         }
     }
+#endif
 }
 
 void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
 {
+#if 0
     Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
 
     Ogre::Real projectedVel = getAlignedVelocity();
@@ -520,10 +529,13 @@ void PSControllableCar::processInternalTick(float timeStep, bool isRaceStarted)
         mCarChassis->applyImpulse(Ogre::Vector3(0.0f, -cockpitAirSpoilerImpulse, 0.0f), rot * Ogre::Vector3(0.0f, -1.0f, -0.5f));
     else
         mCarChassis->applyImpulse(Ogre::Vector3(0.0f, -cockpitGroundSpoilerImpulse, 0.0f), Ogre::Vector3::ZERO);
+
+#endif
 }
 
-void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, StaticMeshProcesser& processer, bool isRaceStarted)
+void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted)
 {
+#if 0
     processSounds(evt);
 
     adjustWheelsFriction(processer);
@@ -623,6 +635,8 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, S
 
 
     cleanWheelsCollisionsFlags();
+
+#endif
 }
 
 void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
@@ -698,8 +712,9 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
 }
 
 
-void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
+void PSControllableCar::adjustWheelsFriction(const StaticMeshProcesser& processer)
 {
+#if 0
     Ogre::Real latitudeFriction;
     Ogre::Real longtitudeFriction;
     Ogre::Vector3 anisotropicFriction;
@@ -733,6 +748,8 @@ void PSControllableCar::adjustWheelsFriction(StaticMeshProcesser& processer)
     anisotropicFriction.y = longtitudeFriction;
     anisotropicFriction.z = longtitudeFriction;
     mCarWheelBackR->getBulletRigidBody()->setAnisotropicFriction(OgreBulletCollisions::convert(anisotropicFriction));
+
+#endif
 }
 
 void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition)
@@ -929,6 +946,7 @@ void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
 
 void PSControllableCar::restoreRollOver()
 {
+#if 0
     if(mCarChassis)
     {
         Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
@@ -948,6 +966,7 @@ void PSControllableCar::restoreRollOver()
             mCarChassis->applyImpulse(rot * Ogre::Vector3(0.0f, 0.0f, 50.0f), rot * Ogre::Vector3(10.0f, 0.0f, 0.0f));
         }
     }
+#endif
 }
 
 bool PSControllableCar::checkCollisionReadyToRestoreRollOverSide()
@@ -967,6 +986,7 @@ bool PSControllableCar::isRollOver()
 {
     bool res = false;
 
+#if 0
     const unsigned long timePeriodToRestoreRoll = 1000; // ms
 
     Ogre::Vector3 linearVelocity = mCarChassis->getLinearVelocity();
@@ -995,7 +1015,7 @@ bool PSControllableCar::isRollOver()
     {
         mTimerRestoreRollOver.reset();
     }
-
+#endif
 
     return res;
 }

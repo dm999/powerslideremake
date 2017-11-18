@@ -562,21 +562,16 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
 
-    mWorld.reset(new OgreBulletDynamics::DynamicsWorld(mSceneMgr, bounds, gravityVector, true, true, 10000));
-    mDebugDrawer.reset(new OgreBulletCollisions::DebugDrawer());
-    mWorld->setDebugDrawer(mDebugDrawer.get());
-    mWorld->getBulletDynamicsWorld()->setInternalTickCallback(internalTickCallback, this);
-
-    Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("debugDrawer", Ogre::Vector3::ZERO);
-    node->attachObject(static_cast<Ogre::SimpleRenderable *>(mDebugDrawer.get()));
+    mWorld.reset(new Physics());
+    //mWorld->getBulletDynamicsWorld()->setInternalTickCallback(internalTickCallback, this);
 
     if(mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugPhysics", mModeContext.mPipeline))
     {
-        mDebugDrawer->setDrawWireframe(true);
-        mWorld->setShowDebugShapes(true);
+        //mDebugDrawer->setDrawWireframe(true);
+        //mWorld->setShowDebugShapes(true);
 
-        mDebugDrawer->setDrawContactPoints(true);
-        mWorld->setShowDebugContactPoints(true);
+        //mDebugDrawer->setDrawContactPoints(true);
+        //mWorld->setShowDebugContactPoints(true);
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
@@ -585,8 +580,6 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
 void BaseRaceMode::deInitWorld()
 {
     mStaticMeshProcesser.deinit();
-    mDebugDrawer.reset();
-    mWorld->setDebugDrawer(NULL);
     mWorld.reset();
 }
 
@@ -632,7 +625,10 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     //http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World
     if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
-        mWorld->stepSimulation(evt.timeSinceLastFrame, 7);
+    {
+        //mWorld->stepSimulation(evt.timeSinceLastFrame, 7);
+        mWorld->timeStep();
+    }
 
     mModeContext.mGameState.getPlayerCar().processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
 
@@ -847,12 +843,12 @@ void BaseRaceMode::reloadTextures()
 
 void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
 {
-    mModeContext.mGameState.getPlayerCar().processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
-    mModeContext.mGameState.getPlayerCar().processChassisCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+    mModeContext.mGameState.getPlayerCar().processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
+    mModeContext.mGameState.getPlayerCar().processChassisCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
 
     for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
     {
-        mModeContext.mGameState.getAICar(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mStaticMeshProcesser, triIndex);
+        mModeContext.mGameState.getAICar(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
     }
 
     customProcessCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
