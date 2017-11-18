@@ -3,23 +3,26 @@
 #define CUSTOMRIGIDBODYWHEEL_H
 
 #include "../includes/OgreInclude.h"
-#include "../includes/OgreBulletInclude.h"
 
-class CustomRigidBodyWheel : public OgreBulletDynamics::RigidBody
+#include "LinearMath/btTransform.h"
+
+class Physics;
+
+class CustomRigidBodyWheel
 {
 public:
 
     CustomRigidBodyWheel(const Ogre::String &name,
-                    OgreBulletDynamics::DynamicsWorld *world,
+                    Physics *world,
                     Ogre::SceneNode* chassisNode,
                     const Ogre::Vector3& connectionPoint,
                     bool isFront = false,
                     const short collisionGroup = 0,
                     const short collisionMask = 0);
 
-    virtual ~CustomRigidBodyWheel(){}
+    ~CustomRigidBodyWheel(){}
 
-    virtual void setTransform(const btTransform& worldTrans);
+    void setTransform(const btTransform& worldTrans);
 
     bool checkCollisionWithStatic(const Ogre::Vector3& newWheelPos);
     void setExternalUpdate(const Ogre::Vector3& wheelPos);
@@ -35,6 +38,8 @@ private:
     Ogre::Vector3 mPrevPosition;
     Ogre::Vector3 mPrevPositionExternalUpdate;
     bool mIsExternalUpdate;
+
+    Physics *mWorld;
 
 };
 

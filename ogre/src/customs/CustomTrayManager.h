@@ -4,7 +4,6 @@
 
 #include "../includes/OgreInclude.h"
 #include "../includes/OISInclude.h"
-#include "../includes/OgreBulletInclude.h"
 #include "../SdkTrays.h"
 
 class CustomTrayManager : public OgreBites::SdkTrayManager

@@ -1,15 +1,20 @@
 
 #include "CustomRigidBodyWheel.h"
 
+#include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
+
+#include "../physics/Physics.h"
+#include "../tools/PhysicsTools.h"
 
 CustomRigidBodyWheel::CustomRigidBodyWheel(const Ogre::String &name,
-                    OgreBulletDynamics::DynamicsWorld *world,
+                    Physics *world,
                     Ogre::SceneNode* chassisNode,
                     const Ogre::Vector3& connectionPoint,
                     bool isFront,
                     const short collisionGroup,
                     const short collisionMask)
-                    : RigidBody(name, world, collisionGroup, collisionMask),
+                    //: RigidBody(name, world, collisionGroup, collisionMask),
+                    : mWorld(world),
                     mIsFront(isFront),
                     mIsExternalUpdate(false)
 {
@@ -24,11 +29,12 @@ CustomRigidBodyWheel::CustomRigidBodyWheel(const Ogre::String &name,
 
 void CustomRigidBodyWheel::setTransform(const btTransform& worldTrans)
 {
-    Ogre::Vector3 newWheelPos = OgreBulletCollisions::convert(worldTrans.getOrigin());
+#if 0
+    Ogre::Vector3 newWheelPos = PhysicsTools::convert(worldTrans.getOrigin());
 
     if(mIsExternalUpdate)
     {
-        getBulletRigidBody()->getWorldTransform().setOrigin(OgreBulletCollisions::convert(mPrevPositionExternalUpdate));
+        getBulletRigidBody()->getWorldTransform().setOrigin(PhysicsTools::convert(mPrevPositionExternalUpdate));
         newWheelPos = mPrevPositionExternalUpdate;
         mIsExternalUpdate = false;
     }
@@ -38,7 +44,7 @@ void CustomRigidBodyWheel::setTransform(const btTransform& worldTrans)
 
     if(isCollided)
     {
-        getBulletRigidBody()->getWorldTransform().setOrigin(OgreBulletCollisions::convert(mPrevPosition));
+        getBulletRigidBody()->getWorldTransform().setOrigin(PhysicsTools::convert(mPrevPosition));
     }
     else
     {
@@ -68,7 +74,7 @@ void CustomRigidBodyWheel::setTransform(const btTransform& worldTrans)
 
     localSpaceNewPos = (rot * localSpaceNewPos) + chassisPos;
 
-    Ogre::Quaternion wheelRotation = OgreBulletCollisions::convert(worldTrans.getRotation());
+    Ogre::Quaternion wheelRotation = PhysicsTools::convert(worldTrans.getRotation());
 
     if(!mIsFront)
     {
@@ -87,6 +93,7 @@ void CustomRigidBodyWheel::setTransform(const btTransform& worldTrans)
 
     mRootNode->setPosition(localSpaceNewPos);
     mRootNode->setOrientation(wheelRotation);
+#endif
 }
 
 bool CustomRigidBodyWheel::checkCollisionWithStatic(const Ogre::Vector3& newWheelPos)
@@ -96,11 +103,11 @@ bool CustomRigidBodyWheel::checkCollisionWithStatic(const Ogre::Vector3& newWhee
     if(mPrevPosition != newWheelPos)
     {
         //d.polubotko: check if center of sphere appeared on other side of static object
-        btCollisionWorld::ClosestRayResultCallback rayCallback(OgreBulletCollisions::convert(mPrevPosition),OgreBulletCollisions::convert(newWheelPos));
-        static_cast<OgreBulletDynamics::DynamicsWorld *>(mWorld)->getBulletDynamicsWorld()->rayTest(OgreBulletCollisions::convert(mPrevPosition), OgreBulletCollisions::convert(newWheelPos), rayCallback);
+        btCollisionWorld::AllHitsRayResultCallback rayCallback(PhysicsTools::convert(mPrevPosition),PhysicsTools::convert(newWheelPos));
+        mWorld->launchRay(rayCallback);
         if (rayCallback.hasHit())
         {
-            if(rayCallback.m_collisionObject != mObject)
+            //if(rayCallback.m_collisionObject != mObject)
             {
                 isCollided = true;
             }

@@ -171,8 +171,6 @@ include_directories ("../lua/src")
 include_directories ("../simpleini/src")
 
 include_directories(../bullet ../bulletextras)
-include_directories(../ogrebullet/Collisions/include)
-include_directories(../ogrebullet/Dynamics/include)
 
 if(PowerslideRemake_MULTIPLAYER)
     include_directories(../multislider/client/source)
@@ -271,7 +269,7 @@ if(ANDROID)
     
     target_link_libraries(PowerslideRemake Lua OIS)
 
-    target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+    target_link_libraries(PowerslideRemake BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     
 else() # Not Android
 
@@ -316,7 +314,7 @@ else() # Not Android
         target_link_libraries(PowerslideRemake debug OIS_d)
         target_link_libraries(PowerslideRemake optimized OIS)
 
-        target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+        target_link_libraries(PowerslideRemake BulletDynamics BulletCollision LinearMath ConvexDecomposition)
         
     else()# Not Windows Not Android (Ubuntu)
     
@@ -343,7 +341,7 @@ else() # Not Android
         
         target_link_libraries(PowerslideRemake Lua ${OIS_LIBRARIES})
 
-        target_link_libraries(PowerslideRemake OgreBullet BulletDynamics BulletCollision LinearMath ConvexDecomposition)
+        target_link_libraries(PowerslideRemake BulletDynamics BulletCollision LinearMath ConvexDecomposition)
     endif()
 endif()
 

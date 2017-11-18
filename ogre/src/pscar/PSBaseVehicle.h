@@ -3,6 +3,7 @@
 
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
+#include "../includes/BulletInclude.h"
 
 class CustomRigidBody;
 class CustomRigidBodyWheel;

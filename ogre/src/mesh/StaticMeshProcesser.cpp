@@ -1,8 +1,10 @@
 
 #include "StaticMeshProcesser.h"
 
+#include "BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h"
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 #include "../physics/Physics.h"
+#include "../tools/PhysicsTools.h"
 
 #include "../lua/DMLuaManager.h"
 
@@ -945,7 +947,7 @@ Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, i
 
     btSubSimplexClosestResult result;
     btVoronoiSimplexSolver simplexSolver;
-    simplexSolver.closestPtPointTriangle(ptB, OgreBulletCollisions::convert(pA), OgreBulletCollisions::convert(pB), OgreBulletCollisions::convert(pC), result);
+    simplexSolver.closestPtPointTriangle(ptB, PhysicsTools::convert(pA), PhysicsTools::convert(pB), PhysicsTools::convert(pC), result);
     
     if(result.isValid())
     {
