@@ -127,12 +127,12 @@ void Physics::createTrimesh(const DE2Part& part, const DE2SingleBatch& batch)
 
     CommonIncludes::shared_ptr<btTriangleMesh> triMesh = CommonIncludes::shared_ptr<btTriangleMesh>(new btTriangleMesh(true));
 
-    for (unsigned int n = 0; n < numFaces; n += 3)
+    for (unsigned int n = 0; n < numFaces; ++n)
     {
         triMesh->addTriangle(
-            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n + 0]]), 
-            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n + 1]]), 
-            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n + 2]])
+            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n * 3 + 0]]), 
+            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n * 3 + 1]]), 
+            PhysicsTools::convert(part.mVertexBuffer[batch.mIndexBuffer[n * 3 + 2]])
             );
     }
 
