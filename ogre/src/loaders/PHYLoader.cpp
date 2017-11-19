@@ -7,6 +7,9 @@ void PHYLoader::load(GameState& gameState) const
 {
     gameState.getTrackPositions().clear();
     gameState.getTrackOriginalImpulseLinear().clear();
+    gameState.getTrackOriginalImpulseLinearInc().clear();
+    gameState.getTrackOriginalImpulseRot().clear();
+    gameState.getTrackOriginalImpulseRotInc().clear();
 
     for(int q = 0; q < (GameState::mAIMax + 1); ++q)
     {
@@ -24,8 +27,8 @@ void PHYLoader::load(GameState& gameState) const
             Ogre::Vector3 pos;
             Ogre::Vector3 impulseRot;
             Ogre::Vector3 impulseLinear;
-            Ogre::Vector3 impulseRotIncr;
-            Ogre::Vector3 impulseLinearIncr;
+            Ogre::Vector3 impulseRotInc;
+            Ogre::Vector3 impulseLinearInc;
 
             fileToLoad->read(&rotX, 4 * 3);
             fileToLoad->read(&rotY, 4 * 3);
@@ -33,8 +36,8 @@ void PHYLoader::load(GameState& gameState) const
             fileToLoad->read(&pos, 4 * 3);
             fileToLoad->read(&impulseRot, 4 * 3);
             fileToLoad->read(&impulseLinear, 4 * 3);
-            fileToLoad->read(&impulseRotIncr, 4 * 3);
-            fileToLoad->read(&impulseLinearIncr, 4 * 3);
+            fileToLoad->read(&impulseRotInc, 4 * 3);
+            fileToLoad->read(&impulseLinearInc, 4 * 3);
 
             Ogre::Matrix4 transform(
                 rotX.x, rotY.x, rotZ.x, pos.x,
@@ -44,6 +47,9 @@ void PHYLoader::load(GameState& gameState) const
 
             gameState.getTrackPositions().push_back(transform);
             gameState.getTrackOriginalImpulseLinear().push_back(Ogre::Vector3(impulseLinear.x, impulseLinear.y, -impulseLinear.z));
+            gameState.getTrackOriginalImpulseLinearInc().push_back(Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, -impulseLinearInc.z));
+            gameState.getTrackOriginalImpulseRot().push_back(Ogre::Vector3(impulseRot.x, impulseRot.y, -impulseRot.z));
+            gameState.getTrackOriginalImpulseRotInc().push_back(Ogre::Vector3(impulseRotInc.x, impulseRotInc.y, -impulseRotInc.z));
 
             fileToLoad->close();
         }

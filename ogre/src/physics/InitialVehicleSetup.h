@@ -34,10 +34,11 @@ struct InitialVehicleSetup
     bool mLimitSpringParamsF;
     bool mLimitSpringParamsR;
 
-    Ogre::Real mAirDensityLinear;
-    Ogre::Real mAirDensityAngular;
+    Ogre::Real mAirDensityTranslation;
+    Ogre::Real mAirDensityRot;
 
     Ogre::Real mChassisMass;
+    Ogre::Real mChassisInvMass;
     Ogre::Real mChassisRestitution;
     Ogre::Real mChassisFriction;
 
@@ -47,6 +48,13 @@ struct InitialVehicleSetup
     Ogre::Real mWheelsFriction;
 
     Ogre::Vector3 mInitialImpulseLinear;
+    Ogre::Vector3 mInitialImpulseLinearInc;
+    Ogre::Vector3 mInitialImpulseRot;
+    Ogre::Vector3 mInitialImpulseRotInc;
+
+    Ogre::Vector3 mMomentOfInertia;
+
+    Ogre::Real mGravityForce;
 };
 
 

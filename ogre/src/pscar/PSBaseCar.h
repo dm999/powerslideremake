@@ -36,6 +36,9 @@ public:
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialImpulseLinear,
+                            const Ogre::Vector3& initialImpulseLinearInc,
+                            const Ogre::Vector3& initialImpulseRot,
+                            const Ogre::Vector3& initialImpulseRotInc,
                             bool isAI);
 
     void repositionVehicle(const Ogre::Matrix4& transform); // for multiplayer
@@ -88,6 +91,7 @@ protected:
     void stopSounds();
 
     float getCarParameter(const std::string& section, const std::string& key, bool isSpline = false) const;
+    Ogre::Vector3 getCarArray3Parameter(const std::string& section, const std::string& key) const;
     Ogre::Vector4 getCarArray4Parameter(const std::string& section, const std::string& key) const;
     std::vector<std::string> getCarArrayValueParameter(const std::string& section, const std::string& key) const;
 

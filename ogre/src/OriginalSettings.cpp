@@ -106,9 +106,10 @@ Ogre::Vector4 STRSettings::getArray4Value(const std::string& section, const std:
     return getArray4Value(section, key, isFound);
 }
 
-Ogre::Vector3 STRSettings::getArray3Value(const std::string& section, const std::string& key) const
+Ogre::Vector3 STRSettings::getArray3Value(const std::string& section, const std::string& key, bool& isFound) const
 {
     Ogre::Vector3 res = Ogre::Vector3::ZERO;
+    isFound = false;
 
     if(mIsSTRLoaded)
     {
@@ -116,11 +117,18 @@ Ogre::Vector3 STRSettings::getArray3Value(const std::string& section, const std:
         if(!val.empty())
         {
             sscanf(val.c_str(), "{%f,%f,%f}", &res.x, &res.y, &res.z);
+            isFound = true;
         }
-        else {assert(false && "STRSettings::getArray3Value: not found");}
+        //else {assert(false && "STRSettings::getArray3Value: not found");}
     }
 
     return res;
+}
+
+Ogre::Vector3 STRSettings::getArray3Value(const std::string& section, const std::string& key) const
+{
+    bool isFound;
+    return getArray3Value(section, key, isFound);
 }
 
 Ogre::Vector2 STRSettings::getArray2Value(const std::string& section, const std::string& key) const

@@ -468,7 +468,13 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
+                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, 
+                    mModeContext.mGameState.getTrackPositions()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                    false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
                 humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
@@ -510,7 +516,13 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.setCharacterName(humanCharacter);
 
-                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, mModeContext.mGameState.getTrackPositions()[q], false, sessionStartInfo.mPlayers[q], true);
+                humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, 
+                    mModeContext.mGameState.getTrackPositions()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
+                    mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                    false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
                 humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
@@ -535,7 +547,13 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
             mModeContext.mGameState.getMultiplayerCarAI(q).setCharacterName(aiCharacter);
 
-            mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacter, mModeContext.mGameState.getTrackPositions()[q], false, "", false);
+            mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacter, 
+                mModeContext.mGameState.getTrackPositions()[q], 
+                mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
+                mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
+                mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
+                mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                false, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 

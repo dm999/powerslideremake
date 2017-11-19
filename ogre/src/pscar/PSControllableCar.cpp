@@ -78,7 +78,10 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     Physics * world,
                                     const std::string& characterName,
                                     const Ogre::Matrix4& transform,
-                                    const Ogre::Vector3& initialForcesLinear,
+                                    const Ogre::Vector3& initialImpulseLinear,
+                                    const Ogre::Vector3& initialImpulseLinearInc,
+                                    const Ogre::Vector3& initialImpulseRot,
+                                    const Ogre::Vector3& initialImpulseRotInc,
                                     bool isPossesCamera,
                                     bool isAI)
 {
@@ -103,7 +106,8 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mParticles = gameState.getParticles();
 
     PSBaseCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
-        transform, initialForcesLinear,
+        transform, 
+        initialImpulseLinear, initialImpulseLinearInc, initialImpulseRot, initialImpulseRotInc,
         isAI);
 
 #if 0

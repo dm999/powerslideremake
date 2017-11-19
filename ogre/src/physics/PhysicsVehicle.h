@@ -20,11 +20,18 @@ public:
     PhysicsVehicle(Physics* physics, const InitialVehicleSetup& initialVehicleSetup, Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis);
     virtual ~PhysicsVehicle();
 
-    void shiftPos(const Ogre::Vector3& shiftAmount);
+    void timeStep();
 
 protected:
 
     Physics* mPhysics;
+
+    Ogre::Vector3 mImpulseLinear;
+    Ogre::Vector3 mImpulseLinearInc;
+    Ogre::Vector3 mImpulseRot;
+    Ogre::Vector3 mImpulseRotInc;
+
+    Ogre::Real mVehicleVelocityMod;
 
     Ogre::SceneNode *mWheelNodes[mWheelsAmount];
     Ogre::SceneNode *mChassis;
@@ -40,6 +47,15 @@ protected:
     CommonIncludes::shared_ptr<btCollisionObject> mWheelFR;
 
 private:
+
+    void reposition(const Ogre::Vector3& posDiff);
+
+    void integrateLinear();
+    void integrateRot();
+
+    Ogre::Real momentOfInertiaProj(const Ogre::Vector3& axis)const;
+
+    const InitialVehicleSetup& mInitialVehicleSetup;
 };
 
 #endif

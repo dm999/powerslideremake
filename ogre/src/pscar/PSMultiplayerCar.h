@@ -27,6 +27,10 @@ public:
                             Physics * world,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
+                            const Ogre::Vector3& initialImpulseLinear,
+                            const Ogre::Vector3& initialImpulseLinearInc,
+                            const Ogre::Vector3& initialImpulseRot,
+                            const Ogre::Vector3& initialImpulseRotInc,
                             bool isPossesCamera, const std::string& humanName, bool isHuman);
 
     /**

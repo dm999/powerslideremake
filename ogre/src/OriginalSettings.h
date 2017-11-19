@@ -35,6 +35,7 @@ public:
     /**
      * extract value from string {a, b, c}
      */
+    Ogre::Vector3 getArray3Value(const std::string& section, const std::string& key, bool& isFound) const;
     Ogre::Vector3 getArray3Value(const std::string& section, const std::string& key) const;
 
     /**

@@ -105,6 +105,9 @@ public:
 
     std::vector<Ogre::Matrix4>& getTrackPositions(){return mTrackPositions;}
     std::vector<Ogre::Vector3>& getTrackOriginalImpulseLinear(){return mTrackOriginalImpulseLinear;}
+    std::vector<Ogre::Vector3>& getTrackOriginalImpulseLinearInc(){return mTrackOriginalImpulseLinearInc;}
+    std::vector<Ogre::Vector3>& getTrackOriginalImpulseRot(){return mTrackOriginalImpulseRot;}
+    std::vector<Ogre::Vector3>& getTrackOriginalImpulseRotInc(){return mTrackOriginalImpulseRotInc;}
 
     std::vector<Particle>& getParticles(){return mParticles;}
     const std::vector<Particle>& getParticles()const{return mParticles;}
@@ -207,6 +210,9 @@ private:
 
     std::vector<Ogre::Matrix4> mTrackPositions;
     std::vector<Ogre::Vector3> mTrackOriginalImpulseLinear;
+    std::vector<Ogre::Vector3> mTrackOriginalImpulseLinearInc;
+    std::vector<Ogre::Vector3> mTrackOriginalImpulseRot;
+    std::vector<Ogre::Vector3> mTrackOriginalImpulseRotInc;
 
     std::vector<Particle> mParticles;
 

@@ -340,7 +340,7 @@
           <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1885.75" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="30.412876993802456">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1929.853515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="8.361119181302456">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -355,7 +355,10 @@ virtual void initModel( lua_State * pipeline,
                             Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
-                            const Ogre::Vector3&amp; initialForcesLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinearInc,
+                            const Ogre::Vector3&amp; initialImpulseRot,
+                            const Ogre::Vector3&amp; initialImpulseInc,
                             bool isAI)
 
 // for multiplayer
@@ -625,7 +628,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2341.486328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-29.120090767698457">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2385.58984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="-51.17184858019846">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -637,7 +640,10 @@ virtual void initModel( lua_State * pipeline,
                             Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
-                            const Ogre::Vector3&amp; initialForcesLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinearInc,
+                            const Ogre::Vector3&amp; initialImpulseRot,
+                            const Ogre::Vector3&amp; initialImpulseInc,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera,
                             bool isAI = true)
@@ -955,7 +961,7 @@ void refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bo
           <y:Geometry height="570.4779855747715" width="814.9492552746156" x="5442.525372362692" y="-1545.2389927873853"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="459.736328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="55.37082872488577">&lt;&lt;PSPlayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="518.541015625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="811.662109375" x="1.6435729498080036" y="25.96848497488577">&lt;&lt;PSPlayerCar.h&gt;&gt;
 
 PSPlayerCar
 
@@ -967,6 +973,10 @@ virtual void initModel( lua_State * pipeline,
                             Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
+                            const Ogre::Vector3&amp; initialImpulseLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinearInc,
+                            const Ogre::Vector3&amp; initialImpulseRot,
+                            const Ogre::Vector3&amp; initialImpulseInc,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera)
 
@@ -1007,7 +1017,7 @@ Ogre::Timer mTimerOversteer</y:NodeLabel>
           <y:Geometry height="719.0561660087035" width="652.036857551991" x="6513.981571224004" y="-1619.5280830043512"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="-2.650627933148371">&lt;&lt;PSAICar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="624.888671875" x="13.574092838495744" y="-24.70238574564837">&lt;&lt;PSAICar.h&gt;&gt;
 
 PSAICar
 
@@ -1019,7 +1029,10 @@ virtual void initModel( lua_State * pipeline,
                             Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
-                            const Ogre::Vector3&amp; initialForcesLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinearInc,
+                            const Ogre::Vector3&amp; initialImpulseRot,
+                            const Ogre::Vector3&amp; initialImpulseInc,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera)
 
@@ -1151,7 +1164,7 @@ Ogre::Vector3 magic</y:NodeLabel>
           <y:Geometry height="607.6943625855972" width="542.4107110025902" x="6568.794644498705" y="-633.8471812927982"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="562.64453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="36.781527376295344" y="22.52491566779861">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="621.44921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="468.84765625" x="36.781527376295344" y="-6.877428082201391">&lt;&lt;PSMultiplayerCar.h&gt;&gt;
 
 PSMultiplayerCar
 
@@ -1163,6 +1176,10 @@ void initModel( lua_State * pipeline,
                             Physics * world,
                             GameCars gameCar,
                             const Ogre::Matrix4&amp; transform,
+                            const Ogre::Vector3&amp; initialImpulseLinear,
+                            const Ogre::Vector3&amp; initialImpulseLinearInc,
+                            const Ogre::Vector3&amp; initialImpulseRot,
+                            const Ogre::Vector3&amp; initialImpulseInc,
                             const std::vector&lt;Particle&gt;&amp; particles,
                             bool isPossesCamera, const std::string&amp; humanName, bool isHuman)
 
@@ -1199,7 +1216,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2870.728515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="43.23242499336084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2958.935546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="-0.8710906316391629">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1248,6 +1265,9 @@ const std::vector&lt;LightEclusion&gt;&amp; getExclusions()const
 
 std::vector&lt;Ogre::Matrix4&gt;&amp; getTrackPositions()
 std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalImpulseLinear()
+std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalImpulseLinearInc()
+std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalImpulseRot()
+std::vector&lt;Ogre::Vector3&gt;&amp; getTrackOriginalImpulseRotInc()
 
 HierarchyNode&amp; getHierarchyNode()
 
@@ -1353,6 +1373,9 @@ std::vector&lt;LightEclusion&gt; mLightExclusions
 
 std::vector&lt;Ogre::Matrix4&gt; mTrackPositions
 std::vector&lt;Ogre::Vector3&gt; mTrackOriginalImpulseLinear
+std::vector&lt;Ogre::Vector3&gt; mTrackOriginalImpulseLinearInc
+std::vector&lt;Ogre::Vector3&gt; mTrackOriginalImpulseRot
+std::vector&lt;Ogre::Vector3&gt; mTrackOriginalImpulseRotInc
 
 HierarchyNode mBaseHierarchyNode
 

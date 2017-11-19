@@ -20,10 +20,6 @@
 
 #include "../GameState.h"
 
-namespace{
-    Ogre::Vector3 gridShift(0.0f, 1.0f, 0.0f);
-}
-
 Ogre::NameGenerator PSBaseCar::nameGenMaterials("Scene/Material/Vehicle/Name");
 Ogre::NameGenerator PSBaseCar::nameGenTextures("Scene/Texture/Vehicle/Name");
 
@@ -58,6 +54,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                             const std::string& characterName,
                             const Ogre::Matrix4& transform,
                             const Ogre::Vector3& initialImpulseLinear,
+                            const Ogre::Vector3& initialImpulseLinearInc,
+                            const Ogre::Vector3& initialImpulseRot,
+                            const Ogre::Vector3& initialImpulseRotInc,
                             bool isAI)
 {
 
@@ -199,7 +198,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     rot.ToAngleAxis(angle, axis);
     rot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
     mModelNode->setOrientation(rot);
-    mModelNode->setPosition(transform.getTrans() + gridShift);
+    mModelNode->setPosition(transform.getTrans());
+
+    STRSettings misSettings;
+    misSettings.parse(gameState.getPFLoaderStore(), "data/misc", "car_misc.str");
 
     //init parms
     mCarSettings.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
@@ -284,12 +286,18 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mLimitSpringParamsF = luaManager.ReadScalarBool("Model.Physics.Wheels.Front.LimitSpringParams", pipeline);
     initialVehicleSetup.mLimitSpringParamsR = luaManager.ReadScalarBool("Model.Physics.Wheels.Rear.LimitSpringParams", pipeline);
 
-    initialVehicleSetup.mAirDensityLinear = getCarParameter("", "air density translation");
-    initialVehicleSetup.mAirDensityAngular = getCarParameter("", "air density rotation");
+    initialVehicleSetup.mAirDensityTranslation = getCarParameter("", "air density translation");
+    initialVehicleSetup.mAirDensityRot = getCarParameter("", "air density rotation");
 
     initialVehicleSetup.mChassisMass = getCarParameter("", "mass");
+    initialVehicleSetup.mChassisInvMass = 1.0f / initialVehicleSetup.mChassisMass;
+    initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");
+
+    initialVehicleSetup.mGravityForce = misSettings.getFloatValue("", "gravity force");
+
     initialVehicleSetup.mChassisRestitution = luaManager.ReadScalarFloat("Model.Physics.Chassis.Restitution", pipeline);
     initialVehicleSetup.mChassisFriction = luaManager.ReadScalarFloat("Model.Physics.Chassis.Friction", pipeline);
+
 
     initialVehicleSetup.mWheelsFMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.Mass", pipeline);
     initialVehicleSetup.mWheelsRMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline);
@@ -297,6 +305,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mWheelsFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline);
 
     initialVehicleSetup.mInitialImpulseLinear = initialImpulseLinear;
+    initialVehicleSetup.mInitialImpulseLinearInc = initialImpulseLinearInc;
+    initialVehicleSetup.mInitialImpulseRot = initialImpulseRot;
+    initialVehicleSetup.mInitialImpulseRotInc = initialImpulseRotInc;
 
     //position wheels
     {
@@ -323,7 +334,7 @@ void PSBaseCar::repositionVehicle(const Ogre::Matrix4& transform)
     Ogre::Vector3 axis;
     chassisRot.ToAngleAxis(angle, axis);
     chassisRot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
-    Ogre::Vector3 chassisPos(transform.getTrans() + gridShift);
+    Ogre::Vector3 chassisPos(transform.getTrans());
 
     repositionVehicle(chassisPos, chassisRot);
 
@@ -528,6 +539,24 @@ float PSBaseCar::getCarParameter(const std::string& section, const std::string& 
             {
                 res = mDefaultSplines.getFloatValue(section, key, isFoundVal);
             }
+        }
+    }
+
+    return res;
+}
+
+Ogre::Vector3 PSBaseCar::getCarArray3Parameter(const std::string& section, const std::string& key) const
+{
+    Ogre::Vector3 res = Ogre::Vector3::ZERO;
+
+    bool isFoundVal = false;
+    res = mCarSettings.getArray3Value(section, key, isFoundVal);
+    if(!isFoundVal)
+    {
+        res = mTrackSettings.getArray3Value(section, key, isFoundVal);
+        if(!isFoundVal)
+        {
+            res = mDefaultSettings.getArray3Value(section, key, isFoundVal);
         }
     }
 

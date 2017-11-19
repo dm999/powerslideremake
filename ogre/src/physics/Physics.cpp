@@ -55,7 +55,7 @@ void Physics::timeStep()
 
     for(vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
-        (*i).second->shiftPos(Ogre::Vector3(0.0f, 0.01f, 0.0f));
+        (*i).second->timeStep();
     }
 }
 
