@@ -46,6 +46,10 @@ protected:
     CommonIncludes::shared_ptr<btCollisionObject> mWheelFL;
     CommonIncludes::shared_ptr<btCollisionObject> mWheelFR;
 
+    CommonIncludes::shared_ptr<btSphereShape> mBodyShape;
+
+    CommonIncludes::shared_ptr<btCollisionObject> mBody;
+
 private:
 
     void reposition(const Ogre::Vector3& posDiff);

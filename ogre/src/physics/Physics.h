@@ -48,6 +48,7 @@ public:
 
     void addCollisionObject(btCollisionObject* object);
     void removeCollisionObject(btCollisionObject* object);
+    bool findCollision(btCollisionObject* object, Ogre::Vector3& worldNormal, Ogre::Real& distance);
 
 private:
 

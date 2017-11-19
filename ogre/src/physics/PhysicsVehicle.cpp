@@ -17,6 +17,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics, const InitialVehicleSetup& init
         mWheelNodes[q] = wheelNodes[q];
     }
 
+    //wheels
     mWheelShapeFL = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
     mWheelShapeFR = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
     mWheelShapeRL = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
@@ -43,10 +44,22 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics, const InitialVehicleSetup& init
     mWheelRR->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointRRWheel));
     mWheelRR->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
 
-    mPhysics->addCollisionObject(mWheelFL.get());
-    mPhysics->addCollisionObject(mWheelFR.get());
-    mPhysics->addCollisionObject(mWheelRL.get());
-    mPhysics->addCollisionObject(mWheelRR.get());
+    //mPhysics->addCollisionObject(mWheelFL.get());
+    //mPhysics->addCollisionObject(mWheelFR.get());
+    //mPhysics->addCollisionObject(mWheelRL.get());
+    //mPhysics->addCollisionObject(mWheelRR.get());
+    //wheels END
+
+    //body
+    mBodyShape = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mBodyRadius));
+    mBody = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
+
+    mBody->setCollisionShape(mBodyShape.get());
+    mBody->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mBodyBasePos));
+    mBody->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
+
+    mPhysics->addCollisionObject(mBody.get());
+    //body END
 
     mImpulseLinear = mInitialVehicleSetup.mInitialImpulseLinear;
     mImpulseLinearInc = mInitialVehicleSetup.mInitialImpulseLinearInc;
@@ -56,10 +69,12 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics, const InitialVehicleSetup& init
 
 PhysicsVehicle::~PhysicsVehicle()
 {
-    mPhysics->removeCollisionObject(mWheelFL.get());
-    mPhysics->removeCollisionObject(mWheelFR.get());
-    mPhysics->removeCollisionObject(mWheelRL.get());
-    mPhysics->removeCollisionObject(mWheelRR.get());
+    //mPhysics->removeCollisionObject(mWheelFL.get());
+    //mPhysics->removeCollisionObject(mWheelFR.get());
+    //mPhysics->removeCollisionObject(mWheelRL.get());
+    //mPhysics->removeCollisionObject(mWheelRR.get());
+
+    mPhysics->removeCollisionObject(mBody.get());
 }
 
 void PhysicsVehicle::timeStep()
@@ -96,6 +111,12 @@ void PhysicsVehicle::timeStep()
 
     //do stuff
 
+    Ogre::Vector3 worldNormal;
+    Ogre::Real distance = 0.0f;
+    if(mPhysics->findCollision(mBody.get(), worldNormal, distance))
+    {
+    }
+
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
     //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
@@ -116,6 +137,8 @@ void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
     mWheelFR->getWorldTransform().setOrigin(mWheelFR->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
     mWheelRL->getWorldTransform().setOrigin(mWheelRL->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
     mWheelRR->getWorldTransform().setOrigin(mWheelRR->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
+
+    mBody->getWorldTransform().setOrigin(mBody->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
 }
 
 void PhysicsVehicle::integrateLinear()

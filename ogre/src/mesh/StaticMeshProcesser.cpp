@@ -895,10 +895,11 @@ void StaticMeshProcesser::addStaticTrimesh( Physics * world,
 
     mParts[lastPart].offset = offset;
 
+    /*
     for(size_t q = 0; q < mParts[lastPart].mVertexBuffer.size(); ++q)
     {
         mParts[lastPart].mVertexBuffer[q] -= mParts[lastPart].offset;
-    }
+    }*/
 
     for(size_t w = 0; w < mParts[lastPart].mBatches.size(); ++w)
     {

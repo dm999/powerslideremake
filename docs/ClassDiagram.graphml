@@ -3685,7 +3685,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="74.77667722210663">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="67.42609128460663">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3708,6 +3708,7 @@ void removeVehicle(const PSBaseVehicle * vehiclePtr)
 
 void addCollisionObject(btCollisionObject* object)
 void removeCollisionObject(btCollisionObject* object)
+bool findCollision(btCollisionObject* object)
 
 private:
 
@@ -3731,10 +3732,10 @@ vehicles mVehicles</y:NodeLabel>
     <node id="n85">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="424.44027926792796" width="549.8481067828084" x="12745.075946608596" y="-1622.220139633964"/>
+          <y:Geometry height="673.2834438402738" width="549.8481067828084" x="12745.075946608596" y="-1746.641721920137"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="386.23046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.205078125" x="95.8215143289035" y="19.10490525896398">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.205078125" x="95.8215143289035" y="33.26769848263689">&lt;&lt;Physics.h&gt;&gt;
 
 PhysicsVehicle
 
@@ -3759,7 +3760,22 @@ CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeFR
 CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRL
 CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRR
 CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFL
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFR</y:NodeLabel>
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFR
+
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mBodyShape
+
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mBody
+
+private:
+
+void reposition(const Ogre::Vector3&amp; posDiff)
+
+void integrateLinear()
+void integrateRot()
+
+Ogre::Real momentOfInertiaProj(const Ogre::Vector3&amp; axis)const
+
+const InitialVehicleSetup&amp; mInitialVehicleSetup</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

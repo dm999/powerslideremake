@@ -10,6 +10,7 @@
 #include "BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
 #include "BulletCollision/CollisionShapes/btEmptyShape.h"
 #include "BulletCollision/CollisionShapes/btTriangleMesh.h"
+#include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 
 #include "../tools/PhysicsTools.h"
 
@@ -28,7 +29,10 @@ struct GameWorld
         mDispatcher(&mCollisionConfiguration),
         mBroadphase(btVector3(-aabbMax, -aabbMax, -aabbMax), btVector3(aabbMax, aabbMax, aabbMax)),
         mCollisionWorld(&mDispatcher, &mBroadphase, &mCollisionConfiguration)
-    {}
+    {
+        //btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(mCollisionWorld.getDispatcher());
+        //btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+    }
 
     ~GameWorld()
     {}
@@ -36,6 +40,7 @@ struct GameWorld
     btDefaultCollisionConfiguration mCollisionConfiguration;
     btCollisionDispatcher mDispatcher;
     btAxisSweep3 mBroadphase;
+    //bt32BitAxisSweep3 mBroadphase;
     btCollisionWorld mCollisionWorld;
 
 };
@@ -50,8 +55,6 @@ Physics::~Physics()
 void Physics::timeStep()
 {
     mGameWorld->mCollisionWorld.performDiscreteCollisionDetection();
-    const int numManifolds = mGameWorld->mCollisionWorld.getDispatcher()->getNumManifolds();
-
 
     for(vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
@@ -69,8 +72,8 @@ void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
 
     btBvhTriangleMeshShape * pGroundShape = static_cast<btBvhTriangleMeshShape*>(mStaticCollisionShapes[mStaticCollisionShapes.size() - 1].get());
 
-    btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
-    btGenerateInternalEdgeInfo(pGroundShape, triangleInfoMap);
+    //btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+    //btGenerateInternalEdgeInfo(pGroundShape, triangleInfoMap);
 
     pGroundShape->setMargin(0.2f);
 
@@ -81,11 +84,16 @@ void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
     collisionObject->setRollingFriction(bodyRollingFriction);
     collisionObject->getWorldTransform().setOrigin(PhysicsTools::convert(part.offset));
     collisionObject->getWorldTransform().setRotation(PhysicsTools::convert(Ogre::Quaternion::IDENTITY));
-    collisionObject->setCollisionFlags(collisionObject->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+    //collisionObject->setCollisionFlags(collisionObject->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+    //collisionObject->setActivationState(DISABLE_DEACTIVATION);
 
     mStaticCollisionObjects.push_back(collisionObject);
 
-    mGameWorld->mCollisionWorld.addCollisionObject(collisionObject.get(), btBroadphaseProxy::StaticFilter, btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
+    mGameWorld->mCollisionWorld.addCollisionObject(
+        collisionObject.get(), 
+        btBroadphaseProxy::StaticFilter, 
+        btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter
+    );
 
     mStaticBodies.insert(std::make_pair(collisionObject.get(), std::make_pair(partIndex, batchIndex)));
 }
@@ -154,10 +162,65 @@ void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
 
 void Physics::addCollisionObject(btCollisionObject* object)
 {
-    mGameWorld->mCollisionWorld.addCollisionObject(object);
+    mGameWorld->mCollisionWorld.addCollisionObject(
+        object,
+        btBroadphaseProxy::KinematicFilter,
+        btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::KinematicFilter
+        );
+
+    //object->setActivationState(DISABLE_DEACTIVATION);
+
 }
 
 void Physics::removeCollisionObject(btCollisionObject* object)
 {
     mGameWorld->mCollisionWorld.removeCollisionObject(object);
+}
+
+bool Physics::findCollision(btCollisionObject* object, Ogre::Vector3& worldNormal, Ogre::Real& distance)
+{
+    bool ret = false;
+
+    const int numManifolds = mGameWorld->mCollisionWorld.getDispatcher()->getNumManifolds();
+    for (int i = 0; i < numManifolds; ++i)
+    {
+        btPersistentManifold * contact_manifold = mGameWorld->mCollisionWorld.getDispatcher()->getManifoldByIndexInternal(i);
+
+        const btCollisionObject * obj_0 = contact_manifold->getBody0();
+        const btCollisionObject * obj_1 = contact_manifold->getBody1();
+
+        if(object == obj_0 || object == obj_1)
+        {
+            bool swap = false;
+            if(object == obj_0)
+            {
+                swap = true;
+            }
+
+            int numContacts = contact_manifold->getNumContacts();
+
+            bool contactsFound = false;
+
+            for (int j = 0; j < numContacts; ++j)
+            {
+                btManifoldPoint& manifold_point = contact_manifold->getContactPoint(j);
+                distance = manifold_point.getDistance();
+
+                if(distance < 0.0f)
+                {
+                    contactsFound = true;
+                    worldNormal = PhysicsTools::convert(manifold_point.m_normalWorldOnB);
+                    break;
+                }
+            }
+
+            if(contactsFound)
+            {
+                ret = true;
+                break;
+            }
+        }
+    }
+
+    return ret;
 }
