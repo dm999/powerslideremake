@@ -13,7 +13,7 @@ void PSSpline::init(const std::vector<float>& values, float hScale, float vScale
     mHScale = hScale;
 }
 
-float PSSpline::getPoint(float val)
+float PSSpline::getPoint(float val) const
 {
     float res = 0.0f;
 

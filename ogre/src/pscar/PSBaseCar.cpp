@@ -309,6 +309,45 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mInitialImpulseRot = initialImpulseRot;
     initialVehicleSetup.mInitialImpulseRotInc = initialImpulseRotInc;
 
+    //splines
+    {
+        Ogre::Real hscale = getCarParameter("", "wheel under ground d_d hscale", true);
+        Ogre::Real vscale = getCarParameter("", "wheel under ground d_d vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "wheel under ground d_d");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mWheelUnderGroundDD.init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "wheel under ground v_v hscale", true);
+        Ogre::Real vscale = getCarParameter("", "wheel under ground v_v vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "wheel under ground v_v");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mWheelUnderGroundVV.init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "wheel under ground d_dv hscale", true);
+        Ogre::Real vscale = getCarParameter("", "wheel under ground d_dv vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "wheel under ground d_dv");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mWheelUnderGroundDDV.init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "wheel under ground v_dv hscale", true);
+        Ogre::Real vscale = getCarParameter("", "wheel under ground v_dv vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "wheel under ground v_dv");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mWheelUnderGroundVDV.init(splinePoints, hscale, vscale);
+    }
+    //splines END
+
     //position wheels
     {
         mWheelNodes[0]->setOrientation(initialVehicleSetup.mChassisRot);
@@ -597,6 +636,20 @@ std::vector<std::string> PSBaseCar::getCarArrayValueParameter(const std::string&
     }
 
     return res;
+}
+
+std::vector<Ogre::Real> PSBaseCar::convertSplinePoints(const std::vector<std::string>& points) const
+{
+    std::vector<Ogre::Real> ret(points.size());
+
+    for(size_t q = 0; q < points.size(); ++q)
+    {
+        Ogre::Real val;
+        Conversions::DMFromString(points[q], val);
+        ret[q] = val;
+    }
+
+    return ret;
 }
 
 void PSBaseCar::setVisibility(bool isVisible)

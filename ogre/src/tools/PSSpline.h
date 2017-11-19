@@ -11,7 +11,7 @@ public:
 
     void init(const std::vector<float>& values, float hScale, float vScale);
 
-    float getPoint(float val);
+    float getPoint(float val) const;
 
 private:
 

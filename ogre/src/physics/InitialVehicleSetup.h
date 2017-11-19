@@ -1,6 +1,8 @@
 #ifndef INITIALVEHICLESETUP_H
 #define INITIALVEHICLESETUP_H
 
+#include "../tools/PSSpline.h"
+
 struct InitialVehicleSetup
 {
     Ogre::Vector3 mChassisPos;
@@ -55,6 +57,11 @@ struct InitialVehicleSetup
     Ogre::Vector3 mMomentOfInertia;
 
     Ogre::Real mGravityForce;
+
+    PSSpline mWheelUnderGroundDD;
+    PSSpline mWheelUnderGroundVV;
+    PSSpline mWheelUnderGroundDDV;
+    PSSpline mWheelUnderGroundVDV;
 };
 
 

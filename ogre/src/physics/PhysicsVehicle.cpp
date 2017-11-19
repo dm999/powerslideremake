@@ -65,6 +65,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics, const InitialVehicleSetup& init
     mImpulseLinearInc = mInitialVehicleSetup.mInitialImpulseLinearInc;
     mImpulseRot = mInitialVehicleSetup.mInitialImpulseRot;
     mImpulseRotInc = mInitialVehicleSetup.mInitialImpulseRotInc;
+
+    mBodyGlobal = Ogre::Vector3::ZERO;
 }
 
 PhysicsVehicle::~PhysicsVehicle()
@@ -79,6 +81,8 @@ PhysicsVehicle::~PhysicsVehicle()
 
 void PhysicsVehicle::timeStep()
 {
+
+    mBodyGlobalPrev = mBodyGlobal;
 
     integrateLinear();
     integrateRot();
@@ -109,13 +113,7 @@ void PhysicsVehicle::timeStep()
     integrateLinear();
     integrateRot();
 
-    //do stuff
-
-    Ogre::Vector3 worldNormal;
-    Ogre::Real distance = 0.0f;
-    if(mPhysics->findCollision(mBody.get(), worldNormal, distance))
-    {
-    }
+    processBody();
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
@@ -164,4 +162,65 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
     ret = mInitialVehicleSetup.mMomentOfInertia.dotProduct(Ogre::Vector3(tmpRes * tmpRes));
 
     return ret;
+}
+
+Ogre::Vector3 PhysicsVehicle::customReflect(const Ogre::Vector3& normal, const Ogre::Vector3& input) const
+{
+    //d.polubotko - incorrect formula (40E8C0)
+    Ogre::Real dot = input.dotProduct(normal);
+    return input - dot * normal;
+}
+
+void PhysicsVehicle::processBody()
+{
+    Ogre::Vector3 bodyRot = mChassis->getOrientation() * mInitialVehicleSetup.mBodyBasePos;
+
+    mBodyGlobal = mChassis->getPosition() + mChassis->getOrientation() * mInitialVehicleSetup.mBodyBasePos;
+
+    Ogre::Matrix3 carRot;
+    mChassis->getOrientation().ToRotationMatrix(carRot);
+    Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
+    bodyRot -= matrixYColumn * 1.2f;
+
+    Ogre::Vector3 diffBodyPos = mBodyGlobal - mBodyGlobalPrev;
+
+    Ogre::Vector3 deriveImpulse = diffBodyPos * mInitialVehicleSetup.mChassisMass;
+
+    Ogre::Vector3 worldNormal;
+    Ogre::Real distance = 0.0f;
+    if(mPhysics->findCollision(mBody.get(), worldNormal, distance))
+    {
+        Ogre::Vector3 reflect = customReflect(worldNormal, deriveImpulse);
+        Ogre::Vector3 velocity = reflect * mInitialVehicleSetup.mChassisInvMass * -33.0f;
+        Ogre::Real impulseProj = -deriveImpulse.dotProduct(worldNormal);
+
+        Ogre::Real velocityMod = velocity.length();
+        if(velocityMod > 0.0f)
+        {
+            velocity.normalise();
+            //d.polubotko: TODO add traction spline here
+        }
+
+        distance = -distance;
+        distance += 1.7f;
+        distance += 1.0f;//d.polubotko: added to stabilize
+
+        Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(distance);
+        Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
+        Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
+        Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(distance);
+
+        Ogre::Real resultedImpulse = v_dv * d_dv + v_v + d_d;
+        if(resultedImpulse > 100.0f) resultedImpulse = 100.f;
+
+        velocity += worldNormal * resultedImpulse;
+
+        adjustImpulseInc(bodyRot, velocity);
+    }
+}
+
+void PhysicsVehicle::adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse)
+{
+    mImpulseRotInc += impulse.crossProduct(rotAxis);
+    mImpulseLinearInc += impulse;
 }

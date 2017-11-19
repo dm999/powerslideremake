@@ -340,7 +340,7 @@
           <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1929.853515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="8.361119181302456">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1959.255859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="-6.340052693697544">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -412,8 +412,10 @@ virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
 void stopSounds()
 
 float getCarParameter(const std::string&amp; section, const std::string&amp; key, bool isSpline = false) const
+Ogre::Vector3 getCarArray3Parameter(const std::string&amp; section, const std::string&amp; key) const
 Ogre::Vector4 getCarArray4Parameter(const std::string&amp; section, const std::string&amp; key) const
 std::vector&lt;std::string&gt; getCarArrayValueParameter(const std::string&amp; section, const std::string&amp; key) const
+std::vector&lt;Ogre::Real&gt; convertSplinePoints(const std::vector&lt;std::string&gt;&amp; points) const
 
 bool mIsAI
 
@@ -3732,10 +3734,10 @@ vehicles mVehicles</y:NodeLabel>
     <node id="n85">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="673.2834438402738" width="549.8481067828084" x="12745.075946608596" y="-1746.641721920137"/>
+          <y:Geometry height="764.7501205479471" width="549.8481067828084" x="12745.075946608596" y="-1792.3750602739735"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="606.748046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="358.205078125" x="95.8215143289035" y="33.26769848263689">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="724.357421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="503.546875" x="23.150615891403504" y="20.19634933647353">&lt;&lt;Physics.h&gt;&gt;
 
 PhysicsVehicle
 
@@ -3774,6 +3776,14 @@ void integrateLinear()
 void integrateRot()
 
 Ogre::Real momentOfInertiaProj(const Ogre::Vector3&amp; axis)const
+Ogre::Vector3 customReflect(const Ogre::Vector3&amp; normal, const Ogre::Vector3&amp; input) const
+
+void processBody()
+
+void adjustImpulseInc(const Ogre::Vector3&amp; rotAxis, const Ogre::Vector3&amp; impulse)
+
+Ogre::Vector3 mBodyGlobal
+Ogre::Vector3 mBodyGlobalPrev
 
 const InitialVehicleSetup&amp; mInitialVehicleSetup</y:NodeLabel>
           <y:Shape type="rectangle"/>

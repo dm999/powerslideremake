@@ -58,6 +58,14 @@ private:
     void integrateRot();
 
     Ogre::Real momentOfInertiaProj(const Ogre::Vector3& axis)const;
+    Ogre::Vector3 customReflect(const Ogre::Vector3& normal, const Ogre::Vector3& input) const;
+
+    void processBody();
+
+    void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
+
+    Ogre::Vector3 mBodyGlobal;
+    Ogre::Vector3 mBodyGlobalPrev;
 
     const InitialVehicleSetup& mInitialVehicleSetup;
 };

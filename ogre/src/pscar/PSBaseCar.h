@@ -94,6 +94,8 @@ protected:
     Ogre::Vector3 getCarArray3Parameter(const std::string& section, const std::string& key) const;
     Ogre::Vector4 getCarArray4Parameter(const std::string& section, const std::string& key) const;
     std::vector<std::string> getCarArrayValueParameter(const std::string& section, const std::string& key) const;
+    std::vector<Ogre::Real> convertSplinePoints(const std::vector<std::string>& points) const;
+
 
     bool mIsAI;
 

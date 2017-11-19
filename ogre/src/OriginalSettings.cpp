@@ -69,7 +69,7 @@ std::vector<std::string> STRSettings::getArrayValue(const std::string& section, 
             res = Tools::splitpath(buffer, delims);
             isFound = true;
         }
-        else {assert(false && "STRSettings::getArrayValue: not found");}
+        //else {assert(false && "STRSettings::getArrayValue: not found");}
     }
 
     return res;
