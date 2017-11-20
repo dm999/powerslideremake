@@ -53,12 +53,14 @@ protected:
 private:
 
     void reposition(const Ogre::Vector3& posDiff);
+    void rerotation(const Ogre::Quaternion& rot);
 
     void integrateLinear();
     void integrateRot();
 
     Ogre::Real momentOfInertiaProj(const Ogre::Vector3& axis)const;
-    Ogre::Vector3 customReflect(const Ogre::Vector3& normal, const Ogre::Vector3& input) const;
+    Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input) const;
+    void createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle) const;
 
     void processBody();
 

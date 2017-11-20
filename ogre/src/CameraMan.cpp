@@ -167,7 +167,7 @@ bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3
         for(int q = 0; q < callback.m_collisionObjects.size(); ++q)
         {
             const btCollisionObject* object = callback.m_collisionObjects[q];
-            //if(object && object->getInvMass() == 0.0f)//collision only with static
+            if(object && object->isStaticObject())
             {
                 res = true;
                 if(callback.m_hitFractions[q] < minimalFraction)

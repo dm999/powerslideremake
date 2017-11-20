@@ -102,8 +102,24 @@ void PhysicsVehicle::timeStep()
     Ogre::Real rotImpulseMod = mImpulseRot.length();
     if(rotImpulseMod > 0.00001f)
     {
-        //Ogre::Vector3 normalisedImpulseRot = mImpulseRot.normalisedCopy();
-        //Ogre::Real momentProj = momentOfInertiaProj(normalisedImpulseRot);
+        Ogre::Vector3 normalisedImpulseRot = mImpulseRot.normalisedCopy();
+        Ogre::Real momentProj = momentOfInertiaProj(normalisedImpulseRot);
+
+        Ogre::Real rotAngle = 1.0f / momentProj * rotImpulseMod;
+
+        Ogre::Matrix3 carRot;
+        mChassis->getOrientation().ToRotationMatrix(carRot);
+
+        Ogre::Vector3 rotMatrixAxisY = carRot.GetColumn(1);
+        Ogre::Vector3 rotMatrixAxisZ = carRot.GetColumn(2);
+        createRotMatrix(rotMatrixAxisY, normalisedImpulseRot, rotAngle);
+        createRotMatrix(rotMatrixAxisZ, normalisedImpulseRot, rotAngle);
+        Ogre::Vector3 rotMatrixAxisX = rotMatrixAxisY.crossProduct(rotMatrixAxisZ);
+        carRot.SetColumn(0, rotMatrixAxisX);
+        carRot.SetColumn(1, rotMatrixAxisY);
+        carRot.SetColumn(2, rotMatrixAxisZ);
+        rerotation(Ogre::Quaternion (carRot));
+
         mImpulseRot *= mInitialVehicleSetup.mAirDensityRot;
     }
 
@@ -139,6 +155,35 @@ void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
     mBody->getWorldTransform().setOrigin(mBody->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
 }
 
+void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
+{
+    Ogre::Vector3 chassisPos = mChassis->getPosition();
+
+    mWheelNodes[0]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointRRWheel);
+    mWheelNodes[1]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointRLWheel);
+    mWheelNodes[2]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointFRWheel);
+    mWheelNodes[3]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointFLWheel);
+    for(int q = 0; q < mWheelsAmount; ++q)
+    {
+        mWheelNodes[q]->setOrientation(rot);
+    }
+
+    mChassis->setOrientation(rot);
+
+
+    mWheelFL->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[3]->getPosition()));
+    mWheelFR->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[2]->getPosition()));
+    mWheelRL->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[1]->getPosition()));
+    mWheelRR->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[0]->getPosition()));
+
+    mWheelFL->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+    mWheelFR->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+    mWheelRL->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+    mWheelRR->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+
+    mBody->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+}
+
 void PhysicsVehicle::integrateLinear()
 {
     mImpulseLinear += mImpulseLinearInc;
@@ -164,9 +209,9 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
     return ret;
 }
 
-Ogre::Vector3 PhysicsVehicle::customReflect(const Ogre::Vector3& normal, const Ogre::Vector3& input) const
+Ogre::Vector3 PhysicsVehicle::findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input) const
 {
-    //d.polubotko - incorrect formula (40E8C0)
+    //40E8C0
     Ogre::Real dot = input.dotProduct(normal);
     return input - dot * normal;
 }
@@ -190,14 +235,14 @@ void PhysicsVehicle::processBody()
     Ogre::Real distance = 0.0f;
     if(mPhysics->findCollision(mBody.get(), worldNormal, distance))
     {
-        Ogre::Vector3 reflect = customReflect(worldNormal, deriveImpulse);
-        Ogre::Vector3 velocity = reflect * mInitialVehicleSetup.mChassisInvMass * -33.0f;
+        Ogre::Vector3 tangent = findTangent(worldNormal, deriveImpulse);
+        Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;
         Ogre::Real impulseProj = -deriveImpulse.dotProduct(worldNormal);
 
-        Ogre::Real velocityMod = velocity.length();
+        Ogre::Real velocityMod = velocityTangent.length();
         if(velocityMod > 0.0f)
         {
-            velocity.normalise();
+            velocityTangent.normalise();
             //d.polubotko: TODO add traction spline here
         }
 
@@ -213,9 +258,9 @@ void PhysicsVehicle::processBody()
         Ogre::Real resultedImpulse = v_dv * d_dv + v_v + d_d;
         if(resultedImpulse > 100.0f) resultedImpulse = 100.f;
 
-        velocity += worldNormal * resultedImpulse;
+        velocityTangent += worldNormal * resultedImpulse;
 
-        adjustImpulseInc(bodyRot, velocity);
+        adjustImpulseInc(bodyRot, velocityTangent);
     }
 }
 
@@ -223,4 +268,15 @@ void PhysicsVehicle::adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::
 {
     mImpulseRotInc += impulse.crossProduct(rotAxis);
     mImpulseLinearInc += impulse;
+}
+
+void PhysicsVehicle::createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle) const
+{
+    Ogre::Vector3 normalisedImpulseProj = normalisedImpulse * matAxis.dotProduct(normalisedImpulse);
+    Ogre::Vector3 diff = matAxis - normalisedImpulseProj;
+    Ogre::Vector3 cross = normalisedImpulse.crossProduct(diff);
+    Ogre::Vector3 cosAngle(Ogre::Math::Cos(angle));
+    Ogre::Vector3 sinAngle(Ogre::Math::Sin(angle));
+    matAxis = cosAngle * diff - sinAngle * cross + normalisedImpulseProj;
+    if(matAxis.squaredLength() > 0.0f) matAxis.normalise();
 }
