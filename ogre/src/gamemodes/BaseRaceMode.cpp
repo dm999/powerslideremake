@@ -573,7 +573,7 @@ void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::Axi
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
 
-    mWorld.reset(new Physics());
+    mWorld.reset(new Physics(&mStaticMeshProcesser));
     //mWorld->getBulletDynamicsWorld()->setInternalTickCallback(internalTickCallback, this);
 
     if(mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugPhysics", mModeContext.mPipeline))

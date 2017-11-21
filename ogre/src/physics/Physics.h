@@ -22,11 +22,13 @@ class PSBaseVehicle;
 class PhysicsVehicle;
 struct InitialVehicleSetup;
 
+class StaticMeshProcesser;
+
 class Physics
 {
 public:
 
-    Physics();
+    Physics(StaticMeshProcesser * meshProesser);
     ~Physics();
 
     void timeStep();
@@ -48,9 +50,14 @@ public:
 
     void addCollisionObject(btCollisionObject* object);
     void removeCollisionObject(btCollisionObject* object);
-    bool findCollision(btCollisionObject* object, Ogre::Vector3& worldNormal, Ogre::Real& distance);
+    bool findCollision(const btCollisionObject* const object, const btCollisionObject*& staticObj, 
+        Ogre::Vector3& pointOnStatic,
+        int& triIndex,
+        Ogre::Vector3& worldNormal, Ogre::Real& distance);
 
 private:
+
+    StaticMeshProcesser * mMeshProesser;
 
     void createTrimesh(const DE2Part& part, const DE2SingleBatch& batch);
 

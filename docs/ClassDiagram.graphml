@@ -1568,7 +1568,7 @@ void loadTerrainMaps()
 const DE2SingleBatch&amp; getBatchByAddress(std::pair&lt;int, int&gt; address)const
 const DE2Part&amp; getPartAddress(std::pair&lt;int, int&gt; address)const
 
-unsigned char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
+char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
 
 Ogre::Real getLatitudeFriction(unsigned char terrainType) const
 Ogre::Real getLongtitudeFriction(unsigned char terrainType) const
@@ -3687,7 +3687,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="592.046875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="67.42609128460663">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="30.673161597106628">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3710,9 +3710,14 @@ void removeVehicle(const PSBaseVehicle * vehiclePtr)
 
 void addCollisionObject(btCollisionObject* object)
 void removeCollisionObject(btCollisionObject* object)
-bool findCollision(btCollisionObject* object)
+bool findCollision(const btCollisionObject* const object, const btCollisionObject*&amp; staticObj, 
+    Ogre::Vector3&amp; pointOnStatic,
+    int&amp; triIndex,
+    Ogre::Vector3&amp; worldNormal, Ogre::Real&amp; distance)
 
 private:
+
+StaticMeshProcesser * mMeshProesser
 
 void createTrimesh(const DE2Part&amp; part, const DE2SingleBatch&amp; batch)
 
@@ -3737,7 +3742,7 @@ vehicles mVehicles</y:NodeLabel>
           <y:Geometry height="764.7501205479471" width="652.0755689855046" x="12693.962215507248" y="-1792.3750602739735"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="753.759765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="5.495177461473531">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="-1.8554084760264686">&lt;&lt;Physics.h&gt;&gt;
 
 PhysicsVehicle
 
@@ -3750,6 +3755,7 @@ void timeStep()
 protected:
 
 Physics* mPhysics
+StaticMeshProcesser* mMeshProcesser
 
 Ogre::SceneNode *mWheelNodes[wheelsAmount]
 Ogre::SceneNode *mChassis

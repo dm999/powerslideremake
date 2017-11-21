@@ -2,6 +2,7 @@
 #include "PSBaseCar.h"
 
 #include "../tools/OgreTools.h"
+#include "../tools/Conversions.h"
 
 #include "../lua/DMLuaManager.h"
 
@@ -345,6 +346,17 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
 
         initialVehicleSetup.mWheelUnderGroundVDV.init(splinePoints, hscale, vscale);
+    }
+    for(int q = 0; q < initialVehicleSetup.mVelocitySplinesAmoint; ++q)
+    {
+        std::string num = Conversions::DMToString(q);
+        Ogre::Real hscale = getCarParameter("", "traction for velocity " + num + " hscale", true);
+        Ogre::Real vscale = getCarParameter("", "traction for velocity " + num + " vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "traction for velocity " + num);
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mVelocitySpline[q].init(splinePoints, hscale, vscale);
     }
     //splines END
 

@@ -62,6 +62,9 @@ struct InitialVehicleSetup
     PSSpline mWheelUnderGroundVV;
     PSSpline mWheelUnderGroundDDV;
     PSSpline mWheelUnderGroundVDV;
+
+    static const int mVelocitySplinesAmoint = 16;
+    PSSpline mVelocitySpline[mVelocitySplinesAmoint];
 };
 
 

@@ -928,7 +928,7 @@ void StaticMeshProcesser::prepareBuffers(const MSHData& mshData)
     mParts.push_back(part);
 }
 
-Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
+Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
 {
     Ogre::Vector3 res(Ogre::Vector3::ZERO);
 
@@ -947,7 +947,7 @@ Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, i
 
     btSubSimplexClosestResult result;
     btVoronoiSimplexSolver simplexSolver;
-    simplexSolver.closestPtPointTriangle(ptB, PhysicsTools::convert(pA), PhysicsTools::convert(pB), PhysicsTools::convert(pC), result);
+    simplexSolver.closestPtPointTriangle(PhysicsTools::convert(ptB), PhysicsTools::convert(pA), PhysicsTools::convert(pB), PhysicsTools::convert(pC), result);
     
     if(result.isValid())
     {
@@ -959,7 +959,7 @@ Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, i
     return res;
 }
 
-Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
+Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
 {
     Ogre::Vector2 res;
 
@@ -1035,9 +1035,9 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
     }
 }
 
-unsigned char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const btVector3& ptB) const
+char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
 {
-    unsigned char res = 0;
+    char res = -1;
 
     std::string terrainMap = getBatchByAddress(address).mTerrainMap;
     if(terrainMap != "")

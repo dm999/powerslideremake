@@ -6,9 +6,14 @@
 
 #include "Physics.h"
 #include "../tools/PhysicsTools.h"
+#include "../mesh/StaticMeshProcesser.h"
 
-PhysicsVehicle::PhysicsVehicle(Physics* physics, const InitialVehicleSetup& initialVehicleSetup, Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis)
+PhysicsVehicle::PhysicsVehicle(Physics* physics, 
+                               StaticMeshProcesser * meshProesser,
+                               const InitialVehicleSetup& initialVehicleSetup, 
+                               Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis)
 : mPhysics(physics),
+    mMeshProcesser(meshProesser),
     mChassis(chassis),
     mInitialVehicleSetup(initialVehicleSetup)
 {
@@ -81,8 +86,11 @@ PhysicsVehicle::~PhysicsVehicle()
 
 void PhysicsVehicle::timeStep()
 {
+    initStep();
 
-    mBodyGlobalPrev = mBodyGlobal;
+    //do AI
+    //do steering adj
+    //do suspension init
 
     integrateLinear();
     integrateRot();
@@ -138,6 +146,11 @@ void PhysicsVehicle::timeStep()
 
 }
 
+void PhysicsVehicle::initStep()
+{
+    mBodyGlobalPrev = mBodyGlobal;
+}
+
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
 {
     for(int q = 0; q < mWheelsAmount; ++q)
@@ -181,6 +194,7 @@ void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
     mWheelRL->getWorldTransform().setRotation(PhysicsTools::convert(rot));
     mWheelRR->getWorldTransform().setRotation(PhysicsTools::convert(rot));
 
+    mBody->getWorldTransform().setOrigin(PhysicsTools::convert(chassisPos + rot * mInitialVehicleSetup.mBodyBasePos));
     mBody->getWorldTransform().setRotation(PhysicsTools::convert(rot));
 }
 
@@ -233,34 +247,56 @@ void PhysicsVehicle::processBody()
 
     Ogre::Vector3 worldNormal;
     Ogre::Real distance = 0.0f;
-    if(mPhysics->findCollision(mBody.get(), worldNormal, distance))
+    const btCollisionObject * staticObj;
+    Ogre::Vector3 pointOnStatic;
+    int triIndex;
+    std::pair<int, int> address;
+    if(mPhysics->findCollision(mBody.get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
     {
-        Ogre::Vector3 tangent = findTangent(worldNormal, deriveImpulse);
-        Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;
-        Ogre::Real impulseProj = -deriveImpulse.dotProduct(worldNormal);
-
-        Ogre::Real velocityMod = velocityTangent.length();
-        if(velocityMod > 0.0f)
+        if(mPhysics->isRigidBodyStatic(staticObj, address))
         {
-            velocityTangent.normalise();
-            //d.polubotko: TODO add traction spline here
+            char terrainType = mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+            if(terrainType != -1)
+            {
+                //std::string terrainMap = mMeshProcesser->getBatchByAddress(address).mTerrainMap;
+                //terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
+                //mWheelFrontLColliderIndex = terrainMap;
+                //mWheelFrontLColliderIndex = Conversions::DMToString(triIndex);
+                //Ogre::Vector2 texCoord = processer.getTextureCoordinateInTriangle(address, triIndex, cp.getPositionWorldOnB());
+                //mWheelFrontLColliderIndex = Conversions::DMToString(texCoord.x);
+                //mWheelFrontLColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
+                //mWheelFrontLColliderIndex = terrainType;
+
+                Ogre::Vector3 tangent = findTangent(worldNormal, deriveImpulse);
+                Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;
+                Ogre::Real impulseProj = -deriveImpulse.dotProduct(worldNormal);
+
+                Ogre::Real velocityMod = velocityTangent.length();
+                if(velocityMod > 0.0f)
+                {
+                    velocityTangent.normalise();
+                    assert(terrainType >= 0);
+                    assert(terrainType <= 15);
+                    Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrainType].getPoint(velocityMod);
+                    velocityTangent *= velocityMultiplier;
+                }
+
+                distance = -distance;
+                distance += 1.7f;
+
+                Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(distance);
+                Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
+                Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
+                Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(distance);
+
+                Ogre::Real resultedImpulse = v_dv * d_dv + v_v + d_d;
+                if(resultedImpulse > 100.0f) resultedImpulse = 100.f;
+
+                velocityTangent += worldNormal * resultedImpulse;
+
+                adjustImpulseInc(bodyRot, velocityTangent);
+            }
         }
-
-        distance = -distance;
-        distance += 1.7f;
-        distance += 1.0f;//d.polubotko: added to stabilize
-
-        Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(distance);
-        Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
-        Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
-        Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(distance);
-
-        Ogre::Real resultedImpulse = v_dv * d_dv + v_v + d_d;
-        if(resultedImpulse > 100.0f) resultedImpulse = 100.f;
-
-        velocityTangent += worldNormal * resultedImpulse;
-
-        adjustImpulseInc(bodyRot, velocityTangent);
     }
 }
 

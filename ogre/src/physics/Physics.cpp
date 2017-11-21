@@ -45,8 +45,9 @@ struct GameWorld
 
 };
 
-Physics::Physics()
-    : mGameWorld(new GameWorld())
+Physics::Physics(StaticMeshProcesser * meshProesser)
+    : mMeshProesser(meshProesser),
+    mGameWorld(new GameWorld())
 {}
 
 Physics::~Physics()
@@ -149,7 +150,7 @@ void Physics::addVehicle(const InitialVehicleSetup& initialVehicleSetup, const P
 
     if(found == mVehicles.end())
     {
-        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, initialVehicleSetup, wheelNodes, chassis));
+        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis));
         mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
     }
 }
@@ -177,7 +178,10 @@ void Physics::removeCollisionObject(btCollisionObject* object)
     mGameWorld->mCollisionWorld.removeCollisionObject(object);
 }
 
-bool Physics::findCollision(btCollisionObject* object, Ogre::Vector3& worldNormal, Ogre::Real& distance)
+bool Physics::findCollision(const btCollisionObject* const object, const btCollisionObject*& staticObj, 
+                            Ogre::Vector3& pointOnStatic,
+                            int& triIndex,
+                            Ogre::Vector3& worldNormal, Ogre::Real& distance)
 {
     bool ret = false;
 
@@ -195,6 +199,11 @@ bool Physics::findCollision(btCollisionObject* object, Ogre::Vector3& worldNorma
             if(object == obj_0)
             {
                 swap = true;
+                staticObj = obj_1;
+            }
+            else
+            {
+                staticObj = obj_0;
             }
 
             int numContacts = contact_manifold->getNumContacts();
@@ -210,6 +219,16 @@ bool Physics::findCollision(btCollisionObject* object, Ogre::Vector3& worldNorma
                 {
                     contactsFound = true;
                     worldNormal = PhysicsTools::convert(manifold_point.m_normalWorldOnB);
+                    if(swap)
+                    {
+                        triIndex = manifold_point.m_index1;
+                        pointOnStatic = PhysicsTools::convert(manifold_point.getPositionWorldOnB());
+                    }
+                    else
+                    {
+                        triIndex = manifold_point.m_index0;
+                        pointOnStatic = PhysicsTools::convert(manifold_point.getPositionWorldOnA());
+                    }
                     break;
                 }
             }

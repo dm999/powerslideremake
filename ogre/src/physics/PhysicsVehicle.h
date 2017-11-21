@@ -10,6 +10,7 @@ class btSphereShape;
 class btCollisionObject;
 
 class Physics;
+class StaticMeshProcesser;
 
 class PhysicsVehicle
 {
@@ -17,7 +18,10 @@ public:
 
     static const int mWheelsAmount = 4;
 
-    PhysicsVehicle(Physics* physics, const InitialVehicleSetup& initialVehicleSetup, Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis);
+    PhysicsVehicle(Physics* physics, 
+                    StaticMeshProcesser * meshProesser,
+                    const InitialVehicleSetup& initialVehicleSetup, 
+                    Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis);
     virtual ~PhysicsVehicle();
 
     void timeStep();
@@ -25,6 +29,7 @@ public:
 protected:
 
     Physics* mPhysics;
+    StaticMeshProcesser* mMeshProcesser;
 
     Ogre::Vector3 mImpulseLinear;
     Ogre::Vector3 mImpulseLinearInc;
@@ -51,6 +56,8 @@ protected:
     CommonIncludes::shared_ptr<btCollisionObject> mBody;
 
 private:
+
+    void initStep();
 
     void reposition(const Ogre::Vector3& posDiff);
     void rerotation(const Ogre::Quaternion& rot);
