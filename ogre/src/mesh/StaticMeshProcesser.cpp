@@ -30,9 +30,6 @@ StaticMeshProcesser::StaticMeshProcesser()
     mNameGenNodes("Scene/StaticNode/Name"),
     mNameGenTextures("Scene/Texture/Name"),
     mPlainIndices(0),
-    mFrictionRemap(16, 0),
-    mLatitudeFrictions(16, 0.5f),
-    mLongtitudeFrictions(16, 0.05f),
     mIsVertexArraySupported(false)
 {
 }
@@ -1071,43 +1068,16 @@ char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triInd
     return res;
 }
 
-Ogre::Real StaticMeshProcesser::getLatitudeFriction(unsigned char terrainType) const
+void StaticMeshProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
-    Ogre::Real res = 0.5f;
+    assert(terrainData.size() == 16);
 
-    assert(terrainType < 16);
-    res = mLatitudeFrictions[mFrictionRemap[terrainType]];
-
-    return res;
+    mTerrainData = terrainData;
 }
 
-Ogre::Real StaticMeshProcesser::getLongtitudeFriction(unsigned char terrainType) const
+const TerrainData& StaticMeshProcesser:: getTerrainData(size_t index) const
 {
-    Ogre::Real res = 0.05f;
+    assert(index < mTerrainData.size());
 
-    assert(terrainType < 16);
-    res = mLongtitudeFrictions[mFrictionRemap[terrainType]];
-
-    return res;
-}
-
-void StaticMeshProcesser::setFrictionRemapArray(const std::vector<size_t>& remap)
-{
-    assert(remap.size() == 16);
-
-    mFrictionRemap = remap;
-}
-
-void StaticMeshProcesser::setLatutuideFrictionArray(const std::vector<float>& frictions)
-{
-    assert(frictions.size() == 16);
-
-    mLatitudeFrictions = frictions;
-}
-
-void StaticMeshProcesser::setLongtitudeFrictionArray(const std::vector<float>& frictions)
-{
-    assert(frictions.size() == 16);
-
-    mLongtitudeFrictions = frictions;
+    return mTerrainData[index];
 }

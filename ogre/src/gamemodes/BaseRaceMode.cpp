@@ -428,12 +428,10 @@ void BaseRaceMode::initTerrain(LoaderListener* loaderListener)
     TerrainLoader terrainLoader;
     terrainLoader.load(mModeContext.mGameState);
 
-    mStaticMeshProcesser.setFrictionRemapArray(terrainLoader.getRemapFriction());
-    mStaticMeshProcesser.setLatutuideFrictionArray(terrainLoader.getLatitudeFriction());
-    mStaticMeshProcesser.setLongtitudeFrictionArray(terrainLoader.getLongtitudeFriction());
+    mStaticMeshProcesser.setTerrainData(terrainLoader.getTerrainData());
 
 #ifndef NO_OPENAL
-    mModeContext.mSoundsProcesser.setRemappers(terrainLoader.getRemapSounds(), terrainLoader.getRemapSoundsCollision());
+    mModeContext.mSoundsProcesser.setTerrainData(terrainLoader.getTerrainData());
 #endif
 
     //particle (before loading cars)

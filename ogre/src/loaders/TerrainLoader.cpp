@@ -1,45 +1,69 @@
 
 #include "TerrainLoader.h"
 
-TerrainLoader::TerrainLoader() 
-    : remapFriction(16, 0), remapSounds(16, 0), remapSoundsCollision(16, 0),
-    latitudeFriction(16, 0.0f), longtitudeFriction(16, 0.0f)
-{}
+#include <sstream>
+
+TerrainLoader::TerrainLoader(){}
 
 void TerrainLoader::load(GameState& gameState)
 {
     Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "terrain.txt");
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        char buf[1025];
-        fileToLoad->readLine(buf, 1024);
-        for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &remapFriction[q]);
+        mTerrainData.clear();
+        mTerrainData.resize(16);
 
-        fileToLoad->readLine(buf, 1024);
-        for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &remapSounds[q]);
-
+        for(size_t q = 0; q < 16; ++q)
         {
-            int something;
+            mTerrainData[q].mVelocityIndex = q;
+        }
+
+        char buf[1025];
+        {
             fileToLoad->readLine(buf, 1024);
+            std::istringstream bufStream(buf);
             for(size_t q = 0; q < 16; ++q)
             {
-                sscanf(buf, " %d", &something);
-                if(something < 0) something = 0;
-                remapSoundsCollision[q] = something;
+                int tmpVal;
+                bufStream >> tmpVal;
+                mTerrainData[tmpVal].mUnknownIndex = 15 - q;
             }
         }
 
         {
-            int something;
             fileToLoad->readLine(buf, 1024);
-            for(size_t q = 0; q < 16; ++q) sscanf(buf, " %d", &something);
+            std::istringstream bufStream(buf);
+            for(size_t q = 0; q < 16; ++q)
+            {
+                int tmpVal;
+                bufStream >> tmpVal;
+                mTerrainData[q].mSoundIndex = tmpVal;
+            }
         }
 
         {
-            //d.polubotko(TODO): usage should be considered
-            //??
-            //Later lines: For each terrain Rolling Resistance;Longtitudinal grip multiplier,Latitudinal,combined
-            //0.00081;0.05,0.1,0.9
+            fileToLoad->readLine(buf, 1024);
+            std::istringstream bufStream(buf);
+            for(size_t q = 0; q < 16; ++q)
+            {
+                int tmpVal;
+                bufStream >> tmpVal;
+                mTerrainData[q].mSoundIndex2 = tmpVal;
+            }
+        }
+
+        {
+            fileToLoad->readLine(buf, 1024);
+            std::istringstream bufStream(buf);
+            for(size_t q = 0; q < 16; ++q)
+            {
+                int tmpVal;
+                bufStream >> tmpVal;
+                mTerrainData[q].mSoundIndex3 = tmpVal;
+            }
+        }
+
+        {
 
             float rollingResistance, longtitudinalGripMultiplier, latitudinalGripMultiplier, combinedGripMultiplier;
             float something, something2;
@@ -50,8 +74,12 @@ void TerrainLoader::load(GameState& gameState)
                                 &rollingResistance, &longtitudinalGripMultiplier, &latitudinalGripMultiplier, &combinedGripMultiplier,
                                 &something, &something2);
 
-                latitudeFriction[q] = longtitudinalGripMultiplier + 0.2f;
-                longtitudeFriction[q] = rollingResistance * 100.0f;
+                mTerrainData[q].mRollResistance = rollingResistance;
+                mTerrainData[q].mLongtitudinalGripMultiplier = longtitudinalGripMultiplier;
+                mTerrainData[q].mLatitudinalGripMultiplier = latitudinalGripMultiplier;
+                mTerrainData[q].mCombinedMultiplier = combinedGripMultiplier;
+                mTerrainData[q].mParameter = something;
+                mTerrainData[q].mParameter2 = something2;
             }
         }
 

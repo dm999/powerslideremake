@@ -17,6 +17,8 @@
 
 #include "loaders/PFLoader.h"
 
+#include "physics/TerrainData.h"
+
 class OpenALSource;
 
 class SoundsProcesser
@@ -32,7 +34,7 @@ public:
     void setListenerPos(const Ogre::Vector3& pos);
     void setListenerGain(ALfloat gain);
 
-    void setRemappers(const std::vector<size_t>& remapSounds, const std::vector<size_t>& remapSoundsCollision);
+    void setTerrainData(const std::vector<TerrainData>& terrainData);
 
     void initSounds(const PFLoader& mPFLoaderData);
     void deinitSounds();
@@ -65,8 +67,7 @@ private:
     CommonIncludes::shared_ptr<OpenALSource> mSurface[mSurfacesCount];
     CommonIncludes::shared_ptr<OpenALSource> mSurfaceCrash[mSurfacesCount];
 
-    std::vector<size_t> mRemapSounds;
-    std::vector<size_t> mRemapSoundsCollision;
+    std::vector<TerrainData> mTerrainData;
 
     size_t mPrevSurface;
 

@@ -258,6 +258,9 @@ void PhysicsVehicle::processBody()
             char terrainType = mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
             if(terrainType != -1)
             {
+                assert(terrainType >= 0);
+                assert(terrainType <= 15);
+
                 //std::string terrainMap = mMeshProcesser->getBatchByAddress(address).mTerrainMap;
                 //terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
                 //mWheelFrontLColliderIndex = terrainMap;
@@ -275,8 +278,6 @@ void PhysicsVehicle::processBody()
                 if(velocityMod > 0.0f)
                 {
                     velocityTangent.normalise();
-                    assert(terrainType >= 0);
-                    assert(terrainType <= 15);
                     Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrainType].getPoint(velocityMod);
                     velocityTangent *= velocityMultiplier;
                 }

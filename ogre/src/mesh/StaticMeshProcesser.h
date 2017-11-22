@@ -11,6 +11,8 @@
 #include "../loaders/DE2.h"
 #include "../loaders/PFLoader.h"
 
+#include "../physics/TerrainData.h"
+
 struct DE2SingleBatch
 {
     std::vector<unsigned int> mIndexBuffer;
@@ -59,12 +61,8 @@ public :
 
     char getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
-    Ogre::Real getLatitudeFriction(unsigned char terrainType) const;
-    Ogre::Real getLongtitudeFriction(unsigned char terrainType) const;
-
-    void setFrictionRemapArray(const std::vector<size_t>& remap);
-    void setLatutuideFrictionArray(const std::vector<float>& frictions);
-    void setLongtitudeFrictionArray(const std::vector<float>& frictions);
+    void setTerrainData(const std::vector<TerrainData>& terrainData);
+    const TerrainData& getTerrainData(size_t index) const;
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
@@ -175,9 +173,7 @@ private:
 
     Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
-    std::vector<size_t> mFrictionRemap;
-    std::vector<float> mLatitudeFrictions;
-    std::vector<float> mLongtitudeFrictions;
+    std::vector<TerrainData> mTerrainData;
 
     bool mIsVertexArraySupported;
 

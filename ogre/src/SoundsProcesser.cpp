@@ -5,8 +5,6 @@
 #include "OpenAL/OpenALSource.h"
 
 SoundsProcesser::SoundsProcesser() :
-    mRemapSounds(16, 0),
-    mRemapSoundsCollision(16, 0),
     mPrevSurface(0),
     mBeforeStartPlayedOnce1(false),
     mBeforeStartPlayedOnce2(false),
@@ -140,10 +138,11 @@ void SoundsProcesser::stopSoundSurfaces()
     }
 }
 
-void SoundsProcesser::setRemappers(const std::vector<size_t>& remapSounds, const std::vector<size_t>& remapSoundsCollision)
+void SoundsProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
-    mRemapSounds = remapSounds;
-    mRemapSoundsCollision = remapSoundsCollision;
+    assert(terrainData.size() == 16);
+
+    mTerrainData = terrainData;
 
     resetInternalStatus();
 }
@@ -212,7 +211,7 @@ void SoundsProcesser::playBeforeStart3()
 
 void SoundsProcesser::playSurface(size_t surfaceNumber, Ogre::Real lateralVel)
 {
-    size_t remappedSurfaceNumber = mRemapSounds[surfaceNumber];
+    size_t remappedSurfaceNumber = mTerrainData[surfaceNumber].mSoundIndex;
 
     if(remappedSurfaceNumber < mSurfacesCount)
     {
@@ -234,7 +233,7 @@ void SoundsProcesser::playSurface(size_t surfaceNumber, Ogre::Real lateralVel)
 
 void SoundsProcesser::playSurfaceCrash(size_t surfaceNumber)
 {
-    size_t remappedSurfaceNumber = mRemapSoundsCollision[surfaceNumber];
+    size_t remappedSurfaceNumber = mTerrainData[surfaceNumber].mSoundIndex2;
 
     if(remappedSurfaceNumber < (mSurfacesCount - 1))
     {

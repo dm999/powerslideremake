@@ -7,6 +7,8 @@
 
 #include "../GameState.h"
 
+#include "../physics/TerrainData.h"
+
 /**
  * Terrain information loader (terrain maps used to extract it)
  */
@@ -17,19 +19,11 @@ public:
 
     void load(GameState& gameState);
 
-    const std::vector<size_t>& getRemapFriction() const {return remapFriction;}
-    const std::vector<size_t>& getRemapSounds() const {return remapSounds;}
-    const std::vector<size_t>& getRemapSoundsCollision() const {return remapSoundsCollision;}
-    const std::vector<float>& getLatitudeFriction() const {return latitudeFriction;}
-    const std::vector<float>& getLongtitudeFriction() const {return longtitudeFriction;}
+    const std::vector<TerrainData>& getTerrainData() const {return mTerrainData;}
 
 private:
 
-    std::vector<size_t> remapFriction;
-    std::vector<size_t> remapSounds;
-    std::vector<size_t> remapSoundsCollision;
-    std::vector<float> latitudeFriction;
-    std::vector<float> longtitudeFriction;
+    std::vector<TerrainData> mTerrainData;
 };
 
 #endif

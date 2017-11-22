@@ -1542,7 +1542,7 @@ static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
           <y:Geometry height="1840.8084935771822" width="869.3089261662258" x="12615.345536916888" y="-4700.404246788591"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1768.140625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="36.33393428859108">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1679.93359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="80.43744991359108">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 StaticMeshProcesser
 
@@ -1570,12 +1570,8 @@ const DE2Part&amp; getPartAddress(std::pair&lt;int, int&gt; address)const
 
 char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
 
-Ogre::Real getLatitudeFriction(unsigned char terrainType) const
-Ogre::Real getLongtitudeFriction(unsigned char terrainType) const
-
-void setFrictionRemapArray(const std::vector&lt;size_t&gt;&amp; remap)
-void setLatutuideFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
-void setLongtitudeFrictionArray(const std::vector&lt;float&gt;&amp; frictions)
+void setTerrainData(const std::vector&lt;TerrainData&gt;&amp; terrainData)
+const TerrainData&amp; getTerrainData(size_t index) const
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
@@ -1657,9 +1653,7 @@ btVoronoiSimplexSolver mSimplexSolver
 
 Ogre::Vector3 getBarycentric(std::pair&lt;int, int&gt; address, int triIndex, const btVector3&amp; ptB)
 
-std::vector&lt;size_t&gt; mFrictionRemap
-std::vector&lt;float&gt; mLatitudeFrictions
-std::vector&lt;float&gt; mLongtitudeFrictions
+std::vector&lt;TerrainData&gt; mTerrainData
 
 bool mIsVertexArraySupported</y:NodeLabel>
           <y:Shape type="rectangle"/>
