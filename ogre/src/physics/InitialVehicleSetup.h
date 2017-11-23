@@ -10,19 +10,15 @@ struct InitialVehicleSetup
     Ogre::Quaternion mChassisRot;
 
     static const int mWheelsAmount = 4;
+    Ogre::Real mWheelRadius[mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mConnectionPointWheel[mWheelsAmount];//RR, RL, FR, FL
 
-    float mRoofBackRadius;
-    Ogre::Vector3 mRoofBackPos;
-
-    float mRoofFrontRadius;
-    Ogre::Vector3 mRoofFrontPos;
+    static const int mRoofsAmount = 4;
+    float mRoofRadius[mRoofsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mRoofPos[mRoofsAmount];//RR, RL, FR, FL
 
     float mBodyRadius;
     Ogre::Vector3 mBodyBasePos;
-
-    Ogre::Real mWheelRadiusFront;
-    Ogre::Real mWheelRadiusBack;
 
     Ogre::Vector3 mAnisotropicFriction;
     Ogre::Real mRollingFriction;

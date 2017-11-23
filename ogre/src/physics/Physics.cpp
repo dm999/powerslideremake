@@ -96,6 +96,8 @@ void Physics::addPart(const DE2Part& part, const DE2SingleBatch& batch,
         btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter
     );
 
+    collisionObject->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+
     mStaticBodies.insert(std::make_pair(collisionObject.get(), std::make_pair(partIndex, batchIndex)));
 }
 
@@ -161,13 +163,15 @@ void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
     mVehicles.erase(found);
 }
 
-void Physics::addCollisionObject(btCollisionObject* object)
+void Physics::addKinematicObject(btCollisionObject* object)
 {
     mGameWorld->mCollisionWorld.addCollisionObject(
         object,
         btBroadphaseProxy::KinematicFilter,
         btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::KinematicFilter
         );
+
+    object->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
 
     //object->setActivationState(DISABLE_DEACTIVATION);
 

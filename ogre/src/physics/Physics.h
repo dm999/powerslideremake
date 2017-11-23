@@ -49,7 +49,7 @@ public:
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);
 
-    void addCollisionObject(btCollisionObject* object);
+    void addKinematicObject(btCollisionObject* object);
     void removeCollisionObject(btCollisionObject* object);
     bool findCollision(const btCollisionObject* const object, const btCollisionObject*& staticObj, 
         Ogre::Vector3& pointOnStatic,

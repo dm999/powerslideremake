@@ -23,22 +23,30 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     }
 
     //wheels
-    mWheelShape[3] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
-    mWheelShape[2] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
-    mWheelShape[1] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
-    mWheelShape[0] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
-
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
+        mWheelShape[q] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadius[q]));
         mWheel[q] = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
-
         mWheel[q]->setCollisionShape(mWheelShape[q].get());
         mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointWheel[q]));
         mWheel[q]->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
 
-        //mPhysics->addCollisionObject(mWheel[q].get());
+        //mPhysics->addKinematicObject(mWheel[q].get());
     }
     //wheels END
+
+    //roof
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mRoofShape[q] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mRoofRadius[q]));
+        mRoof[q] = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
+        mRoof[q]->setCollisionShape(mRoofShape[q].get());
+        mRoof[q]->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mRoofPos[q]));
+        mRoof[q]->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
+
+        mPhysics->addKinematicObject(mRoof[q].get());
+    }
+    //roof END
 
     //body
     mBodyShape = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mBodyRadius));
@@ -48,7 +56,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mBody->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mBodyBasePos));
     mBody->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
 
-    mPhysics->addCollisionObject(mBody.get());
+    mPhysics->addKinematicObject(mBody.get());
     //body END
 
     mImpulseLinear = mInitialVehicleSetup.mInitialImpulseLinear;
@@ -56,15 +64,26 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mImpulseRot = mInitialVehicleSetup.mInitialImpulseRot;
     mImpulseRotInc = mInitialVehicleSetup.mInitialImpulseRotInc;
 
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mRoofGlobal[q] = mChassis->getPosition();
+        mRoofGlobalPrev[q] = mChassis->getPosition();
+    }
+
     mBodyGlobal = Ogre::Vector3::ZERO;
 }
 
 PhysicsVehicle::~PhysicsVehicle()
 {
-    //mPhysics->removeCollisionObject(mWheelFL.get());
-    //mPhysics->removeCollisionObject(mWheelFR.get());
-    //mPhysics->removeCollisionObject(mWheelRL.get());
-    //mPhysics->removeCollisionObject(mWheelRR.get());
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        //mPhysics->removeCollisionObject(mWheel[q].get());
+    }
+
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mPhysics->removeCollisionObject(mRoof[q].get());
+    }
 
     mPhysics->removeCollisionObject(mBody.get());
 }
@@ -77,8 +96,7 @@ void PhysicsVehicle::timeStep()
     //do steering adj
     //do suspension init
 
-    integrateLinear();
-    integrateRot();
+    integrate();
 
     Ogre::Vector3 posDiff = mImpulseLinear * mInitialVehicleSetup.mChassisInvMass;
     reposition(posDiff);
@@ -119,10 +137,16 @@ void PhysicsVehicle::timeStep()
 
     mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
 
-    integrateLinear();
-    integrateRot();
+    integrate();
 
+    calcWheelRoofImpulses();
+
+    //do wheels
+    processRoof();
     processBody();
+    //do flip restore
+    //do transmission
+    //do physics
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
@@ -133,11 +157,21 @@ void PhysicsVehicle::timeStep()
 
 void PhysicsVehicle::initStep()
 {
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mRoofGlobalPrev[q] = mRoofGlobal[q];
+    }
+
     mBodyGlobalPrev = mBodyGlobal;
 }
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
 {
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mRoof[q]->getWorldTransform().setOrigin(mRoof[q]->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
+    }
+
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q]->translate(posDiff);
@@ -153,6 +187,12 @@ void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
 {
     Ogre::Vector3 chassisPos = mChassis->getPosition();
 
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        mRoof[q]->getWorldTransform().setOrigin(PhysicsTools::convert(chassisPos + rot * mInitialVehicleSetup.mRoofPos[q]));
+        mRoof[q]->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+    }
+
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointWheel[q]);
@@ -167,14 +207,11 @@ void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
     mBody->getWorldTransform().setRotation(PhysicsTools::convert(rot));
 }
 
-void PhysicsVehicle::integrateLinear()
+void PhysicsVehicle::integrate()
 {
     mImpulseLinear += mImpulseLinearInc;
     mImpulseLinearInc = Ogre::Vector3::ZERO;
-}
 
-void PhysicsVehicle::integrateRot()
-{
     mImpulseRot += mImpulseRotInc;
     mImpulseRotInc = Ogre::Vector3::ZERO;
 }
@@ -199,11 +236,113 @@ Ogre::Vector3 PhysicsVehicle::findTangent(const Ogre::Vector3& normal, const Ogr
     return input - dot * normal;
 }
 
+void PhysicsVehicle::calcWheelRoofImpulses()
+{
+    mImpulseRotPrev = mImpulseRot;
+    Ogre::Vector3 normalisedImpulseRot = mImpulseRot.normalisedCopy();
+    Ogre::Real momentProj = momentOfInertiaProj(normalisedImpulseRot);
+
+    Ogre::Real recipMomentProj = 1.0f / momentProj;
+
+    if(mImpulseRot.length() == 0.0f)
+    {
+        //do calc wheel impulses
+
+        for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+        {
+            mRoofImpulseLinear[q] = mImpulseLinear;
+        }
+    }
+    else
+    {
+        Ogre::Real force = mInitialVehicleSetup.mChassisMass * recipMomentProj;
+
+        //do calc wheel impulses
+
+        for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+        {
+            Ogre::Vector3 roofRot = mChassis->getOrientation() * mInitialVehicleSetup.mRoofPos[q];
+            Ogre::Vector3 tangent = findTangent(normalisedImpulseRot, roofRot);
+            if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
+            {
+                mRoofImpulseLinear[q] = tangent.crossProduct(mImpulseRotPrev) * force + mImpulseLinear;
+            }
+            else
+            {
+                mRoofImpulseLinear[q] = mImpulseLinear;
+            }
+        }
+
+    }
+}
+
+void PhysicsVehicle::processRoof()
+{
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        Ogre::Vector3 roofRot = mChassis->getOrientation() * mInitialVehicleSetup.mRoofPos[q];
+        mRoofGlobal[q] = mChassis->getPosition() + roofRot;
+
+        Ogre::Matrix3 carRot;
+        mChassis->getOrientation().ToRotationMatrix(carRot);
+        Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
+        roofRot -= matrixYColumn * 1.2f;
+
+        Ogre::Vector3 worldNormal;
+        Ogre::Real distance = 0.0f;
+        const btCollisionObject * staticObj;
+        Ogre::Vector3 pointOnStatic;
+        int triIndex;
+        std::pair<int, int> address;
+        if(mPhysics->findCollision(mRoof[q].get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
+        {
+            if(mPhysics->isRigidBodyStatic(staticObj, address))
+            {
+                char terrainType = mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+                if(terrainType != -1)
+                {
+                    assert(terrainType >= 0);
+                    assert(terrainType < TerrainData::mTerrainsAmount);
+
+                    const TerrainData& terrain = mMeshProcesser->getTerrainData(terrainType);
+
+                    Ogre::Vector3 tangent = findTangent(worldNormal, mRoofImpulseLinear[q]);
+                    Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;
+                    Ogre::Real impulseProj = -mRoofImpulseLinear[q].dotProduct(worldNormal);
+
+                    Ogre::Real velocityMod = velocityTangent.length();
+                    if(velocityMod > 0.0f)
+                    {
+                        velocityTangent.normalise();
+                        Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityMod);
+                        velocityTangent *= velocityMultiplier;
+                    }
+
+                    distance = -distance;
+                    distance += 1.7f;
+
+                    Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(distance);
+                    Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
+                    Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
+                    Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(distance);
+
+                    Ogre::Real resultedImpulse = v_dv * d_dv + v_v + d_d;
+                    if(resultedImpulse > 100.0f) resultedImpulse = 100.f;
+
+                    velocityTangent += worldNormal * resultedImpulse;
+
+                    adjustImpulseInc(roofRot, velocityTangent);
+                }
+            }
+        }
+    }
+}
+
 void PhysicsVehicle::processBody()
 {
     Ogre::Vector3 bodyRot = mChassis->getOrientation() * mInitialVehicleSetup.mBodyBasePos;
 
-    mBodyGlobal = mChassis->getPosition() + mChassis->getOrientation() * mInitialVehicleSetup.mBodyBasePos;
+    mBodyGlobal = mChassis->getPosition() + bodyRot;
 
     Ogre::Matrix3 carRot;
     mChassis->getOrientation().ToRotationMatrix(carRot);

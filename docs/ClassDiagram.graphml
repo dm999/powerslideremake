@@ -3702,7 +3702,7 @@ void launchRay(btCollisionWorld::AllHitsRayResultCallback &amp;rayresult) const
 void addVehicle(const PSBaseVehicle * vehiclePtr, Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis)
 void removeVehicle(const PSBaseVehicle * vehiclePtr)
 
-void addCollisionObject(btCollisionObject* object)
+void addKinematicObject(btCollisionObject* object)
 void removeCollisionObject(btCollisionObject* object)
 bool findCollision(const btCollisionObject* const object, const btCollisionObject*&amp; staticObj, 
     Ogre::Vector3&amp; pointOnStatic,
@@ -3736,13 +3736,11 @@ vehicles mVehicles</y:NodeLabel>
           <y:Geometry height="764.7501205479471" width="652.0755689855046" x="12693.962215507248" y="-1792.3750602739735"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="768.4609375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="-1.8554084760264686">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="753.759765625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="5.495177461473531">&lt;&lt;Physics.h&gt;&gt;
 
 PhysicsVehicle
 
 public:
-
-static const int mWheelsAmount = 4
 
 void timeStep()
 
@@ -3754,35 +3752,36 @@ StaticMeshProcesser* mMeshProcesser
 Ogre::SceneNode *mWheelNodes[wheelsAmount]
 Ogre::SceneNode *mChassis
 
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeRL
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeRR
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeFL
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShapeFR
-
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRL
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelRR
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFL
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheelFR
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShape[InitialVehicleSetup::mWheelsAmount]
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheel[InitialVehicleSetup::mWheelsAmount]
 
 CommonIncludes::shared_ptr&lt;btSphereShape&gt; mBodyShape
-
 CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mBody
+
+CommonIncludes::shared_ptr&lt;btSphereShape&gt; mRoofShape[InitialVehicleSetup::mRoofsAmount]
+CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mRoof[InitialVehicleSetup::mRoofsAmount]
 
 private:
 
 void reposition(const Ogre::Vector3&amp; posDiff)
 void rerotation(const Ogre::Quaternion&amp; rot)
 
-void integrateLinear()
-void integrateRot()
+void integrate()
 
 Ogre::Real momentOfInertiaProj(const Ogre::Vector3&amp; axis)const
 Ogre::Vector3 findTangent(const Ogre::Vector3&amp; normal, const Ogre::Vector3&amp; input) const
 void createRotMatrix(Ogre::Vector3&amp; matAxis, const Ogre::Vector3&amp; normalisedImpulse, Ogre::Real angle) const
 
+void calcWheelRoofImpulses()
+
+void processRoof()
 void processBody()
 
 void adjustImpulseInc(const Ogre::Vector3&amp; rotAxis, const Ogre::Vector3&amp; impulse)
+
+Ogre::Vector3 mRoofImpulseLinear[InitialVehicleSetup::mRoofsAmount]
+Ogre::Vector3 mRoofGlobal[InitialVehicleSetup::mRoofsAmount]
+Ogre::Vector3 mRoofGlobalPrev[InitialVehicleSetup::mRoofsAmount]
 
 Ogre::Vector3 mBodyGlobal
 Ogre::Vector3 mBodyGlobalPrev

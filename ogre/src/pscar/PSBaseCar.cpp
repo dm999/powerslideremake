@@ -251,15 +251,19 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mConnectionPointWheel[2] = mFrontROriginalPos;
     initialVehicleSetup.mConnectionPointWheel[3] = mFrontLOriginalPos;
 
-    initialVehicleSetup.mRoofBackRadius = mCarSettings.getFloatValue("", "roof back radius");
+    initialVehicleSetup.mRoofRadius[0] = mCarSettings.getFloatValue("", "roof back radius");
+    initialVehicleSetup.mRoofRadius[1] = initialVehicleSetup.mRoofRadius[0];
     Ogre::Vector3 roofBack = mCarSettings.getArray3Value("", "roof back");
     roofBack.z = -roofBack.z;
-    initialVehicleSetup.mRoofBackPos = roofBack;
+    initialVehicleSetup.mRoofPos[0] = roofBack;
+    initialVehicleSetup.mRoofPos[1] = Ogre::Vector3(-roofBack.x, roofBack.y, roofBack.z);
 
-    initialVehicleSetup.mRoofFrontRadius = mCarSettings.getFloatValue("", "roof front radius");
+    initialVehicleSetup.mRoofRadius[2] = mCarSettings.getFloatValue("", "roof front radius");
+    initialVehicleSetup.mRoofRadius[3] = initialVehicleSetup.mRoofRadius[2];
     Ogre::Vector3 roofFront = mCarSettings.getArray3Value("", "roof front");
     roofFront.z = -roofFront.z;
-    initialVehicleSetup.mRoofFrontPos = roofFront;
+    initialVehicleSetup.mRoofPos[2] = roofFront;
+    initialVehicleSetup.mRoofPos[3] = Ogre::Vector3(-roofFront.x, roofFront.y, roofFront.z);
 
     initialVehicleSetup.mBodyRadius = mCarSettings.getFloatValue("", "body radius");
     Ogre::Vector3 bodyBase = mCarSettings.getArray3Value("", "body base 0");
@@ -267,8 +271,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mBodyBasePos = bodyBase;
 
     Ogre::Vector2 wheelRadius = mCarSettings.getArray2Value("", "wheel radii");
-    initialVehicleSetup.mWheelRadiusFront = wheelRadius.x;
-    initialVehicleSetup.mWheelRadiusBack = wheelRadius.y;
+    initialVehicleSetup.mWheelRadius[2] = wheelRadius.x;
+    initialVehicleSetup.mWheelRadius[3] = wheelRadius.x;
+    initialVehicleSetup.mWheelRadius[0] = wheelRadius.y;
+    initialVehicleSetup.mWheelRadius[1] = wheelRadius.y;
 
     initialVehicleSetup.mAnisotropicFriction = Ogre::Vector3(
             luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.x", pipeline),
