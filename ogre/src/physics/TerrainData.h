@@ -3,6 +3,8 @@
 
 struct TerrainData
 {
+    static const int mTerrainsAmount = 16;
+
     char mVelocityIndex;
     char mUnknownIndex;
     char mSoundIndex;

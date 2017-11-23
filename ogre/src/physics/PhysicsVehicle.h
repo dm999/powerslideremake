@@ -16,12 +16,10 @@ class PhysicsVehicle
 {
 public:
 
-    static const int mWheelsAmount = 4;
-
     PhysicsVehicle(Physics* physics, 
                     StaticMeshProcesser * meshProesser,
                     const InitialVehicleSetup& initialVehicleSetup, 
-                    Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis);
+                    Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis);
     virtual ~PhysicsVehicle();
 
     void timeStep();
@@ -38,18 +36,11 @@ protected:
 
     Ogre::Real mVehicleVelocityMod;
 
-    Ogre::SceneNode *mWheelNodes[mWheelsAmount];
+    Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::SceneNode *mChassis;
 
-    CommonIncludes::shared_ptr<btSphereShape> mWheelShapeRL;
-    CommonIncludes::shared_ptr<btSphereShape> mWheelShapeRR;
-    CommonIncludes::shared_ptr<btSphereShape> mWheelShapeFL;
-    CommonIncludes::shared_ptr<btSphereShape> mWheelShapeFR;
-
-    CommonIncludes::shared_ptr<btCollisionObject> mWheelRL;
-    CommonIncludes::shared_ptr<btCollisionObject> mWheelRR;
-    CommonIncludes::shared_ptr<btCollisionObject> mWheelFL;
-    CommonIncludes::shared_ptr<btCollisionObject> mWheelFR;
+    CommonIncludes::shared_ptr<btSphereShape> mWheelShape[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    CommonIncludes::shared_ptr<btCollisionObject> mWheel[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 
     CommonIncludes::shared_ptr<btSphereShape> mBodyShape;
 

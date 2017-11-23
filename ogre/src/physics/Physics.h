@@ -8,6 +8,8 @@
 
 #include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
 
+#include "InitialVehicleSetup.h"
+
 struct GameWorld;
 
 struct DE2SingleBatch;
@@ -20,7 +22,6 @@ class btCollisionObject;
 
 class PSBaseVehicle;
 class PhysicsVehicle;
-struct InitialVehicleSetup;
 
 class StaticMeshProcesser;
 
@@ -44,7 +45,7 @@ public:
     void launchRay(btCollisionWorld::AllHitsRayResultCallback &rayresult) const;
 
     void addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
-        Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis
+        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);
 

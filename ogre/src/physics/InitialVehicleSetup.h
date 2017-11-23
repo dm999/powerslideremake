@@ -2,15 +2,15 @@
 #define INITIALVEHICLESETUP_H
 
 #include "../tools/PSSpline.h"
+#include "TerrainData.h"
 
 struct InitialVehicleSetup
 {
     Ogre::Vector3 mChassisPos;
     Ogre::Quaternion mChassisRot;
-    Ogre::Vector3 mConnectionPointRRWheel;
-    Ogre::Vector3 mConnectionPointRLWheel;
-    Ogre::Vector3 mConnectionPointFRWheel;
-    Ogre::Vector3 mConnectionPointFLWheel;
+
+    static const int mWheelsAmount = 4;
+    Ogre::Vector3 mConnectionPointWheel[mWheelsAmount];//RR, RL, FR, FL
 
     float mRoofBackRadius;
     Ogre::Vector3 mRoofBackPos;
@@ -63,7 +63,7 @@ struct InitialVehicleSetup
     PSSpline mWheelUnderGroundDDV;
     PSSpline mWheelUnderGroundVDV;
 
-    static const int mVelocitySplinesAmoint = 16;
+    static const int mVelocitySplinesAmoint = TerrainData::mTerrainsAmount;
     PSSpline mVelocitySpline[mVelocitySplinesAmoint];
 };
 

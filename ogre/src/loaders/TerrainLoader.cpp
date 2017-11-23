@@ -11,21 +11,23 @@ void TerrainLoader::load(GameState& gameState)
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
         mTerrainData.clear();
-        mTerrainData.resize(16);
+        mTerrainData.resize(TerrainData::mTerrainsAmount);
 
-        for(size_t q = 0; q < 16; ++q)
+        for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
         {
             mTerrainData[q].mVelocityIndex = q;
+            mTerrainData[q].mUnknownIndex = -1;
         }
 
         char buf[1025];
         {
             fileToLoad->readLine(buf, 1024);
             std::istringstream bufStream(buf);
-            for(size_t q = 0; q < 16; ++q)
+            for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
             {
                 int tmpVal;
                 bufStream >> tmpVal;
+                assert(mTerrainData[tmpVal].mUnknownIndex == -1);
                 mTerrainData[tmpVal].mUnknownIndex = 15 - q;
             }
         }
@@ -33,7 +35,7 @@ void TerrainLoader::load(GameState& gameState)
         {
             fileToLoad->readLine(buf, 1024);
             std::istringstream bufStream(buf);
-            for(size_t q = 0; q < 16; ++q)
+            for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
             {
                 int tmpVal;
                 bufStream >> tmpVal;
@@ -44,7 +46,7 @@ void TerrainLoader::load(GameState& gameState)
         {
             fileToLoad->readLine(buf, 1024);
             std::istringstream bufStream(buf);
-            for(size_t q = 0; q < 16; ++q)
+            for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
             {
                 int tmpVal;
                 bufStream >> tmpVal;
@@ -55,7 +57,7 @@ void TerrainLoader::load(GameState& gameState)
         {
             fileToLoad->readLine(buf, 1024);
             std::istringstream bufStream(buf);
-            for(size_t q = 0; q < 16; ++q)
+            for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
             {
                 int tmpVal;
                 bufStream >> tmpVal;
@@ -67,7 +69,7 @@ void TerrainLoader::load(GameState& gameState)
 
             float rollingResistance, longtitudinalGripMultiplier, latitudinalGripMultiplier, combinedGripMultiplier;
             float something, something2;
-            for(size_t q = 0; q < 16; ++q)
+            for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
             {
                 fileToLoad->readLine(buf, 1024);
                 sscanf(buf, "%f;%f;%f,%f,%f,%f\n", 

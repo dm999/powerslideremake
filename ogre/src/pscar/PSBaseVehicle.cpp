@@ -9,7 +9,7 @@
 Ogre::NameGenerator PSBaseVehicle::nameGenNodes("Scene/Node/Vehicle/Name");
 
 void PSBaseVehicle::initPhysicalModel(Physics * world, 
-    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[mWheelsAmount], 
+    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], 
     const InitialVehicleSetup& initialVehicleSetup)
 {
     mWorld = world;

@@ -144,7 +144,7 @@ void Physics::createTrimesh(const DE2Part& part, const DE2SingleBatch& batch)
 }
 
 void Physics::addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
-                        Ogre::SceneNode *wheelNodes[PhysicsVehicle::mWheelsAmount], Ogre::SceneNode *chassis)
+                        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis)
 {
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
 

@@ -140,7 +140,7 @@ void SoundsProcesser::stopSoundSurfaces()
 
 void SoundsProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
-    assert(terrainData.size() == 16);
+    assert(terrainData.size() == TerrainData::mTerrainsAmount);
 
     mTerrainData = terrainData;
 

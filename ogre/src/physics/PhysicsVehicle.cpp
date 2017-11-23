@@ -11,48 +11,33 @@
 PhysicsVehicle::PhysicsVehicle(Physics* physics, 
                                StaticMeshProcesser * meshProesser,
                                const InitialVehicleSetup& initialVehicleSetup, 
-                               Ogre::SceneNode *wheelNodes[mWheelsAmount], Ogre::SceneNode *chassis)
+                               Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis)
 : mPhysics(physics),
     mMeshProcesser(meshProesser),
     mChassis(chassis),
     mInitialVehicleSetup(initialVehicleSetup)
 {
-    for(int q = 0; q < mWheelsAmount; ++q)
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q] = wheelNodes[q];
     }
 
     //wheels
-    mWheelShapeFL = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
-    mWheelShapeFR = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
-    mWheelShapeRL = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
-    mWheelShapeRR = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
+    mWheelShape[3] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
+    mWheelShape[2] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusFront));
+    mWheelShape[1] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
+    mWheelShape[0] = CommonIncludes::shared_ptr<btSphereShape>(new btSphereShape(mInitialVehicleSetup.mWheelRadiusBack));
 
-    mWheelFL = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
-    mWheelFR = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
-    mWheelRL = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
-    mWheelRR = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        mWheel[q] = CommonIncludes::shared_ptr<btCollisionObject>(new btCollisionObject());
 
-    mWheelFL->setCollisionShape(mWheelShapeFL.get());
-    mWheelFL->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointFLWheel));
-    mWheelFL->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
+        mWheel[q]->setCollisionShape(mWheelShape[q].get());
+        mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointWheel[q]));
+        mWheel[q]->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
 
-    mWheelFR->setCollisionShape(mWheelShapeFR.get());
-    mWheelFR->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointFRWheel));
-    mWheelFR->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
-
-    mWheelRL->setCollisionShape(mWheelShapeRL.get());
-    mWheelRL->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointRLWheel));
-    mWheelRL->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
-
-    mWheelRR->setCollisionShape(mWheelShapeRR.get());
-    mWheelRR->getWorldTransform().setOrigin(PhysicsTools::convert(mInitialVehicleSetup.mChassisPos + mInitialVehicleSetup.mChassisRot * mInitialVehicleSetup.mConnectionPointRRWheel));
-    mWheelRR->getWorldTransform().setRotation(PhysicsTools::convert(mInitialVehicleSetup.mChassisRot));
-
-    //mPhysics->addCollisionObject(mWheelFL.get());
-    //mPhysics->addCollisionObject(mWheelFR.get());
-    //mPhysics->addCollisionObject(mWheelRL.get());
-    //mPhysics->addCollisionObject(mWheelRR.get());
+        //mPhysics->addCollisionObject(mWheel[q].get());
+    }
     //wheels END
 
     //body
@@ -153,17 +138,13 @@ void PhysicsVehicle::initStep()
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
 {
-    for(int q = 0; q < mWheelsAmount; ++q)
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q]->translate(posDiff);
+        mWheel[q]->getWorldTransform().setOrigin(mWheel[q]->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
     }
 
     mChassis->translate(posDiff);
-
-    mWheelFL->getWorldTransform().setOrigin(mWheelFL->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
-    mWheelFR->getWorldTransform().setOrigin(mWheelFR->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
-    mWheelRL->getWorldTransform().setOrigin(mWheelRL->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
-    mWheelRR->getWorldTransform().setOrigin(mWheelRR->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
 
     mBody->getWorldTransform().setOrigin(mBody->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
 }
@@ -172,27 +153,15 @@ void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
 {
     Ogre::Vector3 chassisPos = mChassis->getPosition();
 
-    mWheelNodes[0]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointRRWheel);
-    mWheelNodes[1]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointRLWheel);
-    mWheelNodes[2]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointFRWheel);
-    mWheelNodes[3]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointFLWheel);
-    for(int q = 0; q < mWheelsAmount; ++q)
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
+        mWheelNodes[q]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointWheel[q]);
         mWheelNodes[q]->setOrientation(rot);
+        mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[q]->getPosition()));
+        mWheel[q]->getWorldTransform().setRotation(PhysicsTools::convert(rot));
     }
 
     mChassis->setOrientation(rot);
-
-
-    mWheelFL->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[3]->getPosition()));
-    mWheelFR->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[2]->getPosition()));
-    mWheelRL->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[1]->getPosition()));
-    mWheelRR->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[0]->getPosition()));
-
-    mWheelFL->getWorldTransform().setRotation(PhysicsTools::convert(rot));
-    mWheelFR->getWorldTransform().setRotation(PhysicsTools::convert(rot));
-    mWheelRL->getWorldTransform().setRotation(PhysicsTools::convert(rot));
-    mWheelRR->getWorldTransform().setRotation(PhysicsTools::convert(rot));
 
     mBody->getWorldTransform().setOrigin(PhysicsTools::convert(chassisPos + rot * mInitialVehicleSetup.mBodyBasePos));
     mBody->getWorldTransform().setRotation(PhysicsTools::convert(rot));
@@ -259,7 +228,9 @@ void PhysicsVehicle::processBody()
             if(terrainType != -1)
             {
                 assert(terrainType >= 0);
-                assert(terrainType <= 15);
+                assert(terrainType < TerrainData::mTerrainsAmount);
+
+                const TerrainData& terrain = mMeshProcesser->getTerrainData(terrainType);
 
                 //std::string terrainMap = mMeshProcesser->getBatchByAddress(address).mTerrainMap;
                 //terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
@@ -278,7 +249,7 @@ void PhysicsVehicle::processBody()
                 if(velocityMod > 0.0f)
                 {
                     velocityTangent.normalise();
-                    Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrainType].getPoint(velocityMod);
+                    Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityMod);
                     velocityTangent *= velocityMultiplier;
                 }
 

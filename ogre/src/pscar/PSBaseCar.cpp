@@ -154,7 +154,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         }
     }
 
-    for(int q = 0; q < mWheelsAmount + 1; ++q)
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount + 1; ++q)
     {
         Ogre::SceneNode* modelNode = mainNode->createChildSceneNode();
 
@@ -246,10 +246,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     InitialVehicleSetup initialVehicleSetup;
     initialVehicleSetup.mChassisPos = mModelNode->getPosition();
     initialVehicleSetup.mChassisRot = mModelNode->getOrientation();
-    initialVehicleSetup.mConnectionPointRRWheel = mBackROriginalPos;
-    initialVehicleSetup.mConnectionPointRLWheel = mBackLOriginalPos;
-    initialVehicleSetup.mConnectionPointFRWheel = mFrontROriginalPos;
-    initialVehicleSetup.mConnectionPointFLWheel = mFrontLOriginalPos;
+    initialVehicleSetup.mConnectionPointWheel[0] = mBackROriginalPos;
+    initialVehicleSetup.mConnectionPointWheel[1] = mBackLOriginalPos;
+    initialVehicleSetup.mConnectionPointWheel[2] = mFrontROriginalPos;
+    initialVehicleSetup.mConnectionPointWheel[3] = mFrontLOriginalPos;
 
     initialVehicleSetup.mRoofBackRadius = mCarSettings.getFloatValue("", "roof back radius");
     Ogre::Vector3 roofBack = mCarSettings.getArray3Value("", "roof back");
@@ -361,16 +361,10 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     //splines END
 
     //position wheels
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mWheelNodes[0]->setOrientation(initialVehicleSetup.mChassisRot);
-        mWheelNodes[1]->setOrientation(initialVehicleSetup.mChassisRot);
-        mWheelNodes[2]->setOrientation(initialVehicleSetup.mChassisRot);
-        mWheelNodes[3]->setOrientation(initialVehicleSetup.mChassisRot);
-
-        mWheelNodes[0]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointRRWheel);
-        mWheelNodes[1]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointRLWheel);
-        mWheelNodes[2]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointFRWheel);
-        mWheelNodes[3]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointFLWheel);
+        mWheelNodes[q]->setOrientation(initialVehicleSetup.mChassisRot);
+        mWheelNodes[q]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointWheel[q]);
     }
 
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);

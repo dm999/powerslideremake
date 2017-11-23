@@ -1070,7 +1070,7 @@ char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triInd
 
 void StaticMeshProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
-    assert(terrainData.size() == 16);
+    assert(terrainData.size() == TerrainData::mTerrainsAmount);
 
     mTerrainData = terrainData;
 }

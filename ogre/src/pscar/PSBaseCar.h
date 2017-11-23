@@ -100,7 +100,7 @@ protected:
     bool mIsAI;
 
     Ogre::SceneNode* mModelNode;
-    Ogre::Entity* mModelEntity[5];
+    Ogre::Entity* mModelEntity[InitialVehicleSetup::mWheelsAmount + 1];//Cockpit, RR, RL, FR, FL
 
     std::vector<std::vector<Ogre::Vector3> > mSuspensionData;
     std::vector<std::vector<size_t> > mSuspensionIndices;
@@ -111,8 +111,8 @@ protected:
     Ogre::Vector3 mBackROriginalPos;
 
 
-    Ogre::Entity * mWheelEntitys[mWheelsAmount];
-    Ogre::SceneNode *mWheelNodes[mWheelsAmount];
+    Ogre::Entity * mWheelEntitys[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 
 
 
