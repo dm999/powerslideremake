@@ -472,11 +472,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         loaderListener->loadState(0.8f, "player model loading");
 
     mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), 
-        mModeContext.mGameState.getTrackPositions()[mModeContext.mGameState.getAICount()], 
-        mModeContext.mGameState.getTrackOriginalImpulseLinear()[mModeContext.mGameState.getAICount()], 
-        mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[mModeContext.mGameState.getAICount()], 
-        mModeContext.mGameState.getTrackOriginalImpulseRot()[mModeContext.mGameState.getAICount()], 
-        mModeContext.mGameState.getTrackOriginalImpulseRotInc()[mModeContext.mGameState.getAICount()], 
+        mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICount()], 
         !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
@@ -493,11 +489,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         if(!isCamToAI)
             isCam = false;
         aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacters[q], 
-            mModeContext.mGameState.getTrackPositions()[q], 
-            mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
-            mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
-            mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
-            mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+            mModeContext.mGameState.getInitialVehicleSetup()[q], 
             isCam);
         aiCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 

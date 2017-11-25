@@ -34,8 +34,6 @@ public:
 
 private:
 
-    void initStep();
-
     void reposition(const Ogre::Vector3& posDiff);
     void rerotation(const Ogre::Quaternion& rot);
 

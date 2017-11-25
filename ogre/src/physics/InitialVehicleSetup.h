@@ -6,12 +6,21 @@
 
 struct InitialVehicleSetup
 {
+    Ogre::Vector3 mCOG;
+
+    Ogre::Matrix4 mTrackPosition;
+    Ogre::Vector3 mInitialImpulseLinear;
+    Ogre::Vector3 mInitialImpulseLinearInc;
+    Ogre::Vector3 mInitialImpulseRot;
+    Ogre::Vector3 mInitialImpulseRotInc;
+
     Ogre::Vector3 mChassisPos;
     Ogre::Quaternion mChassisRot;
 
     static const int mWheelsAmount = 4;
     Ogre::Real mWheelRadius[mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mConnectionPointWheel[mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mSuspensionDataWheel[mWheelsAmount];//RR, RL, FR, FL; x - susp height, y - steering, z - velocity
 
     static const int mRoofsAmount = 4;
     float mRoofRadius[mRoofsAmount];//RR, RL, FR, FL
@@ -44,11 +53,6 @@ struct InitialVehicleSetup
     Ogre::Real mWheelsRMass;
     Ogre::Real mWheelsRestitution;
     Ogre::Real mWheelsFriction;
-
-    Ogre::Vector3 mInitialImpulseLinear;
-    Ogre::Vector3 mInitialImpulseLinearInc;
-    Ogre::Vector3 mInitialImpulseRot;
-    Ogre::Vector3 mInitialImpulseRotInc;
 
     Ogre::Vector3 mMomentOfInertia;
 

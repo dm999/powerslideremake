@@ -104,7 +104,6 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
                 mRoofImpulseLinear[q] = impulseLinear;
             }
         }
-
     }
 }
 

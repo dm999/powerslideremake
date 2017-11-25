@@ -443,7 +443,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
     size_t aiCount = sessionStartInfo.mAISkins.size();
 
     //playerIndex should start from 0
-    mModeContext.mGameState.getPlayerCar().repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + sessionStartInfo.mPlayerIndex]);
+    mModeContext.mGameState.getPlayerCar().repositionVehicle(mModeContext.mGameState.getInitialVehicleSetup()[aiCount + sessionStartInfo.mPlayerIndex].mTrackPosition);
 
     mModeContext.mGameState.clearMultiplayerCarsHuman();
     mModeContext.mGameState.setMultiplayerCountAI(0);
@@ -469,15 +469,11 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.setCharacterName(humanCharacter);
 
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, 
-                    mModeContext.mGameState.getTrackPositions()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                    mModeContext.mGameState.getInitialVehicleSetup()[q], 
                     false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
+                humanCar.repositionVehicle(mModeContext.mGameState.getInitialVehicleSetup()[aiCount + q].mTrackPosition);
 
                 mLapController.addCar(&humanCar);
 
@@ -517,15 +513,11 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
                 humanCar.setCharacterName(humanCharacter);
 
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, 
-                    mModeContext.mGameState.getTrackPositions()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
-                    mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                    mModeContext.mGameState.getInitialVehicleSetup()[q], 
                     false, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-                humanCar.repositionVehicle(mModeContext.mGameState.getTrackPositions()[aiCount + q]);
+                humanCar.repositionVehicle(mModeContext.mGameState.getInitialVehicleSetup()[aiCount + q].mTrackPosition);
 
                 mLapController.addCar(&humanCar);
 
@@ -548,16 +540,12 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
             mModeContext.mGameState.getMultiplayerCarAI(q).setCharacterName(aiCharacter);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacter, 
-                mModeContext.mGameState.getTrackPositions()[q], 
-                mModeContext.mGameState.getTrackOriginalImpulseLinear()[q], 
-                mModeContext.mGameState.getTrackOriginalImpulseLinearInc()[q], 
-                mModeContext.mGameState.getTrackOriginalImpulseRot()[q], 
-                mModeContext.mGameState.getTrackOriginalImpulseRotInc()[q], 
+                mModeContext.mGameState.getInitialVehicleSetup()[q], 
                 false, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
-            mModeContext.mGameState.getMultiplayerCarAI(q).repositionVehicle(mModeContext.mGameState.getTrackPositions()[q]);
+            mModeContext.mGameState.getMultiplayerCarAI(q).repositionVehicle(mModeContext.mGameState.getInitialVehicleSetup()[q].mTrackPosition);
 
             mLapController.addCar(&mModeContext.mGameState.getMultiplayerCarAI(q));
         }

@@ -22,7 +22,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsBody(initialVehicleSetup, physics, meshProesser)
 {
 
-    mPhysicsWheels.init(wheelNodes);
+    mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
     mPhysicsRoofs.init(chassis->getPosition());
     mPhysicsBody.init();
 
@@ -38,7 +38,9 @@ PhysicsVehicle::~PhysicsVehicle()
 
 void PhysicsVehicle::timeStep()
 {
-    initStep();
+    mPhysicsWheels.initStep(mChassis->getPosition(), mChassis->getOrientation());
+    mPhysicsRoofs.initStep();
+    mPhysicsBody.initStep();
 
     //do AI
     //do steering adj
@@ -101,13 +103,6 @@ void PhysicsVehicle::timeStep()
     //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
     //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
 
-}
-
-void PhysicsVehicle::initStep()
-{
-    mPhysicsWheels.initStep();
-    mPhysicsRoofs.initStep();
-    mPhysicsBody.initStep();
 }
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)

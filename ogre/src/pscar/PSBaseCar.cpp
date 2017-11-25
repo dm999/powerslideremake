@@ -53,11 +53,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                             ModelsPool* modelsPool,
                             Physics * world,
                             const std::string& characterName,
-                            const Ogre::Matrix4& transform,
-                            const Ogre::Vector3& initialImpulseLinear,
-                            const Ogre::Vector3& initialImpulseLinearInc,
-                            const Ogre::Vector3& initialImpulseRot,
-                            const Ogre::Vector3& initialImpulseRotInc,
+                            InitialVehicleSetup& initialVehicleSetup,
                             bool isAI)
 {
 
@@ -193,13 +189,13 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     //use shadow buffer & HBU_WRITE_ONLY for cockpit & get suspension points
     AdjustBufferToUseShadow(mModelEntity[0], mSuspensionData, mSuspensionIndices, mSuspensionPointOriginalPos);
 
-    Ogre::Quaternion rot = transform.extractQuaternion();
+    Ogre::Quaternion rot = initialVehicleSetup.mTrackPosition.extractQuaternion();
     Ogre::Radian angle;
     Ogre::Vector3 axis;
     rot.ToAngleAxis(angle, axis);
     rot.FromAngleAxis(angle, Ogre::Vector3(-axis.x, -axis.y, axis.z));
     mModelNode->setOrientation(rot);
-    mModelNode->setPosition(transform.getTrans());
+    mModelNode->setPosition(initialVehicleSetup.mTrackPosition.getTrans());
 
     STRSettings misSettings;
     misSettings.parse(gameState.getPFLoaderStore(), "data/misc", "car_misc.str");
@@ -213,6 +209,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mCarSplines.parse(gameState.getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "graphs.str");
     mTrackSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "graphs.str");
     mDefaultSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "graphs.str");
+
+    initialVehicleSetup.mCOG = -getCarArray3Parameter("", "centre of gravity");
+    initialVehicleSetup.mCOG.z = -initialVehicleSetup.mCOG.z;
 
     //load wheels offsets
     {
@@ -243,7 +242,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     }
 
 
-    InitialVehicleSetup initialVehicleSetup;
     initialVehicleSetup.mChassisPos = mModelNode->getPosition();
     initialVehicleSetup.mChassisRot = mModelNode->getOrientation();
     initialVehicleSetup.mConnectionPointWheel[0] = mBackROriginalPos;
@@ -284,7 +282,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     initialVehicleSetup.mRollingFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.RollingFriction", pipeline);
 
-    initialVehicleSetup.mMaxTravel = -getCarParameter("", "max travel");
+    initialVehicleSetup.mMaxTravel = getCarParameter("", "max travel");
 
     initialVehicleSetup.mWheelsFSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline);
     initialVehicleSetup.mWheelsFSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline);
@@ -311,10 +309,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mWheelsRestitution = luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline);
     initialVehicleSetup.mWheelsFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline);
 
-    initialVehicleSetup.mInitialImpulseLinear = initialImpulseLinear;
-    initialVehicleSetup.mInitialImpulseLinearInc = initialImpulseLinearInc;
-    initialVehicleSetup.mInitialImpulseRot = initialImpulseRot;
-    initialVehicleSetup.mInitialImpulseRotInc = initialImpulseRotInc;
 
     //splines
     {

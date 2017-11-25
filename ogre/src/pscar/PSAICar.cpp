@@ -18,19 +18,14 @@ void PSAICar::initModel(    lua_State * pipeline,
                             ModelsPool* modelsPool,
                             Physics * world,
                             const std::string& characterName,
-                            const Ogre::Matrix4& transform,
-                            const Ogre::Vector3& initialImpulseLinear,
-                            const Ogre::Vector3& initialImpulseLinearInc,
-                            const Ogre::Vector3& initialImpulseRot,
-                            const Ogre::Vector3& initialImpulseRotInc,
+                            InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera)
 {
     mSteeringImpulse = 0.0f;
     mSteeringValue = 0.0f;
 
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
-        transform, 
-        initialImpulseLinear, initialImpulseLinearInc, initialImpulseRot, initialImpulseRotInc,
+        initialVehicleSetup,
         isPossesCamera);
 }
 

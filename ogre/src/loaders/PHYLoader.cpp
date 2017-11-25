@@ -5,17 +5,15 @@
 
 void PHYLoader::load(GameState& gameState) const
 {
-    gameState.getTrackPositions().clear();
-    gameState.getTrackOriginalImpulseLinear().clear();
-    gameState.getTrackOriginalImpulseLinearInc().clear();
-    gameState.getTrackOriginalImpulseRot().clear();
-    gameState.getTrackOriginalImpulseRotInc().clear();
+    gameState.getInitialVehicleSetup().clear();
 
     for(int q = 0; q < (GameState::mAIMax + 1); ++q)
     {
         Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
+            InitialVehicleSetup initialVehicleSetup;
+
             typedef unsigned int DWORD;
 
             DWORD something;
@@ -39,17 +37,34 @@ void PHYLoader::load(GameState& gameState) const
             fileToLoad->read(&impulseRotInc, 4 * 3);
             fileToLoad->read(&impulseLinearInc, 4 * 3);
 
+            Ogre::Real tmp;
+            fileToLoad->read(&tmp, 4);
+            fileToLoad->read(&tmp, 4);
+            Ogre::uint32 gear;
+            fileToLoad->read(&gear, 4);
+            ++gear;
+
+            for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+            {
+                Ogre::Vector3 wheelData;
+                fileToLoad->read(&initialVehicleSetup.mSuspensionDataWheel[InitialVehicleSetup::mWheelsAmount - q - 1], 4 * 3);//FL, FR, RL, RR
+                Ogre::Vector2 wheelDataTmp;
+                fileToLoad->read(&wheelDataTmp, 4 * 2);
+            }
+
             Ogre::Matrix4 transform(
                 rotX.x, rotY.x, rotZ.x, pos.x,
                 rotX.y, rotY.y, rotZ.y, pos.y,
                 rotX.z, rotY.z, rotZ.z, -pos.z,
                 0.0f, 0.0f, 0.0f, 1.0f);
 
-            gameState.getTrackPositions().push_back(transform);
-            gameState.getTrackOriginalImpulseLinear().push_back(Ogre::Vector3(impulseLinear.x, impulseLinear.y, -impulseLinear.z));
-            gameState.getTrackOriginalImpulseLinearInc().push_back(Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, -impulseLinearInc.z));
-            gameState.getTrackOriginalImpulseRot().push_back(Ogre::Vector3(impulseRot.x, impulseRot.y, -impulseRot.z));
-            gameState.getTrackOriginalImpulseRotInc().push_back(Ogre::Vector3(impulseRotInc.x, impulseRotInc.y, -impulseRotInc.z));
+            initialVehicleSetup.mTrackPosition = transform;
+            initialVehicleSetup.mInitialImpulseLinear = Ogre::Vector3(impulseLinear.x, impulseLinear.y, -impulseLinear.z);
+            initialVehicleSetup.mInitialImpulseLinearInc = Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, -impulseLinearInc.z);
+            initialVehicleSetup.mInitialImpulseRot = Ogre::Vector3(impulseRot.x, impulseRot.y, -impulseRot.z);
+            initialVehicleSetup.mInitialImpulseRotInc = Ogre::Vector3(impulseRotInc.x, impulseRotInc.y, -impulseRotInc.z);
+
+            gameState.getInitialVehicleSetup().push_back(initialVehicleSetup);
 
             fileToLoad->close();
         }

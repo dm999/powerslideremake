@@ -22,9 +22,9 @@ public:
 
     ~PhysicsWheels();
 
-    void init(Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount]);
+    void init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount]);
 
-    void initStep();
+    void initStep(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj,
@@ -45,6 +45,23 @@ private:
 
     CommonIncludes::shared_ptr<btSphereShape> mWheelShape[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     CommonIncludes::shared_ptr<btCollisionObject> mWheel[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    Ogre::Vector3 mGlobalPos[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    Ogre::Vector3 mWheelsSuspensionPoint[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mWheelsSuspensionPointGlobal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mWheelsSuspensionPoint2Global[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    Ogre::Vector3 mWheelsSuspensionGlobal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mWheelsSuspensionGlobalPrev[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    
+    Ogre::Real mSuspensionHeight[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+    Ogre::Real mSuspensionHeightPrev[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+    
+    Ogre::Real mSteering[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+    Ogre::Real mVelocity[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+
+    Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 };
 
 

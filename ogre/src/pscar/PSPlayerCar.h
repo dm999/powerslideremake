@@ -23,11 +23,7 @@ public:
                             ModelsPool* modelsPool,
                             Physics * world,
                             const std::string& characterName,
-                            const Ogre::Matrix4& transform,
-                            const Ogre::Vector3& initialImpulseLinear,
-                            const Ogre::Vector3& initialImpulseLinearInc,
-                            const Ogre::Vector3& initialImpulseRot,
-                            const Ogre::Vector3& initialImpulseRotInc,
+                            InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera);
 
     virtual void processInternalTick(float timeStep, bool isRaceStarted) override;
