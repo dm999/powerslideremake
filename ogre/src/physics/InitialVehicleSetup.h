@@ -58,6 +58,9 @@ struct InitialVehicleSetup
 
     Ogre::Real mGravityForce;
 
+    Ogre::Real mFrontSuspension;
+    Ogre::Real mRisingDamp;
+
     PSSpline mWheelUnderGroundDD;
     PSSpline mWheelUnderGroundVV;
     PSSpline mWheelUnderGroundDDV;

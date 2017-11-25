@@ -162,7 +162,6 @@ void PhysicsVehicle::calcWheelRoofImpulses()
     mPhysicsWheels.calcImpulses(mImpulseRot, mImpulseRotPrev, normalisedImpulseRot, 
                                 mImpulseLinear, 
                                 recipMomentProj,
-                                mChassis->getOrientation(),
                                 *this);
 
     mPhysicsRoofs.calcImpulses(mImpulseRot, mImpulseRotPrev, normalisedImpulseRot, 

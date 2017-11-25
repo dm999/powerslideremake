@@ -214,13 +214,19 @@ bool Physics::findCollision(const btCollisionObject* const object, const btColli
 
             bool contactsFound = false;
 
+            Ogre::Real deepestDist = 0.0f;
+
             for (int j = 0; j < numContacts; ++j)
             {
                 btManifoldPoint& manifold_point = contact_manifold->getContactPoint(j);
                 distance = manifold_point.getDistance();
 
-                if(distance < 0.0f)
+                //get deepest penetration
+                if(distance < deepestDist)
                 {
+
+                    deepestDist = distance;
+
                     contactsFound = true;
                     worldNormal = PhysicsTools::convert(manifold_point.m_normalWorldOnB);
                     if(swap)
@@ -233,12 +239,12 @@ bool Physics::findCollision(const btCollisionObject* const object, const btColli
                         triIndex = manifold_point.m_index0;
                         pointOnStatic = PhysicsTools::convert(manifold_point.getPositionWorldOnA());
                     }
-                    break;
                 }
             }
 
             if(contactsFound)
             {
+                distance = deepestDist;
                 ret = true;
                 break;
             }

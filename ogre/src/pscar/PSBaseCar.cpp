@@ -221,6 +221,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         mBackLOriginalPos = mBackROriginalPos;
         mBackLOriginalPos.x = -mBackLOriginalPos.x;
 
+        //mBackROriginalPos += initialVehicleSetup.mCOG;
+        //mBackLOriginalPos += initialVehicleSetup.mCOG;
+
         mWheelNodes[0]->setPosition(mBackROriginalPos);
         mWheelNodes[1]->setPosition(mBackLOriginalPos);
 
@@ -230,6 +233,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
         mFrontLOriginalPos = mFrontROriginalPos;
         mFrontLOriginalPos.x = -mFrontLOriginalPos.x;
+
+        //mFrontROriginalPos += initialVehicleSetup.mCOG;
+        //mFrontLOriginalPos += initialVehicleSetup.mCOG;
 
         mWheelNodes[2]->setPosition(mFrontROriginalPos);
         mWheelNodes[3]->setPosition(mFrontLOriginalPos);
@@ -297,6 +303,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mChassisMass = getCarParameter("", "mass");
     initialVehicleSetup.mChassisInvMass = 1.0f / initialVehicleSetup.mChassisMass;
     initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");
+    initialVehicleSetup.mFrontSuspension = getCarParameter("", "front suspension");
+    initialVehicleSetup.mRisingDamp = getCarParameter("", "rising damp");
 
     initialVehicleSetup.mGravityForce = misSettings.getFloatValue("", "gravity force");
 
