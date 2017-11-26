@@ -48,8 +48,8 @@ void PhysicsVehicle::timeStep()
 
     integrate();
 
+    Ogre::Matrix3 carRot;
     Ogre::Vector3 posDiff = mImpulseLinear * mInitialVehicleSetup.mChassisInvMass;
-    reposition(posDiff);
 
     Ogre::Real linearImpulseMod = mImpulseLinear.length();
 
@@ -68,7 +68,6 @@ void PhysicsVehicle::timeStep()
 
         Ogre::Real rotAngle = 1.0f / momentProj * rotImpulseMod;
 
-        Ogre::Matrix3 carRot;
         mChassis->getOrientation().ToRotationMatrix(carRot);
 
         Ogre::Vector3 rotMatrixAxisY = carRot.GetColumn(1);
@@ -79,7 +78,6 @@ void PhysicsVehicle::timeStep()
         carRot.SetColumn(0, rotMatrixAxisX);
         carRot.SetColumn(1, rotMatrixAxisY);
         carRot.SetColumn(2, rotMatrixAxisZ);
-        rerotation(Ogre::Quaternion (carRot));
 
         mImpulseRot *= mInitialVehicleSetup.mAirDensityRot;
     }
@@ -103,22 +101,28 @@ void PhysicsVehicle::timeStep()
     //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
     //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
 
+    reposition(posDiff);
+    rerotation(Ogre::Quaternion (carRot));
 }
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
 {
-    mPhysicsWheels.reposition(posDiff);
-    mPhysicsRoofs.reposition(posDiff);
     mChassis->translate(posDiff);
+    Ogre::Vector3 chassisPos = mChassis->getPosition();
+    const Ogre::Quaternion& chassisRot = mChassis->getOrientation();
+
+    mPhysicsWheels.reposition(chassisPos, chassisRot);
+    mPhysicsRoofs.reposition(posDiff);
     mPhysicsBody.reposition(posDiff);
 }
 
 void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
 {
     Ogre::Vector3 chassisPos = mChassis->getPosition();
+    mChassis->setOrientation(rot);
+
     mPhysicsWheels.rerotation(chassisPos, rot);
     mPhysicsRoofs.rerotation(chassisPos, rot);
-    mChassis->setOrientation(rot);
     mPhysicsBody.rerotation(chassisPos, rot);
 }
 

@@ -72,26 +72,34 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
 
 }
 
-void PhysicsWheels::reposition(const Ogre::Vector3& posDiff)
+void PhysicsWheels::reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
 {
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mWheelNodes[q]->translate(posDiff);
         if(mWheel[q].get())
-            mWheel[q]->getWorldTransform().setOrigin(mWheel[q]->getWorldTransform().getOrigin() + PhysicsTools::convert(posDiff));
+        {
+            Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
+            connectionPoint.y -= mSuspensionHeight[q];
+            //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
+            mWheelNodes[q]->setPosition(chassisPos + chassisRot * connectionPoint);
+            mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(chassisPos + chassisRot * connectionPoint));
+        }
     }
 }
 
-void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& rot)
+void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
 {
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mWheelNodes[q]->setPosition(chassisPos + rot * mInitialVehicleSetup.mConnectionPointWheel[q]);
-        mWheelNodes[q]->setOrientation(rot);
         if(mWheel[q].get())
         {
-            mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(mWheelNodes[q]->getPosition()));
-            mWheel[q]->getWorldTransform().setRotation(PhysicsTools::convert(rot));
+            Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
+            connectionPoint.y -= mSuspensionHeight[q];
+            //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
+            mWheelNodes[q]->setPosition(chassisPos + chassisRot * connectionPoint);
+            mWheelNodes[q]->setOrientation(chassisRot);
+            mWheel[q]->getWorldTransform().setOrigin(PhysicsTools::convert(chassisPos + chassisRot * connectionPoint));
+            mWheel[q]->getWorldTransform().setRotation(PhysicsTools::convert(chassisRot));
         }
     }
 
@@ -132,8 +140,8 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
 {
 
     Ogre::Matrix3 carRot;
-    Ogre::Quaternion rot = chassis.getOrientation();
-    rot.ToRotationMatrix(carRot);
+    Ogre::Quaternion carRotQ = chassis.getOrientation();
+    carRotQ.ToRotationMatrix(carRot);
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
     Ogre::Vector3 carPos = chassis.getPosition();
 
@@ -169,9 +177,11 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
 
                         suspHeight = calcSuspensionLength(suspHeight, q);
 
+                        mSuspensionHeight[q] = suspHeight;
+
                         Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
                         suspLocal.y -= suspHeight;
-                        mWheelsSuspensionRot[q] = rot * suspLocal;
+                        mWheelsSuspensionRot[q] = carRotQ * suspLocal;
                         mWheelsSuspensionGlobal[q] = carPos + mWheelsSuspensionRot[q];
 
                         mWheelsImpulseTangent[q] = vehicle.findTangent(worldNormal, mWheelsImpulseLinear[q]);

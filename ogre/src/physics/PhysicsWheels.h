@@ -30,8 +30,8 @@ public:
                         Ogre::Real recipMomentProj,
                         const PhysicsVehicle& vehicle);
     void process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle);
-    void reposition(const Ogre::Vector3& posDiff);
-    void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& rot);
+    void reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
+    void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
 
 private:
 
