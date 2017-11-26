@@ -63,6 +63,8 @@ private:
     PhysicsRoofs mPhysicsRoofs;
     PhysicsBody mPhysicsBody;
 
+    Ogre::Real mMaxCollisionDistance;
+
 };
 
 #endif

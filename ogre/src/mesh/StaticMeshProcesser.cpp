@@ -71,6 +71,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
 
         if(loadResult)
         {
+            mCollisionDetection.init(de2Loader.getDE2().CollisionInfo_Global, de2Loader.getDE2().CollisionInfo_Parts);
             createLights(pipeline, sceneMgr, de2Loader.getDE2(), gameState);
         }
     }
@@ -1080,4 +1081,9 @@ const TerrainData& StaticMeshProcesser:: getTerrainData(size_t index) const
     assert(index < mTerrainData.size());
 
     return mTerrainData[index];
+}
+
+void StaticMeshProcesser::performBroadCollisionDetection(const Ogre::Vector3& pos, Ogre::Real collisionDistance)
+{
+    mCollisionDetection.performBroadCollisionDetection(pos, collisionDistance);
 }

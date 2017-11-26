@@ -30,6 +30,25 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mImpulseLinearInc = mInitialVehicleSetup.mInitialImpulseLinearInc;
     mImpulseRot = mInitialVehicleSetup.mInitialImpulseRot;
     mImpulseRotInc = mInitialVehicleSetup.mInitialImpulseRotInc;
+
+    //find collision distance
+    mMaxCollisionDistance = 0.0f;
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        Ogre::Real tmpDist = mInitialVehicleSetup.mConnectionPointWheel[q].length() + mInitialVehicleSetup.mWheelRadius[q];
+        if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
+
+        Ogre::Vector3 tmpPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
+        tmpPoint.y -= mInitialVehicleSetup.mMaxTravel;
+        tmpDist = tmpPoint.length() + mInitialVehicleSetup.mWheelRadius[q];
+        if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
+    }
+
+    for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
+    {
+        Ogre::Real tmpDist = mInitialVehicleSetup.mRoofPos[q].length() + mInitialVehicleSetup.mRoofRadius[q];
+        if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
+    }
 }
 
 PhysicsVehicle::~PhysicsVehicle()
@@ -82,6 +101,8 @@ void PhysicsVehicle::timeStep()
         mImpulseRot *= mInitialVehicleSetup.mAirDensityRot;
     }
 
+    //do falloff check
+    mMeshProcesser->performBroadCollisionDetection(mChassis->getPosition(), mMaxCollisionDistance);
 
     mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
 

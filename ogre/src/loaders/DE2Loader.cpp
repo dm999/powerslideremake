@@ -37,6 +37,8 @@ namespace DE2
         Data_Parts.clear();
         Data_TexturePath.clear();
         Data_TerranPath.clear();
+        CollisionInfo_Parts.clear();
+        CollisionInfo_Global.clear();
     }
 
     void Find_xV4(const Ogre::DataStreamPtr& stream, int count)
@@ -55,18 +57,18 @@ namespace DE2
         }
     }
 
-    int loadTriInfo(DE2_File & DE2, int partIndex, const Ogre::DataStreamPtr& stream, int curTri)
+    int loadCollisionInfo(DE2_File & DE2, DE2_CollisionInfo& collisionInfo, const AABB& aabbPrev, const Ogre::DataStreamPtr& stream, int curTri)
     {
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
         typedef unsigned int DWORD;
 
-        //lightmap per vertex???
+
         float ss_1;
         BYTE ss_2;
         BYTE ss_3;
         BYTE ss_4;
-        BYTE bright;
+        BYTE ss_5;
         BYTE ss_6;
         BYTE ss_7;
         WORD subCount;
@@ -75,35 +77,58 @@ namespace DE2
         stream->read(&ss_2,1);
         stream->read(&ss_3,1);
         stream->read(&ss_4,1);
-        stream->read(&bright,1);
+        stream->read(&ss_5,1);
         stream->read(&ss_6,1);
         stream->read(&ss_7,1);
         stream->read(&subCount,2);
+
+        DE2_CollisionInfo collisionInfoLocal;
+        collisionInfoLocal.aabb.min.x = aabbPrev.min.x + ss_1 * static_cast<float>(ss_2);
+        collisionInfoLocal.aabb.min.y = aabbPrev.min.y + ss_1 * static_cast<float>(ss_3);
+        collisionInfoLocal.aabb.min.z = aabbPrev.min.z + ss_1 * static_cast<float>(ss_4);
+        collisionInfoLocal.aabb.max.x = aabbPrev.min.x + ss_1 * static_cast<float>(ss_5);
+        collisionInfoLocal.aabb.max.y = aabbPrev.min.y + ss_1 * static_cast<float>(ss_6);
+        collisionInfoLocal.aabb.max.z = aabbPrev.min.z + ss_1 * static_cast<float>(ss_7);
 
         int totalsum = 0;
 
         if(subCount)
         {
             for(int q = 0; q < subCount; ++q)
-                totalsum += loadTriInfo(DE2, partIndex, stream, q);
+                totalsum += loadCollisionInfo(DE2, collisionInfoLocal, collisionInfoLocal.aabb, stream, q);
         }
         else
         {
-            WORD triIndex;
-            stream->read(&triIndex,2);
-
-            int vertIndexA = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].v0;
-            int vertIndexB = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].v1;
-            int vertIndexC = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].v2;
-
-            int texIndexA = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].t0;
-            int texIndexB = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].t1;
-            int texIndexC = DE2.Data_Parts[partIndex].Data_Triangles[triIndex].t2;
-
+            stream->read(&collisionInfoLocal.triIndex,2);
             totalsum = 1;
         }
 
+        collisionInfo.subparts.push_back(collisionInfoLocal);
+
         return totalsum;
+    }
+
+    void loadViewHierInfo(DE2_File & DE2, DE2_CollisionInfo& collisionInfo, const Ogre::DataStreamPtr& stream)
+    {
+
+        DE2_CollisionInfo collisionInfoLocal;
+
+        stream->read(&collisionInfoLocal.aabb, sizeof(AABB));
+
+        WORD subCount;
+        stream->read(&subCount,2);
+
+        if(subCount)
+        {
+            for(int q = 0; q < subCount; ++q)
+                loadViewHierInfo(DE2, collisionInfoLocal, stream);
+        }
+        else
+        {
+            stream->read(&collisionInfoLocal.triIndex,2);//part index here
+        }
+
+        collisionInfo.subparts.push_back(collisionInfoLocal);
     }
 
     void readDE2(const Ogre::DataStreamPtr& stream, DE2_File & DataDE2)
@@ -223,6 +248,8 @@ namespace DE2
             stream->read(&DataDE2.Parts,4);
             DataDE2.Data_Parts.clear();
             DataDE2.Data_Parts.resize(DataDE2.Parts);
+            DataDE2.CollisionInfo_Parts.clear();
+            DataDE2.CollisionInfo_Parts.resize(DataDE2.Parts);
 
             for(DWORD q=0;q<DataDE2.Parts;q++)
             {
@@ -252,9 +279,9 @@ namespace DE2
 
                 if(switcher)
                 {
-                    struct switcher_1{ float x,y,z;} sw_1, sw_2;
-                    stream->read(&sw_1,sizeof(switcher_1));
-                    stream->read(&sw_2,sizeof(switcher_1));
+                    DE2_CollisionInfo collisionInfo;
+                    stream->read(&collisionInfo.aabb,sizeof(AABB));
+
                     WORD triCount;
                     stream->read(&triCount,2);
 
@@ -263,18 +290,26 @@ namespace DE2
                         int totalSum = 0;
                         for(int ll = 0; ll < triCount; ++ll)
                         {
-                            totalSum += loadTriInfo(DataDE2, q, stream, ll);
+                            totalSum += loadCollisionInfo(DataDE2, collisionInfo, collisionInfo.aabb, stream, ll);
                         }
-                    }else
-                    {
-                        WORD triIndex;
-                        stream->read(&triIndex,2);
                     }
+                    else
+                    {
+                        stream->read(&collisionInfo.triIndex,2);
+                    }
+
+                    DataDE2.CollisionInfo_Parts[q] = collisionInfo;
                 }
             }
 
+            //viewHierarchy
+            Find_xV4(stream,2);
+            DataDE2.CollisionInfo_Global.clear();
+            DataDE2.CollisionInfo_Global.resize(1);//root element
+            loadViewHierInfo(DataDE2, DataDE2.CollisionInfo_Global[0], stream);
+
             //texture names
-            Find_xV4(stream,3);
+            Find_xV4(stream,1);
             stream->read(&DataDE2.TexturePathCount,4);
 
             if(DataDE2.TexturePathCount)

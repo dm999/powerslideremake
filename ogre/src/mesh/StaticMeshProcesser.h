@@ -6,6 +6,7 @@
 #include "../includes/CommonIncludes.h"
 
 #include "MshData.h"
+#include "CollisionDetection.h"
 
 #include "../GameState.h"
 #include "../loaders/DE2.h"
@@ -63,6 +64,8 @@ public :
 
     void setTerrainData(const std::vector<TerrainData>& terrainData);
     const TerrainData& getTerrainData(size_t index) const;
+
+    void performBroadCollisionDetection(const Ogre::Vector3& pos, Ogre::Real collisionDistance);
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
@@ -176,6 +179,8 @@ private:
     std::vector<TerrainData> mTerrainData;
 
     bool mIsVertexArraySupported;
+
+    CollisionDetection mCollisionDetection;
 
 };
 

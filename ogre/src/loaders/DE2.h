@@ -160,6 +160,31 @@ namespace DE2
         float rangeOut, rangeIn;
     };
 
+    struct AABB{
+        DE2_Vertex min, max;
+        AABB()
+        {
+            min.x = 0.0f;
+            min.y = 0.0f;
+            min.z = 0.0f;
+            max.x = 0.0f;
+            max.y = 0.0f;
+            max.z = 0.0f;
+        }
+    };
+
+    struct DE2_CollisionInfo
+    {
+        AABB aabb;
+        std::vector<DE2_CollisionInfo> subparts;
+        short triIndex;//or part index for view Hierarchy
+
+        DE2_CollisionInfo()
+        {
+            triIndex = -1;
+        }
+    };
+
     struct DE2_File
     {
         typedef unsigned int DWORD;
@@ -177,13 +202,16 @@ namespace DE2
         std::vector<DE2_Vertex> Data_Vertexes;
         std::vector<DE2_TextureCoord> Data_Texture_Coord;
         std::vector<DE2_TextureCoord> Data_Texture_Coord_Decal;
-        std::vector<DE2_Part> Data_Parts;
+        std::vector<DE2_Part> Data_Parts;           // amount = parts
         std::vector<std::string> Data_TexturePath;  // unique names
         std::vector<std::string> Data_TerranPath;   // repeated names (to align size with Data_TexturePath)
 
         std::vector<int> indexesForHighestLODS; // maps all parts to high poly only (size == RealPartsCount)
 
         std::vector<DE2_Light> lights;
+
+        std::vector<DE2_CollisionInfo> CollisionInfo_Parts; // amount = parts
+        std::vector<DE2_CollisionInfo> CollisionInfo_Global;
 
 
         DE2_File();
