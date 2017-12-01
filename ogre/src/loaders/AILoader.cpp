@@ -134,15 +134,15 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
 
                         aiData.pos.x = someBuf2[0];
                         aiData.pos.y = someBuf2[1];
-                        aiData.pos.z = -someBuf2[2];
+                        aiData.pos.z = -someBuf2[2];//original data is left hand
 
                         aiData.tangent.x = someBuf2[3];
                         aiData.tangent.y = someBuf2[4];
-                        aiData.tangent.z = -someBuf2[5];
+                        aiData.tangent.z = -someBuf2[5];//original data is left hand
 
                         aiData.magic.x = someBuf2[6];
                         aiData.magic.y = someBuf2[7];
-                        aiData.magic.z = -someBuf2[8];
+                        aiData.magic.z = -someBuf2[8];//original data is left hand
 
                         aiWhole[w].aiData.push_back(aiData);
                     }

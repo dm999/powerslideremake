@@ -1,27 +1,28 @@
 
 #include "CollisionDetection.h"
 
-void CollisionDetection::init(const std::vector<DE2::DE2_CollisionInfo>& collisionTree,
-                              const std::vector<DE2::DE2_CollisionInfo>& collisionParts)
+void CollisionDetection::init(const DE2::DE2_File& de2File)
 {
-    mCollisionTree = collisionTree;
-    mCollisionParts = collisionParts;
+    mCollisionGobal = de2File.CollisionInfo_Global;
+    mCollisionParts = de2File.CollisionInfo_Parts;
+    mDataParts = de2File.Data_Parts;
+    mDataVertexes = de2File.Data_Vertexes;
 }
 
 void CollisionDetection::performBroadCollisionDetection(const Ogre::Vector3& pos, Ogre::Real collisionDistance)
 {
-    Ogre::Real distSqr = collisionDistance * collisionDistance;
+    mMaxDistanceSqr = collisionDistance * collisionDistance;
     size_t maxSearchDepth = 1024;
 
-    assert(mCollisionTree.size() == 1);
-    assert(mCollisionTree[0].subparts.size() == 1);
+    assert(mCollisionGobal.size() == 1);
+    assert(mCollisionGobal[0].subparts.size() == 1);
 
-    const DE2::DE2_CollisionInfo& root = mCollisionTree[0].subparts[0];
+    const DE2::DE2_CollisionInfo& root = mCollisionGobal[0].subparts[0];
     if(root.subparts.size() > 0)
     {
         for(size_t q = 0; q < root.subparts.size(); ++q)
         {
-            checkSubTree(root.subparts[q]);
+            broadSearch(root.subparts[q], pos);
         }
     }
     else
@@ -31,7 +32,8 @@ void CollisionDetection::performBroadCollisionDetection(const Ogre::Vector3& pos
         Ogre::Real sqrLen = getOnlyNegative(minDiff, maxDiff).squaredLength();
         if(sqrLen <= collisionDistance)
         {
-            checkLeaf(root);
+            assert(false);//shouldn`t be here
+            narrowSearch(root, pos, 0);
         }
     }
 }
@@ -53,10 +55,63 @@ Ogre::Vector3 CollisionDetection::getOnlyNegative(const Ogre::Vector3& a, const 
     return res;
 }
 
-void CollisionDetection::checkSubTree(const DE2::DE2_CollisionInfo& subTree)
+void CollisionDetection::broadSearch(const DE2::DE2_CollisionInfo& subTree, const Ogre::Vector3& pos)
 {
+    Ogre::Vector3 maxDiff = convert(subTree.aabb.max) - pos;
+    Ogre::Vector3 minDiff = pos - convert(subTree.aabb.min);
+    Ogre::Real sqrLen = getOnlyNegative(minDiff, maxDiff).squaredLength();
+    if(mMaxDistanceSqr >= sqrLen)
+    {
+        if(!subTree.subparts.empty())
+        {
+            for(size_t q = 0; q < subTree.subparts.size(); ++q)
+            {
+                broadSearch(subTree.subparts[q], pos);
+            }
+        }
+        else
+        {
+            short partIndex = subTree.triIndex;
+            if(partIndex != -1)
+            {
+                const DE2::DE2_CollisionInfo& leaf = mCollisionParts[partIndex];
+                
+                //some function here
+
+                for(size_t q = 0; q < leaf.subparts.size(); ++q)
+                {
+                    narrowSearch(leaf.subparts[q], pos, partIndex);
+                }
+            }
+        }
+    }
 }
 
-void CollisionDetection::checkLeaf(const DE2::DE2_CollisionInfo& leaf)
+void CollisionDetection::narrowSearch(const DE2::DE2_CollisionInfo& leaf, const Ogre::Vector3& pos, short partIndex)
 {
+    Ogre::Vector3 maxDiff = convert(leaf.aabb.max) - pos;
+    Ogre::Vector3 minDiff = pos - convert(leaf.aabb.min);
+    Ogre::Real sqrLen = getOnlyNegative(minDiff, maxDiff).squaredLength();
+    if(mMaxDistanceSqr >= sqrLen)
+    {
+        if(!leaf.subparts.empty())
+        {
+            for(size_t q = 0; q < leaf.subparts.size(); ++q)
+            {
+                narrowSearch(leaf.subparts[q], pos, partIndex);
+            }
+        }
+        else
+        {
+            short triangleIndex = leaf.triIndex;
+            Ogre::Vector3 pointA = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v0]);
+            Ogre::Vector3 pointB = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v1]);
+            Ogre::Vector3 pointC = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v2]);
+            pointA.z = -pointA.z;//original data is left hand
+            pointB.z = -pointB.z;//original data is left hand
+            pointC.z = -pointC.z;//original data is left hand
+            Ogre::Vector3 norm = Ogre::Vector3(pointC - pointA).crossProduct(Ogre::Vector3(pointB - pointA));
+            norm.normalise();
+        }
+    }
 }
