@@ -41,6 +41,7 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
     {
         //mWheelsSuspensionGlobal[q] = chassisPos;
         //mWheelsSuspensionGlobalPrev[q] = chassisPos;
+        mWheelsSuspensionPointGlobal[q] = chassisPos;
         mSuspensionHeight[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].x;
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
         mSpringVal[q] = 1.0f;
@@ -62,6 +63,7 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
         Ogre::Real maxTravel = mInitialVehicleSetup.mMaxTravel * 0.5f;
         Ogre::Vector3 rotVal = maxTravel * rotAxisY;
 
+        mWheelsSuspensionPointGlobalPrev[q] = mWheelsSuspensionPointGlobal[q];
         mWheelsSuspensionPointGlobal[q] = mGlobalPos[q] - rotVal;
         mWheelsSuspensionPoint2Global[q] = mWheelsSuspensionPointGlobal[q] - rotVal;
         mWheelsSuspensionPoint[q] = mWheelsSuspensionPoint2Global[q] - chassisPos;
@@ -145,8 +147,20 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
     Ogre::Vector3 carPos = chassis.getPosition();
 
-    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    //for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
     {
+
+        const Ogre::Real tol = 0.00001f;
+        Ogre::Vector3 averagedSuspensionPos = mWheelsSuspensionPointGlobal[q] + mWheelsSuspensionPointGlobalPrev[q];
+        averagedSuspensionPos *= 0.5f;
+
+        Ogre::Vector3 diffPos = mWheelsSuspensionPointGlobal[q] - mWheelsSuspensionPointGlobalPrev[q];
+        Ogre::Real averageLen = diffPos.length() * 0.5f - (mInitialVehicleSetup.mMaxTravel * -0.5f) + mInitialVehicleSetup.mWheelRadius[q];
+
+        mMeshProcesser->collideSphere(mWheelsSuspensionPoint2Global[q], mInitialVehicleSetup.mWheelRadius[q], tol,
+                                        averagedSuspensionPos, averageLen);
+
         if(mWheel[q].get())
         {
             Ogre::Vector3 worldNormal;

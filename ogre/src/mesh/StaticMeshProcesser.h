@@ -65,7 +65,9 @@ public :
     void setTerrainData(const std::vector<TerrainData>& terrainData);
     const TerrainData& getTerrainData(size_t index) const;
 
-    void performBroadCollisionDetection(const Ogre::Vector3& pos, Ogre::Real collisionDistance);
+    void performCollisionDetection(const Ogre::Vector3& pos, const Ogre::Vector3& coreBaseGlobal, Ogre::Real collisionDistance);
+    bool collideSphere(const Ogre::Vector3& spherePos, Ogre::Real radius, Ogre::Real tol,
+        const Ogre::Vector3& averagedPos, Ogre::Real averageLen) const;
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);

@@ -103,9 +103,9 @@ namespace DE2
             totalsum = 1;
         }
 
-        collisionInfoLocal.aabb.min.z = -collisionInfoLocal.aabb.min.z;//original data is left hand
-        collisionInfoLocal.aabb.max.z = -collisionInfoLocal.aabb.max.z;//original data is left hand
-        std::swap(collisionInfoLocal.aabb.min.z, collisionInfoLocal.aabb.max.z);
+        //collisionInfoLocal.aabb.min.z = -collisionInfoLocal.aabb.min.z;//original data is left hand
+        //collisionInfoLocal.aabb.max.z = -collisionInfoLocal.aabb.max.z;//original data is left hand
+        //std::swap(collisionInfoLocal.aabb.min.z, collisionInfoLocal.aabb.max.z);
         collisionInfo.subparts.push_back(collisionInfoLocal);
 
         return totalsum;
@@ -133,9 +133,9 @@ namespace DE2
             stream->read(&collisionInfoLocal.triIndex,2);//part index here
         }
 
-        collisionInfoLocal.aabb.min.z = -collisionInfoLocal.aabb.min.z;//original data is left hand
-        collisionInfoLocal.aabb.max.z = -collisionInfoLocal.aabb.max.z;//original data is left hand
-        std::swap(collisionInfoLocal.aabb.min.z, collisionInfoLocal.aabb.max.z);
+        //collisionInfoLocal.aabb.min.z = -collisionInfoLocal.aabb.min.z;//original data is left hand
+        //collisionInfoLocal.aabb.max.z = -collisionInfoLocal.aabb.max.z;//original data is left hand
+        //std::swap(collisionInfoLocal.aabb.min.z, collisionInfoLocal.aabb.max.z);
         collisionInfo.subparts.push_back(collisionInfoLocal);
     }
 

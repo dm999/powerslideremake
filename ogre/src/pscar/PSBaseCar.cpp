@@ -213,6 +213,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mCOG = -getCarArray3Parameter("", "centre of gravity");
     initialVehicleSetup.mCOG.z = -initialVehicleSetup.mCOG.z;
 
+    initialVehicleSetup.mCoreBase = getCarArray3Parameter("", "core base");
+    initialVehicleSetup.mCoreBase.z = -initialVehicleSetup.mCoreBase.z;
+
     //load wheels offsets
     {
         mBackROriginalPos = mCarSettings.getArray3Value("", "wheelbase back");
@@ -221,8 +224,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         mBackLOriginalPos = mBackROriginalPos;
         mBackLOriginalPos.x = -mBackLOriginalPos.x;
 
-        //mBackROriginalPos += initialVehicleSetup.mCOG;
-        //mBackLOriginalPos += initialVehicleSetup.mCOG;
+        mBackROriginalPos += initialVehicleSetup.mCOG;
+        mBackLOriginalPos += initialVehicleSetup.mCOG;
 
         mWheelNodes[0]->setPosition(mBackROriginalPos);
         mWheelNodes[1]->setPosition(mBackLOriginalPos);
@@ -234,8 +237,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         mFrontLOriginalPos = mFrontROriginalPos;
         mFrontLOriginalPos.x = -mFrontLOriginalPos.x;
 
-        //mFrontROriginalPos += initialVehicleSetup.mCOG;
-        //mFrontLOriginalPos += initialVehicleSetup.mCOG;
+        mFrontROriginalPos += initialVehicleSetup.mCOG;
+        mFrontLOriginalPos += initialVehicleSetup.mCOG;
 
         mWheelNodes[2]->setPosition(mFrontROriginalPos);
         mWheelNodes[3]->setPosition(mFrontLOriginalPos);

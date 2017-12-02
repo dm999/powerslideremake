@@ -63,6 +63,9 @@ private:
     PhysicsRoofs mPhysicsRoofs;
     PhysicsBody mPhysicsBody;
 
+    Ogre::Vector3 mCoreBaseGlobal;
+    Ogre::Vector3 mCoreBaseGlobalPrev;
+
     Ogre::Real mMaxCollisionDistance;
 
 };

@@ -1083,7 +1083,25 @@ const TerrainData& StaticMeshProcesser:: getTerrainData(size_t index) const
     return mTerrainData[index];
 }
 
-void StaticMeshProcesser::performBroadCollisionDetection(const Ogre::Vector3& pos, Ogre::Real collisionDistance)
+void StaticMeshProcesser::performCollisionDetection(const Ogre::Vector3& pos, const Ogre::Vector3& coreBaseGlobal, Ogre::Real collisionDistance)
 {
-    mCollisionDetection.performBroadCollisionDetection(pos, collisionDistance);
+    Ogre::Vector3 posL = pos;
+    posL.z = -posL.z;//original data is left hand
+
+    Ogre::Vector3 coreBaseGlobalL = coreBaseGlobal;
+    coreBaseGlobalL.z = -coreBaseGlobalL.z;//original data is left hand
+
+    mCollisionDetection.performCollisionDetection(posL, coreBaseGlobalL, collisionDistance);
+}
+
+bool StaticMeshProcesser::collideSphere(const Ogre::Vector3& spherePos, Ogre::Real radius, Ogre::Real tol, 
+                                        const Ogre::Vector3& averagedPos, Ogre::Real averageLen) const
+{
+    Ogre::Vector3 spherePosL = spherePos;
+    spherePosL.z = -spherePosL.z;//original data is left hand
+
+    Ogre::Vector3 averagedPosL = averagedPos;
+    averagedPosL.z = -averagedPosL.z;//original data is left hand
+
+    return mCollisionDetection.collideSphere(spherePosL, radius, tol, averagedPosL, averageLen);
 }

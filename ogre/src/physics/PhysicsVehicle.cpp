@@ -25,6 +25,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
     mPhysicsRoofs.init(chassis->getPosition());
     mPhysicsBody.init();
+    mCoreBaseGlobal = chassis->getPosition();
+    mCoreBaseGlobalPrev = mCoreBaseGlobal;
 
     mImpulseLinear = mInitialVehicleSetup.mInitialImpulseLinear;
     mImpulseLinearInc = mInitialVehicleSetup.mInitialImpulseLinearInc;
@@ -60,6 +62,7 @@ void PhysicsVehicle::timeStep()
     mPhysicsWheels.initStep(mChassis->getPosition(), mChassis->getOrientation());
     mPhysicsRoofs.initStep();
     mPhysicsBody.initStep();
+    mCoreBaseGlobalPrev = mCoreBaseGlobal;
 
     //do AI
     //do steering adj
@@ -102,7 +105,8 @@ void PhysicsVehicle::timeStep()
     }
 
     //do falloff check
-    mMeshProcesser->performBroadCollisionDetection(mChassis->getPosition(), mMaxCollisionDistance);
+    mCoreBaseGlobal = mChassis->getPosition() + mChassis->getOrientation() * mInitialVehicleSetup.mCoreBase;
+    mMeshProcesser->performCollisionDetection(mChassis->getPosition(), mCoreBaseGlobalPrev, mMaxCollisionDistance);
 
     mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
 
