@@ -1514,7 +1514,7 @@ static Ogre::NameGenerator nameGenMeshes</y:NodeLabel>
           <y:Geometry height="1840.8084935771822" width="869.3089261662258" x="12615.345536916888" y="-4700.404246788591"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1679.93359375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="80.43744991359108">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1826.9453125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="815.716796875" x="26.796064645612205" y="6.931590538591081">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 StaticMeshProcesser
 
@@ -1544,6 +1544,14 @@ char getTerrainType(std::pair&lt;int, int&gt; address, int triIndex, const btVec
 
 void setTerrainData(const std::vector&lt;TerrainData&gt;&amp; terrainData)
 const TerrainData&amp; getTerrainData(size_t index) const
+
+void performCollisionDetection(const Ogre::Vector3&amp; pos, const Ogre::Vector3&amp; coreBaseGlobal, Ogre::Real collisionDistance)
+bool collideSphere(const Ogre::Vector3&amp; spherePos, Ogre::Real radius, Ogre::Real tol,
+        const Ogre::Vector3&amp; averagedPos, Ogre::Real averageLen,
+        size_t&amp; foundIndex, Ogre::Real&amp; minDist) const
+const FoundCollision&amp; getCollision(size_t index) const
+const std::vector&lt;size_t&gt;&amp; getArrayOfCollisions() const
+void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA) const
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
@@ -1627,7 +1635,9 @@ Ogre::Vector3 getBarycentric(std::pair&lt;int, int&gt; address, int triIndex, co
 
 std::vector&lt;TerrainData&gt; mTerrainData
 
-bool mIsVertexArraySupported</y:NodeLabel>
+bool mIsVertexArraySupported
+
+CollisionDetection mCollisionDetection</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3762,7 +3772,7 @@ PhysicsBody mPhysicsBody</y:NodeLabel>
           <y:Geometry height="375.2096856282094" width="441.1641732831026" x="12079.41791335845" y="-1597.6048428141046"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="423.525390625" x="8.819391329050632" y="9.190780314104813">&lt;&lt;PhysicsBody.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="423.525390625" x="8.819391329050632" y="9.190780314104586">&lt;&lt;PhysicsBody.h&gt;&gt;
 
 PhysicsBody
 
@@ -3833,10 +3843,10 @@ Ogre::Vector3 mRoofGlobalPrev[InitialVehicleSetup::mRoofsAmount]</y:NodeLabel>
     <node id="n88">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="417.2440039681328" width="739.6078334965582" x="12830.196083251722" y="-868.6220019840664"/>
+          <y:Geometry height="686.2636413436423" width="739.6078334965582" x="12860.196083251722" y="-793.1318206718212"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="415.6328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="0.8055957340664008">&lt;&lt;PhysicsWheels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="3.004867546821174">&lt;&lt;PhysicsWheels.h&gt;&gt;
 
 PhysicsWheels
 
@@ -3862,8 +3872,106 @@ const InitialVehicleSetup&amp; mInitialVehicleSetup
 
 Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount]
 
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mWheelShape[InitialVehicleSetup::mWheelsAmount]
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheel[InitialVehicleSetup::mWheelsAmount]</y:NodeLabel>
+Ogre::Vector3 mGlobalPos[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Vector3 mWheelsSuspensionPoint[InitialVehicleSetup::mWheelsAmount]
+Ogre::Vector3 mWheelsSuspensionPointGlobalPrev[InitialVehicleSetup::mWheelsAmount]
+Ogre::Vector3 mWheelsSuspensionPointGlobal[InitialVehicleSetup::mWheelsAmount]
+Ogre::Vector3 mWheelsSuspensionPoint2Global[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Vector3 mWheelsSuspensionRot[InitialVehicleSetup::mWheelsAmount]
+Ogre::Vector3 mWheelsSuspensionGlobal[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Real mSuspensionHeight[InitialVehicleSetup::mWheelsAmount]
+Ogre::Real mSuspensionHeightPrev[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Real mSpringVal[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Real mSteering[InitialVehicleSetup::mWheelsAmount]
+Ogre::Real mVelocity[InitialVehicleSetup::mWheelsAmount]
+
+Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount]
+Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount]</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n89">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="701.6986430380616" width="782.3819558392693" x="11608.809022080366" y="-3470.849321519031"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="577.345703125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="679.638671875" x="51.37164198213395" y="62.17646995653104">&lt;&lt;CollisionDetection.h&gt;&gt;
+
+CollisionDetection
+
+public:
+
+void init(const DE2::DE2_File&amp; de2File)
+
+void performCollisionDetection(const Ogre::Vector3&amp; pos, const Ogre::Vector3&amp; coreBaseGlobal, Ogre::Real collisionDistance)
+bool collideSphere(const Ogre::Vector3&amp; spherePos, Ogre::Real radius, Ogre::Real tol, 
+    const Ogre::Vector3&amp; averagedPos, Ogre::Real averageLen, size_t&amp; foundIndex, Ogre::Real&amp; minDist) const
+
+const FoundCollision&amp; getCollision(size_t index) const
+const std::vector&lt;size_t&gt;&amp; getArrayOfCollisions() const
+void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA) const
+
+private:
+
+void broadSearch(const DE2::DE2_CollisionInfo&amp; subTree, const Ogre::Vector3&amp; pos)
+void narrowSearch(const DE2::DE2_CollisionInfo&amp; leaf, const Ogre::Vector3&amp; pos, short partIndex)
+
+Ogre::Real collide(const Ogre::Vector3&amp; spherePos, Ogre::Real radius, size_t batchNum, Ogre::Real tol = 0.0f) const
+bool absLess(Ogre::Real found, Ogre::Real tol) const
+Ogre::Real diffDotP(const Ogre::Vector3&amp; diffProjNorm, const Ogre::Vector3&amp; point) const
+Ogre::Real diffDotP(const Ogre::Vector3&amp; diffProjNorm, const Ogre::Vector3&amp; point, const Ogre::Vector3&amp; point2) const
+bool checkAverage(const Ogre::Vector3&amp; averagedPos, Ogre::Real averageLen, size_t batchNum) const
+
+Ogre::Vector3 convert(const DE2::DE2_Vertex&amp; val) const
+Ogre::Vector3 getOnlyNegative(const Ogre::Vector3&amp; a, const Ogre::Vector3&amp; b) const
+
+std::vector&lt;DE2::DE2_CollisionInfo&gt; mCollisionParts
+std::vector&lt;DE2::DE2_CollisionInfo&gt; mCollisionGobal
+std::vector&lt;DE2::DE2_Part&gt; mDataParts
+std::vector&lt;DE2::DE2_Vertex&gt; mDataVertexes
+
+std::vector&lt;FoundCollision&gt; mFoundCollisions
+mutable std::vector&lt;size_t&gt; mFoundCollisionsSpheres
+
+Ogre::Real mMaxDistanceSqr</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n90">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="170.4848526966316" width="262.28745877307983" x="11208.85627061346" y="-3205.242426348316"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="136.310546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.763671875" x="18.761893449040144" y="17.087152910815803">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+
+FoundCollision
+
+const DE2::DE2_CollisionInfo* mCollision
+Ogre::Vector3 mNormal
+short mPartIndex
+short mTriangleIndex
+bool mIsFarFromCoreBase</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n91">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="31.579756583974813" width="133.7009351193766" x="13163.149532440311" y="-18.438190014110205"/>
+          <y:Fill color="#00FF00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="117.373046875" x="8.163944122188695" y="-0.9112935830125934">Physics
+StaticMeshProcesser</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -4754,6 +4862,36 @@ CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mWheel[InitialVehicleSetup::
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e83" source="n89" target="n24">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e84" source="n89" target="n90">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e85" source="n88" target="n91">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

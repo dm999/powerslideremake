@@ -24,7 +24,13 @@ public:
 
     void performCollisionDetection(const Ogre::Vector3& pos, const Ogre::Vector3& coreBaseGlobal, Ogre::Real collisionDistance);
     bool collideSphere(const Ogre::Vector3& spherePos, Ogre::Real radius, Ogre::Real tol, 
-        const Ogre::Vector3& averagedPos, Ogre::Real averageLen) const;
+        const Ogre::Vector3& averagedPos, Ogre::Real averageLen, 
+        size_t& foundIndex, Ogre::Real& minDist) const;
+
+    const FoundCollision& getCollision(size_t index) const;
+    const std::vector<size_t>& getArrayOfCollisions() const;
+
+    void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const;
 
 private:
 

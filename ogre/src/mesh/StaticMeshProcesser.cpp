@@ -1095,7 +1095,8 @@ void StaticMeshProcesser::performCollisionDetection(const Ogre::Vector3& pos, co
 }
 
 bool StaticMeshProcesser::collideSphere(const Ogre::Vector3& spherePos, Ogre::Real radius, Ogre::Real tol, 
-                                        const Ogre::Vector3& averagedPos, Ogre::Real averageLen) const
+                                        const Ogre::Vector3& averagedPos, Ogre::Real averageLen,
+                                        size_t& foundIndex, Ogre::Real& minDist) const
 {
     Ogre::Vector3 spherePosL = spherePos;
     spherePosL.z = -spherePosL.z;//original data is left hand
@@ -1103,5 +1104,22 @@ bool StaticMeshProcesser::collideSphere(const Ogre::Vector3& spherePos, Ogre::Re
     Ogre::Vector3 averagedPosL = averagedPos;
     averagedPosL.z = -averagedPosL.z;//original data is left hand
 
-    return mCollisionDetection.collideSphere(spherePosL, radius, tol, averagedPosL, averageLen);
+    return mCollisionDetection.collideSphere(spherePosL, radius, tol, 
+        averagedPosL, averageLen, 
+        foundIndex, minDist);
+}
+
+const FoundCollision& StaticMeshProcesser::getCollision(size_t index) const
+{
+    return mCollisionDetection.getCollision(index);
+}
+
+const std::vector<size_t>& StaticMeshProcesser::getArrayOfCollisions() const
+{
+    return mCollisionDetection.getArrayOfCollisions();
+}
+
+void StaticMeshProcesser::getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const
+{
+    mCollisionDetection.getGeoverts(collision, pA);
 }

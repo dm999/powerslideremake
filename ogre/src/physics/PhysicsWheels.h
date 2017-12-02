@@ -6,9 +6,6 @@
 
 #include "InitialVehicleSetup.h"
 
-class btSphereShape;
-class btCollisionObject;
-
 class Physics;
 class StaticMeshProcesser;
 class PhysicsVehicle;
@@ -35,6 +32,8 @@ public:
 
 private:
 
+    void averageCollisionNormal() const;
+
     float calcSuspensionLength(float len, size_t wheelIndex);
 
     Physics* mPhysics;
@@ -43,9 +42,6 @@ private:
     const InitialVehicleSetup& mInitialVehicleSetup;
 
     Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-
-    CommonIncludes::shared_ptr<btSphereShape> mWheelShape[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-    CommonIncludes::shared_ptr<btCollisionObject> mWheel[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 
     Ogre::Vector3 mGlobalPos[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 

@@ -49,15 +49,14 @@ void CollisionDetection::performCollisionDetection(const Ogre::Vector3& pos, con
 }
 
 bool CollisionDetection::collideSphere(const Ogre::Vector3& spherePos, Ogre::Real radius, Ogre::Real tol,
-                                       const Ogre::Vector3& averagedPos, Ogre::Real averageLen) const
+                                       const Ogre::Vector3& averagedPos, Ogre::Real averageLen,
+                                       size_t& foundIndex,
+                                       Ogre::Real& minDist) const
 {
     bool isFound = false;
-    size_t foundBatch = 0;
 
     mFoundCollisionsSpheres.clear();
     mFoundCollisionsSpheres.reserve(10);
-
-    Ogre::Real minDist = tol;
 
     for(size_t q = 0; q < mFoundCollisions.size(); ++q)
     {
@@ -78,13 +77,30 @@ bool CollisionDetection::collideSphere(const Ogre::Vector3& spherePos, Ogre::Rea
             {
                 minDist = res;
                 isFound = true;
-                foundBatch = q;
+                foundIndex = q;
             }
 
         }
     }
 
     return isFound;
+}
+
+const FoundCollision& CollisionDetection::getCollision(size_t index) const
+{
+    assert(index < mFoundCollisions.size());
+
+    return mFoundCollisions[index];
+}
+
+const std::vector<size_t>& CollisionDetection::getArrayOfCollisions() const
+{
+    return mFoundCollisionsSpheres;
+}
+
+void CollisionDetection::getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const
+{
+    pA = convert(mDataVertexes[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].v0]);
 }
 
 bool CollisionDetection::checkAverage(const Ogre::Vector3& averagedPos, Ogre::Real averageLen, size_t batchNum) const
