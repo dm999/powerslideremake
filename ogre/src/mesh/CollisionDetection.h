@@ -11,6 +11,7 @@ struct FoundCollision
 {
     const DE2::DE2_CollisionInfo* mCollision;
     Ogre::Vector3 mNormal;
+    Ogre::Real mDistance;
     short mPartIndex;
     short mTriangleIndex;
     bool mIsFarFromCoreBase;
@@ -30,7 +31,7 @@ public:
     const FoundCollision& getCollision(size_t index) const;
     const std::vector<size_t>& getArrayOfCollisions() const;
 
-    void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const;
+    void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
 
 private:
 
@@ -51,7 +52,7 @@ private:
     std::vector<DE2::DE2_Part> mDataParts;//amount = parts
     std::vector<DE2::DE2_Vertex> mDataVertexes;
 
-    std::vector<FoundCollision> mFoundCollisions;
+    mutable std::vector<FoundCollision> mFoundCollisions;
     mutable std::vector<size_t> mFoundCollisionsSpheres; // index in mFoundCollisions
 
     Ogre::Real mMaxDistanceSqr;

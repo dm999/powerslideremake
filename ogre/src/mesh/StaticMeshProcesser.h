@@ -71,7 +71,7 @@ public :
         size_t& foundIndex, Ogre::Real& minDist) const;
     const FoundCollision& getCollision(size_t index) const;
     const std::vector<size_t>& getArrayOfCollisions() const;
-    void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const;
+    void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);

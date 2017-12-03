@@ -32,7 +32,7 @@ public:
 
 private:
 
-    void averageCollisionNormal() const;
+    Ogre::Real averageCollisionNormal(const Ogre::Vector3& matrixYColumn, size_t wheelIndex, Ogre::Vector3& averagedNormal) const;
 
     float calcSuspensionLength(float len, size_t wheelIndex);
 

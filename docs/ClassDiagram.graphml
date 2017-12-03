@@ -1551,7 +1551,7 @@ bool collideSphere(const Ogre::Vector3&amp; spherePos, Ogre::Real radius, Ogre::
         size_t&amp; foundIndex, Ogre::Real&amp; minDist) const
 const FoundCollision&amp; getCollision(size_t index) const
 const std::vector&lt;size_t&gt;&amp; getArrayOfCollisions() const
-void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA) const
+void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA, Ogre::Vector3&amp; pC, Ogre::Vector3&amp; pB) const
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader&amp; pfloader, const std::string&amp; trackName, LoaderListener* loaderListener)
@@ -3843,10 +3843,10 @@ Ogre::Vector3 mRoofGlobalPrev[InitialVehicleSetup::mRoofsAmount]</y:NodeLabel>
     <node id="n88">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="686.2636413436423" width="739.6078334965582" x="12860.196083251722" y="-793.1318206718212"/>
+          <y:Geometry height="760.2440416219072" width="739.6078334965582" x="12860.196083251722" y="-830.1220208109536"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="680.25390625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="3.004867546821174">&lt;&lt;PhysicsWheels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="10.592723935953586">&lt;&lt;PhysicsWheels.h&gt;&gt;
 
 PhysicsWheels
 
@@ -3864,6 +3864,10 @@ void reposition(const Ogre::Vector3&amp; posDiff)
 void rerotation(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; rot)
 
 private:
+
+Ogre::Real averageCollisionNormal(const Ogre::Vector3&amp; matrixYColumn, size_t wheelIndex, Ogre::Vector3&amp; averagedNormal) const
+
+float calcSuspensionLength(float len, size_t wheelIndex)
 
 Physics* mPhysics
 const StaticMeshProcesser* const mMeshProcesser
@@ -3916,7 +3920,7 @@ bool collideSphere(const Ogre::Vector3&amp; spherePos, Ogre::Real radius, Ogre::
 
 const FoundCollision&amp; getCollision(size_t index) const
 const std::vector&lt;size_t&gt;&amp; getArrayOfCollisions() const
-void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA) const
+void getGeoverts(const FoundCollision&amp; collision, Ogre::Vector3&amp; pA, Ogre::Vector3&amp; pC, Ogre::Vector3&amp; pB) const
 
 private:
 
@@ -3951,12 +3955,13 @@ Ogre::Real mMaxDistanceSqr</y:NodeLabel>
           <y:Geometry height="170.4848526966316" width="262.28745877307983" x="11208.85627061346" y="-3205.242426348316"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="136.310546875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.763671875" x="18.761893449040144" y="17.087152910815803">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.01171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.763671875" x="18.761893449040144" y="9.736566973315803">&lt;&lt;StaticMeshProcesser.h&gt;&gt;
 
 FoundCollision
 
 const DE2::DE2_CollisionInfo* mCollision
 Ogre::Vector3 mNormal
+Ogre::Real mDistance
 short mPartIndex
 short mTriangleIndex
 bool mIsFarFromCoreBase</y:NodeLabel>

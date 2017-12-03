@@ -1119,7 +1119,11 @@ const std::vector<size_t>& StaticMeshProcesser::getArrayOfCollisions() const
     return mCollisionDetection.getArrayOfCollisions();
 }
 
-void StaticMeshProcesser::getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA) const
+void StaticMeshProcesser::getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const
 {
-    mCollisionDetection.getGeoverts(collision, pA);
+    mCollisionDetection.getGeoverts(collision, pA, pC, pB);
+
+    pA.z = -pA.z;//original data is left hand
+    pB.z = -pB.z;//original data is left hand
+    pC.z = -pC.z;//original data is left hand
 }
