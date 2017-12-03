@@ -3772,7 +3772,7 @@ PhysicsBody mPhysicsBody</y:NodeLabel>
           <y:Geometry height="375.2096856282094" width="441.1641732831026" x="12079.41791335845" y="-1597.6048428141046"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="356.828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="423.525390625" x="8.819391329050632" y="9.190780314104586">&lt;&lt;PhysicsBody.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="283.322265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="394.84375" x="23.16021164155063" y="45.943710001604586">&lt;&lt;PhysicsBody.h&gt;&gt;
 
 PhysicsBody
 
@@ -3781,8 +3781,6 @@ public:
 void init()
 void initStep()
 void process(const Ogre::SceneNode&amp; chassis, PhysicsVehicle&amp; vehicle)
-void reposition(const Ogre::Vector3&amp; posDiff)
-void rerotation(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; rot)
 
 private:
 
@@ -3790,9 +3788,6 @@ Physics* mPhysics
 const StaticMeshProcesser* const mMeshProcesser
 
 const InitialVehicleSetup&amp; mInitialVehicleSetup
-
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mBodyShape
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mBody
 
 Ogre::Vector3 mBodyGlobal
 Ogre::Vector3 mBodyGlobalPrev</y:NodeLabel>
@@ -3806,7 +3801,7 @@ Ogre::Vector3 mBodyGlobalPrev</y:NodeLabel>
           <y:Geometry height="458.60577321461733" width="777.438720002488" x="11911.280639998757" y="-889.3028866073087"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="19.89904750124333" y="6.785308482308665">&lt;&lt;PhysicsRoofs.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="371.529296875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="19.89904750124333" y="43.538238169808665">&lt;&lt;PhysicsRoofs.h&gt;&gt;
 
 PhysicsRoofs
 
@@ -3820,8 +3815,6 @@ void calcImpulses(const Ogre::Vector3&amp; impulseRot, const Ogre::Vector3&amp; 
                     const Ogre::Quaternion&amp; carRot,
                     const PhysicsVehicle&amp; vehicle)
 void process(const Ogre::SceneNode&amp; chassis, PhysicsVehicle&amp; vehicle)
-void reposition(const Ogre::Vector3&amp; posDiff)
-void rerotation(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; rot)
 
 private:
 
@@ -3829,9 +3822,6 @@ Physics* mPhysics
 const StaticMeshProcesser* const mMeshProcesser
 
 const InitialVehicleSetup&amp; mInitialVehicleSetup
-
-CommonIncludes::shared_ptr&lt;btSphereShape&gt; mRoofShape[InitialVehicleSetup::mRoofsAmount]
-CommonIncludes::shared_ptr&lt;btCollisionObject&gt; mRoof[InitialVehicleSetup::mRoofsAmount]
 
 Ogre::Vector3 mRoofImpulseLinear[InitialVehicleSetup::mRoofsAmount]
 Ogre::Vector3 mRoofGlobal[InitialVehicleSetup::mRoofsAmount]

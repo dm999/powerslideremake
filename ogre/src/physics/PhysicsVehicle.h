@@ -30,7 +30,7 @@ public:
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
 
-    Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input) const;
+    static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
 
 private:
 

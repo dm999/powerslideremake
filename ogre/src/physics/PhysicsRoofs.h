@@ -2,7 +2,6 @@
 #define PHYSICSROOFS_H
 
 #include "../includes/OgreInclude.h"
-#include "../includes/CommonIncludes.h"
 
 #include "InitialVehicleSetup.h"
 
@@ -31,8 +30,6 @@ public:
                         const Ogre::Quaternion& carRot,
                         const PhysicsVehicle& vehicle);
     void process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle);
-    void reposition(const Ogre::Vector3& posDiff);
-    void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& rot);
 
 private:
 
@@ -40,9 +37,6 @@ private:
     const StaticMeshProcesser* const mMeshProcesser;
 
     const InitialVehicleSetup& mInitialVehicleSetup;
-
-    CommonIncludes::shared_ptr<btSphereShape> mRoofShape[InitialVehicleSetup::mRoofsAmount];//RR, RL, FR, FL
-    CommonIncludes::shared_ptr<btCollisionObject> mRoof[InitialVehicleSetup::mRoofsAmount];//RR, RL, FR, FL
 
     Ogre::Vector3 mRoofImpulseLinear[InitialVehicleSetup::mRoofsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mRoofGlobal[InitialVehicleSetup::mRoofsAmount];//RR, RL, FR, FL

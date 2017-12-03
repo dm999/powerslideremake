@@ -103,7 +103,7 @@ void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Ve
 
         for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
         {
-            Ogre::Vector3 tangent = vehicle.findTangent(normalisedImpulseRot, mWheelsSuspensionPoint[q]);
+            Ogre::Vector3 tangent = PhysicsVehicle::findTangent(normalisedImpulseRot, mWheelsSuspensionPoint[q]);
             if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
             {
                 mWheelsImpulseLinear[q] = tangent.crossProduct(impulseRotPrev) * force + impulseLinear;
@@ -190,7 +190,7 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
                 Ogre::Vector3 averagedNormal;
                 Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);
 
-                mWheelsImpulseTangent[q] = vehicle.findTangent(worldNormal, mWheelsImpulseLinear[q]);
+                mWheelsImpulseTangent[q] = PhysicsVehicle::findTangent(worldNormal, mWheelsImpulseLinear[q]);
 
                 Ogre::Real suspWeight;
                 if(q >= 2)//front wheels

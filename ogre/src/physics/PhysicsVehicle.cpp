@@ -1,9 +1,6 @@
 
 #include "PhysicsVehicle.h"
 
-#include "BulletCollision/CollisionShapes/btSphereShape.h"
-#include "BulletCollision/CollisionDispatch/btCollisionObject.h"
-
 #include "Physics.h"
 #include "../tools/PhysicsTools.h"
 #include "../mesh/StaticMeshProcesser.h"
@@ -114,8 +111,8 @@ void PhysicsVehicle::timeStep()
 
     calcWheelRoofImpulses();
 
-    mPhysicsWheels.process(*mChassis, *this);
-    mPhysicsRoofs.process(*mChassis, *this);
+    //mPhysicsWheels.process(*mChassis, *this);
+    //mPhysicsRoofs.process(*mChassis, *this);
     mPhysicsBody.process(*mChassis, *this);
     //do flip restore
     //do transmission
@@ -137,8 +134,6 @@ void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
     const Ogre::Quaternion& chassisRot = mChassis->getOrientation();
 
     mPhysicsWheels.reposition(chassisPos, chassisRot);
-    mPhysicsRoofs.reposition(posDiff);
-    mPhysicsBody.reposition(posDiff);
 }
 
 void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
@@ -147,8 +142,6 @@ void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
     mChassis->setOrientation(rot);
 
     mPhysicsWheels.rerotation(chassisPos, rot);
-    mPhysicsRoofs.rerotation(chassisPos, rot);
-    mPhysicsBody.rerotation(chassisPos, rot);
 }
 
 void PhysicsVehicle::integrate()
@@ -173,7 +166,7 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
     return ret;
 }
 
-Ogre::Vector3 PhysicsVehicle::findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input) const
+Ogre::Vector3 PhysicsVehicle::findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input)
 {
     //40E8C0
     Ogre::Real dot = input.dotProduct(normal);
