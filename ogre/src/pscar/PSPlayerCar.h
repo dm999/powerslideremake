@@ -31,7 +31,7 @@ public:
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 
-    bool isCollideChassis(const PSBaseCar& otherCar, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap)const;
+    bool isCollideChassis(const PSBaseCar& otherCar)const;
 
 private:
 

@@ -50,7 +50,7 @@ public:
     // scripting functions
     void parseFile(const std::string& fileName);
 
-    void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+    void processCollision(int triIndex);
 
     //controls
     bool setShutdown(bool isOnEsc);

@@ -51,16 +51,16 @@ public :
 
     void queryLights(LoaderListener* loaderListener);
 
-    void deinit() {mParts.clear(); mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
+    void deinit() {/*mParts.clear(); */mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
 
     void checkIsVertexArraySupported();
 
     void loadTerrainMaps(GameState& gameState);
 
-    const DE2SingleBatch& getBatchByAddress(std::pair<int, int> address)const {return mParts[address.first].mBatches[address.second];}
-    const DE2Part& getPartAddress(std::pair<int, int> address)const {return mParts[address.first];}
+    //const DE2SingleBatch& getBatchByAddress(std::pair<int, int> address)const {return mParts[address.first].mBatches[address.second];}
+    //const DE2Part& getPartAddress(std::pair<int, int> address)const {return mParts[address.first];}
 
-    char getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
+    //char getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
     void setTerrainData(const std::vector<TerrainData>& terrainData);
     const TerrainData& getTerrainData(size_t index) const;
@@ -87,13 +87,6 @@ private:
 #endif
 
     void createLights(lua_State * pipeline, Ogre::SceneManager* sceneMgr, const DE2::DE2_File& de2, GameState& gameState);
-
-    void addStaticTrimesh(  Physics * world,
-                            const Ogre::Vector3& offset,
-                            const Ogre::Real bodyRestitution, 
-                            const Ogre::Real bodyFriction,
-                            const Ogre::Real bodyRollingFriction,
-                            const MSHData& mshData);
 
     void initPart(  lua_State * pipeline, 
                     Ogre::SceneManager* sceneMgr, 
@@ -129,7 +122,7 @@ private:
     /**
      * return - return in range [0, 1]
     */
-    Ogre::Vector2 getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
+    //Ogre::Vector2 getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
     std::vector<Ogre::Entity*> mTerrainNodes;
     Ogre::NameGenerator mNameGenMaterials;
@@ -174,13 +167,11 @@ private:
 
     size_t mPlainIndices;
 
-    std::vector<DE2Part> mParts;
+    //std::vector<DE2Part> mParts;
     std::set<std::string> mTerrainMapsNames;
     std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> > mTerrainMaps;
 
-    void prepareBuffers(const MSHData& mshData);
-
-    Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
+    //Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
     std::vector<TerrainData> mTerrainData;
 

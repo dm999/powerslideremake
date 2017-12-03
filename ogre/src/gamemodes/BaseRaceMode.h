@@ -51,7 +51,7 @@ public:
     void reloadTextures()override;
 #endif
 
-    void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+    void processCollision(int triIndex);
     void processInternalTick(float timeStep);
 
     //LapUtils
@@ -100,7 +100,7 @@ protected:
     virtual void customClearScene(){}
     virtual void customInitUI(){}
     virtual void customClearUI(){}
-    virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex){}
+    virtual void customProcessCollision(int triIndex){}
     virtual void customUnloadResources(){}
     virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt){}
     virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt){}

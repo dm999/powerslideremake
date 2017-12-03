@@ -150,10 +150,11 @@ void MultiPlayerMode::customClearUI()
     */
 }
 
-void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
+void MultiPlayerMode::customProcessCollision(int triIndex)
 {
     if(mIsSessionStarted)
     {
+#if 0
         //AI
         for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
         {
@@ -166,6 +167,7 @@ void MultiPlayerMode::customProcessCollision(btManifoldPoint& cp, const btCollis
         {
             mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
         }
+#endif
     }
 }
 

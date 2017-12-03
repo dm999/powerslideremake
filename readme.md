@@ -19,7 +19,6 @@ To build project you need:
 
 ### Sources ###
 "Powerslide remake" also depends and/or includes sources of such open sourced projects as:  
-- [Bullet](http://bulletphysics.org/wordpress/)  
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
 - [JSON++](https://github.com/hjiang/jsonxx)  

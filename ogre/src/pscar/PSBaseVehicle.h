@@ -3,7 +3,6 @@
 
 #include "../includes/OgreInclude.h"
 #include "../includes/CommonIncludes.h"
-#include "../includes/BulletInclude.h"
 
 #include "../physics/InitialVehicleSetup.h"
 
@@ -37,18 +36,7 @@ protected:
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
     Physics * mWorld;
-#if 0
-    CommonIncludes::shared_ptr<CustomRigidBody> mCarChassis;
-    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontL;
-    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelFrontR;
-    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelBackL;
-    CommonIncludes::shared_ptr<CustomRigidBodyWheel> mCarWheelBackR;
 
-    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringFrontL;
-    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringFrontR;
-    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackL;
-    CommonIncludes::shared_ptr<OgreBulletDynamics::SixDofSpring2Constraint> mSixDofSpringBackR;
-#endif
     InitialVehicleSetup mInitialVehicleSetup;
 
     static Ogre::NameGenerator nameGenNodes;
@@ -60,18 +48,7 @@ private:
 
     void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
     void addSpringsToWorld();
-#if 0
-    CommonIncludes::shared_ptr<OgreBulletCollisions::CompoundCollisionShape> mCompoundShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackRShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofBackLShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontRShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mRoofFrontLShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mChassisBodyShape;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::BoxCollisionShape> mChassisBodyShapeBox;
 
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeFront;
-    CommonIncludes::shared_ptr<OgreBulletCollisions::SphereCollisionShape> mWheelShapeBack;
-#endif
 };
 
 #endif

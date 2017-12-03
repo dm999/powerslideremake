@@ -1,9 +1,6 @@
 
 #include "PSBaseVehicle.h"
 
-#include "../customs/CustomRigidBody.h"
-#include "../customs/CustomRigidBodyWheel.h"
-
 #include "../physics/Physics.h"
 
 Ogre::NameGenerator PSBaseVehicle::nameGenNodes("Scene/Node/Vehicle/Name");

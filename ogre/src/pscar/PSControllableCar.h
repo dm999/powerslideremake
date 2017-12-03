@@ -36,18 +36,6 @@ public:
     virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted);
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted);
 
-    virtual void processWheelsCollision(    btManifoldPoint& cp, 
-                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    const Physics* physicsProcesser,
-                                    const StaticMeshProcesser& processer,
-                                    int triIndex);
-
-    virtual void processChassisCollision(    btManifoldPoint& cp, 
-                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    const Physics* physicsProcesser,
-                                    const StaticMeshProcesser& processer,
-                                    int triIndex);
-
     /**
      * apply impulses and set velocity on bullet internal tick
      */

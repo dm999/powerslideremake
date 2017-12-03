@@ -2,7 +2,6 @@
 #include "PhysicsVehicle.h"
 
 #include "Physics.h"
-#include "../tools/PhysicsTools.h"
 #include "../mesh/StaticMeshProcesser.h"
 
 PhysicsVehicle::PhysicsVehicle(Physics* physics, 

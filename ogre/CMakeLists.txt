@@ -170,8 +170,6 @@ endif()
 include_directories ("../lua/src")
 include_directories ("../simpleini/src")
 
-include_directories(../bullet ../bulletextras)
-
 if(PowerslideRemake_MULTIPLAYER)
     include_directories(../multislider/client/source)
     include_directories(../tools/jsonxx/src)
@@ -269,8 +267,6 @@ if(ANDROID)
     
     target_link_libraries(PowerslideRemake Lua OIS)
 
-    target_link_libraries(PowerslideRemake BulletCollision LinearMath)
-    
 else() # Not Android
 
     if(WIN32)
@@ -314,8 +310,6 @@ else() # Not Android
         target_link_libraries(PowerslideRemake debug OIS_d)
         target_link_libraries(PowerslideRemake optimized OIS)
 
-        target_link_libraries(PowerslideRemake BulletCollision LinearMath)
-        
     else()# Not Windows Not Android (Ubuntu)
     
         if(PowerslideRemake_MULTIPLAYER)
@@ -341,7 +335,6 @@ else() # Not Android
         
         target_link_libraries(PowerslideRemake Lua ${OIS_LIBRARIES})
 
-        target_link_libraries(PowerslideRemake BulletCollision LinearMath)
     endif()
 endif()
 

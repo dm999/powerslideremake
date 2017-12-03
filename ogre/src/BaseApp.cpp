@@ -14,8 +14,6 @@
 #include "customs/CustomOverlaySystem.h"
 #include "gamelogic/GameModeSwitcher.h"
 
-#include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
-
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #include "includes/MyGUI_KeyCode.h"
 #include "res/resource.h"
@@ -136,52 +134,6 @@ namespace
     }
 }
 
-extern ContactAddedCallback gContactAddedCallback;
-
-
-
-inline static void ClampInPlace(btScalar& value,btScalar minValue,btScalar maxValue)	{
-	if (value < minValue) value = minValue;
-	else if (value > maxValue) value = maxValue;	
-}
-inline static btScalar CalculateCombinedFriction(btScalar friction0,btScalar friction1)	{
-	btScalar friction = friction0 * friction1;	// Default behavior AFAIK
-						//(friction0 + friction1)*0.5f;
-	const btScalar MAX_FRICTION  = 10.f;	// I don't know what happens if friction>1, to be honest...
-	ClampInPlace(friction,0,MAX_FRICTION);	// Does negative friction have any sense ?
-	return friction;
-}
-inline static btScalar CalculateCombinedRestitution(btScalar restitution0,btScalar restitution1)	{
-	btScalar restitution = restitution0 * restitution1;	// Default behavior AFAIK
-						//(restitution0 + restitution1)*0.5f;
-	const btScalar MAX_RESTITUTION  = 2.f;		// I don't know what happens if restitution>1, to be honest...
-	ClampInPlace(restitution,0,MAX_RESTITUTION);// Does negative restitution have any sense ?
-	return restitution;
-}
-
-//http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?t=6662
-//https://github.com/kripken/ammo.js/blob/master/bullet/Demos/InternalEdgeDemo/InternalEdgeDemo.cpp
-//http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=8082
-//http://bulletphysics.org/Bullet/phpBB3/viewtopic.php?f=9&t=8146
-static bool CustomMaterialCombinerCallback(btManifoldPoint& cp,	const btCollisionObjectWrapper* colObj0Wrap,int partId0,int index0,const btCollisionObjectWrapper* colObj1Wrap,int partId1,int index1)
-{
-   btAdjustInternalEdgeContacts(cp,colObj1Wrap,colObj0Wrap, partId1,index1);
-
-    if (    colObj0Wrap->getCollisionObject()->getCollisionFlags() & btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK ||
-            colObj1Wrap->getCollisionObject()->getCollisionFlags() & btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK
-    )
-    {
-        cp.m_combinedFriction = CalculateCombinedFriction(colObj0Wrap->getCollisionObject()->getFriction(),colObj1Wrap->getCollisionObject()->getFriction());
-        cp.m_combinedRestitution = CalculateCombinedRestitution(colObj0Wrap->getCollisionObject()->getRestitution(),colObj1Wrap->getCollisionObject()->getRestitution());
-        cp.m_combinedRollingFriction = CalculateCombinedFriction(colObj0Wrap->getCollisionObject()->getRollingFriction(),colObj1Wrap->getCollisionObject()->getRollingFriction());
-    }
-
-    if(baseApp != NULL)
-    {
-        baseApp->processCollision(cp, colObj0Wrap, colObj1Wrap, index1);
-    }
-   return true;
-}
 
 BaseApp::BaseApp() :
     mWindow(0),
@@ -193,7 +145,6 @@ BaseApp::BaseApp() :
 #if defined(__ANDROID__)
     LOGI("BaseApp[BaseApp]: Begin"); 
 #endif
-    gContactAddedCallback = CustomMaterialCombinerCallback;
     baseApp = this;
     initLua();
 #if defined(__ANDROID__)
@@ -707,9 +658,9 @@ void BaseApp::parseFile(const std::string& fileName)
     }
 }
 
-void BaseApp::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
+void BaseApp::processCollision(int triIndex)
 {
-    mGameModeSwitcher->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
+    mGameModeSwitcher->processCollision(triIndex);
 }
 
 static int LuaPanic(lua_State * St)

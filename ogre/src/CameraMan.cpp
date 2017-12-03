@@ -5,7 +5,6 @@
 #include "BaseApp.h"
 #include "tools/OgreTools.h"
 #include "physics/Physics.h"
-#include "tools/PhysicsTools.h"
 
 CameraMan::CameraMan(Ogre::Camera* cam, Physics * world, Ogre::SceneManager* sceneMgr) 
 : mWorld(world),
@@ -159,7 +158,7 @@ bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3
     Ogre::Real minimalFraction = 1.0f;
 
     Ogre::Ray ray(From, shift.normalisedCopy());
-
+/*
     btCollisionWorld::AllHitsRayResultCallback callback(PhysicsTools::convert(ray.getOrigin()), PhysicsTools::convert(ray.getPoint(shiftAmount)));
     mWorld->launchRay(callback);
     if(callback.hasHit())
@@ -178,7 +177,7 @@ bool CameraMan::checkRayInBetween(const Ogre::Vector3& From, const Ogre::Vector3
                 }
             }
         }
-    }
+    }*/
 
     return res;
 }

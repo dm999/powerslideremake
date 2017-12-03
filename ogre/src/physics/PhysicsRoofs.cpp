@@ -3,7 +3,6 @@
 
 #include "Physics.h"
 #include "PhysicsVehicle.h"
-#include "../tools/PhysicsTools.h"
 #include "../mesh/StaticMeshProcesser.h"
 
 PhysicsRoofs::PhysicsRoofs(const InitialVehicleSetup& initialVehicleSetup, 

@@ -5,9 +5,6 @@
 
 #include "../mesh/StaticMeshProcesser.h"
 
-#include "../customs/CustomRigidBody.h"
-#include "../customs/CustomRigidBodyWheel.h"
-
 #include "../lua/DMLuaManager.h"
 
 PSPlayerCar::PSPlayerCar() :
@@ -230,7 +227,7 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     }
 }
 
-bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap)const
+bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar)const
 {
     bool res = false;
 

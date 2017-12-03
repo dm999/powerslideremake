@@ -54,7 +54,7 @@ protected:
     virtual void customClearScene()override;
     virtual void customInitUI()override;
     virtual void customClearUI()override;
-    virtual void customProcessCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)override;
+    virtual void customProcessCollision(int triIndex)override;
     virtual void customUnloadResources()override;
     virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)override;
     virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)override;

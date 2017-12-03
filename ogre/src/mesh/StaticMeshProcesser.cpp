@@ -1,10 +1,7 @@
 
 #include "StaticMeshProcesser.h"
 
-#include "BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h"
-#include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 #include "../physics/Physics.h"
-#include "../tools/PhysicsTools.h"
 
 #include "../lua/DMLuaManager.h"
 
@@ -104,9 +101,6 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             Ogre::Vector3 min, max;
             Ogre::Vector3 centroid = mshData.getCentroid();
             mshData.getMinMax(min, max, centroid);
-
-            //create physics elements
-            addStaticTrimesh(world, centroid, 0.0f, 1.0f, 1.0f, mshData);
 
             mergeMSH(mshData, mapTexturesToMSHIndex, mergedMSH);
 
@@ -879,53 +873,7 @@ void StaticMeshProcesser::queryLights(LoaderListener* loaderListener)
     }
 }
 
-void StaticMeshProcesser::addStaticTrimesh( Physics * world,
-                                            const Ogre::Vector3& offset,
-                                            const Ogre::Real bodyRestitution, 
-                                            const Ogre::Real bodyFriction,
-                                            const Ogre::Real bodyRollingFriction,
-                                            const MSHData& mshData)
-{
-    //TODO (d.polubotko): consider vertices weilding
-    prepareBuffers(mshData);
-
-    size_t lastPart = mParts.size() - 1;
-
-    mParts[lastPart].offset = offset;
-
-    for(size_t q = 0; q < mParts[lastPart].mVertexBuffer.size(); ++q)
-    {
-        mParts[lastPart].mVertexBuffer[q] -= mParts[lastPart].offset;
-    }
-
-    for(size_t w = 0; w < mParts[lastPart].mBatches.size(); ++w)
-    {
-        world->addPart( mParts[lastPart], mParts[lastPart].mBatches[w],
-                        lastPart, w, 
-                        bodyRestitution, bodyFriction, bodyRollingFriction);
-    }
-}
-
-void StaticMeshProcesser::prepareBuffers(const MSHData& mshData)
-{
-    DE2Part part;
-    part.mBatches.reserve(mshData.submeshesTriangleIndixesTerrainMaps.size());
-
-    part.mVertexBuffer = mshData.plainVertices;
-    part.mTexCoordsBuffer = mshData.plainTexCoords;
-
-    for (size_t q = 0; q < mshData.submeshesTriangleIndixesTerrainMaps.size(); ++q)
-    {
-        DE2SingleBatch batch;
-        batch.mTerrainMap = mshData.terrainMapNames[q];
-        mTerrainMapsNames.insert(batch.mTerrainMap);
-        batch.mIndexBuffer = mshData.submeshesTriangleIndixesTerrainMaps[q];
-        part.mBatches.push_back(batch);
-    }
-
-    mParts.push_back(part);
-}
-
+#if 0
 Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
 {
     Ogre::Vector3 res(Ogre::Vector3::ZERO);
@@ -1003,7 +951,7 @@ Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int,
 
     return res;
 }
-
+#endif
 void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
 {
     typedef std::set<std::string> maps;
@@ -1033,6 +981,7 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
     }
 }
 
+#if 0
 char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
 {
     char res = -1;
@@ -1068,6 +1017,7 @@ char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triInd
 
     return res;
 }
+#endif
 
 void StaticMeshProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {

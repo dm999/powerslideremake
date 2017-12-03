@@ -4,7 +4,6 @@
 #include "../physics/Physics.h"
 #include "../mesh/StaticMeshProcesser.h"
 
-#include "../customs/CustomRigidBodyWheel.h"
 #include "../tools/Conversions.h"
 
 PSAICar::PSAICar() :
@@ -52,70 +51,6 @@ void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)
         {
             mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
             mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-        }
-    }
-#endif
-}
-
-void PSAICar::processWheelsCollision(   btManifoldPoint& cp, 
-                                            const btCollisionObjectWrapper* colObj0Wrap, 
-                                            const btCollisionObjectWrapper* colObj1Wrap,
-                                            const Physics * physicsProcesser,
-                                            const StaticMeshProcesser& processer,
-                                            int triIndex)
-{
-#if 0
-    Ogre::Vector3 linearVel = getLinearVelocity();
-    Ogre::Real speed = linearVel.length();
-    linearVel.normalise();
-
-    std::pair<int, int> address;
-
-    if(physicsProcesser->isRigidBodyStatic(colObj1Wrap->getCollisionObject(), address))
-    {
-
-        if(colObj0Wrap->getCollisionObject() == mCarWheelFrontL->getBulletRigidBody())
-        {
-            setWheelCollisionHappenFrontL();
-
-            std::string terrainMap = processer.getBatchByAddress(address).mTerrainMap;
-            terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
-            unsigned char terrainType = processer.getTerrainType(address, triIndex, cp.getPositionWorldOnB());
-            mWheelFrontLColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
-            mWheelFrontLColliderIndex = terrainType;
-        }
-
-        if(colObj0Wrap->getCollisionObject() == mCarWheelFrontR->getBulletRigidBody())
-        {
-            setWheelCollisionHappenFrontR();
-
-            std::string terrainMap = processer.getBatchByAddress(address).mTerrainMap;
-            terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
-            unsigned char terrainType = processer.getTerrainType(address, triIndex, cp.getPositionWorldOnB());
-            mWheelFrontRColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
-            mWheelFrontRColliderIndex = terrainType;
-        }
-
-        if(colObj0Wrap->getCollisionObject() == mCarWheelBackL->getBulletRigidBody())
-        {
-            setWheelCollisionHappenBackL();
-
-            std::string terrainMap = processer.getBatchByAddress(address).mTerrainMap;
-            terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
-            unsigned char terrainType = processer.getTerrainType(address, triIndex, cp.getPositionWorldOnB());
-            mWheelBackLColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
-            mWheelBackLColliderIndex = terrainType;
-        }
-
-        if(colObj0Wrap->getCollisionObject() == mCarWheelBackR->getBulletRigidBody())
-        {
-            setWheelCollisionHappenBackR();
-
-            std::string terrainMap = processer.getBatchByAddress(address).mTerrainMap;
-            terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
-            unsigned char terrainType = processer.getTerrainType(address, triIndex, cp.getPositionWorldOnB());
-            mWheelBackRColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
-            mWheelBackRColliderIndex = terrainType;
         }
     }
 #endif

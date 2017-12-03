@@ -44,7 +44,6 @@ private:
     bool mIsNeedToRebuildLightList;
 
     bool checkSphereAndTriangleIntersection(const Ogre::Vector3& sphereCenter, Ogre::Real radius);
-    bool checkSphereAndTriangleIntersectionBullet(const Ogre::Vector3& sphereCenter, Ogre::Real radius);
 
     void doCPUVertexColor();
 

@@ -7,8 +7,6 @@
 #include "../loaders/PFLoader.h"
 #include "../OriginalSettings.h"
 
-#include "../customs/CustomRigidBody.h"
-
 struct lua_State;
 
 class ModelsPool;
@@ -65,8 +63,6 @@ public:
     unsigned char getBackLWheelColliderIndex(){return mWheelBackLColliderIndex;}
     unsigned char getBackRWheelColliderIndex(){return mWheelBackRColliderIndex;}
     unsigned char getChassisColliderIndex(){return mChassisColliderIndex;}
-
-    //const CustomRigidBody& getChassis()const{return *mCarChassis;}
 
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;

@@ -2,7 +2,6 @@
 #include "TerrainSceneObjectListener.h"
 
 #include "../tools/Tools.h"
-#include "../includes/BulletInclude.h"
 #include "../customs/CustomSceneManager.h"
 
 ExclusionBoxesObjectListener::ExclusionBoxesObjectListener(const std::vector<LightEclusion>& excl)
@@ -764,97 +763,6 @@ void TerrainSceneObjectListener::adjustVertexColors(size_t lightIndex)
             vbuf->unlock();
         }
     }
-}
-
-bool TerrainSceneObjectListener::checkSphereAndTriangleIntersectionBullet(const Ogre::Vector3& sphereCenter, Ogre::Real radius)
-{
-    bool res = false;
-    const Ogre::Entity * ent = dynamic_cast<const Ogre::Entity *>(mMovableObj);
-    if(ent)
-    {
-        Ogre::Vector3 derivedPos = mParentNode->_getDerivedPosition();
-
-        Ogre::Mesh* mesh = ent->getMesh().get();
-        for(size_t i = 0; i < mesh->getNumSubMeshes(); i++)
-        {
-            Ogre::SubMesh* submesh = mesh->getSubMesh(i);
-
-            Ogre::VertexData* vertex_data = submesh->useSharedVertices ? mesh->sharedVertexData : submesh->vertexData;
-            const Ogre::VertexElement* posElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
-            Ogre::HardwareVertexBufferSharedPtr vbuf = vertex_data->vertexBufferBinding->getBuffer(posElem->getSource());
-            unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-
-            Ogre::IndexData* index_data = submesh->indexData;
-            size_t numTris = index_data->indexCount / 3;
-            unsigned short* pShort;
-            unsigned int* pInt;
-            Ogre::HardwareIndexBufferSharedPtr ibuf = index_data->indexBuffer;
-            bool use32bitindexes = (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_32BIT);
-            if (use32bitindexes) pInt = static_cast<unsigned int*>(ibuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-            else pShort = static_cast<unsigned short*>(ibuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
-
-            for(size_t k = 0; k < numTris; ++k)
-            {
-
-                unsigned int vindex = use32bitindexes? *pInt++ : *pShort++;
-                unsigned char* vertexOffsetA = vertex + vbuf->getVertexSize() * vindex;
-
-                vindex = use32bitindexes? *pInt++ : *pShort++;
-                unsigned char* vertexOffsetB = vertex + vbuf->getVertexSize() * vindex;
-
-                vindex = use32bitindexes? *pInt++ : *pShort++;
-                unsigned char* vertexOffsetC = vertex + vbuf->getVertexSize() * vindex;
-
-                Ogre::Real* pRealA, * pRealB, * pRealC;
-                posElem->baseVertexPointerToElement(vertexOffsetA, &pRealA);
-                posElem->baseVertexPointerToElement(vertexOffsetB, &pRealB);
-                posElem->baseVertexPointerToElement(vertexOffsetC, &pRealC);
-
-                btVector3 ptA;
-                ptA.setX(derivedPos.x + *pRealA++);
-                ptA.setY(derivedPos.y + *pRealA++);
-                ptA.setZ(derivedPos.z + *pRealA++);
-
-                btVector3 ptB;
-                ptB.setX(derivedPos.x + *pRealB++);
-                ptB.setY(derivedPos.y + *pRealB++);
-                ptB.setZ(derivedPos.z + *pRealB++);
-
-                btVector3 ptC;
-                ptC.setX(derivedPos.x + *pRealC++);
-                ptC.setY(derivedPos.y + *pRealC++);
-                ptC.setZ(derivedPos.z + *pRealC++);
-
-
-                btVector3 sphereCenterBullet(sphereCenter.x, sphereCenter.y, sphereCenter.z);
-                btSphereShape sphere(radius);
-                btTriangleShape tri(ptA, ptB, ptC);
-                btScalar threshold = 0.1f;
-                SphereTriangleDetector detector(&sphere, &tri, threshold);
-
-                btVector3 point;
-                btVector3 resultNormal;
-                btScalar depth;
-                btScalar timeOfImpact;
-                res = detector.collide(sphereCenterBullet, point, resultNormal, depth, timeOfImpact, threshold);
-
-                if(res) break;
-            }
-
-            
-
-            
-
-
-            ibuf->unlock();
-            vbuf->unlock();
-
-            if(res) break;
-        }
-
-    }
-
-    return res;
 }
 
 bool TerrainSceneObjectListener::checkSphereAndTriangleIntersection(const Ogre::Vector3& sphereCenter, Ogre::Real radius)

@@ -842,17 +842,9 @@ void BaseRaceMode::reloadTextures()
 }
 #endif
 
-void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
+void BaseRaceMode::processCollision(int triIndex)
 {
-    mModeContext.mGameState.getPlayerCar().processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
-    mModeContext.mGameState.getPlayerCar().processChassisCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
-
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-    {
-        mModeContext.mGameState.getAICar(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
-    }
-
-    customProcessCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
+    customProcessCollision(triIndex);
 
 #ifndef NO_OPENAL
     //surface sound
@@ -905,7 +897,7 @@ void BaseRaceMode::processCollision(btManifoldPoint& cp, const btCollisionObject
     //ai with player crash sounds
     for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
     {
-        if(mModeContext.mGameState.getPlayerCar().isCollideChassis(mModeContext.mGameState.getAICar(q), colObj0Wrap, colObj1Wrap))
+        if(mModeContext.mGameState.getPlayerCar().isCollideChassis(mModeContext.mGameState.getAICar(q)))
         {
             Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearVelocity();
             Ogre::Real velDiff = playerVel.distance(aiVel);

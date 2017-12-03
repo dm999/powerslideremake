@@ -31,12 +31,6 @@ public:
 
     void setSteeringUmpulse(Ogre::Real impulse){mSteeringImpulse = impulse;}
 
-    virtual void processWheelsCollision(    btManifoldPoint& cp, 
-                                    const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap,
-                                    const Physics * physicsProcesser,
-                                    const StaticMeshProcesser& processer,
-                                    int triIndex);
-
     void performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused);
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();

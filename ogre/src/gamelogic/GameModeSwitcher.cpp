@@ -340,10 +340,10 @@ void GameModeSwitcher::reloadTextures()
 }
 #endif
 
-void GameModeSwitcher::processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex)
+void GameModeSwitcher::processCollision(int triIndex)
 {
     if(mPlayerMode.get())
-        mPlayerMode->processCollision(cp, colObj0Wrap, colObj1Wrap, triIndex);
+        mPlayerMode->processCollision(triIndex);
 }
 
 bool GameModeSwitcher::isExitSubmenu()const

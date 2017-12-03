@@ -51,7 +51,7 @@ public:
     void reloadTextures();
 #endif
 
-    void processCollision(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap, const btCollisionObjectWrapper* colObj1Wrap, int triIndex);
+    void processCollision(int triIndex);
 
     GameMode getMode()const{return mGameMode;}
 

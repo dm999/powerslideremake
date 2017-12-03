@@ -1,8 +1,6 @@
 
 #include "PSMultiplayerCar.h"
 
-#include "../customs/CustomRigidBodyWheel.h"
-
 #include "../customs/MovableText.h"
 
 PSMultiplayerCar::PSMultiplayerCar() :
