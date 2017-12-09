@@ -30,6 +30,8 @@ public:
     void reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
     void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
 
+    bool isAnyCollided() const;
+
 private:
 
     Ogre::Real averageCollisionNormal(const Ogre::Vector3& matrixYColumn, size_t wheelIndex, Ogre::Vector3& averagedNormal) const;
@@ -66,6 +68,8 @@ private:
 
     Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    bool mIsCollided[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 };
 
 

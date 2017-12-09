@@ -18,6 +18,8 @@
 #include "../loaders/TEXLoader.h"
 #include "../loaders/TextureLoader.h"
 
+#include "../physics/PhysicsVehicle.h"
+
 #include "../listeners/LoaderListener.h"
 
 #include "../ui/UIRace.h"
@@ -28,18 +30,6 @@
     #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
     #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 #endif
-
-namespace
-{
-    //http://bulletphysics.org/mediawiki-1.5.8/index.php/Code_Snippets
-    /*
-    void internalTickCallback(btDynamicsWorld *world, btScalar timeStep)
-    {
-        BaseRaceMode * pBaseRaceMode = reinterpret_cast<BaseRaceMode *>(world->getWorldUserInfo());
-        if(pBaseRaceMode)
-            pBaseRaceMode->processInternalTick(timeStep);
-    }*/
-}
 
 BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     BaseMode(modeContext),
@@ -624,11 +614,15 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     mLapController.calculateLapPositions();
 
-    //http://bulletphysics.org/mediawiki-1.5.8/index.php/Stepping_The_World
     if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
     {
-        //mWorld->stepSimulation(evt.timeSinceLastFrame, 7);
         mWorld->timeStep();
+        mModeContext.mGameState.getPlayerCar().processSounds();
+    }
+    if(!mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
+    {
+        mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->processEngineIdle();
+        mModeContext.mGameState.getPlayerCar().processSounds();
     }
 
     mModeContext.mGameState.getPlayerCar().processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
@@ -723,10 +717,10 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     if (!mModeContext.mTrayMgr->isDialogVisible())
     {
         if(!mModeContext.mGameState.isGamePaused())
-            mUIRace->setEngineRPM(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM());
+            mUIRace->setEngineRPM(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getEngineRPM());
         mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
         mUIRace->setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
-        mUIRace->setCarGear(static_cast<unsigned char>(mModeContext.mGameState.getPlayerCar().getCarEngine().getCurrentGear()));
+        mUIRace->setCarGear(static_cast<unsigned char>(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getCurrentGear()));
         mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
 
         mUIRace->hideAIDashboardCars();

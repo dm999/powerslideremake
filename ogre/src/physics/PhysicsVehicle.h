@@ -9,6 +9,8 @@
 #include "PhysicsRoofs.h"
 #include "PhysicsBody.h"
 
+#include "../pscar/PSCarEngine.h"
+
 class btSphereShape;
 class btCollisionObject;
 
@@ -27,12 +29,23 @@ public:
     virtual ~PhysicsVehicle();
 
     void timeStep();
+    void processEngineIdle();
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
+
+    void setThrottle(Ogre::Real value){mThrottle = value;}
+    void setBrakes(Ogre::Real value){mBreaks = value;}
+
+    const PSCarEngine& getCarEngine()const{return mCarEngine;}
+    PSCarEngine& getCarEngine(){return mCarEngine;}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
 
 private:
+
+    void calcTransmission();
+
+    void calcPhysics();
 
     void reposition(const Ogre::Vector3& posDiff);
     void rerotation(const Ogre::Quaternion& rot);
@@ -67,6 +80,10 @@ private:
     Ogre::Vector3 mCoreBaseGlobalPrev;
 
     Ogre::Real mMaxCollisionDistance;
+
+    PSCarEngine mCarEngine;
+    Ogre::Real mThrottle;
+    Ogre::Real mBreaks;
 
 };
 

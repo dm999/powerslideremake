@@ -35,6 +35,8 @@ public:
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);
+    const PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr) const;
+    PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr);
 
 
 private:

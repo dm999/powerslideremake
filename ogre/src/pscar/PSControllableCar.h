@@ -59,8 +59,6 @@ public:
     LapUtils& getLapUtils(){return mLapUtils;}
     const LapUtils& getLapUtils()const{return mLapUtils;}
 
-    const PSCarEngine& getCarEngine()const{return mCarEngine;}
-
     bool checkRearCollision(bool isBoth = false);
     bool checkFrontCollision();
     bool checkChassisCollision()const{return mChassisCollision;}
@@ -71,9 +69,9 @@ public:
     bool getDisableMouse() const {return mIsDisableMouse;}
     void setDisableMouse(bool disableMouse) {mIsDisableMouse = disableMouse ;}
 
-protected:
+    void processSounds();
 
-    virtual void processSounds(const Ogre::FrameEvent &evt);
+protected:
 
     LinearController<float> mPitchValueLow;
     LinearController<float> mPitchValueMid;
@@ -82,7 +80,7 @@ protected:
     LinearController<float> mGainValueMid;
     LinearController<float> mGainValueHigh;
 
-    PSCarEngine mCarEngine;
+    
 
 
 private:

@@ -3,6 +3,7 @@
 
 #include "../mesh/StaticMeshProcesser.h"
 #include "../physics/Physics.h"
+#include "../physics/PhysicsVehicle.h"
 
 #include "../GameState.h"
 
@@ -121,14 +122,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 #endif
 
     {
-        //transmission params
-        mCarEngine.init(getCarParameter("", "idle revs start"), 
-                        getCarParameter("", "idle revs end"), 
-                        getCarParameter("", "gear rev ratio"), 
-                        getCarArray4Parameter("", "rev ratio"), 
-                        getCarArray4Parameter("", "change down"), 
-                        getCarArray4Parameter("", "change up"));
-
         //steering params
         //todo
 
@@ -707,14 +700,12 @@ bool PSControllableCar::checkFrontCollision()
     return res;
 }
 
-void PSControllableCar::processSounds(const Ogre::FrameEvent &evt)
+void PSControllableCar::processSounds()
 {
-    Ogre::Real projectedVel = getAlignedVelocity();
 
     Ogre::Vector3 pos = mModelNode->getPosition();
 
-    mCarEngine.process(projectedVel, mAccelEnabled, mBrakeEnabled, checkRearCollision() || checkFrontCollision(), evt);
-    Ogre::Real engineRPM = mCarEngine.getEngineRPM();
+    Ogre::Real engineRPM = mWorld->getVehicle(this)->getCarEngine().getEngineRPM();
 
 #ifndef NO_OPENAL
     if(!mIsAI)

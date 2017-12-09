@@ -216,6 +216,31 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mCoreBase = getCarArray3Parameter("", "core base");
     initialVehicleSetup.mCoreBase.z = -initialVehicleSetup.mCoreBase.z;
 
+    initialVehicleSetup.mEngineIdleRevsStart = getCarParameter("", "idle revs start");
+    initialVehicleSetup.mEngineIdleRevsEnd = getCarParameter("", "idle revs end");
+    initialVehicleSetup.mGearRatioMain = getCarParameter("", "gear rev ratio");
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "rev ratio");
+        initialVehicleSetup.mGearRatio[0] = tmpGear.x;
+        initialVehicleSetup.mGearRatio[1] = tmpGear.y;
+        initialVehicleSetup.mGearRatio[2] = tmpGear.z;
+        initialVehicleSetup.mGearRatio[3] = tmpGear.w;
+    }
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change down");
+        initialVehicleSetup.mChangeDown[0] = tmpGear.x;
+        initialVehicleSetup.mChangeDown[1] = tmpGear.y;
+        initialVehicleSetup.mChangeDown[2] = tmpGear.z;
+        initialVehicleSetup.mChangeDown[3] = tmpGear.w;
+    }
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change up");
+        initialVehicleSetup.mChangeUp[0] = tmpGear.x;
+        initialVehicleSetup.mChangeUp[1] = tmpGear.y;
+        initialVehicleSetup.mChangeUp[2] = tmpGear.z;
+        initialVehicleSetup.mChangeUp[3] = tmpGear.w;
+    }
+
     //load wheels offsets
     {
         mBackROriginalPos = mCarSettings.getArray3Value("", "wheelbase back");

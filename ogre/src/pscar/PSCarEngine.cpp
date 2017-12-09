@@ -6,44 +6,18 @@ namespace{
     const Ogre::Real engineMaxRPM = 10000.0f;
 }
 
-PSCarEngine::PSCarEngine() :
+PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
+    mInitialVehicleSetup(setup),
     mCurrentGear(1),
     mEngineRPM(0.0f)
 {}
 
-
-void PSCarEngine::init(Ogre::Real idleRevsStart, Ogre::Real idleRevsEnd, float gearRevRatio, Ogre::Vector4 revRatio, Ogre::Vector4 changeDown, Ogre::Vector4 changeUp)
+void PSCarEngine::process(Ogre::Real projectedVel, Ogre::Real throttle, Ogre::Real brakes, bool isTraction)
 {
-    mEngineIdleRevsStart = idleRevsStart;
-    mEngineIdleRevsEnd = idleRevsEnd;
-
-    mGearRatioMain = gearRevRatio;
-
-    mGearRatio[0] = revRatio.x;
-    mGearRatio[1] = revRatio.y;
-    mGearRatio[2] = revRatio.z;
-    mGearRatio[3] = revRatio.w;
-
-    mChangeUp[0] = changeUp.x;
-    mChangeUp[1] = changeUp.y;
-    mChangeUp[2] = changeUp.z;
-    mChangeUp[3] = changeUp.w;
-
-    mChangeDown[0] = changeDown.x;
-    mChangeDown[1] = changeDown.y;
-    mChangeDown[2] = changeDown.z;
-    mChangeDown[3] = changeDown.w;
-
-    mCurrentGear = 1;
-    mEngineRPM = 0.0f;
+    refreshEngineRPM(projectedVel, throttle, brakes, isTraction);
 }
 
-void PSCarEngine::process(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, const Ogre::FrameEvent &evt)
-{
-    refreshEngineRPM(projectedVel, isThrottle, isBrake, isTraction, evt.timeSinceLastFrame);
-}
-
-void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, bool isBrake, bool isTraction, Ogre::Real spf)
+void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, Ogre::Real throttle, Ogre::Real brakes, bool isTraction)
 {
     bool isReverse = false;
     if(projectedVel < 0.0f)
@@ -52,27 +26,25 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         isReverse = true;
     }
 
-    float throttle = isThrottle ? 1.0f : 0.0f;
-
     if(isTraction)
     {
-        Ogre::Real velocityIdle = mGearRatioMain * mGearRatio[0] * mEngineIdleRevsEnd;
+        Ogre::Real velocityIdle = mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0] * mInitialVehicleSetup.mEngineIdleRevsEnd;
 
         if(mCurrentGear <= 0)
         {
             if(mCurrentGear == 0) // N
             {
-                mEngineRPM = mEngineRPM * 0.975f - (mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
+                mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
             }
             else // R
             {
                 if(projectedVel > velocityIdle)
                 {
-                    mEngineRPM = projectedVel / (mGearRatioMain * mGearRatio[0]);
+                    mEngineRPM = projectedVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
                 }
                 else
                 {
-                    mEngineRPM = projectedVel / velocityIdle * (mEngineIdleRevsEnd - mEngineIdleRevsStart) + mEngineIdleRevsStart;
+                    mEngineRPM = projectedVel / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
                 }
                 
             }
@@ -81,42 +53,43 @@ void PSCarEngine::refreshEngineRPM(Ogre::Real projectedVel, bool isThrottle, boo
         {
             if(projectedVel > velocityIdle)
             {
-                mEngineRPM = projectedVel / (mGearRatioMain * mGearRatio[mCurrentGear - 1]);
+                mEngineRPM = projectedVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1]);
             }
             else
             {
-                mEngineRPM = projectedVel / velocityIdle * (mEngineIdleRevsEnd - mEngineIdleRevsStart) + mEngineIdleRevsStart;
+                mEngineRPM = projectedVel / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
             }
         }
 
         //auto transmission
         if(mCurrentGear > 0)
         {
-            if(mEngineRPM < mChangeDown[mCurrentGear - 1])
+            if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
             {
                 --mCurrentGear;
             }
-            if(mEngineRPM > mChangeUp[mCurrentGear - 1])
+            if(mEngineRPM > mInitialVehicleSetup.mChangeUp[mCurrentGear - 1])
             {
                 ++mCurrentGear;
             }
         }
         if(mCurrentGear >= 1)
         {
-            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mGearCount);
+            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
         }
     }
     else //N
     {
-        mEngineRPM = mEngineRPM * 0.975f - (mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
+        mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
     }
 
     mEngineRPM = Ogre::Math::Clamp(mEngineRPM, engineMinRPM, engineMaxRPM);
+
 }
 
 void PSCarEngine::gearUp()
 {
-    if(mCurrentGear <= 0 && mCurrentGear <= mGearCount) ++mCurrentGear;
+    if(mCurrentGear <= 0 && mCurrentGear <= mInitialVehicleSetup.mGearCount) ++mCurrentGear;
 }
 
 void PSCarEngine::gearDown()

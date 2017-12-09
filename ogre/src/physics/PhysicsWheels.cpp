@@ -56,6 +56,8 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
 
         //mWheelsSuspensionGlobalPrev[q] = mWheelsSuspensionGlobal[q];
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
+
+        mIsCollided[q] = false;
     }
 
 }
@@ -82,6 +84,18 @@ void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quat
         mWheelNodes[q]->setOrientation(chassisRot);
     }
 
+}
+
+bool PhysicsWheels::isAnyCollided() const
+{
+    bool ret = false;
+
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        ret |= mIsCollided[q];
+    }
+
+    return ret;
 }
 
 void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
@@ -226,6 +240,8 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
 
                 vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], averagedNormal * resultedImpulse);
             }
+
+            mIsCollided[q] = true;
         }
     }
 }

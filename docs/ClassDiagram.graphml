@@ -340,7 +340,7 @@
           <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1900.451171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="23.062291056302456">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1871.048828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="37.763462931302456">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -402,8 +402,6 @@ void setVisibility(bool isVisible)
 #endif
 
 protected:
-
-virtual void processSounds(const Ogre::FrameEvent &amp;evt) = 0
 
 void stopSounds()
 
@@ -626,7 +624,7 @@ Ogre::WindowEventListener</y:NodeLabel>
           <y:Geometry height="2283.2461465896035" width="731.2209110043996" x="5964.389544497801" y="-4171.6230732948015"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2150.37109375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="66.43752641980154">&lt;&lt;PSControllableCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2091.56640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="676.2578125" x="27.48154925219933" y="95.83987016980154">&lt;&lt;PSControllableCar.h&gt;&gt;
 
 PSControllableCar
 
@@ -667,8 +665,6 @@ bool getBrake()
 LapUtils&amp; getLapUtils()
 const LapUtils&amp; getLapUtils()const
 
-const PSCarEngine&amp; getCarEngine()const
-
 bool checkRearCollision(bool isBoth = false)
 bool checkFrontCollision()
 bool checkChassisCollision()const
@@ -676,13 +672,11 @@ bool checkChassisCollision()const
 size_t getCurrentLap() const override
 Ogre::Real getLapPosition() const override
 
+virtual void processSounds()
+
 protected:
 
-virtual void processSounds(const Ogre::FrameEvent &amp;evt)
-
 LinearController&lt;float&gt; mPitchValue
-
-PSCarEngine mCarEngine
 
 
 private:
@@ -3606,7 +3600,7 @@ float out8, out9, out10, out11
           <y:Geometry height="726.8990575692133" width="869.3089261662258" x="12585.345536916888" y="-2703.4495287846066"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="665.552734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="30.673161597106628">&lt;&lt;Physics.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="694.955078125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="616.333984375" x="126.4874708956122" y="15.971989722106628">&lt;&lt;Physics.h&gt;&gt;
 
 Physics
 
@@ -3626,6 +3620,8 @@ void launchRay(btCollisionWorld::AllHitsRayResultCallback &amp;rayresult) const
 
 void addVehicle(const PSBaseVehicle * vehiclePtr, Ogre::SceneNode *wheelNodes[4], Ogre::SceneNode *chassis)
 void removeVehicle(const PSBaseVehicle * vehiclePtr)
+const PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr) const
+PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr)
 
 void addKinematicObject(btCollisionObject* object)
 void removeCollisionObject(btCollisionObject* object)
@@ -3658,10 +3654,10 @@ vehicles mVehicles</y:NodeLabel>
     <node id="n85">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="764.7501205479471" width="652.0755689855046" x="12693.962215507248" y="-1792.3750602739735"/>
+          <y:Geometry height="935.5234843674239" width="652.0755689855046" x="12693.962215507248" y="-1877.761742183712"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="650.8515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="56.94927902397353">&lt;&lt;PhysicsVehicle.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="871.369140625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="605.58203125" x="23.246768867751598" y="32.07717187121193">&lt;&lt;PhysicsVehicle.h&gt;&gt;
 
 PhysicsVehicle
 
@@ -3671,7 +3667,13 @@ void timeStep()
 
 void adjustImpulseInc(const Ogre::Vector3&amp; rotAxis, const Ogre::Vector3&amp; impulse)
 
-Ogre::Vector3 findTangent(const Ogre::Vector3&amp; normal, const Ogre::Vector3&amp; input) const
+void setAcceleration(Ogre::Real value)
+void setBrakes(Ogre::Real value)
+
+const PSCarEngine&amp; getCarEngine()const
+PSCarEngine&amp; getCarEngine()
+
+static Ogre::Vector3 findTangent(const Ogre::Vector3&amp; normal, const Ogre::Vector3&amp; input)
 
 private:
 
@@ -3704,7 +3706,16 @@ const InitialVehicleSetup&amp; mInitialVehicleSetup
 
 PhysicsWheels mPhysicsWheels
 PhysicsRoofs mPhysicsRoofs
-PhysicsBody mPhysicsBody</y:NodeLabel>
+PhysicsBody mPhysicsBody
+
+Ogre::Vector3 mCoreBaseGlobal
+Ogre::Vector3 mCoreBaseGlobalPrev
+
+Ogre::Real mMaxCollisionDistance
+
+PSCarEngine mCarEngine
+Ogre::Real mThrottle
+Ogre::Real mBreaks</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -3776,10 +3787,10 @@ Ogre::Vector3 mRoofGlobalPrev[InitialVehicleSetup::mRoofsAmount]</y:NodeLabel>
     <node id="n88">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="760.2440416219072" width="739.6078334965582" x="12860.196083251722" y="-830.1220208109536"/>
+          <y:Geometry height="819.0951700766192" width="739.6078334965582" x="12860.196083251722" y="-859.5475850383095"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="739.05859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="10.592723935953586">&lt;&lt;PhysicsWheels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="797.86328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="10.615944413309535">&lt;&lt;PhysicsWheels.h&gt;&gt;
 
 PhysicsWheels
 
@@ -3795,6 +3806,8 @@ void calcImpulses(const Ogre::Vector3&amp; impulseRot, const Ogre::Vector3&amp; 
 void process(const Ogre::SceneNode&amp; chassis, PhysicsVehicle&amp; vehicle)
 void reposition(const Ogre::Vector3&amp; posDiff)
 void rerotation(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; rot)
+
+bool isAnyCollided() const
 
 private:
 
@@ -3828,7 +3841,9 @@ Ogre::Real mSteering[InitialVehicleSetup::mWheelsAmount]
 Ogre::Real mVelocity[InitialVehicleSetup::mWheelsAmount]
 
 Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount]
-Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount]</y:NodeLabel>
+Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount]
+
+bool mIsCollided[InitialVehicleSetup::mWheelsAmount]</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

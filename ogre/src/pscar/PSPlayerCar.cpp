@@ -7,6 +7,9 @@
 
 #include "../lua/DMLuaManager.h"
 
+#include "../physics/Physics.h"
+#include "../physics/PhysicsVehicle.h"
+
 PSPlayerCar::PSPlayerCar() :
     mSteeringAngleVelocity(0.0f)
 {
@@ -183,6 +186,7 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         setSteerRight(true);
         break;
     case OIS::KC_DOWN: 
+        mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
 #if defined(__ANDROID__)
         setAcceleration(false);
@@ -190,12 +194,13 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         break;
     case OIS::KC_UP: 
         setAcceleration(true);
+        mWorld->getVehicle(this)->setThrottle(1.0f);
         break;
     case OIS::KC_A: 
-        mCarEngine.gearUp();
+        mWorld->getVehicle(this)->getCarEngine().gearUp();
         break;
     case OIS::KC_Z: 
-        mCarEngine.gearDown();
+        mWorld->getVehicle(this)->getCarEngine().gearDown();
         break;
     default:
         break;
@@ -213,12 +218,14 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
         setSteerRight(false);
         break;
     case OIS::KC_DOWN: 
+        mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(false);
 #if defined(__ANDROID__)
         setAcceleration(true);
 #endif
         break;
     case OIS::KC_UP: 
+        mWorld->getVehicle(this)->setThrottle(0.0f);
         setAcceleration(false);
         break;
     default:

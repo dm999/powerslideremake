@@ -15,7 +15,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mInitialVehicleSetup(initialVehicleSetup),
     mPhysicsWheels(initialVehicleSetup, physics, meshProesser),
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
-    mPhysicsBody(initialVehicleSetup, physics, meshProesser)
+    mPhysicsBody(initialVehicleSetup, physics, meshProesser),
+    mCarEngine(initialVehicleSetup)
 {
 
     mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
@@ -47,6 +48,9 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
         Ogre::Real tmpDist = mInitialVehicleSetup.mRoofPos[q].length() + mInitialVehicleSetup.mRoofRadius[q];
         if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
     }
+
+    mThrottle = 0.0f;
+    mBreaks = 0.0f;
 }
 
 PhysicsVehicle::~PhysicsVehicle()
@@ -110,12 +114,12 @@ void PhysicsVehicle::timeStep()
 
     calcWheelRoofImpulses();
 
-    //mPhysicsWheels.process(*mChassis, *this);
-    //mPhysicsRoofs.process(*mChassis, *this);
+    mPhysicsWheels.process(*mChassis, *this);
+    mPhysicsRoofs.process(*mChassis, *this);
     mPhysicsBody.process(*mChassis, *this);
     //do flip restore
-    //do transmission
-    //do physics
+    calcTransmission();
+    calcPhysics();
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
@@ -124,6 +128,20 @@ void PhysicsVehicle::timeStep()
 
     reposition(posDiff);
     rerotation(Ogre::Quaternion (carRot));
+}
+
+void PhysicsVehicle::calcTransmission()
+{
+    mCarEngine.process(mVehicleVelocityMod, mThrottle, mBreaks, mPhysicsWheels.isAnyCollided());
+}
+
+void PhysicsVehicle::calcPhysics()
+{
+}
+
+void PhysicsVehicle::processEngineIdle()
+{
+    mCarEngine.process(mVehicleVelocityMod, mThrottle, mBreaks, false);
 }
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)

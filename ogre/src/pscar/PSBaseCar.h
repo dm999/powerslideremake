@@ -78,8 +78,6 @@ public:
 
 protected:
 
-    virtual void processSounds(const Ogre::FrameEvent &evt) = 0;
-
     void stopSounds();
 
     float getCarParameter(const std::string& section, const std::string& key, bool isSpline = false) const;

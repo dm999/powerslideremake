@@ -38,3 +38,21 @@ void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
     mVehicles.erase(found);
 }
+
+const PhysicsVehicle * Physics::getVehicle(const PSBaseVehicle * vehiclePtr) const
+{
+    const PhysicsVehicle * ret = NULL;
+    vehicles::const_iterator found = mVehicles.find(vehiclePtr);
+    if(found != mVehicles.end())
+        ret = (*found).second.get();
+    return ret;
+}
+
+PhysicsVehicle * Physics::getVehicle(const PSBaseVehicle * vehiclePtr)
+{
+    PhysicsVehicle * ret = NULL;
+    vehicles::const_iterator found = mVehicles.find(vehiclePtr);
+    if(found != mVehicles.end())
+        ret = (*found).second.get();
+    return ret;
+}

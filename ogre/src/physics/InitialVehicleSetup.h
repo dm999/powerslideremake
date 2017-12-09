@@ -70,6 +70,14 @@ struct InitialVehicleSetup
 
     static const int mVelocitySplinesAmoint = TerrainData::mTerrainsAmount;
     PSSpline mVelocitySpline[mVelocitySplinesAmoint];
+
+    static const int mGearCount = 4;
+    Ogre::Real mEngineIdleRevsStart;
+    Ogre::Real mEngineIdleRevsEnd;
+    Ogre::Real mGearRatioMain;
+    Ogre::Real mGearRatio[mGearCount];
+    Ogre::Real mChangeUp[mGearCount];
+    Ogre::Real mChangeDown[mGearCount];
 };
 
 
