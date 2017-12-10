@@ -3790,7 +3790,7 @@ Ogre::Vector3 mRoofGlobalPrev[InitialVehicleSetup::mRoofsAmount]</y:NodeLabel>
           <y:Geometry height="819.0951700766192" width="739.6078334965582" x="12860.196083251722" y="-859.5475850383095"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="797.86328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="10.615944413309535">&lt;&lt;PhysicsWheels.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="841.966796875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="737.640625" x="0.9836042482784251" y="-11.435813399190465">&lt;&lt;PhysicsWheels.h&gt;&gt;
 
 PhysicsWheels
 
@@ -3839,9 +3839,12 @@ Ogre::Real mSpringVal[InitialVehicleSetup::mWheelsAmount]
 
 Ogre::Real mSteering[InitialVehicleSetup::mWheelsAmount]
 Ogre::Real mVelocity[InitialVehicleSetup::mWheelsAmount]
+Ogre::Real mWheelRotationalAngle[InitialVehicleSetup::mWheelsAmount]
 
 Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount]
 Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount]
+
+char mTerrainIndex[InitialVehicleSetup::mWheelsAmount]
 
 bool mIsCollided[InitialVehicleSetup::mWheelsAmount]</y:NodeLabel>
           <y:Shape type="rectangle"/>

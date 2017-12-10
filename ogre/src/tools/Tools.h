@@ -23,7 +23,10 @@ struct AIWhole
     //rec
     std::vector<AIData> aiData;
     size_t hackType;
-    float speedCoeff;
+    float accelerationCoeff;
+    float velocityScale;
+    float tractionCoeff;
+    float aiImpulseScale;
     float hack1;
     float hack2;
     float hackMultiplier;

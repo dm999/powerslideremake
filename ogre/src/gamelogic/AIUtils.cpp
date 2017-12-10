@@ -310,8 +310,8 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
 
 void AIUtils::adjustInferenceResults(float& steering, float& acceleration, bool isMineshafted) const
 {
-    if(acceleration > mAIWhole.speedCoeff)
-        acceleration = mAIWhole.speedCoeff;
+    if(acceleration > mAIWhole.accelerationCoeff)
+        acceleration = mAIWhole.accelerationCoeff;
 
     if(isMineshafted)
     {

@@ -14,7 +14,8 @@ public:
 
     PSCarEngine(const InitialVehicleSetup& setup);
 
-    void process(Ogre::Real projectedVel, Ogre::Real throttle, Ogre::Real brakes, bool isTraction);
+    void process(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real wheelsAverageVel, bool isTraction);
+    Ogre::Real getPower(Ogre::Real throttle, Ogre::Real impulseLinearMod) const;
 
     int getCurrentGear()const{return mCurrentGear;}
     Ogre::Real getEngineRPM()const{return mEngineRPM;}
@@ -27,7 +28,7 @@ private:
     int mCurrentGear;//0 N, -1 R
     Ogre::Real mEngineRPM;
 
-    void refreshEngineRPM(Ogre::Real projectedVel, Ogre::Real throttle, Ogre::Real brakes, bool isTraction);
+    void refreshEngineRPM(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real wheelsAverageVel, bool isTraction);
 
     const InitialVehicleSetup& mInitialVehicleSetup;
 };

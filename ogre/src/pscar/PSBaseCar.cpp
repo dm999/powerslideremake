@@ -216,31 +216,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mCoreBase = getCarArray3Parameter("", "core base");
     initialVehicleSetup.mCoreBase.z = -initialVehicleSetup.mCoreBase.z;
 
-    initialVehicleSetup.mEngineIdleRevsStart = getCarParameter("", "idle revs start");
-    initialVehicleSetup.mEngineIdleRevsEnd = getCarParameter("", "idle revs end");
-    initialVehicleSetup.mGearRatioMain = getCarParameter("", "gear rev ratio");
-    {
-        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "rev ratio");
-        initialVehicleSetup.mGearRatio[0] = tmpGear.x;
-        initialVehicleSetup.mGearRatio[1] = tmpGear.y;
-        initialVehicleSetup.mGearRatio[2] = tmpGear.z;
-        initialVehicleSetup.mGearRatio[3] = tmpGear.w;
-    }
-    {
-        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change down");
-        initialVehicleSetup.mChangeDown[0] = tmpGear.x;
-        initialVehicleSetup.mChangeDown[1] = tmpGear.y;
-        initialVehicleSetup.mChangeDown[2] = tmpGear.z;
-        initialVehicleSetup.mChangeDown[3] = tmpGear.w;
-    }
-    {
-        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change up");
-        initialVehicleSetup.mChangeUp[0] = tmpGear.x;
-        initialVehicleSetup.mChangeUp[1] = tmpGear.y;
-        initialVehicleSetup.mChangeUp[2] = tmpGear.z;
-        initialVehicleSetup.mChangeUp[3] = tmpGear.w;
-    }
-
     //load wheels offsets
     {
         mBackROriginalPos = mCarSettings.getArray3Value("", "wheelbase back");
@@ -308,22 +283,6 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mWheelRadius[0] = wheelRadius.y;
     initialVehicleSetup.mWheelRadius[1] = wheelRadius.y;
 
-    initialVehicleSetup.mAnisotropicFriction = Ogre::Vector3(
-            luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.x", pipeline),
-            luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.y", pipeline),
-            luaManager.ReadScalarFloat("Model.Physics.Wheels.AnisotropicFriction.z", pipeline)
-        );
-
-    initialVehicleSetup.mRollingFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.RollingFriction", pipeline);
-
-    initialVehicleSetup.mMaxTravel = getCarParameter("", "max travel");
-
-    initialVehicleSetup.mWheelsFSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringStiffness", pipeline);
-    initialVehicleSetup.mWheelsFSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.SpringDamping", pipeline);
-    initialVehicleSetup.mWheelsRSpringStiffness = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringStiffness", pipeline);
-    initialVehicleSetup.mWheelsRSpringDamping = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.SpringDamping", pipeline);
-    initialVehicleSetup.mLimitSpringParamsF = luaManager.ReadScalarBool("Model.Physics.Wheels.Front.LimitSpringParams", pipeline);
-    initialVehicleSetup.mLimitSpringParamsR = luaManager.ReadScalarBool("Model.Physics.Wheels.Rear.LimitSpringParams", pipeline);
 
     initialVehicleSetup.mAirDensityTranslation = getCarParameter("", "air density translation");
     initialVehicleSetup.mAirDensityRot = getCarParameter("", "air density rotation");
@@ -331,19 +290,49 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mChassisMass = getCarParameter("", "mass");
     initialVehicleSetup.mChassisInvMass = 1.0f / initialVehicleSetup.mChassisMass;
     initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");
-    initialVehicleSetup.mFrontSuspension = getCarParameter("", "front suspension");
-    initialVehicleSetup.mRisingDamp = getCarParameter("", "rising damp");
 
     initialVehicleSetup.mGravityForce = misSettings.getFloatValue("", "gravity force");
 
-    initialVehicleSetup.mChassisRestitution = luaManager.ReadScalarFloat("Model.Physics.Chassis.Restitution", pipeline);
-    initialVehicleSetup.mChassisFriction = luaManager.ReadScalarFloat("Model.Physics.Chassis.Friction", pipeline);
+    initialVehicleSetup.mEngineIdleRevsStart = getCarParameter("", "idle revs start");
+    initialVehicleSetup.mEngineIdleRevsEnd = getCarParameter("", "idle revs end");
+    initialVehicleSetup.mGearRatioMain = getCarParameter("", "gear rev ratio");
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "rev ratio");
+        initialVehicleSetup.mGearRatio[0] = tmpGear.x;
+        initialVehicleSetup.mGearRatio[1] = tmpGear.y;
+        initialVehicleSetup.mGearRatio[2] = tmpGear.z;
+        initialVehicleSetup.mGearRatio[3] = tmpGear.w;
+    }
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change down");
+        initialVehicleSetup.mChangeDown[0] = tmpGear.x;
+        initialVehicleSetup.mChangeDown[1] = tmpGear.y;
+        initialVehicleSetup.mChangeDown[2] = tmpGear.z;
+        initialVehicleSetup.mChangeDown[3] = tmpGear.w;
+    }
+    {
+        Ogre::Vector4 tmpGear = getCarArray4Parameter("", "change up");
+        initialVehicleSetup.mChangeUp[0] = tmpGear.x;
+        initialVehicleSetup.mChangeUp[1] = tmpGear.y;
+        initialVehicleSetup.mChangeUp[2] = tmpGear.z;
+        initialVehicleSetup.mChangeUp[3] = tmpGear.w;
+    }
 
+    initialVehicleSetup.mMaxTravel = getCarParameter("", "max travel");
+    initialVehicleSetup.mFrontSuspension = getCarParameter("", "front suspension");
+    initialVehicleSetup.mRisingDamp = getCarParameter("", "rising damp");
 
-    initialVehicleSetup.mWheelsFMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Front.Mass", pipeline);
-    initialVehicleSetup.mWheelsRMass = luaManager.ReadScalarFloat("Model.Physics.Wheels.Rear.Mass", pipeline);
-    initialVehicleSetup.mWheelsRestitution = luaManager.ReadScalarFloat("Model.Physics.Wheels.Restitution", pipeline);
-    initialVehicleSetup.mWheelsFriction = luaManager.ReadScalarFloat("Model.Physics.Wheels.Friction", pipeline);
+    initialVehicleSetup.mFrontBreak = getCarParameter("", "front brake");
+    initialVehicleSetup.mBackBreak = getCarParameter("", "back brake");
+
+    initialVehicleSetup.mTransmissionDrag = getCarParameter("", "transmission drag");
+
+    initialVehicleSetup.mDiffSlip = getCarParameter("", "diff slip");
+
+    initialVehicleSetup.mFrontWheelDrive = getCarParameter("", "front wheel drive");
+
+    initialVehicleSetup.mAccelerationFactor = getCarParameter("", "acceleration factor");
+
 
 
     //splines
@@ -393,6 +382,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
 
         initialVehicleSetup.mVelocitySpline[q].init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "rev power hscale", true);
+        Ogre::Real vscale = getCarParameter("", "rev power vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "rev power");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mPower.init(splinePoints, hscale, vscale);
     }
     //splines END
 

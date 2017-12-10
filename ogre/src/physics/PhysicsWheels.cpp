@@ -33,6 +33,8 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
         mSpringVal[q] = 1.0f;
         mSteering[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].y;
         mVelocity[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].z;
+        mIsCollided[q] = false;
+        mWheelRotationalAngle[q] = 0.0f;
     }
 }
 
@@ -77,13 +79,151 @@ void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quat
 {
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
+
+        Ogre::Quaternion finalRot = chassisRot;
+
         Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
         connectionPoint.y -= mSuspensionHeight[q];
         //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
         mWheelNodes[q]->setPosition(chassisPos + chassisRot * connectionPoint);
-        mWheelNodes[q]->setOrientation(chassisRot);
+
+        mWheelRotationalAngle[q] += mVelocity[q] * mInitialVehicleSetup.mChassisInvMass * 1.27f / mInitialVehicleSetup.mWheelRadius[q];
+        if(mWheelRotationalAngle[q] <= -Ogre::Math::TWO_PI)
+        {
+            mWheelRotationalAngle[q] += Ogre::Math::TWO_PI;
+        }
+        else
+        {
+            mWheelRotationalAngle[q] -= Ogre::Math::TWO_PI;
+        }
+
+        Ogre::Quaternion rotDrive;
+        rotDrive.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngle[q]), Ogre::Vector3(1.0f, 0.0f, 0.0f));
+
+        if(q >= 2)//front
+        {
+            finalRot = finalRot * rotDrive;
+        }
+        else
+        {
+            finalRot = finalRot * rotDrive;
+        }
+
+        mWheelNodes[q]->setOrientation(finalRot);
     }
 
+}
+
+Ogre::Real PhysicsWheels::calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks)
+{
+
+    throttle *= 1.3f;
+
+    const Ogre::Real handBreak = 0.0f;
+    Ogre::Real breaksHand = handBreak * 2.6f;
+
+    if(vehicleVelocityMod < 0.4f)
+    {
+        breaksHand *= 0.5f;
+        if(breaksHand > breaks)
+            breaks = breaksHand;
+
+        if(vehicleVelocityMod < 0.05f)
+        {
+            breaks *= vehicleVelocityMod * 20.0f;
+            breaksHand *= vehicleVelocityMod * 20.0f;
+        }
+
+    }
+
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        Ogre::Real breakFactor = 0.0f;
+        if(q >= 2)//front
+        {
+            breakFactor = breaks;
+            breakFactor *= mInitialVehicleSetup.mFrontBreak;
+        }
+        else
+        {
+            breakFactor = breaks + breaksHand;
+            breakFactor *= mInitialVehicleSetup.mBackBreak;
+        }
+
+        if(mVelocity[q] < 0.0f)
+        {
+            mVelocity[q] += breakFactor;
+        }
+        else
+        {
+            mVelocity[q] -= breakFactor;
+        }
+    }
+
+    Ogre::Real averageVel = (mVelocity[0] + mVelocity[1]) * 0.5f;
+
+    //differential
+    mVelocity[0] =  ( 1.0f - mInitialVehicleSetup.mDiffSlip) * averageVel +
+                    mInitialVehicleSetup.mDiffSlip * mVelocity[0];
+
+    mVelocity[1] =  ( 1.0f - mInitialVehicleSetup.mDiffSlip) * averageVel +
+                    mInitialVehicleSetup.mDiffSlip * mVelocity[1];
+
+    return averageVel;
+}
+
+void PhysicsWheels::calcVelocityMore(Ogre::Real power, int gear)
+{
+    if(gear > 0)//forward
+    {
+        for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+        {
+            if(q >= 2)//front
+            {
+                mVelocity[q] += (power - mInitialVehicleSetup.mTransmissionDrag * mVelocity[q]) *
+                                mInitialVehicleSetup.mFrontWheelDrive;
+            }
+            else
+            {
+                mVelocity[q] += (power - mInitialVehicleSetup.mTransmissionDrag * mVelocity[q]) *
+                                (1.0f - mInitialVehicleSetup.mFrontWheelDrive);
+            }
+        }
+    }
+
+    if(gear == -1)//reverse
+    {
+        for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+        {
+            if(q >= 2)//front
+            {
+                mVelocity[q] -= (power + mInitialVehicleSetup.mTransmissionDrag * mVelocity[q]) *
+                                mInitialVehicleSetup.mFrontWheelDrive;
+            }
+            else
+            {
+                mVelocity[q] -=  (power + mInitialVehicleSetup.mTransmissionDrag * mVelocity[q]) *
+                                (1.0f - mInitialVehicleSetup.mFrontWheelDrive);
+            }
+        }
+    }
+
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        if(mIsCollided[q] && mTerrainIndex[q] != -1)
+        {
+            const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
+
+            if(q >= 2)//front
+            {
+                mVelocity[q] -= mVelocity[q] * terrain.mRollResistance * 0.4f;
+            }
+            else
+            {
+                mVelocity[q] -= mVelocity[q] * terrain.mRollResistance * 0.6f;
+            }
+        }
+    }
 }
 
 bool PhysicsWheels::isAnyCollided() const
@@ -176,6 +316,8 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
             worldNormal.z = -worldNormal.z;//original data is left hand
 
             char terrainType = 0; //mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+            mTerrainIndex[q] = terrainType;
+
             if(terrainType != -1)
             {
                 Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);

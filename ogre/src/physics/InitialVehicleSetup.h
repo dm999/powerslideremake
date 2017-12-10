@@ -31,37 +31,15 @@ struct InitialVehicleSetup
     float mBodyRadius;
     Ogre::Vector3 mBodyBasePos;
 
-    Ogre::Vector3 mAnisotropicFriction;
-    Ogre::Real mRollingFriction;
-
-    Ogre::Real mMaxTravel;
-
-    Ogre::Real mWheelsFSpringStiffness;
-    Ogre::Real mWheelsFSpringDamping;
-    Ogre::Real mWheelsRSpringStiffness;
-    Ogre::Real mWheelsRSpringDamping;
-    bool mLimitSpringParamsF;
-    bool mLimitSpringParamsR;
-
     Ogre::Real mAirDensityTranslation;
     Ogre::Real mAirDensityRot;
 
     Ogre::Real mChassisMass;
     Ogre::Real mChassisInvMass;
-    Ogre::Real mChassisRestitution;
-    Ogre::Real mChassisFriction;
-
-    Ogre::Real mWheelsFMass;
-    Ogre::Real mWheelsRMass;
-    Ogre::Real mWheelsRestitution;
-    Ogre::Real mWheelsFriction;
 
     Ogre::Vector3 mMomentOfInertia;
 
     Ogre::Real mGravityForce;
-
-    Ogre::Real mFrontSuspension;
-    Ogre::Real mRisingDamp;
 
     PSSpline mWheelUnderGroundDD;
     PSSpline mWheelUnderGroundVV;
@@ -78,6 +56,23 @@ struct InitialVehicleSetup
     Ogre::Real mGearRatio[mGearCount];
     Ogre::Real mChangeUp[mGearCount];
     Ogre::Real mChangeDown[mGearCount];
+
+    Ogre::Real mMaxTravel;
+    Ogre::Real mFrontSuspension;
+    Ogre::Real mRisingDamp;
+
+    Ogre::Real mFrontBreak;
+    Ogre::Real mBackBreak;
+
+    Ogre::Real mTransmissionDrag;
+
+    Ogre::Real mDiffSlip;
+
+    Ogre::Real mFrontWheelDrive;
+
+    Ogre::Real mAccelerationFactor;
+
+    PSSpline mPower;
 };
 
 

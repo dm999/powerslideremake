@@ -30,6 +30,8 @@ public:
     void reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
     void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
 
+    Ogre::Real calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks);
+    void calcVelocityMore(Ogre::Real power, int gear);
     bool isAnyCollided() const;
 
 private:
@@ -65,9 +67,12 @@ private:
     
     Ogre::Real mSteering[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
     Ogre::Real mVelocity[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+    Ogre::Real mWheelRotationalAngle[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 
     Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    char mTerrainIndex[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 
     bool mIsCollided[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 };

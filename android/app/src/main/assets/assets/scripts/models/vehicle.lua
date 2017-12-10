@@ -42,31 +42,6 @@ function createVehicle()
     Model.Material.SingleSpecular.r = 1.0;
     Model.Material.SingleSpecular.g = 1.0;
     Model.Material.SingleSpecular.b = 1.0;
-    
-    Model.Physics = {}
-    Model.Physics.Chassis = {}
-    Model.Physics.Chassis.Restitution = 0.0;    -- bounciness
-    Model.Physics.Chassis.Friction = 0.4;
-    Model.Physics.Wheels = {}
-    Model.Physics.Wheels.Restitution = 0.0;
-    Model.Physics.Wheels.Friction = 1.0;
-    Model.Physics.Wheels.AnisotropicFriction = {}
-    Model.Physics.Wheels.AnisotropicFriction.x = 0.5;   -- latitude friction
-    Model.Physics.Wheels.AnisotropicFriction.y = 0.05;  -- longtitude friction
-    Model.Physics.Wheels.AnisotropicFriction.z = 0.05;  -- longtitude friction
-    Model.Physics.Wheels.RollingFriction = 0.00081;
-    Model.Physics.Wheels.Front = {}
-    Model.Physics.Wheels.Front.LimitSpringParams = false;
-    Model.Physics.Wheels.Front.Mass = 2.0;
-    Model.Physics.Wheels.Front.MinSteer = -45.0;
-    Model.Physics.Wheels.Front.MaxSteer = 45.0;
-    Model.Physics.Wheels.Front.SpringStiffness = 950.0;
-    Model.Physics.Wheels.Front.SpringDamping = 50.0;
-    Model.Physics.Wheels.Rear = {}
-    Model.Physics.Wheels.Rear.LimitSpringParams = false;
-    Model.Physics.Wheels.Rear.Mass = 2.0;
-    Model.Physics.Wheels.Rear.SpringStiffness = 950.0;
-    Model.Physics.Wheels.Rear.SpringDamping = 50.0;
 
     return Model;
 
