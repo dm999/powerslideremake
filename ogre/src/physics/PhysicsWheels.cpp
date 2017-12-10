@@ -59,6 +59,10 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
         //mWheelsSuspensionGlobalPrev[q] = mWheelsSuspensionGlobal[q];
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
 
+        mWheelsImpulseTangent[q] = Ogre::Vector3::ZERO;
+        mWheelsAveragedNormal[q] = Ogre::Vector3::UNIT_Y;
+        mWheelsImpulseResulted[q] = 0.0f;
+
         mIsCollided[q] = false;
     }
 
@@ -98,7 +102,7 @@ void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quat
         }
 
         Ogre::Quaternion rotDrive;
-        rotDrive.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngle[q]), Ogre::Vector3(1.0f, 0.0f, 0.0f));
+        rotDrive.FromAngleAxis(Ogre::Radian(mWheelRotationalAngle[q]), Ogre::Vector3(1.0f, 0.0f, 0.0f));
 
         if(q >= 2)//front
         {
@@ -380,6 +384,9 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
                 if(resultedImpulse < 0.0f) resultedImpulse = 0.0f;
                 if(resultedImpulse > 100.0f) resultedImpulse = 100.0f;
 
+                mWheelsAveragedNormal[q] = averagedNormal;
+                mWheelsImpulseResulted[q] = resultedImpulse;
+
                 vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], averagedNormal * resultedImpulse);
             }
 
@@ -527,4 +534,123 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     }
 
     return res;
+}
+
+void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks)
+{
+    Ogre::Matrix3 carRot;
+    Ogre::Quaternion carRotQ = chassis.getOrientation();
+    carRotQ.ToRotationMatrix(carRot);
+    Ogre::Vector3 matrixZColumn = carRot.GetColumn(2);
+
+    Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[0] * 1.0526316f);
+    if(turnFinish < 0.0f) turnFinish = 0.0f;
+    if(turnFinish <= mInitialVehicleSetup.mTurnFinish)
+        turnFinish /= mInitialVehicleSetup.mTurnFinish;
+    else
+        turnFinish = 1.0f;
+
+    const Ogre::Real lowFrontTractionC = 0.6f;
+    Ogre::Real lowFrontTraction = (1.0f - lowFrontTractionC) * mInitialVehicleSetup.mLowFrontTraction * -0.11f;
+
+    Ogre::Real rearTraction = mInitialVehicleSetup.mLowRearTraction - lowFrontTraction;
+    Ogre::Real frontTraction = lowFrontTraction + mInitialVehicleSetup.mLowFrontTraction;
+
+    //d.polubotko: use handbrake if need
+    breaks *= 0.17f;
+
+    Ogre::Real rearTractionDiff = (mInitialVehicleSetup.mHighRearTraction - mInitialVehicleSetup.mLowRearTraction) * turnFinish;
+    Ogre::Real frontTractionDiff = (mInitialVehicleSetup.mHighFrontTraction - mInitialVehicleSetup.mLowFrontTraction) * turnFinish;
+
+    rearTraction += rearTractionDiff - breaks;
+    frontTraction += frontTractionDiff + breaks;
+
+    for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
+    {
+        if(mIsCollided[q])
+        {
+            const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
+
+            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], matrixZColumn);
+            impulseProj.normalise();
+
+            Ogre::Real cosSteer = Ogre::Math::Cos(mSteering[q]);
+            Ogre::Real sinSteer = Ogre::Math::Sin(mSteering[q]);
+
+            Ogre::Real suspensionTraction = mWheelsImpulseResulted[q] * 4.0f /
+                                            (mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity);
+
+            Ogre::Real suspensionTractionSpline = mInitialVehicleSetup.mSuspensionTraction.getPoint(suspensionTraction);
+
+            Ogre::Vector3 velocityWithSteering = impulseProj.crossProduct(mWheelsAveragedNormal[q]);
+            velocityWithSteering *= sinSteer;
+            velocityWithSteering += cosSteer * impulseProj;
+
+            Ogre::Vector3 wheelVelocity = velocityWithSteering * mVelocity[q];
+
+            Ogre::Vector3 velocity = (wheelVelocity - mWheelsImpulseTangent[q]) * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+
+            Ogre::Real traction;
+
+            if(q >= 2)//front
+            {
+                traction = frontTraction * suspensionTractionSpline;
+            }
+            else
+            {
+                traction = rearTraction * suspensionTractionSpline;
+            }
+
+            //d.polubotko: TODO adjust traction for AI
+
+            Ogre::Real velMod = velocity.length();
+            velocity.normalise();
+
+            Ogre::Real velocitySpline = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velMod);
+
+            Ogre::Vector3 velocityProj = velocityWithSteering * velocityWithSteering.dotProduct(velocity);
+            Ogre::Vector3 velocityProjDiff = velocity - velocityProj;
+            //Ogre::Vector3 velocityProjWeight = (velocityProj * 6.0f - velocityProjDiff * -0.7f) * velMod;
+
+            Ogre::Real velocitySpline2 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProj.length());
+            Ogre::Real velocitySpline3 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProjDiff.length() * velMod);
+
+            Ogre::Vector3 velocityProjWeighted = velocityProj *
+                                                (terrain.mLongtitudinalGripMultiplier * velocitySpline2 +
+                                                terrain.mCombinedMultiplier * velocitySpline) *
+                                                traction;
+
+            Ogre::Real finalTraction =  (velocitySpline3 * terrain.mLatitudinalGripMultiplier +
+                                        velocitySpline * terrain.mParameter) *
+                                        traction;
+
+            Ogre::Real accel;
+            if(q >= 2)//front
+            {
+                accel = 1.15f - throttle * 0.15f;
+            }
+            else
+            {
+                accel = 1.1f - throttle * 0.1f;
+            }
+
+            Ogre::Vector3 velocityProjDiffWeight = velocityProjDiff * finalTraction * accel;
+
+            //d.polubotko: TODO for user car only
+
+            if(velMod > 0.0f)
+            {
+                Ogre::Vector3 finalVelocity = velocityProjWeighted + velocityProjDiffWeight;
+                Ogre::Real finalVelocityDot = velocityWithSteering.dotProduct(finalVelocity);
+
+                if(q >= 2)//front
+                {
+                }
+
+                vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], finalVelocity);
+
+                mVelocity[q] -= mInitialVehicleSetup.mWheelVelocitySub * finalVelocityDot;
+            }
+        }
+    }
 }

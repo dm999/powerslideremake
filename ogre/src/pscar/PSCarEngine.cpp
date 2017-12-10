@@ -1,89 +1,67 @@
 
 #include "PSCarEngine.h"
 
-namespace{
-    const Ogre::Real engineMinRPM = 0.0f;
-    const Ogre::Real engineMaxRPM = 10000.0f;
-}
-
 PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
     mInitialVehicleSetup(setup),
     mCurrentGear(1),
     mEngineRPM(0.0f)
 {}
 
-void PSCarEngine::process(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real wheelsAverageVel, bool isTraction)
+void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
 {
-    refreshEngineRPM(vehicleVelocityMod, throttle, wheelsAverageVel, isTraction);
-}
 
-void PSCarEngine::refreshEngineRPM(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real wheelsAverageVel, bool isTraction)
-{
-    bool isReverse = false;
-    if(vehicleVelocityMod < 0.0f)
+    if(mCurrentGear <= 0)
     {
-        vehicleVelocityMod = -vehicleVelocityMod;
-        isReverse = true;
-    }
-
-    if(isTraction)
-    {
-        Ogre::Real velocityIdle = mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0] * mInitialVehicleSetup.mEngineIdleRevsEnd;
-
-        if(mCurrentGear <= 0)
+        if(mCurrentGear == 0)//N
         {
-            if(mCurrentGear == 0) // N
-            {
-                mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
-            }
-            else // R
-            {
-                if(vehicleVelocityMod > velocityIdle)
-                {
-                    mEngineRPM = vehicleVelocityMod / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
-                }
-                else
-                {
-                    mEngineRPM = vehicleVelocityMod / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
-                }
-                
-            }
+            mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
         }
-        else
+        else//R
         {
-            if(vehicleVelocityMod > velocityIdle)
+            Ogre::Real absVel = Ogre::Math::Abs(wheelsAverageVel);
+            Ogre::Real velocityIdle = mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0] * mInitialVehicleSetup.mEngineIdleRevsEnd;
+
+            if(absVel > velocityIdle)
             {
-                mEngineRPM = vehicleVelocityMod / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1]);
+                mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
             }
             else
             {
-                mEngineRPM = vehicleVelocityMod / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
+                mEngineRPM = absVel / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
             }
-        }
-
-        //auto transmission
-        if(mCurrentGear > 0)
-        {
-            if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
-            {
-                --mCurrentGear;
-            }
-            if(mEngineRPM > mInitialVehicleSetup.mChangeUp[mCurrentGear - 1])
-            {
-                ++mCurrentGear;
-            }
-        }
-        if(mCurrentGear >= 1)
-        {
-            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
         }
     }
-    else //N
+    else//1, 2, 3, 4
     {
-        mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
+        Ogre::Real absVel = Ogre::Math::Abs(wheelsAverageVel);
+        Ogre::Real velocityIdle = mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0] * mInitialVehicleSetup.mEngineIdleRevsEnd;
+
+        if(absVel >= velocityIdle)
+        {
+            mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1]);
+        }
+        else
+        {
+            mEngineRPM = absVel / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
+        }
     }
 
-    mEngineRPM = Ogre::Math::Clamp(mEngineRPM, engineMinRPM, engineMaxRPM);
+    //auto transmission
+    if(mCurrentGear > 0)
+    {
+        if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
+        {
+            --mCurrentGear;
+        }
+        if(mEngineRPM > mInitialVehicleSetup.mChangeUp[mCurrentGear - 1])
+        {
+            ++mCurrentGear;
+        }
+    }
+    if(mCurrentGear >= 1)
+    {
+        mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
+    }
 
 }
 

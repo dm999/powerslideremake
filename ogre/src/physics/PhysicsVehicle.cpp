@@ -108,7 +108,7 @@ void PhysicsVehicle::timeStep()
     mCoreBaseGlobal = mChassis->getPosition() + mChassis->getOrientation() * mInitialVehicleSetup.mCoreBase;
     mMeshProcesser->performCollisionDetection(mChassis->getPosition(), mCoreBaseGlobalPrev, mMaxCollisionDistance);
 
-    mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
+    mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
 
     integrate();
 
@@ -121,10 +121,10 @@ void PhysicsVehicle::timeStep()
     calcTransmission();
     calcPhysics();
 
-    //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityForce);
-    //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
-    //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
-    //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityForce;
+    //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
+    //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
+    //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
+    //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
 
     reposition(posDiff);
     rerotation(Ogre::Quaternion (carRot));
@@ -133,7 +133,7 @@ void PhysicsVehicle::timeStep()
 void PhysicsVehicle::calcTransmission()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(mVehicleVelocityMod, mThrottle, wheelsAverageVel, mPhysicsWheels.isAnyCollided());
+    mCarEngine.process(wheelsAverageVel, mThrottle);
     //d.polubotko: TODO adjust mThrottle for AI
     Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
@@ -141,12 +141,13 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::calcPhysics()
 {
+    mPhysicsWheels.calcPhysics(*mChassis, *this, mThrottle, mBreaks);
 }
 
 void PhysicsVehicle::processEngineIdle()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(mVehicleVelocityMod, mThrottle, wheelsAverageVel, false);
+    mCarEngine.process(wheelsAverageVel, mThrottle);
     //d.polubotko: TODO adjust mThrottle for AI
     Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());

@@ -291,7 +291,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mChassisInvMass = 1.0f / initialVehicleSetup.mChassisMass;
     initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");
 
-    initialVehicleSetup.mGravityForce = misSettings.getFloatValue("", "gravity force");
+    initialVehicleSetup.mGravityVelocity = misSettings.getFloatValue("", "gravity force");
 
     initialVehicleSetup.mEngineIdleRevsStart = getCarParameter("", "idle revs start");
     initialVehicleSetup.mEngineIdleRevsEnd = getCarParameter("", "idle revs end");
@@ -332,6 +332,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mFrontWheelDrive = getCarParameter("", "front wheel drive");
 
     initialVehicleSetup.mAccelerationFactor = getCarParameter("", "acceleration factor");
+
+    initialVehicleSetup.mTurnFinish = getCarParameter("", "turn finish");
+
+    initialVehicleSetup.mHighFrontTraction = getCarParameter("", "high front traction");
+    initialVehicleSetup.mLowFrontTraction = getCarParameter("", "low front traction");
+    initialVehicleSetup.mHighRearTraction = getCarParameter("", "high rear traction");
+    initialVehicleSetup.mLowRearTraction = getCarParameter("", "low rear traction");
+
+    initialVehicleSetup.mWheelVelocitySub = getCarParameter("", "wheel velocity sub");
 
 
 
@@ -391,6 +400,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
 
         initialVehicleSetup.mPower.init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "suspension traction hscale", true);
+        Ogre::Real vscale = getCarParameter("", "suspension traction vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "suspension traction");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mSuspensionTraction.init(splinePoints, hscale, vscale);
     }
     //splines END
 

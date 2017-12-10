@@ -39,7 +39,7 @@ struct InitialVehicleSetup
 
     Ogre::Vector3 mMomentOfInertia;
 
-    Ogre::Real mGravityForce;
+    Ogre::Real mGravityVelocity;
 
     PSSpline mWheelUnderGroundDD;
     PSSpline mWheelUnderGroundVV;
@@ -73,6 +73,17 @@ struct InitialVehicleSetup
     Ogre::Real mAccelerationFactor;
 
     PSSpline mPower;
+
+    Ogre::Real mTurnFinish;
+
+    Ogre::Real mHighFrontTraction;
+    Ogre::Real mLowFrontTraction;
+    Ogre::Real mHighRearTraction;
+    Ogre::Real mLowRearTraction;
+
+    Ogre::Real mWheelVelocitySub;
+
+    PSSpline mSuspensionTraction;
 };
 
 

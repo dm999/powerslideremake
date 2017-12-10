@@ -34,6 +34,8 @@ public:
     void calcVelocityMore(Ogre::Real power, int gear);
     bool isAnyCollided() const;
 
+    void calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks);
+
 private:
 
     Ogre::Real averageCollisionNormal(const Ogre::Vector3& matrixYColumn, size_t wheelIndex, Ogre::Vector3& averagedNormal) const;
@@ -71,6 +73,8 @@ private:
 
     Ogre::Vector3 mWheelsImpulseLinear[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mWheelsImpulseTangent[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mWheelsAveragedNormal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Real mWheelsImpulseResulted[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 
     char mTerrainIndex[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 
