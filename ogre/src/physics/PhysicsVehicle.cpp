@@ -133,7 +133,7 @@ void PhysicsVehicle::timeStep()
 void PhysicsVehicle::calcTransmission()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle);
+    mCarEngine.process(wheelsAverageVel, mThrottle, true);
     //d.polubotko: TODO adjust mThrottle for AI
     Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
@@ -147,10 +147,7 @@ void PhysicsVehicle::calcPhysics()
 void PhysicsVehicle::processEngineIdle()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle);
-    //d.polubotko: TODO adjust mThrottle for AI
-    Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
-    mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
+    mCarEngine.process(wheelsAverageVel, mThrottle, false);
 }
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)

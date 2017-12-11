@@ -7,12 +7,15 @@ PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
     mEngineRPM(0.0f)
 {}
 
-void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
+void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool isRaceStarted)
 {
+    
+    int currentGear = mCurrentGear;
+    if(!isRaceStarted) currentGear = 0;
 
-    if(mCurrentGear <= 0)
+    if(currentGear <= 0)
     {
-        if(mCurrentGear == 0)//N
+        if(currentGear == 0)//N
         {
             mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
         }
@@ -38,7 +41,7 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
 
         if(absVel >= velocityIdle)
         {
-            mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1]);
+            mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[currentGear - 1]);
         }
         else
         {
@@ -47,7 +50,7 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
     }
 
     //auto transmission
-    if(mCurrentGear > 0)
+    if(currentGear > 0)
     {
         if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
         {
@@ -57,12 +60,9 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
         {
             ++mCurrentGear;
         }
-    }
-    if(mCurrentGear >= 1)
-    {
+        
         mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
     }
-
 }
 
 void PSCarEngine::gearUp()
@@ -92,7 +92,7 @@ Ogre::Real PSCarEngine::getPower(Ogre::Real throttle, Ogre::Real impulseLinearMo
         power = mInitialVehicleSetup.mPower.getPoint(revs);
         power *= mInitialVehicleSetup.mAccelerationFactor;
         power *= throttle;
-        power /= mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear];
+        power /= mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1];
 
         if(mCurrentGear < mInitialVehicleSetup.mGearCount && mEngineRPM > 7500.0f)
         {
@@ -100,6 +100,9 @@ Ogre::Real PSCarEngine::getPower(Ogre::Real throttle, Ogre::Real impulseLinearMo
             if(revsRescale < 0.0f) revsRescale = 0.0f;
             power *= revsRescale;
         }
+        
+        if(impulseLinearMod < 40.0f)
+            power *= (1.0f - (40.0f - impulseLinearMod) * -0.0125f);
     }
 
     if(mCurrentGear == -1)//reverse
@@ -109,13 +112,14 @@ Ogre::Real PSCarEngine::getPower(Ogre::Real throttle, Ogre::Real impulseLinearMo
         power *= mInitialVehicleSetup.mAccelerationFactor;
         power *= throttle;
         power /= mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0];
+        
+        if(impulseLinearMod < 40.0f)
+            power *= (1.0f - (40.0f - impulseLinearMod) * -0.0125f);
+        
+        if(power < 0.0f)
+            power = 0.0f;
     }
     
-    if(impulseLinearMod < 40.0f)
-        power *= (1.0f - (40.0f - impulseLinearMod) * -0.0125f);
-
-    if(power < 0.0f)
-        power = 0.0f;
 
     return power;
 }
