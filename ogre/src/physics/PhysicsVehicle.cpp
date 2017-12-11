@@ -141,7 +141,7 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::calcPhysics()
 {
-    mPhysicsWheels.calcPhysics(*mChassis, *this, mThrottle, mBreaks);
+    //mPhysicsWheels.calcPhysics(*mChassis, *this, mThrottle, mBreaks);
 }
 
 void PhysicsVehicle::processEngineIdle()

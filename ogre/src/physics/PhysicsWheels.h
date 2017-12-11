@@ -36,6 +36,8 @@ public:
 
     void calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks);
 
+    void setSteering(Ogre::Real value);
+
 private:
 
     Ogre::Real averageCollisionNormal(const Ogre::Vector3& matrixYColumn, size_t wheelIndex, Ogre::Vector3& averagedNormal) const;

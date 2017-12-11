@@ -102,7 +102,7 @@ void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quat
         }
 
         Ogre::Quaternion rotDrive;
-        rotDrive.FromAngleAxis(Ogre::Radian(mWheelRotationalAngle[q]), Ogre::Vector3(1.0f, 0.0f, 0.0f));
+        rotDrive.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngle[q]), Ogre::Vector3(1.0f, 0.0f, 0.0f));
 
         if(q >= 2)//front
         {
@@ -588,7 +588,7 @@ void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& 
 
             Ogre::Vector3 wheelVelocity = velocityWithSteering * mVelocity[q];
 
-            Ogre::Vector3 velocity = (wheelVelocity - mWheelsImpulseTangent[q]) * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+            Ogre::Vector3 velocity = wheelVelocity - mWheelsImpulseTangent[q] * mInitialVehicleSetup.mChassisInvMass * 33.0f;
 
             Ogre::Real traction;
 
@@ -653,4 +653,10 @@ void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& 
             }
         }
     }
+}
+
+void PhysicsWheels::setSteering(Ogre::Real value)
+{
+    mSteering[2] = value;
+    mSteering[3] = value;
 }

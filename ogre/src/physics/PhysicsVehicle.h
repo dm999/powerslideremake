@@ -33,6 +33,7 @@ public:
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
 
+    void setSteering(Ogre::Real value){mPhysicsWheels.setSteering(value);}
     void setThrottle(Ogre::Real value){mThrottle = value;}
     void setBrakes(Ogre::Real value){mBreaks = value;}
 
