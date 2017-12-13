@@ -220,7 +220,7 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
         setSteerRight(false);
         break;
     case OIS::KC_DOWN: 
-        mWorld->getVehicle(this)->setBrakes(1.0f);
+        mWorld->getVehicle(this)->setBrakes(0.0f);
         setBrake(false);
 #if defined(__ANDROID__)
         setAcceleration(true);

@@ -107,7 +107,7 @@ void PhysicsRoofs::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehic
             */
             //if(mPhysics->findCollision(mRoof[q].get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
             //if(mPhysics->isRigidBodyStatic(staticObj, address))
-            char terrainType = 0; //mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+            char terrainType = 6; //mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
             if(terrainType != -1)
             {
                 assert(terrainType >= 0);

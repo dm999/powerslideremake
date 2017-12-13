@@ -67,7 +67,7 @@ void PhysicsBody::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicl
                                     foundIndex, distance);
     if(isSphereCollided)
     {
-        char terrainType = 0;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+        char terrainType = 6;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
         if(terrainType != -1)
         {
             assert(terrainType >= 0);

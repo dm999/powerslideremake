@@ -342,6 +342,12 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     initialVehicleSetup.mWheelVelocitySub = getCarParameter("", "wheel velocity sub");
 
+    if(gameState.getAIStrength() == Easy)
+        initialVehicleSetup.mOversteer = getCarParameter("", "easy_oversteer");
+    else
+        initialVehicleSetup.mOversteer = 1.0f;
+    initialVehicleSetup.mOversteer *= gameState.getSTRPowerslide().getFloatValue("drive options", "oversteer");
+
 
 
     //splines

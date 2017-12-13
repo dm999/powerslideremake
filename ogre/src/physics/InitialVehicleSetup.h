@@ -83,6 +83,8 @@ struct InitialVehicleSetup
 
     Ogre::Real mWheelVelocitySub;
 
+    Ogre::Real mOversteer;
+
     PSSpline mSuspensionTraction;
 };
 

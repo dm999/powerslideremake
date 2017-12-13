@@ -319,10 +319,9 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
             Ogre::Vector3 worldNormal = collision.mNormal;
             worldNormal.z = -worldNormal.z;//original data is left hand
 
-            char terrainType = 0; //mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
-            mTerrainIndex[q] = terrainType;
+            mTerrainIndex[q] = 6;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
 
-            if(terrainType != -1)
+            if(mTerrainIndex[q] != -1)
             {
                 Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);
                 Ogre::Real suspHeight;
@@ -550,8 +549,7 @@ void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& 
     else
         turnFinish = 1.0f;
 
-    const Ogre::Real lowFrontTractionC = 0.6f;
-    Ogre::Real lowFrontTraction = (1.0f - lowFrontTractionC) * mInitialVehicleSetup.mLowFrontTraction * -0.11f;
+    Ogre::Real lowFrontTraction = (1.0f - mInitialVehicleSetup.mOversteer) * mInitialVehicleSetup.mLowFrontTraction * -0.11f;
 
     Ogre::Real rearTraction = mInitialVehicleSetup.mLowRearTraction - lowFrontTraction;
     Ogre::Real frontTraction = lowFrontTraction + mInitialVehicleSetup.mLowFrontTraction;
@@ -571,7 +569,8 @@ void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& 
         {
             const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
 
-            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], matrixZColumn);
+            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], 
+                -matrixZColumn);//original data is left hand
             impulseProj.normalise();
 
             Ogre::Real cosSteer = Ogre::Math::Cos(mSteering[q]);
