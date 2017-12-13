@@ -27,8 +27,10 @@ void PhysicsBody::initStep()
     mBodyGlobalPrev = mBodyGlobal;
 }
 
-void PhysicsBody::process(PhysicsVehicle& vehicle)
+bool PhysicsBody::process(PhysicsVehicle& vehicle)
 {
+    bool isCollided = false;
+
     Ogre::Vector3 bodyRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mBodyBasePos;
 
     mBodyGlobal = mInitialVehicleSetup.mCarGlobalPos + bodyRot;
@@ -67,6 +69,8 @@ void PhysicsBody::process(PhysicsVehicle& vehicle)
                                     foundIndex, distance);
     if(isSphereCollided)
     {
+        isCollided = true;
+
         char terrainType = 6;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
         if(terrainType != -1)
         {
@@ -126,4 +130,6 @@ void PhysicsBody::process(PhysicsVehicle& vehicle)
             vehicle.adjustImpulseInc(bodyRot, velocityTangent);
         }
     }
+
+    return isCollided;
 }

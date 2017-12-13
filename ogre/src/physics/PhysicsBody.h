@@ -20,7 +20,7 @@ public:
 
     void init();
     void initStep();
-    void process(PhysicsVehicle& vehicle);
+    bool process(PhysicsVehicle& vehicle);
 
 private:
 

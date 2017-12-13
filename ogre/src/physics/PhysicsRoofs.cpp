@@ -67,8 +67,10 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
     }
 }
 
-void PhysicsRoofs::process(PhysicsVehicle& vehicle)
+bool PhysicsRoofs::process(PhysicsVehicle& vehicle)
 {
+    bool isCollided = false;
+
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
     {
 
@@ -96,6 +98,7 @@ void PhysicsRoofs::process(PhysicsVehicle& vehicle)
                                         foundIndex, distance);
         if(isSphereCollided)
         {
+            isCollided = true;
             /*
             Ogre::Vector3 worldNormal;
             Ogre::Real distance = 0.0f;
@@ -156,4 +159,6 @@ void PhysicsRoofs::process(PhysicsVehicle& vehicle)
             }
         }
     }
+
+    return isCollided;
 }

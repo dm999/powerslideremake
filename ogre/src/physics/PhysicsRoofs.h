@@ -28,7 +28,7 @@ public:
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj,
                         const PhysicsVehicle& vehicle);
-    void process(PhysicsVehicle& vehicle);
+    bool process(PhysicsVehicle& vehicle);
 
 private:
 

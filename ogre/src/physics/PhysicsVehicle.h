@@ -58,6 +58,8 @@ private:
 
     void calcWheelRoofImpulses();
 
+    void turnOverRestore(bool isTurnOver);
+
     Physics* mPhysics;
     StaticMeshProcesser* mMeshProcesser;
 
@@ -85,6 +87,8 @@ private:
     PSCarEngine mCarEngine;
     Ogre::Real mThrottle;
     Ogre::Real mBreaks;
+
+    int mTurnOverValue;
 
 };
 

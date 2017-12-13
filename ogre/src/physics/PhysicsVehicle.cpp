@@ -51,6 +51,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
 
     mThrottle = 0.0f;
     mBreaks = 0.0f;
+
+    mTurnOverValue = 0;
 }
 
 PhysicsVehicle::~PhysicsVehicle()
@@ -115,9 +117,9 @@ void PhysicsVehicle::timeStep()
     calcWheelRoofImpulses();
 
     mPhysicsWheels.process(*this);
-    mPhysicsRoofs.process(*this);
-    mPhysicsBody.process(*this);
-    //do flip restore
+    bool isTurnOver = mPhysicsRoofs.process(*this);
+    isTurnOver |= mPhysicsBody.process(*this);
+    turnOverRestore(isTurnOver);
     calcTransmission();
     calcPhysics();
 
@@ -231,4 +233,38 @@ void PhysicsVehicle::createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3
     Ogre::Vector3 sinAngle(Ogre::Math::Sin(angle));
     matAxis = cosAngle * diff - sinAngle * cross + normalisedImpulseProj;
     if(matAxis.squaredLength() > 0.0f) matAxis.normalise();
+}
+
+void PhysicsVehicle::turnOverRestore(bool isTurnOver)
+{
+    if(isTurnOver)
+    {
+        if(mTurnOverValue >= 0)
+            mTurnOverValue += 2;
+
+        if(mTurnOverValue > 60)
+            mTurnOverValue = -1;
+    }
+
+    if(mTurnOverValue < 0)
+    {
+        Ogre::Matrix3 carRot;
+        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+        Ogre::Vector3 rotYAxis = carRot.GetColumn(1);
+
+        Ogre::Real turnOverRestoreVal = 500.0f / (mImpulseRot.length() + 2.0f);
+        Ogre::Vector3 upDiff = Ogre::Vector3::UNIT_Y - rotYAxis;
+        turnOverRestoreVal *= upDiff.length();
+        if(turnOverRestoreVal != 0.0f)
+        {
+            upDiff *= turnOverRestoreVal;
+            mImpulseRot += upDiff.crossProduct(rotYAxis);
+        }
+
+        if(mTurnOverValue < -200)
+            mTurnOverValue = 0;
+    }
+
+    if(mTurnOverValue > 0)
+        --mTurnOverValue;
 }
