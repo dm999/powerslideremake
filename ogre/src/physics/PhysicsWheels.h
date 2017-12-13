@@ -26,15 +26,15 @@ public:
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj,
                         const PhysicsVehicle& vehicle);
-    void process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle);
-    void reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
-    void rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
+    void process(PhysicsVehicle& vehicle);
+    void reposition();
+    void rerotation();
 
     Ogre::Real calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks);
     void calcVelocityMore(Ogre::Real power, int gear);
     bool isAnyCollided() const;
 
-    void calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks);
+    void calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks);
 
     void setSteering(Ogre::Real value);
 

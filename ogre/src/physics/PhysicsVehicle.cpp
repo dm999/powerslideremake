@@ -6,7 +6,7 @@
 
 PhysicsVehicle::PhysicsVehicle(Physics* physics, 
                                StaticMeshProcesser * meshProesser,
-                               const InitialVehicleSetup& initialVehicleSetup, 
+                               InitialVehicleSetup& initialVehicleSetup, 
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                                Ogre::SceneNode *chassis)
 : mPhysics(physics),
@@ -59,7 +59,7 @@ PhysicsVehicle::~PhysicsVehicle()
 
 void PhysicsVehicle::timeStep()
 {
-    mPhysicsWheels.initStep(mChassis->getPosition(), mChassis->getOrientation());
+    mPhysicsWheels.initStep(mInitialVehicleSetup.mCarGlobalPos, mInitialVehicleSetup.mCarRot);
     mPhysicsRoofs.initStep();
     mPhysicsBody.initStep();
     mCoreBaseGlobalPrev = mCoreBaseGlobal;
@@ -90,7 +90,7 @@ void PhysicsVehicle::timeStep()
 
         Ogre::Real rotAngle = 1.0f / momentProj * rotImpulseMod;
 
-        mChassis->getOrientation().ToRotationMatrix(carRot);
+        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
 
         Ogre::Vector3 rotMatrixAxisY = carRot.GetColumn(1);
         Ogre::Vector3 rotMatrixAxisZ = carRot.GetColumn(2);
@@ -105,8 +105,8 @@ void PhysicsVehicle::timeStep()
     }
 
     //do falloff check
-    mCoreBaseGlobal = mChassis->getPosition() + mChassis->getOrientation() * mInitialVehicleSetup.mCoreBase;
-    mMeshProcesser->performCollisionDetection(mChassis->getPosition(), mCoreBaseGlobalPrev, mMaxCollisionDistance);
+    mCoreBaseGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCoreBase;
+    mMeshProcesser->performCollisionDetection(mInitialVehicleSetup.mCarGlobalPos, mCoreBaseGlobalPrev, mMaxCollisionDistance);
 
     mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
 
@@ -114,9 +114,9 @@ void PhysicsVehicle::timeStep()
 
     calcWheelRoofImpulses();
 
-    mPhysicsWheels.process(*mChassis, *this);
-    mPhysicsRoofs.process(*mChassis, *this);
-    mPhysicsBody.process(*mChassis, *this);
+    mPhysicsWheels.process(*this);
+    mPhysicsRoofs.process(*this);
+    mPhysicsBody.process(*this);
     //do flip restore
     calcTransmission();
     calcPhysics();
@@ -141,7 +141,7 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::calcPhysics()
 {
-    mPhysicsWheels.calcPhysics(*mChassis, *this, mThrottle, mBreaks);
+    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks);
 }
 
 void PhysicsVehicle::processEngineIdle()
@@ -152,19 +152,19 @@ void PhysicsVehicle::processEngineIdle()
 
 void PhysicsVehicle::reposition(const Ogre::Vector3& posDiff)
 {
-    mChassis->translate(posDiff);
-    Ogre::Vector3 chassisPos = mChassis->getPosition();
-    const Ogre::Quaternion& chassisRot = mChassis->getOrientation();
+    mInitialVehicleSetup.mCarGlobalPos += posDiff;
+    mChassis->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG);
 
-    mPhysicsWheels.reposition(chassisPos, chassisRot);
+    mPhysicsWheels.reposition();
 }
 
 void PhysicsVehicle::rerotation(const Ogre::Quaternion& rot)
 {
-    Ogre::Vector3 chassisPos = mChassis->getPosition();
     mChassis->setOrientation(rot);
+    mInitialVehicleSetup.mCarRot = rot;
+    mInitialVehicleSetup.mCarRot.normalise();
 
-    mPhysicsWheels.rerotation(chassisPos, rot);
+    mPhysicsWheels.rerotation();
 }
 
 void PhysicsVehicle::integrate()
@@ -181,7 +181,7 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
     Ogre::Real ret = 0.0f;
 
     Ogre::Matrix3 carRot;
-    mChassis->getOrientation().ToRotationMatrix(carRot);
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 tmpRes = carRot * axis;
 
     ret = mInitialVehicleSetup.mMomentOfInertia.dotProduct(Ogre::Vector3(tmpRes * tmpRes));
@@ -212,7 +212,6 @@ void PhysicsVehicle::calcWheelRoofImpulses()
     mPhysicsRoofs.calcImpulses(mImpulseRot, mImpulseRotPrev, normalisedImpulseRot, 
                                 mImpulseLinear, 
                                 recipMomentProj,
-                                mChassis->getOrientation(),
                                 *this);
 
 }

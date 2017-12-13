@@ -21,7 +21,7 @@ void Physics::timeStep()
     }
 }
 
-void Physics::addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
+void Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
                         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis)
 {
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);

@@ -14,8 +14,8 @@ struct InitialVehicleSetup
     Ogre::Vector3 mInitialImpulseRot;
     Ogre::Vector3 mInitialImpulseRotInc;
 
-    Ogre::Vector3 mChassisPos;
-    Ogre::Quaternion mChassisRot;
+    Ogre::Vector3 mCarGlobalPos;
+    Ogre::Quaternion mCarRot;
 
     static const int mWheelsAmount = 4;
     Ogre::Real mWheelRadius[mWheelsAmount];//RR, RL, FR, FL

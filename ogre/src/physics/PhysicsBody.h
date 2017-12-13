@@ -20,7 +20,7 @@ public:
 
     void init();
     void initStep();
-    void process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle);
+    void process(PhysicsVehicle& vehicle);
 
 private:
 

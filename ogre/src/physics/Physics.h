@@ -31,7 +31,7 @@ public:
 
     void timeStep();
 
-    void addVehicle(const InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
+    void addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);

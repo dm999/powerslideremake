@@ -27,9 +27,8 @@ public:
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj,
-                        const Ogre::Quaternion& carRot,
                         const PhysicsVehicle& vehicle);
-    void process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle);
+    void process(PhysicsVehicle& vehicle);
 
 private:
 

@@ -22,8 +22,8 @@ void PSBaseVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogr
 
     removeFromWorld();
 
-    mInitialVehicleSetup.mChassisPos = chassisPos;
-    mInitialVehicleSetup.mChassisRot = chassisRot;
+    mInitialVehicleSetup.mCarGlobalPos = chassisPos;
+    mInitialVehicleSetup.mCarRot = chassisRot;
 
     addToWorld(modelNode, wheelNodes);
 }

@@ -68,28 +68,28 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
 
 }
 
-void PhysicsWheels::reposition(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
+void PhysicsWheels::reposition()
 {
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
         connectionPoint.y -= mSuspensionHeight[q];
         //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
-        mWheelNodes[q]->setPosition(chassisPos + chassisRot * connectionPoint);
+        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * connectionPoint);
     }
 }
 
-void PhysicsWheels::rerotation(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
+void PhysicsWheels::rerotation()
 {
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
 
-        Ogre::Quaternion finalRot = chassisRot;
+        Ogre::Quaternion finalRot = mInitialVehicleSetup.mCarRot;
 
         Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
         connectionPoint.y -= mSuspensionHeight[q];
         //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
-        mWheelNodes[q]->setPosition(chassisPos + chassisRot * connectionPoint);
+        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * connectionPoint);
 
         mWheelRotationalAngle[q] += mVelocity[q] * mInitialVehicleSetup.mChassisInvMass * 1.27f / mInitialVehicleSetup.mWheelRadius[q];
         if(mWheelRotationalAngle[q] <= -Ogre::Math::TWO_PI)
@@ -273,14 +273,12 @@ void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Ve
     }
 }
 
-void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle)
+void PhysicsWheels::process(PhysicsVehicle& vehicle)
 {
 
     Ogre::Matrix3 carRot;
-    Ogre::Quaternion carRotQ = chassis.getOrientation();
-    carRotQ.ToRotationMatrix(carRot);
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-    Ogre::Vector3 carPos = chassis.getPosition();
 
     //for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
@@ -342,8 +340,8 @@ void PhysicsWheels::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehi
 
                 Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
                 suspLocal.y -= suspHeight;
-                mWheelsSuspensionRot[q] = carRotQ * suspLocal;
-                mWheelsSuspensionGlobal[q] = carPos + mWheelsSuspensionRot[q];
+                mWheelsSuspensionRot[q] = mInitialVehicleSetup.mCarRot * suspLocal;
+                mWheelsSuspensionGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + mWheelsSuspensionRot[q];
 
                 Ogre::Vector3 averagedNormal;
                 Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);
@@ -535,11 +533,10 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     return res;
 }
 
-void PhysicsWheels::calcPhysics(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks)
+void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks)
 {
     Ogre::Matrix3 carRot;
-    Ogre::Quaternion carRotQ = chassis.getOrientation();
-    carRotQ.ToRotationMatrix(carRot);
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 matrixZColumn = carRot.GetColumn(2);
 
     Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[0] * 1.0526316f);

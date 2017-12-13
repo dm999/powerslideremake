@@ -23,7 +23,7 @@ public:
 
     PhysicsVehicle(Physics* physics, 
                     StaticMeshProcesser * meshProesser,
-                    const InitialVehicleSetup& initialVehicleSetup, 
+                    InitialVehicleSetup& initialVehicleSetup, 
                     Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                     Ogre::SceneNode *chassis);
     virtual ~PhysicsVehicle();
@@ -71,7 +71,7 @@ private:
 
     Ogre::SceneNode *mChassis;
 
-    const InitialVehicleSetup& mInitialVehicleSetup;
+    InitialVehicleSetup& mInitialVehicleSetup;
 
     PhysicsWheels mPhysicsWheels;
     PhysicsRoofs mPhysicsRoofs;

@@ -27,14 +27,14 @@ void PhysicsBody::initStep()
     mBodyGlobalPrev = mBodyGlobal;
 }
 
-void PhysicsBody::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle)
+void PhysicsBody::process(PhysicsVehicle& vehicle)
 {
-    Ogre::Vector3 bodyRot = chassis.getOrientation() * mInitialVehicleSetup.mBodyBasePos;
+    Ogre::Vector3 bodyRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mBodyBasePos;
 
-    mBodyGlobal = chassis.getPosition() + bodyRot;
+    mBodyGlobal = mInitialVehicleSetup.mCarGlobalPos + bodyRot;
 
     Ogre::Matrix3 carRot;
-    chassis.getOrientation().ToRotationMatrix(carRot);
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
     bodyRot -= matrixYColumn * 1.2f;
 

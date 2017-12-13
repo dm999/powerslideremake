@@ -42,7 +42,7 @@ PSBaseCar::PSBaseCar() :
 void PSBaseCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt)
 {
     AdjustSuspension(   mModelEntity[0], mWheelNodes, 
-                        mModelNode->getPosition(), mModelNode->getOrientation(),
+                        mInitialVehicleSetup.mCarGlobalPos, mModelNode->getOrientation(),
                         mSuspensionIndices, mSuspensionPointOriginalPos,
                         mFrontLOriginalPos, mFrontROriginalPos, mBackLOriginalPos, mBackROriginalPos);
 }
@@ -251,8 +251,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     }
 
 
-    initialVehicleSetup.mChassisPos = mModelNode->getPosition();
-    initialVehicleSetup.mChassisRot = mModelNode->getOrientation();
+    initialVehicleSetup.mCarGlobalPos = mModelNode->getPosition();
+    initialVehicleSetup.mCarRot = mModelNode->getOrientation();
+    mModelNode->setPosition(initialVehicleSetup.mCarGlobalPos + initialVehicleSetup.mCarRot * initialVehicleSetup.mCOG);
     initialVehicleSetup.mConnectionPointWheel[0] = mBackROriginalPos;
     initialVehicleSetup.mConnectionPointWheel[1] = mBackLOriginalPos;
     initialVehicleSetup.mConnectionPointWheel[2] = mFrontROriginalPos;
@@ -421,8 +422,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     //position wheels
     for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mWheelNodes[q]->setOrientation(initialVehicleSetup.mChassisRot);
-        mWheelNodes[q]->setPosition(initialVehicleSetup.mChassisPos + initialVehicleSetup.mChassisRot * initialVehicleSetup.mConnectionPointWheel[q]);
+        mWheelNodes[q]->setOrientation(initialVehicleSetup.mCarRot);
+        mWheelNodes[q]->setPosition(initialVehicleSetup.mCarGlobalPos + initialVehicleSetup.mCarRot * initialVehicleSetup.mConnectionPointWheel[q]);
     }
 
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);

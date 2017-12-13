@@ -37,7 +37,6 @@ void PhysicsRoofs::initStep()
 void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                                const Ogre::Vector3& impulseLinear,
                                Ogre::Real recipMomentProj,
-                               const Ogre::Quaternion& carRot,
                                const PhysicsVehicle& vehicle)
 {
 
@@ -54,7 +53,7 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
 
         for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
         {
-            Ogre::Vector3 roofRot = carRot * mInitialVehicleSetup.mRoofPos[q];
+            Ogre::Vector3 roofRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mRoofPos[q];
             Ogre::Vector3 tangent = PhysicsVehicle::findTangent(normalisedImpulseRot, roofRot);
             if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
             {
@@ -68,16 +67,16 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
     }
 }
 
-void PhysicsRoofs::process(const Ogre::SceneNode& chassis, PhysicsVehicle& vehicle)
+void PhysicsRoofs::process(PhysicsVehicle& vehicle)
 {
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
     {
 
-        Ogre::Vector3 roofRot = chassis.getOrientation() * mInitialVehicleSetup.mRoofPos[q];
-        mRoofGlobal[q] = chassis.getPosition() + roofRot;
+        Ogre::Vector3 roofRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mRoofPos[q];
+        mRoofGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + roofRot;
 
         Ogre::Matrix3 carRot;
-        chassis.getOrientation().ToRotationMatrix(carRot);
+        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
         Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
         roofRot -= matrixYColumn * 1.2f;
 
