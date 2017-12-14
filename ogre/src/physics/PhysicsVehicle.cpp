@@ -51,6 +51,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
 
     mThrottle = 0.0f;
     mBreaks = 0.0f;
+    mSteeringOriginal = 0.0f;
+    mSteeringAdditionalParam = 0.0f;
 
     mTurnOverValue = 0;
 }
@@ -137,7 +139,7 @@ void PhysicsVehicle::timeStep()
     rerotation();
 }
 
-Ogre::Real PhysicsVehicle::adjustSteering() const
+Ogre::Real PhysicsVehicle::adjustSteering()
 {
     Ogre::Real ret = 0.0f;
 
@@ -156,7 +158,8 @@ Ogre::Real PhysicsVehicle::adjustSteering() const
         steeringSpline *= (1.0f - (15.0f - impulseMod) * -0.04f);
     }
 
-    //add field_920 substraction here
+    steeringSpline -= mSteeringAdditionalParam;
+    mSteeringAdditionalParam = 0.0f;
 
     ret = Ogre::Math::Clamp(steeringSpline, -0.95f, 0.95f);
 

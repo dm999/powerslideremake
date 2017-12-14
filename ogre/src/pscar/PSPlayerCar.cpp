@@ -215,9 +215,11 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     {
     case OIS::KC_LEFT: 
         setSteerLeft(false);
+        mWorld->getVehicle(this)->setSteering(0.0f);
         break;
     case OIS::KC_RIGHT: 
         setSteerRight(false);
+        mWorld->getVehicle(this)->setSteering(0.0f);
         break;
     case OIS::KC_DOWN: 
         mWorld->getVehicle(this)->setBrakes(0.0f);

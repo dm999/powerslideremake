@@ -106,7 +106,10 @@ void PhysicsWheels::rerotation()
 
         if(q >= 2)//front
         {
-            finalRot = finalRot * rotDrive;
+            Ogre::Quaternion turnWheel;
+            turnWheel.FromAngleAxis(Ogre::Degree(mSteering[q] * -45.0f), Ogre::Vector3(0.0f, 1.0f, 0.0f));
+
+            finalRot = finalRot * turnWheel * rotDrive;
         }
         else
         {
@@ -278,7 +281,9 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
 
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+    Ogre::Vector3 matrixXColumn = carRot.GetColumn(0);
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
+    Ogre::Vector3 matrixZColumn = -carRot.GetColumn(2);//original data is left hand
 
     //for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
@@ -384,7 +389,24 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
                 mWheelsAveragedNormal[q] = averagedNormal;
                 mWheelsImpulseResulted[q] = resultedImpulse;
 
-                vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], averagedNormal * resultedImpulse);
+                Ogre::Vector3 impulseInc = averagedNormal * resultedImpulse;
+
+                vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], impulseInc);
+
+                if(q >= 2)//front
+                {
+                    Ogre::Real xAxisDot = matrixXColumn.dotProduct(impulseInc);
+                    Ogre::Real zAxisDot = matrixZColumn.dotProduct(impulseInc);
+
+                    if(q == 2)//right
+                    {
+                        vehicle.mSteeringAdditionalParam -= (zAxisDot - xAxisDot) * 0.02f;
+                    }
+                    else//left
+                    {
+                        vehicle.mSteeringAdditionalParam -= (zAxisDot + xAxisDot) * -0.02f;
+                    }
+                }
             }
 
             mIsCollided[q] = true;
@@ -537,6 +559,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+    Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
     Ogre::Vector3 matrixZColumn = carRot.GetColumn(2);
 
     Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[0] * 1.0526316f);
@@ -608,16 +631,16 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
             Ogre::Vector3 velocityProjDiff = velocity - velocityProj;
             //Ogre::Vector3 velocityProjWeight = (velocityProj * 6.0f - velocityProjDiff * -0.7f) * velMod;
 
-            Ogre::Real velocitySpline2 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProj.length());
+            Ogre::Real velocitySpline2 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProj.length() * velMod);
             Ogre::Real velocitySpline3 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProjDiff.length() * velMod);
 
             Ogre::Vector3 velocityProjWeighted = velocityProj *
-                                                (terrain.mLongtitudinalGripMultiplier * velocitySpline2 +
+                                                (terrain.mLatitudinalGripMultiplier * velocitySpline2 +
                                                 terrain.mCombinedMultiplier * velocitySpline) *
                                                 traction;
 
-            Ogre::Real finalTraction =  (velocitySpline3 * terrain.mLatitudinalGripMultiplier +
-                                        velocitySpline * terrain.mParameter) *
+            Ogre::Real finalTraction =  (velocitySpline3 * terrain.mParameter +
+                                        velocitySpline * terrain.mParameter2) *
                                         traction;
 
             Ogre::Real accel;
@@ -641,6 +664,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 
                 if(q >= 2)//front
                 {
+                    vehicle.mSteeringAdditionalParam -= matrixYColumn.crossProduct(velocityWithSteering).dotProduct(finalVelocity) * -0.02f;
                 }
 
                 vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], finalVelocity);

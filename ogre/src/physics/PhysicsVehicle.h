@@ -19,6 +19,7 @@ class StaticMeshProcesser;
 
 class PhysicsVehicle
 {
+    friend class PhysicsWheels;
 public:
 
     PhysicsVehicle(Physics* physics, 
@@ -58,7 +59,7 @@ private:
 
     void turnOverRestore(bool isTurnOver);
 
-    Ogre::Real adjustSteering() const;
+    Ogre::Real adjustSteering();
 
     Physics* mPhysics;
     StaticMeshProcesser* mMeshProcesser;
@@ -88,6 +89,7 @@ private:
     Ogre::Real mThrottle;
     Ogre::Real mBreaks;
     Ogre::Real mSteeringOriginal;
+    Ogre::Real mSteeringAdditionalParam;
 
     int mTurnOverValue;
 
