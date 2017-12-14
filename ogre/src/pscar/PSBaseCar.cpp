@@ -417,6 +417,15 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
         initialVehicleSetup.mSuspensionTraction.init(splinePoints, hscale, vscale);
     }
+    {
+        Ogre::Real hscale = getCarParameter("", "Steer hscale", true);
+        Ogre::Real vscale = getCarParameter("", "Steer vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "Steer");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        initialVehicleSetup.mSteering.init(splinePoints, hscale, vscale);
+    }
     //splines END
 
     //position wheels

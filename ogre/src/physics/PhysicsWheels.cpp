@@ -38,15 +38,15 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
     }
 }
 
-void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)
+void PhysicsWheels::initStep()
 {
     Ogre::Matrix3 rotMatrix;
-    chassisRot.ToRotationMatrix(rotMatrix);
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(rotMatrix);
     Ogre::Vector3 rotAxisY = rotMatrix.GetColumn(1);
 
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mGlobalPos[q] = chassisPos + chassisRot * mInitialVehicleSetup.mConnectionPointWheel[q];
+        mGlobalPos[q] = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mConnectionPointWheel[q];
 
         Ogre::Real maxTravel = mInitialVehicleSetup.mMaxTravel * 0.5f;
         Ogre::Vector3 rotVal = maxTravel * rotAxisY;
@@ -54,7 +54,7 @@ void PhysicsWheels::initStep(const Ogre::Vector3& chassisPos, const Ogre::Quater
         mWheelsSuspensionPointGlobalPrev[q] = mWheelsSuspensionPointGlobal[q];
         mWheelsSuspensionPointGlobal[q] = mGlobalPos[q] - rotVal;
         mWheelsSuspensionPoint2Global[q] = mWheelsSuspensionPointGlobal[q] - rotVal;
-        mWheelsSuspensionPoint[q] = mWheelsSuspensionPoint2Global[q] - chassisPos;
+        mWheelsSuspensionPoint[q] = mWheelsSuspensionPoint2Global[q] - mInitialVehicleSetup.mCarGlobalPos;
 
         //mWheelsSuspensionGlobalPrev[q] = mWheelsSuspensionGlobal[q];
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];

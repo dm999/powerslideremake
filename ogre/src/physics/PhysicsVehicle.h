@@ -33,9 +33,9 @@ public:
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
 
-    void setSteering(Ogre::Real value){mPhysicsWheels.setSteering(value);}
-    void setThrottle(Ogre::Real value){mThrottle = value;}
-    void setBrakes(Ogre::Real value){mBreaks = value;}
+    void setSteering(Ogre::Real value) { mSteeringOriginal = value; }
+    void setThrottle(Ogre::Real value){ mThrottle = value;}
+    void setBrakes(Ogre::Real value){ mBreaks = value;}
 
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
@@ -46,10 +46,8 @@ private:
 
     void calcTransmission();
 
-    void calcPhysics();
-
-    void reposition(const Ogre::Vector3& posDiff);
-    void rerotation(const Ogre::Quaternion& rot);
+    void reposition();
+    void rerotation();
 
     void integrate();
 
@@ -59,6 +57,8 @@ private:
     void calcWheelRoofImpulses();
 
     void turnOverRestore(bool isTurnOver);
+
+    Ogre::Real adjustSteering() const;
 
     Physics* mPhysics;
     StaticMeshProcesser* mMeshProcesser;
@@ -87,6 +87,7 @@ private:
     PSCarEngine mCarEngine;
     Ogre::Real mThrottle;
     Ogre::Real mBreaks;
+    Ogre::Real mSteeringOriginal;
 
     int mTurnOverValue;
 

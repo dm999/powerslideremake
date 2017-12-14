@@ -74,6 +74,7 @@ struct InitialVehicleSetup
 
     PSSpline mPower;
 
+    PSSpline mSteering;
     Ogre::Real mTurnFinish;
 
     Ogre::Real mHighFrontTraction;

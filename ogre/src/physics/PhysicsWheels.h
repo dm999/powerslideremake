@@ -21,7 +21,7 @@ public:
 
     void init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount]);
 
-    void initStep(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
+    void initStep();
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj,
