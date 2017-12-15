@@ -7,15 +7,39 @@
 
 
 Physics::Physics(StaticMeshProcesser * meshProesser)
-    : mMeshProesser(meshProesser)
+    : 
+    mTimeStep(0.0f),
+    mMeshProesser(meshProesser)
 {}
 
 Physics::~Physics()
 {}
 
-void Physics::timeStep()
+void Physics::timeStep(Ogre::Real timeStep, size_t maxSubSteps, Ogre::Real fixedTimeStep)
 {
-    for(vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+
+    size_t numSimulationSubSteps = 0;
+
+    mTimeStep += timeStep;
+    if (mTimeStep >= fixedTimeStep)
+    {
+        numSimulationSubSteps = static_cast<size_t>(mTimeStep / fixedTimeStep);
+        mTimeStep -= numSimulationSubSteps * fixedTimeStep;
+    }
+
+    if (numSimulationSubSteps)
+    {
+        size_t clampedSimulationSteps = (numSimulationSubSteps > maxSubSteps) ? maxSubSteps : numSimulationSubSteps;
+        for (size_t i = 0; i < clampedSimulationSteps; i++)
+        {
+            internalTimeStep();
+        }
+    }
+}
+
+void Physics::internalTimeStep()
+{
+    for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
         (*i).second->timeStep();
     }

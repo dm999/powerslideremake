@@ -616,7 +616,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
     {
-        mWorld->timeStep();
+        mWorld->timeStep(evt.timeSinceLastFrame, 7);
         mModeContext.mGameState.getPlayerCar().processSounds();
     }
     if(!mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
