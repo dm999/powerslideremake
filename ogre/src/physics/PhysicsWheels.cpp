@@ -562,7 +562,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
     Ogre::Vector3 matrixZColumn = carRot.GetColumn(2);
 
-    Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[0] * 1.0526316f);
+    Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[3] * 1.0526316f);
     if(turnFinish < 0.0f) turnFinish = 0.0f;
     if(turnFinish <= mInitialVehicleSetup.mTurnFinish)
         turnFinish /= mInitialVehicleSetup.mTurnFinish;
