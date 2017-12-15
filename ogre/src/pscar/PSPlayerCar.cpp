@@ -34,6 +34,9 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
         initialVehicleSetup,
         isPossesCamera, false);
 
+#if defined(__ANDROID__)
+        mWorld->getVehicle(this)->setThrottle(1.0f);
+#endif
 
     DMLuaManager luaManager;
 
@@ -191,6 +194,7 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
 #if defined(__ANDROID__)
+        mWorld->getVehicle(this)->setThrottle(0.0f);
         setAcceleration(false);
 #endif
         break;
@@ -226,6 +230,7 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
         setBrake(false);
 #if defined(__ANDROID__)
         setAcceleration(true);
+        mWorld->getVehicle(this)->setThrottle(1.0f);
 #endif
         break;
     case OIS::KC_UP: 

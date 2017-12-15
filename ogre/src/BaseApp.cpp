@@ -535,7 +535,9 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
 void BaseApp::keyDown(const OIS::KeyEvent &arg )
 {
-    if(mGameModeSwitcher->isLoadPassed())
+    if(mGameModeSwitcher->isLoadPassed() && 
+        (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+        )
     {
         if(!mGameState.isGamePaused())
             mGameState.getPlayerCar().keyDown(arg.key);
@@ -553,7 +555,9 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
 
 void BaseApp::keyUp(const OIS::KeyEvent &arg )
 {
-    if(mGameModeSwitcher->isLoadPassed())
+    if(mGameModeSwitcher->isLoadPassed() &&
+        (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+        )
     {
         mGameState.getPlayerCar().keyUp(arg.key);
 
