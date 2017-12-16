@@ -11,6 +11,8 @@
 
 #include "../pscar/PSCarEngine.h"
 
+#include "../GameState.h"
+
 class btSphereShape;
 class btCollisionObject;
 
@@ -37,9 +39,12 @@ public:
     void setSteering(Ogre::Real value) { mSteeringOriginal = value; }
     void setThrottle(Ogre::Real value){ mThrottle = value;}
     void setBrakes(Ogre::Real value){ mBreaks = value;}
+    void gearUp();
+    void gearDown();
 
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
-    PSCarEngine& getCarEngine(){return mCarEngine;}
+
+    void setVehicleType(VehicleType type){mVehicleType = type;}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
 
@@ -92,6 +97,8 @@ private:
     Ogre::Real mSteeringAdditionalParam;
 
     int mTurnOverValue;
+
+    VehicleType mVehicleType;
 
 };
 

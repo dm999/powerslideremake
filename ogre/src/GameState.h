@@ -48,6 +48,12 @@ enum AIStrength
     Insane  = 3
 };
 
+enum VehicleType
+{
+    HumanVehicle = 2,
+    AIVehicle = 4
+};
+
 
 class GameState
 {

@@ -10,13 +10,7 @@
 #include "../physics/Physics.h"
 #include "../physics/PhysicsVehicle.h"
 
-PSPlayerCar::PSPlayerCar() :
-    mSteeringAngleVelocity(0.0f)
-{
-    mRotationIntensity.addPoint(-50.0f, 1.5f);
-    mRotationIntensity.addPoint(0.0f, 0.0f);
-    mRotationIntensity.addPoint(20.0f, 1.0f);
-}
+PSPlayerCar::PSPlayerCar(){}
 
 void PSPlayerCar::initModel(    lua_State * pipeline, 
                                 const GameState& gameState,
@@ -27,8 +21,6 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
                                 InitialVehicleSetup& initialVehicleSetup,
                                 bool isPossesCamera)
 {
-
-    mSteeringAngleVelocity = 0.0f;
 
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         initialVehicleSetup,
@@ -43,138 +35,6 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     for(int q = 0; q < 5; ++q)
     {
         mModelEntity[q]->setCastShadows(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline));
-    }
-}
-
-void PSPlayerCar::processInternalTick(float timeStep, bool isRaceStarted)
-{
-#if 0
-    PSControllableCar::processInternalTick(timeStep, isRaceStarted);
-
-    Ogre::Real spfFake = 1.5f;
-
-    Ogre::Vector3 pos = mCarChassis->getSceneNode()->_getDerivedPosition();
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
-
-    Ogre::Real projectedVel = getAlignedVelocity();
-
-    Ogre::Real rotationIntensity = 1.0f;
-
-    if(projectedVel < 0.0f/* && mBrakeEnabled*/)
-    {
-        if (mSteeringLeft && checkFrontCollision())
-        {
-            mSteeringAngleVelocity = -mRotationIntensity.getVal(projectedVel);
-        }
-
-        if (mSteeringRight && checkFrontCollision())
-        {
-            mSteeringAngleVelocity = mRotationIntensity.getVal(projectedVel);
-        }
-
-        if(!mSteeringLeft && !mSteeringRight) mSteeringAngleVelocity = 0.0f;
-    }
-    else
-    {
-        processSteering(isRaceStarted);
-        rotationIntensity = mRotationIntensity.getVal(projectedVel);
-    }
-
-    if(checkFrontCollision() && isRaceStarted)
-    {
-        //mCarChassis->setAngularVelocity(rot * Ogre::Vector3::UNIT_Y * mSteeringAngleVelocity * rotationIntensity * spfFake);
-        mCarChassis->applyImpulse(rot * Ogre::Vector3(-mSteeringAngleVelocity * rotationIntensity * spfFake * 10.0f, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -15.0f));
-    }
-#endif
-}
-
-bool PSPlayerCar::checkOverSteer()
-{
-    bool ret = false;
-
-    if((!mSteeringLeft || !mSteeringRight) && !mAccelEnabled)
-    {
-        mTimerOversteer.reset();
-    }
-    else
-    {
-        const unsigned long timeThreshold = 1000; //ms
-        unsigned long millisecondsPassed = mTimerOversteer.getMilliseconds();
-
-        if(mAccelEnabled && (mSteeringLeft || mSteeringRight) && millisecondsPassed > timeThreshold)
-            ret = true;
-    }
-
-    return ret;
-}
-
-void PSPlayerCar::processSteering(bool isRaceStarted)
-{
-    if(isRaceStarted)
-    {
-        const float steeringAccelMax = 1.4f;
-        const float steeringAccelOversteerMax = 2.4f;
-        const float steeringAccelStep = 0.03f;
-        const float steeringAccelOversteerStep = steeringAccelStep / 2.0f;
-        const float steeringAccelStepFade = steeringAccelStep / 2.0f;
-        const float steeringAccelMinThreshols = steeringAccelStepFade * 2.0f;
-
-        bool isOversteer = checkOverSteer();
-
-        if (mSteeringLeft && checkFrontCollision())
-        {
-            if(mSteeringAngleVelocity < steeringAccelMax)
-            {
-                mSteeringAngleVelocity += steeringAccelStep;
-                if(isOversteer) mSteeringAngleVelocity += steeringAccelOversteerStep;
-            }
-            else
-            {
-                if(isOversteer)
-                {
-                    if(mSteeringAngleVelocity < steeringAccelOversteerMax)
-                        mSteeringAngleVelocity += steeringAccelOversteerStep;
-                    if(mSteeringAngleVelocity >= steeringAccelOversteerMax)
-                        mSteeringAngleVelocity = steeringAccelOversteerMax;
-                }
-                else
-                    mSteeringAngleVelocity = steeringAccelMax;
-            }
-        }
-
-        if (mSteeringRight && checkFrontCollision())
-        {
-            if(mSteeringAngleVelocity > -steeringAccelMax)
-            {
-                mSteeringAngleVelocity -= steeringAccelStep;
-                if(isOversteer) mSteeringAngleVelocity -= steeringAccelOversteerStep;
-            }
-            else
-            {
-                if(isOversteer)
-                {
-                    if(mSteeringAngleVelocity > -steeringAccelOversteerMax)
-                        mSteeringAngleVelocity -= steeringAccelOversteerStep;
-                    if(mSteeringAngleVelocity <= -steeringAccelOversteerMax)
-                        mSteeringAngleVelocity = -steeringAccelOversteerMax;
-                }
-                else
-                    mSteeringAngleVelocity = -steeringAccelMax;
-            }
-        }
-
-        if (!mSteeringRight && !mSteeringLeft)
-        {
-            if(mSteeringAngleVelocity < -steeringAccelMinThreshols)
-            {
-                mSteeringAngleVelocity += steeringAccelStepFade;
-            }
-            else if(mSteeringAngleVelocity > steeringAccelMinThreshols)
-            {
-                mSteeringAngleVelocity -= steeringAccelStepFade;
-            }
-            else mSteeringAngleVelocity = 0.0f;
-        }
     }
 }
 
@@ -203,10 +63,10 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         mWorld->getVehicle(this)->setThrottle(1.0f);
         break;
     case OIS::KC_A: 
-        mWorld->getVehicle(this)->getCarEngine().gearUp();
+        mWorld->getVehicle(this)->gearUp();
         break;
     case OIS::KC_Z: 
-        mWorld->getVehicle(this)->getCarEngine().gearDown();
+        mWorld->getVehicle(this)->gearDown();
         break;
     default:
         break;

@@ -52,7 +52,6 @@ public:
 #endif
 
     void processCollision(int triIndex);
-    void processInternalTick(float timeStep);
 
     //LapUtils
     void onLapFinished()override;

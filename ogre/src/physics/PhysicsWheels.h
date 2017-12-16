@@ -38,6 +38,8 @@ public:
 
     void setSteering(Ogre::Real value);
 
+    void setBackVelocity(Ogre::Real velocity){mVelocity[0] = mVelocity[1] = velocity;}
+
 private:
 
     Ogre::Real averageCollisionNormal(const Ogre::Vector3& matrixYColumn, size_t wheelIndex, Ogre::Vector3& averagedNormal) const;

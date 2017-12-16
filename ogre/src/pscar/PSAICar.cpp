@@ -2,6 +2,7 @@
 #include "PSAICar.h"
 
 #include "../physics/Physics.h"
+#include "../physics/PhysicsVehicle.h"
 #include "../mesh/StaticMeshProcesser.h"
 
 #include "../tools/Conversions.h"
@@ -26,34 +27,8 @@ void PSAICar::initModel(    lua_State * pipeline,
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         initialVehicleSetup,
         isPossesCamera);
-}
 
-void PSAICar::processInternalTick(float timeStep, bool isRaceStarted)
-{
-#if 0
-    PSControllableCar::processInternalTick(timeStep, isRaceStarted);
-
-    Ogre::Real spfFake = 1.5f;
-
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
-
-    if (mSteeringLeft)
-    {
-        if(checkFrontCollision())
-        {
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(-mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-        }
-    }
-    else if (mSteeringRight)
-    {
-        if(checkFrontCollision())
-        {
-            mCarWheelFrontL->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-            mCarWheelFrontR->applyImpulse(rot * Ogre::Vector3(mSteeringImpulse * spfFake, 0.0f, 0.0f), rot * Ogre::Vector3(0.0f, 0.0f, -1.0f));
-        }
-    }
-#endif
+    mPhysicsVehicle->setVehicleType(AIVehicle);
 }
 
 void PSAICar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)

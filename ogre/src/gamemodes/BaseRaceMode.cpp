@@ -911,16 +911,6 @@ void BaseRaceMode::processCollision(int triIndex)
 #endif
 }
 
-void BaseRaceMode::processInternalTick(float timeStep)
-{
-    mModeContext.mGameState.getPlayerCar().processInternalTick(timeStep, mModeContext.mGameState.getRaceStarted());
-
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-    {
-        mModeContext.mGameState.getAICar(q).processInternalTick(timeStep, mModeContext.mGameState.getRaceStarted());
-    }
-}
-
 void BaseRaceMode::loadResources()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::loadResources]: Enter");

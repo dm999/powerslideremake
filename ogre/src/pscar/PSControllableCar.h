@@ -36,11 +36,6 @@ public:
     virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted);
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted);
 
-    /**
-     * apply impulses and set velocity on bullet internal tick
-     */
-    virtual void processInternalTick(float timeStep, bool isRaceStarted);
-
     void setAcceleration(bool isEnable){mAccelEnabled = isEnable;}
     bool getAcceleration() const{return mAccelEnabled;} // multiplayer
 
@@ -129,14 +124,7 @@ private:
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
-    virtual void adjustWheelsFriction(const StaticMeshProcesser& processer);
     void adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition);
-
-    bool isRollOver();
-    void restoreRollOver();
-    bool checkCollisionReadyToRestoreRollOverSide();
-    bool checkCollisionReadyToRestoreRollOverFront();
-    Ogre::Timer mTimerRestoreRollOver;
 
 protected:
 
@@ -175,10 +163,6 @@ protected:
 
     virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt);
 
-    Ogre::Real mBackLRollResistance;
-    Ogre::Real mBackRRollResistance;
-
-    //Ogre::ManualObject * mManual;
 };
 
 #endif

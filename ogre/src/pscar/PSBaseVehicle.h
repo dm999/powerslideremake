@@ -9,7 +9,7 @@
 class CustomRigidBody;
 class CustomRigidBodyWheel;
 class Physics;
-
+class PhysicsVehicle;
 
 /**
  * Class to manipulate with bullet objects
@@ -36,6 +36,7 @@ protected:
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
     Physics * mWorld;
+    PhysicsVehicle * mPhysicsVehicle;
 
     InitialVehicleSetup mInitialVehicleSetup;
 
@@ -43,11 +44,7 @@ protected:
 
 private:
 
-    void removeFromWorld();
     void addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
-
-    void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
-    void addSpringsToWorld();
 
 };
 

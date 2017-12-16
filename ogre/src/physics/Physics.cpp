@@ -45,16 +45,21 @@ void Physics::internalTimeStep()
     }
 }
 
-void Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
+PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
                         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis)
 {
+    PhysicsVehicle* ret = NULL;
+
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
 
     if(found == mVehicles.end())
     {
         CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis));
+        ret = vehicle.get();
         mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
     }
+
+    return ret;
 }
 
 void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)

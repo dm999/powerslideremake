@@ -31,7 +31,7 @@ public:
 
     void timeStep(Ogre::Real timeStep, size_t maxSubSteps = 1, Ogre::Real fixedTimeStep = 1.0f / 60.0f);
 
-    void addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
+    PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);

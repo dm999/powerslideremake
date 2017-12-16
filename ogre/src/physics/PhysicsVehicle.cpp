@@ -19,6 +19,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mCarEngine(initialVehicleSetup)
 {
 
+    mVehicleType = HumanVehicle;
+
     mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
     mPhysicsRoofs.init(chassis->getPosition());
     mPhysicsBody.init();
@@ -293,4 +295,24 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
 
     if(mTurnOverValue > 0)
         --mTurnOverValue;
+}
+
+void PhysicsVehicle::gearUp()
+{
+    mCarEngine.gearUp();
+
+    if(mCarEngine.getCurrentGear() == 1)
+    {
+        mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+    }
+}
+
+void PhysicsVehicle::gearDown()
+{
+    mCarEngine.gearDown();
+
+    if(mCarEngine.getCurrentGear() == -1)
+    {
+        mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+    }
 }

@@ -26,8 +26,6 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera);
 
-    virtual void processInternalTick(float timeStep, bool isRaceStarted) override;
-
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 
@@ -35,13 +33,6 @@ public:
 
 private:
 
-    float mSteeringAngleVelocity;
-    LinearController<float> mRotationIntensity;
-
-    void processSteering(bool isRaceStarted);
-
-    bool checkOverSteer();
-    Ogre::Timer mTimerOversteer;
 };
 
 #endif
