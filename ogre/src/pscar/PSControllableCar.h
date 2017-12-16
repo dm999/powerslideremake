@@ -101,26 +101,12 @@ private:
 
 protected:
 
-    float mSteering;//steering in angles (deg)
     bool mSteeringLeft;
     bool mSteeringRight;
     bool mBrakeEnabled;
     bool mAccelEnabled;
 
-    float mSteeringMin;
-    float mSteeringMinRad;
-    float mSteeringMax;
-    float mSteeringMaxRad;
-    float mSteeringIncrement;   // steering sensivity
-
-    Ogre::Real mLateralStabilizationCoeff;   // additional impulse to prevent turn over
-    Ogre::Vector2 mAIImpulseHelper;
-
     CameraMan * mCameraMan;
-
-    private:
-
-    virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt);
 
 };
 

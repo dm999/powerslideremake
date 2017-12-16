@@ -7,8 +7,7 @@
 
 #include "../tools/Conversions.h"
 
-PSAICar::PSAICar() :
-    mSteeringImpulse(0.0f)
+PSAICar::PSAICar()
 {
 }
 
@@ -21,19 +20,11 @@ void PSAICar::initModel(    lua_State * pipeline,
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera)
 {
-    mSteeringImpulse = 0.0f;
-    mSteeringValue = 0.0f;
-
     PSControllableCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         initialVehicleSetup,
         isPossesCamera);
 
     mPhysicsVehicle->setVehicleType(AIVehicle);
-}
-
-void PSAICar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
-{
-    mSteering = mSteeringMax * mSteeringValue;
 }
 
 void PSAICar::performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused)

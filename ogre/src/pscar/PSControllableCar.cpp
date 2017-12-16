@@ -10,8 +10,6 @@
 #include "../CameraMan.h"
 #include "../tools/Conversions.h"
 
-#include "../lua/DMLuaManager.h"
-
 #ifndef NO_OPENAL
     #include "../OpenAL/OpenALSource.h"
 #endif
@@ -35,14 +33,10 @@ Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material
 PSControllableCar::PSControllableCar() :
     mIsDisableMouse(true),
     mCameraMan(NULL),
-    mSteering(0.0f),
     mSteeringLeft(false),
     mSteeringRight(false),
     mBrakeEnabled(false),
-    mAccelEnabled(false),
-    mSteeringIncrement(2.0f),
-    mLateralStabilizationCoeff(0.2f),
-    mAIImpulseHelper(Ogre::Vector2::ZERO)
+    mAccelEnabled(false)
 {
 }
 
@@ -57,7 +51,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     bool isAI)
 {
     mIsDisableMouse = true;
-    mSteering = 0.0f;
     mSteeringLeft = false;
     mSteeringRight = false;
     mBrakeEnabled = false;
@@ -141,12 +134,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         }
     }
 
-    DMLuaManager luaManager;
-    mSteeringMin = -45.0f;
-    mSteeringMinRad = Ogre::Degree(mSteeringMin).valueRadians();
-    mSteeringMax = 45.0f;
-    mSteeringMaxRad = Ogre::Degree(mSteeringMax).valueRadians();
-
     mIsPossesCamera = isPossesCamera;
 
     mWheelBackLParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
@@ -211,41 +198,6 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
         mWheelBackRParticle->setEmitting(false);
     }
 
-
-    adjustFrontWheelsAngle(evt);
-}
-
-void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
-{
-    Ogre::Real spf = evt.timeSinceLastFrame * 100.0f;
-
-    if (mSteeringLeft)
-    {
-        mSteering += mSteeringIncrement * spf;
-        if (mSteering > mSteeringMax)
-            mSteering = mSteeringMax;
-    }
-    else if (mSteeringRight)
-    {
-        mSteering -= mSteeringIncrement * spf;
-        if (mSteering < mSteeringMin)
-            mSteering = mSteeringMin;
-    }
-    else
-    {
-        if(mSteering < -mSteeringIncrement)
-        {
-            mSteering += mSteeringIncrement * spf;
-        }
-        else if(mSteering > mSteeringIncrement)
-        {
-            mSteering -= mSteeringIncrement * spf;
-        }
-        else
-        {
-            mSteering = 0.0f;
-        }
-    }
 }
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)

@@ -23,12 +23,6 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera)override;
 
-    void setLateralStabilizationCoeff(Ogre::Real linearStabilizationCoeff){mLateralStabilizationCoeff = linearStabilizationCoeff;}
-    void setAIImpulseHelper(const Ogre::Vector2& aiImpulseHelper){mAIImpulseHelper = aiImpulseHelper;}
-    void setSpeedCoeff(Ogre::Real speedCoeff){mAIUtils.setSpeedCoeff(speedCoeff);}
-
-    void setSteeringUmpulse(Ogre::Real impulse){mSteeringImpulse = impulse;}
-
     void performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused);
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
@@ -36,20 +30,12 @@ public:
     void setSlotIndex(size_t index){mSlotIndex = index;}
     size_t getSlotIndex() const {return mSlotIndex;}
 
-    void setSteering(float value){mSteeringValue = value;}
-
 
 private:
-
-    virtual void adjustFrontWheelsAngle(const Ogre::FrameEvent &evt) override;
-
-    float mSteeringValue;
 
     AIUtils mAIUtils;
 
     size_t mSlotIndex;
-
-    Ogre::Real mSteeringImpulse;
 };
 
 #endif

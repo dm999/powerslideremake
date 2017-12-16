@@ -83,17 +83,16 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         aiCar->setSteerLeft(false);
         aiCar->setSteerRight(false);
 
-        const float maxSteerImpulse = 20.0f;
-
-        aiCar->setSteering(steeringVal);
+        //d.polubotko: refactor if needed
+        //aiCar->setSteering(steeringVal);
         if(steeringVal > 0.0f)
         {
-            aiCar->setSteeringUmpulse(maxSteerImpulse * steeringVal);
+            //aiCar->setSteeringUmpulse(maxSteerImpulse * steeringVal);
             aiCar->setSteerLeft(true);
         }
         else
         {
-            aiCar->setSteeringUmpulse(maxSteerImpulse * -steeringVal);
+            //aiCar->setSteeringUmpulse(maxSteerImpulse * -steeringVal);
             aiCar->setSteerRight(true);
         }
 
@@ -193,7 +192,8 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
         fabs(feature3), fabs(feature4)
         );
 
-    aiCar->setAIImpulseHelper(Ogre::Vector2(splineFeatures.impulseAdjuster.x, -splineFeatures.impulseAdjuster.y));//original data is left hand
+    //d.polubotko: refactor if needed
+    //aiCar->setAIImpulseHelper(Ogre::Vector2(splineFeatures.impulseAdjuster.x, -splineFeatures.impulseAdjuster.y));//original data is left hand
 
     if(mAIWhole.hackType == 1)
     {
