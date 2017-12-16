@@ -3,19 +3,16 @@
 
 PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
     mInitialVehicleSetup(setup),
-    mCurrentGear(1),
+    mCurrentGear(0),
     mEngineRPM(0.0f)
 {}
 
-void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool isRaceStarted)
+void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
 {
     
-    int currentGear = mCurrentGear;
-    if(!isRaceStarted) currentGear = 0;
-
-    if(currentGear <= 0)
+    if(mCurrentGear <= 0)
     {
-        if(currentGear == 0)//N
+        if(mCurrentGear == 0)//N
         {
             mEngineRPM = mEngineRPM * 0.975f - (mInitialVehicleSetup.mEngineIdleRevsStart - throttle * -11000.0f) * -0.02f;
         }
@@ -41,7 +38,7 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool
 
         if(absVel >= velocityIdle)
         {
-            mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[currentGear - 1]);
+            mEngineRPM = absVel / (mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[mCurrentGear - 1]);
         }
         else
         {
@@ -50,7 +47,7 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool
     }
 
     //auto transmission
-    if(currentGear > 0)
+    if(mCurrentGear > 0)
     {
         if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
         {

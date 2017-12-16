@@ -103,6 +103,12 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     }
 }
 
+void PSPlayerCar::raceStarted()
+{
+    mPhysicsVehicle->setRaceStarted();
+    mPhysicsVehicle->gearUp();
+}
+
 bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar)const
 {
     bool res = false;

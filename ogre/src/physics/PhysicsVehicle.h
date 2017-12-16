@@ -46,6 +46,8 @@ public:
 
     void setVehicleType(VehicleType type){mVehicleType = type;}
 
+    void setRaceStarted(){mIsRaceStarted = true;}
+
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
 
 private:
@@ -98,6 +100,7 @@ private:
 
     int mTurnOverValue;
 
+    bool mIsRaceStarted;
     VehicleType mVehicleType;
 
 };

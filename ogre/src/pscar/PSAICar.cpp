@@ -48,5 +48,7 @@ void PSAICar::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
 
 void PSAICar::raceStarted()
 {
+    mPhysicsVehicle->setRaceStarted();
+    mPhysicsVehicle->gearUp();
     mAIUtils.raceStarted();
 }

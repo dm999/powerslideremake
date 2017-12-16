@@ -16,10 +16,10 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsWheels(initialVehicleSetup, physics, meshProesser),
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
     mPhysicsBody(initialVehicleSetup, physics, meshProesser),
-    mCarEngine(initialVehicleSetup)
+    mCarEngine(initialVehicleSetup),
+    mVehicleType(HumanVehicle),
+    mIsRaceStarted(false)
 {
-
-    mVehicleType = HumanVehicle;
 
     mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
     mPhysicsRoofs.init(chassis->getPosition());
@@ -171,7 +171,7 @@ Ogre::Real PhysicsVehicle::adjustSteering()
 void PhysicsVehicle::calcTransmission()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle, true);
+    mCarEngine.process(wheelsAverageVel, mThrottle);
     //d.polubotko: TODO adjust mThrottle for AI
     Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
@@ -180,7 +180,7 @@ void PhysicsVehicle::calcTransmission()
 void PhysicsVehicle::processEngineIdle()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle, false);
+    mCarEngine.process(wheelsAverageVel, mThrottle);
 }
 
 void PhysicsVehicle::reposition()
@@ -299,20 +299,32 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
 
 void PhysicsVehicle::gearUp()
 {
-    mCarEngine.gearUp();
-
-    if(mCarEngine.getCurrentGear() == 1)
+    if(mIsRaceStarted)
     {
-        mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+        mCarEngine.gearUp();
+
+        if(mVehicleType == HumanVehicle)
+        {
+            if(mCarEngine.getCurrentGear() == 1)
+            {
+                mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+            }
+        }
     }
 }
 
 void PhysicsVehicle::gearDown()
 {
-    mCarEngine.gearDown();
-
-    if(mCarEngine.getCurrentGear() == -1)
+    if(mIsRaceStarted)
     {
-        mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+        mCarEngine.gearDown();
+
+        if(mVehicleType == HumanVehicle)
+        {
+            if(mCarEngine.getCurrentGear() == -1)
+            {
+                mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+            }
+        }
     }
 }

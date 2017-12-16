@@ -677,6 +677,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mModeContext.mSoundsProcesser.playBeforeStart3();
 #endif
 
+        mModeContext.mGameState.getPlayerCar().raceStarted();
         for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
         {
             mModeContext.mGameState.getAICar(q).raceStarted();
@@ -720,7 +721,14 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mUIRace->setEngineRPM(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getEngineRPM());
         mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
         mUIRace->setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
-        mUIRace->setCarGear(static_cast<unsigned char>(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getCurrentGear()));
+        if(mModeContext.mGameState.getRaceStarted())
+        {
+            mUIRace->setCarGear(static_cast<unsigned char>(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getCurrentGear()));
+        }
+        else
+        {
+            mUIRace->setCarGear(1);
+        }
         mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
 
         mUIRace->hideAIDashboardCars();

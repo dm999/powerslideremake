@@ -29,6 +29,8 @@ public:
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 
+    void raceStarted();
+
     bool isCollideChassis(const PSBaseCar& otherCar)const;
 
 private:
