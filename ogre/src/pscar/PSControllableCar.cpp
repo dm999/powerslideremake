@@ -381,6 +381,11 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot)
         //stateParticle->setTextureScroll(5.0f / 16.0f, -5.0f / 16.0f);
         //stateParticle->setTextureScroll(7.0f / 16.0f, -5.0f / 16.0f);
     }
+    else
+    {
+        mWheelBackLParticle->setEmitting(false);
+        mWheelBackRParticle->setEmitting(false);
+    }
 
 }
 

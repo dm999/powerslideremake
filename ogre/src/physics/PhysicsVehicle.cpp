@@ -226,6 +226,117 @@ Ogre::Vector3 PhysicsVehicle::findTangent(const Ogre::Vector3& normal, const Ogr
     return input - dot * normal;
 }
 
+Ogre::Vector2 PhysicsVehicle::findTexCoordinates(const Ogre::Vector3& normal, 
+    const Ogre::Vector3& point,
+    const Ogre::Vector3& pA, const Ogre::Vector3& pB, const Ogre::Vector3& pC,
+    const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC)
+{
+    //4617C0
+    Ogre::Vector2 res = Ogre::Vector2::ZERO;
+
+    Ogre::Real dotP = point.dotProduct(normal) - pA.dotProduct(normal);
+    dotP = -dotP;
+
+    Ogre::Vector2 proj = dotP * Ogre::Vector2(normal.x, normal.z) + Ogre::Vector2(point.x, point.z);
+
+    Ogre::Vector3 absNorm = normal;
+    absNorm.x = Ogre::Math::Abs(absNorm.x);
+    absNorm.y = Ogre::Math::Abs(absNorm.y);
+    absNorm.z = Ogre::Math::Abs(absNorm.z);
+
+    size_t switcher = 0;
+    if(absNorm.x <= absNorm.y)
+    {
+        switcher = 1;//absNorm.y - max
+        if ( absNorm.y <= absNorm.z )//absNorm.z - max
+            switcher = 2;
+    }
+    else
+        switcher = absNorm.x <= absNorm.z;//absNorm.z - max
+
+    Ogre::Real valA, valB, valC, valD, valE, valF;
+    if(switcher)
+    {
+        --switcher;
+        if(switcher)
+        {
+            if(switcher == 1)
+            {
+                valA = pA.x;
+                valB = pC.y;
+                valC = pA.y;
+                valD = pB.y;
+                valE = pC.x;
+                valF = pB.x;
+            }
+            else
+            {
+                assert(false);
+            }
+        }
+        else
+        {
+            valA = pA.x;
+            valB = pC.z;
+            valC = pA.z;
+            valD = pB.z;
+            valE = pC.x;
+            valF = pB.x;
+        }
+    }
+    else
+    {
+        valA = pA.y;
+        valB = pC.z;
+        valC = pA.z;
+        valD = pB.z;
+        valE = pC.y;
+        valF = pB.y;
+    }
+
+    Ogre::Real diffDC, diffEA, diffBC, diffFA;
+    diffDC = valD - valC;
+    diffEA = valE - valA;
+    diffBC = valB - valC;
+    diffFA = valF - valA;
+
+    Ogre::Real weight = 1.0f / (diffFA * diffBC - diffDC * diffEA);
+
+    Ogre::Vector2 diffProj = proj - Ogre::Vector2(valA, valC);
+    Ogre::Vector2 diffProjWeight = diffProj * Ogre::Vector2(diffBC, diffFA);
+    Ogre::Vector2 coord; 
+    coord.x = (diffProjWeight.x - diffProj.y * diffEA) * weight;
+    coord.y = (diffProjWeight.y - diffProj.x * diffDC) * weight;
+
+    res = (tC - tA) * coord.y + (tB - tA) * coord.x + tA;
+
+    if(res.x < 0.0f)
+    {
+        double integer;
+        float frac = static_cast<float>(modf(res.x, &integer));
+        res.x = frac + 1.0f;
+    }
+    if(res.x > 1.0f)
+    {
+        double integer;
+        res.x = static_cast<float>(modf(res.x, &integer));
+    }
+
+    if(res.y < 0.0f)
+    {
+        double integer;
+        float frac = static_cast<float>(modf(res.y, &integer));
+        res.y = frac + 1.0f;
+    }
+    if(res.y > 1.0f)
+    {
+        double integer;
+        res.y = static_cast<float>(modf(res.y, &integer));
+    }
+
+    return res;
+}
+
 void PhysicsVehicle::calcWheelRoofImpulses()
 {
     mImpulseRotPrev = mImpulseRot;

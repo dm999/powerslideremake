@@ -235,18 +235,6 @@ void PhysicsWheels::calcVelocityMore(Ogre::Real power, int gear)
     }
 }
 
-bool PhysicsWheels::isAnyCollided() const
-{
-    bool ret = false;
-
-    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
-    {
-        ret |= mIsCollided[q];
-    }
-
-    return ret;
-}
-
 bool PhysicsWheels::getWheelCollision(size_t index) const
 {
     return mIsCollided[index];
@@ -366,7 +354,12 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             mWheelsSuspensionGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + mWheelsSuspensionRot[q];
 
             const Ogre::Image * terrainMap = mMeshProcesser->getTerrainMap(mMeshProcesser->getTerrainName(collision));
-            mTerrainIndex[q] = mMeshProcesser->getTerrainType(terrainMap, Ogre::Vector2::ZERO);
+            Ogre::Vector2 texCoords = PhysicsVehicle::findTexCoordinates(worldNormal, 
+                mWheelsSuspensionGlobal[q],
+                pointOnStaticA, pointOnStaticB, pointOnStaticC,
+                pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC
+                );
+            mTerrainIndex[q] = mMeshProcesser->getTerrainType(terrainMap, texCoords);
 
             Ogre::Vector3 averagedNormal;
             Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);

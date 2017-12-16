@@ -56,6 +56,10 @@ public:
     Ogre::Real getWheelBackRVelocity() const {return mPhysicsWheels.getWheelVelocity(0);}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
+    static Ogre::Vector2 findTexCoordinates(const Ogre::Vector3& normal, 
+        const Ogre::Vector3& point,
+        const Ogre::Vector3& pA, const Ogre::Vector3& pB, const Ogre::Vector3& pC,
+        const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC);
 
 private:
 

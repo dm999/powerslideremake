@@ -32,7 +32,7 @@ public:
 
     Ogre::Real calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks);
     void calcVelocityMore(Ogre::Real power, int gear);
-    bool isAnyCollided() const;
+    
     bool getWheelCollision(size_t index) const;
     char getWheelTerainIndex(size_t index) const;
     Ogre::Real getWheelVelocity(size_t index) const;

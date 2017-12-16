@@ -989,7 +989,16 @@ char StaticMeshProcesser::getTerrainType(const Ogre::Image * terrainMap, Ogre::V
 
         Ogre::ColourValue color = terrainMap->getColourAt(pixel_x, pixel_y, 0);
 
-        ret = Ogre::Math::Clamp<unsigned char>(static_cast<unsigned char>(color.r * 255.0f), 0, 15);
+        ret = static_cast<char>(color.r * 255.0f);
+
+        /*
+        if(pixel_x & 1)//odd
+            ret &= 0xF;
+        else
+            ret >>= 4;
+        */
+
+        ret = Ogre::Math::Clamp<char>(ret, 0, 15);
     }
 
     return ret;
