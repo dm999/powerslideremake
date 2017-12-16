@@ -18,6 +18,14 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsBody(initialVehicleSetup, physics, meshProesser),
     mCarEngine(initialVehicleSetup),
     mVehicleType(HumanVehicle),
+    mThrottle(0.0f),
+    mBreaks(0.0f),
+    mSteeringOriginal(0.0f),
+    mSteeringAdditionalParam(0.0f),
+    mIsSteeringLeft(false),
+    mIsSteeringRight(false),
+    mSteeringIncrement(0.1f),
+    mTurnOverValue(0),
     mIsRaceStarted(false)
 {
 
@@ -50,13 +58,6 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
         Ogre::Real tmpDist = mInitialVehicleSetup.mRoofPos[q].length() + mInitialVehicleSetup.mRoofRadius[q];
         if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
     }
-
-    mThrottle = 0.0f;
-    mBreaks = 0.0f;
-    mSteeringOriginal = 0.0f;
-    mSteeringAdditionalParam = 0.0f;
-
-    mTurnOverValue = 0;
 }
 
 PhysicsVehicle::~PhysicsVehicle()
@@ -143,6 +144,32 @@ void PhysicsVehicle::timeStep()
 
 Ogre::Real PhysicsVehicle::adjustSteering()
 {
+    if (mIsSteeringLeft)
+    {
+        mSteeringOriginal -= mSteeringIncrement;
+    }
+    else if (mIsSteeringRight)
+    {
+        mSteeringOriginal += mSteeringIncrement;
+    }
+    else
+    {
+        if(mSteeringOriginal < -mSteeringIncrement)
+        {
+            mSteeringOriginal += mSteeringIncrement;
+        }
+        else if(mSteeringOriginal > mSteeringIncrement)
+        {
+            mSteeringOriginal -= mSteeringIncrement;
+        }
+        else
+        {
+            mSteeringOriginal = 0.0f;
+        }
+    }
+
+    mSteeringOriginal = Ogre::Math::Clamp(mSteeringOriginal, -1.0f, 1.0f);
+
     Ogre::Real ret = 0.0f;
 
     Ogre::Real sign = 1.0f;

@@ -36,6 +36,8 @@ public:
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
 
+    void setSteeringLeft(bool value) { mIsSteeringLeft = value; }
+    void setSteeringRight(bool value) { mIsSteeringRight = value; }
     void setSteering(Ogre::Real value) { mSteeringOriginal = value; }
     void setThrottle(Ogre::Real value){ mThrottle = value;}
     void setBrakes(Ogre::Real value){ mBreaks = value;}
@@ -112,6 +114,9 @@ private:
     Ogre::Real mBreaks;
     Ogre::Real mSteeringOriginal;
     Ogre::Real mSteeringAdditionalParam;
+    bool mIsSteeringLeft;
+    bool mIsSteeringRight;
+    const Ogre::Real mSteeringIncrement;
 
     int mTurnOverValue;
 

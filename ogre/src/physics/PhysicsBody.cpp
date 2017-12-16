@@ -44,17 +44,6 @@ bool PhysicsBody::process(PhysicsVehicle& vehicle)
 
     Ogre::Vector3 deriveImpulse = diffBodyPos * mInitialVehicleSetup.mChassisMass;
 
-    /*
-    Ogre::Vector3 worldNormal;
-    Ogre::Real distance = 0.0f;
-    const btCollisionObject * staticObj;
-    Ogre::Vector3 pointOnStatic;
-    int triIndex;
-    std::pair<int, int> address;
-    */
-    //if(mPhysics->findCollision(mBody.get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
-    //if(mPhysics->isRigidBodyStatic(staticObj, address))
-
     const Ogre::Real tol = 0.00001f;
 
     Ogre::Vector3 averagedBodyPos = mBodyGlobal + mBodyGlobalPrev;

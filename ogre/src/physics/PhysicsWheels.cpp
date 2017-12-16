@@ -309,17 +309,6 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
 
         if(isSphereCollided)
         {
-            /*
-            Ogre::Vector3 worldNormal;
-            Ogre::Real distance = 0.0f;
-            const btCollisionObject * staticObj;
-            Ogre::Vector3 pointOnStatic;
-            int triIndex;
-            std::pair<int, int> address;
-            */
-            //if(mPhysics->findCollision(mWheel[q].get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
-            //if(mPhysics->isRigidBodyStatic(staticObj, address))
-
             const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
             Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
             mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);
