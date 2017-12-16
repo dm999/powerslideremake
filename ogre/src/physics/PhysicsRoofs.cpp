@@ -99,28 +99,32 @@ bool PhysicsRoofs::process(PhysicsVehicle& vehicle)
         if(isSphereCollided)
         {
             isCollided = true;
-            /*
-            Ogre::Vector3 worldNormal;
-            Ogre::Real distance = 0.0f;
-            const btCollisionObject * staticObj;
-            Ogre::Vector3 pointOnStatic;
-            int triIndex;
-            std::pair<int, int> address;
-            */
-            //if(mPhysics->findCollision(mRoof[q].get(), staticObj, pointOnStatic, triIndex, worldNormal, distance))
-            //if(mPhysics->isRigidBodyStatic(staticObj, address))
-            char terrainType = 6; //mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+
+            const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
+
+            Ogre::Vector3 worldNormal = collision.mNormal;
+            worldNormal.z = -worldNormal.z;//original data is left hand
+
+            Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
+            mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);
+
+            Ogre::Vector2 pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC;
+            mMeshProcesser->getGeovertsTexture(collision, pointOnStaticTextureA, pointOnStaticTextureC, pointOnStaticTextureB);
+
+            const Ogre::Image * terrainMap = mMeshProcesser->getTerrainMap(mMeshProcesser->getTerrainName(collision));
+            Ogre::Vector2 texCoords = PhysicsVehicle::findTexCoordinates(worldNormal, 
+                mRoofGlobal[q],
+                pointOnStaticA, pointOnStaticB, pointOnStaticC,
+                pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC
+                );
+            char terrainType = mMeshProcesser->getTerrainType(terrainMap, texCoords);
+
             if(terrainType != -1)
             {
                 assert(terrainType >= 0);
                 assert(terrainType < TerrainData::mTerrainsAmount);
 
                 const TerrainData& terrain = mMeshProcesser->getTerrainData(terrainType);
-
-                const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
-
-                Ogre::Vector3 worldNormal = collision.mNormal;
-                worldNormal.z = -worldNormal.z;//original data is left hand
 
                 Ogre::Vector3 tangent = PhysicsVehicle::findTangent(worldNormal, mRoofImpulseLinear[q]);
                 Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;

@@ -41,8 +41,8 @@ public:
     void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();
 
-    Ogre::Vector3 getLinearVelocity()const{return Ogre::Vector3::ZERO;/*mCarChassis->getLinearVelocity();*/}
-    Ogre::Vector3 getAngularVelocity()const{return Ogre::Vector3::ZERO;/*fmCarChassis->getAngularVelocity();*/}
+    Ogre::Vector3 getLinearVelocity()const;
+    Ogre::Vector3 getAngularVelocity()const;
     Ogre::Real getAlignedVelocity()const;
     Ogre::Real getLateralVelocity()const;
     Ogre::Vector3 getForwardAxis()const;

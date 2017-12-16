@@ -193,12 +193,8 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
 {
     processSounds();
 
-    Ogre::Vector3 linearVelocity = getLinearVelocity();
-
     Ogre::Vector3 carUpVector = mInitialVehicleSetup.mCarRot * Ogre::Vector3::UNIT_Y;
     Ogre::Real upProjY = Ogre::Vector3::UNIT_Y.dotProduct(carUpVector);
-
-    Ogre::Real projectedVel = getAlignedVelocity();
 
 
     //wheels rotation by engine addition

@@ -439,3 +439,18 @@ void PhysicsVehicle::gearDown()
         }
     }
 }
+
+Ogre::Vector3 PhysicsVehicle::getLinearVelocity() const
+{
+    return mImpulseLinear * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+}
+
+Ogre::Vector3 PhysicsVehicle::getAngularVelocity() const
+{
+    return mImpulseRot * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+}
+
+Ogre::Vector3 PhysicsVehicle::getLinearImpulse() const
+{
+    return mImpulseLinear;
+}

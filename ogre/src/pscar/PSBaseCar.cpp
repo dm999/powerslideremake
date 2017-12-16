@@ -19,6 +19,8 @@
 #include "../loaders/SUSLoader.h"
 #include "../OriginalSettings.h"
 
+#include "../physics/PhysicsVehicle.h"
+
 #include "../GameState.h"
 
 Ogre::NameGenerator PSBaseCar::nameGenMaterials("Scene/Material/Vehicle/Name");
@@ -479,46 +481,49 @@ void PSBaseCar::clear()
     //mModelNode = NULL;
 }
 
+Ogre::Vector3 PSBaseCar::getLinearVelocity()const
+{
+    return mPhysicsVehicle->getLinearVelocity();
+}
+
+Ogre::Vector3 PSBaseCar::getAngularVelocity()const
+{
+    return mPhysicsVehicle->getAngularVelocity();
+}
+
 Ogre::Real PSBaseCar::getAlignedVelocity()const
 {
     Ogre::Real res = 0.0f;
-    /*
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+
     Ogre::Vector3 carVelocity = getLinearVelocity();
     Ogre::Vector3 carOrientation = getForwardAxis();
 
     res = carOrientation.dotProduct(carVelocity);
-*/
+
     return res;
 }
 
 Ogre::Real PSBaseCar::getLateralVelocity()const
 {
     Ogre::Real res = 0.0f;
-    /*
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+
     Ogre::Vector3 carVelocity = getLinearVelocity();
 
-    Ogre::Vector3 carOrientation = rot * Ogre::Vector3::NEGATIVE_UNIT_X;
+    Ogre::Vector3 carOrientation = mInitialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_X;
 
     res = carOrientation.dotProduct(carVelocity);
-*/
+
     return res;
 }
 
 Ogre::Vector3 PSBaseCar::getForwardAxis()const
 {
-    /*
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
-    return rot * Ogre::Vector3::NEGATIVE_UNIT_Z;
-    */
-    return Ogre::Vector3::ZERO;
+    return mInitialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
 }
 
 Ogre::Vector3 PSBaseCar::getLinearImpulse()const
 {
-    //return mCarChassis->getLinearImpulse();
-    return Ogre::Vector3::ZERO;
+    return mPhysicsVehicle->getLinearImpulse();
 }
 
 void PSBaseCar::initSuspension(const GameState& gameState)

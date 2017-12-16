@@ -71,27 +71,31 @@ bool PhysicsBody::process(PhysicsVehicle& vehicle)
     {
         isCollided = true;
 
-        char terrainType = 6;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
+        const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
+
+        Ogre::Vector3 worldNormal = collision.mNormal;
+        worldNormal.z = -worldNormal.z;//original data is left hand
+
+        Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
+        mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);
+
+        Ogre::Vector2 pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC;
+        mMeshProcesser->getGeovertsTexture(collision, pointOnStaticTextureA, pointOnStaticTextureC, pointOnStaticTextureB);
+
+        const Ogre::Image * terrainMap = mMeshProcesser->getTerrainMap(mMeshProcesser->getTerrainName(collision));
+        Ogre::Vector2 texCoords = PhysicsVehicle::findTexCoordinates(worldNormal, 
+            mBodyGlobal,
+            pointOnStaticA, pointOnStaticB, pointOnStaticC,
+            pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC
+            );
+        char terrainType = mMeshProcesser->getTerrainType(terrainMap, texCoords);
+
         if(terrainType != -1)
         {
             assert(terrainType >= 0);
             assert(terrainType < TerrainData::mTerrainsAmount);
 
             const TerrainData& terrain = mMeshProcesser->getTerrainData(terrainType);
-
-            //std::string terrainMap = mMeshProcesser->getBatchByAddress(address).mTerrainMap;
-            //terrainMap = terrainMap.substr(0, terrainMap.length() - 4);
-            //mWheelFrontLColliderIndex = terrainMap;
-            //mWheelFrontLColliderIndex = Conversions::DMToString(triIndex);
-            //Ogre::Vector2 texCoord = processer.getTextureCoordinateInTriangle(address, triIndex, cp.getPositionWorldOnB());
-            //mWheelFrontLColliderIndex = Conversions::DMToString(texCoord.x);
-            //mWheelFrontLColliderString = terrainMap + " " + Conversions::DMToString((size_t)terrainType);
-            //mWheelFrontLColliderIndex = terrainType;
-
-            const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
-
-            Ogre::Vector3 worldNormal = collision.mNormal;
-            worldNormal.z = -worldNormal.z;//original data is left hand
 
             Ogre::Vector3 tangent = PhysicsVehicle::findTangent(worldNormal, deriveImpulse);
             Ogre::Vector3 velocityTangent = tangent * mInitialVehicleSetup.mChassisInvMass * -33.0f;
