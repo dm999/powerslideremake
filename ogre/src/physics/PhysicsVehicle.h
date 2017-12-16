@@ -48,6 +48,13 @@ public:
 
     void setRaceStarted(){mIsRaceStarted = true;}
 
+    bool getWheelBackLCollision() const {return mPhysicsWheels.getWheelCollision(1);}
+    bool getWheelBackRCollision() const {return mPhysicsWheels.getWheelCollision(0);}
+    char getWheelBackLTerrainIndex() const {return mPhysicsWheels.getWheelTerainIndex(1);}
+    char getWheelBackRTerrainIndex() const {return mPhysicsWheels.getWheelTerainIndex(0);}
+    Ogre::Real getWheelBackLVelocity() const {return mPhysicsWheels.getWheelVelocity(1);}
+    Ogre::Real getWheelBackRVelocity() const {return mPhysicsWheels.getWheelVelocity(0);}
+
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
 
 private:

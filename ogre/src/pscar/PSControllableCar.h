@@ -54,10 +54,6 @@ public:
     LapUtils& getLapUtils(){return mLapUtils;}
     const LapUtils& getLapUtils()const{return mLapUtils;}
 
-    bool checkRearCollision(bool isBoth = false);
-    bool checkFrontCollision();
-    bool checkChassisCollision()const{return mChassisCollision;}
-
     size_t getCurrentLap() const override {return mLapUtils.getCurrentLap();}
     Ogre::Real getLapPosition() const override {return mLapUtils.getLapPosition();}
 
@@ -85,29 +81,6 @@ private:
     bool mIsDisableMouse;
     bool mIsPossesCamera;
 
-    bool mWheelCollisionFrontL;
-    bool mWheelCollisionFrontR;
-    bool mWheelCollisionBackL;
-    bool mWheelCollisionBackR;
-    bool mChassisCollision;
-
-    Ogre::Timer mTimerJumpHappenFrontL;
-    Ogre::Timer mTimerJumpHappenFrontR;
-    Ogre::Timer mTimerJumpHappenRearL;
-    Ogre::Timer mTimerJumpHappenRearR;
-
-    Ogre::Timer mTimerCollisionHappenFront;
-    Ogre::Timer mTimerCollisionHappenRear;
-
-    LinearController<float> mDriveImpulse;
-    LinearController<float> mResistanceImpulse;     //terrain back friction
-    LinearController<float> mGroundSpoilerImpulse;
-    LinearController<float> mAirSpoilerImpulse;
-    LinearController<float> mWheelsRotationByEngineAddition;
-
-    Ogre::Real mWheelRotationalAngleF;
-    Ogre::Real mWheelRotationalAngleB;
-
 protected:
 
     Ogre::ParticleSystem* mWheelBackLParticle;
@@ -124,7 +97,7 @@ private:
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
-    void adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition);
+    void adjustWheelsParticles(const Ogre::Quaternion& rot);
 
 protected:
 
@@ -144,20 +117,6 @@ protected:
     Ogre::Vector2 mAIImpulseHelper;
 
     CameraMan * mCameraMan;
-
-    void cleanWheelsCollisionsFlags()
-    {
-        mWheelCollisionFrontL = false;
-        mWheelCollisionFrontR = false;
-        mWheelCollisionBackL = false;
-        mWheelCollisionBackR = false;
-        mChassisCollision = false;
-    }
-
-    void setWheelCollisionHappenFrontL(){mWheelCollisionFrontL = true;}
-    void setWheelCollisionHappenFrontR(){mWheelCollisionFrontR = true;}
-    void setWheelCollisionHappenBackL(){mWheelCollisionBackL = true;}
-    void setWheelCollisionHappenBackR(){mWheelCollisionBackR = true;}
 
     private:
 

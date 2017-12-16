@@ -35,11 +35,6 @@ Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material
 PSControllableCar::PSControllableCar() :
     mIsDisableMouse(true),
     mCameraMan(NULL),
-    mWheelCollisionFrontL(false),
-    mWheelCollisionFrontR(false),
-    mWheelCollisionBackL(false),
-    mWheelCollisionBackR(false),
-    mChassisCollision(false),
     mSteering(0.0f),
     mSteeringLeft(false),
     mSteeringRight(false),
@@ -47,28 +42,8 @@ PSControllableCar::PSControllableCar() :
     mAccelEnabled(false),
     mSteeringIncrement(2.0f),
     mLateralStabilizationCoeff(0.2f),
-    mAIImpulseHelper(Ogre::Vector2::ZERO),
-    mWheelRotationalAngleF(0.0f),
-    mWheelRotationalAngleB(0.0f)
+    mAIImpulseHelper(Ogre::Vector2::ZERO)
 {
-    mDriveImpulse.addPoint(-100.0f, 0.0f);
-    mDriveImpulse.addPoint(0.0f, 25.0f);
-    mDriveImpulse.addPoint(60.0f, 20.0f);
-    mDriveImpulse.addPoint(120.0f, 18.0f);
-    mDriveImpulse.addPoint(200.0f, 6.0f);
-    mDriveImpulse.addPoint(240.0f, 3.0f);
-    mDriveImpulse.addPoint(carMaxSpeed, 0.0f);
-
-    mResistanceImpulse.addPoint(160.0f, 0.0f);
-    mResistanceImpulse.addPoint(carMaxSpeed, 20.0f);
-
-    mGroundSpoilerImpulse.addPoint(0.0f, 0.0f);
-    mGroundSpoilerImpulse.addPoint(200.0f, 15.0f);
-
-    mWheelsRotationByEngineAddition.addPoint(-50.0f, 20.0f);
-    mWheelsRotationByEngineAddition.addPoint(0.0f, 200.0f);
-    mWheelsRotationByEngineAddition.addPoint(50.0f, 20.0f);
-    mWheelsRotationByEngineAddition.addPoint(100.0f, 0.0f);
 }
 
 void PSControllableCar::initModel(  lua_State * pipeline, 
@@ -82,11 +57,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     bool isAI)
 {
     mIsDisableMouse = true;
-    mWheelCollisionFrontL = false;
-    mWheelCollisionFrontR = false;
-    mWheelCollisionBackL = false;
-    mWheelCollisionBackR = false;
-    mChassisCollision = false;
     mSteering = 0.0f;
     mSteeringLeft = false;
     mSteeringRight = false;
@@ -96,8 +66,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     if(!isAI)
         mAccelEnabled = true;
 #endif
-    mWheelRotationalAngleF = 0.0f;
-    mWheelRotationalAngleB = 0.0f;
 
     mParticles = gameState.getParticles();
 
@@ -218,60 +186,27 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mParticleNodeWheelBackR = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
     mParticleNodeWheelBackR->attachObject(mWheelBackRParticle);
-
-    mAirSpoilerImpulse.addPoint(0.0f, 0.0f);
-    if(isAI)
-        mAirSpoilerImpulse.addPoint(200.0f, 30.0f);
-    else
-        mAirSpoilerImpulse.addPoint(150.0f, 50.0f);
 }
 
 
 void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted)
 {
-#if 0
-    processSounds(evt);
-
-    adjustWheelsFriction(processer);
-
-    Ogre::Quaternion rot = mCarChassis->getSceneNode()->_getDerivedOrientation();
+    processSounds();
 
     Ogre::Vector3 linearVelocity = getLinearVelocity();
 
-    Ogre::Vector3 carUpVector = rot * Ogre::Vector3::UNIT_Y;
+    Ogre::Vector3 carUpVector = mInitialVehicleSetup.mCarRot * Ogre::Vector3::UNIT_Y;
     Ogre::Real upProjY = Ogre::Vector3::UNIT_Y.dotProduct(carUpVector);
-
-    //freeze on low speed
-    if( Ogre::Math::Abs(linearVelocity.length()) < 10.0f    &&
-        upProjY > 0.96f                         &&
-        !mSteeringLeft                          &&
-        !mSteeringRight                         &&
-        !mBrakeEnabled                          &&
-        !mAccelEnabled
-        )
-    {
-        mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(0.0f, 1.0f, 0.0f));
-        mCarChassis->getBulletRigidBody()->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
-        //mCarChassis->setActivationState(DISABLE_SIMULATION);
-    }
-    else
-    {
-        mCarChassis->getBulletRigidBody()->setLinearFactor(btVector3(1.0f, 1.0f, 1.0f));
-        //mCarChassis->forceActivationState();
-    }
 
     Ogre::Real projectedVel = getAlignedVelocity();
 
 
     //wheels rotation by engine addition
-    if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted && mCarEngine.getCurrentGear() != 0)
+    if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted && mPhysicsVehicle->getCarEngine().getCurrentGear() != 0)
     {
-        Ogre::Real rotAngleAddition = mWheelsRotationByEngineAddition.getVal(projectedVel);
-        if(mBrakeEnabled && rotAngleAddition > 0.0f) rotAngleAddition *= -1.0f;
-
         if(!mParticles.empty())
         {
-            adjustWheelsParticles(rot, rotAngleAddition);
+            adjustWheelsParticles(mInitialVehicleSetup.mCarRot);
         }
     }
     else
@@ -282,55 +217,6 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
 
 
     adjustFrontWheelsAngle(evt);
-
-    mWheelRotationalAngleF += projectedVel * psInvCarMass * 1.27f / mInitialVehicleSetup.mWheelRadius.x;
-    mWheelRotationalAngleB += projectedVel * psInvCarMass * 1.27f / mInitialVehicleSetup.mWheelRadius.y;
-
-    if(mWheelRotationalAngleF <= -Ogre::Math::TWO_PI)
-    {
-        mWheelRotationalAngleF += Ogre::Math::TWO_PI;
-    }
-    else
-    {
-        mWheelRotationalAngleF -= Ogre::Math::TWO_PI;
-    }
-
-    if(mWheelRotationalAngleB <= -Ogre::Math::TWO_PI)
-    {
-        mWheelRotationalAngleB += Ogre::Math::TWO_PI;
-    }
-    else
-    {
-        mWheelRotationalAngleB -= Ogre::Math::TWO_PI;
-    }
-
-    Ogre::Quaternion rotDriveF;
-    rotDriveF.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngleF), Ogre::Vector3(1.0f, 0.0f, 0.0f));
-
-    Ogre::Quaternion rotDriveB;
-    rotDriveB.FromAngleAxis(Ogre::Radian(-mWheelRotationalAngleB), Ogre::Vector3(1.0f, 0.0f, 0.0f));
-
-    Ogre::Quaternion turnWheel;
-    turnWheel.FromAngleAxis(Ogre::Degree(mSteering), Ogre::Vector3(0.0f, 1.0f, 0.0f));
-
-    if(isRaceStarted)
-    {
-        mCarWheelFrontL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDriveF));
-        mCarWheelFrontR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * turnWheel * rotDriveF));
-    }
-    else
-    {
-        mWheelNodes[2]->setOrientation(rot * turnWheel);
-        mWheelNodes[3]->setOrientation(rot * turnWheel);
-    }
-
-    mCarWheelBackL->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDriveB));
-    mCarWheelBackR->getBulletObject()->getWorldTransform().setRotation(OgreBulletCollisions::convert(rot * rotDriveB));
-
-
-    cleanWheelsCollisionsFlags();
-
-#endif
 }
 
 void PSControllableCar::adjustFrontWheelsAngle(const Ogre::FrameEvent &evt)
@@ -397,12 +283,13 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
 }
 
 
-void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre::Real rotAngleAddition)
+void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot)
 {
     Ogre::Vector3 wheelBackLPos = mWheelNodes[1]->getPosition();
     Ogre::Vector3 wheelBackRPos = mWheelNodes[0]->getPosition();
     Ogre::Vector3 particlesShift = rot * (Ogre::Vector3::NEGATIVE_UNIT_Z * mInitialVehicleSetup.mWheelRadius[0]);
-    Ogre::Vector3 particlesDir = rot * Ogre::Vector3(0.0f, 1.0f, 0.1f);
+    Ogre::Vector3 particlesDirL = rot * Ogre::Vector3(0.0f, 1.0f, 0.1f);
+    Ogre::Vector3 particlesDirR = rot * Ogre::Vector3(0.0f, 1.0f, 0.1f);
     wheelBackLPos.y -= mInitialVehicleSetup.mWheelRadius[0] / 1.5f;
     wheelBackRPos.y -= mInitialVehicleSetup.mWheelRadius[0] / 1.5f;
     wheelBackLPos -= particlesShift;
@@ -410,130 +297,91 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot, Ogre:
     mParticleNodeWheelBackL->setPosition(wheelBackLPos);
     mParticleNodeWheelBackR->setPosition(wheelBackRPos);
 
-    unsigned char terrainIndexL = getBackLWheelColliderIndex();
-    unsigned char terrainIndexR = getBackRWheelColliderIndex();
+    char terrainIndexL = mPhysicsVehicle->getWheelBackLTerrainIndex();
+    char terrainIndexR = mPhysicsVehicle->getWheelBackRTerrainIndex();
 
-    const Particle& particleL = mParticles[terrainIndexL];
-    const Particle& particleR = mParticles[terrainIndexR];
-    
-    mWheelBackLParticle->setEmitting(   mWheelCollisionBackL                && 
-                                        (mAccelEnabled || mBrakeEnabled)    &&
-                                        particleL.isVisible
-                                        );
-
-    mWheelBackRParticle->setEmitting(   mWheelCollisionBackR                && 
-                                        (mAccelEnabled || mBrakeEnabled)    &&
-                                        particleR.isVisible
-                                        );
-
-    mWheelBackLParticle->getEmitter(0)->setColour(particleL.rgb1);
-    mWheelBackRParticle->getEmitter(0)->setColour(particleR.rgb1);
-
-    mWheelBackLParticle->getEmitter(0)->setDirection(particlesDir);
-    mWheelBackRParticle->getEmitter(0)->setDirection(particlesDir);
-    //mWheelBackLParticle->getEmitter(0)->setParticleVelocity(linearVel);
-    //mWheelBackRParticle->getEmitter(0)->setParticleVelocity(linearVel);
-    //if(linearVel > 10.0f || linearVel < -10.0f)
+    if(terrainIndexL != - 1 && terrainIndexR != - 1)
     {
-        //Ogre::Real emmisionRate = mParticlesEmmisionRate.getVal(rotAngleAddition);
-        Ogre::Real emmisionRate = Ogre::Math::Abs(rotAngleAddition);
-        mWheelBackLParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
-        mWheelBackRParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
+        Ogre::Real wheelBackLVelocitySign = Ogre::Math::Sign(mPhysicsVehicle->getWheelBackLVelocity());
+        Ogre::Real wheelBackRVelocitySign = Ogre::Math::Sign(mPhysicsVehicle->getWheelBackRVelocity());
+        particlesDirL.z *= wheelBackLVelocitySign;
+        particlesDirR.z *= wheelBackRVelocitySign;
+
+        const Particle& particleL = mParticles[terrainIndexL];
+        const Particle& particleR = mParticles[terrainIndexR];
+        
+        mWheelBackLParticle->setEmitting(   mPhysicsVehicle->getWheelBackLCollision()   && 
+                                            (mAccelEnabled || mBrakeEnabled)    &&
+                                            particleL.isVisible
+                                            );
+
+        mWheelBackRParticle->setEmitting(   mPhysicsVehicle->getWheelBackRCollision()   && 
+                                            (mAccelEnabled || mBrakeEnabled)    &&
+                                            particleR.isVisible
+                                            );
+
+        mWheelBackLParticle->getEmitter(0)->setColour(particleL.rgb1);
+        mWheelBackRParticle->getEmitter(0)->setColour(particleR.rgb1);
+
+        mWheelBackLParticle->getEmitter(0)->setDirection(particlesDirL);
+        mWheelBackRParticle->getEmitter(0)->setDirection(particlesDirR);
+        //mWheelBackLParticle->getEmitter(0)->setParticleVelocity(linearVel);
+        //mWheelBackRParticle->getEmitter(0)->setParticleVelocity(linearVel);
+        //if(linearVel > 10.0f || linearVel < -10.0f)
+        {
+            //Ogre::Real emmisionRate = mParticlesEmmisionRate.getVal(rotAngleAddition);
+            Ogre::Real emmisionRate = 1.0f;//Ogre::Math::Abs(rotAngleAddition);
+            mWheelBackLParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
+            mWheelBackRParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
+        }
+
+        Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialName);
+        Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        stateParticle->setTextureScale(8.0f, 8.0f);
+
+        //snow? (1st row left to right)[left 4 samples]
+        if(particleL.index == 0)
+        {
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -7.0f / 16.0f);
+            //stateParticle->setTextureScroll(-5.0f / 16.0f, -7.0f / 16.0f);
+            //stateParticle->setTextureScroll(-3.0f / 16.0f, -7.0f / 16.0f);
+            //stateParticle->setTextureScroll(-1.0f / 16.0f, -7.0f / 16.0f);
+        }
+
+        //(2nd row left to right)[left 4 samples]
+        if(particleL.index == 1)
+        {
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -5.0f / 16.0f);
+            //stateParticle->setTextureScroll(-5.0f / 16.0f, -5.0f / 16.0f);
+            //stateParticle->setTextureScroll(-3.0f / 16.0f, -5.0f / 16.0f);
+            //stateParticle->setTextureScroll(-1.0f / 16.0f, -5.0f / 16.0f);
+        }
+
+        //(3rd row left to right)[left 4 samples]
+        if(particleL.index == 2)
+        {
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -3.0f / 16.0f);
+            //stateParticle->setTextureScroll(-5.0f / 16.0f, -3.0f / 16.0f);
+            //stateParticle->setTextureScroll(-3.0f / 16.0f, -3.0f / 16.0f);
+            //stateParticle->setTextureScroll(-1.0f / 16.0f, -3.0f / 16.0f);
+        }
+
+        //mud (4th row left to right)[left 4 samples]
+        if(particleL.index == 3)
+        {
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -1.0f / 16.0f);
+            //stateParticle->setTextureScroll(-5.0f / 16.0f, -1.0f / 16.0f);
+            //stateParticle->setTextureScroll(-5.0f / 16.0f, -1.0f / 16.0f);
+            //stateParticle->setTextureScroll(-3.0f / 16.0f, -1.0f / 16.0f);
+        }
+
+        //(2nd row left to right)[right 4 samples]
+        //stateParticle->setTextureScroll(1.0f / 16.0f, -5.0f / 16.0f);
+        //stateParticle->setTextureScroll(3.0f / 16.0f, -5.0f / 16.0f);
+        //stateParticle->setTextureScroll(5.0f / 16.0f, -5.0f / 16.0f);
+        //stateParticle->setTextureScroll(7.0f / 16.0f, -5.0f / 16.0f);
     }
 
-    Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialName);
-    Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-    stateParticle->setTextureScale(8.0f, 8.0f);
-
-    //snow? (1st row left to right)[left 4 samples]
-    if(particleL.index == 0)
-    {
-        stateParticle->setTextureScroll(-7.0f / 16.0f, -7.0f / 16.0f);
-        //stateParticle->setTextureScroll(-5.0f / 16.0f, -7.0f / 16.0f);
-        //stateParticle->setTextureScroll(-3.0f / 16.0f, -7.0f / 16.0f);
-        //stateParticle->setTextureScroll(-1.0f / 16.0f, -7.0f / 16.0f);
-    }
-
-    //(2nd row left to right)[left 4 samples]
-    if(particleL.index == 1)
-    {
-        stateParticle->setTextureScroll(-7.0f / 16.0f, -5.0f / 16.0f);
-        //stateParticle->setTextureScroll(-5.0f / 16.0f, -5.0f / 16.0f);
-        //stateParticle->setTextureScroll(-3.0f / 16.0f, -5.0f / 16.0f);
-        //stateParticle->setTextureScroll(-1.0f / 16.0f, -5.0f / 16.0f);
-    }
-
-    //(3rd row left to right)[left 4 samples]
-    if(particleL.index == 2)
-    {
-        stateParticle->setTextureScroll(-7.0f / 16.0f, -3.0f / 16.0f);
-        //stateParticle->setTextureScroll(-5.0f / 16.0f, -3.0f / 16.0f);
-        //stateParticle->setTextureScroll(-3.0f / 16.0f, -3.0f / 16.0f);
-        //stateParticle->setTextureScroll(-1.0f / 16.0f, -3.0f / 16.0f);
-    }
-
-    //mud (4th row left to right)[left 4 samples]
-    if(particleL.index == 3)
-    {
-        stateParticle->setTextureScroll(-7.0f / 16.0f, -1.0f / 16.0f);
-        //stateParticle->setTextureScroll(-5.0f / 16.0f, -1.0f / 16.0f);
-        //stateParticle->setTextureScroll(-5.0f / 16.0f, -1.0f / 16.0f);
-        //stateParticle->setTextureScroll(-3.0f / 16.0f, -1.0f / 16.0f);
-    }
-
-    //(2nd row left to right)[right 4 samples]
-    //stateParticle->setTextureScroll(1.0f / 16.0f, -5.0f / 16.0f);
-    //stateParticle->setTextureScroll(3.0f / 16.0f, -5.0f / 16.0f);
-    //stateParticle->setTextureScroll(5.0f / 16.0f, -5.0f / 16.0f);
-    //stateParticle->setTextureScroll(7.0f / 16.0f, -5.0f / 16.0f);
-
-}
-
-bool PSControllableCar::checkRearCollision(bool isBoth)
-{ 
-    bool res = false;
-    if(isBoth)
-    {
-        res = mWheelCollisionBackL && mWheelCollisionBackR;
-    }
-    else
-    {
-        res = mWheelCollisionBackL || mWheelCollisionBackR;
-    }
-
-    const unsigned long timePeriodToRestoreRoll = 100; // ms
-
-    if(res)
-    {
-        mTimerCollisionHappenRear.reset();
-    }
-
-    if(!res && mTimerCollisionHappenRear.getMilliseconds() < timePeriodToRestoreRoll)
-    {
-        res = true;
-    }
-
-    return res;
-}
-
-bool PSControllableCar::checkFrontCollision()
-{
-    bool res = mWheelCollisionFrontL || mWheelCollisionFrontR;
-
-    const unsigned long timePeriodToRestoreRoll = 100; // ms
-
-    if(res)
-    {
-        mTimerCollisionHappenFront.reset();
-    }
-
-    if(!res && mTimerCollisionHappenFront.getMilliseconds() < timePeriodToRestoreRoll)
-    {
-        res = true;
-    }
-
-
-    return res;
 }
 
 void PSControllableCar::processSounds()

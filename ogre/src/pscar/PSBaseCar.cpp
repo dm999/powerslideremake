@@ -30,11 +30,6 @@ PSBaseCar::PSBaseCar() :
     mWheelFrontRColliderString(""),
     mWheelBackLColliderString(""),
     mWheelBackRColliderString(""),
-    mWheelFrontLColliderIndex(0),
-    mWheelFrontRColliderIndex(0),
-    mWheelBackLColliderIndex(0),
-    mWheelBackRColliderIndex(0),
-    mChassisColliderIndex(0),
     mCharacterName("frantic")
 {
 }

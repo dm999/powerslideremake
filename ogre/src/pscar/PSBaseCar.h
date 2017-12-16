@@ -58,12 +58,6 @@ public:
     std::string getBackLWheelColliderString(){return mWheelBackLColliderString;}
     std::string getBackRWheelColliderString(){return mWheelBackRColliderString;}
 
-    unsigned char getFrontLWheelColliderIndex(){return mWheelFrontLColliderIndex;}
-    unsigned char getFrontRWheelColliderIndex(){return mWheelFrontRColliderIndex;}
-    unsigned char getBackLWheelColliderIndex(){return mWheelBackLColliderIndex;}
-    unsigned char getBackRWheelColliderIndex(){return mWheelBackRColliderIndex;}
-    unsigned char getChassisColliderIndex(){return mChassisColliderIndex;}
-
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;
 
@@ -110,12 +104,6 @@ protected:
     std::string mWheelFrontRColliderString;
     std::string mWheelBackLColliderString;
     std::string mWheelBackRColliderString;
-
-    unsigned char mWheelFrontLColliderIndex;
-    unsigned char mWheelFrontRColliderIndex;
-    unsigned char mWheelBackLColliderIndex;
-    unsigned char mWheelBackRColliderIndex;
-    unsigned char mChassisColliderIndex;
 
     std::string mCharacterName;
 

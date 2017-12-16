@@ -35,6 +35,7 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
         mVelocity[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].z;
         mIsCollided[q] = false;
         mWheelRotationalAngle[q] = 0.0f;
+        mTerrainIndex[q] = -1;
     }
 }
 
@@ -243,6 +244,21 @@ bool PhysicsWheels::isAnyCollided() const
     }
 
     return ret;
+}
+
+bool PhysicsWheels::getWheelCollision(size_t index) const
+{
+    return mIsCollided[index];
+}
+
+char PhysicsWheels::getWheelTerainIndex(size_t index) const
+{
+    return mTerrainIndex[index];
+}
+
+Ogre::Real PhysicsWheels::getWheelVelocity(size_t index) const
+{
+    return mVelocity[index];
 }
 
 void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
