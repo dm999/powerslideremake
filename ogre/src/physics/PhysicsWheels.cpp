@@ -427,6 +427,10 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
 
             mIsCollided[q] = true;
         }
+        else
+        {
+            mSuspensionHeight[q] = calcSuspensionLength(mInitialVehicleSetup.mMaxTravel * 2.0f, q);
+        }
     }
 }
 
