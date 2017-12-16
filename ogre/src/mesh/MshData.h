@@ -24,11 +24,8 @@ struct MSHData
     size_t texturesCount;
     std::vector<std::string> textureNames;
     std::vector<bool> isDecalTexture;
-    size_t terrainMapCount;
-    std::vector<std::string> terrainMapNames;
 
     std::vector<size_t> textureForTriangleIndex;
-    std::vector<size_t> terrainMapForTriangleIndex;
 
     void preallocateRawData()
     {
@@ -37,18 +34,12 @@ struct MSHData
         texcoords.resize(texCount);
         texCoordsIndexes.resize(triCount);
         textureForTriangleIndex.resize(triCount);
-        terrainMapForTriangleIndex.resize(triCount);
     }
 
     void preallocateTextureNames()
     {
         textureNames.resize(texturesCount);
         isDecalTexture.resize(texturesCount);
-    }
-
-    void preallocateTerrainMaps()
-    {
-        terrainMapNames.resize(terrainMapCount);
     }
 
 
@@ -153,107 +144,10 @@ struct MSHData
 
         textureNames.clear();
         isDecalTexture.clear();
-        terrainMapNames.clear();
 
         textureForTriangleIndex.clear();
-        terrainMapForTriangleIndex.clear();
     }
 
-    void serialize(FILE * f)
-    {
-        if(f)
-        {
-            fwrite(&vertCount, sizeof(size_t), 1, f);
-            fwrite(&triCount, sizeof(size_t), 1, f);
-            fwrite(&texCount, sizeof(size_t), 1, f);
-            fwrite(&texturesCount, sizeof(size_t), 1, f);
-            fwrite(&terrainMapCount, sizeof(size_t), 1, f);
-
-            fwrite(&vertexes[0], sizeof(Ogre::Vector3), vertCount, f);
-            fwrite(&triIndexes[0], sizeof(MSHIndixes), triCount, f);
-            fwrite(&texcoords[0], sizeof(Ogre::Vector3), vertCount, f);
-            fwrite(&texCoordsIndexes[0], sizeof(MSHIndixes), triCount, f);
-
-            fwrite(&textureForTriangleIndex[0], sizeof(size_t), triCount, f);
-            fwrite(&terrainMapForTriangleIndex[0], sizeof(size_t), triCount, f);
-
-            for(size_t q = 0; q < texturesCount; ++q)
-            {
-                serialize(textureNames[q], f);
-            }
-
-            for(size_t q = 0; q < terrainMapCount; ++q)
-            {
-                serialize(terrainMapNames[q], f);
-            }
-
-            fwrite(&plainVertices[0], sizeof(Ogre::Vector3), triCount * 3, f);
-            fwrite(&plainNormals[0], sizeof(Ogre::Vector3), triCount * 3, f);
-            fwrite(&plainTexCoords[0], sizeof(Ogre::Vector3), triCount * 3, f);
-        }
-    }
-
-    void serialize(const std::string& str, FILE * f)
-    {
-        if(f)
-        {
-            size_t strSize = str.size();
-            fwrite(&strSize, sizeof(size_t), 1, f);
-            fwrite(str.c_str(), sizeof(char), strSize, f);
-        }
-    }
-
-    void deserialize(Ogre::DataStream * stream)
-    {
-        clear();
-        if(stream)
-        {
-            stream->read(&vertCount, sizeof(size_t));
-            stream->read(&triCount, sizeof(size_t));
-            stream->read(&texCount, sizeof(size_t));
-            stream->read(&texturesCount, sizeof(size_t));
-            stream->read(&terrainMapCount, sizeof(size_t));
-
-            preallocateRawData();
-            preallocateTextureNames();
-            preallocateTerrainMaps();
-            preallocatePlainData();
-
-            stream->read(&vertexes[0], sizeof(Ogre::Vector3) * vertCount);
-            stream->read(&triIndexes[0], sizeof(MSHIndixes) * triCount);
-            stream->read(&texcoords[0], sizeof(Ogre::Vector3) * vertCount);
-            stream->read(&texCoordsIndexes[0], sizeof(MSHIndixes) * triCount);
-
-            stream->read(&textureForTriangleIndex[0], sizeof(size_t) * triCount);
-            stream->read(&terrainMapForTriangleIndex[0], sizeof(size_t) * triCount);
-
-            for(size_t q = 0; q < texturesCount; ++q)
-            {
-                deserialize(textureNames[q], stream);
-            }
-
-            for(size_t q = 0; q < terrainMapCount; ++q)
-            {
-                deserialize(terrainMapNames[q], stream);
-            }
-
-            stream->read(&plainVertices[0], sizeof(Ogre::Vector3) * triCount * 3);
-            stream->read(&plainNormals[0], sizeof(Ogre::Vector3) * triCount * 3);
-            stream->read(&plainTexCoords[0], sizeof(Ogre::Vector3) * triCount * 3);
-        }
-    }
-
-    void deserialize(std::string& str, Ogre::DataStream * stream)
-    {
-        if(stream)
-        {
-            size_t strSize;
-            stream->read(&strSize, sizeof(size_t));
-            char buf[256] = {0};
-            stream->read(buf, sizeof(char) * strSize);
-            str = buf;
-        }
-    }
 };
 
 #endif

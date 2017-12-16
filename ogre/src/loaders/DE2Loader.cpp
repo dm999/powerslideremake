@@ -36,7 +36,7 @@ namespace DE2
         Data_Texture_Coord_Decal.clear();
         Data_Parts.clear();
         Data_TexturePath.clear();
-        Data_TerranPath.clear();
+        Data_TerranName.clear();
         CollisionInfo_Parts.clear();
         CollisionInfo_Global.clear();
     }
@@ -339,15 +339,21 @@ namespace DE2
             stream->read(&DataDE2.TerranPathCount,4);
             if(DataDE2.TerranPathCount)
             {
-                DataDE2.Data_TerranPath.clear();
-                DataDE2.Data_TerranPath.resize(DataDE2.TerranPathCount);
+                DataDE2.Data_TerranName.clear();
+                DataDE2.Data_TerranName.resize(DataDE2.TerranPathCount);
                 for(DWORD q=0;q<DataDE2.TerranPathCount;q++)
                 {
                     stream->read(&temp,4);
                     char buf[4096];
                     stream->read(buf, temp);
                     buf[temp] = 0;
-                    DataDE2.Data_TerranPath[q] = buf;
+
+                    std::string terrainName(buf);
+                    std::string newFileName = terrainName.substr(terrainName.find_last_of("/\\") + 1);
+                    std::transform(newFileName.begin(), newFileName.end(), newFileName.begin(), ::tolower);
+                    //std::replace(newFileName.begin(), newFileName.end(), ' ', '_');
+
+                    DataDE2.Data_TerranName[q] = newFileName;
                 }
             }
 
@@ -581,9 +587,6 @@ namespace DE2
             std::set<std::string> texNames;
             std::set<std::string> texNamesNew;
 
-            std::set<std::string> terrainNames;
-            std::set<std::string> terrainNamesNew;
-
             typedef std::map<std::string, bool> mBool;
             mBool texNamesToDecals;
 
@@ -591,10 +594,8 @@ namespace DE2
             {
 
                     std::string textureName = DataDE2.Data_TexturePath[DataDE2.Data_Parts[PartIndex].Data_Triangles[q].hz1];
-                    std::string terrainName = DataDE2.Data_TerranPath[DataDE2.Data_Parts[PartIndex].Data_Triangles[q].hz1];
 
                     texNames.insert(textureName);
-                    terrainNames.insert(terrainName);
 
 
                     std::string newFileName = textureName.substr(textureName.find_last_of("/\\") + 1);
@@ -613,12 +614,6 @@ namespace DE2
                     {
                         (*found).second = isdecal;
                     }
-
-                    newFileName = terrainName.substr(terrainName.find_last_of("/\\") + 1);
-                    std::transform(newFileName.begin(), newFileName.end(), newFileName.begin(), ::tolower);
-                    //newFileName = newFileName.substr(0, newFileName.length() - 3) + "bmp";
-                    std::replace(newFileName.begin(), newFileName.end(), ' ', '_');
-                    terrainNamesNew.insert(newFileName);
             }
 
             //textures writing
@@ -651,36 +646,6 @@ namespace DE2
                 index = std::distance(texNamesNew.begin(), i);
 
                 mshData.textureForTriangleIndex[q] = index;
-            }
-
-
-            //terrains writing
-            mshData.terrainMapCount = terrainNamesNew.size();
-
-            assert(mshData.terrainMapCount != 0);
-            mshData.preallocateTerrainMaps();
-
-            {
-                size_t terrainIndex = 0;
-                for(std::set<std::string>::iterator i = terrainNamesNew.begin(),j = terrainNamesNew.end();i != j; ++i)
-                {
-                    mshData.terrainMapNames[terrainIndex++] = (*i);
-                }
-            }
-
-            for(size_t q = 0; q < DataDE2.Data_Parts[PartIndex].Triangles; q++)
-            {
-                    int index = 0;
-                    std::string terrainName = DataDE2.Data_TerranPath[DataDE2.Data_Parts[PartIndex].Data_Triangles[q].hz1];
-                    std::string newFileName = terrainName.substr(terrainName.find_last_of("/\\") + 1);
-                    std::transform(newFileName.begin(), newFileName.end(), newFileName.begin(), ::tolower);
-                    //newFileName = newFileName.substr(0, newFileName.length() - 3) + "bmp";
-                    std::replace(newFileName.begin(), newFileName.end(), ' ', '_');
-
-                    std::set<std::string>::iterator i = terrainNamesNew.find(newFileName);
-                    index = std::distance(terrainNamesNew.begin(), i);
-
-                    mshData.terrainMapForTriangleIndex[q] = index;
             }
 
             //fprintf(f,"PartIndex: %d\n",PartIndex);

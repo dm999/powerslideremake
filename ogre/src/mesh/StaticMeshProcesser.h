@@ -51,16 +51,11 @@ public :
 
     void queryLights(LoaderListener* loaderListener);
 
-    void deinit() {/*mParts.clear(); */mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
+    void deinit() {mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
 
     void checkIsVertexArraySupported();
 
     void loadTerrainMaps(GameState& gameState);
-
-    //const DE2SingleBatch& getBatchByAddress(std::pair<int, int> address)const {return mParts[address.first].mBatches[address.second];}
-    //const DE2Part& getPartAddress(std::pair<int, int> address)const {return mParts[address.first];}
-
-    //char getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
     void setTerrainData(const std::vector<TerrainData>& terrainData);
     const TerrainData& getTerrainData(size_t index) const;
@@ -72,6 +67,10 @@ public :
     const FoundCollision& getCollision(size_t index) const;
     const std::vector<size_t>& getArrayOfCollisions() const;
     void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
+    void getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& pA, Ogre::Vector2& pC, Ogre::Vector2& pB) const;
+    const std::string& getTerrainName(const FoundCollision& collision) const;
+    const Ogre::Image * getTerrainMap(const std::string& terrainMapName) const;
+    char getTerrainType(const Ogre::Image * terrainMap, Ogre::Vector2 texCoord) const;
 
 #if defined(__ANDROID__)
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
@@ -119,11 +118,6 @@ private:
     */
     void mergeMSH(const MSHData& mshData, std::map<std::string, mergedInfo>& mapTexturesToMSHIndex, std::vector<MSHData>& mergedMSH)const;
 
-    /**
-     * return - return in range [0, 1]
-    */
-    //Ogre::Vector2 getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
-
     std::vector<Ogre::Entity*> mTerrainNodes;
     Ogre::NameGenerator mNameGenMaterials;
     Ogre::NameGenerator mNameGenNodes;
@@ -167,11 +161,8 @@ private:
 
     size_t mPlainIndices;
 
-    //std::vector<DE2Part> mParts;
     std::set<std::string> mTerrainMapsNames;
     std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> > mTerrainMaps;
-
-    //Ogre::Vector3 getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const;
 
     std::vector<TerrainData> mTerrainData;
 

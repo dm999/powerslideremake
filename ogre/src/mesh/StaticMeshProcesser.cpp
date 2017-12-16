@@ -74,29 +74,15 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
     }
     if(loadResult)
     {
+
+        for(size_t q = 0; q < de2Loader.getDE2().Data_TerranName.size(); ++q)
+            mTerrainMapsNames.insert(de2Loader.getDE2().Data_TerranName[q]);
+
         std::map<std::string, mergedInfo> mapTexturesToMSHIndex;
 
         for(size_t q = 0; q < originalParts.size(); ++q)
         {
             MSHData& mshData = originalParts[q];
-
-            //terrain maps data indices
-            for(size_t qq = 0; qq < mshData.terrainMapCount; ++qq)
-            {
-                std::vector<unsigned int> triPlainIndixes;
-
-                for(size_t w = 0; w < mshData.triCount; ++w)
-                {
-                    if(mshData.terrainMapForTriangleIndex[w] == qq)
-                    {
-                        triPlainIndixes.push_back(w * 3 + 0);
-                        triPlainIndixes.push_back(w * 3 + 1);
-                        triPlainIndixes.push_back(w * 3 + 2);
-                    }
-                }
-
-                mshData.submeshesTriangleIndixesTerrainMaps.push_back(triPlainIndixes);
-            }
 
             Ogre::Vector3 min, max;
             Ogre::Vector3 centroid = mshData.getCentroid();
@@ -108,6 +94,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
 
             if(loaderListener)
                 loaderListener->loadState(0.31f + 0.19f * static_cast<float>(q) / static_cast<float>(originalParts.size()), "parts loading");
+
         }
 
         //create textures
@@ -873,85 +860,6 @@ void StaticMeshProcesser::queryLights(LoaderListener* loaderListener)
     }
 }
 
-#if 0
-Ogre::Vector3 StaticMeshProcesser::getBarycentric(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
-{
-    Ogre::Vector3 res(Ogre::Vector3::ZERO);
-
-    const DE2SingleBatch& batch = getBatchByAddress(address);
-    const DE2Part& part = getPartAddress(address);
-
-    unsigned int pointA = batch.mIndexBuffer[triIndex * 3 + 0];
-    unsigned int pointB = batch.mIndexBuffer[triIndex * 3 + 1];
-    unsigned int pointC = batch.mIndexBuffer[triIndex * 3 + 2];
-
-    Ogre::Vector3 pA = mParts[address.first].mVertexBuffer[pointA] + part.offset;
-    Ogre::Vector3 pB = mParts[address.first].mVertexBuffer[pointB] + part.offset;
-    Ogre::Vector3 pC = mParts[address.first].mVertexBuffer[pointC] + part.offset;
-
-    //Ogre::Vector3 point = OgreBulletCollisions::convert(ptB);
-
-    btSubSimplexClosestResult result;
-    btVoronoiSimplexSolver simplexSolver;
-    simplexSolver.closestPtPointTriangle(PhysicsTools::convert(ptB), PhysicsTools::convert(pA), PhysicsTools::convert(pB), PhysicsTools::convert(pC), result);
-    
-    if(result.isValid())
-    {
-        res.x = result.m_barycentricCoords[0];
-        res.y = result.m_barycentricCoords[1];
-        res.z = result.m_barycentricCoords[2];
-    }
-
-    return res;
-}
-
-Ogre::Vector2 StaticMeshProcesser::getTextureCoordinateInTriangle(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
-{
-    Ogre::Vector2 res;
-
-    Ogre::Vector3 barycentric = getBarycentric(address, triIndex, ptB);
-
-    const DE2SingleBatch& batch = getBatchByAddress(address);
-
-    unsigned int pointA = batch.mIndexBuffer[triIndex * 3 + 0];
-    unsigned int pointB = batch.mIndexBuffer[triIndex * 3 + 1];
-    unsigned int pointC = batch.mIndexBuffer[triIndex * 3 + 2];
-
-    Ogre::Vector2 pA = Ogre::Vector2(mParts[address.first].mTexCoordsBuffer[pointA].x, mParts[address.first].mTexCoordsBuffer[pointA].y);
-    Ogre::Vector2 pB = Ogre::Vector2(mParts[address.first].mTexCoordsBuffer[pointB].x, mParts[address.first].mTexCoordsBuffer[pointB].y);
-    Ogre::Vector2 pC = Ogre::Vector2(mParts[address.first].mTexCoordsBuffer[pointC].x, mParts[address.first].mTexCoordsBuffer[pointC].y);
-
-    res = pA * barycentric.x + pB * barycentric.y + pC * barycentric.z;
-
-    if(res.x > 1.0f)
-    {
-        double integer;
-        res.x = static_cast<float>(modf(res.x, &integer));
-    }
-
-    if(res.x < 0.0f)
-    {
-        double integer;
-        res.x = static_cast<float>(modf(res.x, &integer));
-        res.x = 1.0f + res.x;
-    }
-
-    if(res.y > 1.0f)
-    {
-        double integer;
-        res.y = static_cast<float>(modf(res.y, &integer));
-    }
-
-    if(res.y < 0.0f)
-    {
-        double integer;
-        res.y = static_cast<float>(modf(res.y, &integer));
-        res.y = 1.0f + res.y;
-    }
-
-    return res;
-}
-#endif
 void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
 {
     typedef std::set<std::string> maps;
@@ -980,44 +888,6 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
         }
     }
 }
-
-#if 0
-char StaticMeshProcesser::getTerrainType(std::pair<int, int> address, int triIndex, const Ogre::Vector3& ptB) const
-{
-    char res = -1;
-
-    std::string terrainMap = getBatchByAddress(address).mTerrainMap;
-    if(terrainMap != "")
-    {
-        std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> >::const_iterator im = mTerrainMaps.find(terrainMap);
-        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = (*im).second;
-        const Ogre::Image * const image = imagePtr.get();
-
-        if(image != NULL)
-        {
-            // result should be in range [0, 1]
-            Ogre::Vector2 texCoord = getTextureCoordinateInTriangle(address, triIndex, ptB);
-
-            float pixel_xf = (image->getWidth() - 1.0f) * texCoord.x;
-            float pixel_yf = (image->getHeight() - 1.0f) * texCoord.y;
-
-            double integer;
-            float frac = static_cast<float>(modf(pixel_xf, &integer));
-
-            size_t pixel_x = static_cast<size_t>(frac > 0.5f ? pixel_xf + 0.5f : pixel_xf);
-
-            frac = static_cast<float>(modf(pixel_yf, &integer));
-            size_t pixel_y = static_cast<size_t>(frac > 0.5f ? pixel_yf + 0.5f : pixel_yf);
-
-            Ogre::ColourValue color = image->getColourAt(pixel_x, pixel_y, 0);
-
-            res = Ogre::Math::Clamp<unsigned char>(static_cast<unsigned char>(color.r * 255.0f), 0, 15);
-        }
-    }
-
-    return res;
-}
-#endif
 
 void StaticMeshProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
@@ -1076,4 +946,51 @@ void StaticMeshProcesser::getGeoverts(const FoundCollision& collision, Ogre::Vec
     pA.z = -pA.z;//original data is left hand
     pB.z = -pB.z;//original data is left hand
     pC.z = -pC.z;//original data is left hand
+}
+
+void StaticMeshProcesser::getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& pA, Ogre::Vector2& pC, Ogre::Vector2& pB) const
+{
+    mCollisionDetection.getGeovertsTexture(collision, pA, pC, pB);
+}
+
+const std::string& StaticMeshProcesser::getTerrainName(const FoundCollision& collision) const
+{
+    return mCollisionDetection.getTerrainName(collision);
+}
+
+const Ogre::Image * StaticMeshProcesser::getTerrainMap(const std::string& terrainMapName) const
+{
+    const Ogre::Image * ret = NULL;
+    if(terrainMapName != "")
+    {
+        std::map<std::string, CommonIncludes::shared_ptr<Ogre::Image> >::const_iterator im = mTerrainMaps.find(terrainMapName);
+        CommonIncludes::shared_ptr<Ogre::Image> imagePtr = (*im).second;
+        ret = imagePtr.get();
+    }
+    return ret;
+}
+
+char StaticMeshProcesser::getTerrainType(const Ogre::Image * terrainMap, Ogre::Vector2 texCoord) const
+{
+    char ret = -1;
+
+    if(terrainMap != NULL)
+    {
+        float pixel_xf = (terrainMap->getWidth() - 1.0f) * texCoord.x;
+        float pixel_yf = (terrainMap->getHeight() - 1.0f) * texCoord.y;
+
+        double integer;
+        float frac = static_cast<float>(modf(pixel_xf, &integer));
+
+        size_t pixel_x = static_cast<size_t>(frac > 0.5f ? pixel_xf + 0.5f : pixel_xf);
+
+        frac = static_cast<float>(modf(pixel_yf, &integer));
+        size_t pixel_y = static_cast<size_t>(frac > 0.5f ? pixel_yf + 0.5f : pixel_yf);
+
+        Ogre::ColourValue color = terrainMap->getColourAt(pixel_x, pixel_y, 0);
+
+        ret = Ogre::Math::Clamp<unsigned char>(static_cast<unsigned char>(color.r * 255.0f), 0, 15);
+    }
+
+    return ret;
 }

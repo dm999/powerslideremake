@@ -64,6 +64,7 @@ void PhysicsWheels::initStep()
         mWheelsAveragedNormal[q] = Ogre::Vector3::UNIT_Y;
         mWheelsImpulseResulted[q] = 0.0f;
 
+        mTerrainIndex[q] = -1;
         mIsCollided[q] = false;
     }
 
@@ -335,95 +336,98 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
             mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);
 
+            Ogre::Vector2 pointOnStaticTextureA, pointOnStaticTextureB, pointOnStaticTextureC;
+            mMeshProcesser->getGeovertsTexture(collision, pointOnStaticTextureA, pointOnStaticTextureC, pointOnStaticTextureB);
+
+
             Ogre::Vector3 worldNormal = collision.mNormal;
             worldNormal.z = -worldNormal.z;//original data is left hand
 
-            mTerrainIndex[q] = 6;//mMeshProcesser->getTerrainType(address, triIndex, pointOnStatic);
-
-            if(mTerrainIndex[q] != -1)
+            Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);
+            Ogre::Real suspHeight;
+            if(projUp <= 0.0f)
             {
-                Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);
-                Ogre::Real suspHeight;
-                if(projUp <= 0.0f)
+                suspHeight = mSuspensionHeightPrev[q];
+            }
+            else
+            {
+                Ogre::Real dotPWheels = mGlobalPos[q].dotProduct(worldNormal);
+                Ogre::Real dotPStatic = pointOnStaticA.dotProduct(worldNormal);
+                suspHeight = (dotPWheels - (dotPStatic + mInitialVehicleSetup.mWheelRadius[q])) / projUp;
+            }
+
+            suspHeight = calcSuspensionLength(suspHeight, q);
+
+            mSuspensionHeight[q] = suspHeight;
+
+            Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
+            suspLocal.y -= suspHeight;
+            mWheelsSuspensionRot[q] = mInitialVehicleSetup.mCarRot * suspLocal;
+            mWheelsSuspensionGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + mWheelsSuspensionRot[q];
+
+            const Ogre::Image * terrainMap = mMeshProcesser->getTerrainMap(mMeshProcesser->getTerrainName(collision));
+            mTerrainIndex[q] = mMeshProcesser->getTerrainType(terrainMap, Ogre::Vector2::ZERO);
+
+            Ogre::Vector3 averagedNormal;
+            Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);
+
+            mWheelsImpulseTangent[q] = PhysicsVehicle::findTangent(worldNormal, mWheelsImpulseLinear[q]);
+
+            Ogre::Real suspWeight;
+            if(q >= 2)//front wheels
+            {
+                suspWeight = mInitialVehicleSetup.mFrontSuspension;
+            }
+            else
+            {
+                suspWeight = 1.0f;
+            }
+
+            if(finalDistance < 0.0f)finalDistance = 0.0f;
+
+            Ogre::Real risingDampWeight = 1.0f;
+            Ogre::Real impulseProj = -mWheelsImpulseLinear[q].dotProduct(averagedNormal);
+            if(impulseProj < 0.0f)
+            {
+                impulseProj = -impulseProj;
+                risingDampWeight = -mInitialVehicleSetup.mRisingDamp;
+            }
+
+            Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(finalDistance);
+            Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
+            Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(finalDistance);
+            Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
+
+            Ogre::Real resultedImpulse = (v_dv * d_dv * risingDampWeight) + 
+                (d_d * mSpringVal[q]) + 
+                (v_v * risingDampWeight);
+            resultedImpulse *= suspWeight;
+
+            if(resultedImpulse < 0.0f) resultedImpulse = 0.0f;
+            if(resultedImpulse > 100.0f) resultedImpulse = 100.0f;
+
+            mWheelsAveragedNormal[q] = averagedNormal;
+            mWheelsImpulseResulted[q] = resultedImpulse;
+
+            Ogre::Vector3 impulseInc = averagedNormal * resultedImpulse;
+
+            vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], impulseInc);
+
+            if(q >= 2)//front
+            {
+                Ogre::Real xAxisDot = matrixXColumn.dotProduct(impulseInc);
+                Ogre::Real zAxisDot = matrixZColumn.dotProduct(impulseInc);
+
+                if(q == 2)//right
                 {
-                    suspHeight = mSuspensionHeightPrev[q];
+                    vehicle.mSteeringAdditionalParam -= (zAxisDot - xAxisDot) * 0.02f;
                 }
-                else
+                else//left
                 {
-                    Ogre::Real dotPWheels = mGlobalPos[q].dotProduct(worldNormal);
-                    Ogre::Real dotPStatic = pointOnStaticA.dotProduct(worldNormal);
-                    suspHeight = (dotPWheels - (dotPStatic + mInitialVehicleSetup.mWheelRadius[q])) / projUp;
-                }
-
-                suspHeight = calcSuspensionLength(suspHeight, q);
-
-                mSuspensionHeight[q] = suspHeight;
-
-                Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
-                suspLocal.y -= suspHeight;
-                mWheelsSuspensionRot[q] = mInitialVehicleSetup.mCarRot * suspLocal;
-                mWheelsSuspensionGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + mWheelsSuspensionRot[q];
-
-                Ogre::Vector3 averagedNormal;
-                Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);
-
-                mWheelsImpulseTangent[q] = PhysicsVehicle::findTangent(worldNormal, mWheelsImpulseLinear[q]);
-
-                Ogre::Real suspWeight;
-                if(q >= 2)//front wheels
-                {
-                    suspWeight = mInitialVehicleSetup.mFrontSuspension;
-                }
-                else
-                {
-                    suspWeight = 1.0f;
-                }
-
-                if(finalDistance < 0.0f)finalDistance = 0.0f;
-
-                Ogre::Real risingDampWeight = 1.0f;
-                Ogre::Real impulseProj = -mWheelsImpulseLinear[q].dotProduct(averagedNormal);
-                if(impulseProj < 0.0f)
-                {
-                    impulseProj = -impulseProj;
-                    risingDampWeight = -mInitialVehicleSetup.mRisingDamp;
-                }
-
-                Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(finalDistance);
-                Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
-                Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(finalDistance);
-                Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
-
-                Ogre::Real resultedImpulse = (v_dv * d_dv * risingDampWeight) + 
-                    (d_d * mSpringVal[q]) + 
-                    (v_v * risingDampWeight);
-                resultedImpulse *= suspWeight;
-
-                if(resultedImpulse < 0.0f) resultedImpulse = 0.0f;
-                if(resultedImpulse > 100.0f) resultedImpulse = 100.0f;
-
-                mWheelsAveragedNormal[q] = averagedNormal;
-                mWheelsImpulseResulted[q] = resultedImpulse;
-
-                Ogre::Vector3 impulseInc = averagedNormal * resultedImpulse;
-
-                vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], impulseInc);
-
-                if(q >= 2)//front
-                {
-                    Ogre::Real xAxisDot = matrixXColumn.dotProduct(impulseInc);
-                    Ogre::Real zAxisDot = matrixZColumn.dotProduct(impulseInc);
-
-                    if(q == 2)//right
-                    {
-                        vehicle.mSteeringAdditionalParam -= (zAxisDot - xAxisDot) * 0.02f;
-                    }
-                    else//left
-                    {
-                        vehicle.mSteeringAdditionalParam -= (zAxisDot + xAxisDot) * -0.02f;
-                    }
+                    vehicle.mSteeringAdditionalParam -= (zAxisDot + xAxisDot) * -0.02f;
                 }
             }
+
 
             mIsCollided[q] = true;
         }

@@ -32,6 +32,8 @@ public:
     const std::vector<size_t>& getArrayOfCollisions() const;
 
     void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
+    void getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& tA, Ogre::Vector2& tC, Ogre::Vector2& tB) const;
+    const std::string& getTerrainName(const FoundCollision& collision) const;
 
 private:
 
@@ -45,12 +47,15 @@ private:
     bool checkAverage(const Ogre::Vector3& averagedPos, Ogre::Real averageLen, size_t batchNum) const;
 
     Ogre::Vector3 convert(const DE2::DE2_Vertex& val) const;
+    Ogre::Vector2 convert(const DE2::DE2_TextureCoord& val) const;
     Ogre::Vector3 getOnlyNegative(const Ogre::Vector3& a, const Ogre::Vector3& b) const;
 
     std::vector<DE2::DE2_CollisionInfo> mCollisionParts;
     std::vector<DE2::DE2_CollisionInfo> mCollisionGobal;
     std::vector<DE2::DE2_Part> mDataParts;//amount = parts
     std::vector<DE2::DE2_Vertex> mDataVertexes;
+    std::vector<DE2::DE2_TextureCoord> mDataTextureCoord;
+    std::vector<std::string> mDataTerrans;
 
     mutable std::vector<FoundCollision> mFoundCollisions;
     mutable std::vector<size_t> mFoundCollisionsSpheres; // index in mFoundCollisions

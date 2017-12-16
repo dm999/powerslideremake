@@ -204,7 +204,7 @@ namespace DE2
         std::vector<DE2_TextureCoord> Data_Texture_Coord_Decal;
         std::vector<DE2_Part> Data_Parts;           // amount = parts
         std::vector<std::string> Data_TexturePath;  // unique names
-        std::vector<std::string> Data_TerranPath;   // repeated names (to align size with Data_TexturePath)
+        std::vector<std::string> Data_TerranName;   // repeated names (to align size with Data_TexturePath)
 
         std::vector<int> indexesForHighestLODS; // maps all parts to high poly only (size == RealPartsCount)
 

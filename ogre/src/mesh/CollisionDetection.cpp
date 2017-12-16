@@ -7,6 +7,8 @@ void CollisionDetection::init(const DE2::DE2_File& de2File)
     mCollisionParts = de2File.CollisionInfo_Parts;
     mDataParts = de2File.Data_Parts;
     mDataVertexes = de2File.Data_Vertexes;
+    mDataTextureCoord = de2File.Data_Texture_Coord;
+    mDataTerrans = de2File.Data_TerranName;
 }
 
 void CollisionDetection::performCollisionDetection(const Ogre::Vector3& pos, const Ogre::Vector3& coreBaseGlobal, Ogre::Real collisionDistance)
@@ -106,6 +108,18 @@ void CollisionDetection::getGeoverts(const FoundCollision& collision, Ogre::Vect
     pA = convert(mDataVertexes[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].v0]);
     pC = convert(mDataVertexes[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].v1]);
     pB = convert(mDataVertexes[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].v2]);
+}
+
+void CollisionDetection::getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& tA, Ogre::Vector2& tC, Ogre::Vector2& tB) const
+{
+    tA = convert(mDataTextureCoord[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].t0]);
+    tC = convert(mDataTextureCoord[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].t1]);
+    tB = convert(mDataTextureCoord[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].t2]);
+}
+
+const std::string& CollisionDetection::getTerrainName(const FoundCollision& collision) const
+{
+    return mDataTerrans[mDataParts[collision.mPartIndex].Data_Triangles[collision.mTriangleIndex].hz1];
 }
 
 bool CollisionDetection::checkAverage(const Ogre::Vector3& averagedPos, Ogre::Real averageLen, size_t batchNum) const
@@ -359,6 +373,11 @@ Ogre::Real CollisionDetection::diffDotP(const Ogre::Vector3& diffProjNorm, const
 Ogre::Vector3 CollisionDetection::convert(const DE2::DE2_Vertex& val) const
 {
     return Ogre::Vector3(val.x, val.y, val.z);
+}
+
+Ogre::Vector2 CollisionDetection::convert(const DE2::DE2_TextureCoord& val) const
+{
+    return Ogre::Vector2(val.uv, val.uw);
 }
 
 Ogre::Vector3 CollisionDetection::getOnlyNegative(const Ogre::Vector3& a, const Ogre::Vector3& b) const
