@@ -264,14 +264,13 @@ void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Ve
     }
     else
     {
-        Ogre::Real force = mInitialVehicleSetup.mChassisMass * recipMomentProj;
-
         for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
         {
             Ogre::Vector3 tangent = PhysicsVehicle::findTangent(normalisedImpulseRot, mWheelsSuspensionPoint[q]);
             if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
             {
-                mWheelsImpulseLinear[q] = tangent.crossProduct(impulseRotPrev) * force + impulseLinear;
+                Ogre::Real recipAccel = mInitialVehicleSetup.mChassisMass * recipMomentProj;
+                mWheelsImpulseLinear[q] = tangent.crossProduct(impulseRotPrev) * recipAccel + impulseLinear;
             }
             else
             {
@@ -438,7 +437,6 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
         Ogre::Real distance = -collision.mDistance;
 
         Ogre::Vector3 worldNormal = collision.mNormal;
-        worldNormal.z = -worldNormal.z;//original data is left hand
 
         Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);
         if(projUp < 0.0f) projUp = 0.0f;
@@ -526,6 +524,7 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
     else
     {
         averagedNormal.normalise();
+        averagedNormal.z = -averagedNormal.z;//original data is left hand
     }
 
     return finalDistance;

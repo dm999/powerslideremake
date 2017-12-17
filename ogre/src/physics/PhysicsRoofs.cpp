@@ -49,15 +49,14 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
     }
     else
     {
-        Ogre::Real force = mInitialVehicleSetup.mChassisMass * recipMomentProj;
-
         for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
         {
             Ogre::Vector3 roofRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mRoofPos[q];
             Ogre::Vector3 tangent = PhysicsVehicle::findTangent(normalisedImpulseRot, roofRot);
             if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
             {
-                mRoofImpulseLinear[q] = tangent.crossProduct(impulseRotPrev) * force + impulseLinear;
+                Ogre::Real recipAccel = mInitialVehicleSetup.mChassisMass * recipMomentProj;
+                mRoofImpulseLinear[q] = tangent.crossProduct(impulseRotPrev) * recipAccel + impulseLinear;
             }
             else
             {
