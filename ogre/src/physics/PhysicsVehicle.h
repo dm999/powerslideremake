@@ -82,6 +82,16 @@ protected:
 
     PSAICar * mAICar;
 
+    InitialVehicleSetup& mInitialVehicleSetup;
+
+    Ogre::Real mVehicleVelocityMod;
+
+    Ogre::Vector3 mImpulseLinear;
+    Ogre::Vector3 mImpulseLinearInc;
+    Ogre::Vector3 mImpulseRot;
+    Ogre::Vector3 mImpulseRotPrev;
+    Ogre::Vector3 mImpulseRotInc;
+
 private:
 
     void calcTransmission();
@@ -103,17 +113,7 @@ private:
     Physics* mPhysics;
     StaticMeshProcesser* mMeshProcesser;
 
-    Ogre::Vector3 mImpulseLinear;
-    Ogre::Vector3 mImpulseLinearInc;
-    Ogre::Vector3 mImpulseRot;
-    Ogre::Vector3 mImpulseRotPrev;
-    Ogre::Vector3 mImpulseRotInc;
-
-    Ogre::Real mVehicleVelocityMod;
-
     Ogre::SceneNode *mChassis;
-
-    InitialVehicleSetup& mInitialVehicleSetup;
 
     PhysicsWheels mPhysicsWheels;
     PhysicsRoofs mPhysicsRoofs;

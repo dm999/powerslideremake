@@ -17,7 +17,7 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 {
     if(mAICar)
-        mAICar->performAICorrection(gameState, this);
+        mAICar->performAICorrection(gameState, this, mInitialVehicleSetup);
 }
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)
@@ -33,6 +33,30 @@ void PhysicsVehicleAI::setAcceleration(Ogre::Real value)
 void PhysicsVehicleAI::setBreaks(Ogre::Real value)
 {
     mBreaks = value;
+}
+
+Ogre::Real PhysicsVehicleAI::getLinearVelocity() const
+{
+    return mVehicleVelocityMod;
+}
+
+void PhysicsVehicleAI::setLinearVelocity(Ogre::Real val)
+{
+    mVehicleVelocityMod = val;
+}
+
+Ogre::Vector3 PhysicsVehicleAI::getLinearImpulseInc() const
+{
+    Ogre::Vector3 tmp(mImpulseLinearInc);
+    tmp.z = -tmp.z;//original data is left hand
+    return tmp;
+}
+
+void PhysicsVehicleAI::setLinearImpulseInc(const Ogre::Vector3& val)
+{
+    Ogre::Vector3 tmp(val);
+    tmp.z = -tmp.z;//original data is left hand
+    mImpulseLinearInc = tmp;
 }
 
 Ogre::Real PhysicsVehicleAI::doAdjustAISteering(Ogre::Real val)const

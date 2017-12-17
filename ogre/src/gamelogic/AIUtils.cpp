@@ -11,15 +11,9 @@
 
 #include "../physics/PhysicsVehicleAI.h"
 
-namespace
-{
-    const float aiMaxSpeed = 300.0f;
-    const float psCarMass = 45.0f;
-    const float psInvCarMass = 1.0f / psCarMass;
-}
+#include "../physics/InitialVehicleSetup.h"
 
 AIUtils::AIUtils() :
-         mSpeedCoeff(1.0f),
         mAIDistanceLength(0.0f),
         mPrevPos(Ogre::Vector3::ZERO),
         mIsReverseEnabled(false)
@@ -47,11 +41,12 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
     }
 }
 
-void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState)
+void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup)
 {
 
     float steeringVal;
     float accelerationVal;
+    float breaksVal;
 
     Ogre::Vector3 carPos = aiCar->getModelNode()->getPosition();
 
@@ -62,9 +57,9 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         mIsPrevClosestSplineIndexInited = true;
     }
 
-    calcFeatures(aiCar, gameState);
+    calcFeatures(aiCar, physicsAICar, gameState, initialVehicleSetup);
     inference(steeringVal, accelerationVal);
-    adjustInferenceResults(steeringVal, accelerationVal, gameState.getTrackName() == "mineshaft");
+    adjustInferenceResults(steeringVal, accelerationVal, breaksVal, gameState.getTrackName() == "mineshaft");
 
     if(gameState.getRaceStarted())
     {
@@ -84,6 +79,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
 
         physicsAICar->setSteering(steeringVal);
         physicsAICar->setAcceleration(accelerationVal);
+        physicsAICar->setBreaks(breaksVal);
 
 
         const Ogre::Real stuckDistanceLimit = 20.0f;
@@ -136,7 +132,7 @@ void AIUtils::raceStarted()
     mTimerAIStuck.reset();
 }
 
-void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
+void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup)
 {
     float feature3 = mAIWhole.slotMatrix[18][0];
 
@@ -171,27 +167,26 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
     size_t splineFracIndex = getFracIndex(closestSplineIndex, carPos, frac);
 
     SplineFeatures splineFeatures = getSplineFeatures(
+        physicsAICar,
         carPos, 
         carLinearImpulse,
+        initialVehicleSetup,
         frac, splineFracIndex, 
         fabs(feature3), fabs(feature4)
         );
-
-    //d.polubotko: refactor if needed
-    //aiCar->setAIImpulseHelper(Ogre::Vector2(splineFeatures.impulseAdjuster.x, -splineFeatures.impulseAdjuster.y));//original data is left hand
 
     if(mAIWhole.hackType == 1)
     {
         mAIWhole.slotMatrix[2][0]   = splineFeatures.out10;
         mAIWhole.slotMatrix[3][0]   = splineFeatures.out11;
-        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearImpulse) * psInvCarMass;
-        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearImpulse) * psInvCarMass;
-        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearImpulse) * psInvCarMass;
+        mAIWhole.slotMatrix[8][0]   = carRotV[0].dotProduct(carLinearImpulse) * initialVehicleSetup.mChassisInvMass;
+        mAIWhole.slotMatrix[9][0]   = carRotV[1].dotProduct(carLinearImpulse) * initialVehicleSetup.mChassisInvMass;
+        mAIWhole.slotMatrix[10][0]  = carRotV[2].dotProduct(carLinearImpulse) * initialVehicleSetup.mChassisInvMass;
     }
     else
     {
         float impulseLen = carLinearImpulse.length();
-        float velocity = psInvCarMass * impulseLen * 0.333f;
+        float velocity = initialVehicleSetup.mChassisInvMass * impulseLen * 0.333f;
 
         mAIWhole.slotMatrix[2][0] = splineFeatures.out10 - velocity;
         mAIWhole.slotMatrix[3][0] = splineFeatures.out11 - velocity;
@@ -293,7 +288,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar, const GameState& gameState)
     mPrevRot = carRotV[0];
 }
 
-void AIUtils::adjustInferenceResults(float& steering, float& acceleration, bool isMineshafted) const
+void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float& breaks, bool isMineshafted) const
 {
     if(acceleration > mAIWhole.accelerationCoeff)
         acceleration = mAIWhole.accelerationCoeff;
@@ -305,17 +300,21 @@ void AIUtils::adjustInferenceResults(float& steering, float& acceleration, bool 
     }
 
     if(acceleration > 1.0f) acceleration = 1.0f;
+    if(acceleration >= 0.0f) breaks = 0.0f;
 
     if(acceleration < 0.0f)
     {
         if(mAIWhole.hackType <= 2)
         {
-            acceleration = 0.0f;//go by inertia
+            breaks = 0.0f;//go by inertia
         }
         else
         {
-            acceleration = Ogre::Math::Clamp(acceleration, -1.0f, 1.0f);
+            breaks = -0.5f - acceleration;
+            breaks = Ogre::Math::Clamp(breaks, 0.0f, 1.0f);
         }
+
+        acceleration = 0.0f;
     }
 
 
@@ -506,8 +505,10 @@ size_t AIUtils::getFracIndex(size_t closestSplineIndex, const Ogre::Vector3& car
 }
 
 AIUtils::SplineFeatures AIUtils::getSplineFeatures(
+    PhysicsVehicleAI* physicsAICar,
     const Ogre::Vector3& carPos, 
-    const Ogre::Vector3& linearImpulse,
+    const Ogre::Vector3& impulseLinear, 
+    const InitialVehicleSetup& initialVehicleSetup,
     float frac, size_t fracIndex, 
     float feature3, float feature4) const
 {
@@ -559,33 +560,48 @@ AIUtils::SplineFeatures AIUtils::getSplineFeatures(
             if(sqLen <= 4900.0f) multiplier = 1.0f;
             else multiplier = 70.0f / sqrt(sqLen);
 
-            float multiplier2 = multiplier * linearImpulse.length() * mAIWhole.hack1 * 45.0f;
+            float multiplier2 = multiplier * initialVehicleSetup.mChassisMass * physicsAICar->getLinearVelocity() * mAIWhole.hack1 * 45.0f;
 
-            ret.impulseAdjuster = multiplier2 * Ogre::Vector2(tmpDiff.x, tmpDiff.z);
+            Ogre::Vector3 impulseInc = physicsAICar->getLinearImpulseInc();
+
+            impulseInc.x += tmpDiff.x * multiplier2;
+            impulseInc.z += tmpDiff.z * multiplier2;
+            physicsAICar->setLinearImpulseInc(impulseInc);
         }
         if(mAIWhole.hack2 > 0.0)//dam, city
         {
             Ogre::Vector4 tx(p1.tangent.x, p2.tangent.x, p3.tangent.x, p4.tangent.x);
             Ogre::Vector4 tz(p1.tangent.z, p2.tangent.z, p3.tangent.z, p4.tangent.z);
 
+            Ogre::Real linVel = physicsAICar->getLinearVelocity();
+            if(linVel < 0.00001f)
+                linVel = 0.00001f;
+            physicsAICar->setLinearVelocity(linVel);
+
             Ogre::Vector2 tmpRes2;
             tmpRes2.x = tx.dotProduct(co);
             tmpRes2.y = tz.dotProduct(co);
 
-            tmpRes2 -= 1.0f;//d.polubotko: no other options?
+            Ogre::Vector3 impulseInc = physicsAICar->getLinearImpulseInc();
+
+            tmpRes2 -= Ogre::Vector2(impulseLinear.x, impulseLinear.z) / (initialVehicleSetup.mChassisMass * linVel);
+
 
             float multiplier = 0.0f;
 
             if(tmpRes2.dotProduct(Ogre::Vector2(tmpDiff.x, tmpDiff.z)) <= 0.0f)
             {
-                multiplier = linearImpulse.length() * mAIWhole.hack2 / (Ogre::Vector2(tmpDiff.x, tmpDiff.z).squaredLength() * mAIWhole.hackMultiplier + 1.0f);
+                multiplier = initialVehicleSetup.mChassisMass * linVel * mAIWhole.hack2 / 
+                    (Ogre::Vector2(tmpDiff.x, tmpDiff.z).squaredLength() * mAIWhole.hackMultiplier + 1.0f);
             }
             else
             {
-                multiplier = linearImpulse.length() * mAIWhole.hack2;
+                multiplier = initialVehicleSetup.mChassisMass * linVel * mAIWhole.hack2;
             }
 
-            ret.impulseAdjuster = multiplier * tmpRes2;
+            impulseInc.x += tmpRes2.x * multiplier;
+            impulseInc.z += tmpRes2.y * multiplier;
+            physicsAICar->setLinearImpulseInc(impulseInc);
         }
     }
 
