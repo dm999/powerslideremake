@@ -7,6 +7,7 @@
 #include "../tools/Tools.h"
 
 class PSAICar;
+class PhysicsVehicleAI;
 class GameState;
 
 struct AIDataSegment
@@ -26,7 +27,7 @@ public:
 
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
 
-    void performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused);
+    void performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState);
 
     void setSpeedCoeff(Ogre::Real speedCoeff){mSpeedCoeff = speedCoeff;}
 

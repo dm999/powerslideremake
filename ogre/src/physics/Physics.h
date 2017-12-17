@@ -12,15 +12,12 @@ struct GameWorld;
 struct DE2SingleBatch;
 struct DE2Part;
 
-class btCollisionObject;
-class btCollisionShape;
-class btTriangleMesh;
-class btCollisionObject;
-
 class PSBaseVehicle;
 class PhysicsVehicle;
 
 class StaticMeshProcesser;
+
+class GameState;
 
 class Physics
 {
@@ -29,10 +26,11 @@ public:
     Physics(StaticMeshProcesser * meshProesser);
     ~Physics();
 
-    void timeStep(Ogre::Real timeStep, size_t maxSubSteps = 1, Ogre::Real fixedTimeStep = 1.0f / 60.0f);
+    void timeStep(const GameState& gameState, Ogre::Real timeStep, size_t maxSubSteps = 1, Ogre::Real fixedTimeStep = 1.0f / 60.0f);
 
-    PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr, 
-        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis
+    PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr, 
+        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
+        bool isAI
         );
     void removeVehicle(const PSBaseVehicle * vehiclePtr);
     const PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr) const;
@@ -41,7 +39,7 @@ public:
 
 private:
 
-    void internalTimeStep();
+    void internalTimeStep(const GameState& gameState);
 
     Ogre::Real mTimeStep;
 

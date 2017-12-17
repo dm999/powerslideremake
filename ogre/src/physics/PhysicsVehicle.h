@@ -13,11 +13,9 @@
 
 #include "../GameState.h"
 
-class btSphereShape;
-class btCollisionObject;
-
 class Physics;
 class StaticMeshProcesser;
+class PSAICar;
 
 class PhysicsVehicle
 {
@@ -31,7 +29,7 @@ public:
                     Ogre::SceneNode *chassis);
     virtual ~PhysicsVehicle();
 
-    void timeStep();
+    void timeStep(const GameState& gameState);
     void processEngineIdle();
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
@@ -66,6 +64,18 @@ public:
         const Ogre::Vector3& point,
         const Ogre::Vector3& pA, const Ogre::Vector3& pB, const Ogre::Vector3& pC,
         const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC);
+
+protected:
+
+    virtual void doAIStep(const GameState& gameState) {(void)gameState;}
+
+    VehicleType mVehicleType;
+
+    Ogre::Real mThrottle;
+    Ogre::Real mBreaks;
+    Ogre::Real mSteeringOriginal;
+
+    PSAICar * mAICar;
 
 private:
 
@@ -110,9 +120,6 @@ private:
     Ogre::Real mMaxCollisionDistance;
 
     PSCarEngine mCarEngine;
-    Ogre::Real mThrottle;
-    Ogre::Real mBreaks;
-    Ogre::Real mSteeringOriginal;
     Ogre::Real mSteeringAdditionalParam;
     bool mIsSteeringLeft;
     bool mIsSteeringRight;
@@ -121,7 +128,6 @@ private:
     int mTurnOverValue;
 
     bool mIsRaceStarted;
-    VehicleType mVehicleType;
 
 };
 

@@ -27,9 +27,9 @@ void PSAICar::initModel(    lua_State * pipeline,
     mPhysicsVehicle->setVehicleType(AIVehicle);
 }
 
-void PSAICar::performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused)
+void PSAICar::performAICorrection(const GameState& gameState, PhysicsVehicleAI* physicsAICar)
 {
-    mAIUtils.performAICorrection(this, gameState, isRaceStarted, isGamePaused);
+    mAIUtils.performAICorrection(this, physicsAICar, gameState);
 }
 
 void PSAICar::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI)

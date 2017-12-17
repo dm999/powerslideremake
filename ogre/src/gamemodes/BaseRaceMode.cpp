@@ -541,7 +541,6 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
             if(!mModeContext.mGameState.getRaceFinished())
                 mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
 
-            mModeContext.mGameState.getAICar(q).performAICorrection(mModeContext.mGameState, mModeContext.mGameState.getRaceStarted(), mModeContext.mGameState.isGamePaused());
             mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
         }
 
@@ -552,7 +551,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
     {
-        mWorld->timeStep(evt.timeSinceLastFrame, 7);
+        mWorld->timeStep(mModeContext.mGameState, evt.timeSinceLastFrame, 7);
         mModeContext.mGameState.getPlayerCar().processSounds();
     }
     if(!mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())

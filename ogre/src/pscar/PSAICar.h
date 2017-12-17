@@ -23,7 +23,7 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera)override;
 
-    void performAICorrection(const GameState& gameState, bool isRaceStarted, bool isGamePaused);
+    void performAICorrection(const GameState& gameState, PhysicsVehicleAI* physicsAICar);
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
     void raceStarted();
 

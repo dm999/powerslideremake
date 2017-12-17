@@ -12,6 +12,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
 : mPhysics(physics),
     mMeshProcesser(meshProesser),
     mChassis(chassis),
+    mAICar(NULL),
     mInitialVehicleSetup(initialVehicleSetup),
     mPhysicsWheels(initialVehicleSetup, physics, meshProesser),
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
@@ -64,26 +65,26 @@ PhysicsVehicle::~PhysicsVehicle()
 {
 }
 
-void PhysicsVehicle::timeStep()
+void PhysicsVehicle::timeStep(const GameState& gameState)
 {
     mPhysicsWheels.initStep();
     mPhysicsRoofs.initStep();
     mPhysicsBody.initStep();
     mCoreBaseGlobalPrev = mCoreBaseGlobal;
 
-    //do AI
+    doAIStep(gameState);
     mPhysicsWheels.setSteering(adjustSteering());
 
     integrate();
 
-    //d.polubotko: TODO add velocity scale
+    Ogre::Real velScale = mInitialVehicleSetup.mVelocityScale;
     //d.polubotko: TODO adjust velocity scale for AI
 
     Ogre::Real linearImpulseMod = mImpulseLinear.length();
     mVehicleVelocityMod = linearImpulseMod * mInitialVehicleSetup.mChassisInvMass;
     if(mVehicleVelocityMod < 0.0001f) mVehicleVelocityMod = 0.0001f;
 
-    mInitialVehicleSetup.mCarGlobalPos += mImpulseLinear * mInitialVehicleSetup.mChassisInvMass;
+    mInitialVehicleSetup.mCarGlobalPos += mImpulseLinear * velScale * mInitialVehicleSetup.mChassisInvMass;
     Ogre::Real airDensTransCoeff = -1.0f * mInitialVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
     mImpulseLinear *= airDensTransCoeff;
 
@@ -144,27 +145,30 @@ void PhysicsVehicle::timeStep()
 
 Ogre::Real PhysicsVehicle::adjustSteering()
 {
-    if (mIsSteeringLeft)
+    if(mVehicleType == HumanVehicle)
     {
-        mSteeringOriginal -= mSteeringIncrement;
-    }
-    else if (mIsSteeringRight)
-    {
-        mSteeringOriginal += mSteeringIncrement;
-    }
-    else
-    {
-        if(mSteeringOriginal < -mSteeringIncrement)
-        {
-            mSteeringOriginal += mSteeringIncrement;
-        }
-        else if(mSteeringOriginal > mSteeringIncrement)
+        if (mIsSteeringLeft)
         {
             mSteeringOriginal -= mSteeringIncrement;
         }
+        else if (mIsSteeringRight)
+        {
+            mSteeringOriginal += mSteeringIncrement;
+        }
         else
         {
-            mSteeringOriginal = 0.0f;
+            if(mSteeringOriginal < -mSteeringIncrement)
+            {
+                mSteeringOriginal += mSteeringIncrement;
+            }
+            else if(mSteeringOriginal > mSteeringIncrement)
+            {
+                mSteeringOriginal -= mSteeringIncrement;
+            }
+            else
+            {
+                mSteeringOriginal = 0.0f;
+            }
         }
     }
 

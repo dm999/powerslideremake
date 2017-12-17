@@ -40,11 +40,9 @@ protected:
 
     InitialVehicleSetup mInitialVehicleSetup;
 
+    bool mIsAI;
+
     static Ogre::NameGenerator nameGenNodes;
-
-private:
-
-    void addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
 };
 

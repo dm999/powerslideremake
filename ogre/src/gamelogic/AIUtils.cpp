@@ -9,6 +9,8 @@
 
 #include "../pscar/PSAICar.h"
 
+#include "../physics/PhysicsVehicleAI.h"
+
 namespace
 {
     const float aiMaxSpeed = 300.0f;
@@ -45,7 +47,7 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
     }
 }
 
-void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bool isRaceStarted, bool isGamePaused)
+void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState)
 {
 
     float steeringVal;
@@ -64,9 +66,9 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
     inference(steeringVal, accelerationVal);
     adjustInferenceResults(steeringVal, accelerationVal, gameState.getTrackName() == "mineshaft");
 
-    if(isRaceStarted)
+    if(gameState.getRaceStarted())
     {
-        if(isGamePaused)
+        if(gameState.isGamePaused())
         {
             mTimerAIStuck.reset();
         }
@@ -80,31 +82,14 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
         mPrevPos = carPos;
         mAIDistanceLength += Ogre::Math::Abs(lastDistance);
 
-        aiCar->setSteerLeft(false);
-        aiCar->setSteerRight(false);
+        physicsAICar->setSteering(steeringVal);
+        physicsAICar->setAcceleration(accelerationVal);
 
-        //d.polubotko: refactor if needed
-        //aiCar->setSteering(steeringVal);
-        if(steeringVal > 0.0f)
-        {
-            //aiCar->setSteeringUmpulse(maxSteerImpulse * steeringVal);
-            aiCar->setSteerLeft(true);
-        }
-        else
-        {
-            //aiCar->setSteeringUmpulse(maxSteerImpulse * -steeringVal);
-            aiCar->setSteerRight(true);
-        }
-
-
-        //acceleration
-        aiCar->setAcceleration(false);
-        aiCar->setBrake(false);
 
         const Ogre::Real stuckDistanceLimit = 20.0f;
         const unsigned long stuckTimeLimit = 2000; //ms
         const unsigned long reverseTimeLimit = 2000; //ms
-
+#if 0
         if(mTimerAIStuck.getMilliseconds() > stuckTimeLimit && !mIsReverseEnabled)
         {
             if(mAIDistanceLength < stuckDistanceLimit)
@@ -142,8 +127,8 @@ void AIUtils::performAICorrection(PSAICar* aiCar, const GameState& gameState, bo
                 mTimerAIStuck.reset();
             }
         }
+#endif
     }
-
 }
 
 void AIUtils::raceStarted()

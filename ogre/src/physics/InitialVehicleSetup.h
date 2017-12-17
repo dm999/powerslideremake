@@ -72,6 +72,8 @@ struct InitialVehicleSetup
 
     Ogre::Real mAccelerationFactor;
 
+    Ogre::Real mVelocityScale;
+
     PSSpline mPower;
 
     PSSpline mSteering;

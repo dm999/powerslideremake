@@ -13,7 +13,7 @@ void PSBaseVehicle::initPhysicalModel(Physics * world,
 
     mInitialVehicleSetup = initialVehicleSetup;
 
-    addToWorld(modelNode, wheelNodes);
+    mPhysicsVehicle = mWorld->addVehicle(mInitialVehicleSetup, this, wheelNodes, modelNode, mIsAI);
 }
 
 void PSBaseVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
@@ -26,9 +26,4 @@ void PSBaseVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogr
 void PSBaseVehicle::clear()
 {
     mWorld->removeVehicle(this);
-}
-
-void PSBaseVehicle::addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
-{
-    mPhysicsVehicle = mWorld->addVehicle(mInitialVehicleSetup, this, wheelNodes, modelNode);
 }

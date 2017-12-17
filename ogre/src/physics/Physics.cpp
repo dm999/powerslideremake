@@ -4,6 +4,7 @@
 #include "../mesh/StaticMeshProcesser.h"
 
 #include "PhysicsVehicle.h"
+#include "PhysicsVehicleAI.h"
 
 
 Physics::Physics(StaticMeshProcesser * meshProesser)
@@ -15,7 +16,7 @@ Physics::Physics(StaticMeshProcesser * meshProesser)
 Physics::~Physics()
 {}
 
-void Physics::timeStep(Ogre::Real timeStep, size_t maxSubSteps, Ogre::Real fixedTimeStep)
+void Physics::timeStep(const GameState& gameState, Ogre::Real timeStep, size_t maxSubSteps, Ogre::Real fixedTimeStep)
 {
 
     size_t numSimulationSubSteps = 0;
@@ -32,21 +33,22 @@ void Physics::timeStep(Ogre::Real timeStep, size_t maxSubSteps, Ogre::Real fixed
         size_t clampedSimulationSteps = (numSimulationSubSteps > maxSubSteps) ? maxSubSteps : numSimulationSubSteps;
         for (size_t i = 0; i < clampedSimulationSteps; i++)
         {
-            internalTimeStep();
+            internalTimeStep(gameState);
         }
     }
 }
 
-void Physics::internalTimeStep()
+void Physics::internalTimeStep(const GameState& gameState)
 {
     for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
-        (*i).second->timeStep();
+        (*i).second->timeStep(gameState);
     }
 }
 
-PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, const PSBaseVehicle * vehiclePtr,
-                        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis)
+PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr,
+                        Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
+                        bool isAI)
 {
     PhysicsVehicle* ret = NULL;
 
@@ -54,7 +56,11 @@ PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, co
 
     if(found == mVehicles.end())
     {
-        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis));
+        CommonIncludes::shared_ptr<PhysicsVehicle> vehicle;
+        if(isAI)
+            vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicleAI(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis, static_cast<PSAICar*>(vehiclePtr)));
+        else
+            vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis));
         ret = vehicle.get();
         mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
     }

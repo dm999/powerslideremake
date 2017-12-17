@@ -81,8 +81,6 @@ protected:
     std::vector<Ogre::Real> convertSplinePoints(const std::vector<std::string>& points) const;
 
 
-    bool mIsAI;
-
     Ogre::SceneNode* mModelNode;
     Ogre::Entity* mModelEntity[InitialVehicleSetup::mWheelsAmount + 1];//Cockpit, RR, RL, FR, FL
 

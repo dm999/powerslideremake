@@ -323,6 +323,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mFrontBreak = getCarParameter("", "front brake");
     initialVehicleSetup.mBackBreak = getCarParameter("", "back brake");
 
+    initialVehicleSetup.mVelocityScale = getCarParameter("", "velocity scale");
+
     initialVehicleSetup.mTransmissionDrag = getCarParameter("", "transmission drag");
 
     initialVehicleSetup.mDiffSlip = getCarParameter("", "diff slip");
