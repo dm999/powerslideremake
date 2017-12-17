@@ -30,6 +30,8 @@ public:
     void setSlotIndex(size_t index){mSlotIndex = index;}
     size_t getSlotIndex() const {return mSlotIndex;}
 
+    const AIWhole& getAIData() const {return mAIUtils.getAIData();}
+
 
 private:
 

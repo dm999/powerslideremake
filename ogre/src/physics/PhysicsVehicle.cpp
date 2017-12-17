@@ -77,8 +77,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     integrate();
 
-    Ogre::Real velScale = mInitialVehicleSetup.mVelocityScale;
-    //d.polubotko: TODO adjust velocity scale for AI
+    Ogre::Real velScale = mInitialVehicleSetup.mVelocityScale * doGetVelocityScale();
 
     Ogre::Real linearImpulseMod = mImpulseLinear.length();
     mVehicleVelocityMod = linearImpulseMod * mInitialVehicleSetup.mChassisInvMass;
@@ -99,7 +98,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
         Ogre::Real rotAngle = 1.0f / momentProj * rotImpulseMod;
 
-        //d.polubotko: TODO adjust rotAngle for AI
+        rotAngle *= doGetVelocityScale();
 
         mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
 
@@ -132,7 +131,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     isTurnOver |= mPhysicsBody.process(*this);
     turnOverRestore(isTurnOver);
     calcTransmission();
-    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks);
+    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, doGetTractionScale());
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
@@ -180,8 +179,13 @@ Ogre::Real PhysicsVehicle::adjustSteering()
     if (mSteeringOriginal < 0.0f)
         sign = -1.0f;
 
-    //d.polubotko: TODO adjust steering for AI
-    Ogre::Real steeringSpline = mInitialVehicleSetup.mSteering.getPoint(Ogre::Math::Abs(mSteeringOriginal));
+    
+    Ogre::Real steeringSpline;
+    if(mVehicleType == HumanVehicle)
+        steeringSpline = mInitialVehicleSetup.mSteering.getPoint(Ogre::Math::Abs(mSteeringOriginal));
+    if(mVehicleType == AIVehicle)
+        steeringSpline = doAdjustAISteering(Ogre::Math::Abs(mSteeringOriginal));
+
     steeringSpline *= sign * 0.95f;
 
     Ogre::Real impulseMod = mImpulseLinear.length();
@@ -203,8 +207,7 @@ void PhysicsVehicle::calcTransmission()
 {
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
     mCarEngine.process(wheelsAverageVel, mThrottle);
-    //d.polubotko: TODO adjust mThrottle for AI
-    Ogre::Real power = mCarEngine.getPower(mThrottle, mImpulseLinear.length());
+    Ogre::Real power = mCarEngine.getPower(mThrottle * doGetThrottleScale(), mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
 }
 

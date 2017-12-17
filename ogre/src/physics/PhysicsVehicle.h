@@ -69,6 +69,11 @@ protected:
 
     virtual void doAIStep(const GameState& gameState) {(void)gameState;}
 
+    virtual Ogre::Real doAdjustAISteering(Ogre::Real val)const {return val;}
+    virtual Ogre::Real doGetVelocityScale()const {return 1.0f;}
+    virtual Ogre::Real doGetThrottleScale()const {return 1.0f;}
+    virtual Ogre::Real doGetTractionScale()const {return 1.0f;}
+
     VehicleType mVehicleType;
 
     Ogre::Real mThrottle;

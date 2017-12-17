@@ -37,7 +37,7 @@ public:
     char getWheelTerainIndex(size_t index) const;
     Ogre::Real getWheelVelocity(size_t index) const;
 
-    void calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks);
+    void calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale);
 
     void setSteering(Ogre::Real value);
 

@@ -33,6 +33,8 @@ public:
 
     void raceStarted();
 
+    const AIWhole& getAIData() const {return mAIWhole;}
+
 private:
 
     Ogre::Real mSpeedCoeff;

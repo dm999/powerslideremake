@@ -34,3 +34,38 @@ void PhysicsVehicleAI::setBreaks(Ogre::Real value)
 {
     mBreaks = value;
 }
+
+Ogre::Real PhysicsVehicleAI::doAdjustAISteering(Ogre::Real val)const
+{
+    return Ogre::Math::Pow(val * 1.0526316f, 1.2f);
+}
+
+Ogre::Real PhysicsVehicleAI::doGetVelocityScale()const
+{
+    Ogre::Real ret = 1.0f;
+
+    if(mAICar)
+        ret = mAICar->getAIData().velocityScale;
+
+    return ret;
+}
+
+Ogre::Real PhysicsVehicleAI::doGetThrottleScale()const
+{
+    Ogre::Real ret = 1.0f;
+
+    if(mAICar)
+        ret = mAICar->getAIData().aiImpulseScale;
+
+    return ret;
+}
+
+Ogre::Real PhysicsVehicleAI::doGetTractionScale()const
+{
+    Ogre::Real ret = 1.0f;
+
+    if(mAICar)
+        ret = mAICar->getAIData().tractionCoeff;
+
+    return ret;
+}

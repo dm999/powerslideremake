@@ -561,7 +561,7 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     return res;
 }
 
-void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks)
+void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale)
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
@@ -626,7 +626,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
                 traction = rearTraction * suspensionTractionSpline;
             }
 
-            //d.polubotko: TODO adjust traction for AI
+            traction *= tractionScale;
 
             Ogre::Real velMod = velocity.length();
             velocity.normalise();

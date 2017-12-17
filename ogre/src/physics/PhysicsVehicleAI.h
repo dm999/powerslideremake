@@ -23,6 +23,11 @@ public:
 protected:
 
     virtual void doAIStep(const GameState& gameState) override;
+
+    virtual Ogre::Real doAdjustAISteering(Ogre::Real val) const override;
+    virtual Ogre::Real doGetVelocityScale() const override;
+    virtual Ogre::Real doGetThrottleScale() const override;
+    virtual Ogre::Real doGetTractionScale() const override;
 };
 
 #endif
