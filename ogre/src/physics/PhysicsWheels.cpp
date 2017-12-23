@@ -565,7 +565,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-    Ogre::Vector3 matrixZColumn = carRot.GetColumn(2);
+    Ogre::Vector3 matrixZColumn = -carRot.GetColumn(2);//original data is left hand
 
     Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[3] * 1.0526316f);
     if(turnFinish < 0.0f) turnFinish = 0.0f;
@@ -594,8 +594,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         {
             const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
 
-            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], 
-                -matrixZColumn);//original data is left hand
+            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], matrixZColumn);
             impulseProj.normalise();
 
             Ogre::Real cosSteer = Ogre::Math::Cos(mSteering[q]);

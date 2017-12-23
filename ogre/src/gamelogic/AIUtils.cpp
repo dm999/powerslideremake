@@ -81,6 +81,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         physicsAICar->setAcceleration(accelerationVal);
         physicsAICar->setBreaks(breaksVal);
 
+        aiCar->setAcceleration(true);//for particles
 
         const Ogre::Real stuckDistanceLimit = 20.0f;
         const unsigned long stuckTimeLimit = 2000; //ms

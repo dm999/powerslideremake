@@ -216,13 +216,19 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
         if(mIsDisableMouse)
         {
             Ogre::Camera* cam = mCameraMan->getCamera();
-            cam->setAutoTracking(false);
-            mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), getAlignedVelocity());
+            if(cam)
+            {
+                cam->setAutoTracking(false);
+                mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), getAlignedVelocity());
+            }
         }
         else
         {
             Ogre::Camera* cam = mCameraMan->getCamera();
-            cam->setAutoTracking(true, mModelNode);
+            if(cam)
+            {
+                cam->setAutoTracking(true, mModelNode);
+            }
         }
         
     }
