@@ -22,7 +22,7 @@ void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)
 {
-    mSteeringOriginal = -value;
+    mSteeringOriginal = value;
 }
 
 void PhysicsVehicleAI::setAcceleration(Ogre::Real value)
@@ -47,16 +47,12 @@ void PhysicsVehicleAI::setLinearVelocity(Ogre::Real val)
 
 Ogre::Vector3 PhysicsVehicleAI::getLinearImpulseInc() const
 {
-    Ogre::Vector3 tmp(mImpulseLinearInc);
-    tmp.z = -tmp.z;//original data is left hand
-    return tmp;
+    return mImpulseLinearInc;
 }
 
 void PhysicsVehicleAI::setLinearImpulseInc(const Ogre::Vector3& val)
 {
-    Ogre::Vector3 tmp(val);
-    tmp.z = -tmp.z;//original data is left hand
-    mImpulseLinearInc = tmp;
+    mImpulseLinearInc = val;
 }
 
 Ogre::Real PhysicsVehicleAI::doAdjustAISteering(Ogre::Real val)const

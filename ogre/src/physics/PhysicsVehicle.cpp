@@ -80,11 +80,13 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     Ogre::Real velScale = mInitialVehicleSetup.mVelocityScale * doGetVelocityScale();
 
-    Ogre::Real linearImpulseMod = mImpulseLinear.length();
+    Ogre::Vector3 impulse(mImpulseLinear);
+    impulse.z = -impulse.z;//original data is left hand
+    Ogre::Real linearImpulseMod = impulse.length();
     mVehicleVelocityMod = linearImpulseMod * mInitialVehicleSetup.mChassisInvMass;
     if(mVehicleVelocityMod < 0.0001f) mVehicleVelocityMod = 0.0001f;
 
-    mInitialVehicleSetup.mCarGlobalPos += mImpulseLinear * velScale * mInitialVehicleSetup.mChassisInvMass;
+    mInitialVehicleSetup.mCarGlobalPos += impulse * velScale * mInitialVehicleSetup.mChassisInvMass;
     Ogre::Real airDensTransCoeff = -1.0f * mInitialVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
     mImpulseLinear *= airDensTransCoeff;
 
@@ -102,15 +104,20 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
         rotAngle *= doGetVelocityScale();
 
         mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+        Ogre::Vector3 carRotV[3];//original data is left hand
+        carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+        carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+        carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
-        Ogre::Vector3 rotMatrixAxisY = carRot.GetColumn(1);
-        Ogre::Vector3 rotMatrixAxisZ = carRot.GetColumn(2);
-        createRotMatrix(rotMatrixAxisY, normalisedImpulseRot, rotAngle);
-        createRotMatrix(rotMatrixAxisZ, normalisedImpulseRot, rotAngle);
-        Ogre::Vector3 rotMatrixAxisX = rotMatrixAxisY.crossProduct(rotMatrixAxisZ);
+        createRotMatrix(carRotV[1], normalisedImpulseRot, rotAngle);
+        createRotMatrix(carRotV[2], normalisedImpulseRot, rotAngle);
+        carRotV[1].z = -carRotV[1].z;//original data is left hand
+        carRotV[2].x = -carRotV[2].x;//original data is left hand
+        carRotV[2].y = -carRotV[2].y;//original data is left hand
+        Ogre::Vector3 rotMatrixAxisX = carRotV[1].crossProduct(carRotV[2]);
         carRot.SetColumn(0, rotMatrixAxisX);
-        carRot.SetColumn(1, rotMatrixAxisY);
-        carRot.SetColumn(2, rotMatrixAxisZ);
+        carRot.SetColumn(1, carRotV[1]);
+        carRot.SetColumn(2, carRotV[2]);
 
         mInitialVehicleSetup.mCarRot.FromRotationMatrix(carRot);
 
@@ -149,11 +156,11 @@ Ogre::Real PhysicsVehicle::adjustSteering()
     {
         if (mIsSteeringLeft)
         {
-            mSteeringOriginal -= mSteeringIncrement;
+            mSteeringOriginal += mSteeringIncrement;
         }
         else if (mIsSteeringRight)
         {
-            mSteeringOriginal += mSteeringIncrement;
+            mSteeringOriginal -= mSteeringIncrement;
         }
         else
         {
@@ -247,7 +254,14 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
 
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-    Ogre::Vector3 tmpRes = carRot * axis;
+    Ogre::Matrix3 carRotPS;
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+    carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
+
+    Ogre::Vector3 tmpRes = carRotPS * axis;
 
     ret = mInitialVehicleSetup.mMomentOfInertia.dotProduct(Ogre::Vector3(tmpRes * tmpRes));
 
@@ -382,13 +396,11 @@ void PhysicsVehicle::calcWheelRoofImpulses()
 
     mPhysicsWheels.calcImpulses(mImpulseRot, mImpulseRotPrev, normalisedImpulseRot, 
                                 mImpulseLinear, 
-                                recipMomentProj,
-                                *this);
+                                recipMomentProj);
 
     mPhysicsRoofs.calcImpulses(mImpulseRot, mImpulseRotPrev, normalisedImpulseRot, 
                                 mImpulseLinear, 
-                                recipMomentProj,
-                                *this);
+                                recipMomentProj);
 
 }
 
@@ -424,15 +436,18 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
     {
         Ogre::Matrix3 carRot;
         mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-        Ogre::Vector3 rotYAxis = carRot.GetColumn(1);
+        Ogre::Vector3 carRotV[3];//original data is left hand
+        carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+        carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+        carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
         Ogre::Real turnOverRestoreVal = 500.0f / (mImpulseRot.length() + 2.0f);
-        Ogre::Vector3 upDiff = Ogre::Vector3::UNIT_Y - rotYAxis;
+        Ogre::Vector3 upDiff = Ogre::Vector3::UNIT_Y - carRotV[1];
         turnOverRestoreVal *= upDiff.length();
         if(turnOverRestoreVal != 0.0f)
         {
             upDiff *= turnOverRestoreVal;
-            mImpulseRot += upDiff.crossProduct(rotYAxis);
+            mImpulseRotInc += upDiff.crossProduct(carRotV[1]);
         }
 
         if(mTurnOverValue < -200)
@@ -477,7 +492,9 @@ void PhysicsVehicle::gearDown()
 
 Ogre::Vector3 PhysicsVehicle::getLinearVelocity() const
 {
-    return mImpulseLinear * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+    Ogre::Vector3 impulse(mImpulseLinear);
+    impulse.z = -impulse.z;//original data is left hand
+    return impulse * mInitialVehicleSetup.mChassisInvMass * 33.0f;
 }
 
 Ogre::Vector3 PhysicsVehicle::getAngularVelocity() const

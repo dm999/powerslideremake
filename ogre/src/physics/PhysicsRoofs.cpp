@@ -19,10 +19,13 @@ PhysicsRoofs::~PhysicsRoofs()
 
 void PhysicsRoofs::init(const Ogre::Vector3& chassisPos)
 {
+    Ogre::Vector3 carPos(chassisPos);
+    carPos.z = -carPos.z;//original data is left hand
+
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
     {
-        mRoofGlobal[q] = chassisPos;
-        mRoofGlobalPrev[q] = chassisPos;
+        mRoofGlobal[q] = carPos;
+        mRoofGlobalPrev[q] = carPos;
     }
 }
 
@@ -36,9 +39,9 @@ void PhysicsRoofs::initStep()
 
 void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                                const Ogre::Vector3& impulseLinear,
-                               Ogre::Real recipMomentProj,
-                               const PhysicsVehicle& vehicle)
+                               Ogre::Real recipMomentProj)
 {
+
 
     if(impulseRot.length() == 0.0f)
     {
@@ -49,9 +52,19 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
     }
     else
     {
+        Ogre::Matrix3 carRot;
+        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+
+        Ogre::Matrix3 carRotPS;
+        Ogre::Vector3 carRotV[3];//original data is left hand
+        carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+        carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+        carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+        carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
+
         for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
         {
-            Ogre::Vector3 roofRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mRoofPos[q];
+            Ogre::Vector3 roofRot = carRotPS * mInitialVehicleSetup.mRoofPos[q];
             Ogre::Vector3 tangent = PhysicsVehicle::findTangent(normalisedImpulseRot, roofRot);
             if(tangent.x != 0.0f || tangent.y != 0.0f || tangent.z != 0.0f)
             {
@@ -68,18 +81,28 @@ void PhysicsRoofs::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vec
 
 bool PhysicsRoofs::process(PhysicsVehicle& vehicle)
 {
+    Ogre::Vector3 carPos = mInitialVehicleSetup.mCarGlobalPos;
+    carPos.z = -carPos.z;//original data is left hand
+
+    Ogre::Matrix3 carRot;
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+
+    Ogre::Matrix3 carRotPS;
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+    carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
+
     bool isCollided = false;
 
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
     {
 
-        Ogre::Vector3 roofRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mRoofPos[q];
-        mRoofGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + roofRot;
+        Ogre::Vector3 roofRot = carRotPS * mInitialVehicleSetup.mRoofPos[q];
+        mRoofGlobal[q] = carPos + roofRot;
 
-        Ogre::Matrix3 carRot;
-        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-        Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-        roofRot -= matrixYColumn * 1.2f;
+        roofRot -= carRotV[1] * 1.2f;
 
         Ogre::Vector3 diffRoofPos = mRoofGlobal[q] - mRoofGlobalPrev[q];
 
@@ -102,7 +125,6 @@ bool PhysicsRoofs::process(PhysicsVehicle& vehicle)
             const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
 
             Ogre::Vector3 worldNormal = collision.mNormal;
-            worldNormal.z = -worldNormal.z;//original data is left hand
 
             Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
             mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);

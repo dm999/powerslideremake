@@ -59,10 +59,10 @@ void PHYLoader::load(GameState& gameState) const
                 0.0f, 0.0f, 0.0f, 1.0f);
 
             initialVehicleSetup.mTrackPosition = transform;
-            initialVehicleSetup.mInitialImpulseLinear = Ogre::Vector3(impulseLinear.x, impulseLinear.y, -impulseLinear.z);
-            initialVehicleSetup.mInitialImpulseLinearInc = Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, -impulseLinearInc.z);
-            initialVehicleSetup.mInitialImpulseRot = Ogre::Vector3(impulseRot.x, impulseRot.y, -impulseRot.z);
-            initialVehicleSetup.mInitialImpulseRotInc = Ogre::Vector3(impulseRotInc.x, impulseRotInc.y, -impulseRotInc.z);
+            initialVehicleSetup.mInitialImpulseLinear = Ogre::Vector3(impulseLinear.x, impulseLinear.y, impulseLinear.z);
+            initialVehicleSetup.mInitialImpulseLinearInc = Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, impulseLinearInc.z);
+            initialVehicleSetup.mInitialImpulseRot = Ogre::Vector3(impulseRot.x, impulseRot.y, impulseRot.z);
+            initialVehicleSetup.mInitialImpulseRotInc = Ogre::Vector3(impulseRotInc.x, impulseRotInc.y, impulseRotInc.z);
 
             gameState.getInitialVehicleSetup().push_back(initialVehicleSetup);
 

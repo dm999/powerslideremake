@@ -259,20 +259,17 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mRoofRadius[0] = mCarSettings.getFloatValue("", "roof back radius");
     initialVehicleSetup.mRoofRadius[1] = initialVehicleSetup.mRoofRadius[0];
     Ogre::Vector3 roofBack = mCarSettings.getArray3Value("", "roof back");
-    roofBack.z = -roofBack.z;
     initialVehicleSetup.mRoofPos[0] = roofBack;
     initialVehicleSetup.mRoofPos[1] = Ogre::Vector3(-roofBack.x, roofBack.y, roofBack.z);
 
     initialVehicleSetup.mRoofRadius[2] = mCarSettings.getFloatValue("", "roof front radius");
     initialVehicleSetup.mRoofRadius[3] = initialVehicleSetup.mRoofRadius[2];
     Ogre::Vector3 roofFront = mCarSettings.getArray3Value("", "roof front");
-    roofFront.z = -roofFront.z;
     initialVehicleSetup.mRoofPos[2] = roofFront;
     initialVehicleSetup.mRoofPos[3] = Ogre::Vector3(-roofFront.x, roofFront.y, roofFront.z);
 
     initialVehicleSetup.mBodyRadius = mCarSettings.getFloatValue("", "body radius");
     Ogre::Vector3 bodyBase = mCarSettings.getArray3Value("", "body base 0");
-    bodyBase.z = -bodyBase.z;
     initialVehicleSetup.mBodyBasePos = bodyBase;
 
     Ogre::Vector2 wheelRadius = mCarSettings.getArray2Value("", "wheel radii");

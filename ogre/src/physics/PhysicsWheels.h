@@ -10,6 +10,7 @@ class Physics;
 class StaticMeshProcesser;
 class PhysicsVehicle;
 
+/*all calculations in left hand - like original data*/
 class PhysicsWheels
 {
 public:
@@ -24,8 +25,7 @@ public:
     void initStep();
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
-                        Ogre::Real recipMomentProj,
-                        const PhysicsVehicle& vehicle);
+                        Ogre::Real recipMomentProj);
     void process(PhysicsVehicle& vehicle);
     void reposition();
     void rerotation();

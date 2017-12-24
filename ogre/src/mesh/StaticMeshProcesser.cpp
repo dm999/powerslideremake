@@ -918,14 +918,8 @@ bool StaticMeshProcesser::collideSphere(const Ogre::Vector3& spherePos, Ogre::Re
                                         const Ogre::Vector3& averagedPos, Ogre::Real averageLen,
                                         size_t& foundIndex, Ogre::Real& minDist) const
 {
-    Ogre::Vector3 spherePosL = spherePos;
-    spherePosL.z = -spherePosL.z;//original data is left hand
-
-    Ogre::Vector3 averagedPosL = averagedPos;
-    averagedPosL.z = -averagedPosL.z;//original data is left hand
-
-    return mCollisionDetection.collideSphere(spherePosL, radius, tol, 
-        averagedPosL, averageLen, 
+    return mCollisionDetection.collideSphere(spherePos, radius, tol, 
+        averagedPos, averageLen, 
         foundIndex, minDist);
 }
 
@@ -942,10 +936,6 @@ const std::vector<size_t>& StaticMeshProcesser::getArrayOfCollisions() const
 void StaticMeshProcesser::getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const
 {
     mCollisionDetection.getGeoverts(collision, pA, pC, pB);
-
-    pA.z = -pA.z;//original data is left hand
-    pB.z = -pB.z;//original data is left hand
-    pC.z = -pC.z;//original data is left hand
 }
 
 void StaticMeshProcesser::getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& pA, Ogre::Vector2& pC, Ogre::Vector2& pB) const

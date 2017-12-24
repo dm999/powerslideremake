@@ -159,7 +159,6 @@ void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
     Ogre::Vector3 carLinearImpulse = aiCar->getLinearImpulse();
-    carLinearImpulse.z = -carLinearImpulse.z;//original data is left hand
 
 
     size_t closestSplineIndex = getRelativeClosestSplinePoint(carPos);

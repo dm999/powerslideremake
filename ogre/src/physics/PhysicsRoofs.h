@@ -26,8 +26,7 @@ public:
     void initStep();
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
-                        Ogre::Real recipMomentProj,
-                        const PhysicsVehicle& vehicle);
+                        Ogre::Real recipMomentProj);
     bool process(PhysicsVehicle& vehicle);
 
 private:

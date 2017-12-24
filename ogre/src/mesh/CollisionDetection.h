@@ -17,6 +17,7 @@ struct FoundCollision
     bool mIsFarFromCoreBase;
 };
 
+/*all calculations in left hand - like original data*/
 class CollisionDetection
 {
 public:

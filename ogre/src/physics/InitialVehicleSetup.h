@@ -4,15 +4,16 @@
 #include "../tools/PSSpline.h"
 #include "TerrainData.h"
 
+/*most data assumed to be in right hand - like Ogre*/
 struct InitialVehicleSetup
 {
     Ogre::Vector3 mCOG;
 
     Ogre::Matrix4 mTrackPosition;
-    Ogre::Vector3 mInitialImpulseLinear;
-    Ogre::Vector3 mInitialImpulseLinearInc;
-    Ogre::Vector3 mInitialImpulseRot;
-    Ogre::Vector3 mInitialImpulseRotInc;
+    Ogre::Vector3 mInitialImpulseLinear;//left hand
+    Ogre::Vector3 mInitialImpulseLinearInc;//left hand
+    Ogre::Vector3 mInitialImpulseRot;//left hand
+    Ogre::Vector3 mInitialImpulseRotInc;//left hand
 
     Ogre::Vector3 mCarGlobalPos;
     Ogre::Quaternion mCarRot;
@@ -24,12 +25,12 @@ struct InitialVehicleSetup
 
     static const int mRoofsAmount = 4;
     float mRoofRadius[mRoofsAmount];//RR, RL, FR, FL
-    Ogre::Vector3 mRoofPos[mRoofsAmount];//RR, RL, FR, FL
+    Ogre::Vector3 mRoofPos[mRoofsAmount];//RR, RL, FR, FL //left hand
 
     Ogre::Vector3 mCoreBase;
 
     float mBodyRadius;
-    Ogre::Vector3 mBodyBasePos;
+    Ogre::Vector3 mBodyBasePos;//left hand
 
     Ogre::Real mAirDensityTranslation;
     Ogre::Real mAirDensityRot;

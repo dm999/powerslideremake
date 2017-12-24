@@ -29,16 +29,26 @@ void PhysicsBody::initStep()
 
 bool PhysicsBody::process(PhysicsVehicle& vehicle)
 {
-    bool isCollided = false;
-
-    Ogre::Vector3 bodyRot = mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mBodyBasePos;
-
-    mBodyGlobal = mInitialVehicleSetup.mCarGlobalPos + bodyRot;
+    Ogre::Vector3 carPos = mInitialVehicleSetup.mCarGlobalPos;
+    carPos.z = -carPos.z;//original data is left hand
 
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-    Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-    bodyRot -= matrixYColumn * 1.2f;
+
+    Ogre::Matrix3 carRotPS;
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+    carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
+
+    bool isCollided = false;
+
+    Ogre::Vector3 bodyRot = carRotPS * mInitialVehicleSetup.mBodyBasePos;
+
+    mBodyGlobal = carPos + bodyRot;
+
+    bodyRot -= carRotV[1] * 1.2f;
 
     Ogre::Vector3 diffBodyPos = mBodyGlobal - mBodyGlobalPrev;
 
@@ -63,7 +73,6 @@ bool PhysicsBody::process(PhysicsVehicle& vehicle)
         const FoundCollision& collision = mMeshProcesser->getCollision(foundIndex);
 
         Ogre::Vector3 worldNormal = collision.mNormal;
-        worldNormal.z = -worldNormal.z;//original data is left hand
 
         Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
         mMeshProcesser->getGeoverts(collision, pointOnStaticA, pointOnStaticC, pointOnStaticB);

@@ -19,6 +19,7 @@ struct AIDataSegment
     Ogre::Real segmentLength;
 };
 
+/*all calculations in left hand - like original data*/
 class AIUtils
 {
 public:

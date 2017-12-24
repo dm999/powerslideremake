@@ -41,21 +41,32 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
 
 void PhysicsWheels::initStep()
 {
-    Ogre::Matrix3 rotMatrix;
-    mInitialVehicleSetup.mCarRot.ToRotationMatrix(rotMatrix);
-    Ogre::Vector3 rotAxisY = rotMatrix.GetColumn(1);
+    Ogre::Vector3 carPos = mInitialVehicleSetup.mCarGlobalPos;
+    carPos.z = -carPos.z;//original data is left hand
+
+    Ogre::Matrix3 carRot;
+    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+
+    Ogre::Matrix3 carRotPS;
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+    carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
 
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        mGlobalPos[q] = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mConnectionPointWheel[q];
+        Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
+        suspLocal.z = -suspLocal.z;//original data is left hand
+        mGlobalPos[q] = carPos + carRotPS * suspLocal;
 
         Ogre::Real maxTravel = mInitialVehicleSetup.mMaxTravel * 0.5f;
-        Ogre::Vector3 rotVal = maxTravel * rotAxisY;
+        Ogre::Vector3 rotVal = maxTravel * carRotV[1];
 
         mWheelsSuspensionPointGlobalPrev[q] = mWheelsSuspensionPointGlobal[q];
         mWheelsSuspensionPointGlobal[q] = mGlobalPos[q] - rotVal;
         mWheelsSuspensionPoint2Global[q] = mWheelsSuspensionPointGlobal[q] - rotVal;
-        mWheelsSuspensionPoint[q] = mWheelsSuspensionPoint2Global[q] - mInitialVehicleSetup.mCarGlobalPos;
+        mWheelsSuspensionPoint[q] = mWheelsSuspensionPoint2Global[q] - carPos;
 
         //mWheelsSuspensionGlobalPrev[q] = mWheelsSuspensionGlobal[q];
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
@@ -109,7 +120,7 @@ void PhysicsWheels::rerotation()
         if(q >= 2)//front
         {
             Ogre::Quaternion turnWheel;
-            turnWheel.FromAngleAxis(Ogre::Degree(mSteering[q] * -45.0f), Ogre::Vector3(0.0f, 1.0f, 0.0f));
+            turnWheel.FromAngleAxis(Ogre::Degree(mSteering[q] * 45.0f), Ogre::Vector3(0.0f, 1.0f, 0.0f));
 
             finalRot = finalRot * turnWheel * rotDrive;
         }
@@ -252,8 +263,7 @@ Ogre::Real PhysicsWheels::getWheelVelocity(size_t index) const
 
 void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                     const Ogre::Vector3& impulseLinear,
-                    Ogre::Real recipMomentProj,
-                    const PhysicsVehicle& vehicle)
+                    Ogre::Real recipMomentProj)
 {
     if(impulseRot.length() == 0.0f)
     {
@@ -282,12 +292,17 @@ void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Ve
 
 void PhysicsWheels::process(PhysicsVehicle& vehicle)
 {
+    Ogre::Vector3 carPos = mInitialVehicleSetup.mCarGlobalPos;
+    carPos.z = -carPos.z;//original data is left hand
 
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-    Ogre::Vector3 matrixXColumn = carRot.GetColumn(0);
-    Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-    Ogre::Vector3 matrixZColumn = -carRot.GetColumn(2);//original data is left hand
+    Ogre::Matrix3 carRotPS;
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
+    carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
 
     //for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
@@ -317,9 +332,8 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
 
 
             Ogre::Vector3 worldNormal = collision.mNormal;
-            worldNormal.z = -worldNormal.z;//original data is left hand
 
-            Ogre::Real projUp = matrixYColumn.dotProduct(worldNormal);
+            Ogre::Real projUp = carRotV[1].dotProduct(worldNormal);
             Ogre::Real suspHeight;
             if(projUp <= 0.0f)
             {
@@ -337,9 +351,10 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             mSuspensionHeight[q] = suspHeight;
 
             Ogre::Vector3 suspLocal = mInitialVehicleSetup.mConnectionPointWheel[q];
+            suspLocal.z = -suspLocal.z;//original data is left hand
             suspLocal.y -= suspHeight;
-            mWheelsSuspensionRot[q] = mInitialVehicleSetup.mCarRot * suspLocal;
-            mWheelsSuspensionGlobal[q] = mInitialVehicleSetup.mCarGlobalPos + mWheelsSuspensionRot[q];
+            mWheelsSuspensionRot[q] = carRotPS * suspLocal;
+            mWheelsSuspensionGlobal[q] = carPos + mWheelsSuspensionRot[q];
 
             const Ogre::Image * terrainMap = mMeshProcesser->getTerrainMap(mMeshProcesser->getTerrainName(collision));
             Ogre::Vector2 texCoords = PhysicsVehicle::findTexCoordinates(worldNormal, 
@@ -350,7 +365,7 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             mTerrainIndex[q] = mMeshProcesser->getTerrainType(terrainMap, texCoords);
 
             Ogre::Vector3 averagedNormal;
-            Ogre::Real finalDistance = averageCollisionNormal(matrixYColumn, q, averagedNormal);
+            Ogre::Real finalDistance = averageCollisionNormal(carRotV[1], q, averagedNormal);
 
             mWheelsImpulseTangent[q] = PhysicsVehicle::findTangent(worldNormal, mWheelsImpulseLinear[q]);
 
@@ -375,14 +390,9 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             }
 
             Ogre::Real d_dv = mInitialVehicleSetup.mWheelUnderGroundDDV.getPoint(finalDistance);
-            Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj);
-            Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(finalDistance);
-            Ogre::Real v_v = mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj);
-
-            Ogre::Real resultedImpulse = (v_dv * d_dv * risingDampWeight) + 
-                (d_d * mSpringVal[q]) + 
-                (v_v * risingDampWeight);
-            resultedImpulse *= suspWeight;
+            Ogre::Real v_dv = mInitialVehicleSetup.mWheelUnderGroundVDV.getPoint(impulseProj) * d_dv * risingDampWeight;
+            Ogre::Real d_d = mInitialVehicleSetup.mWheelUnderGroundDD.getPoint(finalDistance) + v_dv;
+            Ogre::Real resultedImpulse = (mInitialVehicleSetup.mWheelUnderGroundVV.getPoint(impulseProj) * risingDampWeight + d_d) * suspWeight;
 
             if(resultedImpulse < 0.0f) resultedImpulse = 0.0f;
             if(resultedImpulse > 100.0f) resultedImpulse = 100.0f;
@@ -396,8 +406,8 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
 
             if(q >= 2)//front
             {
-                Ogre::Real xAxisDot = matrixXColumn.dotProduct(impulseInc);
-                Ogre::Real zAxisDot = matrixZColumn.dotProduct(impulseInc);
+                Ogre::Real xAxisDot = carRotV[0].dotProduct(impulseInc);
+                Ogre::Real zAxisDot = carRotV[2].dotProduct(impulseInc);
 
                 if(q == 2)//right
                 {
@@ -430,7 +440,8 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
     averagedNormal = Ogre::Vector3::ZERO;
 
     const std::vector<size_t>& arrayOfCollisions = mMeshProcesser->getArrayOfCollisions();
-    for(size_t q = 0; q < arrayOfCollisions.size(); ++q)
+    const size_t amountCollisions = arrayOfCollisions.size();
+    for(size_t q = 0; q < amountCollisions; ++q)
     {
         const FoundCollision& collision = mMeshProcesser->getCollision(arrayOfCollisions[q]);
 
@@ -512,7 +523,7 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
 
         Ogre::Real impulseProjMul = 8.0f - impulseProj * -0.2f;
 
-        if(wheelRadSqr < wheelRadSqrMul) impulseProjMul = 8.0f;
+        if(lenValWheel < wheelRadSqrMul) impulseProjMul = 8.0f;
 
         Ogre::Real weight = lenValWheel * impulseProjMul;
 
@@ -524,7 +535,6 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
     else
     {
         averagedNormal.normalise();
-        averagedNormal.z = -averagedNormal.z;//original data is left hand
     }
 
     return finalDistance;
@@ -564,10 +574,20 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
-    Ogre::Vector3 matrixYColumn = carRot.GetColumn(1);
-    Ogre::Vector3 matrixZColumn = -carRot.GetColumn(2);//original data is left hand
+    Ogre::Vector3 carRotV[3];//original data is left hand
+    carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
+    carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
+    carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
-    Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[3] * 1.0526316f);
+    Ogre::Vector3 maxWheelNormal = Ogre::Vector3::ZERO;
+    maxWheelNormal.y = -2.0f;
+
+    Ogre::Real throttleAddition = 0.0f;
+    if(throttle != 0.0f)
+    {
+        throttleAddition = 1.0f;
+    }
+    Ogre::Real turnFinish = Ogre::Math::Abs(mSteering[3] * 1.0526316f) - throttleAddition * 0.125f;
     if(turnFinish < 0.0f) turnFinish = 0.0f;
     if(turnFinish <= mInitialVehicleSetup.mTurnFinish)
         turnFinish /= mInitialVehicleSetup.mTurnFinish;
@@ -594,7 +614,9 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         {
             const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
 
-            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], matrixZColumn);
+            if(mWheelsAveragedNormal[q].y > maxWheelNormal.y)maxWheelNormal = mWheelsAveragedNormal[q];
+
+            Ogre::Vector3 impulseProj = PhysicsVehicle::findTangent(mWheelsAveragedNormal[q], carRotV[2]);
             impulseProj.normalise();
 
             Ogre::Real cosSteer = Ogre::Math::Cos(mSteering[q]);
@@ -635,12 +657,13 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
             Ogre::Vector3 velocityProjDiff = velocity - velocityProj;
             //Ogre::Vector3 velocityProjWeight = (velocityProj * 6.0f - velocityProjDiff * -0.7f) * velMod;
 
-            Ogre::Real velocitySpline2 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProj.length() * velMod);
+            Ogre::Real velocitySpline2 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProj.length() * velMod) * terrain.mLatitudinalGripMultiplier;
             Ogre::Real velocitySpline3 = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityProjDiff.length() * velMod);
 
+            Ogre::Real velocitySplineWeight = terrain.mCombinedMultiplier * velocitySpline;
+
             Ogre::Vector3 velocityProjWeighted = velocityProj *
-                                                (terrain.mLatitudinalGripMultiplier * velocitySpline2 +
-                                                terrain.mCombinedMultiplier * velocitySpline) *
+                                                (velocitySpline2 + velocitySplineWeight) *
                                                 traction;
 
             Ogre::Real finalTraction =  (velocitySpline3 * terrain.mParameter +
@@ -668,7 +691,7 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 
                 if(q >= 2)//front
                 {
-                    vehicle.mSteeringAdditionalParam -= matrixYColumn.crossProduct(velocityWithSteering).dotProduct(finalVelocity) * -0.02f;
+                    vehicle.mSteeringAdditionalParam -= carRotV[1].crossProduct(velocityWithSteering).dotProduct(finalVelocity) * -0.02f;
                 }
 
                 vehicle.adjustImpulseInc(mWheelsSuspensionRot[q], finalVelocity);
@@ -677,6 +700,19 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
             }
         }
     }
+
+    if(/*check noRoll*/ false && maxWheelNormal.y > -1.0f)
+    {
+        Ogre::Vector3 diffN = maxWheelNormal - carRotV[1];
+        diffN.normalise();
+        diffN *= 4.0f;
+        if(diffN.squaredLength() > 0.0f)
+        {
+            vehicle.mImpulseRotInc += diffN.crossProduct(carRotV[1]);
+        }
+    }
+
+
 }
 
 void PhysicsWheels::setSteering(Ogre::Real value)
