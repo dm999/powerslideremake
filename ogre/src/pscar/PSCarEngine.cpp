@@ -4,7 +4,8 @@
 PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
     mInitialVehicleSetup(setup),
     mCurrentGear(0),
-    mEngineRPM(0.0f)
+    mEngineRPM(0.0f),
+    mTransmissionType(trManual)
 {}
 
 void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
@@ -46,37 +47,49 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
         }
     }
 
-    //auto transmission
-    if(mCurrentGear > 0)
+    if(mTransmissionType == trAuto)
     {
-        if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
+        if(mCurrentGear > 0)
         {
-            --mCurrentGear;
+            if(mEngineRPM < mInitialVehicleSetup.mChangeDown[mCurrentGear - 1])
+            {
+                --mCurrentGear;
+            }
+            if(mEngineRPM > mInitialVehicleSetup.mChangeUp[mCurrentGear - 1])
+            {
+                ++mCurrentGear;
+            }
+            
+            mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
         }
-        if(mEngineRPM > mInitialVehicleSetup.mChangeUp[mCurrentGear - 1])
-        {
-            ++mCurrentGear;
-        }
-        
-        mCurrentGear = Ogre::Math::Clamp(mCurrentGear, 1, mInitialVehicleSetup.mGearCount);
     }
 }
 
 void PSCarEngine::gearUp()
 {
-    if(mCurrentGear <= 0 && mCurrentGear <= mInitialVehicleSetup.mGearCount) ++mCurrentGear;
+    if(mTransmissionType == trAuto)
+    {
+        if(mCurrentGear <= 0 && mCurrentGear < mInitialVehicleSetup.mGearCount) ++mCurrentGear;
+    }
+    else
+        if(mCurrentGear < mInitialVehicleSetup.mGearCount) ++mCurrentGear;
 }
 
 void PSCarEngine::gearDown()
 {
-    if(mCurrentGear > 1)
+    if(mTransmissionType == trAuto)
     {
-        mCurrentGear = 0;
+        if(mCurrentGear > 1)
+        {
+            mCurrentGear = 0;
+        }
+        else
+        {
+            if(mCurrentGear > -1) --mCurrentGear;
+        }
     }
     else
-    {
         if(mCurrentGear > -1) --mCurrentGear;
-    }
 }
 
 Ogre::Real PSCarEngine::getPower(Ogre::Real throttle, Ogre::Real impulseLinearMod) const

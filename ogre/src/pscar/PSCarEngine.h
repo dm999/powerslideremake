@@ -8,6 +8,8 @@
 
 #include "../physics/InitialVehicleSetup.h"
 
+#include "../Enums.h"
+
 class PSCarEngine
 {
 public:
@@ -23,7 +25,11 @@ public:
     void gearUp();
     void gearDown();
 
+    void setTransmissionType(TransmissionType type) { mTransmissionType = type;}
+
 private:
+
+    TransmissionType mTransmissionType;
 
     int mCurrentGear;//0 N, -1 R
     Ogre::Real mEngineRPM;

@@ -12,6 +12,8 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 {
     mVehicleType = AIVehicle;
     mAICar = aiCar;
+
+    mCarEngine.setTransmissionType(trAuto);
 }
 
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)

@@ -135,7 +135,8 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     calcWheelRoofImpulses();
 
     mPhysicsWheels.process(*this);
-    bool isTurnOver = mPhysicsRoofs.process(*this);
+    bool isTurnOver;
+    isTurnOver = mPhysicsRoofs.process(*this);
     isTurnOver |= mPhysicsBody.process(*this);
     turnOverRestore(isTurnOver);
     calcTransmission();

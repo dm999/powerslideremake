@@ -92,6 +92,8 @@ protected:
     Ogre::Vector3 mImpulseRotPrev;
     Ogre::Vector3 mImpulseRotInc;
 
+    PSCarEngine mCarEngine;
+
 private:
 
     void calcTransmission();
@@ -124,7 +126,6 @@ private:
 
     Ogre::Real mMaxCollisionDistance;
 
-    PSCarEngine mCarEngine;
     Ogre::Real mSteeringAdditionalParam;
     bool mIsSteeringLeft;
     bool mIsSteeringRight;
