@@ -7,8 +7,6 @@
 /*most data assumed to be in right hand - like Ogre*/
 struct InitialVehicleSetup
 {
-    Ogre::Vector3 mCOG;
-
     Ogre::Matrix4 mTrackPosition;
     Ogre::Vector3 mInitialImpulseLinear;//left hand
     Ogre::Vector3 mInitialImpulseLinearInc;//left hand
@@ -27,7 +25,9 @@ struct InitialVehicleSetup
     float mRoofRadius[mRoofsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mRoofPos[mRoofsAmount];//RR, RL, FR, FL //left hand
 
+    Ogre::Vector3 mCOG;
     Ogre::Vector3 mCoreBase;
+    Ogre::Vector3 mCockpit;
 
     float mBodyRadius;
     Ogre::Vector3 mBodyBasePos;//left hand

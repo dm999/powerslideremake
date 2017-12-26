@@ -140,7 +140,7 @@ void BaseRaceMode::initCamera()
     //mCamera->setFOVy(Ogre::Degree(95.0f));
     mCamera->setFOVy(Ogre::Degree(80.0f));
 
-    mCameraMan.reset(new CameraMan(mCamera, mWorld.get(), mSceneMgr));
+    mCameraMan.reset(new CameraMan(mCamera));
     mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
     mModeContext.mGameState.getPlayerCar().setCameraMan(mCameraMan.get());

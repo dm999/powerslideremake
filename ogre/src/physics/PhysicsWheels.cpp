@@ -18,6 +18,9 @@ PhysicsWheels::~PhysicsWheels()
 
 void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount])
 {
+    Ogre::Vector3 carPos = chassisPos;
+    carPos.z = -carPos.z;//original data is left hand
+
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q] = wheelNodes[q];
@@ -25,9 +28,7 @@ void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheel
 
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        //mWheelsSuspensionGlobal[q] = chassisPos;
-        //mWheelsSuspensionGlobalPrev[q] = chassisPos;
-        mWheelsSuspensionPointGlobal[q] = chassisPos;
+        mWheelsSuspensionPointGlobal[q] = carPos;
         mSuspensionHeight[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].x;
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
         mSpringVal[q] = 1.0f;

@@ -219,7 +219,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
             if(cam)
             {
                 cam->setAutoTracking(false);
-                mCameraMan->setYawPitchDist(mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), getAlignedVelocity());
+                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), getAlignedVelocity());
             }
         }
         else

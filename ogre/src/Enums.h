@@ -1,6 +1,14 @@
 #ifndef ENUMS
 #define ENUMS
 
+enum CameraPositions
+{
+    CameraPosition_Bumper,
+    CameraPosition_ChassisA,
+    CameraPosition_ChassisB,
+    CameraPosition_ChassisC
+};
+
 enum GameMode
 {
     ModeMenu,

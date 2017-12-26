@@ -210,6 +210,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mCOG = -getCarArray3Parameter("", "centre of gravity");
     initialVehicleSetup.mCOG.z = -initialVehicleSetup.mCOG.z;
 
+    initialVehicleSetup.mCockpit = getCarArray3Parameter("", "cockpit");
+    initialVehicleSetup.mCockpit.z = -initialVehicleSetup.mCockpit.z;
+
     initialVehicleSetup.mCoreBase = getCarArray3Parameter("", "core base");
     initialVehicleSetup.mCoreBase.z = -initialVehicleSetup.mCoreBase.z;
 
