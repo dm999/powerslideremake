@@ -549,14 +549,10 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     mLapController.calculateLapPositions();
 
-    if(mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
+    mWorld->timeStep(mModeContext.mGameState);
+    
+    if(!mModeContext.mGameState.isGamePaused())
     {
-        mWorld->timeStep(mModeContext.mGameState, evt.timeSinceLastFrame, 7);
-        mModeContext.mGameState.getPlayerCar().processSounds();
-    }
-    if(!mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
-    {
-        mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->processEngineIdle();
         mModeContext.mGameState.getPlayerCar().processSounds();
     }
 

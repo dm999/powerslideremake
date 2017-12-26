@@ -26,7 +26,7 @@ public:
     Physics(StaticMeshProcesser * meshProesser);
     ~Physics();
 
-    void timeStep(const GameState& gameState, Ogre::Real timeStep, size_t maxSubSteps = 1, Ogre::Real fixedTimeStep = 1.0f / 60.0f);
+    void timeStep(const GameState& gameState);
 
     PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
@@ -41,7 +41,10 @@ private:
 
     void internalTimeStep(const GameState& gameState);
 
-    Ogre::Real mTimeStep;
+    Ogre::Timer mTimer;
+
+    Ogre::int32 mTimeStep;
+    Ogre::int32 mTimeStep2;
 
     StaticMeshProcesser * mMeshProesser;
 

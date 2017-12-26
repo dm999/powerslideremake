@@ -9,41 +9,53 @@
 
 Physics::Physics(StaticMeshProcesser * meshProesser)
     : 
-    mTimeStep(0.0f),
-    mMeshProesser(meshProesser)
-{}
+    mMeshProesser(meshProesser),
+    mTimeStep(-1),
+    mTimeStep2(0)
+{
+    mTimer.reset();
+}
 
 Physics::~Physics()
 {}
 
-void Physics::timeStep(const GameState& gameState, Ogre::Real timeStep, size_t maxSubSteps, Ogre::Real fixedTimeStep)
+void Physics::timeStep(const GameState& gameState)
 {
+    Ogre::Real timeFromStartSeconds = mTimer.getMilliseconds() / 1000.0f;
 
-    size_t numSimulationSubSteps = 0;
+    mTimeStep2 = static_cast<Ogre::int32>(timeFromStartSeconds * 60.0f + 1.0f);
 
-    mTimeStep += timeStep;
-    if (mTimeStep >= fixedTimeStep)
+    if(mTimeStep2 - mTimeStep > 15 || mTimeStep2 < mTimeStep)
+        mTimeStep = mTimeStep2 - 15;
+
+    if(mTimeStep < mTimeStep2)
     {
-        numSimulationSubSteps = static_cast<size_t>(mTimeStep / fixedTimeStep);
-        mTimeStep -= numSimulationSubSteps * fixedTimeStep;
-    }
-
-    if (numSimulationSubSteps)
-    {
-        size_t clampedSimulationSteps = (numSimulationSubSteps > maxSubSteps) ? maxSubSteps : numSimulationSubSteps;
-        for (size_t i = 0; i < clampedSimulationSteps; i++)
+        do
         {
             internalTimeStep(gameState);
-        }
+            ++mTimeStep;
+        }while(mTimeStep < mTimeStep2);
     }
 }
 
 void Physics::internalTimeStep(const GameState& gameState)
 {
-    for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+    if(gameState.getRaceStarted() && !gameState.isGamePaused())
     {
-        (*i).second->timeStep(gameState);
+        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+        {
+            (*i).second->timeStep(gameState);
+        }
     }
+
+    if(!gameState.getRaceStarted() && !gameState.isGamePaused())
+    {
+        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+        {
+            (*i).second->processEngineIdle();
+        }
+    }
+
 }
 
 PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr,
