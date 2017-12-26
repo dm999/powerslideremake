@@ -30,6 +30,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mTurnOverValue(0),
     mIsRaceStarted(false)
 {
+    mCarEngine.setTransmissionType(trAuto);
 
     mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
     mPhysicsRoofs.init(chassis->getPosition());

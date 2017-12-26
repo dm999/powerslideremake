@@ -123,7 +123,7 @@ private:
     void initTerrain(LoaderListener* loaderListener);
     void initModel(LoaderListener* loaderListener);
 
-    void initLightLists(LoaderListener* loaderListener);
+    void initLightLists();
 
 
     void initWorld(const Ogre::Vector3 &gravityVector = Ogre::Vector3(0.0f, -59.81f, 0.0f),
@@ -136,8 +136,6 @@ private:
     void unloadResources();
 
     LoaderListener* mLoaderListener;
-    size_t mResourceCount;
-    size_t mResourceCurrent;
 };
 
 

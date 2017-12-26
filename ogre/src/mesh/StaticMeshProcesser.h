@@ -49,7 +49,7 @@ public :
                     Physics * world,
                     LoaderListener* loaderListener);
 
-    void queryLights(LoaderListener* loaderListener);
+    void queryLights();
 
     void deinit() {mTerrainMaps.clear(); mTerrainMapsNames.clear(); mPlainIndices = 0;}
 

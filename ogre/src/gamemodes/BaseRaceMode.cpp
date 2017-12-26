@@ -76,7 +76,7 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     if(loaderListener)
         loaderListener->loadState(0.95f, "light list loading");
 
-    initLightLists(loaderListener);
+    initLightLists();
 
     if(loaderListener)
         loaderListener->loadState(1.0f, "all loaded");
@@ -217,7 +217,7 @@ void BaseRaceMode::restart()
     initModel(NULL);
     initMisc();
 
-    initLightLists(NULL);
+    initLightLists();
 }
 
 void BaseRaceMode::initScene(LoaderListener* loaderListener)
@@ -331,12 +331,12 @@ void BaseRaceMode::clearScene()
     mModeContext.mWindow->removeAllViewports();
 }
 
-void BaseRaceMode::initLightLists(LoaderListener* loaderListener)
+void BaseRaceMode::initLightLists()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Enter");
 
     //d.polubotko: make sure light lists created during loading
-    mStaticMeshProcesser.queryLights(loaderListener);
+    mStaticMeshProcesser.queryLights();
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initLightLists]: Exit");
 }
@@ -887,40 +887,18 @@ void BaseRaceMode::loadResources()
 
 void BaseRaceMode::resourceGroupScriptingStarted(const Ogre::String& groupName, size_t scriptCount)
 {
-    mResourceCount = scriptCount;
-    mResourceCurrent = 0;
 }
 
 void BaseRaceMode::scriptParseEnded(const Ogre::String& scriptName, bool skipped)
 {
-    //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.2f;
-    const float loaderMax = 0.25f;
-    const float loaderDistance = loaderMax - loaderMin;
-
-    ++mResourceCurrent;
-
-    if(mLoaderListener)
-        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount), scriptName);
 }
 
 void BaseRaceMode::resourceGroupLoadStarted(const Ogre::String& groupName, size_t resourceCount)
 {
-    mResourceCount = resourceCount;
-    mResourceCurrent = 0;
 }
 
 void BaseRaceMode::resourceLoadEnded()
 {
-    //ranges from BaseRaceMode::initData
-    const float loaderMin = 0.25f;
-    const float loaderMax = 0.3f;
-    const float loaderDistance = loaderMax - loaderMin;
-
-    ++mResourceCurrent;
-
-    if(mLoaderListener)
-        mLoaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(mResourceCurrent) / static_cast<float>(mResourceCount), "resources loading");
 }
 
 void BaseRaceMode::unloadResources()

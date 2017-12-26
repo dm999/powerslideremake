@@ -92,9 +92,6 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
 
             mshData.clear();
 
-            if(loaderListener)
-                loaderListener->loadState(0.31f + 0.19f * static_cast<float>(q) / static_cast<float>(originalParts.size()), "parts loading");
-
         }
 
         //create textures
@@ -131,8 +128,6 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             }
             initPart(pipeline, sceneMgr, mainNode, isGlobalReset, gameState, terrain, terrainNode, centroid);
 
-            if(loaderListener)
-                loaderListener->loadState(0.7f + 0.1f * static_cast<float>(q) / static_cast<float>(mergedMSH.size()), "merged parts loading");
         }
     }
 }
@@ -848,15 +843,12 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
     return materialNames;
 }
 
-void StaticMeshProcesser::queryLights(LoaderListener* loaderListener)
+void StaticMeshProcesser::queryLights()
 {
     //d.polubotko: make sure light lists created during loading
     for(size_t q = 0; q < mTerrainNodes.size(); ++q)
     {
         mTerrainNodes[q]->queryLights();
-
-        if(loaderListener)
-            loaderListener->loadState(0.95f + 0.05f * static_cast<float>(q) / static_cast<float>(mTerrainNodes.size()), "light list loading");//0.95f from BaseRaceMode::initData
     }
 }
 
