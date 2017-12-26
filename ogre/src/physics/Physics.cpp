@@ -12,9 +12,7 @@ Physics::Physics(StaticMeshProcesser * meshProesser)
     mMeshProesser(meshProesser),
     mTimeStep(-1),
     mTimeStep2(0)
-{
-    mTimer.reset();
-}
+{}
 
 Physics::~Physics()
 {}

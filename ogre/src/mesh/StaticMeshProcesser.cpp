@@ -97,6 +97,8 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         //create textures
         loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, loaderListener);
 
+        if(loaderListener)
+            loaderListener->loadState(0.7f, "Textures loaded");
 
         for(size_t q = 0; q < mergedMSH.size(); ++q)
         {
@@ -279,7 +281,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
             fileToLoad->close();
         }
 
-        if(loaderListener)
+        if(loaderListener && loadedAmount % 2)
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
     }
 }

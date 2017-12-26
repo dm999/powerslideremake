@@ -88,7 +88,7 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", charSmallName, 
                                 "OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
 
-            if(loaderListener)
+            if(loaderListener && q % 2)
                 loaderListener->loadState(0.4f + 0.6f * (static_cast<float>(q + 1) / availableCharacters.size()), availableCharacters[q] + " loaded");
         }
 
