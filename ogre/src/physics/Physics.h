@@ -32,9 +32,9 @@ public:
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
         bool isAI
         );
-    void removeVehicle(const PSBaseVehicle * vehiclePtr);
-    const PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr) const;
-    PhysicsVehicle * getVehicle(const PSBaseVehicle * vehiclePtr);
+    void removeVehicle(PSBaseVehicle * vehiclePtr);
+    const PhysicsVehicle * getVehicle(PSBaseVehicle * vehiclePtr) const;
+    PhysicsVehicle * getVehicle(PSBaseVehicle * vehiclePtr);
 
 
 private:
@@ -48,7 +48,7 @@ private:
 
     StaticMeshProcesser * mMeshProesser;
 
-    typedef std::map<const PSBaseVehicle *, CommonIncludes::shared_ptr<PhysicsVehicle> > vehicles;
+    typedef std::map<PSBaseVehicle *, CommonIncludes::shared_ptr<PhysicsVehicle> > vehicles;
     vehicles mVehicles;
 };
 

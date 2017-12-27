@@ -3,8 +3,6 @@
 
 #include "includes/OgreInclude.h"
 
-#include "tools/LinearController.h"
-
 #include "Enums.h"
 
 struct InitialVehicleSetup;
@@ -17,7 +15,7 @@ public :
 
     virtual ~CameraMan() {}
 
-    void setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::Real alignedVelocity);
+    void setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot);
 
     void setRearCamera(Ogre::Camera* cam){mRearCamera = cam;}
 
@@ -36,14 +34,19 @@ private :
     Ogre::Real mCamParam;
     Ogre::Real mCamAngle;
 
+    Ogre::Real mCamRotZ_y;
+    Ogre::Vector3 mCamRotZ;
+    Ogre::Vector3 mCamShift;
+    //Ogre::Vector3 mCamVal;
+
+    Ogre::Vector3 mCamRot[3];
+
     bool mCamTypeSwitched;
 
     Ogre::Camera* mCamera;
     Ogre::Camera* mRearCamera;
 
     CameraPositions mCamPositonType;
-
-    LinearController<float> mSpeedToFOV;
 };
 
 #endif

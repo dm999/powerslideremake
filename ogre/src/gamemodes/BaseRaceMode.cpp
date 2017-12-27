@@ -137,7 +137,8 @@ void BaseRaceMode::initCamera()
 
     mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
     mCamera->setAspectRatio(1.2f * Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
-    //mCamera->setFOVy(Ogre::Degree(95.0f));
+    //mCamera->setAspectRatio(0.95f);//close to original
+    //mCamera->setFOVy(Ogre::Degree(90.0f));//close to original
     mCamera->setFOVy(Ogre::Degree(80.0f));
 
     mCameraMan.reset(new CameraMan(mCamera));

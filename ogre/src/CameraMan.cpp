@@ -2,18 +2,16 @@
 #include "CameraMan.h"
 
 #include "physics/InitialVehicleSetup.h"
+#include "physics/PhysicsVehicle.h"
 
 CameraMan::CameraMan(Ogre::Camera* cam) 
 : mRearCamera(NULL),
     mCamera(cam),
-    mCamPositonType(CameraPosition_ChassisC),
+    mCamPositonType(CameraPosition_ChassisB),
     mCamTypeSwitched(true)
-{
-    mSpeedToFOV.addPoint(120.0f, 85.0f);
-    mSpeedToFOV.addPoint(250.0f, 100.0f);
-}
+{}
 
-void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot, const Ogre::Vector3& carPos, Ogre::Real lateralVelocity, Ogre::Real alignedVelocity)
+void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot)
 {
 
     Ogre::Matrix3 carRotMatrix;
@@ -27,8 +25,18 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
     Ogre::Matrix3 carRotPS;
     carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
 
-    Ogre::Vector3 camPos (initialVehicleSetup.mCarGlobalPos);
+    Ogre::Vector3 carPos (initialVehicleSetup.mCarGlobalPos);
+    carPos.z = -carPos.z;//original data is left hand
+
+    Ogre::Vector3 camPos (mCamera->getPosition());
     camPos.z = -camPos.z;//original data is left hand
+
+    Ogre::Vector3 cog(initialVehicleSetup.mCOG);
+    cog.z = -cog.z;//original data is left hand
+
+    Ogre::Vector3 cogRot(carRotPS * cog);
+
+    Ogre::Vector3 cogGlobal(carPos + cogRot);
 
     if(mCamPositonType != CameraPosition_Bumper)
     {
@@ -36,65 +44,141 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         {
             recalcCamParams(initialVehicleSetup);
 
+            mCamRotZ.x = carRotV[2].x;
+            mCamRotZ.z = carRotV[2].z;
         }
         else
         {
+            Ogre::Vector3 shift = cogGlobal - mCamShift;
+            shift.normalise();
+
+            Ogre::Real diff = Ogre::Math::Abs(acos(mCamRotZ_y) - acos(carRotV[2].y));
+            if(diff < 0.01f)
+                diff = 0.01f;
+            diff = 1.0f - diff * -100.0f;
+            mCamRotZ.x = shift.x - mCamParam3D.z * carRotV[2].x * -2.0f / diff;
+            mCamRotZ.z = shift.z - mCamParam3D.z * carRotV[2].z * -2.0f / diff;
         }
+
+        if(mCamRotZ.x != 0.0f || mCamRotZ.z != 0.0f)
+        {
+            mCamRotZ.y = 0.0f;
+            mCamRotZ.normalise();
+        }
+        else
+        {
+            mCamRotZ = Ogre::Vector3::UNIT_X;
+        }
+
+        mCamRotZ_y = carRotV[2].y;
+        mCamShift = cogGlobal - mCamRotZ * 50.0f;
+
+        Ogre::Vector3 diff = cogGlobal - mCamRotZ * mCamParam2D.y;
+
+        Ogre::Vector3 camVal(cogGlobal);
+        camVal.x += carRotV[0].x * mCameraOffset.x;
+        camVal.x += carRotV[1].x * mCameraOffset.y;
+        camVal.x += carRotV[2].x * mCameraOffset.z;
+
+        camVal.y += carRotV[0].y * mCameraOffset.x;
+        camVal.y += carRotV[1].y * mCameraOffset.y;
+        camVal.y += carRotV[2].y * mCameraOffset.z;
+
+        camVal.z += carRotV[0].z * mCameraOffset.x;
+        camVal.z += carRotV[1].z * mCameraOffset.y;
+        camVal.z += carRotV[2].z * mCameraOffset.z;
+
+        Ogre::Vector3 camDiff = diff + Ogre::Vector3(0.0f, mCamParam2D.x , 0.0f) - camVal;
+        camDiff.normalise();
+
+        Ogre::Vector3 camValue;
 
         if(false)//d.polubotko: TODO - check collision with static
         {
         }
+        else
+        {
+            camValue = camDiff * mCamParam + camVal;
+        }
+
+        camVal.x -= carRotV[0].x * mCameraOffset.x;
+        camVal.x -= carRotV[1].x * mCameraOffset.y;
+        camVal.x -= carRotV[2].x * mCameraOffset.z;
+
+        camVal.y -= carRotV[0].y * mCameraOffset.x;
+        camVal.y -= carRotV[1].y * mCameraOffset.y;
+        camVal.y -= carRotV[2].y * mCameraOffset.z;
+
+        camVal.z -= carRotV[0].z * mCameraOffset.x;
+        camVal.z -= carRotV[1].z * mCameraOffset.y;
+        camVal.z -= carRotV[2].z * mCameraOffset.z;
+
+        Ogre::Vector3 rotMatrixAxis = camVal - camValue;
+        rotMatrixAxis.normalise();
+
+        Ogre::Vector3 camAxis(rotMatrixAxis.z, 0.0f, -rotMatrixAxis.x);
+        camAxis.normalise();
+
+        PhysicsVehicle::createRotMatrix(rotMatrixAxis, camAxis, mCamAngle);
+        rotMatrixAxis.normalise();
+
+        Ogre::Vector3 camDiff2(-rotMatrixAxis.z, 0.0f, rotMatrixAxis.x);
+        camDiff2.normalise();
+
+        Ogre::Vector3 camAxis2 = camDiff2.crossProduct(rotMatrixAxis);
 
         if(mCamTypeSwitched)
         {
             mCamTypeSwitched = false;
+            camPos = camValue;
+            //mCamVal = camVal;
+            mCamRot[0] = camDiff2;
+            mCamRot[1] = camAxis2;
+            mCamRot[2] = rotMatrixAxis;
         }
         else
         {
+            camPos += (camValue - camPos) * mCamParam3D.x;
+            mCamRot[1] += (camAxis2 - mCamRot[1]) * mCamParam3D.y;
+            mCamRot[2] += (rotMatrixAxis - mCamRot[2]) * mCamParam3D.y;
+            mCamRot[2].normalise();
+            mCamRot[0] = mCamRot[1].crossProduct(mCamRot[2]);
+            mCamRot[0].normalise();
+            mCamRot[1] = mCamRot[2].crossProduct(mCamRot[0]);
+            mCamRot[1].normalise();
         }
     }
     else
     {
-        Ogre::Vector3 cog(initialVehicleSetup.mCOG);
-        cog.z = -cog.z;//original data is left hand
-
         Ogre::Vector3 cockpit(initialVehicleSetup.mCockpit);
         cockpit.z = -cockpit.z;//original data is left hand
 
-        Ogre::Vector3 cogGlobalRot(carRotPS * cog);
-
-        Ogre::Vector3 cogGlobal(camPos + cogGlobalRot);
         camPos = cogGlobal + carRotPS * cockpit;
     }
 
-    carRotV[1].z = -carRotV[1].z;//original data is left hand
-    carRotV[2].x = -carRotV[2].x;//original data is left hand
-    carRotV[2].y = -carRotV[2].y;//original data is left hand
-    Ogre::Vector3 rotMatrixAxisX = carRotV[1].crossProduct(carRotV[2]);
-    carRotMatrix.SetColumn(0, rotMatrixAxisX);
-    carRotMatrix.SetColumn(1, carRotV[1]);
-    carRotMatrix.SetColumn(2, carRotV[2]);
+    Ogre::Vector3 camRotTmp[3];
+    camRotTmp[0] = mCamRot[0];
+    camRotTmp[1] = mCamRot[1];
+    camRotTmp[2] = mCamRot[2];
+
+    camRotTmp[0].z = -camRotTmp[0].z;//original data is left hand
+    camRotTmp[1].z = -camRotTmp[1].z;//original data is left hand
+    camRotTmp[2].x = -camRotTmp[2].x;//original data is left hand
+    camRotTmp[2].y = -camRotTmp[2].y;//original data is left hand
 
     camPos.z = -camPos.z;//original data is left hand
 
-
     Ogre::Quaternion camRot;
-    camRot.FromRotationMatrix(carRotMatrix);
+    camRot.FromAxes(camRotTmp[0], camRotTmp[1], camRotTmp[2]);
     mCamera->setOrientation(camRot);
     mCamera->setPosition(camPos);
-
-    float fov = mSpeedToFOV.getVal(alignedVelocity);
-    if(mCamera)
-        mCamera->setFOVy(Ogre::Degree(fov));
-
-
 
     if(mRearCamera)
     {
         Ogre::Quaternion rotationRear(Ogre::Quaternion::IDENTITY);
         rotationRear.FromAngleAxis(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
         mRearCamera->setOrientation(carRot * rotationRear);
-        mRearCamera->setPosition(carPos + carRot * Ogre::Vector3(0.0f, 10.0f, 0.0f));
+        mRearCamera->setPosition(camPos + carRot * Ogre::Vector3(0.0f, 10.0f, 0.0f));
     }
 }
 
@@ -106,6 +190,10 @@ void CameraMan::setCameraPositionType(const CameraPositions& type)
 
 void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
 {
+
+    mCamRot[0] = Ogre::Vector3::ZERO;
+    mCamRot[1] = Ogre::Vector3::ZERO;
+    mCamRot[2] = Ogre::Vector3::ZERO;
 
     Ogre::Real someVal;
     Ogre::Real someVal2;

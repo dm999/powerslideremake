@@ -202,6 +202,11 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
 
 void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)
 {
+    PSBaseCar::processFrameAfterPhysics(evt);
+}
+
+void PSControllableCar::processCamera()
+{
     if(mCameraMan && mIsPossesCamera)
     {
         if(mCameraMan->getCameraPositionType() == CameraPosition_Bumper)
@@ -219,7 +224,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
             if(cam)
             {
                 cam->setAutoTracking(false);
-                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation(), mModelNode->getPosition(), getLateralVelocity(), getAlignedVelocity());
+                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation());
             }
         }
         else
@@ -232,10 +237,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
         }
         
     }
-
-    PSBaseCar::processFrameAfterPhysics(evt);
 }
-
 
 void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot)
 {

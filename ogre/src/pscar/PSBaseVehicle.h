@@ -23,6 +23,8 @@ public:
 
     virtual void clear();
 
+    virtual void processCamera(){};
+
 protected:
 
     void initPhysicalModel(Physics * world, 

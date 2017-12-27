@@ -42,6 +42,7 @@ void Physics::internalTimeStep(const GameState& gameState)
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
+            (*i).first->processCamera();
             (*i).second->timeStep(gameState);
         }
     }
@@ -50,6 +51,7 @@ void Physics::internalTimeStep(const GameState& gameState)
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
+            (*i).first->processCamera();
             (*i).second->processEngineIdle();
         }
     }
@@ -78,13 +80,13 @@ PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, PS
     return ret;
 }
 
-void Physics::removeVehicle(const PSBaseVehicle * vehiclePtr)
+void Physics::removeVehicle(PSBaseVehicle * vehiclePtr)
 {
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
     mVehicles.erase(found);
 }
 
-const PhysicsVehicle * Physics::getVehicle(const PSBaseVehicle * vehiclePtr) const
+const PhysicsVehicle * Physics::getVehicle(PSBaseVehicle * vehiclePtr) const
 {
     const PhysicsVehicle * ret = NULL;
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);
@@ -93,7 +95,7 @@ const PhysicsVehicle * Physics::getVehicle(const PSBaseVehicle * vehiclePtr) con
     return ret;
 }
 
-PhysicsVehicle * Physics::getVehicle(const PSBaseVehicle * vehiclePtr)
+PhysicsVehicle * Physics::getVehicle(PSBaseVehicle * vehiclePtr)
 {
     PhysicsVehicle * ret = NULL;
     vehicles::const_iterator found = mVehicles.find(vehiclePtr);

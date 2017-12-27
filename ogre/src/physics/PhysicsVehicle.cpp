@@ -412,7 +412,7 @@ void PhysicsVehicle::adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::
     mImpulseLinearInc += impulse;
 }
 
-void PhysicsVehicle::createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle) const
+void PhysicsVehicle::createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle)
 {
     Ogre::Vector3 normalisedImpulseProj = normalisedImpulse * matAxis.dotProduct(normalisedImpulse);
     Ogre::Vector3 diff = matAxis - normalisedImpulseProj;

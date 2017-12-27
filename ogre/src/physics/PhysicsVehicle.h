@@ -64,6 +64,7 @@ public:
         const Ogre::Vector3& point,
         const Ogre::Vector3& pA, const Ogre::Vector3& pB, const Ogre::Vector3& pC,
         const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC);
+    static void createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle);
 
 protected:
 
@@ -104,7 +105,6 @@ private:
     void integrate();
 
     Ogre::Real momentOfInertiaProj(const Ogre::Vector3& axis)const;
-    void createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle) const;
 
     void calcWheelRoofImpulses();
 
