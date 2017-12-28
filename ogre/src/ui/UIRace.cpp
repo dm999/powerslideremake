@@ -253,11 +253,11 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     Ogre::Real dashHeight = tachoHeight / 1.7f;
 
     Ogre::Real dashTop = viewportHeight - dashHeight;
+    Ogre::Real dashPositionHeight = dashHeight / 1.8f;
 
+    Ogre::PanelOverlayElement* dashboardPosition;
     {
-        Ogre::Real dashPositionHeight = dashHeight / 1.8f;
-
-        Ogre::PanelOverlayElement* dashboardPosition = createPanel("DashboardPosition", dashWidth, dashPositionHeight, 0.0f, dashTop, "Test/DashboardWarthogPosition");
+        dashboardPosition = createPanel("DashboardPosition", dashWidth, dashPositionHeight, 0.0f, dashTop, "Test/DashboardWarthogPosition");
         dashboardPosition->setUV(0.0f, 0.0f, 10.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(dashboardPosition);
     }
@@ -300,12 +300,14 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         Ogre::Real dashCarHeight = dashHeight / 4.0f;
 
         Ogre::Real dashCarLeft = dashWidth / 3.0f + dashCarWidth;
-        Ogre::Real dashCarTop = dashTop + (dashHeight / 2.91f) / 2.0f - dashCarHeight / 2.0f;
+        Ogre::Real dashCarTop = dashPositionHeight / 20.0f;
         
 
+        Ogre::PanelOverlayElement* userCarPanel = createEmptyPanel("DashboardCar0_e", dashWidth, dashPositionHeight, 0.0f, 0.0f);
         mPlayerDashboardCar = createPanel("DashboardCar0", dashCarWidth, dashCarHeight, dashCarLeft, dashCarTop, "Test/car0_0s.bmp");
         mPlayerDashboardCar->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPlayerDashboardCar);
+        dashboardPosition->addChild(userCarPanel);
+        userCarPanel->addChild(mPlayerDashboardCar);
 
         for(size_t q = 0; q < mDashboardCarsCount; ++q)
         {
@@ -313,7 +315,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             mDashboardCars[q] = createPanel(dashCarName, dashCarWidth, dashCarHeight, dashCarLeft, dashCarTop, "Test/car0_0s.bmp");
             mDashboardCars[q]->hide();
             mDashboardCars[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-            trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mDashboardCars[q]);
+            dashboardPosition->addChild(mDashboardCars[q]);
         }
     }
 

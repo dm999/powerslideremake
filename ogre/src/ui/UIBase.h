@@ -16,6 +16,8 @@ public:
     virtual ~UIBase(){}
 
 
+    Ogre::PanelOverlayElement* createEmptyPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
+    Ogre::PanelOverlayElement* createEmptyPanel(const Ogre::String& name, const Ogre::Vector4& pos);
     Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top, const Ogre::String& material);
     Ogre::PanelOverlayElement* createPanel(const Ogre::String& name, const Ogre::Vector4& pos, const Ogre::String& material);
     Ogre::TextAreaOverlayElement* createTextArea(const Ogre::String& name, Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
