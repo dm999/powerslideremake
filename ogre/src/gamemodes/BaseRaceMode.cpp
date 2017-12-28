@@ -131,12 +131,18 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
 void BaseRaceMode::initCamera()
 {
 
+    const Ogre::int32 actualWidth = mModeContext.mWindow->getWidth();
+    const Ogre::int32 actualHeight = mModeContext.mWindow->getHeight();
+
     mCamera = mSceneMgr->createCamera("PlayerCam");
     mCamera->setNearClipDistance(0.5f);
-    Ogre::Viewport * mViewPort = mModeContext.mWindow->addViewport(mCamera);
 
-    mViewPort->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-    mCamera->setAspectRatio(1.0f * Ogre::Real(mViewPort->getActualWidth()) / Ogre::Real(mViewPort->getActualHeight()) / (640.0f / 480.0f));
+    Ogre::Real viewportYShift = (actualHeight / 4.73f / 1.7f) / actualHeight;//see dashHeight
+    Ogre::Viewport * viewPortScene = mModeContext.mWindow->addViewport(mCamera, 0, 0.0f, -viewportYShift, 1.0f, 1.0f);
+
+    viewPortScene->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
+    viewPortScene->setOverlaysEnabled(false);
+    mCamera->setAspectRatio(1.0f * Ogre::Real(actualWidth) / Ogre::Real(actualHeight) / (640.0f / 480.0f));
     mCamera->setFOVy(Ogre::Degree(90.0f));
 
     mCameraMan.reset(new CameraMan(mCamera));
@@ -146,17 +152,19 @@ void BaseRaceMode::initCamera()
 
     //http://www.ogre3d.org/forums/viewtopic.php?p=331138
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79581
+    //for tacho needle
     mSceneMgrCarUI = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);
-    Ogre::Camera * cameraCarUI = mSceneMgrCarUI->createCamera("PlayerCam");
+    mSceneMgrCarUI->addRenderQueueListener(mModeContext.mOverlaySystem);
+    Ogre::Camera * cameraCarUI = mSceneMgrCarUI->createCamera("PlayerUICam");
     cameraCarUI->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
-    cameraCarUI->setOrthoWindow(static_cast<float>(mViewPort->getActualWidth()), static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setOrthoWindow(static_cast<float>(actualWidth), static_cast<float>(actualHeight));
     cameraCarUI->setNearClipDistance(0.5f);
     cameraCarUI->setFarClipDistance(10000.0f);
     Ogre::Viewport * viewPortCarUI = mModeContext.mWindow->addViewport(cameraCarUI, 1);
     viewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
-    viewPortCarUI->setOverlaysEnabled(false);
+    viewPortCarUI->setOverlaysEnabled(true);
     viewPortCarUI->setSkiesEnabled(false);
-    cameraCarUI->setAspectRatio(static_cast<float>(mViewPort->getActualWidth()) / static_cast<float>(mViewPort->getActualHeight()));
+    cameraCarUI->setAspectRatio(static_cast<float>(actualWidth) / static_cast<float>(actualHeight));
     cameraCarUI->setFOVy(Ogre::Degree(45.0f));
     cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
     cameraCarUI->lookAt(Ogre::Vector3::ZERO);
@@ -236,7 +244,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
     //migration from 1.8.1 to 1.9.0
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=78278
-    mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
+    //mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
 

@@ -37,7 +37,6 @@ private :
     Ogre::Real mCamRotZ_y;
     Ogre::Vector3 mCamRotZ;
     Ogre::Vector3 mCamShift;
-    //Ogre::Vector3 mCamVal;
 
     Ogre::Vector3 mCamRot[3];
 

@@ -131,7 +131,6 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         {
             mCamTypeSwitched = false;
             camPos = camValue;
-            //mCamVal = camVal;
             mCamRot[0] = camDiff2;
             mCamRot[1] = camAxis2;
             mCamRot[2] = rotMatrixAxis;
@@ -213,8 +212,7 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     {
         someVal = 15.5f;
         someVal2 = 10.0f;
-        //mCamParam2D = Ogre::Vector2(10.0f, 26.5f);
-        mCamParam2D = Ogre::Vector2(14.0f, 26.5f);
+        mCamParam2D = Ogre::Vector2(10.0f, 26.5f);
         mCamParam3D = Ogre::Vector3(0.6f, 0.8f, 0.714286f);
     }
 
@@ -226,6 +224,8 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
         mCamParam3D = Ogre::Vector3(0.6f, 0.9f, 0.909091f);
     }
 
+    //for software renderer
+#if 0
     someVal -= 5.0f;
     mCamParam2D.x -= 3.0f;
 
@@ -234,7 +234,7 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
         someVal -= 2.0f;
         mCamParam2D.x += 1.0f;
     }
-
+#endif
     Ogre::Vector3 coreBase(initialVehicleSetup.mCoreBase);
     coreBase.z = -coreBase.z;//original data is left hand
 
