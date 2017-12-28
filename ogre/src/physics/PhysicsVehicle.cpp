@@ -23,6 +23,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mThrottle(0.0f),
     mBreaks(0.0f),
     mSteeringOriginal(0.0f),
+    mThrottleAdjusterCounter(0),
     mSteeringAdditionalParam(0.0f),
     mIsSteeringLeft(false),
     mIsSteeringRight(false),
@@ -141,7 +142,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     isTurnOver |= mPhysicsBody.process(*this);
     turnOverRestore(isTurnOver);
     calcTransmission();
-    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, doGetTractionScale());
+    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
@@ -470,6 +471,8 @@ void PhysicsVehicle::gearUp()
         {
             if(mCarEngine.getCurrentGear() == 1)
             {
+                mThrottleAdjusterCounter = 180;
+                mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
                 mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
             }
         }
@@ -486,6 +489,8 @@ void PhysicsVehicle::gearDown()
         {
             if(mCarEngine.getCurrentGear() == -1)
             {
+                mThrottleAdjusterCounter = 180;
+                mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
                 mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
             }
         }

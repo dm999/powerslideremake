@@ -81,6 +81,9 @@ protected:
     Ogre::Real mBreaks;
     Ogre::Real mSteeringOriginal;
 
+    Ogre::uint8 mThrottleAdjusterCounter;
+    Ogre::Real mThrottleAdjuster;
+
     PSAICar * mAICar;
 
     InitialVehicleSetup& mInitialVehicleSetup;

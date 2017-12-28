@@ -571,7 +571,7 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     return res;
 }
 
-void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale)
+void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster)
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
@@ -683,7 +683,20 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 
             Ogre::Vector3 velocityProjDiffWeight = velocityProjDiff * finalTraction * accel;
 
-            //d.polubotko: TODO for user car only
+            if(throttleAdjusterCounter > 0 && throttleAdjuster > 0.0f)
+            {
+                Ogre::Real lenVelocityProjWeighted = velocityProjWeighted.length();
+                if(lenVelocityProjWeighted > 0.25f)
+                {
+                    Ogre::Real lenVelocityProjWeightedNeg = 0.25f - lenVelocityProjWeighted;
+                    if(lenVelocityProjWeightedNeg < 0.125f)
+                        lenVelocityProjWeightedNeg = 0.125f;
+
+                    Ogre::Real weightCoeff = static_cast<float>(throttleAdjusterCounter) * throttleAdjuster * 0.0055555557f;
+
+                    velocityProjWeighted *= (lenVelocityProjWeightedNeg / lenVelocityProjWeighted) * weightCoeff + 1.0f - weightCoeff;
+                }
+            }
 
             if(velMod > 0.0f)
             {
@@ -713,6 +726,8 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         }
     }
 
+    if(throttleAdjusterCounter > 0)
+        --throttleAdjusterCounter;
 
 }
 
