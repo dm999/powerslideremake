@@ -495,14 +495,7 @@ Ogre::Vector3 PSBaseCar::getAngularVelocity()const
 
 Ogre::Real PSBaseCar::getAlignedVelocity()const
 {
-    Ogre::Real res = 0.0f;
-
-    Ogre::Vector3 carVelocity = getLinearVelocity();
-    Ogre::Vector3 carOrientation = getForwardAxis();
-
-    res = carOrientation.dotProduct(carVelocity);
-
-    return res;
+    return mPhysicsVehicle->getAlignedVelocity();
 }
 
 Ogre::Real PSBaseCar::getLateralVelocity()const

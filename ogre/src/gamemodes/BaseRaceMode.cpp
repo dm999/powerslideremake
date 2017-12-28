@@ -652,7 +652,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         if(!mModeContext.mGameState.isGamePaused())
             mUIRace->setEngineRPM(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getEngineRPM());
-        mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity());
+        mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity() * 58.0f);
         mUIRace->setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
         if(mModeContext.mGameState.getRaceStarted())
         {

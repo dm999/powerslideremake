@@ -55,6 +55,7 @@ public:
     Ogre::Real getWheelBackLVelocity() const {return mPhysicsWheels.getWheelVelocity(1);}
     Ogre::Real getWheelBackRVelocity() const {return mPhysicsWheels.getWheelVelocity(0);}
 
+    Ogre::Real getAlignedVelocity()const {return mVehicleVelocityMod;}
     Ogre::Vector3 getLinearVelocity() const;
     Ogre::Vector3 getAngularVelocity() const;
     Ogre::Vector3 getLinearImpulse() const;
