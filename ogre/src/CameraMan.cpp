@@ -154,6 +154,9 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         cockpit.z = -cockpit.z;//original data is left hand
 
         camPos = cogGlobal + carRotPS * cockpit;
+        mCamRot[0] = carRotV[0];
+        mCamRot[1] = carRotV[1];
+        mCamRot[2] = carRotV[2];
     }
 
     Ogre::Vector3 camRotTmp[3];
@@ -210,7 +213,8 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     {
         someVal = 15.5f;
         someVal2 = 10.0f;
-        mCamParam2D = Ogre::Vector2(10.0f, 26.5f);
+        //mCamParam2D = Ogre::Vector2(10.0f, 26.5f);
+        mCamParam2D = Ogre::Vector2(14.0f, 26.5f);
         mCamParam3D = Ogre::Vector3(0.6f, 0.8f, 0.714286f);
     }
 

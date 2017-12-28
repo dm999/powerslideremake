@@ -42,8 +42,8 @@ void Physics::internalTimeStep(const GameState& gameState)
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
-            (*i).first->processCamera();
             (*i).second->timeStep(gameState);
+            (*i).first->processCamera();
         }
     }
 
@@ -51,8 +51,8 @@ void Physics::internalTimeStep(const GameState& gameState)
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
-            (*i).first->processCamera();
             (*i).second->processEngineIdle();
+            (*i).first->processCamera();
         }
     }
 
