@@ -421,7 +421,7 @@ void BaseApp::windowFocusChange(Ogre::RenderWindow* rw)
     (void) rw;
 }
 
-void BaseApp::quickScriptsReload()
+void BaseApp::restartRace()
 {
     if(mGameModeSwitcher->getMode() == ModeRaceSingle)
         mGameModeSwitcher->restartRace();

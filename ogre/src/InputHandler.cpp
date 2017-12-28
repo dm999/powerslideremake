@@ -105,7 +105,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     }
     else if (arg.key == OIS::KC_F5)
     {
-        baseApp->quickScriptsReload();
+        baseApp->restartRace();
     }
     else if (arg.key == OIS::KC_SPACE)
     {

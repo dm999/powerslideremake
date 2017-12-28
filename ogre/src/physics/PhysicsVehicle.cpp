@@ -453,6 +453,8 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
             mImpulseRotInc += upDiff.crossProduct(carRotV[1]);
         }
 
+        --mTurnOverValue;
+
         if(mTurnOverValue < -200)
             mTurnOverValue = 0;
     }

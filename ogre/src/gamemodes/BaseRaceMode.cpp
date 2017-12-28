@@ -209,6 +209,8 @@ void BaseRaceMode::clearData()
 
 void BaseRaceMode::restart()
 {
+    //d.polubotko: TODO - implement restart
+#if 0
     clearScene();
     mLuaManager.CallFunction_0_0("main", mModeContext.mPipeline);
     initScene(NULL);
@@ -217,6 +219,7 @@ void BaseRaceMode::restart()
     initMisc();
 
     initLightLists();
+#endif
 }
 
 void BaseRaceMode::initScene(LoaderListener* loaderListener)

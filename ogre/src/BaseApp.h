@@ -41,7 +41,7 @@ public:
 
     void go();
 
-    void quickScriptsReload();  // reread main params only
+    void restartRace();
     void enablePause();
     void tabPressed();
     void switchRenderType();
