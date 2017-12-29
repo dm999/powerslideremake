@@ -25,6 +25,7 @@ function createVehicle()
 --~     Model.Material.SingleSubMaterial = "Test/SpotDiffuse";
 --~     Model.Material.SingleSubMaterial = "Test/PointDiffuseLR";
     Model.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLR";
+    Model.Material.SingleSubMaterialNoAtt = "Test/Multi_2/PointDiffuseLRNoAtt";
     Model.Material.SingleSubMaterialExclude = "Test/Multi_2/PointDiffuseLRExclude";
     Model.Material.SingleSubMaterialAI = "Test/PointDiffuseSimple";
     Model.Material.SingleSubMaterialAIFog = "Test/PointDiffuseSimpleFog";

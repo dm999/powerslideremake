@@ -314,6 +314,9 @@ void TerrainSceneObjectListener::doCPUVertexColor()
                 float attenuationMul = Tools::clamp((lightOutRange - distance) / (lightOutRange - lightInRange), 0.0f, 1.0f);
                 attenuation *= attenuationMul;
 
+                if(lightOutRange == 20000.0f)
+                    attenuation = 1.0f;
+
                 Ogre::ColourValue lightAffect = lightColor * attenuation;
 
                 if(!mLightExclusions[de2LightIndex].exclusions.empty())

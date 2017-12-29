@@ -70,6 +70,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     const Ogre::Vector2& fogStartEnd = gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName());
     bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
 
+    bool isSandBlaster = gameState.getTrackName() == "desert track";
+
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
     {
         for(size_t q = 0; q < 5; ++q)
@@ -89,6 +91,11 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                 if(!isAI)
                 {
                     std::string playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterial", pipeline);
+
+                    if(isSandBlaster)
+                    {
+                        playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterialNoAtt", pipeline);
+                    }
 
                     if(isAttenuateExcludeBox)
                     {
