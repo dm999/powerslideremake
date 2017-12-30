@@ -10,6 +10,7 @@ class CustomRigidBody;
 class CustomRigidBodyWheel;
 class Physics;
 class PhysicsVehicle;
+class GameState;
 
 /**
  * Class to manipulate with bullet objects
@@ -23,7 +24,7 @@ public:
 
     virtual void clear();
 
-    virtual void processCamera(){};
+    virtual void processCamera(GameState& gameState){}
 
 protected:
 

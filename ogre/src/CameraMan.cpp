@@ -14,7 +14,8 @@ CameraMan::CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser
     mCamTypeSwitched(true)
 {}
 
-void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot)
+void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot,
+    Ogre::Light * globalLight, Ogre::Light * shadowLight)
 {
 
     Ogre::Matrix3 carRotMatrix;
@@ -350,6 +351,20 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         rotationRear.FromAngleAxis(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
         mRearCamera->setOrientation(carRot * rotationRear);
         mRearCamera->setPosition(camPos + carRot * Ogre::Vector3(0.0f, 10.0f, 0.0f));
+    }
+
+    //shadow cam
+    if(globalLight && shadowLight)
+    {
+        const Ogre::Real shadowLightDistanceFromCar = 40.0f;
+
+        Ogre::Vector3 lightPos = globalLight->getDerivedPosition();
+        Ogre::Vector3 lightDir = initialVehicleSetup.mCarGlobalPos - lightPos;
+        lightDir.normalise();
+
+        Ogre::Vector3 shadowLightPos = initialVehicleSetup.mCarGlobalPos + (-lightDir) * shadowLightDistanceFromCar;
+        shadowLight->setPosition(shadowLightPos);
+        shadowLight->setDirection(lightDir);
     }
 }
 

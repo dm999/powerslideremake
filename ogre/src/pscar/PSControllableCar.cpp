@@ -205,7 +205,7 @@ void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bo
     PSBaseCar::processFrameAfterPhysics(evt);
 }
 
-void PSControllableCar::processCamera()
+void PSControllableCar::processCamera(GameState& gameState)
 {
     if(mCameraMan && mIsPossesCamera)
     {
@@ -224,7 +224,8 @@ void PSControllableCar::processCamera()
             if(cam)
             {
                 cam->setAutoTracking(false);
-                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation());
+                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation(),
+                    gameState.getGlobalLight(), gameState.getShadowLight());
             }
         }
         else

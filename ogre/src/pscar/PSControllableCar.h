@@ -36,7 +36,7 @@ public:
     virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted);
     virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted);
 
-    virtual void processCamera() override;
+    virtual void processCamera(GameState& gameState) override;
 
     void setAcceleration(bool isEnable){mAccelEnabled = isEnable;}
     bool getAcceleration() const{return mAccelEnabled;} // multiplayer

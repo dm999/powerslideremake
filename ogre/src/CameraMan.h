@@ -17,7 +17,8 @@ public :
 
     virtual ~CameraMan() {}
 
-    void setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot);
+    void setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot,
+        Ogre::Light * globalLight, Ogre::Light * shadowLight);
 
     void setRearCamera(Ogre::Camera* cam){mRearCamera = cam;}
 

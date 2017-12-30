@@ -17,7 +17,7 @@ Physics::Physics(StaticMeshProcesser * meshProesser)
 Physics::~Physics()
 {}
 
-void Physics::timeStep(const GameState& gameState)
+void Physics::timeStep(GameState& gameState)
 {
     Ogre::Real timeFromStartSeconds = mTimer.getMilliseconds() / 1000.0f;
 
@@ -36,14 +36,14 @@ void Physics::timeStep(const GameState& gameState)
     }
 }
 
-void Physics::internalTimeStep(const GameState& gameState)
+void Physics::internalTimeStep(GameState& gameState)
 {
     if(gameState.getRaceStarted() && !gameState.isGamePaused())
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
             (*i).second->timeStep(gameState);
-            (*i).first->processCamera();
+            (*i).first->processCamera(gameState);
         }
     }
 
@@ -52,7 +52,7 @@ void Physics::internalTimeStep(const GameState& gameState)
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
             (*i).second->processEngineIdle();
-            (*i).first->processCamera();
+            (*i).first->processCamera(gameState);
         }
     }
 

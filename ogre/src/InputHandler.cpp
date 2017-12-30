@@ -201,37 +201,3 @@ bool InputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID
     return true;
 }
 #endif
-
-void InputHandler::capture(const Ogre::FrameEvent& evt, 
-                            Ogre::SceneNode * modelNode, Ogre::Light * globalLight, Ogre::Light * shadowLight,
-                            float shadowLightDistanceFromCar,
-                            bool isDisableMouse)
-{
-
-    if (mKeyCodes[OIS::KC_MINUS] || mKeyCodes[OIS::KC_SUBTRACT])
-    {
-    }
-    else if (mKeyCodes[OIS::KC_EQUALS] || mKeyCodes[OIS::KC_ADD])
-    {
-    }
-
-    if(modelNode && mCameraMan)
-    {
-
-        if(globalLight && shadowLight)
-        {
-            Ogre::Vector3 lightPos = globalLight->getDerivedPosition();
-            Ogre::Vector3 modelPos = modelNode->getPosition();
-            Ogre::Vector3 lightDir = modelPos - lightPos;
-            lightDir.normalise();
-
-            Ogre::Vector3 shadowLightPos = modelPos + (-lightDir) * shadowLightDistanceFromCar;
-            shadowLight->setPosition(shadowLightPos);
-            shadowLight->setDirection(lightDir);
-        }
-
-    }
-
-    mInputContext.capture();
-
-}

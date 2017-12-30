@@ -650,7 +650,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    mModeContext.mInputHandler->capture(evt, mModeContext.mGameState.getPlayerCar().getModelNode(), mModeContext.mGameState.getGlobalLight(), mModeContext.mGameState.getShadowLight(), mShadowLightDistanceFromCar, true);
+    mModeContext.mInputHandler->capture();
 
     mModeContext.mTrayMgr->frameRenderingQueued(evt);
 
