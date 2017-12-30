@@ -235,7 +235,21 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
                 compareCamParams(paramE, paramA, paramI, paramG, compareRes)
                 )
             {
-                //d.polubotko: TODO - implement
+                Ogre::Vector2 diffResI = paramI - compareRes;
+                Ogre::Vector2 diffResIG = paramI - paramG;
+
+                Ogre::Real diffSqrt = Ogre::Math::Sqrt((diffResI.x * diffResI.x + diffResI.y * diffResI.y) /
+                    (diffResIG.x * diffResIG.x + diffResIG.y * diffResIG.y) * diffResIG.y);
+
+                Ogre::Vector3 newSomeAxis = (camSomeAxis - collisionPoint) * diffSqrt + collisionPoint - camCollisionPointDiff * -0.5f;
+                Ogre::Vector3 newSomeAxisDiff = collisionPoint - newSomeAxis;
+                Ogre::Vector3 someAxisDiff = collisionPoint - camSomeAxis;
+
+                if(someAxisDiff.dotProduct(someAxisDiff) > newSomeAxisDiff.dotProduct(newSomeAxisDiff))
+                {
+                    camSomeAxis = newSomeAxis;
+                }
+
             }
 
             camDiff = camSomeAxis - camVal;
@@ -480,7 +494,7 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     }
 
     //for software renderer
-#if 1
+#if 0
     someVal -= 5.0f;
     mCamParam2D.x -= 3.0f;
 
