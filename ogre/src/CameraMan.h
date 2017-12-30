@@ -7,11 +7,13 @@
 
 struct InitialVehicleSetup;
 
+class StaticMeshProcesser;
+
 /*all calculations in left hand - like original data*/
 class CameraMan
 {
 public :
-    CameraMan(Ogre::Camera* cam);
+    CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser);
 
     virtual ~CameraMan() {}
 
@@ -27,6 +29,8 @@ public :
 private :
 
     void recalcCamParams(const InitialVehicleSetup& initialVehicleSetup);
+
+    bool compareCamParams(Ogre::Vector2 paramA, Ogre::Vector2 paramB, Ogre::Vector2 paramC, Ogre::Vector2 paramD, Ogre::Vector2& res) const;
 
     Ogre::Vector3 mCameraOffset;
     Ogre::Vector2 mCamParam2D;
@@ -44,6 +48,8 @@ private :
 
     Ogre::Camera* mCamera;
     Ogre::Camera* mRearCamera;
+
+    StaticMeshProcesser& mStaticMeshProcesser;
 
     CameraPositions mCamPositonType;
 };

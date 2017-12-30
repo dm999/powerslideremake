@@ -145,7 +145,7 @@ void BaseRaceMode::initCamera()
     mCamera->setAspectRatio(1.0f * Ogre::Real(actualWidth) / Ogre::Real(actualHeight) / (640.0f / 480.0f));
     mCamera->setFOVy(Ogre::Degree(90.0f));
 
-    mCameraMan.reset(new CameraMan(mCamera));
+    mCameraMan.reset(new CameraMan(mCamera, mStaticMeshProcesser));
     mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
     mModeContext.mGameState.getPlayerCar().setCameraMan(mCameraMan.get());

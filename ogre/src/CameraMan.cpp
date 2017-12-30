@@ -4,10 +4,13 @@
 #include "physics/InitialVehicleSetup.h"
 #include "physics/PhysicsVehicle.h"
 
-CameraMan::CameraMan(Ogre::Camera* cam) 
+#include "mesh/StaticMeshProcesser.h"
+
+CameraMan::CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser) 
 : mRearCamera(NULL),
     mCamera(cam),
     mCamPositonType(CameraPosition_ChassisB),
+    mStaticMeshProcesser(staticMeshProcesser),
     mCamTypeSwitched(true)
 {}
 
@@ -93,8 +96,160 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
 
         Ogre::Vector3 camValue;
 
-        if(false)//d.polubotko: TODO - check collision with static
+        bool isCollisionFound = false;
+        short collisionApproach = 0;
+        Ogre::Vector3 collisionPoint;
+        do
         {
+            short partIndex;
+            short triangleIndex;
+            Ogre::Vector3 camParam = camDiff * (mCamParam + 7.0f);
+            bool isCollided = mStaticMeshProcesser.performCamCollisionDetection(camVal, camParam, collisionPoint, partIndex, triangleIndex);
+            if(!isCollided)
+            {
+                isCollisionFound = false;
+                break;
+            }
+
+            isCollisionFound = true;
+
+            Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
+            mStaticMeshProcesser.getGeoverts(partIndex, triangleIndex, pointOnStaticA, pointOnStaticC, pointOnStaticB);
+
+            Ogre::Vector3 normal = Ogre::Vector3(pointOnStaticB - pointOnStaticA).crossProduct(Ogre::Vector3(pointOnStaticC - pointOnStaticA));
+            normal.normalise();
+
+            Ogre::Real dotP = Ogre::Math::Abs(camVal.dotProduct(normal) - pointOnStaticA.dotProduct(normal));
+
+            Ogre::Vector3 camProj = camVal - dotP * normal;
+            Ogre::Vector3 camValDiff = camVal - camProj;
+            Ogre::Real camValSqrt = Ogre::Math::Sqrt(((mCamParam + 7.0f) * (mCamParam + 7.0f)) - camValDiff.dotProduct(camValDiff));
+
+            Ogre::Vector3 camCollisionPointDiff = collisionPoint - camProj;
+            Ogre::Real camCollsisionPointDiffDotP = camCollisionPointDiff.dotProduct(camCollisionPointDiff);
+            if(camCollsisionPointDiffDotP < 0.01f)break;
+
+            camCollisionPointDiff /= Ogre::Math::Sqrt(camCollsisionPointDiffDotP);
+
+            Ogre::Vector3 camSomeAxis = camValSqrt * camCollisionPointDiff + camProj;
+
+            Ogre::Vector3 normalAbs = Ogre::Vector3(Ogre::Math::Abs(normal.x), Ogre::Math::Abs(normal.y), Ogre::Math::Abs(normal.z));
+
+            Ogre::Vector2 paramA, paramC, paramE, paramG, paramI;
+
+            if(normalAbs.x <= normalAbs.y || normalAbs.x <= normalAbs.z)//y,z max
+            {
+                if(normalAbs.y > normalAbs.z)//y max
+                {
+                    if(normal.y <= 0.0f)
+                    {
+                        paramA.x = pointOnStaticA.x;
+                        paramA.y = pointOnStaticA.z;
+                        paramC.x = pointOnStaticB.x;
+                        paramC.y = pointOnStaticB.z;
+                        paramE.x = pointOnStaticC.x;
+                        paramE.y = pointOnStaticC.z;
+                        paramG.y = camSomeAxis.z;
+                        paramG.x = camSomeAxis.x;
+                        paramI.y = collisionPoint.z;
+                        paramI.x = collisionPoint.x;
+                    }
+                    else
+                    {
+                        paramA.x = pointOnStaticA.z;
+                        paramA.y = pointOnStaticA.x;
+                        paramC.x = pointOnStaticB.z;
+                        paramC.y = pointOnStaticB.x;
+                        paramE.x = pointOnStaticC.z;
+                        paramE.y = pointOnStaticC.x;
+                        paramG.y = camSomeAxis.x;
+                        paramG.x = camSomeAxis.z;
+                        paramI.y = collisionPoint.x;
+                        paramI.x = collisionPoint.z;
+                    }
+                }
+                else//z max
+                {
+                    if(normal.z <= 0.0f)
+                    {
+                        paramA.x = pointOnStaticA.y;
+                        paramA.y = pointOnStaticA.x;
+                        paramC.x = pointOnStaticB.y;
+                        paramC.y = pointOnStaticB.x;
+                        paramE.x = pointOnStaticC.y;
+                        paramE.y = pointOnStaticC.x;
+                        paramG.y = camSomeAxis.x;
+                        paramG.x = camSomeAxis.y;
+                        paramI.y = collisionPoint.x;
+                        paramI.x = collisionPoint.y;
+                    }
+                    else
+                    {
+                        paramA.x = pointOnStaticA.x;
+                        paramA.y = pointOnStaticA.y;
+                        paramC.x = pointOnStaticB.x;
+                        paramC.y = pointOnStaticB.y;
+                        paramE.x = pointOnStaticC.x;
+                        paramE.y = pointOnStaticC.y;
+                        paramG.y = camSomeAxis.y;
+                        paramG.x = camSomeAxis.x;
+                        paramI.y = collisionPoint.y;
+                        paramI.x = collisionPoint.x;
+                    }
+                }
+            }
+            else//x max
+            {
+                if(normal.x > 0.0f)
+                {
+                    paramA.x = pointOnStaticA.y;
+                    paramA.y = pointOnStaticA.z;
+                    paramC.x = pointOnStaticB.y;
+                    paramC.y = pointOnStaticB.z;
+                    paramE.x = pointOnStaticC.y;
+                    paramE.y = pointOnStaticC.z;
+                    paramG.y = camSomeAxis.z;
+                    paramG.x = camSomeAxis.y;
+                    paramI.y = collisionPoint.z;
+                    paramI.x = collisionPoint.y;
+                }
+                else
+                {
+                    paramA.x = pointOnStaticA.z;
+                    paramA.y = pointOnStaticA.y;
+                    paramC.x = pointOnStaticB.z;
+                    paramC.y = pointOnStaticB.y;
+                    paramE.x = pointOnStaticC.z;
+                    paramE.y = pointOnStaticC.y;
+                    paramG.y = camSomeAxis.y;
+                    paramG.x = camSomeAxis.z;
+                    paramI.y = collisionPoint.y;
+                    paramI.x = collisionPoint.z;
+                }
+            }
+
+            Ogre::Vector2 compareRes;
+            if(
+                compareCamParams(paramA, paramC, paramI, paramG, compareRes)    ||
+                compareCamParams(paramC, paramE, paramI, paramG, compareRes)    ||
+                compareCamParams(paramE, paramA, paramI, paramG, compareRes)
+                )
+            {
+                //d.polubotko: TODO - implement
+            }
+
+            camDiff = camSomeAxis - camVal;
+            camDiff.normalise();
+
+            ++collisionApproach;
+
+        }while(collisionApproach < 15);
+
+        if(isCollisionFound)
+        {
+            Ogre::Vector3 camCollisionPointDiff = collisionPoint - camVal;
+            camCollisionPointDiff.normalise();
+            camValue = collisionPoint - camCollisionPointDiff * 7.0f;
         }
         else
         {
@@ -184,6 +339,106 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
     }
 }
 
+bool CameraMan::compareCamParams(Ogre::Vector2 paramA, Ogre::Vector2 paramB, Ogre::Vector2 paramC, Ogre::Vector2 paramD, Ogre::Vector2& res) const
+{
+    bool ret = false;
+
+    Ogre::Vector2 diffBA = paramB - paramA;
+    Ogre::Vector2 diffCD = paramC - paramD;
+    Ogre::Vector2 diffAC = paramA - paramC;
+
+    Ogre::Vector2 switcher, switcher2;
+
+    if(diffBA.x < 0.0f)
+    {
+        switcher.x = paramB.x;
+        switcher2.x = paramA.x;
+    }
+    else
+    {
+        switcher.x = paramA.x;
+        switcher2.x = paramB.x;
+    }
+
+    if(diffCD.x <= 0.0f)
+    {
+        if (switcher2.x < paramC.x || paramD.x < switcher.x)
+            return false;
+    }
+    else
+    {
+        if (switcher2.x < paramD.x)
+            return false;
+        if (paramC.x < switcher.x)
+            return false;
+    }
+
+    if(diffBA.y < 0.0f)
+    {
+        switcher.y = paramB.y;
+        switcher2.y = paramA.y;
+    }
+    else
+    {
+        switcher.y = paramA.y;
+        switcher2.y = paramB.y;
+    }
+
+    if(diffCD.y <= 0.0f)
+    {
+        if (switcher2.y < paramC.y || paramD.y < switcher.y)
+            return false;
+    }
+    else
+    {
+        if (switcher2.y < paramD.y)
+            return false;
+        if (paramC.y < switcher.y)
+            return false;
+    }
+
+    Ogre::Real dotP_1 = diffBA.y * diffCD.x - diffCD.y * diffBA.x;
+    Ogre::Real dotP_2 = diffCD.y * diffAC.x - diffAC.y * diffCD.x;
+
+    if(dotP_1 <= 0.0f)
+    {
+        if (dotP_2 > 0.0f || dotP_2 < dotP_1)
+            return false;
+    }
+    else
+    {
+        if (dotP_2 < 0.0f)
+            return false;
+        if (dotP_2 > dotP_1)
+            return false;
+    }
+
+    Ogre::Real dotP_3 = diffAC.y * diffBA.x - diffBA.y * diffAC.x;
+
+    if(dotP_1 <= 0.0f)
+    {
+        if (dotP_3 > 0.0f || dotP_3 < dotP_1)
+            return false;
+    }
+    else
+    {
+        if (dotP_3 < 0.0f)
+            return false;
+        if (dotP_3 > dotP_1)
+            return false;
+    }
+
+    if(dotP_1 != 0.0f)
+    {
+        ret = true;
+        res.x = dotP_2 * diffBA.x / dotP_1 + paramA.x;
+        res.y = dotP_2 * diffBA.y / dotP_1 + paramA.y;
+    }
+
+
+    return ret;
+}
+
 void CameraMan::setCameraPositionType(const CameraPositions& type)
 {
     mCamTypeSwitched = true;
@@ -225,7 +480,7 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     }
 
     //for software renderer
-#if 0
+#if 1
     someVal -= 5.0f;
     mCamParam2D.x -= 3.0f;
 
