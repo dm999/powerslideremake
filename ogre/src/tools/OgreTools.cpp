@@ -16,8 +16,11 @@ Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre:
         state->setTextureName(texturesNames[q]);
         state->setTextureScale(scale, scale);
 
+        //d.polubotko: adjust OgreGLHardwearePixelBuffer.cpp in ogre 1.9.0 - add line 674
+        //if((mUsage & TU_AUTOMIPMAP))
+        //OGRE_CHECK_GL_ERROR(glGenerateMipmap(mFaceTarget));
 #if defined(__ANDROID__)
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        //state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         /*
         if(state->getTextureFiltering(Ogre::FT_MIN) == Ogre::FO_ANISOTROPIC || state->getTextureFiltering(Ogre::FT_MAG) == Ogre::FO_ANISOTROPIC)
         {
