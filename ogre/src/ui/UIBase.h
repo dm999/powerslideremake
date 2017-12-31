@@ -30,9 +30,14 @@ public:
 
     virtual void destroy(CustomTrayManager* trayMgr);
 
-protected:
+    void setVisible(bool isVisible);//to hide for different viewports - arrow issue
 
+private:
+
+    std::vector<bool> mCreatedElementsVisible;
     std::vector<Ogre::OverlayElement*> mCreatedElements;//to destroy automatically
+
+    std::vector<bool> mCreatedWidgetsVisible;
     std::vector<OgreBites::Widget*> mCreatedWidgets;//to destroy automatically
 };
 

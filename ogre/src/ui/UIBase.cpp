@@ -19,6 +19,7 @@ Ogre::PanelOverlayElement* UIBase::createEmptyPanel(const Ogre::String& name, Og
     res->setVerticalAlignment(Ogre::GVA_TOP);
     res->show();
 
+    mCreatedElementsVisible.push_back(false);
     mCreatedElements.push_back(res);
 
     return res;
@@ -46,6 +47,7 @@ Ogre::PanelOverlayElement* UIBase::createPanel(const Ogre::String& name, Ogre::R
     res->setVerticalAlignment(Ogre::GVA_TOP);
     res->show();
 
+    mCreatedElementsVisible.push_back(false);
     mCreatedElements.push_back(res);
 
     return res;
@@ -72,6 +74,7 @@ Ogre::TextAreaOverlayElement* UIBase::createTextArea(const Ogre::String& name, O
     res->setVerticalAlignment(Ogre::GVA_TOP);
     res->show();
 
+    mCreatedElementsVisible.push_back(false);
     mCreatedElements.push_back(res);
 
     return res;
@@ -86,6 +89,7 @@ OgreBites::Label* UIBase::createLabel(CustomTrayManager* trayMgr, OgreBites::Tra
 {
     OgreBites::Label* res = trayMgr->createLabel(trayLoc, name, caption, width);
 
+    mCreatedWidgetsVisible.push_back(false);
     mCreatedWidgets.push_back(res);
 
     return res;
@@ -95,6 +99,7 @@ OgreBites::Button* UIBase::createButton(CustomTrayManager* trayMgr, OgreBites::T
 {
     OgreBites::Button* res = trayMgr->createButton(trayLoc, name, caption, width);
 
+    mCreatedWidgetsVisible.push_back(false);
     mCreatedWidgets.push_back(res);
 
     return res;
@@ -104,6 +109,7 @@ OgreBites::TextBox* UIBase::createTextBox(CustomTrayManager* trayMgr, OgreBites:
 {
     OgreBites::TextBox* res = trayMgr->createTextBox(trayLoc, name, caption, width, height);
 
+    mCreatedWidgetsVisible.push_back(false);
     mCreatedWidgets.push_back(res);
 
     return res;
@@ -113,6 +119,7 @@ OgreBites::SelectMenu* UIBase::createSelectMenu(CustomTrayManager* trayMgr, Ogre
 {
     OgreBites::SelectMenu* res = trayMgr->createThickSelectMenu(trayLoc, name, caption, width, maxItemsShown, items);
 
+    mCreatedWidgetsVisible.push_back(false);
     mCreatedWidgets.push_back(res);
 
     return res;
@@ -124,12 +131,48 @@ void UIBase::destroy(CustomTrayManager* trayMgr)
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
 
+
     for(size_t q = 0; q < mCreatedElements.size(); ++q)
         om.destroyOverlayElement(mCreatedElements[q]);
 
     for(size_t q = 0; q < mCreatedWidgets.size(); ++q)
         trayMgr->destroyWidget(mCreatedWidgets[q]);
 
+    mCreatedElementsVisible.clear();
     mCreatedElements.clear();
+
+    mCreatedWidgetsVisible.clear();
     mCreatedWidgets.clear();
+}
+
+void UIBase::setVisible(bool isVisible)
+{
+    if(isVisible)
+    {
+        for(size_t q = 0; q < mCreatedElements.size(); ++q)
+        {
+            if(mCreatedElementsVisible[q])
+                mCreatedElements[q]->show();
+        }
+
+        for(size_t q = 0; q < mCreatedWidgets.size(); ++q)
+        {
+            if(mCreatedWidgetsVisible[q])
+                mCreatedWidgets[q]->show();
+        }
+    }
+    else
+    {
+        for(size_t q = 0; q < mCreatedElements.size(); ++q)
+        {
+            mCreatedElementsVisible[q] = mCreatedElements[q]->isVisible();
+            mCreatedElements[q]->hide();
+        }
+
+        for(size_t q = 0; q < mCreatedWidgets.size(); ++q)
+        {
+            mCreatedWidgetsVisible[q] = mCreatedWidgets[q]->isVisible();
+            mCreatedWidgets[q]->hide();
+        }
+    }
 }

@@ -44,6 +44,11 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
 {
 }
 
+BaseRaceMode::~BaseRaceMode()
+{
+    mModeContext.mWindow->removeListener(this);//for arrow
+}
+
 void BaseRaceMode::initData(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initData]: Enter");
@@ -138,10 +143,11 @@ void BaseRaceMode::initCamera()
     mCamera->setNearClipDistance(0.5f);
 
     Ogre::Real viewportYShift = (actualHeight / 4.73f / 1.7f) / actualHeight;//see dashHeight
-    Ogre::Viewport * viewPortScene = mModeContext.mWindow->addViewport(mCamera, 0, 0.0f, -viewportYShift, 1.0f, 1.0f);
+    mViewPortScene = mModeContext.mWindow->addViewport(mCamera, 0, 0.0f, -viewportYShift, 1.0f, 1.0f);
 
-    viewPortScene->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-    viewPortScene->setOverlaysEnabled(false);
+    mViewPortScene->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
+    mViewPortScene->setOverlaysEnabled(true);
+    mModeContext.mWindow->addListener(this);//for arrow
     mCamera->setAspectRatio(1.0f * Ogre::Real(actualWidth) / Ogre::Real(actualHeight) / (640.0f / 480.0f));
     mCamera->setFOVy(Ogre::Degree(90.0f));
 
@@ -160,10 +166,10 @@ void BaseRaceMode::initCamera()
     cameraCarUI->setOrthoWindow(static_cast<float>(actualWidth), static_cast<float>(actualHeight));
     cameraCarUI->setNearClipDistance(0.5f);
     cameraCarUI->setFarClipDistance(10000.0f);
-    Ogre::Viewport * viewPortCarUI = mModeContext.mWindow->addViewport(cameraCarUI, 1);
-    viewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
-    viewPortCarUI->setOverlaysEnabled(true);
-    viewPortCarUI->setSkiesEnabled(false);
+    mViewPortCarUI = mModeContext.mWindow->addViewport(cameraCarUI, 1);
+    mViewPortCarUI->setClearEveryFrame(true, Ogre::FBT_DEPTH);
+    mViewPortCarUI->setOverlaysEnabled(true);
+    mViewPortCarUI->setSkiesEnabled(false);
     cameraCarUI->setAspectRatio(static_cast<float>(actualWidth) / static_cast<float>(actualHeight));
     cameraCarUI->setFOVy(Ogre::Degree(45.0f));
     cameraCarUI->setPosition(0.0f, 0.0f, 100.0f);
@@ -244,7 +250,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
     //migration from 1.8.1 to 1.9.0
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=78278
-    //mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
+    mSceneMgr->addRenderQueueListener(mModeContext.mOverlaySystem);
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
 
@@ -335,10 +341,12 @@ void BaseRaceMode::clearScene()
     mModeContext.mTrayMgr->getTraysLayer()->remove3D(mModeContext.mGameState.getArrowNode());
 
     mSceneMgr->clearScene();
+    mModeContext.mWindow->removeAllViewports();
+    mSceneMgr->destroyAllCameras();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
     mSceneMgrCarUI->clearScene();
+    mSceneMgrCarUI->destroyAllCameras();
     mModeContext.mRoot->destroySceneManager(mSceneMgrCarUI);
-    mModeContext.mWindow->removeAllViewports();
 }
 
 void BaseRaceMode::initLightLists()
@@ -484,7 +492,7 @@ void BaseRaceMode::initMisc()
     mModeContext.mGameState.setArrowNode(mSceneMgr->createSceneNode(arrowEntity->getName()));
     mModeContext.mGameState.getArrowNode()->attachObject(arrowEntity);
     mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNode());
-    mModeContext.mGameState.getArrowNode()->setPosition(-0.75f, 0.75f, -1.0f);
+    mModeContext.mGameState.getArrowNode()->setPosition(-0.75f, 0.55f, -1.0f);
     mModeContext.mGameState.getArrowNode()->setScale(0.20f, 0.20f, 0.20f);
     mModeContext.mGameState.getArrowNode()->setVisible(true);
 
@@ -965,17 +973,43 @@ void BaseRaceMode::onLapFinished()
 
 void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
-    //http://www.ogre3d.org/forums/viewtopic.php?t=45499
-    if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
-        mModeContext.mGameState.getPlayerCar().setVisibility(false);
+    if(evt.source == mModeContext.mWindow)//for arrow
+    {
+    }
+    else//rear view mirror
+    {
+        //http://www.ogre3d.org/forums/viewtopic.php?t=45499
+        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+            mModeContext.mGameState.getPlayerCar().setVisibility(false);
 
-    mUIRace->setVisibleTachoNeedle(false);
+        mUIRace->setVisibleTachoNeedle(false);
+    }
 }
 
 void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
-    if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
-        mModeContext.mGameState.getPlayerCar().setVisibility(true);
+    if(evt.source == mModeContext.mWindow)//for arrow
+    {
+    }
+    else//rear view mirror
+    {
+        if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
+            mModeContext.mGameState.getPlayerCar().setVisibility(true);
 
-    mUIRace->setVisibleTachoNeedle(true);
+        mUIRace->setVisibleTachoNeedle(true);
+    }
+}
+
+void BaseRaceMode::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
+{
+    if(evt.source == mViewPortCarUI)//for arrow
+    {
+        mModeContext.mGameState.getArrowNode()->setVisible(false);
+        mUIRace->setVisible(true);
+    }
+    if(evt.source == mViewPortScene)//for arrow
+    {
+        mModeContext.mGameState.getArrowNode()->setVisible(true);
+        mUIRace->setVisible(false);
+    }
 }

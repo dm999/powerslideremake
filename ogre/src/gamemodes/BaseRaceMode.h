@@ -29,13 +29,13 @@ class LoaderListener;
 class BaseRaceMode : 
     public BaseMode,
     public LapUtils::Events,
-    public Ogre::RenderTargetListener,  // for rear camera
+    public Ogre::RenderTargetListener,  // for rear camera, arrow
     public Ogre::ResourceGroupListener  // for loader
 {
 public:
 
     BaseRaceMode(const ModeContext& modeContext);
-    virtual ~BaseRaceMode(){}
+    virtual ~BaseRaceMode();
 
     void initData(LoaderListener* loaderListener)override;
     void initCamera()override;
@@ -56,9 +56,11 @@ public:
     //LapUtils
     void onLapFinished()override;
 
-    //rear camera listener
+    //rear camera, arrow listener
     void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
     void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)override;
+    //arrow listener
+    void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)override;
 
     //ResourceGroupListener
     void resourceGroupScriptingStarted(const Ogre::String& groupName, size_t scriptCount) override;
@@ -136,6 +138,9 @@ private:
     void unloadResources();
 
     LoaderListener* mLoaderListener;
+
+    Ogre::Viewport * mViewPortScene;
+    Ogre::Viewport * mViewPortCarUI;
 };
 
 
