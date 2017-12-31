@@ -100,6 +100,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         bool isCollisionFound = false;
         short collisionApproach = 0;
         Ogre::Vector3 collisionPoint;
+        std::vector<std::pair<short, short> > averaging;
+        averaging.reserve(15);
         do
         {
             short partIndex;
@@ -110,6 +112,36 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
             {
                 isCollisionFound = false;
                 break;
+            }
+
+            if(!averaging.empty())
+            {
+                short prevPartIndex = averaging[averaging.size() - 1].first;
+                short prevTriangleIndex = averaging[averaging.size() - 1].second;
+                if(partIndex != prevPartIndex && triangleIndex != prevTriangleIndex)
+                {
+                    Ogre::int32 averageIndex = averaging.size() - 2;
+                    if(averageIndex >= 0)
+                    {
+                        do
+                        {
+                            if(partIndex == averaging[averageIndex].first && triangleIndex == averaging[averageIndex].second)
+                                break;
+                            --averageIndex;
+                        }while(averageIndex >= 0);
+
+                        if(averageIndex >= 0)
+                        {
+                            isCollisionFound = true;
+                            break;
+                        }
+                    }
+                    averaging.push_back(std::make_pair(partIndex, triangleIndex));
+                }
+            }
+            else
+            {
+                averaging.push_back(std::make_pair(partIndex, triangleIndex));
             }
 
             isCollisionFound = true;
