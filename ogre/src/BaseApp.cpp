@@ -480,7 +480,8 @@ void BaseApp::createBombByPlayer()
         mGameModeSwitcher->getMode() == ModeRaceMulti
     )
     {
-        mGameModeSwitcher->createBombByPlayer();
+        if(mGameState.getRaceStarted())
+            mGameModeSwitcher->createBombByPlayer();
     }
 }
 

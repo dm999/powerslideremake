@@ -25,6 +25,8 @@ struct InitialVehicleSetup
     float mRoofRadius[mRoofsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mRoofPos[mRoofsAmount];//RR, RL, FR, FL //left hand
 
+    Ogre::Real mCollisionRadius;
+
     Ogre::Vector3 mCOG;
     Ogre::Vector3 mCoreBase;
     Ogre::Vector3 mCockpit;

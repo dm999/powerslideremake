@@ -22,7 +22,9 @@ void CheatBomb::createBombByPlayer(PhysicsVehicle * vehicle)
         mPlayerVehicle = vehicle;
         mIsBombInProgress = true;
         mIsBombJumpsInProgress = true;
+        mIsBombExplosionInProgress = false;
         mBlowCounter = 0;
+        mExplosionCounter = 0;
 
         const InitialVehicleSetup& vehicleSetup = mPlayerVehicle->getVehicleSetup();
 
@@ -57,55 +59,98 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
     {
         if(mIsBombInProgress)
         {
-            if(mIsBombJumpsInProgress)
+            if(mIsBombExplosionInProgress)
             {
-                Ogre::Vector3 collisionPoint;
-                short partIndex;
-                short triangleIndex;
-                bool isCollided = mMeshProesser->performPointCollisionDetection(mBombPosition, mBombVelocity, collisionPoint, partIndex, triangleIndex);
-
-                if(isCollided)
+                --mExplosionCounter;
+                mSphereNode->setScale(mSphereNode->getScale() + 0.1f);
+                if(mExplosionCounter == 0)
                 {
-                    Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
-                    mMeshProesser->getGeoverts(partIndex, triangleIndex, pointOnStaticA, pointOnStaticC, pointOnStaticB);
+                    mIsBombInProgress = false;
+                    stopBomb();
+                }
+            }
+            else
+            {
+                if(mIsBombJumpsInProgress)
+                {
+                    Ogre::Vector3 collisionPoint;
+                    short partIndex;
+                    short triangleIndex;
+                    bool isCollided = mMeshProesser->performPointCollisionDetection(mBombPosition, mBombVelocity, collisionPoint, partIndex, triangleIndex);
 
-                    Ogre::Vector3 normal = Ogre::Vector3(pointOnStaticB - pointOnStaticA).crossProduct(Ogre::Vector3(pointOnStaticC - pointOnStaticA));
-                    normal.normalise();
-
-                    Ogre::Real reflectCoeff = -mBombVelocity.x * normal.x - mBombVelocity.y * normal.y - mBombVelocity.z * normal.z;
-
-                    mBombVelocity -= reflectCoeff * normal * -2.0f;
-                    mBombVelocity *= 0.95f;
-
-                    mBombPosition = collisionPoint - mBombVelocity.x * -0.1f;
-
-                    if(mBombVelocity.length() < 5.0f)
+                    if(isCollided)
                     {
-                        mBombVelocity = Ogre::Vector3::ZERO;
-                        mIsBombJumpsInProgress = false;
+                        Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
+                        mMeshProesser->getGeoverts(partIndex, triangleIndex, pointOnStaticA, pointOnStaticC, pointOnStaticB);
+
+                        Ogre::Vector3 normal = Ogre::Vector3(pointOnStaticB - pointOnStaticA).crossProduct(Ogre::Vector3(pointOnStaticC - pointOnStaticA));
+                        normal.normalise();
+
+                        Ogre::Real reflectCoeff = -mBombVelocity.x * normal.x - mBombVelocity.y * normal.y - mBombVelocity.z * normal.z;
+
+                        mBombVelocity -= reflectCoeff * normal * -2.0f;
+                        mBombVelocity *= 0.95f;
+
+                        mBombPosition = collisionPoint - mBombVelocity.x * -0.1f;
+
+                        if(mBombVelocity.length() < 5.0f)
+                        {
+                            mBombVelocity = Ogre::Vector3::ZERO;
+                            mIsBombJumpsInProgress = false;
+                        }
+                    }
+                }//jumps in progress
+
+                for (vehicles::const_iterator i = vehiclesMap.begin(), j = vehiclesMap.end(); i != j; ++i)
+                {
+                    if((*i).second.get() != mPlayerVehicle)//don`t blow on yorself bomb
+                    {
+                        Ogre::Vector3 carPos = (*i).second->getVehicleSetup().mCarGlobalPos;
+                        carPos.z = -carPos.z;//original data is left hand
+
+                        Ogre::Vector3 posDiff = carPos - mBombPosition;
+                        if (posDiff.length() < (*i).second->getVehicleSetup().mCollisionRadius)
+                            mBlowCounter = 210;
                     }
                 }
-            }//jumps in progress
 
-            mBombPosition += mBombVelocity;
 
-            if(mIsBombJumpsInProgress)
-            {
-                mBombVelocity.y -= 0.8f;
-                mBombVelocity *= 0.97f;
+
+                mBombPosition += mBombVelocity;
+
+                if(mIsBombJumpsInProgress)
+                {
+                    mBombVelocity.y -= 0.8f;
+                    mBombVelocity *= 0.97f;
+                }
+
+                ++mBlowCounter;
+
+                if(mBlowCounter > 200)
+                {
+                    for (vehicles::const_iterator i = vehiclesMap.begin(), j = vehiclesMap.end(); i != j; ++i)
+                    {
+                        Ogre::Vector3 carPos = (*i).second->getVehicleSetup().mCarGlobalPos;
+                        carPos.z = -carPos.z;//original data is left hand
+
+                        Ogre::Vector3 posDiff = carPos - mBombPosition;
+                        Ogre::Real diffLen = posDiff.length();
+                        if(diffLen < 75.0f)
+                        {
+                            Ogre::Real diffLenDiff = 75.0f - diffLen;
+                            Ogre::Real forceAmount = (*i).second->getVehicleSetup().mCollisionRadius * 0.1f / diffLen;
+                            Ogre::Vector3 rotImpulse(forceAmount * posDiff);
+                            Ogre::Vector3 linearImpulse(0.0f, diffLenDiff * 0.013333334f * 150.0f, 0.0f);
+                            (*i).second->adjustImpulseInc(rotImpulse, linearImpulse);
+                        }
+                    }
+
+                    mIsBombExplosionInProgress = true;
+                    mExplosionCounter = 30;
+                }
+
+                mSphereNode->setPosition(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
             }
-
-            ++mBlowCounter;
-
-            if(mBlowCounter > 200)
-            {
-                mIsBombInProgress = false;
-            }
-
-            mSphereNode->setPosition(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
-
-            if(!mIsBombInProgress)
-                stopBomb();
         }
     }
 }

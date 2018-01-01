@@ -27,7 +27,9 @@ private:
 
     bool mIsBombInProgress;
     bool mIsBombJumpsInProgress;
+    bool mIsBombExplosionInProgress;
     Ogre::uint8 mBlowCounter;
+    Ogre::uint8 mExplosionCounter;
     PhysicsVehicle * mPlayerVehicle;
 
     Ogre::Vector3 mBombPosition;
