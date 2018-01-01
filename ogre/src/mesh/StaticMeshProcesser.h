@@ -69,7 +69,7 @@ public :
     const std::vector<size_t>& getArrayOfCollisions() const;
 
     //for cam
-    bool performCamCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+    bool performPointCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
         Ogre::Vector3& collisionPoint,
         short& partIndex, short& triangleIndex);
 

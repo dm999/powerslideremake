@@ -33,11 +33,12 @@ public:
     const FoundCollision& getCollision(size_t index) const;
     const std::vector<size_t>& getArrayOfCollisions() const;
 
-    //for cam
-    bool performCamCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+    //for point
+    bool performPointCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
         Ogre::Vector3& collisionPoint,
         short& partIndex, short& triangleIndex);
 
+    //getters
     void getGeoverts(short partIndex, short triangleIndex, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
     void getGeoverts(const FoundCollision& collision, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const;
     void getGeovertsTexture(const FoundCollision& collision, Ogre::Vector2& tA, Ogre::Vector2& tC, Ogre::Vector2& tB) const;
@@ -71,22 +72,22 @@ private:
 
     Ogre::Real mMaxDistanceSqr;
 
-    //for cam
-    bool checkCamCollision(const DE2::AABB& aabb, const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip) const;
-    void camBroadSearch(const DE2::DE2_CollisionInfo& subTree,
+    //for point
+    bool checkPointCollision(const DE2::AABB& aabb, const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip) const;
+    void pointBroadSearch(const DE2::DE2_CollisionInfo& subTree,
         const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip);
-    void camNarrowSearch(const DE2::DE2_CollisionInfo& leaf,
+    void pointNarrowSearch(const DE2::DE2_CollisionInfo& leaf,
         const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip,
         short partIndex);
-    void camCollisionFinal(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+    void pointCollisionFinal(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
         short partIndex, short triangleIndex);
 
-    bool mCamPointFound;
-    short mCamFoundPartIndex;
-    short mCamFoundTiangleIndex;
-    Ogre::Real mCamDiffSqrLen;
-    Ogre::Real mCamCollisionWeight;
-    Ogre::Vector3 mCamCollisionPoint;
+    bool mPointCollisionFound;
+    short mPointFoundPartIndex;
+    short mPointFoundTiangleIndex;
+    Ogre::Real mPointDiffSqrLen;
+    Ogre::Real mPointCollisionWeight;
+    Ogre::Vector3 mCollisionPoint;
 };
 
 #endif
