@@ -12,10 +12,12 @@
 
 #include "../gamelogic/LapController.h"
 
-#include "../physics/Physics.h"
-
 class CameraMan;
 class UIRace;
+
+class Physics;
+
+class CheatBomb;
 
 namespace OgreBites
 {
@@ -42,6 +44,8 @@ public:
     void clearData()override;
 
     void restart();
+
+    void createBombByPlayer();
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
@@ -86,6 +90,7 @@ protected:
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
     CommonIncludes::shared_ptr<Physics> mWorld;
+    CommonIncludes::shared_ptr<CheatBomb> mCheatBomb;
 
     CommonIncludes::shared_ptr<UIRace> mUIRace;
 
@@ -128,9 +133,7 @@ private:
     void initLightLists();
 
 
-    void initWorld(const Ogre::Vector3 &gravityVector = Ogre::Vector3(0.0f, -59.81f, 0.0f),
-                   const Ogre::AxisAlignedBox &bounds = Ogre::AxisAlignedBox(   Ogre::Vector3 (-10000.0f, -10000.0f, -10000.0f),
-                                                                                Ogre::Vector3 (10000.0f,  10000.0f,  10000.0f)));
+    void initWorld();
 
     void deInitWorld();
 

@@ -6,6 +6,8 @@
 #include "PhysicsVehicle.h"
 #include "PhysicsVehicleAI.h"
 
+#include "../listeners/PhysicsListener.h"
+
 
 Physics::Physics(StaticMeshProcesser * meshProesser)
     : 
@@ -38,12 +40,22 @@ void Physics::timeStep(GameState& gameState)
 
 void Physics::internalTimeStep(GameState& gameState)
 {
+    for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)
+    {
+        (*i)->timeStepBefore(this);
+    }
+
     if(gameState.getRaceStarted() && !gameState.isGamePaused())
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
+
+            for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
+            {
+                (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
+            }
         }
     }
 
@@ -53,7 +65,17 @@ void Physics::internalTimeStep(GameState& gameState)
         {
             (*i).second->processEngineIdle();
             (*i).first->processCamera(gameState);
+
+            for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
+            {
+                (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
+            }
         }
+    }
+
+    for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)
+    {
+        (*i)->timeStepAfter(this);
     }
 
 }
@@ -102,4 +124,16 @@ PhysicsVehicle * Physics::getVehicle(PSBaseVehicle * vehiclePtr)
     if(found != mVehicles.end())
         ret = (*found).second.get();
     return ret;
+}
+
+void Physics::addListener(PhysicsListener* listener)
+{
+    mListeners.push_back(listener);
+}
+
+void Physics::removeListener(PhysicsListener* listener)
+{
+    physicsListener::const_iterator found = std::find(mListeners.begin(), mListeners.end(), listener);
+    if(found != mListeners.end())
+        mListeners.erase(found);
 }

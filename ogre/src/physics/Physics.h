@@ -19,6 +19,8 @@ class StaticMeshProcesser;
 
 class GameState;
 
+class PhysicsListener;
+
 class Physics
 {
 public:
@@ -36,6 +38,8 @@ public:
     const PhysicsVehicle * getVehicle(PSBaseVehicle * vehiclePtr) const;
     PhysicsVehicle * getVehicle(PSBaseVehicle * vehiclePtr);
 
+    void addListener(PhysicsListener* listener);
+    void removeListener(PhysicsListener* listener);
 
 private:
 
@@ -50,6 +54,9 @@ private:
 
     typedef std::map<PSBaseVehicle *, CommonIncludes::shared_ptr<PhysicsVehicle> > vehicles;
     vehicles mVehicles;
+
+    typedef std::vector<PhysicsListener *> physicsListener;
+    physicsListener mListeners;
 };
 
 #endif

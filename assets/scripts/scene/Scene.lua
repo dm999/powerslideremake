@@ -6,7 +6,6 @@ function createScene()
 
     Scene.Lights = Terrain.Lights;
     Scene.TerrainScene = Terrain.Scene;
-    Scene.Gravity = 59.81;
     Terrain.Mesh.IsBB = false;
     Terrain.Mesh.IsBS = false;
     Terrain.Scene.IsDebugLights = false;
@@ -14,7 +13,6 @@ function createScene()
     Terrain.Scene.IsDebugExclusion = false;
     Terrain.Scene.IsDebugAI = false;
     Terrain.Scene.IsDebugLLT = false;
-    Terrain.Scene.IsDebugPhysics = false;
 --~     Terrain.Material.IsOverrideSubMaterials = true;
 --~     Terrain.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLRShadow";
 --~     Terrain.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLRShadowSoft";

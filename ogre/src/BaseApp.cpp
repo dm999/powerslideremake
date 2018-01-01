@@ -473,6 +473,17 @@ void BaseApp::switchRenderType()
     }
 }
 
+void BaseApp::createBombByPlayer()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceMulti
+    )
+    {
+        mGameModeSwitcher->createBombByPlayer();
+    }
+}
+
 void BaseApp::dropCamera()
 {
     if(

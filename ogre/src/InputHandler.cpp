@@ -98,6 +98,11 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         if(noSpecialKey())
             baseApp->setShutdown(false);
     }
+    else if (arg.key == OIS::KC_F2)
+    {
+        if(noSpecialKey())
+            baseApp->createBombByPlayer();
+    }
     else if (arg.key == OIS::KC_F4)
     {
         if(noSpecialKey())

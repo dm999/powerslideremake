@@ -60,6 +60,8 @@ public:
     Ogre::Vector3 getAngularVelocity() const;
     Ogre::Vector3 getLinearImpulse() const;
 
+    const InitialVehicleSetup& getVehicleSetup()const{ return mInitialVehicleSetup;}
+
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
     static Ogre::Vector2 findTexCoordinates(const Ogre::Vector3& normal, 
         const Ogre::Vector3& point,

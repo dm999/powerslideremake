@@ -18,9 +18,12 @@
 #include "../loaders/TEXLoader.h"
 #include "../loaders/TextureLoader.h"
 
+#include "../physics/Physics.h"
 #include "../physics/PhysicsVehicle.h"
 
 #include "../listeners/LoaderListener.h"
+
+#include "../cheats/CheatBomb.h"
 
 #include "../ui/UIRace.h"
 
@@ -236,6 +239,11 @@ void BaseRaceMode::restart()
 #endif
 }
 
+void BaseRaceMode::createBombByPlayer()
+{
+    mCheatBomb->createBombByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+}
+
 void BaseRaceMode::initScene(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Enter");
@@ -256,7 +264,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
     mMainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 
-    initWorld(Ogre::Vector3(0.0f, -mLuaManager.ReadScalarFloat("Scene.Gravity", mModeContext.mPipeline), 0.0f));
+    initWorld();
 
     if(loaderListener)
         loaderListener->loadState(0.1f, "world inited");
@@ -503,28 +511,25 @@ void BaseRaceMode::initMisc()
 
 
 
-void BaseRaceMode::initWorld(const Ogre::Vector3 &gravityVector, const Ogre::AxisAlignedBox &bounds)
+void BaseRaceMode::initWorld()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
 
     mWorld.reset(new Physics(&mStaticMeshProcesser));
-    //mWorld->getBulletDynamicsWorld()->setInternalTickCallback(internalTickCallback, this);
+    mCheatBomb.reset(new CheatBomb(&mStaticMeshProcesser, mSceneMgr));
 
-    if(mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugPhysics", mModeContext.mPipeline))
-    {
-        //mDebugDrawer->setDrawWireframe(true);
-        //mWorld->setShowDebugShapes(true);
-
-        //mDebugDrawer->setDrawContactPoints(true);
-        //mWorld->setShowDebugContactPoints(true);
-    }
+    mWorld->addListener(mCheatBomb.get());
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }
 
 void BaseRaceMode::deInitWorld()
 {
+    mWorld->removeListener(mCheatBomb.get());
+    mCheatBomb.reset();
+
     mStaticMeshProcesser.deinit();
+
     mWorld.reset();
 }
 

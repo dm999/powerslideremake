@@ -267,6 +267,12 @@ void GameModeSwitcher::restartRace()
         mPlayerMode->restart();
 }
 
+void GameModeSwitcher::createBombByPlayer()
+{
+    if(mPlayerMode.get())
+        mPlayerMode->createBombByPlayer();
+}
+
 void GameModeSwitcher::tabPressed()
 {
 #ifndef NO_MULTIPLAYER

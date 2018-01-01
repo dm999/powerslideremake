@@ -38,6 +38,8 @@ public:
 
     void restartRace();
 
+    void createBombByPlayer();
+
     void tabPressed();
 
     void keyUp(MyGUI::KeyCode _key, wchar_t _char );
