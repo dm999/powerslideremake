@@ -4,6 +4,8 @@
 
 #include "../physics/PhysicsVehicle.h"
 
+Ogre::NameGenerator CheatBomb::nameGenNodes("Cheats/CheatBomb");
+
 CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager)
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager),
@@ -11,6 +13,7 @@ CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sce
     mPlayerVehicle(NULL),
     mSphereNode(NULL)
 {
+    mNodeName = nameGenNodes.generate();
 }
 
 CheatBomb::~CheatBomb(){}
@@ -43,9 +46,9 @@ void CheatBomb::createBombByPlayer(PhysicsVehicle * vehicle)
         mBombVelocity += mPlayerVehicle->getLinearImpulse() * vehicleSetup.mChassisInvMass;
         mBombPosition = carPos + mBombVelocity;
 
-        Ogre::Entity * debugSphere = mSceneMgr->createEntity("CheatBomb", Ogre::SceneManager::PT_SPHERE);
+        Ogre::Entity * debugSphere = mSceneMgr->createEntity(mNodeName, Ogre::SceneManager::PT_SPHERE);
         debugSphere->setMaterialName("BaseWhiteNoLighting");
-        mSphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CheatBomb");
+        mSphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(mNodeName);
         mSphereNode->attachObject(debugSphere);
         mSphereNode->setPosition(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
         mSphereNode->setScale(0.05f, 0.05f, 0.05f);
@@ -159,8 +162,35 @@ void CheatBomb::stopBomb()
 {
     if(mSphereNode)
     {
-        mSceneMgr->getRootSceneNode()->removeAndDestroyChild("CheatBomb");
-        mSceneMgr->destroyEntity("CheatBomb");
+        mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mNodeName);
+        mSceneMgr->destroyEntity(mNodeName);
         mSphereNode = NULL;
     }
+}
+
+CheatBombs::CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombMaxAmount)
+    : mMeshProesser(meshProesser),
+    mSceneMgr(sceneManager)
+{
+    mBombs.reserve(bombMaxAmount);
+    for(size_t q = 0; q < bombMaxAmount; ++q)
+        mBombs.push_back(CheatBomb(meshProesser, sceneManager));
+}
+
+void CheatBombs::createBombByPlayer(PhysicsVehicle * vehicle)
+{
+    for(size_t q = 0; q < mBombs.size(); ++q)
+    {
+        if(!mBombs[q].isInProgress())
+        {
+            mBombs[q].createBombByPlayer(vehicle);
+            break;
+        }
+    }
+}
+
+void CheatBombs::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& vehiclesMap)
+{
+    for(size_t q = 0; q < mBombs.size(); ++q)
+        mBombs[q].timeStepForVehicle(vehicle, vehiclesMap);
 }

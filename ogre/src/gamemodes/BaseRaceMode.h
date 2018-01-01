@@ -17,7 +17,7 @@ class UIRace;
 
 class Physics;
 
-class CheatBomb;
+class CheatBombs;
 
 namespace OgreBites
 {
@@ -90,7 +90,7 @@ protected:
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
     CommonIncludes::shared_ptr<Physics> mWorld;
-    CommonIncludes::shared_ptr<CheatBomb> mCheatBomb;
+    CommonIncludes::shared_ptr<CheatBombs> mCheatBombs;
 
     CommonIncludes::shared_ptr<UIRace> mUIRace;
 
