@@ -79,7 +79,7 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                     Ogre::Vector3 collisionPoint;
                     short partIndex;
                     short triangleIndex;
-                    bool isCollided = mMeshProesser->performPointCollisionDetection(mBombPosition, mBombVelocity, collisionPoint, partIndex, triangleIndex);
+                    bool isCollided = mMeshProesser->performPointCollisionDetection(Ogre::Ray(mBombPosition, mBombVelocity), collisionPoint, partIndex, triangleIndex);
 
                     if(isCollided)
                     {
@@ -89,7 +89,7 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         Ogre::Vector3 normal = Ogre::Vector3(pointOnStaticB - pointOnStaticA).crossProduct(Ogre::Vector3(pointOnStaticC - pointOnStaticA));
                         normal.normalise();
 
-                        Ogre::Real reflectCoeff = -mBombVelocity.x * normal.x - mBombVelocity.y * normal.y - mBombVelocity.z * normal.z;
+                        Ogre::Real reflectCoeff = -mBombVelocity.dotProduct(normal);
 
                         mBombVelocity -= reflectCoeff * normal * -2.0f;
                         mBombVelocity *= 0.95f;

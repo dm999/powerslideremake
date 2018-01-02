@@ -34,7 +34,7 @@ public:
     const std::vector<size_t>& getArrayOfCollisions() const;
 
     //for point
-    bool performPointCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+    bool performPointCollisionDetection(const Ogre::Ray& ray,
         Ogre::Vector3& collisionPoint,
         short& partIndex, short& triangleIndex);
 
@@ -73,13 +73,13 @@ private:
     Ogre::Real mMaxDistanceSqr;
 
     //for point
-    bool checkPointCollision(const DE2::AABB& aabb, const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip) const;
+    bool checkPointCollision(const DE2::AABB& aabb, const Ogre::Ray& ray, const Ogre::Vector3& dirRecip) const;
     void pointBroadSearch(const DE2::DE2_CollisionInfo& subTree,
-        const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip);
+        const Ogre::Ray& ray, const Ogre::Vector3& dirRecip);
     void pointNarrowSearch(const DE2::DE2_CollisionInfo& leaf,
-        const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip,
+        const Ogre::Ray& ray, const Ogre::Vector3& dirRecip,
         short partIndex);
-    void pointCollisionFinal(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+    void pointCollisionFinal(const Ogre::Ray& ray,
         short partIndex, short triangleIndex);
 
     bool mPointCollisionFound;

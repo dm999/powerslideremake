@@ -462,21 +462,21 @@ void CollisionDetection::narrowSearch(const DE2::DE2_CollisionInfo& leaf, const 
     }
 }
 
-bool CollisionDetection::performPointCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+bool CollisionDetection::performPointCollisionDetection(const Ogre::Ray& ray,
     Ogre::Vector3& collisionPoint,
     short& partIndex, short& triangleIndex)
 {
     mPointCollisionFound = false;
     mPointCollisionWeight = 1.0f;
-    mPointDiffSqrLen = camDiff.squaredLength();
+    mPointDiffSqrLen = ray.getDirection().squaredLength();
 
-    Ogre::Vector3 camDiffRecip = Ogre::Vector3::ZERO;
-    if(camDiff.x != 0.0f)
-        camDiffRecip.x = 1.0f / camDiff.x;
-    if(camDiff.y != 0.0f)
-        camDiffRecip.y = 1.0f / camDiff.y;
-    if(camDiff.z != 0.0f)
-        camDiffRecip.z = 1.0f / camDiff.z;
+    Ogre::Vector3 dirRecip = Ogre::Vector3::ZERO;
+    if(ray.getDirection().x != 0.0f)
+        dirRecip.x = 1.0f / ray.getDirection().x;
+    if(ray.getDirection().y != 0.0f)
+        dirRecip.y = 1.0f / ray.getDirection().y;
+    if(ray.getDirection().z != 0.0f)
+        dirRecip.z = 1.0f / ray.getDirection().z;
 
     if(mPointDiffSqrLen > 0.0f)
     {
@@ -484,7 +484,7 @@ bool CollisionDetection::performPointCollisionDetection(const Ogre::Vector3& cam
         assert(mCollisionGobal[0].subparts.size() == 1);
 
         const DE2::DE2_CollisionInfo& root = mCollisionGobal[0].subparts[0];
-        pointBroadSearch(root, camValue, camDiff, camDiffRecip);
+        pointBroadSearch(root, ray, dirRecip);
     }
 
     partIndex = mPointFoundPartIndex;
@@ -495,15 +495,15 @@ bool CollisionDetection::performPointCollisionDetection(const Ogre::Vector3& cam
 }
 
 void CollisionDetection::pointBroadSearch(const DE2::DE2_CollisionInfo& subTree,
-    const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip)
+    const Ogre::Ray& ray, const Ogre::Vector3& dirRecip)
 {
-    if(checkPointCollision(subTree.aabb, camValue, camDiff, camDiffRecip))
+    if(checkPointCollision(subTree.aabb, ray, dirRecip))
     {
         if(!subTree.subparts.empty())
         {
             for(size_t q = 0; q < subTree.subparts.size(); ++q)
             {
-                pointBroadSearch(subTree.subparts[q], camValue, camDiff, camDiffRecip);
+                pointBroadSearch(subTree.subparts[q], ray, dirRecip);
             }
         }
         else
@@ -513,18 +513,18 @@ void CollisionDetection::pointBroadSearch(const DE2::DE2_CollisionInfo& subTree,
             {
                 const DE2::DE2_CollisionInfo& leaf = mCollisionParts[partIndex];
 
-                if(checkPointCollision(leaf.aabb, camValue, camDiff, camDiffRecip))
+                if(checkPointCollision(leaf.aabb, ray, dirRecip))
                 {
                     if(!leaf.subparts.empty())
                     {
                         for(size_t q = 0; q < leaf.subparts.size(); ++q)
                         {
-                            pointNarrowSearch(leaf.subparts[q], camValue, camDiff, camDiffRecip, partIndex);
+                            pointNarrowSearch(leaf.subparts[q], ray, dirRecip, partIndex);
                         }
                     }
                     else
                     {
-                        pointCollisionFinal(camValue, camDiff, partIndex, leaf.triIndex);
+                        pointCollisionFinal(ray, partIndex, leaf.triIndex);
                     }
                 }
             }
@@ -533,26 +533,26 @@ void CollisionDetection::pointBroadSearch(const DE2::DE2_CollisionInfo& subTree,
 }
 
 void CollisionDetection::pointNarrowSearch(const DE2::DE2_CollisionInfo& leaf,
-    const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip,
+    const Ogre::Ray& ray, const Ogre::Vector3& dirRecip,
     short partIndex)
 {
-    if(checkPointCollision(leaf.aabb, camValue, camDiff, camDiffRecip))
+    if(checkPointCollision(leaf.aabb, ray, dirRecip))
     {
         if(!leaf.subparts.empty())
         {
             for(size_t q = 0; q < leaf.subparts.size(); ++q)
             {
-                pointNarrowSearch(leaf.subparts[q], camValue, camDiff, camDiffRecip, partIndex);
+                pointNarrowSearch(leaf.subparts[q], ray, dirRecip, partIndex);
             }
         }
         else
         {
-            pointCollisionFinal(camValue, camDiff, partIndex, leaf.triIndex);
+            pointCollisionFinal(ray, partIndex, leaf.triIndex);
         }
     }
 }
 
-void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+void CollisionDetection::pointCollisionFinal(const Ogre::Ray& ray,
     short partIndex, short triangleIndex)
 {
     Ogre::Vector3 pointA = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v0]);
@@ -561,11 +561,11 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
     Ogre::Vector3 normal = Ogre::Vector3(pointB - pointA).crossProduct(Ogre::Vector3(pointC - pointA));
     normal.normalise();
 
-    Ogre::Real dotP = -(camValue.dotProduct(normal) - pointA.dotProduct(normal)) / camDiff.dotProduct(normal);
+    Ogre::Real dotP = -(ray.getOrigin().dotProduct(normal) - pointA.dotProduct(normal)) / ray.getDirection().dotProduct(normal);
 
     if(dotP >= 0.0f && dotP < mPointCollisionWeight)
     {
-        Ogre::Vector3 proj = camDiff * dotP + camValue;
+        Ogre::Vector3 pointAlong = ray.getPoint(dotP);
 
         Ogre::Vector3 normalAbs = Ogre::Vector3(Ogre::Math::Abs(normal.x), Ogre::Math::Abs(normal.y), Ogre::Math::Abs(normal.z));
 
@@ -583,8 +583,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                     paramD = pointB.y;
                     paramE = pointC.x;
                     paramF = pointC.y;
-                    paramG = proj.x;
-                    paramH = proj.y;
+                    paramG = pointAlong.x;
+                    paramH = pointAlong.y;
                 }
                 else
                 {
@@ -594,8 +594,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                     paramD = pointB.x;
                     paramE = pointC.y;
                     paramF = pointC.x;
-                    paramG = proj.y;
-                    paramH = proj.x;
+                    paramG = pointAlong.y;
+                    paramH = pointAlong.x;
                 }
             }
             else//y max
@@ -608,8 +608,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                     paramD = pointB.x;
                     paramE = pointC.z;
                     paramF = pointC.x;
-                    paramG = proj.z;
-                    paramH = proj.x;
+                    paramG = pointAlong.z;
+                    paramH = pointAlong.x;
                 }
                 else
                 {
@@ -619,8 +619,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                     paramD = pointB.z;
                     paramE = pointC.x;
                     paramF = pointC.z;
-                    paramG = proj.x;
-                    paramH = proj.z;
+                    paramG = pointAlong.x;
+                    paramH = pointAlong.z;
                 }
             }
         }
@@ -634,8 +634,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                 paramD = pointB.y;
                 paramE = pointC.z;
                 paramF = pointC.y;
-                paramG = proj.z;
-                paramH = proj.y;
+                paramG = pointAlong.z;
+                paramH = pointAlong.y;
             }
             else
             {
@@ -645,8 +645,8 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
                 paramD = pointB.z;
                 paramE = pointC.y;
                 paramF = pointC.z;
-                paramG = proj.y;
-                paramH = proj.z;
+                paramG = pointAlong.y;
+                paramH = pointAlong.z;
             }
         }
 
@@ -663,12 +663,12 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Vector3& camValue, cons
             mPointFoundPartIndex = partIndex;
             mPointFoundTiangleIndex = triangleIndex;
             mPointCollisionWeight = dotP;
-            mCollisionPoint = proj;
+            mCollisionPoint = pointAlong;
         }
     }
 }
 
-bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff, const Ogre::Vector3& camDiffRecip) const
+bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::Ray& ray, const Ogre::Vector3& dirRecip) const
 {
     bool ret = false;
 
@@ -676,9 +676,9 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
 
     Ogre::Vector3 vals;
 
-    if(camValue.x >= aabb.min.x)
+    if(ray.getOrigin().x >= aabb.min.x)
     {
-        if(camValue.x <= aabb.max.x)
+        if(ray.getOrigin().x <= aabb.max.x)
         {
             flagD = 2;
         }
@@ -696,9 +696,9 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
         vals.x = aabb.min.x;
     }
 
-    if(camValue.y >= aabb.min.y)
+    if(ray.getOrigin().y >= aabb.min.y)
     {
-        if(camValue.y <= aabb.max.y)
+        if(ray.getOrigin().y <= aabb.max.y)
         {
             flagC = 2;
         }
@@ -716,9 +716,9 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
         vals.y = aabb.min.y;
     }
 
-    if(camValue.z >= aabb.min.z)
+    if(ray.getOrigin().z >= aabb.min.z)
     {
-        if(camValue.z <= aabb.max.z)
+        if(ray.getOrigin().z <= aabb.max.z)
         {
             flagB = 2;
         }
@@ -743,20 +743,20 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
     {
         Ogre::Real valA, valB, valC;
 
-        if(flagD == 2 || camDiff.x == 0.0f)
+        if(flagD == 2 || ray.getDirection().x == 0.0f)
             valA = -1.0f;
         else
-            valA = (vals.x - camValue.x) * camDiffRecip.x;
+            valA = (vals.x - ray.getOrigin().x) * dirRecip.x;
 
-        if(flagC == 2 || camDiff.y == 0.0f)
+        if(flagC == 2 || ray.getDirection().y == 0.0f)
             valB = -1.0f;
         else
-            valB = (vals.y - camValue.y) * camDiffRecip.y;
+            valB = (vals.y - ray.getOrigin().y) * dirRecip.y;
 
-        if(flagB == 2 || camDiff.z == 0.0f)
+        if(flagB == 2 || ray.getDirection().z == 0.0f)
             valC = -1.0f;
         else
-            valC = (vals.z - camValue.z) * camDiffRecip.z;
+            valC = (vals.z - ray.getOrigin().z) * dirRecip.z;
 
         if(valA <= valB || valA <= valC)
         {
@@ -764,15 +764,15 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
             {
                 if ( valC >= 0.0f )
                 {
-                    Ogre::Real valCC = camDiff.x * valC + camValue.x;
+                    Ogre::Real valCC = ray.getDirection().x * valC + ray.getOrigin().x;
 
                     if(valCC >= aabb.min.x && valCC <= aabb.max.x)
                     {
-                        Ogre::Real valCCC = camDiff.y * valC + camValue.y;
+                        Ogre::Real valCCC = ray.getDirection().y * valC + ray.getOrigin().y;
 
                         if(valCCC >= aabb.min.y && valCCC <= aabb.max.y)
                         {
-                            Ogre::Vector3 diff(valCC - camValue.x, valCCC - camValue.y, vals.z - camValue.z);
+                            Ogre::Vector3 diff(valCC - ray.getOrigin().x, valCCC - ray.getOrigin().y, vals.z - ray.getOrigin().z);
                             if(diff.squaredLength() <= mPointDiffSqrLen)
                                 ret = true;
                         }
@@ -781,15 +781,15 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
             }
             else if(valB >= 0.0f)
             {
-                Ogre::Real valBB = camDiff.x * valB + camValue.x;
+                Ogre::Real valBB = ray.getDirection().x * valB + ray.getOrigin().x;
 
                 if(valBB >= aabb.min.x && valBB <= aabb.max.x)
                 {
-                    Ogre::Real valBBB = camDiff.z * valB + camValue.z;
+                    Ogre::Real valBBB = ray.getDirection().z * valB + ray.getOrigin().z;
 
                     if(valBBB >= aabb.min.z && valBBB <= aabb.max.z)
                     {
-                        Ogre::Vector3 diff(valBB - camValue.x, vals.y - camValue.y, valBBB - camValue.z);
+                        Ogre::Vector3 diff(valBB - ray.getOrigin().x, vals.y - ray.getOrigin().y, valBBB - ray.getOrigin().z);
                         if(diff.squaredLength() <= mPointDiffSqrLen)
                             ret = true;
                     }
@@ -798,15 +798,15 @@ bool CollisionDetection::checkPointCollision(const DE2::AABB& aabb, const Ogre::
         }
         else if(valA >= 0.0f)
         {
-            Ogre::Real valAA = camDiff.y * valA + camValue.y;
+            Ogre::Real valAA = ray.getDirection().y * valA + ray.getOrigin().y;
 
             if(valAA >= aabb.min.y && valAA <= aabb.max.y)
             {
-                Ogre::Real valAAA = camDiff.z * valA + camValue.z;
+                Ogre::Real valAAA = ray.getDirection().z * valA + ray.getOrigin().z;
 
                 if(valAAA >= aabb.min.z && valAAA <= aabb.max.z)
                 {
-                    Ogre::Vector3 diff(vals.x - camValue.x, valAA - camValue.y, valAAA - camValue.z);
+                    Ogre::Vector3 diff(vals.x - ray.getOrigin().x, valAA - ray.getOrigin().y, valAAA - ray.getOrigin().z);
                     if(diff.squaredLength() <= mPointDiffSqrLen)
                         ret = true;
                 }

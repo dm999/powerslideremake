@@ -42,14 +42,14 @@ void CheatBurn::createBurnByPlayer(PhysicsVehicle * vehicle)
 
 
         mBurnVelocity = carRotY * vehicleSetup.mMissileAngle + carRotZ;
-        Ogre::Vector3 ray = mBurnVelocity * 1000.0f;
+        Ogre::Vector3 rayDirection = mBurnVelocity * 1000.0f;
         mBurnVelocity *= 10.0f;
         mBurnPosition = carPos + mBurnVelocity;
 
         Ogre::Vector3 collisionPoint;
         short partIndex;
         short triangleIndex;
-        bool isCollided = mMeshProesser->performPointCollisionDetection(mBurnPosition, ray, collisionPoint, partIndex, triangleIndex);
+        bool isCollided = mMeshProesser->performPointCollisionDetection(Ogre::Ray(mBurnPosition, rayDirection), collisionPoint, partIndex, triangleIndex);
         if(isCollided)
             mFlyPathLength = Ogre::Vector3(collisionPoint - mBurnPosition).length();
         else

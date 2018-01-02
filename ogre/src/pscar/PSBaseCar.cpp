@@ -215,6 +215,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mDefaultSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "graphs.str");
 
     initialVehicleSetup.mMissileAngle = -0.01f;
+    if(carName == "supercar")
+        initialVehicleSetup.mMissileAngle = 0.02f;
 
     initialVehicleSetup.mCollisionRadius = getCarParameter("", "collision radius");
 

@@ -927,11 +927,11 @@ const std::vector<size_t>& StaticMeshProcesser::getArrayOfCollisions() const
     return mCollisionDetection.getArrayOfCollisions();
 }
 
-bool StaticMeshProcesser::performPointCollisionDetection(const Ogre::Vector3& camValue, const Ogre::Vector3& camDiff,
+bool StaticMeshProcesser::performPointCollisionDetection(const Ogre::Ray& ray,
         Ogre::Vector3& collisionPoint,
         short& partIndex, short& triangleIndex)
 {
-    return mCollisionDetection.performPointCollisionDetection(camValue, camDiff, collisionPoint, partIndex, triangleIndex);
+    return mCollisionDetection.performPointCollisionDetection(ray, collisionPoint, partIndex, triangleIndex);
 }
 
 void StaticMeshProcesser::getGeoverts(short partIndex, short triangleIndex, Ogre::Vector3& pA, Ogre::Vector3& pC, Ogre::Vector3& pB) const

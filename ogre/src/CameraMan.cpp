@@ -106,8 +106,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         {
             short partIndex;
             short triangleIndex;
-            Ogre::Vector3 camParam = camDiff * (mCamParam + 7.0f);
-            bool isCollided = mStaticMeshProcesser.performPointCollisionDetection(camVal, camParam, collisionPoint, partIndex, triangleIndex);
+            Ogre::Vector3 rayDir = camDiff * (mCamParam + 7.0f);
+            bool isCollided = mStaticMeshProcesser.performPointCollisionDetection(Ogre::Ray(camVal, rayDir), collisionPoint, partIndex, triangleIndex);
             if(!isCollided)
             {
                 isCollisionFound = false;
