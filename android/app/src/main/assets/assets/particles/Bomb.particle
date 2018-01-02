@@ -1,0 +1,26 @@
+particle_system Particle/Bomb
+{
+    material        Test/Particle
+    particle_width  12
+    particle_height 12
+    cull_each       false
+    quota           2000
+    billboard_type  point
+ 
+    // Area emitter
+    emitter Point
+    {
+        angle           20
+        emission_rate   20
+        time_to_live    0.5
+        direction       0 1 0
+        velocity       20.0
+        colour 0.5 0.3 0.0 1.0
+    }
+ 
+    // Fader
+    affector ColourFader
+    {
+        alpha -4.0
+    }
+}

@@ -38,10 +38,14 @@ private:
     Ogre::Vector3 mBombVelocity;
 
     Ogre::SceneNode * mSphereNode;
+    Ogre::ParticleSystem* mParticle;
 
     Ogre::String mNodeName;
 
+    bool mIsFog;
+
     static Ogre::NameGenerator nameGenNodes;
+    static Ogre::NameGenerator nameGenParticleMaterials;
 };
 
 class CheatBombs : public PhysicsListener

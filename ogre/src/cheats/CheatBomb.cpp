@@ -4,7 +4,10 @@
 
 #include "../physics/PhysicsVehicle.h"
 
+#include "../tools/OgreTools.h"
+
 Ogre::NameGenerator CheatBomb::nameGenNodes("Cheats/CheatBomb");
+Ogre::NameGenerator CheatBomb::nameGenParticleMaterials("Cheats/CheatBomb/Particle/Material");
 
 CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager)
     : mMeshProesser(meshProesser),
@@ -46,13 +49,43 @@ void CheatBomb::createBombByPlayer(PhysicsVehicle * vehicle)
         mBombVelocity += mPlayerVehicle->getLinearImpulse() * vehicleSetup.mChassisInvMass;
         mBombPosition = carPos + mBombVelocity;
 
-        Ogre::Entity * debugSphere = mSceneMgr->createEntity(mNodeName, Ogre::SceneManager::PT_SPHERE);
-        debugSphere->setMaterialName("BaseWhiteNoLighting");
+
+        mParticle = mSceneMgr->createParticleSystem(mNodeName, "Particle/Bomb");
+
+        Ogre::String materialName = nameGenParticleMaterials.generate();
+
+        Ogre::MaterialPtr newMatParticle;
+        if(!mIsFog)
+        {
+            newMatParticle = CloneMaterial(  materialName, 
+                            "Test/ParticleAlpha", 
+                            std::vector<Ogre::String>(), 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        }
+        else
+        {
+            newMatParticle = CloneMaterial(  materialName, 
+                            "Test/ParticleFogAlpha", 
+                            std::vector<Ogre::String>(), 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        }
+        mParticle->setMaterialName(materialName);
+
+        Ogre::TextureUnitState * stateParticle = newMatParticle->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        stateParticle->setTextureScale(8.0f, 8.0f);
+        stateParticle->setTextureScroll(5.0f / 16.0f + 0.01f, -5.0f / 16.0f - 0.02f);
+
         mSphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(mNodeName);
-        mSphereNode->attachObject(debugSphere);
+        mSphereNode->attachObject(mParticle);
         mSphereNode->setPosition(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
         mSphereNode->setScale(0.05f, 0.05f, 0.05f);
-        debugSphere->setCastShadows(false);
+
+        mParticle->getEmitter(0)->setAngle(Ogre::Degree(40.0f));
+        mParticle->getEmitter(0)->setColour(Ogre::ColourValue::White);
+        mParticle->getEmitter(0)->setEmissionRate(100.0f);
+        mParticle->setEmitting(true);
     }
 }
 
@@ -71,6 +104,9 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                     mIsBombInProgress = false;
                     stopBomb();
                 }
+
+                if(mExplosionCounter < 15)
+                    mParticle->setEmitting(false);
             }
             else
             {
@@ -100,6 +136,8 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         {
                             mBombVelocity = Ogre::Vector3::ZERO;
                             mIsBombJumpsInProgress = false;
+                            mParticle->getEmitter(0)->setEmissionRate(40.0f);
+                            mParticle->getAffector(0)->setParameter("alpha", "-1.0");
                         }
                     }
                 }//jumps in progress
@@ -152,6 +190,13 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         }
                     }
 
+                    mParticle->getEmitter(0)->setTimeToLive(2.0f);
+                    mParticle->getEmitter(0)->setColour(Ogre::ColourValue(255.0f/255.0f, 210.0f/255.0f, 76.0f/255.0f, 1.0f));
+                    mParticle->getEmitter(0)->setEmissionRate(1000.0f);
+                    mParticle->getEmitter(0)->setAngle(Ogre::Degree(180.0f));
+                    mParticle->getEmitter(0)->setParticleVelocity(60.0f);
+                    mParticle->getAffector(0)->setParameter("alpha", "-4.0");
+
                     mIsBombExplosionInProgress = true;
                     mExplosionCounter = 30;
                 }
@@ -167,7 +212,7 @@ void CheatBomb::stopBomb()
     if(mSphereNode)
     {
         mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mNodeName);
-        mSceneMgr->destroyEntity(mNodeName);
+        mSceneMgr->destroyParticleSystem(mNodeName);
         mSphereNode = NULL;
     }
 }
