@@ -17,7 +17,7 @@ class CheatBombs;
 class Cheats
 {
 public:
-    Cheats(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, Physics* world);
+    Cheats(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, Physics* world, bool isFog);
     ~Cheats();
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);

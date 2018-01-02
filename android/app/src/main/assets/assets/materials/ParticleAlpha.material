@@ -1,0 +1,39 @@
+fragment_program Test/FPParticleAlpha glsles
+{
+    source ParticleFragAlpha.glsl
+}
+
+vertex_program Test/VPParticle glsles
+{
+    source ParticleVert.glsl
+}
+
+material Test/ParticleAlpha
+{
+    technique
+    {
+        pass
+        {
+            lighting off
+            depth_write off
+            scene_blend add
+
+            fragment_program_ref Test/FPParticleAlpha
+            {
+                param_named diffuseMap int 0
+            }
+            vertex_program_ref Test/VPParticle
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto texturematrix texture_matrix 0
+            }
+            
+            texture_unit
+            {
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+        }
+    }
+}

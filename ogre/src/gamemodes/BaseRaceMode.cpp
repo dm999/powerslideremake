@@ -395,11 +395,18 @@ void BaseRaceMode::initTerrain(LoaderListener* loaderListener)
     {
         //Ogre::TexturePtr particle = TextureLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "particle.tga", "OriginalParticle");
         Ogre::TexturePtr particle = TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
+        
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
+        
+        Ogre::MaterialPtr particleMatAlpha = Ogre::MaterialManager::getSingleton().getByName("Test/ParticleAlpha");
+        particleMatAlpha->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
 
         Ogre::MaterialPtr particleMatFog = Ogre::MaterialManager::getSingleton().getByName("Test/ParticleFog");
         particleMatFog->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
+
+        Ogre::MaterialPtr particleMatFogAlpha = Ogre::MaterialManager::getSingleton().getByName("Test/ParticleFogAlpha");
+        particleMatFogAlpha->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initTerrain]: Exit");
@@ -520,8 +527,11 @@ void BaseRaceMode::initWorld()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
 
+    const Ogre::Vector2& fogStartEnd = mModeContext.mGameState.getSTRPowerslide().getFogStartEnd(mModeContext.mGameState.getTrackName());
+    bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
+
     mWorld.reset(new Physics(&mStaticMeshProcesser));
-    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get()));
+    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled));
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }

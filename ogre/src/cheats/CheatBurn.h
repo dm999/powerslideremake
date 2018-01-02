@@ -11,7 +11,7 @@ class CheatBurn : public PhysicsListener
 {
 public:
 
-    CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager);
+    CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog);
     ~CheatBurn();
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);
@@ -38,16 +38,20 @@ private:
     Ogre::Vector3 mBurnVelocity;
 
     Ogre::SceneNode * mSphereNode;
+    Ogre::ParticleSystem* mParticle;
 
     Ogre::String mNodeName;
 
+    bool mIsFog;
+
     static Ogre::NameGenerator nameGenNodes;
+    static Ogre::NameGenerator nameGenParticleMaterials;
 };
 
 class CheatBurns : public PhysicsListener
 {
 public:
-    CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t burnsMaxAmount = 100);
+    CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog, size_t burnsMaxAmount = 100);
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);
 
