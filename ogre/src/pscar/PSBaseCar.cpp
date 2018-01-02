@@ -214,6 +214,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mTrackSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/" + gameState.getSTRPowerslide().getDataSubDir(gameState.getTrackName()), "graphs.str");
     mDefaultSplines.parse(gameState.getPFLoaderStore(), "data/cars/global/data/default", "graphs.str");
 
+    initialVehicleSetup.mMissileAngle = -0.01f;
+
     initialVehicleSetup.mCollisionRadius = getCarParameter("", "collision radius");
 
     initialVehicleSetup.mCOG = -getCarArray3Parameter("", "centre of gravity");

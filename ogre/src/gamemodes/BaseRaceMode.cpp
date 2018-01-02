@@ -23,7 +23,7 @@
 
 #include "../listeners/LoaderListener.h"
 
-#include "../cheats/CheatBomb.h"
+#include "../cheats/Cheats.h"
 
 #include "../ui/UIRace.h"
 
@@ -239,9 +239,14 @@ void BaseRaceMode::restart()
 #endif
 }
 
+void BaseRaceMode::createBurnByPlayer()
+{
+    mCheats->createBurnByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+}
+
 void BaseRaceMode::createBombByPlayer()
 {
-    mCheatBombs->createBombByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+    mCheats->createBombByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
 }
 
 void BaseRaceMode::initScene(LoaderListener* loaderListener)
@@ -516,17 +521,14 @@ void BaseRaceMode::initWorld()
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Enter");
 
     mWorld.reset(new Physics(&mStaticMeshProcesser));
-    mCheatBombs.reset(new CheatBombs(&mStaticMeshProcesser, mSceneMgr));
-
-    mWorld->addListener(mCheatBombs.get());
+    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get()));
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }
 
 void BaseRaceMode::deInitWorld()
 {
-    mWorld->removeListener(mCheatBombs.get());
-    mCheatBombs.reset();
+    mCheats.reset();
 
     mStaticMeshProcesser.deinit();
 

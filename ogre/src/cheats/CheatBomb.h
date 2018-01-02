@@ -47,7 +47,7 @@ private:
 class CheatBombs : public PhysicsListener
 {
 public:
-    CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombMaxAmount = 100);
+    CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombsMaxAmount = 100);
 
     void createBombByPlayer(PhysicsVehicle * vehicle);
 

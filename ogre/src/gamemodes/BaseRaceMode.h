@@ -16,8 +16,7 @@ class CameraMan;
 class UIRace;
 
 class Physics;
-
-class CheatBombs;
+class Cheats;
 
 namespace OgreBites
 {
@@ -45,6 +44,7 @@ public:
 
     void restart();
 
+    void createBurnByPlayer();
     void createBombByPlayer();
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
@@ -90,7 +90,7 @@ protected:
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
     CommonIncludes::shared_ptr<Physics> mWorld;
-    CommonIncludes::shared_ptr<CheatBombs> mCheatBombs;
+    CommonIncludes::shared_ptr<Cheats> mCheats;
 
     CommonIncludes::shared_ptr<UIRace> mUIRace;
 

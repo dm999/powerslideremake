@@ -267,6 +267,12 @@ void GameModeSwitcher::restartRace()
         mPlayerMode->restart();
 }
 
+void GameModeSwitcher::createBurnByPlayer()
+{
+    if(mPlayerMode.get())
+        mPlayerMode->createBurnByPlayer();
+}
+
 void GameModeSwitcher::createBombByPlayer()
 {
     if(mPlayerMode.get())

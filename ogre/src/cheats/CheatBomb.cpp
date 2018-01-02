@@ -104,16 +104,20 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                     }
                 }//jumps in progress
 
+                //detect car near by
                 for (vehicles::const_iterator i = vehiclesMap.begin(), j = vehiclesMap.end(); i != j; ++i)
                 {
-                    if((*i).second.get() != mPlayerVehicle)//don`t blow on yorself bomb
+                    if((*i).second.get() != mPlayerVehicle)//don`t blow up on yourself bomb
                     {
                         Ogre::Vector3 carPos = (*i).second->getVehicleSetup().mCarGlobalPos;
                         carPos.z = -carPos.z;//original data is left hand
 
                         Ogre::Vector3 posDiff = carPos - mBombPosition;
                         if (posDiff.length() < (*i).second->getVehicleSetup().mCollisionRadius)
+                        {
                             mBlowCounter = 210;
+                            break;
+                        }
                     }
                 }
 
@@ -168,12 +172,12 @@ void CheatBomb::stopBomb()
     }
 }
 
-CheatBombs::CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombMaxAmount)
+CheatBombs::CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombsMaxAmount)
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager)
 {
-    mBombs.reserve(bombMaxAmount);
-    for(size_t q = 0; q < bombMaxAmount; ++q)
+    mBombs.reserve(bombsMaxAmount);
+    for(size_t q = 0; q < bombsMaxAmount; ++q)
         mBombs.push_back(CheatBomb(meshProesser, sceneManager));
 }
 

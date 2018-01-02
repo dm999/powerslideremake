@@ -473,6 +473,18 @@ void BaseApp::switchRenderType()
     }
 }
 
+void BaseApp::createBurnByPlayer()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceMulti
+    )
+    {
+        if(mGameState.getRaceStarted())
+            mGameModeSwitcher->createBurnByPlayer();
+    }
+}
+
 void BaseApp::createBombByPlayer()
 {
     if(

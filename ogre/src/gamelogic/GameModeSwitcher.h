@@ -38,6 +38,7 @@ public:
 
     void restartRace();
 
+    void createBurnByPlayer();
     void createBombByPlayer();
 
     void tabPressed();

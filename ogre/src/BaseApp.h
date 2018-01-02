@@ -45,6 +45,7 @@ public:
     void enablePause();
     void tabPressed();
     void switchRenderType();
+    void createBurnByPlayer();
     void createBombByPlayer();
     void dropCamera();
 
