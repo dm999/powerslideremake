@@ -595,6 +595,17 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
             mTrayMgr->injectMouseMove(arg);
             mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
         }
+
+        if(mGameModeSwitcher->isLoadPassed() && 
+            (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            )
+        {
+            if(!mGameState.isGamePaused())
+            {
+                Ogre::Real winWidth = mWindow->getWidth();
+                mGameState.getPlayerCar().mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs), winWidth);
+            }
+        }
     }
 }
 void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
@@ -606,6 +617,14 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             mTrayMgr->injectMouseDown(arg, id);
             mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
         }
+
+        if(mGameModeSwitcher->isLoadPassed() && 
+            (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            )
+        {
+            if(!mGameState.isGamePaused())
+                mGameState.getPlayerCar().mousePressed(id);
+        }
     }
 }
 void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
@@ -616,6 +635,14 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
         {
             mTrayMgr->injectMouseUp(arg, id);
             mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        }
+
+        if(mGameModeSwitcher->isLoadPassed() && 
+            (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            )
+        {
+            if(!mGameState.isGamePaused())
+                mGameState.getPlayerCar().mouseReleased(id);
         }
     }
 }

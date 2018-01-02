@@ -53,4 +53,10 @@ enum TransmissionType
     trAuto
 };
 
+enum InputType
+{
+    itKeyboard,
+    itMouse
+};
+
 #endif

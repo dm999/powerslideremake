@@ -103,6 +103,43 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     }
 }
 
+void PSPlayerCar::mousePressed(OIS::MouseButtonID id)
+{
+    if(id == OIS::MB_Left)
+    {
+        mWorld->getVehicle(this)->setThrottle(1.0f);
+        setAcceleration(true);
+    }
+
+    if(id == OIS::MB_Right)
+    {
+        mWorld->getVehicle(this)->setBrakes(1.0f);
+        setBrake(true);
+    }
+}
+
+void PSPlayerCar::mouseReleased(OIS::MouseButtonID id)
+{
+    if(id == OIS::MB_Left)
+    {
+        mWorld->getVehicle(this)->setThrottle(0.0f);
+        setAcceleration(false);
+    }
+
+    if(id == OIS::MB_Right)
+    {
+        mWorld->getVehicle(this)->setBrakes(0.0f);
+        setBrake(false);
+    }
+}
+
+void PSPlayerCar::mouseMoved(Ogre::Vector2& pos, Ogre::Real windowWidth)
+{
+    Ogre::Real steering = windowWidth / 2.0f - pos.x;
+    steering /= windowWidth / 2.0f;
+    mWorld->getVehicle(this)->setSteering(steering);
+}
+
 void PSPlayerCar::raceStarted()
 {
     mPhysicsVehicle->setRaceStarted();

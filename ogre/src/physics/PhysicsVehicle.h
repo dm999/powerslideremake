@@ -141,6 +141,8 @@ private:
 
     bool mIsRaceStarted;
 
+    InputType mInputType;
+
 };
 
 #endif

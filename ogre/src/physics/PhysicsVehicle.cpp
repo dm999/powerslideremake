@@ -29,7 +29,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsSteeringRight(false),
     mSteeringIncrement(0.1f),
     mTurnOverValue(0),
-    mIsRaceStarted(false)
+    mIsRaceStarted(false),
+    mInputType(itKeyboard)
 {
     mCarEngine.setTransmissionType(trAuto);
 
@@ -155,7 +156,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
 Ogre::Real PhysicsVehicle::adjustSteering()
 {
-    if(mVehicleType == HumanVehicle)
+    if(mVehicleType == HumanVehicle && mInputType == itKeyboard)
     {
         if (mIsSteeringLeft)
         {

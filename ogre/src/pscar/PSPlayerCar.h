@@ -29,6 +29,10 @@ public:
     void keyDown(OIS::KeyCode key);
     void keyUp(OIS::KeyCode key);
 
+    void mousePressed(OIS::MouseButtonID id);
+    void mouseReleased(OIS::MouseButtonID id);
+    void mouseMoved(Ogre::Vector2& pos, Ogre::Real windowWidth);
+
     void raceStarted();
 
     bool isCollideChassis(const PSBaseCar& otherCar)const;
