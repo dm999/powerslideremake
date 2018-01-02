@@ -11,13 +11,15 @@
 #include "../OriginalSettings.h"
 #include "../GameState.h"
 
+#include "../gamemodes/ModeContext.h"
+
 class CustomTrayManager;
 class BaseRaceMode;
 
 class UIRace : public UIBase
 {
 public:
-    UIRace();
+    UIRace(const ModeContext& modeContext);
     ~UIRace(){}
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState);
@@ -26,6 +28,10 @@ public:
     void showBeforeStart2();
     void showBeforeStart3();
     void hideAllStart();
+
+    void mousePressed(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos);
 
     void setEngineRPM(Ogre::Real rpm);
     void setCarSpeed(Ogre::Real speed);
@@ -72,10 +78,19 @@ public:
 
 private:
 
+    ModeContext mModeContext;
+
     bool mLoaded;
 
     void loadDashboardCars(const GameState& gameState);
     void loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
+
+#if defined(__ANDROID__)
+    void panelHit(Ogre::PanelOverlayElement* panel);
+
+    Ogre::PanelOverlayElement* mPanelBurn;
+    Ogre::PanelOverlayElement* mPanelBomb;
+#endif
 
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyL;
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyC;

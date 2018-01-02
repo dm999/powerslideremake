@@ -309,6 +309,9 @@ void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
     if(mMenuMultiMode.get())
         mMenuMultiMode->mousePressed(pos);
 #endif
+
+    if(mPlayerMode.get())
+        mPlayerMode->mousePressed(pos);
 }
 
 void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
@@ -320,6 +323,9 @@ void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
     if(mMenuMultiMode.get())
         mMenuMultiMode->mouseReleased(pos);
 #endif
+
+    if(mPlayerMode.get())
+        mPlayerMode->mouseReleased(pos);
 }
 
 void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
@@ -331,6 +337,9 @@ void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
     if(mMenuMultiMode.get())
         mMenuMultiMode->mouseMoved(pos);
 #endif
+
+    if(mPlayerMode.get())
+        mPlayerMode->mouseMoved(pos);
 }
 
 #if defined(__ANDROID__)

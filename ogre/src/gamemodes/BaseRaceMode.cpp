@@ -39,7 +39,7 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mShadowLightDistanceFromCar(40.0f),
     mIsGlobalReset(true),
     mRearCamera(0),
-    mUIRace(new UIRace()),
+    mUIRace(new UIRace(modeContext)),
     mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
@@ -247,6 +247,21 @@ void BaseRaceMode::createBurnByPlayer()
 void BaseRaceMode::createBombByPlayer()
 {
     mCheats->createBombByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+}
+
+void BaseRaceMode::mousePressed(const Ogre::Vector2& pos)
+{
+    mUIRace->mousePressed(pos);
+}
+
+void BaseRaceMode::mouseReleased(const Ogre::Vector2& pos)
+{
+    mUIRace->mouseReleased(pos);
+}
+
+void BaseRaceMode::mouseMoved(const Ogre::Vector2& pos)
+{
+    mUIRace->mouseMoved(pos);
 }
 
 void BaseRaceMode::initScene(LoaderListener* loaderListener)

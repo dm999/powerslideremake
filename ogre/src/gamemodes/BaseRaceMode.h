@@ -47,6 +47,10 @@ public:
     void createBurnByPlayer();
     void createBombByPlayer();
 
+    void mousePressed(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos);
+
     void frameStarted(const Ogre::FrameEvent &evt)override;
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
 

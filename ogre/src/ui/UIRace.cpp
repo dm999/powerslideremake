@@ -13,13 +13,16 @@
 #include "../loaders/TEXLoader.h"
 
 #if defined(__ANDROID__)
+    #include "../BaseApp.h"
+
     #include <android/log.h>
 
-    #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
-    #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 #endif
 
-UIRace::UIRace() :
+UIRace::UIRace(const ModeContext& modeContext) :
+    mModeContext(modeContext),
     mLoaded(false), mRearViewMirrorPanel(NULL)
 {
     mEngineRPMToRotation.addPoint(1000.0f, 155.0f);
@@ -125,6 +128,23 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
                                 texName, 
                                 1.0f,
                                 TEMP_RESOURCE_GROUP_NAME);
+        }
+    }
+
+    {
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("CustomBackgroundRed");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundRed", 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
     }
 
@@ -745,6 +765,26 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         }
     }
 
+    //android buttons
+#if defined(__ANDROID__)
+    {
+        Ogre::Real cheatButtonWidth = viewportWidth / 10.0f;
+        Ogre::Real cheatButtonHeight = viewportHeight / 20.0f;
+        Ogre::Real cheatButtonLeft = cheatButtonWidth;
+        Ogre::Real cheatButtonTop = 0.0f;;
+
+        mPanelBurn = createPanel("CheatBurn", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelBurn->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBurn);
+        mPanelBurn->show();
+
+        mPanelBomb = createPanel("CheatBomb", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft + cheatButtonWidth + cheatButtonWidth / 2.0f, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelBomb->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBomb);
+        mPanelBomb->show();
+    }
+#endif
+
     mLoaded = true;
 
 }
@@ -955,10 +995,27 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
                                 "data/misc", "4_m_1.tex", 
                                 "OriginalFinished4", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
+
 #if defined(__ANDROID__)
         LOGI("UIRace[loadMisc]: End"); 
 #endif
 }
+
+#if defined(__ANDROID__)
+void UIRace::panelHit(Ogre::PanelOverlayElement* panel)
+{
+    LOGI("UIRace[panelHit]: Begin"); 
+
+    if(panel != NULL && panel->getName() == "CheatBurn")
+        mModeContext.getBaseApp()->createBurnByPlayer();
+
+    if(panel != NULL && panel->getName() == "CheatBomb")
+        mModeContext.getBaseApp()->createBombByPlayer();
+
+    LOGI("UIRace[panelHit]: End"); 
+}
+#endif
 
 void UIRace::showBeforeStart1()
 {
@@ -994,6 +1051,38 @@ void UIRace::hideAllStart()
     mBeforeStartPanelGoL->hide();
     mBeforeStartPanelGoC->hide();
     mBeforeStartPanelGoR->hide();
+}
+
+void UIRace::mousePressed(const Ogre::Vector2& pos)
+{
+#if defined(__ANDROID__)
+    LOGI("UIRace[mousePressed]: Begin"); 
+
+    //LOGI("UIRace[mousePressed]: %.2f %.2f", pos.x, pos.y); 
+
+    if(OgreBites::Widget::isCursorOver(mPanelBurn, pos, 0))
+    {
+        panelHit(mPanelBurn);
+    }
+    if(OgreBites::Widget::isCursorOver(mPanelBomb, pos, 0))
+    {
+        panelHit(mPanelBomb);
+    }
+    LOGI("UIRace[mousePressed]: End"); 
+#endif
+}
+
+void UIRace::mouseReleased(const Ogre::Vector2& pos)
+{
+#if defined(__ANDROID__)
+    LOGI("UIRace[mouseReleased]: Begin"); 
+
+    LOGI("UIRace[mouseReleased]: End"); 
+#endif
+}
+
+void UIRace::mouseMoved(const Ogre::Vector2& pos)
+{
 }
 
 void UIRace::setEngineRPM(Ogre::Real rpm)
