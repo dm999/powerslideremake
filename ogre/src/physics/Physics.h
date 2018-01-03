@@ -44,9 +44,16 @@ public:
     void addListener(PhysicsListener* listener);
     void removeListener(PhysicsListener* listener);
 
+    void setCollisionSplinesDD(const PSSpline& collisionDD){mCollisionDD = collisionDD;}
+    void setCollisionSplinesVV(const PSSpline& collisionVV){mCollisionVV = collisionVV;}
+    void setCollisionSplinesDDV(const PSSpline& collisionDDV){mCollisionDDV = collisionDDV;}
+    void setCollisionSplinesVDV(const PSSpline& collisionVDV){mCollisionVDV = collisionVDV;}
+
 private:
 
     void internalTimeStep(GameState& gameState);
+
+    void processCarsCollisions(PhysicsVehicle* vehicle);
 
     Ogre::Timer mTimer;
 
@@ -57,6 +64,11 @@ private:
 
     typedef std::map<PSBaseVehicle *, CommonIncludes::shared_ptr<PhysicsVehicle> > vehicles;
     vehicles mVehicles;
+
+    PSSpline mCollisionDD;
+    PSSpline mCollisionVV;
+    PSSpline mCollisionDDV;
+    PSSpline mCollisionVDV;
 
     typedef std::vector<PhysicsListener *> physicsListener;
     physicsListener mListeners;

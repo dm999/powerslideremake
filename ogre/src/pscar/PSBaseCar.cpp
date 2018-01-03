@@ -19,6 +19,7 @@
 #include "../loaders/SUSLoader.h"
 #include "../OriginalSettings.h"
 
+#include "../physics/Physics.h"
 #include "../physics/PhysicsVehicle.h"
 
 #include "../GameState.h"
@@ -437,6 +438,50 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
 
         initialVehicleSetup.mSteering.init(splinePoints, hscale, vscale);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "collision d_d hscale", true);
+        Ogre::Real vscale = getCarParameter("", "collision d_d vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "collision d_d");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        PSSpline spline;
+        spline.init(splinePoints, hscale, vscale);
+        world->setCollisionSplinesDD(spline);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "collision v_v hscale", true);
+        Ogre::Real vscale = getCarParameter("", "collision v_v vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "collision v_v");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        PSSpline spline;
+        spline.init(splinePoints, hscale, vscale);
+        world->setCollisionSplinesVV(spline);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "collision d_dv hscale", true);
+        Ogre::Real vscale = getCarParameter("", "collision d_dv vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "collision d_dv");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        PSSpline spline;
+        spline.init(splinePoints, hscale, vscale);
+        world->setCollisionSplinesDDV(spline);
+    }
+    {
+        Ogre::Real hscale = getCarParameter("", "collision v_dv hscale", true);
+        Ogre::Real vscale = getCarParameter("", "collision v_dv vscale", true);
+
+        std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "collision v_dv");
+        std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+
+        PSSpline spline;
+        spline.init(splinePoints, hscale, vscale);
+        world->setCollisionSplinesVDV(spline);
     }
     //splines END
 
