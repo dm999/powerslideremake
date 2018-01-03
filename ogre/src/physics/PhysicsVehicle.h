@@ -26,7 +26,8 @@ public:
                     StaticMeshProcesser * meshProesser,
                     InitialVehicleSetup& initialVehicleSetup, 
                     Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
-                    Ogre::SceneNode *chassis);
+                    Ogre::SceneNode *chassis,
+                    InputType type);
     virtual ~PhysicsVehicle();
 
     void timeStep(const GameState& gameState);

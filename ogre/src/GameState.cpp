@@ -20,6 +20,7 @@ GameState::GameState() :
     mIsMirrorEnabled(false),
     mListenerGain(1.0f),
     mIsGamePaused(false),
+    mInputType(itKeyboard),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
     mMultiplayerUserName("Rasputin"),

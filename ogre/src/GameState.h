@@ -114,6 +114,9 @@ public:
     void resetGamePaused();
     bool isGamePaused()const{return mIsGamePaused;}
 
+    InputType getInputType() const {return mInputType;}
+    void setInputType(InputType type) {mInputType = type;}
+
     void setMultiplayerMaster(bool option){mIsMultiplayerMaster = option;}
     bool isMultiplayerMaster()const{return mIsMultiplayerMaster;}
 
@@ -198,6 +201,8 @@ private:
     Ogre::Real mListenerGain; //master volume
 
     bool mIsGamePaused;
+
+    InputType mInputType;
 
     //multiplayer
     bool mIsMultiplayerMaster;

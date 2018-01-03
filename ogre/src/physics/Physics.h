@@ -5,6 +5,8 @@
 
 #include "../includes/CommonIncludes.h"
 
+#include "../Enums.h"
+
 #include "InitialVehicleSetup.h"
 
 struct GameWorld;
@@ -32,6 +34,7 @@ public:
 
     PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
+        InputType type,
         bool isAI
         );
     void removeVehicle(PSBaseVehicle * vehiclePtr);

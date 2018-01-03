@@ -7,8 +7,9 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
                                InitialVehicleSetup& initialVehicleSetup, 
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                                Ogre::SceneNode *chassis,
+                               InputType type,
                                PSAICar * aiCar) :
-    PhysicsVehicle(physics, meshProesser, initialVehicleSetup, wheelNodes, chassis)
+    PhysicsVehicle(physics, meshProesser, initialVehicleSetup, wheelNodes, chassis, type)
 {
     mVehicleType = AIVehicle;
     mAICar = aiCar;

@@ -268,6 +268,10 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initScene]: Enter");
 
+#if !defined(__ANDROID__)
+    mModeContext.mGameState.setInputType(mLuaManager.ReadScalarBool("Model.MouseControl", mModeContext.mPipeline) ? itMouse : itKeyboard);
+#endif
+
     mShadowLightDistanceFromCar = mLuaManager.ReadScalarFloat("Model.ShadowLightDistance", mModeContext.mPipeline);
 
     mSceneMgr = mModeContext.mRoot->createSceneManager(Ogre::ST_GENERIC);

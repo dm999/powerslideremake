@@ -6,6 +6,8 @@
 
 #include "../physics/InitialVehicleSetup.h"
 
+#include "../Enums.h"
+
 class CustomRigidBody;
 class CustomRigidBodyWheel;
 class Physics;
@@ -30,7 +32,8 @@ protected:
 
     void initPhysicalModel(Physics * world, 
         Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], 
-        const InitialVehicleSetup& initialVehicleSetup);
+        const InitialVehicleSetup& initialVehicleSetup,
+        InputType type);
 
     /**
      * Could be slow due to total removal from world

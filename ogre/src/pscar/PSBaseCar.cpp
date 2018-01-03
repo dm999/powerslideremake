@@ -447,7 +447,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
         mWheelNodes[q]->setPosition(initialVehicleSetup.mCarGlobalPos + initialVehicleSetup.mCarRot * initialVehicleSetup.mConnectionPointWheel[q]);
     }
 
-    initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup);
+    initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup, gameState.getInputType());
 
 }
 

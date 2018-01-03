@@ -8,7 +8,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
                                StaticMeshProcesser * meshProesser,
                                InitialVehicleSetup& initialVehicleSetup, 
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
-                               Ogre::SceneNode *chassis)
+                               Ogre::SceneNode *chassis,
+                               InputType type)
 : mPhysics(physics),
     mMeshProcesser(meshProesser),
     mChassis(chassis),
@@ -30,7 +31,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mSteeringIncrement(0.1f),
     mTurnOverValue(0),
     mIsRaceStarted(false),
-    mInputType(itKeyboard)
+    mInputType(type)
 {
     mCarEngine.setTransmissionType(trAuto);
 

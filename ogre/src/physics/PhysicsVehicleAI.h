@@ -12,6 +12,7 @@ public:
                                InitialVehicleSetup& initialVehicleSetup, 
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                                Ogre::SceneNode *chassis,
+                               InputType type,
                                PSAICar * aiCar);
 
     virtual ~PhysicsVehicleAI(){}
