@@ -573,7 +573,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
 
-    mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getSteering());
+    mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getSteering(), mModeContext.mGameState.getPlayerCar().getBrake());
 
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.setListenerPos(playerPos);
@@ -706,7 +706,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     {
         if(!mModeContext.mGameState.isGamePaused())
             mUIRace->setEngineRPM(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar())->getCarEngine().getEngineRPM());
-        mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocity() * 58.0f);
+        mUIRace->setCarSpeed(mModeContext.mGameState.getPlayerCar().getAlignedVelocitySpeedometer());
         mUIRace->setCurrentLap(static_cast<unsigned short>(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()), static_cast<unsigned short>(mModeContext.mGameState.getLapsCount()));
         if(mModeContext.mGameState.getRaceStarted())
         {

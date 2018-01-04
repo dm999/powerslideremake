@@ -802,7 +802,8 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 void UIRace::setVisibleTachoNeedleAndPointer(bool isVisible)
 {
     mNeedle->setVisible(isVisible);
-    mPointer->setVisible(isVisible);
+    if(mIsBreakInProgress)
+        mPointerArrow->setVisible(isVisible);
 }
 
 void UIRace::initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const GameState& gameState)
@@ -904,11 +905,36 @@ void UIRace::initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const 
 
     mPointer->setBoundingBox(aabInf);
 
+
+
+    mPointerArrow = sceneManager->createManualObject("ManualPointerArrow");
+
+    mPointerArrow->begin("Test/CustomColor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+
+    mPointerArrow->position(pointerTopX, pointerTopY, 0.0f);
+    mPointerArrow->colour(Ogre::ColourValue::Red);
+    mPointerArrow->position(pointerTopX + pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointerArrow->colour(Ogre::ColourValue::Red);
+    mPointerArrow->position(pointerTopX - pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointerArrow->colour(Ogre::ColourValue::Red);
+    mPointerArrow->position(pointerTopX, pointerTopY, 0.0f);
+    mPointerArrow->colour(Ogre::ColourValue::Red);
+
+    mPointerArrow->end();
+
+    mPointerArrow->setCastShadows(false);
+
+    mPointerArrow->setBoundingBox(aabInf);
+
+    mIsBreakInProgress = false;
+    mPointerArrow->setVisible(mIsBreakInProgress);
+
     mChildPointer = sceneManager->getRootSceneNode()->createChildSceneNode();
     mChildPointer->attachObject(mPointer);
+    mChildPointer->attachObject(mPointerArrow);
 }
 
-void UIRace::setPointerPosition(Ogre::Real steering)
+void UIRace::setPointerPosition(Ogre::Real steering, bool isBreaking)
 {
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -916,6 +942,16 @@ void UIRace::setPointerPosition(Ogre::Real steering)
     Ogre::Vector3 pos = mChildPointer->getPosition();
     pos.x = -steering * viewportWidth / 2.0f;
     mChildPointer->setPosition(pos);
+
+    mIsBreakInProgress = isBreaking;
+    if(mIsBreakInProgress)
+    {
+        mPointerArrow->setVisible(true);
+    }
+    else
+    {
+        mPointerArrow->setVisible(false);
+    }
 }
 
 void UIRace::setVisibleFinishSign(bool isVisible, size_t finishPos)

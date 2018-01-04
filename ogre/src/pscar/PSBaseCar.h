@@ -44,6 +44,9 @@ public:
     Ogre::Vector3 getLinearVelocity()const;
     Ogre::Vector3 getAngularVelocity()const;
     Ogre::Real getAlignedVelocity()const;
+    Ogre::Real getAlignedVelocitySpeedometer()const;
+    Ogre::Real getWheelBackLVelocity() const;
+    Ogre::Real getWheelBackRVelocity() const;
     Ogre::Real getLateralVelocity()const;
     Ogre::Vector3 getForwardAxis()const;
     Ogre::Vector3 getLinearImpulse()const;

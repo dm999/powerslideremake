@@ -183,9 +183,14 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
     Ogre::Vector3 carUpVector = mInitialVehicleSetup.mCarRot * Ogre::Vector3::UNIT_Y;
     Ogre::Real upProjY = Ogre::Vector3::UNIT_Y.dotProduct(carUpVector);
 
+    Ogre::Real speedometerVel = getAlignedVelocitySpeedometer();
+    Ogre::Real wheelVel = getWheelBackLVelocity();
 
     //wheels rotation by engine addition
-    if( (mAccelEnabled || mBrakeEnabled) && isRaceStarted && mPhysicsVehicle->getCarEngine().getCurrentGear() != 0)
+    if( (mAccelEnabled || mBrakeEnabled) &&
+        isRaceStarted && 
+        mPhysicsVehicle->getCarEngine().getCurrentGear() != 0 &&
+        ( speedometerVel > 10.0f || wheelVel > 10.0f))
     {
         if(!mParticles.empty())
         {

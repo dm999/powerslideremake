@@ -57,6 +57,7 @@ public:
     Ogre::Real getWheelBackRVelocity() const {return mPhysicsWheels.getWheelVelocity(0);}
 
     Ogre::Real getAlignedVelocity()const {return mVehicleVelocityMod;}
+    Ogre::Real getAlignedVelocitySpeedometer()const {return mVehicleVelocityMod * 58.0f;}
     Ogre::Vector3 getLinearVelocity() const;
     Ogre::Vector3 getAngularVelocity() const;
     Ogre::Vector3 getLinearImpulse() const;
@@ -139,6 +140,7 @@ private:
     bool mIsSteeringLeft;
     bool mIsSteeringRight;
     const Ogre::Real mSteeringIncrement;
+    const Ogre::Real mSteeringIncrementReturn;
 
     int mTurnOverValue;
 

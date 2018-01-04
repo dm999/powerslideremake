@@ -556,6 +556,21 @@ Ogre::Real PSBaseCar::getAlignedVelocity()const
     return mPhysicsVehicle->getAlignedVelocity();
 }
 
+Ogre::Real PSBaseCar::getAlignedVelocitySpeedometer()const
+{
+    return mPhysicsVehicle->getAlignedVelocitySpeedometer();
+}
+
+Ogre::Real PSBaseCar::getWheelBackLVelocity()const
+{
+    return mPhysicsVehicle->getWheelBackLVelocity();
+}
+
+Ogre::Real PSBaseCar::getWheelBackRVelocity()const
+{
+    return mPhysicsVehicle->getWheelBackRVelocity();
+}
+
 Ogre::Real PSBaseCar::getLateralVelocity()const
 {
     Ogre::Real res = 0.0f;

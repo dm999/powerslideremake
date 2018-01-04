@@ -28,7 +28,12 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mSteeringAdditionalParam(0.0f),
     mIsSteeringLeft(false),
     mIsSteeringRight(false),
+#if defined(__ANDROID__)
+    mSteeringIncrement(0.05f),
+#else
     mSteeringIncrement(0.1f),
+#endif
+    mSteeringIncrementReturn(0.1f),
     mTurnOverValue(0),
     mIsRaceStarted(false),
     mInputType(type)
@@ -171,13 +176,13 @@ Ogre::Real PhysicsVehicle::adjustSteering()
         }
         else
         {
-            if(mSteeringOriginal < -mSteeringIncrement)
+            if(mSteeringOriginal < -mSteeringIncrementReturn)
             {
-                mSteeringOriginal += mSteeringIncrement;
+                mSteeringOriginal += mSteeringIncrementReturn;
             }
-            else if(mSteeringOriginal > mSteeringIncrement)
+            else if(mSteeringOriginal > mSteeringIncrementReturn)
             {
-                mSteeringOriginal -= mSteeringIncrement;
+                mSteeringOriginal -= mSteeringIncrementReturn;
             }
             else
             {

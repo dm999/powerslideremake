@@ -73,7 +73,7 @@ public:
 
     void setVisibleTachoNeedleAndPointer(bool isVisible);
     void initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const GameState& gameState);
-    void setPointerPosition(Ogre::Real steering);
+    void setPointerPosition(Ogre::Real steering, bool isBreaking);
 
     void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
 
@@ -113,6 +113,8 @@ private:
 
     Ogre::SceneNode * mChildPointer;
     Ogre::ManualObject* mPointer;
+    Ogre::ManualObject* mPointerArrow;
+    bool mIsBreakInProgress;
 
     std::vector<Ogre::PanelOverlayElement*> mTachoLamps;
     std::vector<size_t> mTachoRange;
