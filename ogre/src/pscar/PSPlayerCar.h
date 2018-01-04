@@ -37,6 +37,8 @@ public:
 
     bool isCollideChassis(const PSBaseCar& otherCar)const;
 
+    Ogre::Real getSteering() const;
+
 private:
 
 };

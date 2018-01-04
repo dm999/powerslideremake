@@ -61,6 +61,8 @@ public:
     Ogre::Vector3 getAngularVelocity() const;
     Ogre::Vector3 getLinearImpulse() const;
 
+    Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
+
     const InitialVehicleSetup& getVehicleSetup()const{ return mInitialVehicleSetup;}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);

@@ -162,3 +162,8 @@ bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar)const
 #endif
     return res;
 }
+
+Ogre::Real PSPlayerCar::getSteering() const
+{
+    return mPhysicsVehicle->getOriginalSteering();
+}

@@ -193,7 +193,7 @@ void BaseRaceMode::initCamera()
         mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
     }
 
-    mUIRace->initTachoNeedle(mSceneMgrCarUI, mModeContext.mGameState);
+    mUIRace->initTachoNeedleAndPointer(mSceneMgrCarUI, mModeContext.mGameState);
 
     mCameraMan->setRearCamera(mRearCamera);
     //init misc end
@@ -572,6 +572,8 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
     Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
 
     Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
+
+    mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getSteering());
 
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.setListenerPos(playerPos);
@@ -1018,7 +1020,7 @@ void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(false);
 
-        mUIRace->setVisibleTachoNeedle(false);
+        mUIRace->setVisibleTachoNeedleAndPointer(false);
     }
 }
 
@@ -1032,7 +1034,7 @@ void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(true);
 
-        mUIRace->setVisibleTachoNeedle(true);
+        mUIRace->setVisibleTachoNeedleAndPointer(true);
     }
 }
 

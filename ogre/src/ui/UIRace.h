@@ -71,8 +71,9 @@ public:
     void reloadTextures(const GameState& gameState);
 #endif
 
-    void setVisibleTachoNeedle(bool isVisible);
-    void initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState);
+    void setVisibleTachoNeedleAndPointer(bool isVisible);
+    void initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const GameState& gameState);
+    void setPointerPosition(Ogre::Real steering);
 
     void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
 
@@ -109,6 +110,9 @@ private:
     Ogre::SceneNode * mChildNeedle;
     Ogre::ManualObject* mNeedle;
     LinearController<float> mEngineRPMToRotation;
+
+    Ogre::SceneNode * mChildPointer;
+    Ogre::ManualObject* mPointer;
 
     std::vector<Ogre::PanelOverlayElement*> mTachoLamps;
     std::vector<size_t> mTachoRange;

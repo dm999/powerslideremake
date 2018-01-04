@@ -146,6 +146,21 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("CustomBackgroundGray");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundGray", 
+                                "Test/Diffuse", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
     }
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
@@ -789,12 +804,13 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
 }
 
-void UIRace::setVisibleTachoNeedle(bool isVisible)
+void UIRace::setVisibleTachoNeedleAndPointer(bool isVisible)
 {
     mNeedle->setVisible(isVisible);
+    mPointer->setVisible(isVisible);
 }
 
-void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState& gameState)
+void UIRace::initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const GameState& gameState)
 {
 
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
@@ -866,6 +882,41 @@ void UIRace::initTachoNeedle(Ogre::SceneManager * sceneManager, const GameState&
     baseNeedle->setPosition(needleCenterX - viewportWidth / 2.0f, -needleCenterY + viewportHeight / 2.0f, 0.0f);
     mChildNeedle = baseNeedle->createChildSceneNode();
     mChildNeedle->attachObject(mNeedle);
+
+
+    //pointer
+    float pointerTopX = 0.0f / 640.0f * viewportWidth;
+    float pointerTopY = -175.0f / 480.0f * viewportHeight;
+    float pointerOffsetX = 2.5f / 640.0f * viewportWidth;
+    float pointerOffsetY = 5.0f / 480.0f * viewportHeight;
+
+    mPointer = sceneManager->createManualObject("ManualPointer");
+
+    mPointer->begin("CustomBackgroundGray", Ogre::RenderOperation::OT_LINE_STRIP);
+
+    mPointer->position(pointerTopX, pointerTopY, 0.0f);
+    mPointer->position(pointerTopX - pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointer->position(pointerTopX + pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointer->position(pointerTopX, pointerTopY, 0.0f);
+
+    mPointer->end();
+
+    mPointer->setCastShadows(false);
+
+    mPointer->setBoundingBox(aabInf);
+
+    mChildPointer = sceneManager->getRootSceneNode()->createChildSceneNode();
+    mChildPointer->attachObject(mPointer);
+}
+
+void UIRace::setPointerPosition(Ogre::Real steering)
+{
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+
+    Ogre::Vector3 pos = mChildPointer->getPosition();
+    pos.x = -steering * viewportWidth / 2.0f;
+    mChildPointer->setPosition(pos);
 }
 
 void UIRace::setVisibleFinishSign(bool isVisible, size_t finishPos)
@@ -996,6 +1047,7 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
                                 "OriginalFinished4", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
+    TextureLoader().generate("CustomBackgroundGray", 64, 64, Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
 
 #if defined(__ANDROID__)
         LOGI("UIRace[loadMisc]: End"); 
