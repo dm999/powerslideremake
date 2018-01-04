@@ -16,6 +16,8 @@ material Test/Color
     {
         pass
         {
+            scene_blend one_minus_dest_colour zero
+        
             fragment_program_ref Test/FPColor
             {
             }

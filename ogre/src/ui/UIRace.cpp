@@ -890,13 +890,13 @@ void UIRace::initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const 
     mPointer->begin("Test/CustomColor", Ogre::RenderOperation::OT_LINE_STRIP);
 
     mPointer->position(pointerTopX, pointerTopY, 0.0f);
-    mPointer->colour(Ogre::ColourValue::Black);
+    mPointer->colour(Ogre::ColourValue::Red);
     mPointer->position(pointerTopX + pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
-    mPointer->colour(Ogre::ColourValue::Black);
+    mPointer->colour(Ogre::ColourValue::Red);
     mPointer->position(pointerTopX - pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
-    mPointer->colour(Ogre::ColourValue::Black);
+    mPointer->colour(Ogre::ColourValue::Red);
     mPointer->position(pointerTopX, pointerTopY, 0.0f);
-    mPointer->colour(Ogre::ColourValue::Black);
+    mPointer->colour(Ogre::ColourValue::Red);
 
     mPointer->end();
 
