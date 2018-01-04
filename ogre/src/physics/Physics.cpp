@@ -147,39 +147,20 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
         if((*i).second.get() != vehicle)//don`t collide with yourself
         {
             Ogre::Matrix3 carRotMatrix;
-            Ogre::Vector3 carARotV[3];//original data is left hand
-            Ogre::Vector3 carBRotV[3];//original data is left hand
+            Ogre::Vector3 carARotZ;//original data is left hand
+            Ogre::Vector3 carBRotZ;//original data is left hand
 
             (*i).second->getVehicleSetup().mCarRot.ToRotationMatrix(carRotMatrix);
-            carARotV[0] = Ogre::Vector3(carRotMatrix[0][0], carRotMatrix[1][0], -carRotMatrix[2][0]);
-            carARotV[1] = Ogre::Vector3(carRotMatrix[0][1], carRotMatrix[1][1], -carRotMatrix[2][1]);
-            carARotV[2] = Ogre::Vector3(-carRotMatrix[0][2], -carRotMatrix[1][2], carRotMatrix[2][2]);
-
-            Ogre::Matrix3 carARotPS;
-            carARotPS.FromAxes(carARotV[0], carARotV[1], carARotV[2]);
+            carARotZ = Ogre::Vector3(-carRotMatrix[0][2], -carRotMatrix[1][2], carRotMatrix[2][2]);
 
             vehicle->getVehicleSetup().mCarRot.ToRotationMatrix(carRotMatrix);
-            carBRotV[0] = Ogre::Vector3(carRotMatrix[0][0], carRotMatrix[1][0], -carRotMatrix[2][0]);
-            carBRotV[1] = Ogre::Vector3(carRotMatrix[0][1], carRotMatrix[1][1], -carRotMatrix[2][1]);
-            carBRotV[2] = Ogre::Vector3(-carRotMatrix[0][2], -carRotMatrix[1][2], carRotMatrix[2][2]);
+            carBRotZ = Ogre::Vector3(-carRotMatrix[0][2], -carRotMatrix[1][2], carRotMatrix[2][2]);
 
-            Ogre::Matrix3 carBRotPS;
-            carBRotPS.FromAxes(carBRotV[0], carBRotV[1], carBRotV[2]);
+            Ogre::Vector3 cogAGlobal((*i).second->getVehicleSetup().mCOGGlobal);
+            cogAGlobal.z = -cogAGlobal.z;//original data is left hand
 
-            Ogre::Vector3 cogA((*i).second->getVehicleSetup().mCOG);
-            cogA.z = -cogA.z;//original data is left hand
-
-            Ogre::Vector3 cogB(vehicle->getVehicleSetup().mCOG);
-            cogB.z = -cogB.z;//original data is left hand
-
-            Ogre::Vector3 carAPos ((*i).second->getVehicleSetup().mCarGlobalPos);
-            carAPos.z = -carAPos.z;//original data is left hand
-
-            Ogre::Vector3 carBPos (vehicle->getVehicleSetup().mCarGlobalPos);
-            carBPos.z = -carBPos.z;//original data is left hand
-
-            Ogre::Vector3 cogAGlobal(carAPos + carARotPS * cogA);
-            Ogre::Vector3 cogBGlobal(carBPos + carBRotPS * cogB);
+            Ogre::Vector3 cogBGlobal(vehicle->getVehicleSetup().mCOGGlobal);
+            cogBGlobal.z = -cogBGlobal.z;//original data is left hand
 
             Ogre::Real collisionRadiusDiff = vehicle->getVehicleSetup().mCollisionRadius + 
                 (*i).second->getVehicleSetup().mCollisionRadius - 2.0f + 1.0f;
@@ -209,17 +190,17 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                     switch(counter)
                     {
                     case 0:
-                        aVal = cogAGlobal - carARotV[2] * -3.0f;
-                        bVal = cogBGlobal - carBRotV[2] * -3.0f;
+                        aVal = cogAGlobal - carARotZ * -3.0f;
+                        bVal = cogBGlobal - carBRotZ * -3.0f;
                         break;
                     case 1:
-                        bVal = cogBGlobal - carBRotV[2] * 3.0f;
+                        bVal = cogBGlobal - carBRotZ * 3.0f;
                         break;
                     case 2:
-                        aVal = cogAGlobal - carARotV[2] * 3.0f;
+                        aVal = cogAGlobal - carARotZ * 3.0f;
                         break;
                     case 3:
-                        bVal = cogBGlobal - carBRotV[2] * -3.0f;
+                        bVal = cogBGlobal - carBRotZ * -3.0f;
                         break;
                     default:
                         break;

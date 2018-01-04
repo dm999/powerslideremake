@@ -30,6 +30,7 @@ struct InitialVehicleSetup
     Ogre::Real mCollisionRadius;
 
     Ogre::Vector3 mCOG;
+    Ogre::Vector3 mCOGGlobal;
     Ogre::Vector3 mCoreBase;
     Ogre::Vector3 mCockpit;
 

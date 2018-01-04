@@ -151,6 +151,8 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
     //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
 
+    mInitialVehicleSetup.mCOGGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG;
+
     reposition();
     rerotation();
 }
