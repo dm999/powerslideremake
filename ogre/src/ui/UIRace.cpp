@@ -939,6 +939,9 @@ void UIRace::setPointerPosition(Ogre::Real steering, bool isBreaking)
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
 
+    Ogre::Real offsetX = 2.5f / 640.0f * viewportWidth;
+    viewportWidth -= offsetX * 2.0f;
+
     Ogre::Vector3 pos = mChildPointer->getPosition();
     pos.x = -steering * viewportWidth / 2.0f;
     mChildPointer->setPosition(pos);

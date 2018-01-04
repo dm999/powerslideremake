@@ -233,6 +233,10 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::processEngineIdle()
 {
+    mPhysicsWheels.setSteering(adjustSteering());
+    reposition();
+    rerotation();
+
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
     mCarEngine.process(wheelsAverageVel, mThrottle);
 }
