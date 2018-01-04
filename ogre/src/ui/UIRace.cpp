@@ -147,18 +147,13 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
         {
-            std::vector<Ogre::String> texName;
-            texName.push_back("CustomBackgroundGray");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundGray", 
-                                "Test/Diffuse", 
-                                texName, 
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomColor", 
+                                "Test/Color", 
+                                std::vector<Ogre::String>(), 
                                 1.0f,
                                 TEMP_RESOURCE_GROUP_NAME);
             newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
 
     }
@@ -892,12 +887,16 @@ void UIRace::initTachoNeedleAndPointer(Ogre::SceneManager * sceneManager, const 
 
     mPointer = sceneManager->createManualObject("ManualPointer");
 
-    mPointer->begin("CustomBackgroundGray", Ogre::RenderOperation::OT_LINE_STRIP);
+    mPointer->begin("Test/CustomColor", Ogre::RenderOperation::OT_LINE_STRIP);
 
     mPointer->position(pointerTopX, pointerTopY, 0.0f);
-    mPointer->position(pointerTopX - pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointer->colour(Ogre::ColourValue::Black);
     mPointer->position(pointerTopX + pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointer->colour(Ogre::ColourValue::Black);
+    mPointer->position(pointerTopX - pointerOffsetX, pointerTopY + pointerOffsetY, 0.0f);
+    mPointer->colour(Ogre::ColourValue::Black);
     mPointer->position(pointerTopX, pointerTopY, 0.0f);
+    mPointer->colour(Ogre::ColourValue::Black);
 
     mPointer->end();
 
@@ -1047,7 +1046,6 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
                                 "OriginalFinished4", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
-    TextureLoader().generate("CustomBackgroundGray", 64, 64, Ogre::ColourValue(0.5f, 0.5f, 0.5f, 1.0f));
 
 #if defined(__ANDROID__)
         LOGI("UIRace[loadMisc]: End"); 

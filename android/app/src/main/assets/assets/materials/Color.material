@@ -1,0 +1,28 @@
+fragment_program Test/FPColor glsles
+{
+    source ColorFrag.glsl
+}
+
+vertex_program Test/VPColor glsles
+{
+    source ColorVert.glsl
+}
+
+material Test/Color
+{
+    receive_shadows off
+
+    technique
+    {
+        pass
+        {
+            fragment_program_ref Test/FPColor
+            {
+            }
+            vertex_program_ref Test/VPColor
+            {
+                param_named_auto modelviewproj worldviewproj_matrix
+            }
+        }
+    }
+}
