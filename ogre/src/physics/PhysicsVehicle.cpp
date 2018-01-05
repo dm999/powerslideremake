@@ -28,12 +28,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mSteeringAdditionalParam(0.0f),
     mIsSteeringLeft(false),
     mIsSteeringRight(false),
-#if defined(__ANDROID__)
-    mSteeringIncrement(0.05f),
-#else
-    mSteeringIncrement(0.1f),
-#endif
-    mSteeringIncrementReturn(0.1f),
+    mSteeringIncrement(0.0f),
     mTurnOverValue(0),
     mIsRaceStarted(false),
     mInputType(type)
@@ -166,28 +161,37 @@ Ogre::Real PhysicsVehicle::adjustSteering()
 {
     if(mVehicleType == HumanVehicle && mInputType == itKeyboard)
     {
-        if (mIsSteeringLeft)
+        Ogre::Real steerDirection = 0.0f;
+        if (mIsSteeringLeft) steerDirection = 1.0f;
+        if (mIsSteeringRight) steerDirection = -1.0f;
+
+        if(mSteeringOriginal == steerDirection)
+            mSteeringIncrement = 0.0f;
+        else
+            mSteeringIncrement += 1.0f;
+
+        Ogre::Real steerWeight = 0.07f - mSteeringIncrement * -0.005f;
+        if(steerWeight > 0.35f) steerWeight = 0.35f;
+
+        if(mSteeringOriginal < steerDirection)
         {
-            mSteeringOriginal += mSteeringIncrement;
-        }
-        else if (mIsSteeringRight)
-        {
-            mSteeringOriginal -= mSteeringIncrement;
+            if(mSteeringOriginal >= 0.0f)
+                mSteeringOriginal += steerWeight;
+            else
+                mSteeringOriginal += steerWeight * 2.0f;
+
+            if(mSteeringOriginal > steerDirection)
+                mSteeringOriginal = steerDirection;
         }
         else
         {
-            if(mSteeringOriginal < -mSteeringIncrementReturn)
-            {
-                mSteeringOriginal += mSteeringIncrementReturn;
-            }
-            else if(mSteeringOriginal > mSteeringIncrementReturn)
-            {
-                mSteeringOriginal -= mSteeringIncrementReturn;
-            }
+            if(mSteeringOriginal <= 0.0f)
+                mSteeringOriginal -= steerWeight;
             else
-            {
-                mSteeringOriginal = 0.0f;
-            }
+                mSteeringOriginal -= steerWeight * 2.0f;
+
+            if(mSteeringOriginal < steerDirection)
+                mSteeringOriginal = steerDirection;
         }
     }
 

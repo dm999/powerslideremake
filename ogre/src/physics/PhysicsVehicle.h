@@ -139,8 +139,7 @@ private:
     Ogre::Real mSteeringAdditionalParam;
     bool mIsSteeringLeft;
     bool mIsSteeringRight;
-    const Ogre::Real mSteeringIncrement;
-    const Ogre::Real mSteeringIncrementReturn;
+    Ogre::Real mSteeringIncrement;
 
     int mTurnOverValue;
 
