@@ -45,32 +45,24 @@ void Physics::internalTimeStep(GameState& gameState)
         (*i)->timeStepBefore(this);
     }
 
-    if(gameState.getRaceStarted() && !gameState.isGamePaused())
+    if(!gameState.isGamePaused())
     {
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
-            processCarsCollisions((*i).second.get());
 
-            for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
+            if(gameState.getRaceStarted())
             {
-                (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
-            }
-        }
-    }
+                processCarsCollisions((*i).second.get());
 
-    if(!gameState.getRaceStarted() && !gameState.isGamePaused())
-    {
-        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
-        {
-            (*i).second->processEngineIdle();
-            (*i).first->processCamera(gameState);
-
-            for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
-            {
-                (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
+                for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
+                {
+                    (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
+                }
             }
+            else
+                (*i).second->zeroImpulses();
         }
     }
 

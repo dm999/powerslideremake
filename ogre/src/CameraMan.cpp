@@ -38,9 +38,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
     Ogre::Vector3 cog(initialVehicleSetup.mCOG);
     cog.z = -cog.z;//original data is left hand
 
-    Ogre::Vector3 cogRot(carRotPS * cog);
-
-    Ogre::Vector3 cogGlobal(carPos + cogRot);
+    Ogre::Vector3 cogGlobal(initialVehicleSetup.mCOGGlobal);
+    cogGlobal.z = -cogGlobal.z;//original data is left hand
 
     if(mCamPositonType != CameraPosition_Bumper)
     {

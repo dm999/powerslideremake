@@ -31,7 +31,6 @@ public:
     virtual ~PhysicsVehicle();
 
     void timeStep(const GameState& gameState);
-    void processEngineIdle();
 
     void adjustImpulseInc(const Ogre::Vector3& rotAxis, const Ogre::Vector3& impulse);
 
@@ -61,6 +60,8 @@ public:
     Ogre::Vector3 getLinearVelocity() const;
     Ogre::Vector3 getAngularVelocity() const;
     Ogre::Vector3 getLinearImpulse() const;
+
+    void zeroImpulses();
 
     Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
 

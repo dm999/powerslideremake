@@ -235,16 +235,6 @@ void PhysicsVehicle::calcTransmission()
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
 }
 
-void PhysicsVehicle::processEngineIdle()
-{
-    mPhysicsWheels.setSteering(adjustSteering());
-    reposition();
-    rerotation();
-
-    Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle);
-}
-
 void PhysicsVehicle::reposition()
 {
     mChassis->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG);
@@ -531,4 +521,12 @@ Ogre::Vector3 PhysicsVehicle::getAngularVelocity() const
 Ogre::Vector3 PhysicsVehicle::getLinearImpulse() const
 {
     return mImpulseLinear;
+}
+
+void PhysicsVehicle::zeroImpulses()
+{
+    mImpulseLinear = Ogre::Vector3::ZERO;
+    mImpulseLinearInc = Ogre::Vector3::ZERO;
+    mImpulseRot = Ogre::Vector3::ZERO;
+    mImpulseRotInc = Ogre::Vector3::ZERO;
 }
