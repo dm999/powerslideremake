@@ -62,6 +62,8 @@ public:
     Ogre::Vector3 getLinearImpulse() const;
 
     void zeroImpulses();
+    void setCollisionImpilseWeighter(Ogre::Real val){mCollisionImpulseWeighter = val;}
+    Ogre::Real getCollisionImpilseWeighter() const {return mCollisionImpulseWeighter;}
 
     Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
 
@@ -136,6 +138,8 @@ private:
     Ogre::Vector3 mCoreBaseGlobalPrev;
 
     Ogre::Real mMaxCollisionDistance;
+
+    Ogre::Real mCollisionImpulseWeighter;
 
     Ogre::Real mSteeringAdditionalParam;
     bool mIsSteeringLeft;

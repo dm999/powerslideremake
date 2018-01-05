@@ -54,6 +54,7 @@ private:
     void internalTimeStep(GameState& gameState);
 
     void processCarsCollisions(PhysicsVehicle* vehicle);
+    void processCollisionsImpulseWeighter(PhysicsVehicle* vehicle);
 
     Ogre::Timer mTimer;
 
