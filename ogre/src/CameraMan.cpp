@@ -381,7 +381,7 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
         Ogre::Quaternion rotationRear(Ogre::Quaternion::IDENTITY);
         rotationRear.FromAngleAxis(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
         mRearCamera->setOrientation(carRot * rotationRear);
-        mRearCamera->setPosition(camPos + carRot * Ogre::Vector3(0.0f, 10.0f, 0.0f));
+        mRearCamera->setPosition(camPos + carRot * Ogre::Vector3(0.0f, 5.0f, -10.0f));
     }
 
     //shadow cam

@@ -25,7 +25,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mBreaks(0.0f),
     mSteeringOriginal(0.0f),
     mThrottleAdjusterCounter(0),
-    mCollisionImpulseWeighter(0.0f),
+    mSlipStreamFactor(0.0f),
     mSteeringAdditionalParam(0.0f),
     mCollisionSteeringAdditionalParam(0.0f),
     mIsSteeringLeft(false),
@@ -93,7 +93,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     if(mVehicleVelocityMod < 0.0001f) mVehicleVelocityMod = 0.0001f;
 
     mInitialVehicleSetup.mCarGlobalPos += impulse * velScale * mInitialVehicleSetup.mChassisInvMass;
-    Ogre::Real airDensTransCoeff = (mCollisionImpulseWeighter - 1.0f) * mInitialVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
+    Ogre::Real airDensTransCoeff = (mSlipStreamFactor - 1.0f) * mInitialVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
     mImpulseLinear *= airDensTransCoeff;
 
     //do falloff check

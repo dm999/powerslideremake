@@ -157,7 +157,13 @@ void BaseRaceMode::initCamera()
     mCameraMan.reset(new CameraMan(mCamera, mStaticMeshProcesser));
     mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
-    mModeContext.mGameState.getPlayerCar().setCameraMan(mCameraMan.get());
+    Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);
+    bool isCamToAI = mLuaManager.ReadScalarBool("Scene.IsCamToAI", mModeContext.mPipeline);
+
+    if(!isCamToAI)
+        mModeContext.mGameState.getPlayerCar().setCameraMan(mCameraMan.get());
+    else
+        mModeContext.mGameState.getAICar(aiCamIndex).setCameraMan(mCameraMan.get());
 
     //http://www.ogre3d.org/forums/viewtopic.php?p=331138
     //http://www.ogre3d.org/forums/viewtopic.php?f=2&t=79581
@@ -443,6 +449,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
 
     mModeContext.mGameState.setPLayerCarPrevVel(Ogre::Vector3::ZERO);
 
+    Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);
     bool isCamToAI = mLuaManager.ReadScalarBool("Scene.IsCamToAI", mModeContext.mPipeline);
 
     mLapController.clear();
@@ -468,7 +475,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
     {
         PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
 
-        bool isCam = (q == (mModeContext.mGameState.getAICount() - 1));
+        bool isCam = (q == aiCamIndex);
         if(!isCamToAI)
             isCam = false;
         aiCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacters[q], 

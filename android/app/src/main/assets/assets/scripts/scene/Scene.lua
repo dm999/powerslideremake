@@ -21,6 +21,7 @@ function createScene()
     
     
     Scene.IsCamToAI = false;
+    Scene.AICamIndex = 0;
     
     Scene.Mirror = {}
     Scene.Mirror.RTTSize = {}

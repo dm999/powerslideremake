@@ -48,26 +48,44 @@ void Physics::internalTimeStep(GameState& gameState)
 
     if(!gameState.isGamePaused())
     {
+        //process physics
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
+        }
 
+        //process collisions
+        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+        {
+               if(gameState.getRaceStarted())
+                    processCarsCollisions((*i).second.get());
+        }
+
+        //process impulse weighter
+        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+        {
             if(gameState.getRaceStarted())
             {
-                processCarsCollisions((*i).second.get());
                 processCollisionsImpulseWeighter((*i).second.get());
-
-                for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
-                {
-                    (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
-                }
             }
             else
             {
                 if((*i).second->getVehicleType() == AIVehicle)
                     (*i).second->getCarEngine().setEngineRPM(8000.0f);
                 (*i).second->zeroImpulses();
+            }
+        }
+
+        //process listeners
+        for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
+        {
+            if(gameState.getRaceStarted())
+            {
+                for (physicsListener::iterator ii = mListeners.begin(), jj = mListeners.end(); ii != jj; ++ii)
+                {
+                    (*ii)->timeStepForVehicle((*i).second.get(), mVehicles);
+                }
             }
         }
 
@@ -201,8 +219,6 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                         break;
                     case 1:
                         bVal = cogBGlobal - carBRotZ * 3.0f;
-                        bVal.y = cogBGlobal.y - carBRotZ.y * -3.0f;
-                        bVal.z = cogBGlobal.z - carBRotZ.z * -3.0f;
                         break;
                     case 2:
                         aVal = cogAGlobal - carARotZ * 3.0f;
@@ -215,16 +231,16 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                     }
 
                     Ogre::Vector3 diff(bVal - aVal);
-                    Ogre::Real dotP = diff.dotProduct(diff);
-                    if(dotP < collisionRadiusDiffMore)
+                    Ogre::Real sqLength = diff.squaredLength();
+                    if(sqLength < collisionRadiusDiffMore)
                     {
                         cogDiffSub -= cogDiff * -0.5f;
 
-                        if(dotP > distance)
-                            distance = collisionRadiusDiffMore - dotP;
+                        if(sqLength > distance)
+                            distance = collisionRadiusDiffMore - sqLength;
 
                         ++threshold;
-                        cogDiffAdd += (cogDiff * -1.0f / Ogre::Math::Sqrt(dotP));
+                        cogDiffAdd += (cogDiff * -1.0f / Ogre::Math::Sqrt(sqLength));
                     }
 
                     ++counter;
@@ -267,7 +283,7 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
 
 void Physics::processCollisionsImpulseWeighter(PhysicsVehicle* vehicle)
 {
-    vehicle->setCollisionImpilseWeighter(0.0f);
+    vehicle->setSlipStreamFactor(0.0f);
 
     for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
@@ -302,8 +318,8 @@ void Physics::processCollisionsImpulseWeighter(PhysicsVehicle* vehicle)
 
                         if(impulseWeight > 0.6f)
                             impulseWeight = 0.6f;
-                        if(impulseWeight > vehicle->getCollisionImpilseWeighter())
-                            vehicle->setCollisionImpilseWeighter(impulseWeight);
+                        if(impulseWeight > vehicle->getSlipStreamFactor())
+                            vehicle->setSlipStreamFactor(impulseWeight);
                     }
                 }
             }

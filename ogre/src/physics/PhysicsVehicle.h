@@ -64,8 +64,8 @@ public:
     Ogre::Vector3 getLinearImpulse() const;
 
     void zeroImpulses();
-    void setCollisionImpilseWeighter(Ogre::Real val){mCollisionImpulseWeighter = val;}
-    Ogre::Real getCollisionImpilseWeighter() const {return mCollisionImpulseWeighter;}
+    void setSlipStreamFactor(Ogre::Real val){mSlipStreamFactor = val;}
+    Ogre::Real getSlipStreamFactor() const {return mSlipStreamFactor;}
     void setCollisionSteeringAdditionalParam(Ogre::Real val) {mCollisionSteeringAdditionalParam = val;}
 
     Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
@@ -142,7 +142,7 @@ private:
 
     Ogre::Real mMaxCollisionDistance;
 
-    Ogre::Real mCollisionImpulseWeighter;
+    Ogre::Real mSlipStreamFactor;
 
     Ogre::Real mSteeringAdditionalParam;
     Ogre::Real mCollisionSteeringAdditionalParam;
