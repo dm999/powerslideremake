@@ -41,14 +41,14 @@ void AIUtils::setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bo
     }
 }
 
-void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup)
+void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup, Ogre::int32 afterStartCounter)
 {
 
     float steeringVal;
     float accelerationVal;
     float breaksVal;
 
-    Ogre::Vector3 carPos = aiCar->getModelNode()->getPosition();
+    Ogre::Vector3 carPos = initialVehicleSetup.mCarGlobalPos;
 
     if(!mIsPrevClosestSplineIndexInited)
     {
@@ -57,9 +57,9 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         mIsPrevClosestSplineIndexInited = true;
     }
 
-    calcFeatures(aiCar, physicsAICar, gameState, initialVehicleSetup);
+    calcFeatures(physicsAICar, gameState, initialVehicleSetup);
     inference(steeringVal, accelerationVal);
-    adjustInferenceResults(steeringVal, accelerationVal, breaksVal, gameState.getTrackName() == "mineshaft");
+    adjustInferenceResults(steeringVal, accelerationVal, breaksVal, gameState.getTrackName(), afterStartCounter);
 
     if(gameState.getRaceStarted())
     {
@@ -69,6 +69,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         }
 
         //steering
+        /*
         Ogre::Vector3 carDir = aiCar->getForwardAxis();
         Ogre::Vector3 carDirOriginal = carDir;
         carDir.y = 0.0f;
@@ -76,7 +77,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         Ogre::Real lastDistance = carDir.dotProduct(carPos - mPrevPos);
         mPrevPos = carPos;
         mAIDistanceLength += Ogre::Math::Abs(lastDistance);
-
+*/
         physicsAICar->setSteering(steeringVal);
         physicsAICar->setAcceleration(accelerationVal);
         physicsAICar->setBreaks(breaksVal);
@@ -133,7 +134,7 @@ void AIUtils::raceStarted()
     mTimerAIStuck.reset();
 }
 
-void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup)
+void AIUtils::calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup)
 {
     float feature3 = mAIWhole.slotMatrix[18][0];
 
@@ -148,17 +149,17 @@ void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const
 
     float feature4 = mAIWhole.slotMatrix[19][0] + 1.0f;
 
-    Ogre::Vector3 carPos = aiCar->getModelNode()->getPosition();
+    Ogre::Vector3 carPos = initialVehicleSetup.mCarGlobalPos;
     carPos.z = -carPos.z;//original data is left hand
 
     Ogre::Matrix3 carRot;
-    aiCar->getModelNode()->getOrientation().ToRotationMatrix(carRot);
+    initialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Vector3 carRotV[3];//original data is left hand
     carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
-    Ogre::Vector3 carLinearImpulse = aiCar->getLinearImpulse();
+    Ogre::Vector3 carLinearImpulse = physicsAICar->getLinearImpulse();
 
 
     size_t closestSplineIndex = getRelativeClosestSplinePoint(carPos);
@@ -226,20 +227,20 @@ void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const
     bool isNeedToOvertake = false;
     int closestOtherCarIndex = 0;
 
-    std::vector<const PSBaseCar*> cars;
+    std::vector<const PhysicsVehicle*> cars;
     cars.reserve(GameState::mRaceGridCarsMax);
 
+    cars.push_back(gameState.getPlayerCar().getPhysicsVehicle());
     for(size_t q = 0; q < gameState.getAICount(); ++q)
     {
-        cars.push_back(&gameState.getAICar(q));
+        cars.push_back(gameState.getAICar(q).getPhysicsVehicle());
     }
-    cars.push_back(&gameState.getPlayerCar());
 
     float minSqDist = std::numeric_limits<float>::max();
 
     for(size_t q = 0; q < cars.size(); ++q)
     {
-        Ogre::Vector3 otherPos = cars[q]->getModelNode()->getPosition();
+        Ogre::Vector3 otherPos = cars[q]->getVehicleSetup().mCarGlobalPos;
         otherPos.z = -otherPos.z;//original data is left hand
 
         Ogre::Vector3 posDiff = otherPos - carPos;
@@ -259,7 +260,7 @@ void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const
 
     if(isNeedToOvertake)
     {
-        Ogre::Vector3 otherPos = cars[closestOtherCarIndex]->getModelNode()->getPosition();
+        Ogre::Vector3 otherPos = cars[closestOtherCarIndex]->getVehicleSetup().mCarGlobalPos;
         otherPos.z = -otherPos.z;//original data is left hand
 
         Ogre::Vector3 posDiff = otherPos - carPos;
@@ -288,8 +289,11 @@ void AIUtils::calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const
     mPrevRot = carRotV[0];
 }
 
-void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float& breaks, bool isMineshafted) const
+void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float& breaks, const std::string& trackName, Ogre::int32 afterStartCounter) const
 {
+    bool isMineshafted = trackName == "mineshaft";
+    bool isSpeedway = (trackName == "speedway track") || (trackName == "speedway night track");
+
     if(acceleration > mAIWhole.accelerationCoeff)
         acceleration = mAIWhole.accelerationCoeff;
 
@@ -319,6 +323,17 @@ void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float
 
 
     steering = Ogre::Math::Clamp(steering, -0.95f, 0.95f);
+
+    if(afterStartCounter < 60 && isSpeedway)
+    {
+        Ogre::Real limit = afterStartCounter * 0.01586499980092049f;
+        Ogre::Real limitNeg = -limit;
+
+        if(steering < limitNeg)
+            steering = limitNeg;
+        if(limit < steering)
+            steering = limit;
+    }
 }
 
 void AIUtils::inference(float& steering, float& acceleration)

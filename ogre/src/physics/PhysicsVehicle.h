@@ -43,8 +43,10 @@ public:
     void gearDown();
 
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
+    PSCarEngine& getCarEngine(){return mCarEngine;}
 
     void setVehicleType(VehicleType type){mVehicleType = type;}
+    VehicleType getVehicleType() const {return mVehicleType;}
 
     void setRaceStarted(){mIsRaceStarted = true;}
 
@@ -106,6 +108,7 @@ protected:
     Ogre::Vector3 mImpulseRotPrev;
     Ogre::Vector3 mImpulseRotInc;
 
+    Physics* mPhysics;
     PSCarEngine mCarEngine;
 
 private:
@@ -125,7 +128,6 @@ private:
 
     Ogre::Real adjustSteering();
 
-    Physics* mPhysics;
     StaticMeshProcesser* mMeshProcesser;
 
     Ogre::SceneNode *mChassis;

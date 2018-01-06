@@ -20,7 +20,9 @@ public:
     Ogre::Real getPower(Ogre::Real throttle, Ogre::Real impulseLinearMod) const;
 
     int getCurrentGear()const{return mCurrentGear;}
+
     Ogre::Real getEngineRPM()const{return mEngineRPM;}
+    void setEngineRPM(Ogre::Real val) {mEngineRPM = val;}
 
     void gearUp();
     void gearDown();

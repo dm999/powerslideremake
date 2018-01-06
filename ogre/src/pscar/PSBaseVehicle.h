@@ -28,6 +28,9 @@ public:
 
     virtual void processCamera(GameState& gameState){}
 
+    PhysicsVehicle* getPhysicsVehicle() {return mPhysicsVehicle;}
+    const PhysicsVehicle* getPhysicsVehicle() const {return mPhysicsVehicle;}
+
 protected:
 
     void initPhysicalModel(Physics * world, 

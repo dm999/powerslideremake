@@ -29,7 +29,7 @@ public:
 
     void setAIData(const AIWhole& aiWhole, Ogre::SceneManager* sceneMgr, bool isDebugAI);
 
-    void performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup);
+    void performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup, Ogre::int32 afterStartCounter);
 
     void raceStarted();
 
@@ -44,9 +44,9 @@ private:
     bool mIsReverseEnabled;
 
     //NN based functions
-    void calcFeatures(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup);
+    void calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup);
     void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
-    void adjustInferenceResults(float& steering, float& acceleration, float& breaks, bool isMineshafted) const;
+    void adjustInferenceResults(float& steering, float& acceleration, float& breaks, const std::string& trackName, Ogre::int32 afterStartCounter) const;
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;
     size_t getRelativeClosestSplinePoint(const Ogre::Vector3& carPos);

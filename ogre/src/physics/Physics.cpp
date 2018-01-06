@@ -13,7 +13,8 @@ Physics::Physics(StaticMeshProcesser * meshProesser)
     : 
     mMeshProesser(meshProesser),
     mTimeStep(-1),
-    mTimeStep2(0)
+    mTimeStep2(0),
+    mAfterStartCounter(0)
 {}
 
 Physics::~Physics()
@@ -63,8 +64,15 @@ void Physics::internalTimeStep(GameState& gameState)
                 }
             }
             else
+            {
+                if((*i).second->getVehicleType() == AIVehicle)
+                    (*i).second->getCarEngine().setEngineRPM(8000.0f);
                 (*i).second->zeroImpulses();
+            }
         }
+
+        if(gameState.getRaceStarted())
+            ++mAfterStartCounter;
     }
 
     for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)

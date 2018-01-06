@@ -1,5 +1,7 @@
 #include "PhysicsVehicleAI.h"
 
+#include "Physics.h"
+
 #include "../pscar/PSAICar.h"
 
 PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics, 
@@ -20,7 +22,7 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 {
     if(mAICar)
-        mAICar->performAICorrection(gameState, this, mInitialVehicleSetup);
+        mAICar->performAICorrection(gameState, this, mInitialVehicleSetup, mPhysics->getAfterStartCounter());
 }
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)

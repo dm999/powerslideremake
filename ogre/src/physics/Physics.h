@@ -49,6 +49,8 @@ public:
     void setCollisionSplinesDDV(const PSSpline& collisionDDV){mCollisionDDV = collisionDDV;}
     void setCollisionSplinesVDV(const PSSpline& collisionVDV){mCollisionVDV = collisionVDV;}
 
+    Ogre::int32 getAfterStartCounter () const {return mAfterStartCounter;}
+
 private:
 
     void internalTimeStep(GameState& gameState);
@@ -60,6 +62,8 @@ private:
 
     Ogre::int32 mTimeStep;
     Ogre::int32 mTimeStep2;
+
+    Ogre::int32 mAfterStartCounter;
 
     StaticMeshProcesser * mMeshProesser;
 
