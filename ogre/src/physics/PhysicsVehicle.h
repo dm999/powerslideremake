@@ -66,6 +66,7 @@ public:
     void zeroImpulses();
     void setCollisionImpilseWeighter(Ogre::Real val){mCollisionImpulseWeighter = val;}
     Ogre::Real getCollisionImpilseWeighter() const {return mCollisionImpulseWeighter;}
+    void setCollisionSteeringAdditionalParam(Ogre::Real val) {mCollisionSteeringAdditionalParam = val;}
 
     Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
 
@@ -144,6 +145,7 @@ private:
     Ogre::Real mCollisionImpulseWeighter;
 
     Ogre::Real mSteeringAdditionalParam;
+    Ogre::Real mCollisionSteeringAdditionalParam;
     bool mIsSteeringLeft;
     bool mIsSteeringRight;
     Ogre::Real mSteeringIncrement;

@@ -148,10 +148,12 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
         if((*i).second.get() != vehicle)//don`t collide with yourself
         {
             Ogre::Matrix3 carRotMatrix;
+            Ogre::Vector3 carARotX;//original data is left hand
             Ogre::Vector3 carARotZ;//original data is left hand
             Ogre::Vector3 carBRotZ;//original data is left hand
 
             vehicle->getVehicleSetup().mCarRot.ToRotationMatrix(carRotMatrix);
+            carARotX = Ogre::Vector3(carRotMatrix[0][0], carRotMatrix[1][0], -carRotMatrix[2][0]);
             carARotZ = Ogre::Vector3(-carRotMatrix[0][2], -carRotMatrix[1][2], carRotMatrix[2][2]);
 
             (*i).second->getVehicleSetup().mCarRot.ToRotationMatrix(carRotMatrix);
@@ -167,7 +169,10 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                 vehicle->getVehicleSetup().mCollisionRadius - 2.0f + 1.0f;
 
             Ogre::Vector3 cogDiff(cogBGlobal - cogAGlobal);
-            Ogre::Vector3 cogDiffAbs(Ogre::Math::Abs(cogDiff.x), Ogre::Math::Abs(cogDiff.y), Ogre::Math::Abs(cogDiff.z));
+            Ogre::Vector3 cogDiffAbs(Ogre::Math::Abs(cogDiff.x), 
+                Ogre::Math::Abs(cogDiff.y), 
+                Ogre::Math::Abs(cogDiff.z));
+
             if( collisionRadiusDiff >= cogDiffAbs.x &&
                 collisionRadiusDiff >= cogDiffAbs.y &&
                 collisionRadiusDiff >= cogDiffAbs.z &&
@@ -196,6 +201,8 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                         break;
                     case 1:
                         bVal = cogBGlobal - carBRotZ * 3.0f;
+                        bVal.y = cogBGlobal.y - carBRotZ.y * -3.0f;
+                        bVal.z = cogBGlobal.z - carBRotZ.z * -3.0f;
                         break;
                     case 2:
                         aVal = cogAGlobal - carARotZ * 3.0f;
@@ -248,7 +255,9 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                     Ogre::Real finalImpulse = mCollisionVV.getPoint(velocity) + dd;
                     if(finalImpulse > 100.0f) finalImpulse = 100.0f;
 
-                    vehicle->adjustImpulseInc(cogDiffSub, cogDiffAdd * finalImpulse);
+                    Ogre::Vector3 impulseLinear = cogDiffAdd * finalImpulse;
+                    vehicle->adjustImpulseInc(cogDiffSub, impulseLinear);
+                    vehicle->setCollisionSteeringAdditionalParam(carARotX.dotProduct(impulseLinear) * 0.02f);
                 }
             }
 
@@ -275,16 +284,16 @@ void Physics::processCollisionsImpulseWeighter(PhysicsVehicle* vehicle)
             if(posDiff.squaredLength() < 4225.0f)
             {
                 Ogre::Real posDiffLen = posDiff.length();
-                Ogre::Real carBImpulseLen = vehicle->getLinearImpulse().length();
+                Ogre::Real carBImpulseLen = (*i).second->getLinearImpulse().length();
                 Ogre::Real impulseWeight = posDiffLen * carBImpulseLen;
-                if(posDiffLen > 10.0f)
+                if(posDiffLen < 10.0f)
                     posDiffLen = 10.0f;
 
                 posDiffLen = (posDiffLen - 10.0f) * 0.018181818f;
 
                 if(impulseWeight > 0.0f)
                 {
-                    impulseWeight = vehicle->getLinearImpulse().dotProduct(posDiff) / impulseWeight - 
+                    impulseWeight = (*i).second->getLinearImpulse().dotProduct(posDiff) / impulseWeight - 
                     (posDiffLen - (1.0f - posDiffLen) * -0.7f);
 
                     if(impulseWeight > 0.0f)

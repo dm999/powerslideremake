@@ -27,6 +27,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mThrottleAdjusterCounter(0),
     mCollisionImpulseWeighter(0.0f),
     mSteeringAdditionalParam(0.0f),
+    mCollisionSteeringAdditionalParam(0.0f),
     mIsSteeringLeft(false),
     mIsSteeringRight(false),
     mSteeringIncrement(0.0f),
@@ -221,7 +222,8 @@ Ogre::Real PhysicsVehicle::adjustSteering()
     }
 
     steeringSpline -= mSteeringAdditionalParam;
-    mSteeringAdditionalParam = 0.0f;
+    mSteeringAdditionalParam = mCollisionSteeringAdditionalParam;
+    mCollisionSteeringAdditionalParam = 0.0f;
 
     ret = Ogre::Math::Clamp(steeringSpline, -0.95f, 0.95f);
 
