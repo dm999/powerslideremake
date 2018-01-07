@@ -17,9 +17,9 @@ PhysicsRoofs::~PhysicsRoofs()
 {
 }
 
-void PhysicsRoofs::init(const Ogre::Vector3& chassisPos)
+void PhysicsRoofs::init()
 {
-    Ogre::Vector3 carPos(chassisPos);
+    Ogre::Vector3 carPos(mInitialVehicleSetup.mCarGlobalPos);
     carPos.z = -carPos.z;//original data is left hand
 
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)

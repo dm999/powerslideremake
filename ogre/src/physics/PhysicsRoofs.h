@@ -21,7 +21,7 @@ public:
 
     ~PhysicsRoofs();
 
-    void init(const Ogre::Vector3& chassisPos);
+    void init();
 
     void initStep();
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,

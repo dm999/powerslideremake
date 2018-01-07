@@ -37,8 +37,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
 {
     mCarEngine.setTransmissionType(trAuto);
 
-    mPhysicsWheels.init(chassis->getPosition(), wheelNodes);
-    mPhysicsRoofs.init(chassis->getPosition());
+    mPhysicsWheels.init(wheelNodes);
+    mPhysicsRoofs.init();
     mPhysicsBody.init();
     mCoreBaseGlobal = chassis->getPosition();
     mCoreBaseGlobalPrev = mCoreBaseGlobal;

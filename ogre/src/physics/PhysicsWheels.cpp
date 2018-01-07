@@ -16,9 +16,9 @@ PhysicsWheels::PhysicsWheels(const InitialVehicleSetup& initialVehicleSetup,
 PhysicsWheels::~PhysicsWheels()
 {}
 
-void PhysicsWheels::init(const Ogre::Vector3& chassisPos, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount])
+void PhysicsWheels::init(Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount])
 {
-    Ogre::Vector3 carPos = chassisPos;
+    Ogre::Vector3 carPos (mInitialVehicleSetup.mCarGlobalPos);
     carPos.z = -carPos.z;//original data is left hand
 
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
