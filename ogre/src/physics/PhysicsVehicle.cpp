@@ -48,6 +48,11 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mImpulseRot = mInitialVehicleSetup.mInitialImpulseRot;
     mImpulseRotInc = mInitialVehicleSetup.mInitialImpulseRotInc;
 
+    mCOGShift = Ogre::Vector3::ZERO;
+    for(int q = 0; q < mShiftValuesAmount; ++q)
+        mCOGShiftValues[q] = Ogre::Vector3::ZERO;
+    mCOGShiftIndex = 0;
+
     //find collision distance
     mMaxCollisionDistance = 0.0f;
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
@@ -140,7 +145,42 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     calcWheelRoofImpulses();
 
-    mPhysicsWheels.process(*this);
+    bool isProcessShift;
+    Ogre::Vector3 shiftValue(Ogre::Vector3::ZERO);
+    mPhysicsWheels.process(*this, isProcessShift);
+    if(isProcessShift)
+    {
+        for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+        {
+            shiftValue += mPhysicsWheels.getWorldNormalWeighted(q);
+        }
+
+        shiftValue.normalise();
+
+        Ogre::Real weightWal = 100.0f;
+
+        for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+        {
+            Ogre::Real dot = mPhysicsWheels.getWorldNormalWeighted(q).dotProduct(shiftValue);
+            if(dot < weightWal) weightWal = dot;
+        }
+
+        if(weightWal >= 0.0f)
+            weightWal *= 0.16666667f;
+        else
+            weightWal = 0.0f;
+
+        shiftValue *= weightWal;
+    }
+    else
+    {
+        mCOGShift = mCOGShift * 0.999f;
+    }
+    mCOGShift += (shiftValue - mCOGShiftValues[mCOGShiftIndex]);
+    mInitialVehicleSetup.mCOGShift = mCOGShift;
+    mCOGShiftValues[mCOGShiftIndex] = shiftValue;
+    mCOGShiftIndex = (mCOGShiftIndex + 1) % mShiftValuesAmount;
+
     bool isTurnOver;
     isTurnOver = mPhysicsRoofs.process(*this);
     isTurnOver |= mPhysicsBody.process(*this);
@@ -153,7 +193,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
     //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
 
-    mInitialVehicleSetup.mCOGGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG;
+    mInitialVehicleSetup.mCOGGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCOGShift + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG;
 
     reposition();
     rerotation();
@@ -240,7 +280,7 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::reposition()
 {
-    mChassis->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG);
+    mChassis->setPosition(mInitialVehicleSetup.mCOGGlobal);
 
     mPhysicsWheels.reposition();
 }

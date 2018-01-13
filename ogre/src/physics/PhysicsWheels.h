@@ -26,7 +26,7 @@ public:
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,
                         const Ogre::Vector3& impulseLinear,
                         Ogre::Real recipMomentProj);
-    void process(PhysicsVehicle& vehicle);
+    void process(PhysicsVehicle& vehicle, bool& processShift);
     void reposition();
     void rerotation();
 
@@ -42,6 +42,8 @@ public:
     void setSteering(Ogre::Real value);
 
     void setBackVelocity(Ogre::Real velocity){mVelocity[0] = mVelocity[1] = velocity;}
+
+    const Ogre::Vector3& getWorldNormalWeighted(size_t wheelIndex) const{return mWorldNormalWeighted[wheelIndex];}
 
 private:
 
@@ -66,11 +68,9 @@ private:
     Ogre::Vector3 mWheelsSuspensionRot[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::Vector3 mWheelsSuspensionGlobal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 
-    //Ogre::Vector3 mWheelsSuspensionGlobal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-    //Ogre::Vector3 mWheelsSuspensionGlobalPrev[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-    
     Ogre::Real mSuspensionHeight[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
     Ogre::Real mSuspensionHeightPrev[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
+    Ogre::Vector3 mWorldNormalWeighted[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
 
     Ogre::Real mSpringVal[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL;
     

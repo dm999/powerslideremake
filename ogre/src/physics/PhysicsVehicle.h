@@ -140,6 +140,11 @@ private:
     Ogre::Vector3 mCoreBaseGlobal;
     Ogre::Vector3 mCoreBaseGlobalPrev;
 
+    Ogre::Vector3 mCOGShift;
+    static const int mShiftValuesAmount = 6;
+    Ogre::Vector3 mCOGShiftValues[mShiftValuesAmount];
+    Ogre::uint8 mCOGShiftIndex;
+
     Ogre::Real mMaxCollisionDistance;
 
     Ogre::Real mSlipStreamFactor;

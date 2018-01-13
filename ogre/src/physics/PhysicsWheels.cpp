@@ -37,6 +37,7 @@ void PhysicsWheels::init(Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheel
         mIsCollided[q] = false;
         mWheelRotationalAngle[q] = 0.0f;
         mTerrainIndex[q] = -1;
+        mWorldNormalWeighted[q] = Ogre::Vector3::ZERO;
     }
 }
 
@@ -89,7 +90,7 @@ void PhysicsWheels::reposition()
         Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
         connectionPoint.y -= mSuspensionHeight[q];
         //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
-        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * connectionPoint);
+        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCOGShift + mInitialVehicleSetup.mCarRot * connectionPoint);
     }
 }
 
@@ -103,7 +104,7 @@ void PhysicsWheels::rerotation()
         Ogre::Vector3 connectionPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
         connectionPoint.y -= mSuspensionHeight[q];
         //mWheelNodes[q]->setPosition(mWheelsSuspensionGlobal[q]);
-        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * connectionPoint);
+        mWheelNodes[q]->setPosition(mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCOGShift + mInitialVehicleSetup.mCarRot * connectionPoint);
 
         mWheelRotationalAngle[q] += mVelocity[q] * mInitialVehicleSetup.mChassisInvMass * 1.27f / mInitialVehicleSetup.mWheelRadius[q];
         if(mWheelRotationalAngle[q] <= -Ogre::Math::TWO_PI)
@@ -291,10 +292,14 @@ void PhysicsWheels::calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Ve
     }
 }
 
-void PhysicsWheels::process(PhysicsVehicle& vehicle)
+void PhysicsWheels::process(PhysicsVehicle& vehicle, bool& processShift)
 {
     Ogre::Vector3 carPos = mInitialVehicleSetup.mCarGlobalPos;
     carPos.z = -carPos.z;//original data is left hand
+
+    processShift = true;
+
+    Ogre::Real shiftParam = 0.0f;
 
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
@@ -339,12 +344,23 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle)
             if(projUp <= 0.0f)
             {
                 suspHeight = mSuspensionHeightPrev[q];
+                shiftParam = 0.0f;
             }
             else
             {
                 Ogre::Real dotPWheels = mGlobalPos[q].dotProduct(worldNormal);
                 Ogre::Real dotPStatic = pointOnStaticA.dotProduct(worldNormal);
                 suspHeight = (dotPWheels - (dotPStatic + mInitialVehicleSetup.mWheelRadius[q])) / projUp;
+
+                if(suspHeight < 0.0f)
+                    shiftParam = -(projUp * suspHeight) - 0.25f;
+            }
+            if(processShift)
+            {
+                if(shiftParam <= 0.0f)
+                    processShift = false;
+                else
+                    mWorldNormalWeighted[q] = worldNormal * shiftParam;
             }
 
             suspHeight = calcSuspensionLength(suspHeight, q);
