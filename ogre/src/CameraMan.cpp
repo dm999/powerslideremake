@@ -14,13 +14,13 @@ CameraMan::CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser
     mCamTypeSwitched(true)
 {}
 
-void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, const Ogre::Quaternion& carRot,
+void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
     Ogre::Light * globalLight, Ogre::Light * shadowLight)
 {
 
     Ogre::Matrix3 carRotMatrix;
 
-    carRot.ToRotationMatrix(carRotMatrix);
+    initialVehicleSetup.mCarRot.ToRotationMatrix(carRotMatrix);
     Ogre::Vector3 carRotV[3];//original data is left hand
     carRotV[0] = Ogre::Vector3(carRotMatrix[0][0], carRotMatrix[1][0], -carRotMatrix[2][0]);
     carRotV[1] = Ogre::Vector3(carRotMatrix[0][1], carRotMatrix[1][1], -carRotMatrix[2][1]);
@@ -380,8 +380,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup, 
     {
         Ogre::Quaternion rotationRear(Ogre::Quaternion::IDENTITY);
         rotationRear.FromAngleAxis(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
-        mRearCamera->setOrientation(carRot * rotationRear);
-        mRearCamera->setPosition(camPos + carRot * Ogre::Vector3(0.0f, 5.0f, -10.0f));
+        mRearCamera->setOrientation(initialVehicleSetup.mCarRot * rotationRear);
+        mRearCamera->setPosition(camPos + initialVehicleSetup.mCarRot * Ogre::Vector3(0.0f, 5.0f, -10.0f));
     }
 
     //shadow cam

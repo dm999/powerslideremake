@@ -40,9 +40,9 @@ PSBaseCar::PSBaseCar() :
 void PSBaseCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt)
 {
     AdjustSuspension(   mModelEntity[0], mWheelNodes, 
-                        mInitialVehicleSetup.mCarGlobalPos, mModelNode->getOrientation(),
+                        mInitialVehicleSetup.mCarGlobalPos, mInitialVehicleSetup.mCarRot,
                         mSuspensionIndices, mSuspensionPointOriginalPos,
-                        mFrontLOriginalPos, mFrontROriginalPos, mBackLOriginalPos, mBackROriginalPos);
+                        mInitialVehicleSetup.mConnectionPointWheel[3], mInitialVehicleSetup.mConnectionPointWheel[2], mInitialVehicleSetup.mConnectionPointWheel[1], mInitialVehicleSetup.mConnectionPointWheel[0]);
 }
 
 void PSBaseCar::initModel(  lua_State * pipeline, 

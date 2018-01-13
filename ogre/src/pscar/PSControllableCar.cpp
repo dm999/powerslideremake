@@ -229,7 +229,7 @@ void PSControllableCar::processCamera(GameState& gameState)
             if(cam)
             {
                 cam->setAutoTracking(false);
-                mCameraMan->setYawPitchDist(mInitialVehicleSetup, mModelNode->getOrientation(),
+                mCameraMan->setYawPitchDist(mInitialVehicleSetup,
                     gameState.getGlobalLight(), gameState.getShadowLight());
             }
         }
