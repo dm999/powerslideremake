@@ -7,6 +7,8 @@
 #include "../loaders/PFLoader.h"
 #include "../OriginalSettings.h"
 
+#include "../listeners/PhysicsListener.h"
+
 struct lua_State;
 
 class ModelsPool;
@@ -16,7 +18,7 @@ class OpenALSource;
 
 class GameState;
 
-class PSBaseCar : public PSBaseVehicle
+class PSBaseCar : public PSBaseVehicle, public PhysicsListener
 {
 public:
 
@@ -24,7 +26,6 @@ public:
     virtual ~PSBaseCar(){}
 
     virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted) = 0;
-    virtual void processFrameAfterPhysics(const Ogre::FrameEvent &evt);
 
     virtual void initModel( lua_State * pipeline, 
                             const GameState& gameState,
@@ -34,6 +35,8 @@ public:
                             const std::string& characterName,
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isAI);
+
+    void timeStepAfter(Physics * physics)override;
 
     void repositionVehicle(const Ogre::Matrix4& transform); // for multiplayer
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot); // for multiplayer

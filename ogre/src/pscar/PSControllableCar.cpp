@@ -205,11 +205,6 @@ void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, c
 
 }
 
-void PSControllableCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt, bool isRaceStarted)
-{
-    PSBaseCar::processFrameAfterPhysics(evt);
-}
-
 void PSControllableCar::processCamera(GameState& gameState)
 {
     if(mCameraMan && mIsPossesCamera)

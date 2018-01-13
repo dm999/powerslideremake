@@ -619,11 +619,6 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
         mModeContext.mGameState.getPlayerCar().processSounds();
     }
 
-    mModeContext.mGameState.getPlayerCar().processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        mModeContext.mGameState.getAICar(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
     customFrameStartedDoProcessFrameAfterPhysics(evt);
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Exit");

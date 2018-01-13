@@ -37,8 +37,10 @@ PSBaseCar::PSBaseCar() :
 {
 }
 
-void PSBaseCar::processFrameAfterPhysics(const Ogre::FrameEvent &evt)
+void PSBaseCar::timeStepAfter(Physics * physics)
 {
+    (void)physics;
+
     AdjustSuspension(   mModelEntity[0], mWheelNodes, 
                         mInitialVehicleSetup.mCarGlobalPos, mInitialVehicleSetup.mCarRot,
                         mSuspensionIndices, mSuspensionPointOriginalPos,
@@ -60,6 +62,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     mIsAI = isAI;
 
     DMLuaManager luaManager;
+
+    world->addListener(this);
 
     std::string genTextureName = nameGenTextures.generate();
     std::string carPath;

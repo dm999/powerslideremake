@@ -212,20 +212,6 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics(const Ogre::
 
 void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)
 {
-    if(mIsSessionStarted)
-    {
-        //AI
-        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-
-        //human
-        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-        for(size_t q = 0; q < playerNames.size(); ++q)
-        {
-            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameAfterPhysics(evt, mModeContext.mGameState.getRaceStarted());
-        }
-    }
-
 
     if(mMultiplayerController.get())
     {
