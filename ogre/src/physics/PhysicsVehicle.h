@@ -70,6 +70,8 @@ public:
 
     Ogre::Real getOriginalSteering() const {return mSteeringOriginal;}
 
+    Ogre::Real getSuspensionHeight(size_t wheelIndex) const{return mPhysicsWheels.getSuspensionHeight(wheelIndex);}
+
     const InitialVehicleSetup& getVehicleSetup()const{ return mInitialVehicleSetup;}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);

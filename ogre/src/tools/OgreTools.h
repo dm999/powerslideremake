@@ -28,16 +28,13 @@ void AdjustBufferToUseShadow(   Ogre::Entity* entity,
                                 std::vector<std::vector<Ogre::Vector3> >& suspensionPointOriginalPos);
 
 
-void AdjustSuspension(  Ogre::Entity* cockpit,
-                        Ogre::SceneNode * wheels[4],
-                        const Ogre::Vector3& chassisOffset,
-                        const Ogre::Quaternion& chassisRot,
+void AdjustSuspension(Ogre::Mesh* mesh,
                         const std::vector<std::vector<size_t> >& suspensionIndices,
                         const std::vector<std::vector<Ogre::Vector3> >& suspensionPointOriginalPos,
-                        const Ogre::Vector3& frontLOriginalPos,
-                        const Ogre::Vector3& frontROriginalPos,
-                        const Ogre::Vector3& backLOriginalPos,
-                        const Ogre::Vector3& backROriginalPos);
+                        const Ogre::Real frontLSuspHeight,
+                        const Ogre::Real frontRSuspHeight,
+                        const Ogre::Real backLSuspHeight,
+                        const Ogre::Real backRSuspHeight);
 
 /**
  * a, b - should be normalized direction vectors

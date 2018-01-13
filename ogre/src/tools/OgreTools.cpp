@@ -443,37 +443,14 @@ void AdjustBufferToUseShadow(   Ogre::Entity* entity,
     }
 }
 
-void AdjustSuspension(  Ogre::Entity* cockpit,
-                        Ogre::SceneNode * wheels[4],
-                        const Ogre::Vector3& chassisOffset,
-                        const Ogre::Quaternion& chassisRot,
+void AdjustSuspension(Ogre::Mesh* mesh,
                         const std::vector<std::vector<size_t> >& suspensionIndices,
                         const std::vector<std::vector<Ogre::Vector3> >& suspensionPointOriginalPos,
-                        const Ogre::Vector3& frontLOriginalPos,
-                        const Ogre::Vector3& frontROriginalPos,
-                        const Ogre::Vector3& backLOriginalPos,
-                        const Ogre::Vector3& backROriginalPos)
+                        const Ogre::Real frontLSuspHeight,
+                        const Ogre::Real frontRSuspHeight,
+                        const Ogre::Real backLSuspHeight,
+                        const Ogre::Real backRSuspHeight)
 {
-    Ogre::Vector3 posWheelBackR = wheels[0]->getPosition();
-    Ogre::Vector3 posWheelBackL = wheels[1]->getPosition();
-    Ogre::Vector3 posWheelFrontR = wheels[2]->getPosition();
-    Ogre::Vector3 posWheelFrontL = wheels[3]->getPosition();
-
-    Ogre::Quaternion chassisRotInverse = chassisRot.Inverse();
-
-#if 0
-    Ogre::Vector3 posDiffBackR = posWheelBackR - (chassisOffset + chassisRot * backROriginalPos);
-    Ogre::Vector3 posDiffBackL = posWheelBackL - (chassisOffset + chassisRot * backLOriginalPos);
-    Ogre::Vector3 posDiffFrontR = posWheelFrontR - (chassisOffset + chassisRot * frontROriginalPos);
-    Ogre::Vector3 posDiffFrontL = posWheelFrontL - (chassisOffset + chassisRot * frontLOriginalPos);
-#endif
-
-    Ogre::Vector3 posDiffBackR = chassisRotInverse * (posWheelBackR - chassisOffset) - backROriginalPos;
-    Ogre::Vector3 posDiffBackL = chassisRotInverse * (posWheelBackL - chassisOffset) - backLOriginalPos;
-    Ogre::Vector3 posDiffFrontR = chassisRotInverse * (posWheelFrontR - chassisOffset) - frontROriginalPos;
-    Ogre::Vector3 posDiffFrontL = chassisRotInverse * (posWheelFrontL - chassisOffset) - frontLOriginalPos;
-
-    Ogre::Mesh* mesh = cockpit->getMesh().get();
 
     //d.polubotko: assume used shared buffer
     Ogre::VertexData* vertex_data = mesh->sharedVertexData;
@@ -491,27 +468,27 @@ void AdjustSuspension(  Ogre::Entity* cockpit,
             posElem->baseVertexPointerToElement(vertexOfset, &pReal);
             if(q == 3)
             {
-                *pReal++ = suspensionPointOriginalPos[q][w].x + posDiffBackR.x;
-                *pReal++ = suspensionPointOriginalPos[q][w].y + posDiffBackR.y;
-                *pReal++ = suspensionPointOriginalPos[q][w].z + posDiffBackR.z;
+                *pReal++;
+                *pReal++ = suspensionPointOriginalPos[q][w].y + backRSuspHeight;
+                *pReal++;
             }
             if(q == 2)
             {
-                *pReal++ = suspensionPointOriginalPos[q][w].x + posDiffBackL.x;
-                *pReal++ = suspensionPointOriginalPos[q][w].y + posDiffBackL.y;
-                *pReal++ = suspensionPointOriginalPos[q][w].z + posDiffBackL.z;
+                *pReal++;
+                *pReal++ = suspensionPointOriginalPos[q][w].y + backLSuspHeight;
+                *pReal++;
             }
             if(q == 1)
             {
-                *pReal++ = suspensionPointOriginalPos[q][w].x + posDiffFrontR.x;
-                *pReal++ = suspensionPointOriginalPos[q][w].y + posDiffFrontR.y;
-                *pReal++ = suspensionPointOriginalPos[q][w].z + posDiffFrontR.z;
+                *pReal++;
+                *pReal++ = suspensionPointOriginalPos[q][w].y + frontRSuspHeight;
+                *pReal++;
             }
             if(q == 0)
             {
-                *pReal++ = suspensionPointOriginalPos[q][w].x + posDiffFrontL.x;
-                *pReal++ = suspensionPointOriginalPos[q][w].y + posDiffFrontL.y;
-                *pReal++ = suspensionPointOriginalPos[q][w].z + posDiffFrontL.z;
+                *pReal++;
+                *pReal++ = suspensionPointOriginalPos[q][w].y + frontLSuspHeight;
+                *pReal++;
             }
         }
     }
