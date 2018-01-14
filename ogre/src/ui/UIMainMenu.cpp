@@ -186,6 +186,15 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
     mEditBoxIP.keyUp(_key, _char);
     mEditBoxUserName.keyUp(_key, _char);
     mEditBoxRoomName.keyUp(_key, _char);
+
+    if(mEditBoxIP.isActive())
+        setColorMultiIP(mInactiveLabel);
+
+    if(mEditBoxUserName.isActive())
+        setColorMultiUserName(mInactiveLabel);
+
+    if(mEditBoxRoomName.isActive())
+        setColorMultiRoomName(mInactiveLabel);
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
@@ -536,7 +545,15 @@ void UIMainMenu::createRoom()
     else
     {
         switchState(State_Multi);
-        //mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
+
+        if(serverIP.empty())
+            setColorMultiIP(Ogre::ColourValue::Red);
+
+        if(userName.empty())
+            setColorMultiUserName(Ogre::ColourValue::Red);
+
+        if(roomName.empty())
+            setColorMultiRoomName(Ogre::ColourValue::Red);
     }
 }
 

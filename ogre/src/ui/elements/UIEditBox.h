@@ -44,6 +44,8 @@ public:
 
     Ogre::String getMaterialName()const {return mMaterialName;}
 
+    bool isActive() const{return mIsActive;}
+
 private:
 
     void adjustCaptionLength();

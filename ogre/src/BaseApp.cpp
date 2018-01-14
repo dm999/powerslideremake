@@ -576,7 +576,10 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
         )
     {
         mGameState.getPlayerCar().keyUp(arg.key);
+    }
 
+    if(mGameModeSwitcher->isLoadPassed())
+    {
 #if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
         mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), mInputHandler->getInputContext().mKeyboard->getAsString(arg.key)[0]);
 #else

@@ -51,6 +51,8 @@ private:
 
     MenuMultiMode * mMenuMultiMode;
 
+    Ogre::PanelOverlayElement* mMainBackground;
+
     /*
     MyGUI::Button* mWidgetJoin;
     MyGUI::Button* mWidgetStart;

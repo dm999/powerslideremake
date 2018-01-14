@@ -11,6 +11,8 @@ public:
 
 protected:
 
+    static Ogre::ColourValue mInactiveLabel;
+
     void createLabels(const Ogre::Matrix4& screenAdaptionRelative);
 
     void mouseReleased(const Ogre::Vector2& pos);
@@ -35,6 +37,10 @@ protected:
     void showPodiumLabels(const finishBoard_v& finishBoard);
     void showMultiIPLabels();
     void hideAllLabels();
+
+    void setColorMultiIP(const Ogre::ColourValue& val){mModeMultiIP->setColour(val);}
+    void setColorMultiUserName(const Ogre::ColourValue& val){mModeMultiUserName->setColour(val);}
+    void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
 
 private:
 

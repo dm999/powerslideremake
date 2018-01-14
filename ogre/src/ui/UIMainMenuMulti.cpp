@@ -22,15 +22,17 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
+    loadCommonTextures(pfLoaderGameshell);
+
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "m_chat.bmp", 
                                 "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
-
-    loadCommonTextures(pfLoaderGameshell);
 }
 
 void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState)
 {
+
+
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
     Ogre::Real viewportHeight = om.getViewportHeight(); 
@@ -42,6 +44,29 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
 
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
+
+    //main background
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalMainBackground");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
+        mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
+        //mMainBackground->hide();
+    }
 
 #if 0
     {

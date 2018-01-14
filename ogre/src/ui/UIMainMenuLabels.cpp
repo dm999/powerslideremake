@@ -5,9 +5,7 @@
 
 #include "../BaseApp.h"
 
-namespace{
-    Ogre::ColourValue inactiveLabel(0.51f, 0.51f, 0.51f);
-}
+Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 {
@@ -34,7 +32,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeSingle->setHeight(46.0f * viewportHeight / 1024.0f);
         mModeSingle->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeSingle->setFontName("SdkTrays/Caption");
-        mModeSingle->setColour(inactiveLabel);
+        mModeSingle->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeSingle);
     }
 
@@ -48,7 +46,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMulti->setHeight(46.0f * viewportHeight / 1024.0f);
         mModeMulti->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMulti->setFontName("SdkTrays/Caption");
-        mModeMulti->setColour(inactiveLabel);
+        mModeMulti->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMulti);
     }
 
@@ -61,7 +59,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiIP->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiIP->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiIP->setFontName("SdkTrays/Caption");
-        mModeMultiIP->setColour(inactiveLabel);
+        mModeMultiIP->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiIP);
     }
 
@@ -74,7 +72,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiConnect->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiConnect->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiConnect->setFontName("SdkTrays/Caption");
-        mModeMultiConnect->setColour(inactiveLabel);
+        mModeMultiConnect->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiConnect);
     }
 
@@ -87,7 +85,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiUserName->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiUserName->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiUserName->setFontName("SdkTrays/Caption");
-        mModeMultiUserName->setColour(inactiveLabel);
+        mModeMultiUserName->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiUserName);
     }
 
@@ -100,7 +98,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiRoomName->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiRoomName->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiRoomName->setFontName("SdkTrays/Caption");
-        mModeMultiRoomName->setColour(inactiveLabel);
+        mModeMultiRoomName->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiRoomName);
     }
 
@@ -113,7 +111,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiCreateRoom->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiCreateRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiCreateRoom->setFontName("SdkTrays/Caption");
-        mModeMultiCreateRoom->setColour(inactiveLabel);
+        mModeMultiCreateRoom->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiCreateRoom);
     }
 
@@ -126,7 +124,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiJoinRoom->setHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiJoinRoom->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeMultiJoinRoom->setFontName("SdkTrays/Caption");
-        mModeMultiJoinRoom->setColour(inactiveLabel);
+        mModeMultiJoinRoom->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiJoinRoom);
     }
 #endif
@@ -140,7 +138,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeSingleDifficultyNovice->setHeight(36.0f * viewportHeight / 1024.0f);
         mModeSingleDifficultyNovice->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeSingleDifficultyNovice->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyNovice->setColour(inactiveLabel);
+        mModeSingleDifficultyNovice->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeSingleDifficultyNovice);
     }
 
@@ -153,7 +151,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeSingleDifficultyAdvanced->setHeight(36.0f * viewportHeight / 1024.0f);
         mModeSingleDifficultyAdvanced->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeSingleDifficultyAdvanced->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyAdvanced->setColour(inactiveLabel);
+        mModeSingleDifficultyAdvanced->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeSingleDifficultyAdvanced);
     }
 
@@ -166,7 +164,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeSingleDifficultyExpert->setHeight(36.0f * viewportHeight / 1024.0f);
         mModeSingleDifficultyExpert->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeSingleDifficultyExpert->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyExpert->setColour(inactiveLabel);
+        mModeSingleDifficultyExpert->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeSingleDifficultyExpert);
     }
 
@@ -179,7 +177,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeSingleDifficultyInsane->setHeight(36.0f * viewportHeight / 1024.0f);
         mModeSingleDifficultyInsane->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeSingleDifficultyInsane->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyInsane->setColour(inactiveLabel);
+        mModeSingleDifficultyInsane->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeSingleDifficultyInsane);
     }
 
@@ -200,7 +198,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mTracksLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
         mTracksLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mTracksLabels[q]->setFontName("SdkTrays/Caption");
-        mTracksLabels[q]->setColour(inactiveLabel);
+        mTracksLabels[q]->setColour(mInactiveLabel);
         getMainBackground()->addChild(mTracksLabels[q]);
     }
 
@@ -222,7 +220,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mCarsLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
         mCarsLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mCarsLabels[q]->setFontName("SdkTrays/Caption");
-        mCarsLabels[q]->setColour(inactiveLabel);
+        mCarsLabels[q]->setColour(mInactiveLabel);
         getMainBackground()->addChild(mCarsLabels[q]);
     }
 
@@ -239,7 +237,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mCharactersLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
         mCharactersLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mCharactersLabels[q]->setFontName("SdkTrays/Caption");
-        mCharactersLabels[q]->setColour(inactiveLabel);
+        mCharactersLabels[q]->setColour(mInactiveLabel);
         getMainBackground()->addChild(mCharactersLabels[q]);
     }
 
@@ -265,7 +263,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mGameExitLabel->setHeight(46.0f * viewportHeight / 1024.0f);
         mGameExitLabel->setAlignment(Ogre::TextAreaOverlayElement::Center);
         mGameExitLabel->setFontName("SdkTrays/Caption");
-        mGameExitLabel->setColour(inactiveLabel);
+        mGameExitLabel->setColour(mInactiveLabel);
         getMainBackground()->addChild(mGameExitLabel);
     }
 
@@ -278,7 +276,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mGameExitYesLabel->setHeight(46.0f * viewportHeight / 1024.0f);
         mGameExitYesLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mGameExitYesLabel->setFontName("SdkTrays/Caption");
-        mGameExitYesLabel->setColour(inactiveLabel);
+        mGameExitYesLabel->setColour(mInactiveLabel);
         getMainBackground()->addChild(mGameExitYesLabel);
     }
 
@@ -291,7 +289,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mGameExitNoLabel->setHeight(46.0f * viewportHeight / 1024.0f);
         mGameExitNoLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mGameExitNoLabel->setFontName("SdkTrays/Caption");
-        mGameExitNoLabel->setColour(inactiveLabel);
+        mGameExitNoLabel->setColour(mInactiveLabel);
         getMainBackground()->addChild(mGameExitNoLabel);
     }
 
@@ -827,7 +825,7 @@ bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::Text
     }
     else
     {
-        label->setColour(inactiveLabel);
+        label->setColour(mInactiveLabel);
     }
 
     return ret;
