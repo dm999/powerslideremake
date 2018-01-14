@@ -22,7 +22,7 @@ public:
 
     void receiveData();
 
-    void updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI, float spf);
+    void updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI);
 
     bool getStartHappen()const{return mStartHappened;}
 

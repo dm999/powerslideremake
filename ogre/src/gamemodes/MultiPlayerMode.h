@@ -56,8 +56,8 @@ protected:
     virtual void customClearUI()override;
     virtual void customProcessCollision(int triIndex)override;
     virtual void customUnloadResources()override;
-    virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)override;
-    virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)override;
+    virtual void customFrameStartedDoProcessFrameBeforePhysics()override;
+    virtual void customFrameStartedDoProcessFrameAfterPhysics()override;
     virtual void customFrameRenderingQueuedDoBegining()override;
     virtual void customFrameRenderingQueuedDoRaceStarted()override;
     virtual void customFrameRenderingQueuedDo2DUI()override;

@@ -185,14 +185,14 @@ void MultiPlayerMode::customUnloadResources()
     }
 }
 
-void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt)
+void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics()
 {
     if(mIsSessionStarted)
     {
         //AI
         for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
         {
-            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+            mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
 
             if(!mModeContext.mGameState.getRaceFinished())
                 mModeContext.mGameState.getMultiplayerCarAI(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getPosition());
@@ -205,12 +205,12 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics(const Ogre::
             if(!mModeContext.mGameState.getRaceFinished())
                 mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getModelNode()->getPosition());
 
-            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
         }
     }
 }
 
-void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt)
+void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
 {
 
     if(mMultiplayerController.get())
@@ -263,7 +263,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics(const Ogre::F
                 dataAI.push_back(aiData);
             }
 
-            mMultiplayerController->updateSessionData(data, dataAI, evt.timeSinceLastFrame);
+            mMultiplayerController->updateSessionData(data, dataAI);
         }
     }
 }

@@ -33,7 +33,7 @@ public:
 
     void setCameraMan(CameraMan * cameraMan){mCameraMan = cameraMan;}
 
-    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted);
+    virtual void processFrameBeforePhysics(const StaticMeshProcesser& processer, bool isRaceStarted);
 
     virtual void processCamera(GameState& gameState) override;
 

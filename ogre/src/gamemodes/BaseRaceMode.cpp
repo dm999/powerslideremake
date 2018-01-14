@@ -557,6 +557,8 @@ void BaseRaceMode::initWorld()
     bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
 
     mWorld.reset(new Physics(&mStaticMeshProcesser));
+    mWorld->addListener(this);
+
     mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled));
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
@@ -576,50 +578,9 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Enter");
 
-    Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
-
-    Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
-
     mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getSteering(), mModeContext.mGameState.getPlayerCar().getBrake());
 
-#ifndef NO_OPENAL
-    mModeContext.mSoundsProcesser.setListenerPos(playerPos);
-    if(!mModeContext.mGameState.isGamePaused())
-        mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
-    else
-        mModeContext.mSoundsProcesser.setListenerGain(0.0f);
-#endif
-
-    if(!mModeContext.mGameState.getRaceFinished())
-        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
-
-    mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
-
-    if(!mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGameState.getPlayerCar().processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-        {
-            if(!mModeContext.mGameState.getRaceFinished())
-                mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
-
-            mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(evt, mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
-        }
-
-        customFrameStartedDoProcessFrameBeforePhysics(evt);
-    }
-
-    mLapController.calculateLapPositions();
-
     mWorld->timeStep(mModeContext.mGameState);
-    
-    if(!mModeContext.mGameState.isGamePaused())
-    {
-        mModeContext.mGameState.getPlayerCar().processSounds();
-    }
-
-    customFrameStartedDoProcessFrameAfterPhysics(evt);
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Exit");
 }
@@ -810,6 +771,54 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameRenderingQueued]: Exit");
+}
+
+void BaseRaceMode::timeStepBefore(Physics * physics)
+{
+
+    Ogre::Vector3 playerPos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+
+    Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
+
+#ifndef NO_OPENAL
+    mModeContext.mSoundsProcesser.setListenerPos(playerPos);
+    if(!mModeContext.mGameState.isGamePaused())
+        mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
+    else
+        mModeContext.mSoundsProcesser.setListenerGain(0.0f);
+#endif
+
+    if(!mModeContext.mGameState.getRaceFinished())
+        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
+
+    mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
+
+    if(!mModeContext.mGameState.isGamePaused())
+    {
+        mModeContext.mGameState.getPlayerCar().processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+
+        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        {
+            if(!mModeContext.mGameState.getRaceFinished())
+                mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
+
+            mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
+        }
+
+        customFrameStartedDoProcessFrameBeforePhysics();
+    }
+
+    mLapController.calculateLapPositions();
+}
+
+void BaseRaceMode::timeStepAfter(Physics * physics)
+{
+    if(!mModeContext.mGameState.isGamePaused())
+    {
+        mModeContext.mGameState.getPlayerCar().processSounds();
+    }
+
+    customFrameStartedDoProcessFrameAfterPhysics();
 }
 
 

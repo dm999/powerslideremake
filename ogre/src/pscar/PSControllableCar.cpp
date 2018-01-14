@@ -176,7 +176,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 }
 
 
-void PSControllableCar::processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted)
+void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& processer, bool isRaceStarted)
 {
     processSounds();
 

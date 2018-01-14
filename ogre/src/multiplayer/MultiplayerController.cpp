@@ -186,7 +186,7 @@ void MultiplayerController::receiveData()
     }
 }
 
-void MultiplayerController::updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI, float spf)
+void MultiplayerController::updateSessionData(const MultiplayerSessionData& dataHuman, const std::vector<MultiplayerSessionData>& dataAI)
 {
     if(mSessionStarted && mSession)
     {

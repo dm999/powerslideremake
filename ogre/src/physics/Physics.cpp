@@ -93,9 +93,10 @@ void Physics::internalTimeStep(GameState& gameState)
             ++mAfterStartCounter;
     }
 
-    for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)
+    // in multiplayer removeListener called
+    for (int index = mListeners.size() - 1; index >=0; --index)
     {
-        (*i)->timeStepAfter(this);
+        mListeners[index]->timeStepAfter(this);
     }
 
 }

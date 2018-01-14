@@ -25,7 +25,7 @@ public:
     PSBaseCar();
     virtual ~PSBaseCar(){}
 
-    virtual void processFrameBeforePhysics(const Ogre::FrameEvent &evt, const StaticMeshProcesser& processer, bool isRaceStarted) = 0;
+    virtual void processFrameBeforePhysics(const StaticMeshProcesser& processer, bool isRaceStarted) = 0;
 
     virtual void initModel( lua_State * pipeline, 
                             const GameState& gameState,
@@ -36,6 +36,7 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isAI);
 
+    //PhysicsListener
     void timeStepAfter(Physics * physics)override;
 
     void repositionVehicle(const Ogre::Matrix4& transform); // for multiplayer

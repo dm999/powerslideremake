@@ -31,6 +31,7 @@ class BaseRaceMode :
     public BaseMode,
     public LapUtils::Events,
     public Ogre::RenderTargetListener,  // for rear camera, arrow
+    public PhysicsListener,
     public Ogre::ResourceGroupListener  // for loader
 {
 public:
@@ -82,6 +83,10 @@ public:
     void worldGeometryStageStarted(const Ogre::String& description) override {}
     void worldGeometryStageEnded(void) override {}
 
+    //PhysicsListener
+    void timeStepBefore(Physics * physics)override;
+    void timeStepAfter(Physics * physics)override;
+
     LapController getLapController() const {return mLapController;}
 
 protected:
@@ -112,8 +117,8 @@ protected:
     virtual void customClearUI(){}
     virtual void customProcessCollision(int triIndex){}
     virtual void customUnloadResources(){}
-    virtual void customFrameStartedDoProcessFrameBeforePhysics(const Ogre::FrameEvent &evt){}
-    virtual void customFrameStartedDoProcessFrameAfterPhysics(const Ogre::FrameEvent &evt){}
+    virtual void customFrameStartedDoProcessFrameBeforePhysics(){}
+    virtual void customFrameStartedDoProcessFrameAfterPhysics(){}
     virtual void customFrameRenderingQueuedDoBegining(){}
     virtual void customFrameRenderingQueuedDoRaceStarted(){}
     virtual void customFrameRenderingQueuedDo2DUI(){}
