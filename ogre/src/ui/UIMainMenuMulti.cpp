@@ -15,9 +15,19 @@
 #include "../multiplayer/MultiplayerControllerMaster.h"
 #include "../multiplayer/MultiplayerControllerSlave.h"
 
+#if defined(__ANDROID__)
+    #include <android/log.h>
+
+    #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+    #define LOGE(...) ((void)__android_log_write(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+#endif
+
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : UIBaseMenu(modeContext),
-    mMenuMultiMode(menuMultiMode)
+    mMenuMultiMode(menuMultiMode),
+    mWidgetJoin(NULL),
+    mWidgetStart(NULL)
+
 {}
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
@@ -67,8 +77,6 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
         //mMainBackground->hide();
     }
-
-    trayMgr->setListener(this);
 
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
@@ -265,8 +273,24 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 }
 #endif
 
+void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
+{
+    if(mWidgetJoin && OgreBites::Widget::isCursorOver(mWidgetJoin->getOverlayElement(), pos, 0))
+    {
+        buttonHit(mWidgetJoin);
+    }
+    if(mWidgetStart && OgreBites::Widget::isCursorOver(mWidgetStart->getOverlayElement(), pos, 0))
+    {
+        buttonHit(mWidgetStart);
+    }
+}
+
 void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
 {
+#if defined(__ANDROID__)
+    LOGI("UIMainMenuMulti[buttonHit]: Begin"); 
+#endif
+
     if(button->getName() == "mWidgetJoin")
     {
         bool changeToReady = true;
@@ -328,6 +352,10 @@ void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
 
         static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName(), mModeContext.mGameState.getAIStrength(), mModeContext.mGameState.getLapsCount());
     }
+
+#if defined(__ANDROID__)
+    LOGI("UIMainMenuMulti[buttonHit]: End"); 
+#endif
 }
 
 #if 0

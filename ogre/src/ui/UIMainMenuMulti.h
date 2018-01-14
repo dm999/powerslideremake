@@ -29,6 +29,8 @@ public:
     //void processChangeComboBox(MyGUI::Widget* sender, size_t index);
     //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
 
+    void mouseReleased(const Ogre::Vector2& pos);
+
     void setMiscText(const std::string& text, const Ogre::ColourValue& color = Ogre::ColourValue::White);
 
 #if defined(__ANDROID__)

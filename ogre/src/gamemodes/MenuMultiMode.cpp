@@ -95,6 +95,19 @@ void MenuMultiMode::frameStarted(const Ogre::FrameEvent &evt)
     }
 }
 
+void MenuMultiMode::mousePressed(const Ogre::Vector2& pos)
+{
+}
+
+void MenuMultiMode::mouseReleased(const Ogre::Vector2& pos)
+{
+    mUIMainMenuMulti->mouseReleased(pos);
+}
+
+void MenuMultiMode::mouseMoved(const Ogre::Vector2& pos)
+{
+}
+
 void MenuMultiMode::onSessionReadyToStart()
 {
     if(mModeContext.mGameState.isMultiplayerMaster())
