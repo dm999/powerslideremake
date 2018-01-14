@@ -549,14 +549,14 @@ void PhysicsVehicle::gearDown()
     }
 }
 
-Ogre::Vector3 PhysicsVehicle::getLinearVelocity() const
+Ogre::Vector3 PhysicsVehicle::getLinearVelocitySpeedometer() const
 {
     Ogre::Vector3 impulse(mImpulseLinear);
     impulse.z = -impulse.z;//original data is left hand
     return impulse * mInitialVehicleSetup.mChassisInvMass * 33.0f;
 }
 
-Ogre::Vector3 PhysicsVehicle::getAngularVelocity() const
+Ogre::Vector3 PhysicsVehicle::getAngularVelocitySpeedometer() const
 {
     return mImpulseRot * mInitialVehicleSetup.mChassisInvMass * 33.0f;
 }
@@ -564,6 +564,21 @@ Ogre::Vector3 PhysicsVehicle::getAngularVelocity() const
 Ogre::Vector3 PhysicsVehicle::getLinearImpulse() const
 {
     return mImpulseLinear;
+}
+
+void PhysicsVehicle::setLinearImpulse(const Ogre::Vector3& val)
+{
+    mImpulseLinear = val;
+}
+
+Ogre::Vector3 PhysicsVehicle::getAngularImpulse() const
+{
+    return mImpulseRot;
+}
+
+void PhysicsVehicle::setAngularImpulse(const Ogre::Vector3& val)
+{
+    mImpulseRot = val;
 }
 
 void PhysicsVehicle::zeroImpulses()

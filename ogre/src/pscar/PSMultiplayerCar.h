@@ -29,9 +29,9 @@ public:
     void clear()override;
 
     /**
-     * Positioning of multiplayer car based on velocities
+     * Positioning of multiplayer car based on impulses
      */
-    void setModelVelocity(const Ogre::Vector3& linear, const Ogre::Vector3& angular);
+    void setModelImpulse(const Ogre::Vector3& linear, const Ogre::Vector3& angular);
 
     void removeFromScene(Ogre::SceneManager* sceneMgr);
 

@@ -59,9 +59,12 @@ public:
 
     Ogre::Real getAlignedVelocity()const {return mVehicleVelocityMod;}
     Ogre::Real getAlignedVelocitySpeedometer()const {return mVehicleVelocityMod * 58.0f;}
-    Ogre::Vector3 getLinearVelocity() const;
-    Ogre::Vector3 getAngularVelocity() const;
-    Ogre::Vector3 getLinearImpulse() const;
+    Ogre::Vector3 getLinearVelocitySpeedometer() const;
+    Ogre::Vector3 getAngularVelocitySpeedometer() const;
+    Ogre::Vector3 getLinearImpulse() const;//ai & multiplayer
+    void setLinearImpulse(const Ogre::Vector3& val);//multiplayer
+    Ogre::Vector3 getAngularImpulse() const;//multiplayer
+    void setAngularImpulse(const Ogre::Vector3& val);//multiplayer
 
     void zeroImpulses();
     void setSlipStreamFactor(Ogre::Real val){mSlipStreamFactor = val;}

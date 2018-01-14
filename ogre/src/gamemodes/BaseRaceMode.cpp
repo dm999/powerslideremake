@@ -865,7 +865,7 @@ void BaseRaceMode::processCollision(int triIndex)
     }
 
     //surface crash sound
-    Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocity();
+    Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocitySpeedometer();
     Ogre::Real playerVelDiff = playerVel.distance(mModeContext.mGameState.getPLayerCarPrevVel());
     mModeContext.mGameState.setPLayerCarPrevVel(playerVel);
     if(playerVelDiff > 10.0f)
@@ -899,7 +899,7 @@ void BaseRaceMode::processCollision(int triIndex)
     {
         if(mModeContext.mGameState.getPlayerCar().isCollideChassis(mModeContext.mGameState.getAICar(q)))
         {
-            Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearVelocity();
+            Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearVelocitySpeedometer();
             Ogre::Real velDiff = playerVel.distance(aiVel);
             if(velDiff > 20.0f && velDiff <= 50.0f)
             {

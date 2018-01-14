@@ -45,15 +45,18 @@ public:
     void initSounds(lua_State * pipeline, const GameState& gameState);
     void deinitSounds();
 
-    Ogre::Vector3 getLinearVelocity()const;
-    Ogre::Vector3 getAngularVelocity()const;
+    Ogre::Vector3 getLinearVelocitySpeedometer()const;
+    Ogre::Vector3 getAngularVelocitySpeedometer()const;
     Ogre::Real getAlignedVelocity()const;
     Ogre::Real getAlignedVelocitySpeedometer()const;
     Ogre::Real getWheelBackLVelocity() const;
     Ogre::Real getWheelBackRVelocity() const;
-    Ogre::Real getLateralVelocity()const;
+    Ogre::Real getLateralVelocitySpeedometer()const;
     Ogre::Vector3 getForwardAxis()const;
-    Ogre::Vector3 getLinearImpulse()const;
+    Ogre::Vector3 getLinearImpulse()const;//ai & multiplayer
+    void setLinearImpulse(const Ogre::Vector3& val);//multiplayer
+    Ogre::Vector3 getAngularImpulse()const;//multiplayer
+    void setAngularImpulse(const Ogre::Vector3& val);//multiplayer
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
     Ogre::SceneNode* getModelNode() const{return mModelNode;}

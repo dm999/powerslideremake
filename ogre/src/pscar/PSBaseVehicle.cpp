@@ -19,7 +19,6 @@ void PSBaseVehicle::initPhysicalModel(Physics * world,
 
 void PSBaseVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 {
-    //d.polubotko: reimplement
     mInitialVehicleSetup.mCarGlobalPos = chassisPos;
     mInitialVehicleSetup.mCarRot = chassisRot;
 }

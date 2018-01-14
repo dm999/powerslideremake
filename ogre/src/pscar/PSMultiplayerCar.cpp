@@ -45,15 +45,13 @@ void PSMultiplayerCar::clear()
     mPlayerTitle.reset();
 }
 
-void PSMultiplayerCar::setModelVelocity(const Ogre::Vector3& linear, const Ogre::Vector3& angular)
+void PSMultiplayerCar::setModelImpulse(const Ogre::Vector3& linear, const Ogre::Vector3& angular)
 {
-#if 0
     if(mModelNode)
     {
-        mCarChassis->setLinearVelocity(linear);
-        mCarChassis->setAngularVelocity(angular);
+        setLinearImpulse(linear);
+        setAngularImpulse(angular);
     }
-#endif
 }
 
 void PSMultiplayerCar::removeFromScene(Ogre::SceneManager* sceneMgr)

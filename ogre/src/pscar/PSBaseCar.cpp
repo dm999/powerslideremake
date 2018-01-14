@@ -547,14 +547,14 @@ void PSBaseCar::clear()
     //mModelNode = NULL;
 }
 
-Ogre::Vector3 PSBaseCar::getLinearVelocity()const
+Ogre::Vector3 PSBaseCar::getLinearVelocitySpeedometer()const
 {
-    return mPhysicsVehicle->getLinearVelocity();
+    return mPhysicsVehicle->getLinearVelocitySpeedometer();
 }
 
-Ogre::Vector3 PSBaseCar::getAngularVelocity()const
+Ogre::Vector3 PSBaseCar::getAngularVelocitySpeedometer()const
 {
-    return mPhysicsVehicle->getAngularVelocity();
+    return mPhysicsVehicle->getAngularVelocitySpeedometer();
 }
 
 Ogre::Real PSBaseCar::getAlignedVelocity()const
@@ -577,11 +577,11 @@ Ogre::Real PSBaseCar::getWheelBackRVelocity()const
     return mPhysicsVehicle->getWheelBackRVelocity();
 }
 
-Ogre::Real PSBaseCar::getLateralVelocity()const
+Ogre::Real PSBaseCar::getLateralVelocitySpeedometer()const
 {
     Ogre::Real res = 0.0f;
 
-    Ogre::Vector3 carVelocity = getLinearVelocity();
+    Ogre::Vector3 carVelocity = getLinearVelocitySpeedometer();
 
     Ogre::Vector3 carOrientation = mInitialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_X;
 
@@ -598,6 +598,21 @@ Ogre::Vector3 PSBaseCar::getForwardAxis()const
 Ogre::Vector3 PSBaseCar::getLinearImpulse()const
 {
     return mPhysicsVehicle->getLinearImpulse();
+}
+
+void PSBaseCar::setLinearImpulse(const Ogre::Vector3& val)
+{
+    mPhysicsVehicle->setLinearImpulse(val);
+}
+
+Ogre::Vector3 PSBaseCar::getAngularImpulse()const
+{
+    return mPhysicsVehicle->getAngularImpulse();
+}
+
+void PSBaseCar::setAngularImpulse(const Ogre::Vector3& val)
+{
+    mPhysicsVehicle->setAngularImpulse(val);
 }
 
 void PSBaseCar::initSuspension(const GameState& gameState)
