@@ -68,6 +68,23 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         //mMainBackground->hide();
     }
 
+    trayMgr->setListener(this);
+
+    if(mModeContext.mGameState.isMultiplayerMaster())
+    {
+        mWidgetJoin = createButton(trayMgr, OgreBites::TL_NONE, "mWidgetJoin", "Ready", 100.0f);
+
+        Ogre::Vector4 startPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 50.0f, 0.0f, 0.0f);
+        mWidgetStart = createButton(trayMgr, OgreBites::TL_NONE, "mWidgetStart", "Start", 100.0f);
+        mWidgetStart->getOverlayElement()->setTop(startPos.y);
+        mWidgetStart->hide();
+    }
+    else
+    {
+        mWidgetJoin = createButton(trayMgr, OgreBites::TL_NONE, "mWidgetJoin", "Ready", 100.0f);
+    }
+
+
 #if 0
     {
         MyGUI::ImageBox * mainBackground = gui->createWidget<MyGUI::ImageBox>("ImageBox", 0, 0, viewportWidth, viewportHeight, MyGUI::Align::Default, "Wallpaper");
@@ -248,30 +265,9 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 }
 #endif
 
-#if 0
-void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
+void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
 {
-    if(sender == mWidgetStart)
-    {
-        mWidgetStart->setEnabled(false);
-
-        if(mModeContext.mGameState.isMultiplayerMaster())
-        {
-            mMenuMultiMode->recalculateCharacterNames(static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->getAllPlayersSkins());
-
-            std::vector<std::string> gameCars;
-            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
-            {
-                gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
-            }
-
-            static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
-        }
-
-        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName(), mModeContext.mGameState.getAIStrength(), mModeContext.mGameState.getLapsCount());
-    }
-
-    if(sender == mWidgetJoin)
+    if(button->getName() == "mWidgetJoin")
     {
         bool changeToReady = true;
         if(mWidgetJoin->getCaption() != "Ready")
@@ -285,7 +281,8 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
         {
             const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
             std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-            trackName = availTracks[mWidgetTrack->getItemIndexSelected()];
+            //trackName = availTracks[mWidgetTrack->getItemIndexSelected()];
+            trackName = availTracks[0];
         }
 
 
@@ -311,6 +308,31 @@ void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
             }
         }
     }
+
+    if(button->getName() == "mWidgetStart")
+    {
+        if(mModeContext.mGameState.isMultiplayerMaster())
+        {
+            //mWidgetStart->setEnabled(false);
+
+            mMenuMultiMode->recalculateCharacterNames(static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->getAllPlayersSkins());
+
+            std::vector<std::string> gameCars;
+            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            {
+                gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
+            }
+
+            static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->setAISkins(gameCars);
+        }
+
+        static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->startSession(mModeContext.mGameState.getTrackName(), mModeContext.mGameState.getAIStrength(), mModeContext.mGameState.getLapsCount());
+    }
+}
+
+#if 0
+void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
+{
 
     if(sender == mWidgetSendMessage)
     {
@@ -426,16 +448,18 @@ void UIMainMenuMulti::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key,
 
 void UIMainMenuMulti::onStartPossible()
 {
-    //mWidgetStart->setEnabled(true);
+    mWidgetStart->show();
 }
 
 void UIMainMenuMulti::onStartNotPossible()
 {
-    //mWidgetStart->setEnabled(false);
+    mWidgetStart->hide();
 }
 
 void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[UIMainMenuMulti::addEvent]: " + eventItem);
+
     /*
     if(isMessage)
         mWidgetEvents->insertItem(0, "#FF0000" + eventItem);
@@ -448,7 +472,6 @@ void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 
 void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 {
-#if 0
     bool changeToReady = true;
     if(mWidgetJoin->getCaption() == "Ready")
         changeToReady = false;
@@ -478,7 +501,6 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
 
         bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
     }
-#endif
 }
 
 void UIMainMenuMulti::setMiscText(const std::string& text, const Ogre::ColourValue& color)

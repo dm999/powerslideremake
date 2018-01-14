@@ -14,7 +14,7 @@
 
 class MenuMultiMode;
 
-class UIMainMenuMulti : public UIBaseMenu
+class UIMainMenuMulti : public UIBaseMenu, public OgreBites::SdkTrayListener
 {
 public:
 
@@ -41,6 +41,8 @@ public:
 
     void addEvent(const std::string& eventItem, bool isMessage = false);
 
+    void buttonHit(OgreBites::Button* button) override;
+
 private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
@@ -52,6 +54,9 @@ private:
     MenuMultiMode * mMenuMultiMode;
 
     Ogre::PanelOverlayElement* mMainBackground;
+
+    OgreBites::Button* mWidgetJoin;
+    OgreBites::Button* mWidgetStart;
 
     /*
     MyGUI::Button* mWidgetJoin;

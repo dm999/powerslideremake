@@ -3,6 +3,9 @@
 
 #include "../customs/MovableText.h"
 
+#include "../physics/Physics.h"
+#include "../physics/PhysicsVehicle.h"
+
 PSMultiplayerCar::PSMultiplayerCar() :
     mCurrentLap(0), mLapPosition(0.0f)
 {
@@ -20,7 +23,7 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
 {
     mLastTimeOfUpdate = 0;
 
-    PSAICar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
+    PSPlayerCar::initModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, world, characterName, 
         initialVehicleSetup,
         isPossesCamera);
 
@@ -35,7 +38,9 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
 
 void PSMultiplayerCar::clear()
 {
-    PSAICar::clear();
+    mWorld->removeListener(this);
+
+    PSPlayerCar::clear();
 
     mPlayerTitle.reset();
 }

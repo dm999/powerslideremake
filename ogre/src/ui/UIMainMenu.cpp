@@ -140,8 +140,13 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     mEditBoxRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxRoomName.setText("Powerslide!");//d.polubotko: FIXME
 
-    mRoomsTable = createSelectMenu(trayMgr, OgreBites::TL_NONE, "roomsTable", "Rooms", 100.0f, 20, Ogre::StringVector());
-    mRoomsTable->hide();
+    {
+        Ogre::Vector4 roomsTablePos = screenAdaptionRelative * Ogre::Vector4(500.0f, 180.0f, 140.0f, 0.0f);
+        mRoomsTable = createSelectMenu(trayMgr, OgreBites::TL_NONE, "roomsTable", "Rooms", roomsTablePos.z, 20, Ogre::StringVector());
+        mRoomsTable->getOverlayElement()->setLeft(roomsTablePos.x);
+        mRoomsTable->getOverlayElement()->setTop(roomsTablePos.y);
+        mRoomsTable->hide();
+    }
 
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
