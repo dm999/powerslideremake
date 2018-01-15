@@ -31,7 +31,7 @@ public:
 
     void mousePressed(OIS::MouseButtonID id);
     void mouseReleased(OIS::MouseButtonID id);
-    void mouseMoved(Ogre::Vector2& pos, Ogre::Real windowWidth);
+    void mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth);
 
     void raceStarted();
 

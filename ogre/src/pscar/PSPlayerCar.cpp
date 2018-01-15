@@ -133,7 +133,7 @@ void PSPlayerCar::mouseReleased(OIS::MouseButtonID id)
     }
 }
 
-void PSPlayerCar::mouseMoved(Ogre::Vector2& pos, Ogre::Real windowWidth)
+void PSPlayerCar::mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth)
 {
     Ogre::Real steering = windowWidth / 2.0f - pos.x;
     steering /= windowWidth / 2.0f;
