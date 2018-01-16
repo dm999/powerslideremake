@@ -158,15 +158,17 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_includes_main_h}
 
 if(ANDROID)
     include_directories( 
-            ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
+            ${OGRE_INCLUDE_DIR}/Bites
+            ${PowerslideRemake_OGREHOME}/include/SDL2
             ${PowerslideRemake_OGREHOME}/include/OGRE/RenderSystems/GLES2
             ${PowerslideRemake_OGREHOME}/include/OGRE/Overlay
     )
 else()
     include_directories( 
-            ${OIS_INCLUDE_DIRS}
             ${OGRE_INCLUDE_DIRS}
+            ${OGRE_INCLUDE_DIR}/Bites
+            ${PowerslideRemake_OGREHOME}/include/SDL2
             ${PowerslideRemake_OGREHOME}/include/OGRE/RenderSystems/GL
             ${PowerslideRemake_OGREHOME}/include/OGRE/Overlay
     )
@@ -263,14 +265,14 @@ if(ANDROID)
         target_link_libraries(PowerslideRemake openal)
     endif()
     
-    target_link_libraries(PowerslideRemake RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
+    target_link_libraries(PowerslideRemake RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic OgreBitesStatic OgreGLSupportStatic EGL GLESv2 log android c m dl)
     target_link_libraries(PowerslideRemake Plugin_ParticleFXStatic)
     target_link_libraries(PowerslideRemake freetype)
     target_link_libraries(PowerslideRemake FreeImage)
     target_link_libraries(PowerslideRemake zlib)
-    target_link_libraries(PowerslideRemake zziplib)
+    target_link_libraries(PowerslideRemake zzip)
     
-    target_link_libraries(PowerslideRemake Lua OIS)
+    target_link_libraries(PowerslideRemake Lua SDL2)
 
 else() # Not Android
 
@@ -291,29 +293,28 @@ else() # Not Android
         target_link_libraries(PowerslideRemake debug OgreOverlayStatic_d)
         target_link_libraries(PowerslideRemake debug RenderSystem_GLStatic_d)
         target_link_libraries(PowerslideRemake debug Plugin_ParticleFXStatic_d)
-        target_link_libraries(PowerslideRemake debug freetype_d)
+        target_link_libraries(PowerslideRemake debug OgreBitesStatic_d)
+        target_link_libraries(PowerslideRemake debug OgreGLSupportStatic_d)
         target_link_libraries(PowerslideRemake debug FreeImage_d)
-        target_link_libraries(PowerslideRemake debug zlib_d)
-        target_link_libraries(PowerslideRemake debug zziplib_d)
-        
-        
 
         target_link_libraries(PowerslideRemake optimized RenderSystem_GLStatic)
         target_link_libraries(PowerslideRemake optimized OgreMainStatic)
         target_link_libraries(PowerslideRemake optimized OgreOverlayStatic)
         target_link_libraries(PowerslideRemake optimized Plugin_ParticleFXStatic)
-        target_link_libraries(PowerslideRemake optimized freetype)
+        target_link_libraries(PowerslideRemake optimized OgreBitesStatic)
+        target_link_libraries(PowerslideRemake optimized OgreGLSupportStatic)
         target_link_libraries(PowerslideRemake optimized FreeImage)
-        target_link_libraries(PowerslideRemake optimized zlib)
-        target_link_libraries(PowerslideRemake optimized zziplib)
+        
+        target_link_libraries(PowerslideRemake freetype)
+        target_link_libraries(PowerslideRemake zlib)
+        target_link_libraries(PowerslideRemake zzip)
         
         target_link_libraries(PowerslideRemake general opengl32)
         target_link_libraries(PowerslideRemake general glu32)
         
         target_link_libraries(PowerslideRemake Lua)
         
-        target_link_libraries(PowerslideRemake debug OIS_d)
-        target_link_libraries(PowerslideRemake optimized OIS)
+        target_link_libraries(PowerslideRemake SDL2)
 
     else()# Not Windows Not Android (Ubuntu)
     
@@ -328,25 +329,22 @@ else() # Not Android
         endif()
 
 
-        target_link_libraries(PowerslideRemake RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic)
+        target_link_libraries(PowerslideRemake RenderSystem_GLStatic OgreMainStatic OgreOverlayStatic OgreBitesStatic OgreGLSupportStatic)
         target_link_libraries(PowerslideRemake GL GLU X11 Xrandr Xt Xaw Xext m dl pthread)
         target_link_libraries(PowerslideRemake Plugin_ParticleFXStatic)
         target_link_libraries(PowerslideRemake freetype)
         target_link_libraries(PowerslideRemake FreeImage)
         target_link_libraries(PowerslideRemake zlib)
-        target_link_libraries(PowerslideRemake zziplib)
+        target_link_libraries(PowerslideRemake zzip)
 
 
         
-        target_link_libraries(PowerslideRemake Lua ${OIS_LIBRARIES})
+        target_link_libraries(PowerslideRemake Lua SDL2)
 
     endif()
 endif()
 
 if(WIN32)
-    install(FILES "${PowerslideRemake_OGREHOME}/lib/Debug/OIS_d.dll" CONFIGURATIONS Debug DESTINATION .)
-    install(FILES "${PowerslideRemake_OGREHOME}/lib/Release/OIS.dll" CONFIGURATIONS Release DESTINATION .)
-    install(FILES "${PowerslideRemake_OGREHOME}/bin/release/OIS.dll" CONFIGURATIONS Release DESTINATION .)
     install(TARGETS PowerslideRemake DESTINATION .)
 else()
     if(ANDROID)

@@ -14,6 +14,8 @@
 
 #include "../includes/OgreInclude.h"
 #include "OgreOverlaySystem.h"
+#include "OgreOverlayElement.h"
+#include "OgreFont.h"
  
 namespace Ogre {
  

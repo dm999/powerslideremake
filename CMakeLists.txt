@@ -31,8 +31,8 @@ if(NOT PowerslideRemake_BOOSTHOME STREQUAL "")
 endif()
 
 set(OGRE_STATIC true)
-find_package(OGRE REQUIRED)
-find_package(OIS REQUIRED)
+find_package(OGRE 1.10 REQUIRED)
+#find_package(OIS REQUIRED)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})

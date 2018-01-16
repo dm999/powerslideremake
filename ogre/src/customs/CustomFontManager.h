@@ -4,6 +4,8 @@
 #include "../includes/OgreInclude.h"
 #include "OgreOverlaySystem.h"
 
+#include "OgreFontManager.h"
+
 class CustomFontManager : public Ogre::FontManager
 {
 public:

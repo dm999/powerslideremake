@@ -4,6 +4,7 @@
 
 #include "PSControllableCar.h"
 #include "../includes/OISInclude.h"
+#include "OgreInput.h"
 
 #include "../tools/LinearController.h"
 
@@ -26,11 +27,11 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera);
 
-    void keyDown(OIS::KeyCode key);
-    void keyUp(OIS::KeyCode key);
+    void keyDown(OgreBites::Keycode key);
+    void keyUp(OgreBites::Keycode key);
 
-    void mousePressed(OIS::MouseButtonID id);
-    void mouseReleased(OIS::MouseButtonID id);
+    void mousePressed(Uint8 id);
+    void mouseReleased(Uint8 id);
     void mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth);
 
     void raceStarted();

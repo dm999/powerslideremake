@@ -4,27 +4,19 @@
 
 #include "includes/OgreInclude.h"
 #include "includes/OISInclude.h"
-#include "SdkTrays.h"
+#include "OgreTrays.h"
+#include <OgreApplicationContext.h>
 
 class BaseApp;
 
 class CameraMan;
 
-class InputHandler : public OIS::KeyListener
-#if !defined(__ANDROID__)
-    , public OIS::MouseListener
-#endif
+class InputHandler : public OgreBites::ApplicationContext, public OgreBites::InputListener
 {
     friend class BaseApp;
 private:
 
     BaseApp * baseApp;
-
-#if !defined(__ANDROID__)
-    OIS::InputManager* mInputManager;
-#endif
-    OgreBites::InputContext mInputContext;
-
 
     CameraMan* mCameraMan;
 
@@ -35,28 +27,19 @@ private:
 
 protected:
 
-    virtual bool keyPressed( const OIS::KeyEvent &arg );
-    virtual bool keyReleased( const OIS::KeyEvent &arg );
-    
-#if !defined(__ANDROID__)
-    virtual bool mouseMoved( const OIS::MouseEvent &arg );
-    virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-    virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-#endif
+    virtual bool keyPressed( const OgreBites::KeyboardEvent &arg );
+    virtual bool keyReleased( const OgreBites::KeyboardEvent &arg );
+    virtual bool mouseMoved( const OgreBites::MouseMotionEvent &arg );
+    virtual bool mousePressed( const OgreBites::MouseButtonEvent &arg);
+    virtual bool mouseReleased( const OgreBites::MouseButtonEvent &arg);
+    virtual bool touchMoved(const OgreBites::TouchFingerEvent& evt);
+    virtual bool touchPressed(const OgreBites::TouchFingerEvent& evt);
+    virtual bool touchReleased(const OgreBites::TouchFingerEvent& evt);
 
 public:
 
     InputHandler(Ogre::RenderWindow* mWindow, BaseApp * app);
     virtual ~InputHandler(){}
-
-    /**
-     * consume input for controllers during loading process
-     */
-    void capture(){mInputContext.capture();}
-
-    void detach();
-
-    OgreBites::InputContext& getInputContext(){return mInputContext;}
 
 
     void resetCameraMenPointer(CameraMan* cameraMan);

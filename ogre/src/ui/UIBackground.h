@@ -3,7 +3,7 @@
 
 #include "../includes/OgreInclude.h"
 
-#include "SdkTrays.h"
+#include "OgreTrays.h"
 
 #include "../gamemodes/ModeContext.h"
 

@@ -659,9 +659,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    mModeContext.mInputHandler->capture();
+    //mModeContext.mInputHandler->capture();
 
-    mModeContext.mTrayMgr->frameRenderingQueued(evt);
+    //mModeContext.mTrayMgr->frameRenderingQueued(evt);
 
     mUIRace->setShowPausedPanel(mModeContext.mGameState.isGamePaused());
 

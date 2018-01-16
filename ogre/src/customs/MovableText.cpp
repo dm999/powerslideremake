@@ -16,6 +16,8 @@
 
 #include "MovableText.h"
 
+#include "OgreFontManager.h"
+
 using namespace Ogre;
  
 #define POS_TEX_BINDING    0

@@ -14,7 +14,7 @@
 
 class MenuMultiMode;
 
-class UIMainMenuMulti : public UIBaseMenu, public OgreBites::SdkTrayListener
+class UIMainMenuMulti : public UIBaseMenu, public OgreBites::TrayListener
 {
 public:
 

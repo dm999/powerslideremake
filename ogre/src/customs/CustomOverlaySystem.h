@@ -4,6 +4,8 @@
 
 #include "../includes/OgreInclude.h"
 #include "OgreOverlaySystem.h"
+#include "OgreOverlayManager.h"
+#include "OgreOverlayElementFactory.h"
 
 class CustomFontManager;
 

@@ -40,7 +40,7 @@ namespace
 {
     lua_State * mPipeline = NULL;
     BaseApp * baseApp = NULL;
-
+/*
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
     //https://github.com/MyGUI/mygui/blob/master/Common/Input/OIS/InputManager.cpp
     wchar_t translateWin32Text(MyGUI::KeyCode kc)
@@ -132,6 +132,7 @@ namespace
 
         return text;
     }
+    */
 }
 
 
@@ -328,7 +329,7 @@ bool BaseApp::setup()
 
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
 
-    mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
+    mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow));
     //mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
@@ -396,6 +397,7 @@ void BaseApp::windowResized(Ogre::RenderWindow* rw)
     int left, top;
     rw->getMetrics(width, height, depth, left, top);
 
+    /*
 #if defined (__ANDROID__)
 #else
     if(mInputHandler->getInputContext().mMouse)
@@ -405,6 +407,7 @@ void BaseApp::windowResized(Ogre::RenderWindow* rw)
         ms.height = height;
     }
 #endif
+*/
 }
 
 void BaseApp::windowClosed(Ogre::RenderWindow* rw)
@@ -412,7 +415,7 @@ void BaseApp::windowClosed(Ogre::RenderWindow* rw)
     //Only close for window that created OIS (the main window in these demos)
     if( rw == mWindow )
     {
-        mInputHandler->detach();
+        //mInputHandler->detach();
     }
 }
 
@@ -557,46 +560,50 @@ bool BaseApp::setShutdown(bool isOnEsc)
     return mShutDown;
 }
 
-void BaseApp::keyDown(const OIS::KeyEvent &arg )
+void BaseApp::keyDown(const OgreBites::KeyboardEvent &arg )
 {
+    OgreBites::Keycode key = arg.keysym.sym;
+
     if(mGameModeSwitcher->isLoadPassed() && 
         (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
         )
     {
         if(!mGameState.isGamePaused())
-            mGameState.getPlayerCar().keyDown(arg.key);
+            mGameState.getPlayerCar().keyDown(key);
     }
     
 }
 
-void BaseApp::keyUp(const OIS::KeyEvent &arg )
+void BaseApp::keyUp(const OgreBites::KeyboardEvent &arg )
 {
+    OgreBites::Keycode key = arg.keysym.sym;
+
     if(mGameModeSwitcher->isLoadPassed() &&
         (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
         )
     {
-        mGameState.getPlayerCar().keyUp(arg.key);
+        mGameState.getPlayerCar().keyUp(key);
     }
 
     if(mGameModeSwitcher->isLoadPassed())
     {
 #if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
-        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), mInputHandler->getInputContext().mKeyboard->getAsString(arg.key)[0]);
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(key), mInputHandler->getInputContext().mKeyboard->getAsString(key)[0]);
 #else
-        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(arg.key), OISToWCharT(arg));
+        //mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(key), OISToWCharT(arg));
+        mGameModeSwitcher->keyUp(MyGUI::KeyCode::Enum(key), L' ');
 #endif
     }
 }
 
-#if !defined(__ANDROID__)
-void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
+void BaseApp::mouseMoved(const OgreBites::MouseMotionEvent &arg)
 {
     if(mGameModeSwitcher->isLoadPassed())
     {
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
         {
-            mTrayMgr->injectMouseMove(arg);
-            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+            mTrayMgr->mouseMoved(arg);
+            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.x, arg.y));
         }
 
         if(mGameState.getInputType() == itMouse)
@@ -608,20 +615,20 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
                 if(!mGameState.isGamePaused())
                 {
                     Ogre::Real winWidth = mWindow->getWidth();
-                    mGameState.getPlayerCar().mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs), winWidth);
+                    mGameState.getPlayerCar().mouseMoved(Ogre::Vector2(arg.x, arg.y), winWidth);
                 }
             }
         }
     }
 }
-void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+void BaseApp::mousePressed(const OgreBites::MouseButtonEvent &arg)
 {
     if(mGameModeSwitcher->isLoadPassed())
     {
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
         {
-            mTrayMgr->injectMouseDown(arg, id);
-            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+            mTrayMgr->mousePressed(arg);
+            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.x, arg.y));
         }
 
         if(mGameState.getInputType() == itMouse)
@@ -631,19 +638,19 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
                 )
             {
                 if(!mGameState.isGamePaused())
-                    mGameState.getPlayerCar().mousePressed(id);
+                    mGameState.getPlayerCar().mousePressed(arg.button);
             }
         }
     }
 }
-void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+void BaseApp::mouseReleased(const OgreBites::MouseButtonEvent &arg)
 {
     if(mGameModeSwitcher->isLoadPassed())
     {
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
         {
-            mTrayMgr->injectMouseUp(arg, id);
-            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+            mTrayMgr->mouseReleased(arg);
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.x, arg.y));
         }
 
         if(mGameState.getInputType() == itMouse)
@@ -653,60 +660,73 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
                 )
             {
                 if(!mGameState.isGamePaused())
-                    mGameState.getPlayerCar().mouseReleased(id);
+                    mGameState.getPlayerCar().mouseReleased(arg.button);
             }
         }
     }
 }
-#else
-void BaseApp::touchMoved(const OIS::MultiTouchEvent& arg)
+
+void BaseApp::touchMoved(const OgreBites::TouchFingerEvent& arg)
 {
+#if defined(__ANDROID__)
     LOGI("BaseApp[touchMoved]: Begin"); 
-
-    if(mGameModeSwitcher->isLoadPassed())
-    {
-        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
-        {
-            mTrayMgr->injectMouseMove(arg);
-            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
-        }
-    }
-
-    LOGI("BaseApp[touchMoved]: End"); 
-}
-void BaseApp::touchPressed(const OIS::MultiTouchEvent& arg)
-{
-    LOGI("BaseApp[touchPressed]: Begin"); 
-
-    if(mGameModeSwitcher->isLoadPassed())
-    {
-        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
-        {
-            mTrayMgr->injectMouseDown(arg);
-            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
-        }
-    }
-
-    LOGI("BaseApp[touchPressed]: End"); 
-}
-void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
-{
-    LOGI("BaseApp[touchReleased]: Begin"); 
-
-    if(mGameModeSwitcher->isLoadPassed())
-    {
-        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
-        {
-            LOGI("BaseApp[touchReleased]: before injectMouseUp");
-            LOGI("BaseApp[touchPressed]: %d %d", arg.state.X.abs, arg.state.Y.abs); 
-            mTrayMgr->injectMouseUp(arg);
-            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
-        }
-    }
-
-    LOGI("BaseApp[touchReleased]: End"); 
-}
 #endif
+
+    if(mGameModeSwitcher->isLoadPassed())
+    {
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->touchMoved(arg);
+            mGameModeSwitcher->mouseMoved(Ogre::Vector2(arg.x, arg.y));
+        }
+    }
+
+#if defined(__ANDROID__)
+    LOGI("BaseApp[touchMoved]: End"); 
+#endif
+}
+void BaseApp::touchPressed(const OgreBites::TouchFingerEvent& arg)
+{
+#if defined(__ANDROID__)
+    LOGI("BaseApp[touchPressed]: Begin"); 
+#endif
+
+    if(mGameModeSwitcher->isLoadPassed())
+    {
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+            mTrayMgr->touchPressed(arg);
+            mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.x, arg.y));
+        }
+    }
+
+#if defined(__ANDROID__)
+    LOGI("BaseApp[touchPressed]: End"); 
+#endif
+}
+void BaseApp::touchReleased(const OgreBites::TouchFingerEvent& arg)
+{
+#if defined(__ANDROID__)
+    LOGI("BaseApp[touchReleased]: Begin"); 
+#endif
+
+    if(mGameModeSwitcher->isLoadPassed())
+    {
+        //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
+        {
+#if defined(__ANDROID__)
+            LOGI("BaseApp[touchReleased]: before injectMouseUp");
+            LOGI("BaseApp[touchPressed]: %d %d", arg.x, arg.y); 
+#endif
+            mTrayMgr->touchReleased(arg);
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.x, arg.y));
+        }
+    }
+
+#if defined(__ANDROID__)
+    LOGI("BaseApp[touchReleased]: End"); 
+#endif
+}
 
 void BaseApp::parseFile(const std::string& fileName)
 {
@@ -1012,7 +1032,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before CustomTrayManager"); 
 
-            mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
+            mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow));
             //mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
             //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
             mTrayMgr->hideCursor();

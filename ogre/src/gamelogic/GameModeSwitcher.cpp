@@ -424,8 +424,8 @@ void GameModeSwitcher::clear()
 void GameModeSwitcher::loadState(float percent, const std::string& info)
 {
     //consume input events
-    if(mIsInitialLoadPassed)
-        mContext.mInputHandler->capture();
+    //if(mIsInitialLoadPassed)
+        //mContext.mInputHandler->capture();
 
     if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
     {

@@ -75,13 +75,6 @@ void BaseMenuMode::initCamera()
     //mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
     //mModeContext.mGUI->initialise();
 
-    //update mouse position
-    const OIS::MouseState &ms = mModeContext.mInputHandler->getInputContext().mMouse->getMouseState();
-    //MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
-    //MyGUI::PointerManager::getInstance().setVisible(false);
-
-    
-
     //mModeContext.mTrayMgr->showCursor();
 #if !defined(__ANDROID__)
     mModeContext.mTrayMgr->showCursor("Test/Cursor");
@@ -118,6 +111,6 @@ void BaseMenuMode::frameRenderingQueued(const Ogre::FrameEvent &evt)
 {
     customFrameRenderingQueued();
 
-    mModeContext.mInputHandler->capture();
-    mModeContext.mTrayMgr->frameRenderingQueued(evt);
+    //mModeContext.mInputHandler->capture();
+    //mModeContext.mTrayMgr->frameRenderingQueued(evt);
 }

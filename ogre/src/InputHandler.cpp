@@ -4,69 +4,24 @@
 #include "InputHandler.h"
 #include "BaseApp.h"
 
-#include "lua/DMLuaManager.h"
-
 #include "CameraMan.h"
 
 InputHandler::InputHandler(Ogre::RenderWindow* mWindow, BaseApp * app) :
     baseApp(app),
-#if !defined(__ANDROID__)
-    mInputManager(0),
-#endif
     mCameraMan(0)
 {
-#if !defined(__ANDROID__)
-    OIS::ParamList pl;
-    size_t windowHnd = 0;
-    std::ostringstream windowHndStr;
+    OgreBites::ApplicationContext::setup();
 
+    addInputListener(this);
+
+#if !defined(__ANDROID__)
     memset(mKeyCodes, 0, sizeof(bool) * mKeycodesSize);
 
-    mWindow->getCustomAttribute("WINDOW", &windowHnd);
-    windowHndStr << windowHnd;
-    pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-
-    mInputManager = OIS::InputManager::createInputSystem( pl );
-
-    mInputContext.mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
-    mInputContext.mKeyboard->setEventCallback(this);
-
-    mInputContext.mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
-    mInputContext.mMouse->setEventCallback(this);
-    
     //centered mouse
     //http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Initial+Mouse+Position+With+OIS+and+CEGUI
-    OIS::MouseState &mutableMouseState = const_cast<OIS::MouseState &>(mInputContext.mMouse->getMouseState());
-    mutableMouseState.X.abs = mWindow->getWidth() / 2;
-    mutableMouseState.Y.abs = mWindow->getHeight() / 2;
-#endif
-}
-
-void InputHandler::detach()
-{
-#if !defined(__ANDROID__)
-    //Only close for window that created OIS (the main window in these demos)
-    //if( rw == mWindow )
-    {
-        if( mInputManager )
-        {
-            if(mInputContext.mKeyboard)
-            {
-                mInputContext.mKeyboard->setEventCallback(NULL);
-                mInputManager->destroyInputObject( mInputContext.mKeyboard );
-            }
-
-            if(mInputContext.mMouse)
-            {
-                mInputContext.mMouse->setEventCallback(NULL); 
-                mInputManager->destroyInputObject( mInputContext.mMouse );
-            }
-
-            OIS::InputManager::destroyInputSystem(mInputManager);
-            mInputManager = NULL;
-        }
-    }
-
+    //OIS::MouseState &mutableMouseState = const_cast<OIS::MouseState &>(mInputContext.mMouse->getMouseState());
+    //mutableMouseState.X.abs = mWindow->getWidth() / 2;
+    //mutableMouseState.Y.abs = mWindow->getHeight() / 2;
 #endif
 }
 
@@ -77,86 +32,89 @@ void InputHandler::resetCameraMenPointer(CameraMan* cameraMan)
 
 bool InputHandler::noSpecialKey()
 {
+    return false;/*
     return !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Shift)   &&
     !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Ctrl)           &&
-    !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt);
+    !mInputContext.mKeyboard->isModifierDown(OIS::Keyboard::Alt);*/
 }
 
-bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
+bool InputHandler::keyPressed( const OgreBites::KeyboardEvent &arg )
 {
 
-    if(arg.key < mKeycodesSize)
-        mKeyCodes[arg.key] = true;
+    OgreBites::Keycode key = arg.keysym.sym;
 
-    if (arg.key == OIS::KC_ESCAPE)
+    if(key < mKeycodesSize)
+        mKeyCodes[key] = true;
+
+    if (key == SDLK_ESCAPE)
     {
         if(noSpecialKey())
             baseApp->setShutdown(true);
     }
-    else if (arg.key == OIS::KC_RETURN || arg.key == OIS::KC_NUMPADENTER)
+    else if (key == SDLK_RETURN/* || key == SDLK_NUMPADENTER*/)
     {
         if(noSpecialKey())
             baseApp->setShutdown(false);
     }
-    else if (arg.key == OIS::KC_F1)
+    else if (key == SDLK_F1)
     {
         if(noSpecialKey())
             baseApp->createBurnByPlayer();
     }
-    else if (arg.key == OIS::KC_F2)
+    else if (key == SDLK_F2)
     {
         if(noSpecialKey())
             baseApp->createBombByPlayer();
     }
-    else if (arg.key == OIS::KC_F4)
+    else if (key == SDLK_F4)
     {
         if(noSpecialKey())
             baseApp->dropCamera();
     }
-    else if (arg.key == OIS::KC_F5)
+    else if (key == SDLK_F5)
     {
         baseApp->restartRace();
     }
-    else if (arg.key == OIS::KC_SPACE)
+    else if (key == SDLK_SPACE)
     {
         if(mCameraMan)
         {
             baseApp->switchRenderType();
         }
     }
-    else if (arg.key == OIS::KC_1)
+    else if (key == SDLK_1)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_Bumper);
         }
     }
-    else if (arg.key == OIS::KC_2)
+    else if (key == SDLK_2)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_ChassisA);
         }
     }
-    else if (arg.key == OIS::KC_3)
+    else if (key == SDLK_3)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_ChassisB);
         }
     }
-    else if (arg.key == OIS::KC_4)
+    else if (key == SDLK_4)
     {
         if(mCameraMan)
         {
             mCameraMan->setCameraPositionType(CameraPosition_ChassisC);
         }
     }
-    else if (arg.key == OIS::KC_P)
+    else if (key == SDLK_p)
     {
         baseApp->enablePause();
     }
-    else if (arg.key == OIS::KC_TAB)
+    else if (key == SDLK_TAB)
     {
         if(noSpecialKey())
             baseApp->tabPressed();
@@ -170,10 +128,12 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     return true;
 }
 
-bool InputHandler::keyReleased( const OIS::KeyEvent &arg )
+bool InputHandler::keyReleased( const OgreBites::KeyboardEvent &arg )
 {
-    if(arg.key < mKeycodesSize)
-        mKeyCodes[arg.key] = false;
+    OgreBites::Keycode key = arg.keysym.sym;
+
+    if(key < mKeycodesSize)
+        mKeyCodes[key] = false;
 
     //if(mCameraMan)
         //mCameraMan->injectKeyUp(arg);
@@ -183,8 +143,7 @@ bool InputHandler::keyReleased( const OIS::KeyEvent &arg )
     return true;
 }
 
-#if !defined(__ANDROID__)
-bool InputHandler::mouseMoved( const OIS::MouseEvent &arg )
+bool InputHandler::mouseMoved( const OgreBites::MouseMotionEvent &arg )
 {
     baseApp->mouseMoved(arg);
     //if(mCameraMan)
@@ -193,21 +152,41 @@ bool InputHandler::mouseMoved( const OIS::MouseEvent &arg )
     return true;
 }
 
-bool InputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+bool InputHandler::mousePressed( const OgreBites::MouseButtonEvent &arg)
 {
-    baseApp->mousePressed(arg, id);
+    baseApp->mousePressed(arg);
     //if(mCameraMan)
         //mCameraMan->injectMouseDown(arg, id);
 
     return true;
 }
 
-bool InputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+bool InputHandler::mouseReleased( const OgreBites::MouseButtonEvent &arg)
 {
-    baseApp->mouseReleased(arg, id);
+    baseApp->mouseReleased(arg);
     //if(mCameraMan)
         //mCameraMan->injectMouseUp(arg, id);
 
     return true;
 }
-#endif
+
+bool InputHandler::touchMoved(const OgreBites::TouchFingerEvent &arg)
+{
+    baseApp->touchMoved(arg);
+
+    return true;
+}
+
+bool InputHandler::touchPressed(const OgreBites::TouchFingerEvent &arg)
+{
+    baseApp->touchPressed(arg);
+
+    return true;
+}
+
+bool InputHandler::touchReleased(const OgreBites::TouchFingerEvent &arg)
+{
+    baseApp->touchReleased(arg);
+
+    return true;
+}

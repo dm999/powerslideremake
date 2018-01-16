@@ -4,14 +4,14 @@
 
 #include "../includes/OgreInclude.h"
 #include "../includes/OISInclude.h"
-#include "../SdkTrays.h"
+#include "OgreTrays.h"
 
-class CustomTrayManager : public OgreBites::SdkTrayManager
+class CustomTrayManager : public OgreBites::TrayManager
 {
 public :
 
-    CustomTrayManager(const Ogre::String& name, Ogre::RenderWindow* window, OgreBites::InputContext inputContext, SdkTrayListener* listener = 0) 
-        : OgreBites::SdkTrayManager(name, window, inputContext, listener){}
+    CustomTrayManager(const Ogre::String& name, Ogre::RenderWindow* window, TrayListener* listener = 0) 
+        : OgreBites::TrayManager(name, window, listener){}
 
 
     virtual ~CustomTrayManager(){}

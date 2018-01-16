@@ -38,19 +38,19 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     }
 }
 
-void PSPlayerCar::keyDown(OIS::KeyCode key)
+void PSPlayerCar::keyDown(OgreBites::Keycode key)
 {
     switch(key)
     {
-    case OIS::KC_LEFT: 
+    case SDLK_LEFT:
         setSteerLeft(true);
         mWorld->getVehicle(this)->setSteeringLeft(true);
         break;
-    case OIS::KC_RIGHT: 
+    case SDLK_RIGHT:
         setSteerRight(true);
         mWorld->getVehicle(this)->setSteeringRight(true);
         break;
-    case OIS::KC_DOWN: 
+    case SDLK_DOWN:
         mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
 #if defined(__ANDROID__)
@@ -58,14 +58,14 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         setAcceleration(false);
 #endif
         break;
-    case OIS::KC_UP: 
+    case SDLK_UP:
         setAcceleration(true);
         mWorld->getVehicle(this)->setThrottle(1.0f);
         break;
-    case OIS::KC_A: 
+    case SDLK_a:
         mWorld->getVehicle(this)->gearUp();
         break;
-    case OIS::KC_Z: 
+    case SDLK_z:
         mWorld->getVehicle(this)->gearDown();
         break;
     default:
@@ -73,19 +73,19 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
     }
 }
 
-void PSPlayerCar::keyUp(OIS::KeyCode key)
+void PSPlayerCar::keyUp(OgreBites::Keycode key)
 {
     switch(key)
     {
-    case OIS::KC_LEFT: 
+    case SDLK_LEFT:
         setSteerLeft(false);
         mWorld->getVehicle(this)->setSteeringLeft(false);
         break;
-    case OIS::KC_RIGHT: 
+    case SDLK_RIGHT:
         setSteerRight(false);
         mWorld->getVehicle(this)->setSteeringRight(false);
         break;
-    case OIS::KC_DOWN: 
+    case SDLK_DOWN:
         mWorld->getVehicle(this)->setBrakes(0.0f);
         setBrake(false);
 #if defined(__ANDROID__)
@@ -93,7 +93,7 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
         mWorld->getVehicle(this)->setThrottle(1.0f);
 #endif
         break;
-    case OIS::KC_UP: 
+    case SDLK_UP:
         mWorld->getVehicle(this)->setThrottle(0.0f);
         setAcceleration(false);
         break;
@@ -103,30 +103,30 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     }
 }
 
-void PSPlayerCar::mousePressed(OIS::MouseButtonID id)
+void PSPlayerCar::mousePressed(Uint8 id)
 {
-    if(id == OIS::MB_Left)
+    if(id == SDL_BUTTON_LEFT)
     {
         mWorld->getVehicle(this)->setThrottle(1.0f);
         setAcceleration(true);
     }
 
-    if(id == OIS::MB_Right)
+    if(id == SDL_BUTTON_RIGHT)
     {
         mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
     }
 }
 
-void PSPlayerCar::mouseReleased(OIS::MouseButtonID id)
+void PSPlayerCar::mouseReleased(Uint8 id)
 {
-    if(id == OIS::MB_Left)
+    if(id == SDL_BUTTON_LEFT)
     {
         mWorld->getVehicle(this)->setThrottle(0.0f);
         setAcceleration(false);
     }
 
-    if(id == OIS::MB_Right)
+    if(id == SDL_BUTTON_RIGHT)
     {
         mWorld->getVehicle(this)->setBrakes(0.0f);
         setBrake(false);

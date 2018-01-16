@@ -5,7 +5,7 @@
 
 #include "includes/OgreInclude.h"
 #include "includes/OISInclude.h"
-#include "SdkTrays.h"
+#include "OgreTrays.h"
 
 #include "lua/DMLuaManager.h"
 
@@ -56,18 +56,17 @@ public:
 
     //controls
     bool setShutdown(bool isOnEsc);
-    void keyDown(const OIS::KeyEvent &arg );
-    void keyUp(const OIS::KeyEvent &arg );
+    void keyDown(const OgreBites::KeyboardEvent &arg );
+    void keyUp(const OgreBites::KeyboardEvent &arg );
 
-#if !defined(__ANDROID__)
-    void mouseMoved(const OIS::MouseEvent &arg);
-    void mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
-    void mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
-#else
-    void touchMoved(const OIS::MultiTouchEvent& arg);
-    void touchPressed(const OIS::MultiTouchEvent& arg);
-    void touchReleased(const OIS::MultiTouchEvent& arg);
-#endif
+    void mouseMoved(const OgreBites::MouseMotionEvent &arg);
+    void mousePressed(const OgreBites::MouseButtonEvent &arg);
+    void mouseReleased(const OgreBites::MouseButtonEvent &arg);
+
+    void touchMoved(const OgreBites::TouchFingerEvent& arg);
+    void touchPressed(const OgreBites::TouchFingerEvent& arg);
+    void touchReleased(const OgreBites::TouchFingerEvent& arg);
+
 
     GameState& getGameState(){return mGameState;}
 
