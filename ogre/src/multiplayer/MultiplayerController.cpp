@@ -237,7 +237,7 @@ size_t MultiplayerController::getLobbyPing()
 
 size_t MultiplayerController::getSessionPing()const
 {
-    uint64_t res = 0;
+    Ogre::uint64 res = 0;
     if(mSessionStarted && mSession)
     {
         res = mSession->getLastPing();
@@ -250,7 +250,7 @@ void MultiplayerController::parseDataPacket(MultiplayerSessionData& data, const 
 {
     if(jsonObject.has<jsonxx::Number>("x"))
     {
-        data.dataUpdateTimestamp = static_cast<uint64_t>(jsonObject.get<jsonxx::Number>("timestamp"));
+        data.dataUpdateTimestamp = static_cast<Ogre::uint64>(jsonObject.get<jsonxx::Number>("timestamp"));
         data.pos.x = static_cast<float>(jsonObject.get<jsonxx::Number>("x"));
         data.pos.y = static_cast<float>(jsonObject.get<jsonxx::Number>("y"));
         data.pos.z = static_cast<float>(jsonObject.get<jsonxx::Number>("z"));
@@ -266,8 +266,7 @@ void MultiplayerController::parseDataPacket(MultiplayerSessionData& data, const 
         data.velang.z = static_cast<float>(jsonObject.get<jsonxx::Number>("velangz"));
         data.isAcc = jsonObject.get<jsonxx::Boolean>("isAcc");
         data.isBrake = jsonObject.get<jsonxx::Boolean>("isBrake");
-        data.isLeft = jsonObject.get<jsonxx::Boolean>("isLeft");
-        data.isRight = jsonObject.get<jsonxx::Boolean>("isRight");
+        data.steering = static_cast<float>(jsonObject.get<jsonxx::Number>("steering"));
         data.currentLap = static_cast<size_t>(jsonObject.get<jsonxx::Number>("lap"));
         data.lapPosition = static_cast<Ogre::Real>(jsonObject.get<jsonxx::Number>("lappos"));
 
@@ -294,8 +293,7 @@ jsonxx::Object MultiplayerController::fillDataPacket(const MultiplayerSessionDat
     jsonObject << "velangz" << data.velang.z;
     jsonObject << "isAcc" << data.isAcc;
     jsonObject << "isBrake" << data.isBrake;
-    jsonObject << "isLeft" << data.isLeft;
-    jsonObject << "isRight" << data.isRight;
+    jsonObject << "steering" << data.steering;
     jsonObject << "lap" << data.currentLap;
     jsonObject << "lappos" << data.lapPosition;
 

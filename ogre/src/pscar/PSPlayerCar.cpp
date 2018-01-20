@@ -43,11 +43,9 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
     switch(key)
     {
     case OIS::KC_LEFT: 
-        setSteerLeft(true);
         mWorld->getVehicle(this)->setSteeringLeft(true);
         break;
     case OIS::KC_RIGHT: 
-        setSteerRight(true);
         mWorld->getVehicle(this)->setSteeringRight(true);
         break;
     case OIS::KC_DOWN: 
@@ -78,11 +76,9 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
     switch(key)
     {
     case OIS::KC_LEFT: 
-        setSteerLeft(false);
         mWorld->getVehicle(this)->setSteeringLeft(false);
         break;
     case OIS::KC_RIGHT: 
-        setSteerRight(false);
         mWorld->getVehicle(this)->setSteeringRight(false);
         break;
     case OIS::KC_DOWN: 
@@ -161,9 +157,4 @@ bool PSPlayerCar::isCollideChassis(const PSBaseCar& otherCar)const
     }
 #endif
     return res;
-}
-
-Ogre::Real PSPlayerCar::getSteering() const
-{
-    return mPhysicsVehicle->getOriginalSteering();
 }

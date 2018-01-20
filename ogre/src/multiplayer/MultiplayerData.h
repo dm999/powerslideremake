@@ -76,10 +76,9 @@ struct MultiplayerSessionData
     Ogre::Vector3 velang;
     bool isAcc;
     bool isBrake;
-    bool isLeft;
-    bool isRight;
+    Ogre::Real steering;
 
-    uint64_t dataUpdateTimestamp;//other client update timestamp
+    Ogre::uint64 dataUpdateTimestamp;//other client update timestamp
 
     size_t currentLap;
     Ogre::Real lapPosition;
@@ -88,7 +87,7 @@ struct MultiplayerSessionData
     pos(Ogre::Vector3::ZERO),
     vel(Ogre::Vector3::ZERO),
     velang(Ogre::Vector3::ZERO),
-    isAcc(false), isBrake(false), isLeft(false), isRight(false),
+    isAcc(false), isBrake(false), steering(0.0f),
     dataUpdateTimestamp(0),
     currentLap(0), lapPosition(0.0f)
     {}

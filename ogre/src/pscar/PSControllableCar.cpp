@@ -33,8 +33,6 @@ Ogre::NameGenerator PSControllableCar::nameGenMaterialsParticles("Scene/Material
 PSControllableCar::PSControllableCar() :
     mIsDisableMouse(true),
     mCameraMan(NULL),
-    mSteeringLeft(false),
-    mSteeringRight(false),
     mBrakeEnabled(false),
     mAccelEnabled(false)
 {
@@ -51,8 +49,6 @@ void PSControllableCar::initModel(  lua_State * pipeline,
                                     bool isAI)
 {
     mIsDisableMouse = true;
-    mSteeringLeft = false;
-    mSteeringRight = false;
     mBrakeEnabled = false;
     mAccelEnabled = false;
 #if defined(__ANDROID__)

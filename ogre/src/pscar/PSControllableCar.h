@@ -43,12 +43,6 @@ public:
     void setBrake(bool isEnable){mBrakeEnabled = isEnable;}
     bool getBrake() const {return mBrakeEnabled;} // multiplayer
 
-    void setSteerLeft(bool isEnable){mSteeringLeft = isEnable;}
-    bool getSteerLeft()const {return mSteeringLeft;} // multiplayer
-
-    void setSteerRight(bool isEnable){mSteeringRight = isEnable;}
-    bool getSteerRight() const {return mSteeringRight;} // multiplayer
-
     bool getAcceleration(){return mAccelEnabled;}
     bool getBrake(){return mBrakeEnabled;}
 
@@ -102,8 +96,6 @@ private:
 
 protected:
 
-    bool mSteeringLeft;
-    bool mSteeringRight;
     bool mBrakeEnabled;
     bool mAccelEnabled;
 

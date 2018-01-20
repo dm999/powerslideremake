@@ -578,7 +578,7 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Enter");
 
-    mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getSteering(), mModeContext.mGameState.getPlayerCar().getBrake());
+    mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getOriginalSteering(), mModeContext.mGameState.getPlayerCar().getBrake());
 
     mWorld->timeStep(mModeContext.mGameState);
 

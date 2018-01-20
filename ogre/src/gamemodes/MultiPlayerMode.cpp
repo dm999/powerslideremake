@@ -246,8 +246,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
             data.velang = playerAngVel;
             data.isAcc = mModeContext.mGameState.getPlayerCar().getAcceleration();
             data.isBrake = mModeContext.mGameState.getPlayerCar().getBrake();
-            data.isLeft = mModeContext.mGameState.getPlayerCar().getSteerLeft();
-            data.isRight = mModeContext.mGameState.getPlayerCar().getSteerRight();
+            data.steering = mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getOriginalSteering();
             data.currentLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
             data.lapPosition = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
 
@@ -267,8 +266,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
 
                 aiData.isAcc = mModeContext.mGameState.getAICar(q).getAcceleration();
                 aiData.isBrake = mModeContext.mGameState.getAICar(q).getBrake();
-                aiData.isLeft = mModeContext.mGameState.getAICar(q).getSteerLeft();
-                aiData.isRight = mModeContext.mGameState.getAICar(q).getSteerRight();
+                aiData.steering = mModeContext.mGameState.getAICar(q).getPhysicsVehicle()->getOriginalSteering();
 
                 aiData.currentLap = mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap();
                 aiData.lapPosition = mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition();
@@ -580,9 +578,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
             {
                 PSMultiplayerCar& aiCar = mModeContext.mGameState.getMultiplayerCarAI(q);
 
-                uint64_t lastTimestamp = aiCar.getLastTimeOfUpdate();
-
-                if(lastTimestamp < aiPlayersSessionData[q].dataUpdateTimestamp)
+                if(aiCar.getLastTimeOfUpdate() < aiPlayersSessionData[q].dataUpdateTimestamp)
                 {
                     const Ogre::Real carMass = aiCar.getPhysicsVehicle()->getVehicleSetup().mChassisMass;
 
@@ -614,8 +610,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                     aiCar.setAcceleration(aiPlayersSessionData[q].isAcc);
                     aiCar.setBrake(aiPlayersSessionData[q].isBrake);
-                    aiCar.setSteerLeft(aiPlayersSessionData[q].isLeft);
-                    aiCar.setSteerRight(aiPlayersSessionData[q].isRight);
+                    aiCar.getPhysicsVehicle()->setSteering(aiPlayersSessionData[q].steering);
                     aiCar.setCurrentLap(aiPlayersSessionData[q].currentLap);
                     aiCar.setLapPosition(aiPlayersSessionData[q].lapPosition);
                 }
@@ -629,9 +624,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
         {
             PSMultiplayerCar& humanCar = mModeContext.mGameState.getMultiplayerCarHuman((*i).first);
 
-            uint64_t lastTimestamp = humanCar.getLastTimeOfUpdate();
-
-            if(lastTimestamp < (*i).second.dataUpdateTimestamp)
+            if(humanCar.getLastTimeOfUpdate() < (*i).second.dataUpdateTimestamp)
             {
                 const Ogre::Real carMass = humanCar.getPhysicsVehicle()->getVehicleSetup().mChassisMass;
 
@@ -662,8 +655,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
-                humanCar.setSteerLeft((*i).second.isLeft);
-                humanCar.setSteerRight((*i).second.isRight);
+                humanCar.getPhysicsVehicle()->setSteering((*i).second.steering);
                 humanCar.setCurrentLap((*i).second.currentLap);
                 humanCar.setLapPosition((*i).second.lapPosition);
             }
@@ -677,9 +669,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
         {
             PSMultiplayerCar& humanCar = mModeContext.mGameState.getMultiplayerCarHuman((*i).first);
 
-            uint64_t lastTimestamp = humanCar.getLastTimeOfUpdate();
-
-            if(lastTimestamp < (*i).second.dataUpdateTimestamp)
+            if(humanCar.getLastTimeOfUpdate() < (*i).second.dataUpdateTimestamp)
             {
                 const Ogre::Real carMass = humanCar.getPhysicsVehicle()->getVehicleSetup().mChassisMass;
 
@@ -710,8 +700,7 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                 humanCar.setAcceleration((*i).second.isAcc);
                 humanCar.setBrake((*i).second.isBrake);
-                humanCar.setSteerLeft((*i).second.isLeft);
-                humanCar.setSteerRight((*i).second.isRight);
+                humanCar.getPhysicsVehicle()->setSteering((*i).second.steering);
                 humanCar.setCurrentLap((*i).second.currentLap);
                 humanCar.setLapPosition((*i).second.lapPosition);
             }
