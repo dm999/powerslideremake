@@ -18,6 +18,8 @@ public:
     MultiPlayerMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller);
     virtual ~MultiPlayerMode(){}
 
+    void initCamera()override;
+
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
 
     //LapUtils

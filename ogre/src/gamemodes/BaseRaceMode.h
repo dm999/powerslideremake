@@ -103,6 +103,8 @@ protected:
 
     CommonIncludes::shared_ptr<UIRace> mUIRace;
 
+    DMLuaManager mLuaManager;
+
 #if SHOW_DETAILS_PANEL
     OgreBites::ParamsPanel* mDetailsPanel;     // sample details panel
 #endif
@@ -128,8 +130,6 @@ private:
     float mShadowLightDistanceFromCar;
 
     bool mIsGlobalReset;
-
-    DMLuaManager mLuaManager;
 
     Ogre::Camera* mRearCamera;
 

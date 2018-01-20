@@ -61,6 +61,18 @@ MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext, const CommonInc
         mMultiplayerController->setEvents(this);
 }
 
+void MultiPlayerMode::initCamera()
+{
+
+    BaseRaceMode::initCamera();
+
+    Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);
+    bool isCamToAI = mLuaManager.ReadScalarBool("Scene.IsCamToAI", mModeContext.mPipeline);
+
+    if(isCamToAI)
+        mModeContext.mGameState.getMultiplayerCarAI(aiCamIndex).setCameraMan(mCameraMan.get());
+}
+
 void MultiPlayerMode::onLapFinished()
 {
     size_t lap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
@@ -437,6 +449,9 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
     mModeContext.mGameState.clearMultiplayerCarsHuman();
     mModeContext.mGameState.setMultiplayerCountAI(0);
 
+    Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);
+    bool isCamToAI = mLuaManager.ReadScalarBool("Scene.IsCamToAI", mModeContext.mPipeline);
+
     if(sessionStartInfo.mIsHost)
     {
         //only human cars
@@ -503,7 +518,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
                 humanCar.initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), humanCharacter, 
                     mModeContext.mGameState.getInitialVehicleSetup()[q], 
-                    false, sessionStartInfo.mPlayers[q], true);
+                    !isCamToAI, sessionStartInfo.mPlayers[q], true);
                 humanCar.initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
                 humanCar.repositionVehicle(mModeContext.mGameState.getInitialVehicleSetup()[aiCount + q].mTrackPosition);
@@ -528,9 +543,13 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
 
             mModeContext.mGameState.getMultiplayerCarAI(q).setCharacterName(aiCharacter);
 
+            bool isCam = (q == aiCamIndex);
+            if(!isCamToAI)
+                isCam = false;
+
             mModeContext.mGameState.getMultiplayerCarAI(q).initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), aiCharacter, 
                 mModeContext.mGameState.getInitialVehicleSetup()[q], 
-                false, "", false);
+                isCam, "", false);
 
             mModeContext.mGameState.getMultiplayerCarAI(q).initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
