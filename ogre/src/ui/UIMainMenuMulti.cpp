@@ -92,6 +92,22 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mWidgetJoin = createButton(trayMgr, OgreBites::TL_NONE, "mWidgetJoin", "Ready", 100.0f);
     }
 
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(189.0f, 22.0f * q + 112.0f, 0.0f, 0.0f);
+            mChatroomPlayers[q] = createTextArea("MainWindowPlayers1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mChatroomPlayers[q]->setCaption("");
+            mChatroomPlayers[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mChatroomPlayers[q]->setSpaceWidth(9.0f);
+            mChatroomPlayers[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mChatroomPlayers[q]->setAlignment(Ogre::TextAreaOverlayElement::Right);
+            mChatroomPlayers[q]->setFontName("SdkTrays/Caption");
+            mChatroomPlayers[q]->setColour(Ogre::ColourValue::White);
+            mMainBackground->addChild(mChatroomPlayers[q]);
+        }
+    }
+
 
 #if 0
     {
@@ -496,6 +512,57 @@ void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 
     mWidgetEvents->setScrollPosition(0);
     */
+}
+
+void UIMainMenuMulti::roomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)
+{
+    mPlayerToChatList.clear();
+
+    mChatroomPlayers[0]->setCaption(player);
+
+    mPlayerToChatList.insert(std::make_pair(player, 0));
+
+    for(size_t q = 0; q < players.size(); ++q)
+    {
+        mChatroomPlayers[q + 1]->setCaption(players[q]);
+        mPlayerToChatList.insert(std::make_pair(players[q], q + 1));
+    }
+}
+
+void UIMainMenuMulti::roomJoined(const std::string& player)
+{
+    size_t nextIndex = mPlayerToChatList.size();
+    mChatroomPlayers[nextIndex]->setCaption(player);
+    mPlayerToChatList.insert(std::make_pair(player, nextIndex));
+}
+
+void UIMainMenuMulti::roomLeft(const std::string& player)
+{
+    std::map<std::string, size_t>::iterator i = mPlayerToChatList.find(player);
+    if(i != mPlayerToChatList.end())
+    {
+        size_t indexToDelete = (*i).second;
+
+        mPlayerToChatList.erase(i);
+
+        for(std::map<std::string, size_t>::iterator ii = mPlayerToChatList.begin(), j = mPlayerToChatList.end(); ii != j; ++ii)
+        {
+            if((*ii).second > indexToDelete)
+            {
+                --(*ii).second;
+            }
+        }
+
+        for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+        {
+            mChatroomPlayers[q]->setCaption("");
+        }
+
+        for(std::map<std::string, size_t>::iterator ii = mPlayerToChatList.begin(), j = mPlayerToChatList.end(); ii != j; ++ii)
+        {
+            mChatroomPlayers[(*ii).second]->setCaption((*ii).first);
+        }
+    }
 }
 
 void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const

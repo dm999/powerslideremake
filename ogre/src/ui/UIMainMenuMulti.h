@@ -43,6 +43,10 @@ public:
 
     void addEvent(const std::string& eventItem, bool isMessage = false);
 
+    void roomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players);
+    void roomJoined(const std::string& player);
+    void roomLeft(const std::string& player);
+
     void buttonHit(OgreBites::Button* button) override;
 
 private:
@@ -56,6 +60,9 @@ private:
     MenuMultiMode * mMenuMultiMode;
 
     Ogre::PanelOverlayElement* mMainBackground;
+
+    Ogre::TextAreaOverlayElement * mChatroomPlayers[GameState::mRaceGridCarsMax];
+    std::map<std::string, size_t> mPlayerToChatList;
 
     OgreBites::Button* mWidgetJoin;
     OgreBites::Button* mWidgetStart;

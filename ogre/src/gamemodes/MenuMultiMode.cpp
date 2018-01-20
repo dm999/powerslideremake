@@ -141,6 +141,9 @@ void MenuMultiMode::reloadTextures()
 
 void MenuMultiMode::onRoomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)
 {
+
+    mUIMainMenuMulti->roomEnter(roomName, player, players);
+
     mUIMainMenuMulti->addEvent("room entered: " + roomName + " by player: " + player);
 
     for(size_t q = 0; q < players.size(); ++q)
@@ -151,16 +154,19 @@ void MenuMultiMode::onRoomEnter(const std::string& roomName, const std::string& 
 
 void MenuMultiMode::onPlayerEjected(const std::string& player)
 {
+    mUIMainMenuMulti->roomLeft(player);
     mUIMainMenuMulti->addEvent("player [" + player + "] ejected");
 }
 
 void MenuMultiMode::onPlayerJoined(const std::string& player)
 {
+    mUIMainMenuMulti->roomJoined(player);
     mUIMainMenuMulti->addEvent("player [" + player + "] joined");
 }
 
 void MenuMultiMode::onPlayerLeft(const std::string& player)
 {
+    mUIMainMenuMulti->roomLeft(player);
     mUIMainMenuMulti->addEvent("player [" + player + "] left");
 }
 
