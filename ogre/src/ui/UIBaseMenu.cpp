@@ -58,6 +58,7 @@ UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
 
 void UIBaseMenu::loadColorTextures()
 {
+    TextureLoader().generate("CustomBackgroundTransparent", 64, 64, Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.0f));
     TextureLoader().generate("CustomBackgroundBlack");
     TextureLoader().generate("CustomBackgroundBlackTransparent", 64, 64, Ogre::ColourValue(0.0f, 0.0f, 0.0f, 0.5f));
     TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
@@ -114,6 +115,21 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
 
 void UIBaseMenu::createColorMaterials()
 {
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("CustomBackgroundTransparent");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/CustomBackgroundTransparent", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
     {
         std::vector<Ogre::String> texName;
         texName.push_back("CustomBackgroundBlack");

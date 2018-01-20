@@ -25,6 +25,7 @@
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : UIBaseMenu(modeContext),
     mMenuMultiMode(menuMultiMode),
+    mEditBoxMessage(50),
     mWidgetJoin(NULL),
     mWidgetStart(NULL)
 
@@ -97,7 +98,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         {
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(189.0f, 22.0f * q + 112.0f, 0.0f, 0.0f);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(185.0f, 22.0f * q + 110.0f, 0.0f, 0.0f);
             mChatroomPlayers[q] = createTextArea("MainWindowPlayers1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
             mChatroomPlayers[q]->setCaption("");
             mChatroomPlayers[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -127,8 +128,8 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
     }
 
     {
-        mEditBoxMessage.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
-        mEditBoxMessage.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(189.0f, 103.0f, 450.0f, 18.0f), 36.0f, true);
+        mEditBoxMessage.setBackgroundMaterial("Test/CustomBackgroundTransparent");
+        mEditBoxMessage.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(189.0f, 105.0f, 450.0f, 18.0f), 36.0f, true);
         mEditBoxMessage.setText("");
     }
 
@@ -713,6 +714,7 @@ void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
 void UIMainMenuMulti::addCurrentPlayer(const std::string& player)
 {
     mChatroomPlayers[0]->setCaption(player);
+    mChatroomPlayers[0]->setColour(Ogre::ColourValue::White);
 
     mPlayerToChatList.insert(std::make_pair(player, 0));
 }
@@ -721,6 +723,7 @@ void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bo
 {
     mChatroomPlayers[index + 1]->setCaption(player);
     mPlayerToChatList.insert(std::make_pair(player, index + 1));
+    mChatroomPlayers[index + 1]->setColour(Ogre::ColourValue::White);
     if(isInSession)
         mChatroomPlayers[index + 1]->setColour(Ogre::ColourValue(1.0f, 1.0f, 0.0f));
 }
