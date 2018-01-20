@@ -23,7 +23,7 @@ public:
     UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode);
     ~UIMainMenuMulti(){}
 
-    void load(CustomTrayManager* trayMgr, const GameState& gameState);
+    void load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu);
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 
@@ -66,6 +66,9 @@ private:
     void updateRoomState(const std::string& playerMessage = "")const;
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
+
+    void addCurrentPlayer(const std::string& player);
+    void addOtherPlayer(size_t index, const std::string& player, bool isInSession);
 
     MenuMultiMode * mMenuMultiMode;
 

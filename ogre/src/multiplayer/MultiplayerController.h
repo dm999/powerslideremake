@@ -31,6 +31,9 @@ public:
 
     void setBroadcastInterval(size_t interval){mBroadcastInterval = interval;}
 
+    const multislider::RoomInfo& getRoomInfo() const;
+    const std::string& getPlayerName() const;
+
 protected:
 
     // Lobby callback

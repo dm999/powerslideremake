@@ -246,6 +246,16 @@ size_t MultiplayerController::getSessionPing()const
     return static_cast<size_t>(res);
 }
 
+const multislider::RoomInfo& MultiplayerController::getRoomInfo() const
+{
+    return mLobby->getRoomInfo();
+}
+
+const std::string& MultiplayerController::getPlayerName() const
+{
+    return mLobby->getPlayerName();
+}
+
 void MultiplayerController::parseDataPacket(MultiplayerSessionData& data, const jsonxx::Object& jsonObject)
 {
     if(jsonObject.has<jsonxx::Number>("x"))

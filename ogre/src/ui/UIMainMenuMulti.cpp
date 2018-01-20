@@ -39,7 +39,7 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
                                 "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
 }
 
-void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState)
+void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu)
 {
 
 
@@ -130,6 +130,21 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mEditBoxMessage.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
         mEditBoxMessage.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(189.0f, 103.0f, 450.0f, 18.0f), 36.0f, true);
         mEditBoxMessage.setText("");
+    }
+
+    if(!isEnterFromBaseMenu)
+    {
+        const multislider::RoomInfo& roomInfo = mMenuMultiMode->getMultiplayerController()->getRoomInfo();
+        const std::string& player = mMenuMultiMode->getMultiplayerController()->getPlayerName();
+        const std::vector<std::string>& players = roomInfo.getPlayers();
+        addCurrentPlayer(player);
+        for(size_t q = 0, index = 0; q < players.size(); ++q)
+        {
+            if(players[q] != player)
+            {
+                addOtherPlayer(index++, players[q], false);
+            }
+        }
     }
 
 
@@ -571,24 +586,17 @@ void UIMainMenuMulti::addEvent(const std::string& eventItem, bool isMessage)
 
 void UIMainMenuMulti::roomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players)
 {
-    mPlayerToChatList.clear();
-
-    mChatroomPlayers[0]->setCaption(player);
-
-    mPlayerToChatList.insert(std::make_pair(player, 0));
+    addCurrentPlayer(player);
 
     for(size_t q = 0; q < players.size(); ++q)
     {
-        mChatroomPlayers[q + 1]->setCaption(players[q]);
-        mPlayerToChatList.insert(std::make_pair(players[q], q + 1));
+        addOtherPlayer(q, players[q], false);
     }
 }
 
 void UIMainMenuMulti::roomJoined(const std::string& player)
 {
-    size_t nextIndex = mPlayerToChatList.size();
-    mChatroomPlayers[nextIndex]->setCaption(player);
-    mPlayerToChatList.insert(std::make_pair(player, nextIndex));
+    addOtherPlayer(mPlayerToChatList.size() - 1, player, false);
 }
 
 void UIMainMenuMulti::roomLeft(const std::string& player)
@@ -700,6 +708,21 @@ void UIMainMenuMulti::setMiscText(const std::string& text, const Ogre::ColourVal
 
 void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
 {
+}
+
+void UIMainMenuMulti::addCurrentPlayer(const std::string& player)
+{
+    mChatroomPlayers[0]->setCaption(player);
+
+    mPlayerToChatList.insert(std::make_pair(player, 0));
+}
+
+void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bool isInSession)
+{
+    mChatroomPlayers[index + 1]->setCaption(player);
+    mPlayerToChatList.insert(std::make_pair(player, index + 1));
+    if(isInSession)
+        mChatroomPlayers[index + 1]->setColour(Ogre::ColourValue(1.0f, 1.0f, 0.0f));
 }
 
 #endif
