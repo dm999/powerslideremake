@@ -95,7 +95,7 @@ namespace multislider
 
             //d.polubotko: icmp seems not allowed on android?
 #if !defined(__ANDROID__)
-            mPinger.reset(new Pinger(mIoServicePinger, ip.c_str()));
+            //mPinger.reset(new Pinger(mIoServicePinger, ip.c_str()));
 #endif
 
 #if defined(__ANDROID__)
