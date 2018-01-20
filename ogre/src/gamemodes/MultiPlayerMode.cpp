@@ -439,6 +439,10 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
 
 void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo)
 {
+    //hack to enable correct steering
+    InputType originalInput = mModeContext.mGameState.getInputType();
+    mModeContext.mGameState.setInputType(itMouse);
+
     size_t aiCount = sessionStartInfo.mAISkins.size();
 
     //playerIndex should start from 0
@@ -556,6 +560,9 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
             mLapController.addCar(&mModeContext.mGameState.getMultiplayerCarAI(q));
         }
     }
+
+    //hack to enable correct steering
+    mModeContext.mGameState.setInputType(originalInput);
 
     mIsSessionStarted = true;
 }
