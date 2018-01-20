@@ -12,6 +12,8 @@
 
 #include "../GameState.h"
 
+#include "elements/UIEditBox.h"
+
 class MenuMultiMode;
 
 class UIMainMenuMulti : public UIBaseMenu, public OgreBites::SdkTrayListener
@@ -23,13 +25,17 @@ public:
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState);
 
-    void frameStarted(const Ogre::FrameEvent &evt) override {}
+    void frameStarted(const Ogre::FrameEvent &evt) override;
 
     //void processButtonClick(MyGUI::Widget* sender);
     //void processChangeComboBox(MyGUI::Widget* sender, size_t index);
     //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
 
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char);
+
+    void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos);
 
     void setMiscText(const std::string& text, const Ogre::ColourValue& color = Ogre::ColourValue::White);
 
@@ -46,8 +52,12 @@ public:
     void roomEnter(const std::string& roomName, const std::string& player, const std::vector<std::string>& players);
     void roomJoined(const std::string& player);
     void roomLeft(const std::string& player);
+    void playerMessage(const std::string& player, const std::string& message);
+    void playerReadyChange(const std::string& player, bool isReady);
 
     void buttonHit(OgreBites::Button* button) override;
+
+    void destroy(CustomTrayManager* trayMgr) override;
 
 private:
 
@@ -63,6 +73,8 @@ private:
 
     Ogre::TextAreaOverlayElement * mChatroomPlayers[GameState::mRaceGridCarsMax];
     std::map<std::string, size_t> mPlayerToChatList;
+    Ogre::TextAreaOverlayElement * mChatroomPlayersMessages[GameState::mRaceGridCarsMax - 1];//minus self
+    UIEditBox mEditBoxMessage;
 
     OgreBites::Button* mWidgetJoin;
     OgreBites::Button* mWidgetStart;

@@ -31,6 +31,7 @@ namespace{
 UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
     : mModeContext(modeContext)
 {
+    memset(mControls, 0, sizeof(Ogre::PanelOverlayElement*) * mControlsCount);
     memset(mControlClicked, 0, sizeof(bool) * mControlsCount);
 
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
@@ -416,10 +417,13 @@ void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
 {
     for(int q = 0; q < mControlsCount; ++q)
     {
-        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        if(mControls[q])
         {
-            mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
-            mControlClicked[q] = true;
+            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            {
+                mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                mControlClicked[q] = true;
+            }
         }
     }
 }
@@ -428,13 +432,16 @@ void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
 {
     for(int q = 0; q < mControlsCount; ++q)
     {
-        mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-        mControlClicked[q] = false;
-
-        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        if(mControls[q])
         {
-            mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
-            panelHit(mControls[q]);
+            mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            mControlClicked[q] = false;
+
+            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            {
+                mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                panelHit(mControls[q]);
+            }
         }
     }
 }
@@ -443,18 +450,21 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
 {
     for(int q = 0; q < mControlsCount; ++q)
     {
-        if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+        if(mControls[q])
         {
-            if(mControlClicked[q])
-                mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            {
+                if(mControlClicked[q])
+                    mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                else
+                    mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                mControlsText[q]->show();
+            }
             else
-                mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
-            mControlsText[q]->show();
-        }
-        else
-        {
-            mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mControlsText[q]->hide();
+            {
+                mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+                mControlsText[q]->hide();
+            }
         }
     }
 }

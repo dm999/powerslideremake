@@ -55,6 +55,8 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
 
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
+    createCommonMaterials();
+
     //main background
     {
         std::vector<Ogre::String> texName;
@@ -106,6 +108,28 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
             mChatroomPlayers[q]->setColour(Ogre::ColourValue::White);
             mMainBackground->addChild(mChatroomPlayers[q]);
         }
+    }
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax - 1; ++q)
+    {
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(189.0f, 22.0f * (q + 1) + 112.0f, 0.0f, 0.0f);
+            mChatroomPlayersMessages[q] = createTextArea("MainWindowPlayersMessages1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mChatroomPlayersMessages[q]->setCaption("");
+            mChatroomPlayersMessages[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mChatroomPlayersMessages[q]->setSpaceWidth(9.0f);
+            mChatroomPlayersMessages[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mChatroomPlayersMessages[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mChatroomPlayersMessages[q]->setFontName("SdkTrays/Caption");
+            mChatroomPlayersMessages[q]->setColour(Ogre::ColourValue::White);
+            mMainBackground->addChild(mChatroomPlayersMessages[q]);
+        }
+    }
+
+    {
+        mEditBoxMessage.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
+        mEditBoxMessage.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(189.0f, 103.0f, 450.0f, 18.0f), 36.0f, true);
+        mEditBoxMessage.setText("");
     }
 
 
@@ -278,8 +302,6 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
     }
 #endif
 
-    createCommonMaterials();
-
 }
 
 #if defined(__ANDROID__)
@@ -289,8 +311,27 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 }
 #endif
 
+void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)
+{
+    mEditBoxMessage.frameStarted(evt);
+}
+
+void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
+{
+    mEditBoxMessage.keyUp(_key, _char);
+    updateRoomState(mEditBoxMessage.getText());
+}
+
+void UIMainMenuMulti::mousePressed(const Ogre::Vector2& pos)
+{
+    UIBaseMenu::mousePressed(pos);
+    mEditBoxMessage.mouseReleased(pos);
+}
+
 void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
 {
+    UIBaseMenu::mouseReleased(pos);
+
     if(mWidgetJoin && OgreBites::Widget::isCursorOver(mWidgetJoin->getOverlayElement(), pos, 0))
     {
         buttonHit(mWidgetJoin);
@@ -299,6 +340,11 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
     {
         buttonHit(mWidgetStart);
     }
+}
+
+void UIMainMenuMulti::mouseMoved(const Ogre::Vector2& pos)
+{
+    UIBaseMenu::mouseMoved(pos);
 }
 
 void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
@@ -372,6 +418,13 @@ void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
 #if defined(__ANDROID__)
     LOGI("UIMainMenuMulti[buttonHit]: End"); 
 #endif
+}
+
+void UIMainMenuMulti::destroy(CustomTrayManager* trayMgr)
+{
+    UIBase::destroy(trayMgr);
+
+    mEditBoxMessage.destroy(trayMgr);
 }
 
 #if 0
@@ -562,6 +615,32 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
         {
             mChatroomPlayers[(*ii).second]->setCaption((*ii).first);
         }
+    }
+}
+
+void UIMainMenuMulti::playerMessage(const std::string& player, const std::string& message)
+{
+    std::map<std::string, size_t>::iterator i = mPlayerToChatList.find(player);
+    if(i != mPlayerToChatList.end())
+    {
+        size_t index = (*i).second;
+        if(index > 0)
+        {
+            mChatroomPlayersMessages[index - 1]->setCaption(message);
+        }
+    }
+}
+
+void UIMainMenuMulti::playerReadyChange(const std::string& player, bool isReady)
+{
+    std::map<std::string, size_t>::iterator i = mPlayerToChatList.find(player);
+    if(i != mPlayerToChatList.end())
+    {
+        size_t index = (*i).second;
+        if(!isReady)
+            mChatroomPlayers[index]->setColour(Ogre::ColourValue::White);
+        else
+            mChatroomPlayers[index]->setColour(Ogre::ColourValue::Green);
     }
 }
 

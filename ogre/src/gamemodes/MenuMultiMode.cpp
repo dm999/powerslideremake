@@ -93,10 +93,18 @@ void MenuMultiMode::frameStarted(const Ogre::FrameEvent &evt)
     {
         mMultiplayerController->receiveData();
     }
+
+    mUIMainMenuMulti->frameStarted(evt);
+}
+
+void MenuMultiMode::keyUp(MyGUI::KeyCode _key, wchar_t _char )
+{
+    mUIMainMenuMulti->keyUp(_key, _char);
 }
 
 void MenuMultiMode::mousePressed(const Ogre::Vector2& pos)
 {
+    mUIMainMenuMulti->mousePressed(pos);
 }
 
 void MenuMultiMode::mouseReleased(const Ogre::Vector2& pos)
@@ -106,6 +114,7 @@ void MenuMultiMode::mouseReleased(const Ogre::Vector2& pos)
 
 void MenuMultiMode::mouseMoved(const Ogre::Vector2& pos)
 {
+    mUIMainMenuMulti->mouseMoved(pos);
 }
 
 void MenuMultiMode::onSessionReadyToStart()
@@ -192,30 +201,22 @@ void MenuMultiMode::onRoomClosed(const std::string& player)
 
 void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
-    if(data.mPlayerMessage.empty())
+    mUIMainMenuMulti->playerReadyChange(player, data.mIsReady);
+
+    mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
+
+    //host data
+    if(!data.mTrackName.empty())
     {
-        if(data.mIsReady)
-            mUIMainMenuMulti->addEvent("player [" + player + "] ready");
-        else
-            mUIMainMenuMulti->addEvent("player [" + player + "] not ready");
+        mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
+        mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
+        mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
+        mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
 
-        mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
-
-        //host data
-        if(!data.mTrackName.empty())
-        {
-            mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
-            mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
-            mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
-            mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
-
-            mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
-        }
+        mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
     }
-    else
-    {
-        mUIMainMenuMulti->addEvent(player + ": " + data.mPlayerMessage, true);
-    }
+
+    mUIMainMenuMulti->playerMessage(player, data.mPlayerMessage);
 }
 
 void MenuMultiMode::onError(const std::string& message)
