@@ -318,14 +318,16 @@ void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)
 
 void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
+#if !defined(__ANDROID__)
     mEditBoxMessage.keyUp(_key, _char);
     updateRoomState(mEditBoxMessage.getText());
+#endif
 }
 
 void UIMainMenuMulti::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
-    mEditBoxMessage.mouseReleased(pos);
+    //mEditBoxMessage.mouseReleased(pos);
 }
 
 void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
@@ -595,6 +597,7 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
     if(i != mPlayerToChatList.end())
     {
         size_t indexToDelete = (*i).second;
+        size_t indexToDeleteMessage = indexToDelete - 1;
 
         mPlayerToChatList.erase(i);
 
@@ -608,6 +611,15 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
 
         for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
         {
+            if(q >= indexToDeleteMessage && q < (GameState::mRaceGridCarsMax - 1))
+            {
+                size_t indexToRead = q + 1;
+                if(indexToRead < (GameState::mRaceGridCarsMax - 1))
+                {
+                    mChatroomPlayersMessages[q]->setCaption(mChatroomPlayersMessages[indexToRead]->getCaption());
+                    mChatroomPlayersMessages[indexToRead]->setCaption("");
+                }
+            }
             mChatroomPlayers[q]->setCaption("");
         }
 
