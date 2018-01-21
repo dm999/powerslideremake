@@ -529,7 +529,9 @@ bool BaseApp::setShutdown(bool isOnEsc)
             )
             mGameModeSwitcher->switchMode(ModeMenu);
 
-        if(mGameModeSwitcher->getMode() == ModeMenuMulti)
+        if( mGameModeSwitcher->getMode() == ModeMenuMulti    &&
+            isOnEsc
+            )
             mGameModeSwitcher->switchMode(ModeMenu);
 
         if( mGameModeSwitcher->getMode() == ModeRaceMulti   &&

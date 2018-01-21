@@ -336,7 +336,11 @@ void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
 #if !defined(__ANDROID__)
     mEditBoxMessage.keyUp(_key, _char);
-    updateRoomState(mEditBoxMessage.getText());
+    if(_key == MyGUI::KeyCode::Return || _key == MyGUI::KeyCode::NumpadEnter)
+    {
+        updateRoomState(mEditBoxMessage.getText());
+        mEditBoxMessage.setText("");
+    }
 #endif
 }
 
