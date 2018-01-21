@@ -51,7 +51,7 @@ void UIEditBox::setBackgroundMaterial(const std::string& name)
 }
 
 void UIEditBox::init(const Ogre::Matrix4& screenAdaptionRelative, 
-                     Ogre::PanelOverlayElement* mainBackground,
+                     Ogre::OverlayContainer* mainBackground,
                      const Ogre::Vector4& dimensions,
                      Ogre::Real fontSize, 
                      bool isActive)

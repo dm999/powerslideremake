@@ -7,6 +7,8 @@
 
 #include "../multiplayer/MultiplayerController.h"
 
+#include "../includes/MyGUI_KeyCode.h"
+
 class MultiplayerAILapFinishController;
 class UIRaceMulti;
 
@@ -21,6 +23,10 @@ public:
     void initCamera()override;
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
+
+    void frameStarted(const Ogre::FrameEvent &evt)override;
+
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char);
 
     //LapUtils
     void onLapFinished()override;
@@ -49,6 +55,13 @@ public:
     void prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo);
 
     void tabPressed();
+
+    void clearData()override;
+
+#if defined(__ANDROID__)
+    //for UI only
+    void reloadTextures()override;
+#endif
 
 protected:
 

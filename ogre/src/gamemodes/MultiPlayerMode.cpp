@@ -73,6 +73,17 @@ void MultiPlayerMode::initCamera()
         mModeContext.mGameState.getMultiplayerCarAI(aiCamIndex).setCameraMan(mCameraMan.get());
 }
 
+void MultiPlayerMode::frameStarted(const Ogre::FrameEvent &evt)
+{
+    BaseRaceMode::frameStarted(evt);
+    mUIRaceMulti->frameStarted(evt);
+}
+
+void MultiPlayerMode::keyUp(MyGUI::KeyCode _key, wchar_t _char)
+{
+    mUIRaceMulti->keyUp(_key, _char);
+}
+
 void MultiPlayerMode::onLapFinished()
 {
     size_t lap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
@@ -571,6 +582,26 @@ void MultiPlayerMode::tabPressed()
 {
     mUIRaceMulti->switchVisibleMessageWidget();
 }
+
+void MultiPlayerMode::clearData()
+{
+    mUIRaceMulti->destroy(mModeContext.mTrayMgr);
+    BaseRaceMode::clearData();
+}
+
+#if defined(__ANDROID__)
+void MultiPlayerMode::reloadTextures()
+{
+    BaseRaceMode::reloadTextures();
+
+    for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
+    {
+        mModeContext.mGameState.getMultiplayerCarAI(q).reloadTextures(mModeContext.mGameState);
+    }
+
+    mUIRaceMulti->reloadTextures(mModeContext.mGameState);
+}
+#endif
 
 void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionData, const std::vector<MultiplayerSessionData>& aiPlayersSessionData, bool isHost)
 {

@@ -23,7 +23,7 @@ public:
     void setBackgroundMaterial(const std::string& name);
 
     void init(const Ogre::Matrix4& screenAdaptionRelative, 
-        Ogre::PanelOverlayElement* mainBackground, 
+        Ogre::OverlayContainer* mainBackground, 
         const Ogre::Vector4& dimensions, // original sizes (640x480), before adaptation
         Ogre::Real fontSize, // original sizes (640x480), before adaptation
         bool isActive = false);
@@ -45,6 +45,8 @@ public:
     Ogre::String getMaterialName()const {return mMaterialName;}
 
     bool isActive() const{return mIsActive;}
+
+    bool isVisible() const {return mIsShown;}
 
 private:
 

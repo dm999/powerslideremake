@@ -11,12 +11,7 @@
 
 #include "../GameState.h"
 
-namespace MyGUI
-{
-    class Gui;
-    class Widget;
-    class EditBox;
-}
+#include "elements/UIEditBox.h"
 
 class MultiPlayerMode;
 
@@ -32,13 +27,25 @@ public:
 
     void switchVisibleMessageWidget();
 
-    //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char);
+
+    void frameStarted(const Ogre::FrameEvent &evt);
+
+    void destroy(CustomTrayManager* trayMgr);
+
+#if defined(__ANDROID__)
+    void reloadTextures(const GameState& gameState);
+#endif
 
 private:
 
     ModeContext mModeContext;
 
     MultiPlayerMode * mMultiPlayerMode;
+
+    UIEditBox mEditBoxMessage;
+
+    void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
     //MyGUI::EditBox* mWidgetMessage;
 };

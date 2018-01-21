@@ -297,6 +297,11 @@ void GameModeSwitcher::keyUp(MyGUI::KeyCode _key, wchar_t _char )
 #ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->keyUp(_key, _char);
+
+    if(mGameMode == ModeRaceMulti)
+    {
+        static_cast<MultiPlayerMode *>(mPlayerMode.get())->keyUp(_key, _char);
+    }
 #endif
 }
 
