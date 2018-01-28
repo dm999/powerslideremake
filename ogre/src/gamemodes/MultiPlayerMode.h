@@ -103,8 +103,10 @@ private:
     std::map<std::string, Ogre::Real> mRaceTimeByHuman;//key - human name, self not included
     std::vector<Ogre::Real> mRaceTimeByAI;
 
-    bool mIsBurn;
-    bool mIsBomb;
+    bool mIsBurn;                       // self
+    bool mIsBomb;                       // self
+    std::set<std::string> mIsOtherBurn; // other
+    std::set<std::string> mIsOtherBomb; // other
 };
 #endif
 #endif
