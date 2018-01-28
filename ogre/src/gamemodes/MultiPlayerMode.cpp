@@ -14,6 +14,8 @@
 
 #include "../physics/PhysicsVehicle.h"
 
+#include "../cheats/Cheats.h"
+
 class MultiplayerAILapFinishController : public LapUtils::Events
 {
 public:
@@ -49,7 +51,9 @@ void MultiplayerAILapFinishController::onLapFinished()
 MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
     BaseRaceMode(modeContext),
     mIsSessionStarted(false),
-    mIsSelfFinished(false)
+    mIsSelfFinished(false),
+    mIsBurn(false),
+    mIsBomb(false)
 {
 
     mUIRaceMulti.reset(new UIRaceMulti(modeContext, this));
@@ -82,6 +86,18 @@ void MultiPlayerMode::frameStarted(const Ogre::FrameEvent &evt)
 void MultiPlayerMode::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
     mUIRaceMulti->keyUp(_key, _char);
+}
+
+void MultiPlayerMode::createBurnByPlayer()
+{
+    BaseRaceMode::createBurnByPlayer();
+    mIsBurn = true;
+}
+
+void MultiPlayerMode::createBombByPlayer()
+{
+    BaseRaceMode::createBombByPlayer();
+    mIsBomb = true;
 }
 
 void MultiPlayerMode::onLapFinished()
@@ -240,6 +256,22 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
 
     if(mMultiplayerController.get())
     {
+
+        if(mIsBurn)
+        {
+            mIsBurn = false;
+
+            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 10.0f);
+            bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
+        }
+        if(mIsBomb)
+        {
+            mIsBomb = false;
+
+            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 11.0f);
+            bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
+        }
+
         mMultiplayerController->receiveData();
 
         if(mIsSessionStarted)
@@ -392,6 +424,16 @@ void MultiPlayerMode::onLobbyMessage(const std::string& player, const Multiplaye
         std::string time = Tools::SecondsToString(data.mRaceTotalTime);
         mUIRace->addMiscPanelText("Race finished by AI: " + Ogre::String(time), mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
         mRaceTimeByAI.push_back(data.mRaceTotalTime);
+    }
+
+    if(data.mDataType == lobbyDataCheats)
+    {
+        PSMultiplayerCar& humanCar = mModeContext.mGameState.getMultiplayerCarHuman(player);
+
+        if(data.mRaceTotalTime == 10.0f)
+            mCheats->createBurnByPlayer(humanCar.getPhysicsVehicle());
+        if(data.mRaceTotalTime == 11.0f)
+            mCheats->createBombByPlayer(humanCar.getPhysicsVehicle());
     }
 }
 

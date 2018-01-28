@@ -11,7 +11,8 @@ enum MultiplayerLobbyDataType
 {
     lobbyDataRegular = 0,
     lobbyDataLapTime = 1,
-    lobbyDataLapTimeAI = 2
+    lobbyDataLapTimeAI = 2,
+    lobbyDataCheats = 3,
 };
 
 /**

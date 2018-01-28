@@ -338,9 +338,9 @@ void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
     mEditBoxMessage.keyUp(_key, _char);
     if(_key == MyGUI::KeyCode::Return || _key == MyGUI::KeyCode::NumpadEnter)
     {
-        updateRoomState(mEditBoxMessage.getText());
         mEditBoxMessage.setText("");
     }
+    updateRoomState(mEditBoxMessage.getText());
 #endif
 }
 
@@ -450,22 +450,6 @@ void UIMainMenuMulti::destroy(CustomTrayManager* trayMgr)
 }
 
 #if 0
-void UIMainMenuMulti::processButtonClick(MyGUI::Widget* sender)
-{
-
-    if(sender == mWidgetSendMessage)
-    {
-        std::string message = mWidgetMessage->getCaption();
-        if(!message.empty())
-        {
-            
-            mWidgetMessage->setCaption("");
-
-            updateRoomState(message);
-        }
-    }
-
-}
 
 void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
 {
@@ -546,23 +530,6 @@ void UIMainMenuMulti::processChangeComboBox(MyGUI::Widget* sender, size_t index)
     updateRoomState();
 }
 
-void UIMainMenuMulti::processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char)
-{
-    if(sender == mWidgetMessage)
-    {
-        if(key == MyGUI::KeyCode::Return)
-        {
-            std::string message = mWidgetMessage->getCaption();
-            if(!message.empty())
-            {
-                
-                mWidgetMessage->setCaption("");
-
-                updateRoomState(message);
-            }
-        }
-    }
-}
 #endif
 
 void UIMainMenuMulti::onStartPossible()

@@ -28,6 +28,9 @@ public:
 
     void keyUp(MyGUI::KeyCode _key, wchar_t _char);
 
+    void createBurnByPlayer() override;
+    void createBombByPlayer() override;
+
     //LapUtils
     void onLapFinished()override;
 
@@ -99,6 +102,9 @@ private:
     std::map<std::string, bool> mIsRaceFinishedByHuman;//key - human name, self not included
     std::map<std::string, Ogre::Real> mRaceTimeByHuman;//key - human name, self not included
     std::vector<Ogre::Real> mRaceTimeByAI;
+
+    bool mIsBurn;
+    bool mIsBomb;
 };
 #endif
 #endif

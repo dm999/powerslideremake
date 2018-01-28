@@ -45,8 +45,8 @@ public:
 
     void restart();
 
-    void createBurnByPlayer();
-    void createBombByPlayer();
+    virtual void createBurnByPlayer();
+    virtual void createBombByPlayer();
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
