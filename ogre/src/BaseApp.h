@@ -52,8 +52,6 @@ public:
     // scripting functions
     void parseFile(const std::string& fileName);
 
-    void processCollision(int triIndex);
-
     //controls
     bool setShutdown(bool isOnEsc);
     void keyDown(const OIS::KeyEvent &arg );

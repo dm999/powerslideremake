@@ -726,11 +726,6 @@ void BaseApp::parseFile(const std::string& fileName)
     }
 }
 
-void BaseApp::processCollision(int triIndex)
-{
-    mGameModeSwitcher->processCollision(triIndex);
-}
-
 static int LuaPanic(lua_State * St)
 {
     std::string debugInfo = lua_tostring(mPipeline,-1);

@@ -54,8 +54,6 @@ public:
     void reloadTextures();
 #endif
 
-    void processCollision(int triIndex);
-
     GameMode getMode()const{return mGameMode;}
 
     bool isExitSubmenu()const;

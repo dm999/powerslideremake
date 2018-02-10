@@ -549,6 +549,16 @@ void PhysicsVehicle::gearDown()
     }
 }
 
+bool PhysicsVehicle::getFrontCollision() const
+{
+    return mPhysicsWheels.getWheelCollision(3) || mPhysicsWheels.getWheelCollision(2);
+}
+
+bool PhysicsVehicle::getBackCollision() const
+{
+    return mPhysicsWheels.getWheelCollision(1) || mPhysicsWheels.getWheelCollision(0);
+}
+
 Ogre::Vector3 PhysicsVehicle::getLinearVelocitySpeedometer() const
 {
     Ogre::Vector3 impulse(mImpulseLinear);

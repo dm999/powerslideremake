@@ -816,6 +816,7 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
     if(!mModeContext.mGameState.isGamePaused())
     {
         mModeContext.mGameState.getPlayerCar().processSounds();
+        processSounds();
     }
 
     customFrameStartedDoProcessFrameAfterPhysics();
@@ -842,28 +843,35 @@ void BaseRaceMode::reloadTextures()
 }
 #endif
 
-void BaseRaceMode::processCollision(int triIndex)
+void BaseRaceMode::processSounds()
 {
-    customProcessCollision(triIndex);
+    //customProcessCollision(triIndex);
 
 #ifndef NO_OPENAL
     //surface sound
     bool isSoundPlay = false;
-    if(mModeContext.mGameState.getPlayerCar().checkFrontCollision() || mModeContext.mGameState.getPlayerCar().checkRearCollision())
+    if(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getFrontCollision() || mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getBackCollision())
     {
         //if(mModeContext.mGameState.getPlayerCar().getAcceleration() || mModeContext.mGameState.getPlayerCar().getBrake())
         {
-            Ogre::Real lateralVel = Ogre::Math::Abs(mModeContext.mGameState.getPlayerCar().getLateralVelocity());
-            isSoundPlay = true;
-            unsigned char backLWheel = mModeContext.mGameState.getPlayerCar().getBackLWheelColliderIndex();
-            mModeContext.mSoundsProcesser.playSurface(backLWheel, lateralVel);
+            char backLWheel = mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getWheelBackLTerrainIndex();
+            if(backLWheel != -1)
+            {
+                isSoundPlay = true;
+                Ogre::Real velDiff = Ogre::Math::Abs(
+                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getWheelBackLVelocity() - 
+                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getAlignedVelocitySpeedometer()
+                    );
+                
+                mModeContext.mSoundsProcesser.playSurface(backLWheel, velDiff);
+            }
         }
     }
     if(!isSoundPlay)
     {
         mModeContext.mSoundsProcesser.stopSoundSurfaces();
     }
-
+#if 0
     //surface crash sound
     Ogre::Vector3 playerVel = mModeContext.mGameState.getPlayerCar().getLinearVelocitySpeedometer();
     Ogre::Real playerVelDiff = playerVel.distance(mModeContext.mGameState.getPLayerCarPrevVel());
@@ -914,6 +922,7 @@ void BaseRaceMode::processCollision(int triIndex)
             
         }
     }
+#endif
 #endif
 }
 

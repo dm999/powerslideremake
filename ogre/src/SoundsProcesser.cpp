@@ -11,7 +11,7 @@ SoundsProcesser::SoundsProcesser() :
     mBeforeStartPlayedOnce3(false)
 {
     mSurfaceSoundGain.addPoint(0.0f, 0.0f);
-    mSurfaceSoundGain.addPoint(150.0f, 1.0f);
+    mSurfaceSoundGain.addPoint(100.0f, 1.0f);
 }
 
 SoundsProcesser::~SoundsProcesser()

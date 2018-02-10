@@ -60,7 +60,7 @@ public:
     void reloadTextures()override;
 #endif
 
-    void processCollision(int triIndex);
+    void processSounds();
 
     //LapUtils
     void onLapFinished()override;

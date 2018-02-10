@@ -366,12 +366,6 @@ void GameModeSwitcher::reloadTextures()
 }
 #endif
 
-void GameModeSwitcher::processCollision(int triIndex)
-{
-    if(mPlayerMode.get())
-        mPlayerMode->processCollision(triIndex);
-}
-
 bool GameModeSwitcher::isExitSubmenu()const
 {
     bool ret = true;

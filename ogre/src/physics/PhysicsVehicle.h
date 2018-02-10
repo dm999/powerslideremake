@@ -50,6 +50,8 @@ public:
 
     void setRaceStarted(){mIsRaceStarted = true;}
 
+    bool getFrontCollision() const;
+    bool getBackCollision() const;
     bool getWheelBackLCollision() const {return mPhysicsWheels.getWheelCollision(1);}
     bool getWheelBackRCollision() const {return mPhysicsWheels.getWheelCollision(0);}
     char getWheelBackLTerrainIndex() const {return mPhysicsWheels.getWheelTerainIndex(1);}
