@@ -369,6 +369,7 @@ void PSControllableCar::processSounds()
     {
         mEngHigh->setPosition(pos.x, pos.y, pos.z);
         mEngHigh->setPitch(mPitchValueHigh.getVal(engineRPM));
+        mEngHigh->setGain(0.5f);
     }
 
 

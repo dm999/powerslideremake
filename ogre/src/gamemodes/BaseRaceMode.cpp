@@ -859,8 +859,8 @@ void BaseRaceMode::processSounds()
             {
                 isSoundPlay = true;
                 Ogre::Real velDiff = Ogre::Math::Abs(
-                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getWheelBackLVelocity() - 
-                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getAlignedVelocitySpeedometer()
+                    Ogre::Math::Abs(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getWheelBackLVelocity()) - 
+                    Ogre::Math::Abs(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getAlignedVelocitySpeedometer())
                     );
                 
                 mModeContext.mSoundsProcesser.playSurface(backLWheel, velDiff);
