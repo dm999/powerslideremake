@@ -1156,7 +1156,10 @@ void BaseApp::androidPause(JNIEnv * env)
 {
     LOGI("BaseApp[androidPause]: Begin"); 
 
-    mGameState.setGamePaused();
+    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    {
+        mGameState.setGamePaused();
+    }
 
     if(mWindow != NULL && mWindow->isActive())
     {
