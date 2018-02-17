@@ -76,8 +76,14 @@ private:
     bool isAITrack() const;
     std::string getLapsCountString() const;
     std::string getAIStrengthString() const;
+    std::string getCarString() const;
+    std::string getCharacterString() const;
+    size_t getCurrentTrackIndex(size_t& total) const;
     size_t getCurrentTrackIndex() const;
-    size_t getCurrentTrackIndex(size_t& totalTracks) const;
+    size_t getCurrentCarIndex(size_t& total) const;
+    size_t getCurrentCarIndex() const;
+    size_t getCurrentCharacterIndex(size_t& total) const;
+    size_t getCurrentCharacterIndex() const;
     size_t mAICountBeforeNonAITrack;
 
     MenuMultiMode * mMenuMultiMode;
@@ -105,6 +111,12 @@ private:
 
     Ogre::TextAreaOverlayElement * mWeapons;
     Ogre::TextAreaOverlayElement * mWeaponsVal;
+
+    Ogre::TextAreaOverlayElement * mCar;
+    Ogre::TextAreaOverlayElement * mCarVal;
+
+    Ogre::TextAreaOverlayElement * mCharacter;
+    Ogre::TextAreaOverlayElement * mCharacterVal;
 
     Ogre::TextAreaOverlayElement * mChatroom;
 
