@@ -1,6 +1,8 @@
 
 #include "MultiplayerControllerMaster.h"
 
+#include "../GameState.h"
+
 #include "jsonxx.h"
 
 MultiplayerControllerMaster::MultiplayerControllerMaster(MultiplayerControllerEvents* events, size_t broadcastInterval)
@@ -249,7 +251,7 @@ void MultiplayerControllerMaster::startSession(const std::string& trackName, siz
 
 void MultiplayerControllerMaster::reconfigureSession(size_t aiAmount)
 {
-    mLobby->reconfigure(12, aiAmount);
+    mLobby->reconfigure(GameState::mRaceGridCarsMax, aiAmount);
 }
 
 void MultiplayerControllerMaster::addPlayer(const std::string& playerName)

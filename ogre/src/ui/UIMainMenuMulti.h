@@ -75,7 +75,7 @@ private:
 
     bool isAITrack() const;
     std::string getLapsCountString() const;
-    std::string getAIStrenthString() const;
+    std::string getAIStrengthString() const;
     size_t getCurrentTrackIndex() const;
     size_t getCurrentTrackIndex(size_t& totalTracks) const;
     size_t mAICountBeforeNonAITrack;
@@ -101,6 +101,12 @@ private:
     Ogre::TextAreaOverlayElement * mAIStrengthVal;
 
     Ogre::TextAreaOverlayElement * mMode;
+    Ogre::TextAreaOverlayElement * mModeVal;
+
+    Ogre::TextAreaOverlayElement * mWeapons;
+    Ogre::TextAreaOverlayElement * mWeaponsVal;
+
+    Ogre::TextAreaOverlayElement * mChatroom;
 
     /*
     MyGUI::Button* mWidgetJoin;
