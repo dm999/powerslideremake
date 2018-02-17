@@ -3,6 +3,8 @@
 
 #include "UIMainMenuMulti.h"
 
+#include "UIMainMenuLabels.h"
+
 #include "../tools/OgreTools.h"
 #include "../tools/Conversions.h"
 
@@ -30,8 +32,12 @@ namespace{
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : UIBaseMenu(modeContext),
+    mAICountBeforeNonAITrack(mModeContext.getGameState().getAICount()),
     mMenuMultiMode(menuMultiMode),
-    mEditBoxMessage(50)
+    mEditBoxMessage(50),
+    mTrackNameSelected(NULL),
+    mLapsCount(NULL),
+    mAIStrengthVal(NULL)
 {
     memset(mMainChatButtons, 0, sizeof(Ogre::PanelOverlayElement*));
 }
@@ -194,6 +200,110 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mEditBoxMessage.setText("");
     }
 
+    //Track
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(321.0f, 13.0f, 0.0f, 0.0f);
+        mTrackName = createTextArea("MainWindowTrackName", 0.0f, 0.0f, pos.x, pos.y); 
+        mTrackName->setCaption("TRACK");
+        mTrackName->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mTrackName->setSpaceWidth(9.0f);
+        mTrackName->setHeight(20.0f * viewportHeight / 1024.0f);
+        mTrackName->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mTrackName->setFontName("SdkTrays/Caption");
+        mTrackName->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mTrackName);
+    }
+    {
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(321.0f, 23.0f, 0.0f, 0.0f);
+        mTrackNameSelected = createTextArea("MainWindowTrackNameSelected", 0.0f, 0.0f, pos.x, pos.y); 
+        mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[getCurrentTrackIndex()]));
+        mTrackNameSelected->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mTrackNameSelected->setSpaceWidth(9.0f);
+        mTrackNameSelected->setHeight(16.0f * viewportHeight / 1024.0f);
+        mTrackNameSelected->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mTrackNameSelected->setFontName("SdkTrays/Caption");
+        if(mModeContext.mGameState.isMultiplayerMaster())
+            mTrackNameSelected->setColour(UIMainMenuLabels::mInactiveLabel);
+        else
+            mTrackNameSelected->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mTrackNameSelected);
+    }
+
+    //Laps
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(381.0f, 13.0f, 0.0f, 0.0f);
+        mLaps = createTextArea("MainWindowLaps", 0.0f, 0.0f, pos.x, pos.y); 
+        mLaps->setCaption("LAPS");
+        mLaps->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mLaps->setSpaceWidth(9.0f);
+        mLaps->setHeight(20.0f * viewportHeight / 1024.0f);
+        mLaps->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLaps->setFontName("SdkTrays/Caption");
+        mLaps->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mLaps);
+    }
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(381.0f, 23.0f, 0.0f, 0.0f);
+        mLapsCount = createTextArea("MainWindowLapsCount", 0.0f, 0.0f, pos.x, pos.y); 
+        mLapsCount->setCaption(getLapsCountString());
+        mLapsCount->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mLapsCount->setSpaceWidth(9.0f);
+        mLapsCount->setHeight(16.0f * viewportHeight / 1024.0f);
+        mLapsCount->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLapsCount->setFontName("SdkTrays/Caption");
+        if(mModeContext.mGameState.isMultiplayerMaster())
+            mLapsCount->setColour(UIMainMenuLabels::mInactiveLabel);
+        else
+            mLapsCount->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mLapsCount);
+    }
+
+    //AIStrength
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(156.0f, 23.0f, 0.0f, 0.0f);
+        mAIStrength = createTextArea("MainWindowAIStrength", 0.0f, 0.0f, pos.x, pos.y); 
+        mAIStrength->setCaption("DIFFICULTY");
+        mAIStrength->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mAIStrength->setSpaceWidth(9.0f);
+        mAIStrength->setHeight(20.0f * viewportHeight / 1024.0f);
+        mAIStrength->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mAIStrength->setFontName("SdkTrays/Caption");
+        mAIStrength->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mAIStrength);
+    }
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(240.0f, 25.0f, 0.0f, 0.0f);
+        mAIStrengthVal = createTextArea("MainWindowAIStrengthVal", 0.0f, 0.0f, pos.x, pos.y); 
+        mAIStrengthVal->setCaption(getAIStrenthString());
+        mAIStrengthVal->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mAIStrengthVal->setSpaceWidth(9.0f);
+        mAIStrengthVal->setHeight(16.0f * viewportHeight / 1024.0f);
+        mAIStrengthVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mAIStrengthVal->setFontName("SdkTrays/Caption");
+        if(mModeContext.mGameState.isMultiplayerMaster())
+            mAIStrengthVal->setColour(UIMainMenuLabels::mInactiveLabel);
+        else
+            mAIStrengthVal->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mAIStrengthVal);
+    }
+
+    //Mode
+    {
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(156.0f, 13.0f, 0.0f, 0.0f);
+        mMode = createTextArea("MainWindowMode", 0.0f, 0.0f, pos.x, pos.y); 
+        mMode->setCaption("MODE");
+        mMode->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mMode->setSpaceWidth(9.0f);
+        mMode->setHeight(20.0f * viewportHeight / 1024.0f);
+        mMode->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mMode->setFontName("SdkTrays/Caption");
+        mMode->setColour(Ogre::ColourValue::White);
+        mMainBackground->addChild(mMode);
+    }
+
     if(!isEnterFromBaseMenu)
     {
         const multislider::RoomInfo& roomInfo = mMenuMultiMode->getMultiplayerController()->getRoomInfo();
@@ -209,15 +319,10 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         }
     }
 
-    hostAICountChange(mModeContext.getGameState().getAICount());
+    hostTrackUpdate(mModeContext.getGameState().getAICount());
 
 
 #if 0
-    {
-        MyGUI::ImageBox * mainBackground = gui->createWidget<MyGUI::ImageBox>("ImageBox", 0, 0, viewportWidth, viewportHeight, MyGUI::Align::Default, "Wallpaper");
-        mainBackground->setImageTexture("OriginalMainBackground");
-    }
-
     {
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
@@ -422,6 +527,7 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         readySwitcher();
     }
 
+    //race params switch
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
         for(size_t q = 1; q < GameState::mRaceGridCarsMax; ++q)
@@ -431,12 +537,68 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
                 aiCountSwitcher(q);
             }
         }
+
+        if(mTrackNameSelected && mTrackNameSelected->isVisible() && OgreBites::Widget::isCursorOver(mTrackNameSelected, pos, 0))
+        {
+            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+            size_t totalTracks;
+            size_t currentTrack = getCurrentTrackIndex(totalTracks);
+            ++currentTrack;
+            if(currentTrack >= totalTracks)currentTrack = 0;
+
+            mModeContext.getGameState().setRaceParameters(availTracks[currentTrack], mModeContext.getGameState().getAIStrength());
+            mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[currentTrack]));
+            mLapsCount->setCaption(getLapsCountString());
+            if(!isAITrack())
+            {
+                mModeContext.getGameState().setAICount(0);
+                hostTrackUpdate(0);
+            }
+            else
+            {
+                mModeContext.getGameState().setAICount(mAICountBeforeNonAITrack);
+                hostTrackUpdate(mAICountBeforeNonAITrack);
+            }
+            updateRoomState();
+        }
+
+        if(mLapsCount && mLapsCount->isVisible() && OgreBites::Widget::isCursorOver(mLapsCount, pos, 0))
+        {
+            size_t lapsCount = mModeContext.getGameState().getLapsCount();
+            ++lapsCount;
+            if(lapsCount > 10) lapsCount = 1;
+
+            mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), lapsCount);
+            mLapsCount->setCaption(getLapsCountString());
+            updateRoomState();
+        }
+
+        if(mAIStrengthVal && mAIStrengthVal->isVisible() && OgreBites::Widget::isCursorOver(mAIStrengthVal, pos, 0))
+        {
+            size_t strenthIndex = mModeContext.getGameState().getAIStrength();
+            ++strenthIndex;
+            if(strenthIndex > Insane)strenthIndex = Easy;
+
+            mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(strenthIndex), mModeContext.getGameState().getLapsCount());
+            mAIStrengthVal->setCaption(getAIStrenthString());
+            updateRoomState();
+        }
     }
 }
 
 void UIMainMenuMulti::mouseMoved(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mouseMoved(pos);
+
+    //race params highlight
+    if(mModeContext.mGameState.isMultiplayerMaster())
+    {
+        UIMainMenuLabels::checkCursorOverLabel(pos, mTrackNameSelected);
+        UIMainMenuLabels::checkCursorOverLabel(pos, mLapsCount);
+        UIMainMenuLabels::checkCursorOverLabel(pos, mAIStrengthVal);
+    }
 }
 
 void UIMainMenuMulti::readySwitcher()
@@ -453,8 +615,7 @@ void UIMainMenuMulti::readySwitcher()
     {
         const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
         std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-        //trackName = availTracks[mWidgetTrack->getItemIndexSelected()];
-        trackName = availTracks[0];
+        trackName = availTracks[getCurrentTrackIndex()];
     }
 
 
@@ -485,33 +646,38 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
 {
     if(index >= mPlayerToChatList.size())
     {
-        //increase
-        if(
-            index == GameState::mRaceGridCarsMax - 1                                &&
-            mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   ||
-            index < GameState::mRaceGridCarsMax - 1                                 &&
-            mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   &&
-            mMainChatButtons[index + 1]->getMaterialName() == "Test/OriginalChatBut2"
-            )
+        if(isAITrack())
         {
-            mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
-            mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() + 1);
-            static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
-            updateRoomState();
-        }
-        else
-        {
-            //decrease
+            //increase
             if(
-                mMainChatButtons[index]->getMaterialName() == "Test/OriginalChatBut2"   &&
-                mMainChatButtons[index - 1]->getMaterialName() != "Test/OriginalChatBut2"
+                index == GameState::mRaceGridCarsMax - 1                                &&
+                mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   ||
+                index < GameState::mRaceGridCarsMax - 1                                 &&
+                mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   &&
+                mMainChatButtons[index + 1]->getMaterialName() == "Test/OriginalChatBut2"
                 )
             {
-                mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
-                mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() - 1);
+                mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
+                mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() + 1);
                 static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
                 updateRoomState();
             }
+            else
+            {
+                //decrease
+                if(
+                    mMainChatButtons[index]->getMaterialName() == "Test/OriginalChatBut2"   &&
+                    mMainChatButtons[index - 1]->getMaterialName() != "Test/OriginalChatBut2"
+                    )
+                {
+                    mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
+                    mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() - 1);
+                    static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
+                    updateRoomState();
+                }
+            }
+
+            mAICountBeforeNonAITrack = mModeContext.getGameState().getAICount();
         }
     }
 }
@@ -717,10 +883,11 @@ void UIMainMenuMulti::playerReadyChange(const std::string& player, bool isReady)
     }
 }
 
-void UIMainMenuMulti::hostAICountChange(size_t count)
+void UIMainMenuMulti::hostTrackUpdate(size_t aiCount)
 {
-    mModeContext.getGameState().setAICount(count);
 
+    //ai count
+    mModeContext.getGameState().setAICount(aiCount);
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         if(mMainChatButtons[q]->getMaterialName() == "Test/OriginalChatBut2")
@@ -733,6 +900,18 @@ void UIMainMenuMulti::hostAICountChange(size_t count)
             mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut2");
         }
     }
+
+    //track name
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+    size_t currentTrack = getCurrentTrackIndex();
+    mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[currentTrack]));
+
+    //laps count
+    mLapsCount->setCaption(getLapsCountString());
+
+    //AI strength
+    mAIStrengthVal->setCaption(getAIStrenthString());
 }
 
 void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
@@ -783,8 +962,6 @@ void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
     {
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            //mWidgetStart->setEnabled(false);
-
             mMenuMultiMode->recalculateCharacterNames(static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->getAllPlayersSkins());
 
             std::vector<std::string> gameCars;
@@ -824,4 +1001,67 @@ void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bo
     }
 }
 
+bool UIMainMenuMulti::isAITrack() const
+{
+    return 
+        mModeContext.getGameState().getTrackName() != "stunt track"         &&
+        mModeContext.getGameState().getTrackName() != "luge track"          &&
+        mModeContext.getGameState().getTrackName() != "Foxnhound1 track"    &&
+        mModeContext.getGameState().getTrackName() != "Foxnhound2 track";
+}
+
+std::string UIMainMenuMulti::getLapsCountString() const
+{
+    std::string ret = "N/A";
+
+    if(isAITrack())
+    {
+        ret = Conversions::DMToString(mModeContext.getGameState().getLapsCount());
+    }
+
+    return ret;
+}
+
+std::string UIMainMenuMulti::getAIStrenthString() const
+{
+    std::string ret = "Novice";
+
+    switch(mModeContext.getGameState().getAIStrength())
+    {
+    case Medium:
+        ret = "Medium";
+        break;
+    case Hard:
+        ret = "Hard";
+        break;
+    case Insane:
+        ret = "Insane";
+        break;
+    }
+
+    return ret;
+}
+
+size_t UIMainMenuMulti::getCurrentTrackIndex(size_t& totalTracks) const
+{
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    totalTracks = availTracks.size();
+
+    size_t itemToSelect = 0;
+    for(size_t q = 0; q < availTracks.size(); ++q)
+    {
+        if(availTracks[q] == mModeContext.getGameState().getTrackNameAsOriginal())
+            itemToSelect = q;
+    }
+
+    return itemToSelect;
+}
+
+size_t UIMainMenuMulti::getCurrentTrackIndex() const
+{
+    size_t totalTracks;
+    return getCurrentTrackIndex(totalTracks);
+}
 #endif

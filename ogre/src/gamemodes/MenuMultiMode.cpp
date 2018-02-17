@@ -208,13 +208,14 @@ void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerL
     //host data
     if(!data.mTrackName.empty())
     {
-        mUIMainMenuMulti->hostAICountChange(data.mAICount);
         mUIMainMenuMulti->addEvent("player [" + player + "] set track: " + data.mTrackName);
         mUIMainMenuMulti->addEvent("player [" + player + "] set AI count: " + Conversions::DMToString(data.mAICount));
         mUIMainMenuMulti->addEvent("player [" + player + "] set AI strentgh: " + Conversions::DMToString(data.mAIStrength));
         mUIMainMenuMulti->addEvent("player [" + player + "] set laps count: " + Conversions::DMToString(data.mLapsCount));
 
         mModeContext.getGameState().setRaceParameters(data.mTrackName, static_cast<AIStrength>(data.mAIStrength), data.mLapsCount);
+
+        mUIMainMenuMulti->hostTrackUpdate(data.mAICount);
     }
 
     mUIMainMenuMulti->playerMessage(player, data.mPlayerMessage);

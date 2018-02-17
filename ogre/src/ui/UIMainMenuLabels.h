@@ -9,9 +9,11 @@ public:
     UIMainMenuLabels(const ModeContext& modeContext) : UIMainMenuBackground(modeContext){}
     ~UIMainMenuLabels(){}
 
-protected:
+    static const Ogre::ColourValue mInactiveLabel;
 
-    static Ogre::ColourValue mInactiveLabel;
+    static bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
+
+protected:
 
     void createLabels(const Ogre::Matrix4& screenAdaptionRelative);
 
@@ -43,8 +45,6 @@ protected:
     void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
 
 private:
-
-    bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
 
     Ogre::TextAreaOverlayElement * mWindowTitle;
 

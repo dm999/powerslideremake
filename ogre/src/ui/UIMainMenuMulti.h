@@ -54,7 +54,7 @@ public:
     void roomLeft(const std::string& player);
     void playerMessage(const std::string& player, const std::string& message);
     void playerReadyChange(const std::string& player, bool isReady);
-    void hostAICountChange(size_t count);
+    void hostTrackUpdate(size_t aiCount);
 
     void destroy(CustomTrayManager* trayMgr) override;
 
@@ -73,6 +73,13 @@ private:
     void addCurrentPlayer(const std::string& player);
     void addOtherPlayer(size_t index, const std::string& player, bool isInSession);
 
+    bool isAITrack() const;
+    std::string getLapsCountString() const;
+    std::string getAIStrenthString() const;
+    size_t getCurrentTrackIndex() const;
+    size_t getCurrentTrackIndex(size_t& totalTracks) const;
+    size_t mAICountBeforeNonAITrack;
+
     MenuMultiMode * mMenuMultiMode;
 
     Ogre::PanelOverlayElement* mMainBackground;
@@ -83,6 +90,17 @@ private:
     std::map<std::string, size_t> mPlayerToChatList;
     Ogre::TextAreaOverlayElement * mChatroomPlayersMessages[GameState::mRaceGridCarsMax - 1];//minus self
     UIEditBox mEditBoxMessage;
+
+    Ogre::TextAreaOverlayElement * mTrackName;
+    Ogre::TextAreaOverlayElement * mTrackNameSelected;
+
+    Ogre::TextAreaOverlayElement * mLaps;
+    Ogre::TextAreaOverlayElement * mLapsCount;
+
+    Ogre::TextAreaOverlayElement * mAIStrength;
+    Ogre::TextAreaOverlayElement * mAIStrengthVal;
+
+    Ogre::TextAreaOverlayElement * mMode;
 
     /*
     MyGUI::Button* mWidgetJoin;

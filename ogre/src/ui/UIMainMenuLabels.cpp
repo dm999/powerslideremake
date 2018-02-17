@@ -5,7 +5,7 @@
 
 #include "../BaseApp.h"
 
-Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
+const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 {
