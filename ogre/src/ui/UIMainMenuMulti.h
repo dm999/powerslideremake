@@ -16,7 +16,7 @@
 
 class MenuMultiMode;
 
-class UIMainMenuMulti : public UIBaseMenu, public OgreBites::SdkTrayListener
+class UIMainMenuMulti : public UIBaseMenu
 {
 public:
 
@@ -56,8 +56,6 @@ public:
     void playerReadyChange(const std::string& player, bool isReady);
     void hostAICountChange(size_t count);
 
-    void buttonHit(OgreBites::Button* button) override;
-
     void destroy(CustomTrayManager* trayMgr) override;
 
 private:
@@ -69,6 +67,7 @@ private:
     void updateRoomState(const std::string& playerMessage = "")const;
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
+    void readySwitcher();
     void aiCountSwitcher(size_t index);
 
     void addCurrentPlayer(const std::string& player);
@@ -84,9 +83,6 @@ private:
     std::map<std::string, size_t> mPlayerToChatList;
     Ogre::TextAreaOverlayElement * mChatroomPlayersMessages[GameState::mRaceGridCarsMax - 1];//minus self
     UIEditBox mEditBoxMessage;
-
-    OgreBites::Button* mWidgetJoin;
-    OgreBites::Button* mWidgetStart;
 
     /*
     MyGUI::Button* mWidgetJoin;

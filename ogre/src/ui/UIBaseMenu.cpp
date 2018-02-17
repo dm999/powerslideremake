@@ -33,6 +33,7 @@ UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
 {
     memset(mControls, 0, sizeof(Ogre::PanelOverlayElement*) * mControlsCount);
     memset(mControlClicked, 0, sizeof(bool) * mControlsCount);
+    memset(mControlActivated, 1, sizeof(bool) * mControlsCount);
 
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("speedway track", 1));
@@ -435,10 +436,13 @@ void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            if(mControlActivated[q])
             {
-                mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
-                mControlClicked[q] = true;
+                if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+                {
+                    mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                    mControlClicked[q] = true;
+                }
             }
         }
     }
@@ -450,13 +454,16 @@ void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-            mControlClicked[q] = false;
-
-            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            if(mControlActivated[q])
             {
-                mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
-                panelHit(mControls[q]);
+                mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+                mControlClicked[q] = false;
+
+                if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+                {
+                    mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                    panelHit(mControls[q]);
+                }
             }
         }
     }
@@ -468,19 +475,40 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+            if(mControlActivated[q])
             {
-                if(mControlClicked[q])
-                    mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
+                {
+                    if(mControlClicked[q])
+                        mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                    else
+                        mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                    mControlsText[q]->show();
+                }
                 else
-                    mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
-                mControlsText[q]->show();
+                {
+                    mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+                    mControlsText[q]->hide();
+                }
             }
-            else
-            {
-                mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
-                mControlsText[q]->hide();
-            }
+        }
+    }
+}
+
+void UIBaseMenu::setControlActive(size_t index, bool isActive)
+{
+    if(index < mControlsCount)
+    {
+        mControlActivated[index] = isActive;
+
+        if(!isActive)
+        {
+            mControlsText[index]->hide();
+            mControls[index]->setUV(0.0f, 0.75f, 1.0f, 1.0f);
+        }
+        else
+        {
+            mControls[index]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
         }
     }
 }

@@ -56,6 +56,8 @@ protected:
 
     virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0;
 
+    void setControlActive(size_t index, bool isActive);
+
     static const int mControlsCount = 6;
     Ogre::PanelOverlayElement* mControls[mControlsCount];
     Ogre::TextAreaOverlayElement * mControlsText[mControlsCount];
@@ -72,6 +74,7 @@ private:
     void loadColorTextures();
     void createColorMaterials();
 
+    bool mControlActivated[mControlsCount];
     bool mControlClicked[mControlsCount];
 };
 
