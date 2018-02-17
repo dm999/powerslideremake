@@ -77,13 +77,14 @@ public:
 
     void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
 
+    static void loadDashboardCars(const GameState& gameState);
+
 private:
 
     ModeContext mModeContext;
 
     bool mLoaded;
 
-    void loadDashboardCars(const GameState& gameState);
     void loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
 #if defined(__ANDROID__)

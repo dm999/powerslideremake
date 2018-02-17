@@ -54,6 +54,7 @@ public:
     void roomLeft(const std::string& player);
     void playerMessage(const std::string& player, const std::string& message);
     void playerReadyChange(const std::string& player, bool isReady);
+    void playerSkinChanged(const std::string& player, const std::string& characterName);
     void hostTrackUpdate(size_t aiCount);
 
     void destroy(CustomTrayManager* trayMgr) override;
@@ -91,6 +92,8 @@ private:
     Ogre::PanelOverlayElement* mMainBackground;
 
     Ogre::PanelOverlayElement* mMainChatButtons[GameState::mRaceGridCarsMax];
+
+    Ogre::PanelOverlayElement* mMainCarIcons[GameState::mRaceGridCarsMax];
 
     Ogre::TextAreaOverlayElement * mChatroomPlayers[GameState::mRaceGridCarsMax];
     std::map<std::string, size_t> mPlayerToChatList;

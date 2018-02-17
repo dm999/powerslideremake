@@ -202,6 +202,7 @@ void MenuMultiMode::onRoomClosed(const std::string& player)
 void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
     mUIMainMenuMulti->playerReadyChange(player, data.mIsReady);
+    mUIMainMenuMulti->playerSkinChanged(player, data.mCharacterName);
 
     mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
 

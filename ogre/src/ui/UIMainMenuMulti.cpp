@@ -4,6 +4,7 @@
 #include "UIMainMenuMulti.h"
 
 #include "UIMainMenuLabels.h"
+#include "UIRace.h"
 
 #include "../tools/OgreTools.h"
 #include "../tools/Conversions.h"
@@ -69,6 +70,7 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
                                     true);
     }
 
+    UIRace::loadDashboardCars(mModeContext.getGameState());
 }
 
 void UIMainMenuMulti::createMaterials(CustomTrayManager* trayMgr)
@@ -123,6 +125,28 @@ void UIMainMenuMulti::createMaterials(CustomTrayManager* trayMgr)
         mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
         //mMainBackground->hide();
+    }
+
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+    for (size_t q = 0; q < availableCharacters.size(); ++q)
+    {
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
+
+        std::vector<Ogre::String> texName;
+        texName.push_back("chroma_" + iconName);
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/" + iconName, 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setSceneBlending (Ogre::SBT_TRANSPARENT_ALPHA);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        state->setTextureScale(-1.0f, 1.0f);
     }
 }
 
@@ -180,6 +204,24 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
             mChatroomPlayers[q]->setColour(Ogre::ColourValue::White);
             mMainBackground->addChild(mChatroomPlayers[q]);
         }
+
+        //icons
+        {
+            const Ogre::Real left = 126.0f;
+            const Ogre::Real top = 101.0f;
+            Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, 22.0f * q + top, left + 62.0f, 22.0f * q + top + 22.0f);
+            mMainCarIcons[q] = createPanel("MainWindowPlayersIcon_" + Conversions::DMToString(q), pos, "Test/car0_0s.bmp");
+            mMainCarIcons[q]->setUV(0.0f, 0.0f, -1.0f, 1.0f);
+            if(q > 0)
+                mMainCarIcons[q]->hide();
+            mMainBackground->addChild(mMainCarIcons[q]);
+        }
+    }
+
+    {
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(mModeContext.getGameState().getPlayerCar().getCharacterName() + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[0]->setMaterialName(matName);
     }
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax - 1; ++q)
@@ -434,53 +476,19 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         }
     }
 
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+    selectCar(characterCar);
+
     hostTrackUpdate(mModeContext.getGameState().getAICount());
 
 
 #if 0
     {
         {
-            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-            std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-            //car
-            Ogre::Vector4 posCar = screenAdaptionRelative * Ogre::Vector4(360.0f, 60.0f, 60.0f, 12.0f);
-            mWidgetCar = gui->createWidget<MyGUI::ComboBox>("ComboBox", posCar.x, posCar.y, posCar.z, posCar.w, MyGUI::Align::Default, "Middle");
-
-            size_t itemToSelect = 0;
-            for(size_t q = 0; q < availCars.size(); ++q)
-            {
-                mWidgetCar->addItem(strPowerslide.getCarTitle(availCars[q]));
-
-                if(availCars[q] == characterCar)
-                    itemToSelect = q;
-            }
-            mWidgetCar->setIndexSelected(itemToSelect);
-            mWidgetCar->setEditReadOnly(true);
-            mWidgetCar->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
-
-
-            //character
-            Ogre::Vector4 posChar = screenAdaptionRelative * Ogre::Vector4(360.0f, 80.0f, 60.0f, 12.0f);
-            mWidgetCharacter = gui->createWidget<MyGUI::ComboBox>("ComboBox", posChar.x, posChar.y, posChar.z, posChar.w, MyGUI::Align::Default, "Middle");
-
-            itemToSelect = 0;
-            for(size_t q = 0; q < availChars.size(); ++q)
-            {
-                mWidgetCharacter->addItem(strPowerslide.getCharacterTitle(availChars[q]));
-
-                if(availChars[q] == mModeContext.getGameState().getPlayerCar().getCharacterName())
-                    itemToSelect = q;
-            }
-            mWidgetCharacter->setIndexSelected(itemToSelect);
-
-            mWidgetCharacter->setEditReadOnly(true);
-            mWidgetCharacter->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
-
 
             //broadcast interval
             Ogre::Vector4 posBroadcast = screenAdaptionRelative * Ogre::Vector4(540.0f, 80.0f, 60.0f, 12.0f);
@@ -593,6 +601,7 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
                 mModeContext.getGameState().setAICount(mAICountBeforeNonAITrack);
                 hostTrackUpdate(mAICountBeforeNonAITrack);
             }
+            selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
             updateRoomState();
         }
 
@@ -639,6 +648,10 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
         mCarVal->setCaption(getCarString());
         mCharacterVal->setCaption(getCharacterString());
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[0] + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[0]->setMaterialName(matName);
+        selectCar(characterCar);
 
         updateRoomState();
     }
@@ -659,8 +672,12 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         if(characterIndex >= totalChars) characterIndex = 0;
 
         mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[characterIndex]);
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[characterIndex] + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[0]->setMaterialName(matName);
 
         mCharacterVal->setCaption(getCharacterString());
+        selectCar(characterCar);
 
         updateRoomState();
     }
@@ -676,9 +693,10 @@ void UIMainMenuMulti::mouseMoved(const Ogre::Vector2& pos)
         UIMainMenuLabels::checkCursorOverLabel(pos, mTrackNameSelected);
         UIMainMenuLabels::checkCursorOverLabel(pos, mLapsCount);
         UIMainMenuLabels::checkCursorOverLabel(pos, mAIStrengthVal);
-        UIMainMenuLabels::checkCursorOverLabel(pos, mCarVal);
-        UIMainMenuLabels::checkCursorOverLabel(pos, mCharacterVal);
     }
+
+    UIMainMenuLabels::checkCursorOverLabel(pos, mCarVal);
+    UIMainMenuLabels::checkCursorOverLabel(pos, mCharacterVal);
 }
 
 void UIMainMenuMulti::readySwitcher()
@@ -821,6 +839,7 @@ void UIMainMenuMulti::roomEnter(const std::string& roomName, const std::string& 
 void UIMainMenuMulti::roomJoined(const std::string& player)
 {
     addOtherPlayer(mPlayerToChatList.size() - 1, player, false);
+    updateRoomState();//send skins info
 }
 
 void UIMainMenuMulti::roomLeft(const std::string& player)
@@ -855,6 +874,16 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
                     {
                         mMainChatButtons[q]->setMaterialName(mMainChatButtons[indexToRead]->getMaterialName());
                         mMainChatButtons[indexToRead]->setMaterialName("Test/OriginalChatBut0");
+
+                        mMainCarIcons[q]->setMaterialName(mMainCarIcons[indexToRead]->getMaterialName());
+                        if(mMainCarIcons[indexToRead]->isVisible())
+                            mMainCarIcons[q]->show();
+                        else
+                        {
+                            mMainCarIcons[q]->hide();
+                            mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut0");
+                        }
+                        mMainCarIcons[indexToRead]->hide();
                     }
                 }
             }
@@ -898,6 +927,18 @@ void UIMainMenuMulti::playerReadyChange(const std::string& player, bool isReady)
     }
 }
 
+void UIMainMenuMulti::playerSkinChanged(const std::string& player, const std::string& characterName)
+{
+    std::map<std::string, size_t>::iterator i = mPlayerToChatList.find(player);
+    if(i != mPlayerToChatList.end())
+    {
+        size_t index = (*i).second;
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(characterName + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[index]->setMaterialName(matName);
+    }
+}
+
 void UIMainMenuMulti::hostTrackUpdate(size_t aiCount)
 {
 
@@ -921,6 +962,7 @@ void UIMainMenuMulti::hostTrackUpdate(size_t aiCount)
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
     size_t currentTrack = getCurrentTrackIndex();
     mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[currentTrack]));
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
 
     //laps count
     mLapsCount->setCaption(getLapsCountString());
@@ -1008,6 +1050,7 @@ void UIMainMenuMulti::addCurrentPlayer(const std::string& player)
 void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bool isInSession)
 {
     mChatroomPlayers[index + 1]->setCaption(player);
+    mMainCarIcons[index + 1]->show();
     mPlayerToChatList.insert(std::make_pair(player, index + 1));
     mMainChatButtons[index + 1]->setMaterialName("Test/OriginalChatBut0");
     if(isInSession)
