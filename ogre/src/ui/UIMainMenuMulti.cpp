@@ -29,7 +29,9 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
     mWidgetJoin(NULL),
     mWidgetStart(NULL)
 
-{}
+{
+    memset(mMainChatButtons, NULL, sizeof(Ogre::PanelOverlayElement*));
+}
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)
 {
@@ -38,6 +40,137 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "m_chat.bmp", 
                                 "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
+
+    //empty
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "chatbut0.bmp", 
+                                "OriginalChatBut0", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(1.0f, 0.0f, 0.487f),
+                                0.1f,
+                                false, 64.0f, 
+                                true);
+
+    //green
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "chatbut1.bmp", 
+                                "OriginalChatBut1", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(1.0f, 0.0f, 0.487f),
+                                0.1f,
+                                false, 64.0f, 
+                                true);
+
+    //PC
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "chatbut2.bmp", 
+                                "OriginalChatBut2", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(1.0f, 0.0f, 0.487f),
+                                0.1f,
+                                false, 64.0f, 
+                                true);
+
+    //red
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "chatbut3.bmp", 
+                                "OriginalChatBut3", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(1.0f, 0.0f, 0.487f),
+                                0.1f,
+                                false, 64.0f, 
+                                true);
+}
+
+void UIMainMenuMulti::createMaterials(CustomTrayManager* trayMgr)
+{
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+    Ogre::Real viewportHeight = om.getViewportHeight(); 
+
+    Ogre::Matrix4 screenAdaptionRelative(
+        viewportWidth / 640.0f, 0.0f,                       0.0f,                   0.0f,
+        0.0f,                   viewportHeight / 480.0f,    0.0f,                   0.0f,
+        0.0f,                   0.0f,                       viewportWidth / 640.0f, 0.0f,
+        0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
+
+    //main background
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalMainBackground");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    //chatbut
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalChatBut0");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/OriginalChatBut0", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalChatBut1");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/OriginalChatBut1", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalChatBut2");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/OriginalChatBut2", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalChatBut3");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/OriginalChatBut3", 
+                            "Test/DiffuseTransparent", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    {
+        mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
+        mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
+        //mMainBackground->hide();
+    }
 }
 
 void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu)
@@ -57,29 +190,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
     createCommonMaterials();
-
-    //main background
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalMainBackground");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    {
-        mMainBackground = createPanel("MainBackground", viewportWidth, viewportHeight, 0.0f, 0.0f, "Test/MainBackground");
-        mMainBackground->setUV(0.0f, 0.0f, 1.0f, 1.0f);
-        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMainBackground);
-        //mMainBackground->hide();
-    }
+    createMaterials(trayMgr);
 
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
@@ -97,6 +208,23 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
+
+        //chatbuttons
+        {
+            const Ogre::Real left = 15.0f;
+            const Ogre::Real top = 106.0f;
+            Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, 22.0f * q + top, left + 15.0f, 22.0f * q + top + 15.0f);
+            mMainChatButtons[q] = createPanel("ChatBut_" + Conversions::DMToString(q), pos, "Test/OriginalChatBut0");
+            mMainChatButtons[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mMainChatButtons[q]);
+
+            if(q >= GameState::mRaceGridCarsMax - mModeContext.getGameState().getAICount())
+            {
+                mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut2");
+            }
+        }
+
+        //names
         {
             Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(185.0f, 22.0f * q + 110.0f, 0.0f, 0.0f);
             mChatroomPlayers[q] = createTextArea("MainWindowPlayers1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -354,6 +482,22 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mouseReleased(pos);
 
+    if(mMainChatButtons[0] && OgreBites::Widget::isCursorOver(mMainChatButtons[0], pos, 0))
+    {
+        buttonHit(mWidgetJoin);
+    }
+
+    if(mModeContext.mGameState.isMultiplayerMaster())
+    {
+        for(size_t q = 1; q < GameState::mRaceGridCarsMax; ++q)
+        {
+            if(mMainChatButtons[q] && OgreBites::Widget::isCursorOver(mMainChatButtons[q], pos, 0))
+            {
+                aiCountSwitcher(q);
+            }
+        }
+    }
+
     if(mWidgetJoin && OgreBites::Widget::isCursorOver(mWidgetJoin->getOverlayElement(), pos, 0))
     {
         buttonHit(mWidgetJoin);
@@ -408,10 +552,12 @@ void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
         {
             if(mWidgetJoin->getCaption() == "Ready")
             {
+                mMainChatButtons[0]->setMaterialName("Test/OriginalChatBut1");
                 mWidgetJoin->setCaption("Not ready");
             }
             else
             {
+                mMainChatButtons[0]->setMaterialName("Test/OriginalChatBut0");
                 mWidgetJoin->setCaption("Ready");
             }
         }
@@ -440,6 +586,41 @@ void UIMainMenuMulti::buttonHit(OgreBites::Button* button)
 #if defined(__ANDROID__)
     LOGI("UIMainMenuMulti[buttonHit]: End"); 
 #endif
+}
+
+void UIMainMenuMulti::aiCountSwitcher(size_t index)
+{
+    if(index >= mPlayerToChatList.size())
+    {
+        //increase
+        if(
+            index == GameState::mRaceGridCarsMax - 1                                &&
+            mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   ||
+            index < GameState::mRaceGridCarsMax - 1                                 &&
+            mMainChatButtons[index]->getMaterialName() != "Test/OriginalChatBut2"   &&
+            mMainChatButtons[index + 1]->getMaterialName() == "Test/OriginalChatBut2"
+            )
+        {
+            mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
+            mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() + 1);
+            static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
+            updateRoomState();
+        }
+        else
+        {
+            //decrease
+            if(
+                mMainChatButtons[index]->getMaterialName() == "Test/OriginalChatBut2"   &&
+                mMainChatButtons[index - 1]->getMaterialName() != "Test/OriginalChatBut2"
+                )
+            {
+                mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
+                mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() - 1);
+                static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
+                updateRoomState();
+            }
+        }
+    }
 }
 
 void UIMainMenuMulti::destroy(CustomTrayManager* trayMgr)
@@ -589,7 +770,7 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
             }
         }
 
-        for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+        for(size_t q = 1; q < GameState::mRaceGridCarsMax; ++q)
         {
             if(q >= indexToDeleteMessage && q < (GameState::mRaceGridCarsMax - 1))
             {
@@ -598,6 +779,9 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
                 {
                     mChatroomPlayersMessages[q]->setCaption(mChatroomPlayersMessages[indexToRead]->getCaption());
                     mChatroomPlayersMessages[indexToRead]->setCaption("");
+
+                    mMainChatButtons[q]->setMaterialName(mMainChatButtons[indexToRead]->getMaterialName());
+                    mMainChatButtons[indexToRead]->setMaterialName("Test/OriginalChatBut0");
                 }
             }
             mChatroomPlayers[q]->setCaption("");
@@ -630,9 +814,33 @@ void UIMainMenuMulti::playerReadyChange(const std::string& player, bool isReady)
     {
         size_t index = (*i).second;
         if(!isReady)
+        {
+            mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
             mChatroomPlayers[index]->setColour(Ogre::ColourValue::White);
+        }
         else
+        {
+            mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut1");
             mChatroomPlayers[index]->setColour(Ogre::ColourValue::Green);
+        }
+    }
+}
+
+void UIMainMenuMulti::hostAICountChange(size_t count)
+{
+    mModeContext.getGameState().setAICount(count);
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        if(mMainChatButtons[q]->getMaterialName() == "Test/OriginalChatBut2")
+        {
+            mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut0");
+        }
+
+        if(q >= GameState::mRaceGridCarsMax - mModeContext.getGameState().getAICount())
+        {
+            mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut2");
+        }
     }
 }
 
@@ -684,6 +892,7 @@ void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
 
 void UIMainMenuMulti::addCurrentPlayer(const std::string& player)
 {
+    mMainChatButtons[0]->setMaterialName("Test/OriginalChatBut0");
     mChatroomPlayers[0]->setCaption(player);
     mChatroomPlayers[0]->setColour(Ogre::ColourValue::White);
 
@@ -695,8 +904,12 @@ void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bo
     mChatroomPlayers[index + 1]->setCaption(player);
     mPlayerToChatList.insert(std::make_pair(player, index + 1));
     mChatroomPlayers[index + 1]->setColour(Ogre::ColourValue::White);
+    mMainChatButtons[index + 1]->setMaterialName("Test/OriginalChatBut0");
     if(isInSession)
+    {
+        mMainChatButtons[index + 1]->setMaterialName("Test/OriginalChatBut3");
         mChatroomPlayers[index + 1]->setColour(Ogre::ColourValue(1.0f, 1.0f, 0.0f));
+    }
 }
 
 #endif

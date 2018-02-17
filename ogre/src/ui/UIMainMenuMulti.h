@@ -54,6 +54,7 @@ public:
     void roomLeft(const std::string& player);
     void playerMessage(const std::string& player, const std::string& message);
     void playerReadyChange(const std::string& player, bool isReady);
+    void hostAICountChange(size_t count);
 
     void buttonHit(OgreBites::Button* button) override;
 
@@ -61,11 +62,14 @@ public:
 
 private:
 
+    void createMaterials(CustomTrayManager* trayMgr);
+
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
     void updateRoomState(const std::string& playerMessage = "")const;
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
+    void aiCountSwitcher(size_t index);
 
     void addCurrentPlayer(const std::string& player);
     void addOtherPlayer(size_t index, const std::string& player, bool isInSession);
@@ -73,6 +77,8 @@ private:
     MenuMultiMode * mMenuMultiMode;
 
     Ogre::PanelOverlayElement* mMainBackground;
+
+    Ogre::PanelOverlayElement* mMainChatButtons[GameState::mRaceGridCarsMax];
 
     Ogre::TextAreaOverlayElement * mChatroomPlayers[GameState::mRaceGridCarsMax];
     std::map<std::string, size_t> mPlayerToChatList;
