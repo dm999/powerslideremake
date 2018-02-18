@@ -265,6 +265,35 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     mOptionLabels[5]->setCaption("Change Name");
     mOptionLabels[6]->setCaption("Trophies");
 
+    //Options Graphics Shadow
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Shadow = createTextArea("MainWindowOptionGraphicsShadowLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Shadow->setCaption("Shadows");
+        mOptionGraphicsLabel_Shadow->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Shadow->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Shadow->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Shadow->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_Shadow->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Shadow->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Shadow_Val = createTextArea("MainWindowOptionGraphicsShadowValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getGameState().isCastShadows())
+            mOptionGraphicsLabel_Shadow_Val->setCaption("Yes");
+        else
+            mOptionGraphicsLabel_Shadow_Val->setCaption("No");
+        mOptionGraphicsLabel_Shadow_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Shadow_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Shadow_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Shadow_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Shadow_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Shadow_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Shadow_Val);
+    }
+
     //Options Race Opponents
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
@@ -723,6 +752,20 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
+    if(mOptionGraphicsLabel_Shadow_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Shadow_Val, pos, 0))
+    {
+        if(mModeContext.getGameState().isCastShadows())
+        {
+            mModeContext.getGameState().setCastShadows(false);
+            mOptionGraphicsLabel_Shadow_Val->setCaption("No");
+        }
+        else
+        {
+            mModeContext.getGameState().setCastShadows(true);
+            mOptionGraphicsLabel_Shadow_Val->setCaption("Yes");
+        }
+    }
+
     if(mOptionRaceLabel_Opponents_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Opponents_Val, pos, 0))
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
@@ -751,12 +794,12 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     {
         if(mModeContext.getGameState().isKMPh())
         {
-            mModeContext.getGameState().setIsKMPh(false);
+            mModeContext.getGameState().setKMPh(false);
             mOptionRaceLabel_KMPH_Val->setCaption("Mph");
         }
         else
         {
-            mModeContext.getGameState().setIsKMPh(true);
+            mModeContext.getGameState().setKMPh(true);
             mOptionRaceLabel_KMPH_Val->setCaption("Kph");
         }
     }
@@ -841,6 +884,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     {
         bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
     }
+    checkCursorOverLabel(pos, mOptionGraphicsLabel_Shadow_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_KMPH_Val);
@@ -902,6 +946,12 @@ void UIMainMenuLabels::showOptionLabels()
 {
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->show();
+}
+
+void UIMainMenuLabels::showOptionGraphicsLabels()
+{
+    mOptionGraphicsLabel_Shadow->show();
+    mOptionGraphicsLabel_Shadow_Val->show();
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -1015,6 +1065,8 @@ void UIMainMenuLabels::hideAllLabels()
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->hide();
 
+    mOptionGraphicsLabel_Shadow->hide();
+    mOptionGraphicsLabel_Shadow_Val->hide();
     mOptionRaceLabel_Opponents->hide();
     mOptionRaceLabel_Opponents_Val->hide();
     mOptionRaceLabel_Transmission->hide();

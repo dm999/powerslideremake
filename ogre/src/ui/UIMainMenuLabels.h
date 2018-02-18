@@ -34,6 +34,7 @@ protected:
     void showCarLabels();
     void showCharacterLabels();
     void showOptionLabels();
+    void showOptionGraphicsLabels();
     void showOptionRaceLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showGameExitLabels();
@@ -61,6 +62,8 @@ private:
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mOptionLabels;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission;

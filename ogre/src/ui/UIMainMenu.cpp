@@ -438,6 +438,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         setWindowTitle("Options: Graphics");
         showOptionLabels();
+        showOptionGraphicsLabels();
         break;
 
     case State_Options_Input:

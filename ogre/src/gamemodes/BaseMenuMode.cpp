@@ -20,7 +20,7 @@ BaseMenuMode::BaseMenuMode(const ModeContext& modeContext, bool isInitialCreatio
 
         mModeContext.getGameState().setListenerGain(1.0f);
 
-        mModeContext.getGameState().setMirrorEnabled(true);
+        //mModeContext.getGameState().setMirrorEnabled(true);
 
         std::vector<std::string> playersCharacters;
         playersCharacters.push_back(mModeContext.getGameState().getPlayerCar().getCharacterName());

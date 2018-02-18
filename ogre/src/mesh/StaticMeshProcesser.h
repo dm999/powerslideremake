@@ -141,7 +141,8 @@ private:
                                 MSHData& mshData,
                                 const Ogre::ColourValue& skyColor,//as fog color
                                 const Ogre::Vector2& fogStartEnd,
-                                const Ogre::ColourValue& ambient);
+                                const Ogre::ColourValue& ambient,
+                                bool isShadow);
 
     /**
      * return - material names

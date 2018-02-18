@@ -122,7 +122,8 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
                                         mergedMSH[q], 
                                         gameState.getSTRPowerslide().getTrackSkyColor(gameState.getTrackName()),
                                         gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName()),
-                                        gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getTrackName()));
+                                        gameState.getSTRPowerslide().getTrackAmbientColor(gameState.getTrackName()),
+                                        gameState.isCastShadows());
             }
             else
             {
@@ -195,7 +196,7 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         }
     }
 
-    if(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline))
+    if(gameState.isCastShadows())
     {
         //shadow light
         gameState.setShadowLight(sceneMgr->createLight("shadow_light"));
@@ -491,7 +492,8 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
                                                 MSHData& mshData,
                                                 const Ogre::ColourValue& skyColor,
                                                 const Ogre::Vector2& fogStartEnd,
-                                                const Ogre::ColourValue& ambient)
+                                                const Ogre::ColourValue& ambient,
+                                                bool isShadow)
 {
     Ogre::Entity * res = NULL;
 
@@ -502,6 +504,19 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
     Ogre::MaterialPtr overrideMaterial = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterial", pipeline));
     Ogre::MaterialPtr overrideMaterialFog = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialFog", pipeline));
     Ogre::MaterialPtr overrideMaterialArray = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialArray", pipeline));
+
+    if(isShadow)
+    {
+        overrideMaterial = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterial", pipeline));
+        overrideMaterialFog = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialFog", pipeline));
+        overrideMaterialArray = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialArray", pipeline));
+    }
+    else
+    {
+        overrideMaterial = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialNoShadow", pipeline));
+        overrideMaterialFog = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialNoShadowFog", pipeline));
+        overrideMaterialArray = Ogre::MaterialManager::getSingleton().getByName(luaManager.ReadScalarString("Terrain.Material.SingleSubMaterialArray", pipeline));
+    }
 
     std::string defaultTextureName = luaManager.ReadScalarString("Terrain.Material.DefaultTextureName", pipeline);
 

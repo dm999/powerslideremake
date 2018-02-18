@@ -182,7 +182,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
                 mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
         }
 
-        mModelEntity[q]->setCastShadows(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline));
+        mModelEntity[q]->setCastShadows(gameState.isCastShadows());
 
         if(q > 0)
         {

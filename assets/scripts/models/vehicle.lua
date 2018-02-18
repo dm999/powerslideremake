@@ -2,7 +2,6 @@ function createVehicle()
 
     local Model = {}
 
-    Model.IsCastShadows = true;
     Model.ShadowLightDistance = 40.0;
     Model.ShadowLightOuterAngle = 90.0;
     Model.ShadowLightInnerAngle = 80.0;

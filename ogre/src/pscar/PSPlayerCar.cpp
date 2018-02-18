@@ -34,7 +34,7 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
 
     for(int q = 0; q < 5; ++q)
     {
-        mModelEntity[q]->setCastShadows(luaManager.ReadScalarBool("Model.IsCastShadows", pipeline));
+        mModelEntity[q]->setCastShadows(gameState.isCastShadows());
     }
 }
 

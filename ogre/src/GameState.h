@@ -50,7 +50,10 @@ public:
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}
 
     bool isKMPh() const {return mIsKMPh;}
-    void setIsKMPh(bool isKMPh){mIsKMPh = isKMPh;}
+    void setKMPh(bool isKMPh){mIsKMPh = isKMPh;}
+
+    bool isCastShadows() const {return mIsCastShadows;}
+    void setCastShadows(bool isCastShadows){mIsCastShadows = isCastShadows;}
 
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
@@ -167,6 +170,7 @@ private:
 
     TransmissionType mTransmissionType;
     bool mIsKMPh;
+    bool mIsCastShadows;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;
