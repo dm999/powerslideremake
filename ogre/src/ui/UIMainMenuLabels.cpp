@@ -920,8 +920,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     if(mOptionGraphicsLabel_Resolution_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Val, pos, 0))
     {
             Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
-            Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
-            Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
+            Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption videoMode = configOpts["Video Mode"];
             size_t curVal = 0;
             for(size_t q = 0; q < videoMode.possibleValues.size(); ++q)
             {
@@ -933,14 +933,17 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
             }
             ++curVal;
             if(curVal >= videoMode.possibleValues.size()) curVal = 0;
-            videoMode.currentValue = videoMode.possibleValues[curVal];
             mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.possibleValues[curVal]);
     }
 
     if(mOptionGraphicsLabel_Resolution_Apply->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Apply, pos, 0))
     {
+        Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+        Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
+        Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
         unsigned int desiredWidth, desiredHeight;
         std::string desiredRes = mOptionGraphicsLabel_Resolution_Val->getCaption();
+        videoMode.currentValue = desiredRes;
         sscanf(desiredRes.c_str(), "%d x %d", &desiredWidth, &desiredHeight);
         if(mModeContext.getRenderWindow()->isFullScreen())
         {
@@ -1139,6 +1142,10 @@ void UIMainMenuLabels::showOptionLabels()
 {
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->show();
+
+#ifdef NO_OPENAL
+    mOptionLabels[2]->hide();
+#endif
 }
 
 void UIMainMenuLabels::showOptionGraphicsLabels()
@@ -1152,6 +1159,10 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mOptionGraphicsLabel_Fulscreen->show();
     mOptionGraphicsLabel_Fulscreen_Val->show();
 
+    Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+    Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+    Ogre::ConfigOption videoMode = configOpts["Video Mode"];
+    mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
     mOptionGraphicsLabel_Resolution->show();
     mOptionGraphicsLabel_Resolution_Val->show();
     mOptionGraphicsLabel_Resolution_Apply->show();
