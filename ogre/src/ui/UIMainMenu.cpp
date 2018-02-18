@@ -257,6 +257,9 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
     if(panel != NULL && panel->getName() == "Car")
         switchState(State_Car);
 
+    if(panel != NULL && panel->getName() == "Option")
+        switchState(State_Options);
+
     if(panel != NULL && panel->getName() == "Race")
         switchState(State_StartingGrid);
 
@@ -429,6 +432,12 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showBackgroundCharacter();
         setWindowTitle("Select Character");
         showCharacterLabels();
+        break;
+
+    case State_Options:
+        mIsInStartingGrid = false;
+        setWindowTitle("Options: Graphics");
+        showOptionLabels();
         break;
 
     case State_StartingGrid:

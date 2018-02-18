@@ -241,6 +241,30 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mCharactersLabels[q]);
     }
 
+    mOptionLabels.clear();
+
+    for(size_t q = 0; q < 7; ++q)
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
+        mOptionLabels.push_back(NULL);
+        mOptionLabels[q] = createTextArea("MainWindowOptionLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionLabels[q]->setCaption("");
+        mOptionLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mOptionLabels[q]->setSpaceWidth(9.0f);
+        mOptionLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
+        mOptionLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionLabels[q]->setFontName("SdkTrays/Caption");
+        mOptionLabels[q]->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionLabels[q]);
+    }
+    mOptionLabels[0]->setCaption("Graphics");
+    mOptionLabels[1]->setCaption("Input Devices");
+    mOptionLabels[2]->setCaption("Sound");
+    mOptionLabels[3]->setCaption("Race Options");
+    mOptionLabels[4]->setCaption("High Scores");
+    mOptionLabels[5]->setCaption("Change Name");
+    mOptionLabels[6]->setCaption("Trophies");
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -576,6 +600,23 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
+    for(size_t q = 0; q < mOptionLabels.size(); ++q)
+    {
+        if(mOptionLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mOptionLabels[q], pos, 0))
+        {
+            setWindowTitle("Options: " + mOptionLabels[q]->getCaption());
+            //std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            //characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+            //std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+            //mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
+
+            //switchState(State_StartingGrid);
+            return;
+        }
+    }
+
     if(mGameExitYesLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitYesLabel, pos, 0))
     {
         mModeContext.getBaseApp()->setShutdown(false);
@@ -638,6 +679,11 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
         }
     }
 
+    for(size_t q = 0; q < mOptionLabels.size(); ++q)
+    {
+        bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
+    }
+
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
 }
@@ -688,6 +734,12 @@ void UIMainMenuLabels::showCharacterLabels()
         if(STRPowerslide::getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getCaption().asUTF8())
             setCharacterLogo(q);
     }
+}
+
+void UIMainMenuLabels::showOptionLabels()
+{
+    for(size_t q = 0; q < mOptionLabels.size(); ++q)
+        mOptionLabels[q]->show();
 }
 
 void UIMainMenuLabels::showGameExitLabels()
@@ -785,6 +837,9 @@ void UIMainMenuLabels::hideAllLabels()
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
         mCharactersLabels[q]->hide();
+
+    for(size_t q = 0; q < mOptionLabels.size(); ++q)
+        mOptionLabels[q]->hide();
 
     mStartingGridTimeLabel->hide();
 
