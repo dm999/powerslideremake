@@ -65,6 +65,10 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission_Val;
+    Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH;
+    Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
+    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
+    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror_Val;
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 

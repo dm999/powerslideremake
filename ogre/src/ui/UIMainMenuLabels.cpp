@@ -320,6 +320,64 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Transmission_Val);
     }
 
+    //Options Race KMPH
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 102.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_KMPH = createTextArea("MainWindowOptionRaceKMPHLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_KMPH->setCaption("Speed Display");
+        mOptionRaceLabel_KMPH->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_KMPH->setSpaceWidth(9.0f);
+        mOptionRaceLabel_KMPH->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_KMPH->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionRaceLabel_KMPH->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_KMPH->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionRaceLabel_KMPH);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 102.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_KMPH_Val = createTextArea("MainWindowOptionRaceKMPHValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getGameState().isKMPh())
+            mOptionRaceLabel_KMPH_Val->setCaption("Kph");
+        else
+            mOptionRaceLabel_KMPH_Val->setCaption("Mph");
+        mOptionRaceLabel_KMPH_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_KMPH_Val->setSpaceWidth(9.0f);
+        mOptionRaceLabel_KMPH_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_KMPH_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionRaceLabel_KMPH_Val->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_KMPH_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionRaceLabel_KMPH_Val);
+    }
+
+    //Options Race Mirror
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 122.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Mirror = createTextArea("MainWindowOptionRaceMirrorLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_Mirror->setCaption("Rearview Mirror");
+        mOptionRaceLabel_Mirror->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Mirror->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Mirror->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Mirror->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionRaceLabel_Mirror->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Mirror->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionRaceLabel_Mirror);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Mirror_Val = createTextArea("MainWindowOptionRaceMirrorValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getGameState().getMirrorEnabled())
+            mOptionRaceLabel_Mirror_Val->setCaption("Yes");
+        else
+            mOptionRaceLabel_Mirror_Val->setCaption("No");
+        mOptionRaceLabel_Mirror_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Mirror_Val->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Mirror_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Mirror_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionRaceLabel_Mirror_Val->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Mirror_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionRaceLabel_Mirror_Val);
+    }
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -689,6 +747,34 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
+    if(mOptionRaceLabel_KMPH_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_KMPH_Val, pos, 0))
+    {
+        if(mModeContext.getGameState().isKMPh())
+        {
+            mModeContext.getGameState().setIsKMPh(false);
+            mOptionRaceLabel_KMPH_Val->setCaption("Mph");
+        }
+        else
+        {
+            mModeContext.getGameState().setIsKMPh(true);
+            mOptionRaceLabel_KMPH_Val->setCaption("Kph");
+        }
+    }
+
+    if(mOptionRaceLabel_Mirror_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Mirror_Val, pos, 0))
+    {
+        if(mModeContext.getGameState().getMirrorEnabled())
+        {
+            mModeContext.getGameState().setMirrorEnabled(false);
+            mOptionRaceLabel_Mirror_Val->setCaption("No");
+        }
+        else
+        {
+            mModeContext.getGameState().setMirrorEnabled(true);
+            mOptionRaceLabel_Mirror_Val->setCaption("Yes");
+        }
+    }
+
     if(mGameExitYesLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitYesLabel, pos, 0))
     {
         mModeContext.getBaseApp()->setShutdown(false);
@@ -757,6 +843,8 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     }
     checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
+    checkCursorOverLabel(pos, mOptionRaceLabel_KMPH_Val);
+    checkCursorOverLabel(pos, mOptionRaceLabel_Mirror_Val);
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
@@ -822,6 +910,10 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mOptionRaceLabel_Opponents_Val->show();
     mOptionRaceLabel_Transmission->show();
     mOptionRaceLabel_Transmission_Val->show();
+    mOptionRaceLabel_KMPH->show();
+    mOptionRaceLabel_KMPH_Val->show();
+    mOptionRaceLabel_Mirror->show();
+    mOptionRaceLabel_Mirror_Val->show();
 }
 
 void UIMainMenuLabels::showGameExitLabels()
@@ -927,6 +1019,10 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_Opponents_Val->hide();
     mOptionRaceLabel_Transmission->hide();
     mOptionRaceLabel_Transmission_Val->hide();
+    mOptionRaceLabel_KMPH->hide();
+    mOptionRaceLabel_KMPH_Val->hide();
+    mOptionRaceLabel_Mirror->hide();
+    mOptionRaceLabel_Mirror_Val->hide();
 
     mStartingGridTimeLabel->hide();
 

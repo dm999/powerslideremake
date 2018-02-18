@@ -49,6 +49,9 @@ public:
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}
 
+    bool isKMPh() const {return mIsKMPh;}
+    void setIsKMPh(bool isKMPh){mIsKMPh = isKMPh;}
+
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
 
@@ -163,6 +166,7 @@ private:
     size_t mLapsCount;
 
     TransmissionType mTransmissionType;
+    bool mIsKMPh;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;

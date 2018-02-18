@@ -1234,6 +1234,9 @@ void UIRace::setCarSpeed(Ogre::Real speed)
 {
     speed = Ogre::Math::Abs(speed);
 
+    if(!mModeContext.getGameState().isKMPh())
+        speed /= 1.8f;
+
     int speedInt = static_cast<int>(speed);
     unsigned char digit1 = speedInt % 10;
     unsigned char digit2 = (speedInt / 10) % 10;
