@@ -56,6 +56,7 @@ public:
      * create vehicles and positioning them according data
      */
     void prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo);
+    const MultiplayerSessionStartInfo& getMultiplayerSessionStartInfo()const{return mSessionStartInfo;}
 
     void tabPressed();
 
@@ -96,6 +97,8 @@ private:
     CommonIncludes::shared_ptr<UIRaceMulti> mUIRaceMulti;
 
     std::vector<CommonIncludes::shared_ptr<MultiplayerAILapFinishController> > mAILapsController;
+
+    MultiplayerSessionStartInfo mSessionStartInfo; // to pass back to menu skins info
 
     bool mIsSelfFinished;
     Ogre::Real mSelfTotalRaceTime;

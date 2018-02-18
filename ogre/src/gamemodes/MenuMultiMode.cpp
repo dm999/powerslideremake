@@ -36,7 +36,7 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
 /**
  * Multiplayer session already created (switch from multi race to multi menu)
  */
-MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller) :
+MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller, const MultiplayerSessionStartInfo& sessionInfo) :
     BaseMenuMode(modeContext, false),
     mIsEnterFromBaseMenu(false),
     mIsLobbyEntered(true)
@@ -46,11 +46,12 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonInclude
     //get multiplayer controller from previous (racing) mode
     assert(controller.get());
     mMultiplayerController = controller;
+    mMultiplayerSessionStartInfo = sessionInfo;
 }
 
 void MenuMultiMode::doInitData(LoaderListener* loaderListener)
 {
-    mUIMainMenuMulti->load(mModeContext.mTrayMgr, mModeContext.mGameState, mIsEnterFromBaseMenu);
+    mUIMainMenuMulti->load(mModeContext.mTrayMgr, mModeContext.mGameState, mIsEnterFromBaseMenu, mMultiplayerSessionStartInfo.mPlayersSkins);
 
     //do room operations after UI created
 
@@ -201,8 +202,11 @@ void MenuMultiMode::onRoomClosed(const std::string& player)
 
 void MenuMultiMode::onLobbyMessage(const std::string& player, const MultiplayerLobbyData& data)
 {
-    mUIMainMenuMulti->playerReadyChange(player, data.mIsReady);
-    mUIMainMenuMulti->playerSkinChanged(player, data.mCharacterName);
+    if(data.mDataType == lobbyDataRegular)
+    {
+        mUIMainMenuMulti->playerReadyChange(player, data.mIsReady);
+        mUIMainMenuMulti->playerSkinChanged(player, data.mCharacterName);
+    }
 
     mUIMainMenuMulti->addEvent("player [" + player + "] select character: " + data.mCharacterName);
 

@@ -23,7 +23,7 @@ public:
     UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode);
     ~UIMainMenuMulti(){}
 
-    void load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu);
+    void load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu, const std::map<std::string, std::string>& playersSkins);
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 

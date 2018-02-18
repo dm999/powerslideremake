@@ -79,7 +79,7 @@ void UIRaceMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 
                 MultiplayerLobbyData multiplayerLobbyData(
                     false, 
-                    "", 
+                    mModeContext.getGameState().getPlayerCar().getCharacterName(), 
                     message, 
                     "", 
                     0, 0, 

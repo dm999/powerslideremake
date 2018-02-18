@@ -98,6 +98,7 @@ struct MultiplayerSessionData
  * Used for switch between multi menu mode to multi race mode:
  * multiplayer controller execute onSessionStart when GameModeSwitcher is in menu mode
  * this structure used to pass data into racing mode
+ * Also used for switch from multiplayer race to multi menu mode - to restore skins
  */
 struct MultiplayerSessionStartInfo
 {

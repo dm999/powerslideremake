@@ -490,6 +490,8 @@ void MultiPlayerMode::onPlayerQuitSession(const std::string& player, bool isHost
 
 void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& sessionStartInfo)
 {
+    mSessionStartInfo = sessionStartInfo;
+
     //hack to enable correct steering
     InputType originalInput = mModeContext.mGameState.getInputType();
     mModeContext.mGameState.setInputType(itMouse);

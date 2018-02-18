@@ -150,7 +150,7 @@ void UIMainMenuMulti::createMaterials(CustomTrayManager* trayMgr)
     }
 }
 
-void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu)
+void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu, const std::map<std::string, std::string>& playersSkins)
 {
 
 
@@ -473,6 +473,9 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
             {
                 addOtherPlayer(index++, players[q], false);
             }
+
+            std::map<std::string, std::string>::const_iterator i = playersSkins.find(players[q]);
+            playerSkinChanged(players[q], (*i).second);
         }
     }
 
@@ -844,11 +847,22 @@ void UIMainMenuMulti::roomJoined(const std::string& player)
 
 void UIMainMenuMulti::roomLeft(const std::string& player)
 {
+    std::map<std::string, std::pair<std::string, std::string> > playerToPlayerStatus;//ready material, skin
+
+    for(std::map<std::string, size_t>::const_iterator i = mPlayerToChatList.begin(); i != mPlayerToChatList.end(); ++i)
+    {
+        playerToPlayerStatus[(*i).first] = std::make_pair(
+            mMainChatButtons[(*i).second]->getMaterialName(), 
+            mMainCarIcons[(*i).second]->getMaterialName());
+    }
+
     std::map<std::string, size_t>::iterator i = mPlayerToChatList.find(player);
     if(i != mPlayerToChatList.end())
     {
         size_t indexToDelete = (*i).second;
         size_t indexToDeleteMessage = indexToDelete - 1;
+
+        playerToPlayerStatus.erase(player);
 
         mPlayerToChatList.erase(i);
 
@@ -869,25 +883,23 @@ void UIMainMenuMulti::roomLeft(const std::string& player)
                 {
                     mChatroomPlayersMessages[q]->setCaption(mChatroomPlayersMessages[indexToRead]->getCaption());
                     mChatroomPlayersMessages[indexToRead]->setCaption("");
-
-                    if(mMainChatButtons[indexToRead]->getMaterialName() != "Test/OriginalChatBut2")
-                    {
-                        mMainChatButtons[q]->setMaterialName(mMainChatButtons[indexToRead]->getMaterialName());
-                        mMainChatButtons[indexToRead]->setMaterialName("Test/OriginalChatBut0");
-
-                        mMainCarIcons[q]->setMaterialName(mMainCarIcons[indexToRead]->getMaterialName());
-                        if(mMainCarIcons[indexToRead]->isVisible())
-                            mMainCarIcons[q]->show();
-                        else
-                        {
-                            mMainCarIcons[q]->hide();
-                            mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut0");
-                        }
-                        mMainCarIcons[indexToRead]->hide();
-                    }
                 }
             }
             mChatroomPlayers[q]->setCaption("");
+        }
+
+        mMainCarIcons[playerToPlayerStatus.size()]->hide();
+        mMainChatButtons[playerToPlayerStatus.size()]->setMaterialName("Test/OriginalChatBut0");
+
+        for(std::map<std::string, std::pair<std::string, std::string> >::iterator ii = playerToPlayerStatus.begin(), j = playerToPlayerStatus.end(); ii != j; ++ii)
+        {
+            std::string curPlayer = (*ii).first;
+            std::map<std::string, size_t>::iterator iii = mPlayerToChatList.find(curPlayer);
+            if((*iii).second != 0)
+            {
+                mMainChatButtons[(*iii).second]->setMaterialName((*ii).second.first);
+                mMainCarIcons[(*iii).second]->setMaterialName((*ii).second.second);
+            }
         }
 
         for(std::map<std::string, size_t>::iterator ii = mPlayerToChatList.begin(), j = mPlayerToChatList.end(); ii != j; ++ii)

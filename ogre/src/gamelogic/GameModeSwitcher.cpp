@@ -99,6 +99,7 @@ void GameModeSwitcher::frameEnded()
             {
                 MultiPlayerMode * mode = static_cast<MultiPlayerMode *>(mPlayerMode.get());
                 controller = mode->getMultiplayerController();
+                multiplayerSessionStartInfo = mode->getMultiplayerSessionStartInfo();
                 assert(controller.get());
                 controller->setEvents(NULL);
                 controller->clearSession();
@@ -162,7 +163,7 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMultiMode.reset(new MenuMultiMode(mContext, controller));
+                mMenuMultiMode.reset(new MenuMultiMode(mContext, controller, multiplayerSessionStartInfo));
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMultiMode->initData(this);

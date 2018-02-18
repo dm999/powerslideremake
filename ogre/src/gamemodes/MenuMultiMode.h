@@ -17,7 +17,7 @@ class MenuMultiMode :
 public:
 
     MenuMultiMode(const ModeContext& modeContext);
-    MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller);
+    MenuMultiMode(const ModeContext& modeContext, const CommonIncludes::shared_ptr<MultiplayerController>& controller, const MultiplayerSessionStartInfo& sessionInfo);
     virtual ~MenuMultiMode(){}
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
