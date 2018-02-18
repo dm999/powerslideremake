@@ -8,6 +8,7 @@ GameState::GameState() :
     mVersion(GAMEVERSION),
     mTrackName("desert track"),
     mLapsCount(3),
+    mTransmissionType(trAuto),
     mOriginalDataInited(false),
     mAiOpponentsAmount(3),
     mAIStrength(Easy),

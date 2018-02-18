@@ -265,6 +265,61 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     mOptionLabels[5]->setCaption("Change Name");
     mOptionLabels[6]->setCaption("Trophies");
 
+    //Options Race Opponents
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Opponents = createTextArea("MainWindowOptionRaceOpponentsLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_Opponents->setCaption("Number of Opponents");
+        mOptionRaceLabel_Opponents->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Opponents->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Opponents->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Opponents->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionRaceLabel_Opponents->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Opponents->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionRaceLabel_Opponents);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Opponents_Val = createTextArea("MainWindowOptionRaceOpponentsValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+        mOptionRaceLabel_Opponents_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Opponents_Val->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Opponents_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Opponents_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionRaceLabel_Opponents_Val->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Opponents_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionRaceLabel_Opponents_Val);
+    }
+
+    //Options Race Transmission
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Transmission = createTextArea("MainWindowOptionRaceTransmissionLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_Transmission->setCaption("Transmission");
+        mOptionRaceLabel_Transmission->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Transmission->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Transmission->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Transmission->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionRaceLabel_Transmission->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Transmission->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionRaceLabel_Transmission);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Transmission_Val = createTextArea("MainWindowOptionRaceTransmissionValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getGameState().getTransmissionType() == trAuto)
+            mOptionRaceLabel_Transmission_Val->setCaption("Auto");
+        else
+            mOptionRaceLabel_Transmission_Val->setCaption("Manual");
+        mOptionRaceLabel_Transmission_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Transmission_Val->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Transmission_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Transmission_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionRaceLabel_Transmission_Val->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Transmission_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionRaceLabel_Transmission_Val);
+    }
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -605,15 +660,32 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         if(mOptionLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mOptionLabels[q], pos, 0))
         {
             setWindowTitle("Options: " + mOptionLabels[q]->getCaption());
-            //std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            //characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-            //std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-            //mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
-
-            //switchState(State_StartingGrid);
+            switchState(static_cast<SinglePlayerMenuStates>(State_Options + q));
             return;
+        }
+    }
+
+    if(mOptionRaceLabel_Opponents_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Opponents_Val, pos, 0))
+    {
+        size_t aiCount = mModeContext.getGameState().getAICount();
+        ++aiCount;
+        if(aiCount > GameState::mAIMax) aiCount = 3;
+
+        mModeContext.getGameState().setAICount(aiCount);
+        mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+    }
+
+    if(mOptionRaceLabel_Transmission_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Transmission_Val, pos, 0))
+    {
+        if(mModeContext.getGameState().getTransmissionType() == trAuto)
+        {
+            mModeContext.getGameState().setTransmissionType(trManual);
+            mOptionRaceLabel_Transmission_Val->setCaption("Manual");
+        }
+        else
+        {
+            mModeContext.getGameState().setTransmissionType(trAuto);
+            mOptionRaceLabel_Transmission_Val->setCaption("Auto");
         }
     }
 
@@ -683,6 +755,8 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     {
         bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
     }
+    checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
+    checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
@@ -740,6 +814,14 @@ void UIMainMenuLabels::showOptionLabels()
 {
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->show();
+}
+
+void UIMainMenuLabels::showOptionRaceLabels()
+{
+    mOptionRaceLabel_Opponents->show();
+    mOptionRaceLabel_Opponents_Val->show();
+    mOptionRaceLabel_Transmission->show();
+    mOptionRaceLabel_Transmission_Val->show();
 }
 
 void UIMainMenuLabels::showGameExitLabels()
@@ -840,6 +922,11 @@ void UIMainMenuLabels::hideAllLabels()
 
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->hide();
+
+    mOptionRaceLabel_Opponents->hide();
+    mOptionRaceLabel_Opponents_Val->hide();
+    mOptionRaceLabel_Transmission->hide();
+    mOptionRaceLabel_Transmission_Val->hide();
 
     mStartingGridTimeLabel->hide();
 

@@ -440,6 +440,37 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showOptionLabels();
         break;
 
+    case State_Options_Input:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        break;
+
+    case State_Options_Sound:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        break;
+
+    case State_Options_Race:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        showOptionRaceLabels();
+        break;
+
+    case State_Options_Scores:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        break;
+
+    case State_Options_Name:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        break;
+
+    case State_Options_Trophies:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        break;
+
     case State_StartingGrid:
         if(mIsInStartingGrid)
         {

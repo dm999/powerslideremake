@@ -46,6 +46,9 @@ public:
     const STRRacecrud& getSTRRacecrud() const;
     const STRRacetimes& getSTRRacetimes() const;
 
+    TransmissionType getTransmissionType() const {return mTransmissionType;}
+    void setTransmissionType(TransmissionType type){mTransmissionType = type;}
+
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
 
@@ -158,6 +161,8 @@ private:
 
     std::string mTrackName;
     size_t mLapsCount;
+
+    TransmissionType mTransmissionType;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;

@@ -28,7 +28,13 @@ enum SinglePlayerMenuStates // multiplayer menus too but before connection happe
     State_Track,
     State_Car,
     State_Character,
-    State_Options,
+    State_Options,  // == options: graphics
+    State_Options_Input,
+    State_Options_Sound,
+    State_Options_Race,
+    State_Options_Scores,
+    State_Options_Name,
+    State_Options_Trophies,
     State_StartingGrid,
     State_Podium,
     State_ExitGame

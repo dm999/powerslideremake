@@ -466,6 +466,8 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
+    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getCarEngine().setTransmissionType(mModeContext.mGameState.getTransmissionType());
+
     if(loaderListener)
         loaderListener->loadState(0.81f, "player model loaded");
 
