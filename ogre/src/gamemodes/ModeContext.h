@@ -52,6 +52,8 @@ public:
     GameState& getGameState(){return mGameState;}
     const GameState& getGameState() const{return mGameState;}
 
+    Ogre::RenderWindow* getRenderWindow(){return mWindow;}
+
     CustomTrayManager* getTrayManager(){return mTrayMgr;}
 
     BaseApp* getBaseApp(){return mBaseApp;}

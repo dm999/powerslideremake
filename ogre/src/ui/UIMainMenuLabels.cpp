@@ -3,6 +3,8 @@
 
 #include "../tools/Conversions.h"
 
+#include "../gamelogic/GameModeSwitcher.h"
+
 #include "../BaseApp.h"
 
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
@@ -292,6 +294,105 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mOptionGraphicsLabel_Shadow_Val->setFontName("SdkTrays/Caption");
         mOptionGraphicsLabel_Shadow_Val->setColour(mInactiveLabel);
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow_Val);
+    }
+
+    //Options Graphics VSync
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_VSync = createTextArea("MainWindowOptionGraphicsVsyncLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_VSync->setCaption("VSync");
+        mOptionGraphicsLabel_VSync->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_VSync->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_VSync->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_VSync->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_VSync->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_VSync->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_VSync);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_VSync_Val = createTextArea("MainWindowOptionGraphicsVSyncValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getRenderWindow()->isVSyncEnabled())
+            mOptionGraphicsLabel_VSync_Val->setCaption("Yes");
+        else
+            mOptionGraphicsLabel_VSync_Val->setCaption("No");
+        mOptionGraphicsLabel_VSync_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_VSync_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_VSync_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_VSync_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_VSync_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_VSync_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionGraphicsLabel_VSync_Val);
+    }
+
+    //Options Graphics Fullscreen
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 102.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Fulscreen = createTextArea("MainWindowOptionGraphicsFullscreenLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Fulscreen->setCaption("Fullscreen");
+        mOptionGraphicsLabel_Fulscreen->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Fulscreen->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Fulscreen->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Fulscreen->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_Fulscreen->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Fulscreen->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Fulscreen);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 102.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Fulscreen_Val = createTextArea("MainWindowOptionGraphicsFullscreenValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        if(mModeContext.getRenderWindow()->isFullScreen())
+            mOptionGraphicsLabel_Fulscreen_Val->setCaption("Yes");
+        else
+            mOptionGraphicsLabel_Fulscreen_Val->setCaption("No");
+        mOptionGraphicsLabel_Fulscreen_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Fulscreen_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Fulscreen_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Fulscreen_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Fulscreen_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Fulscreen_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Fulscreen_Val);
+    }
+
+    //Options Graphics Resolution
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 122.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Resolution = createTextArea("MainWindowOptionGraphicsResolutionLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Resolution->setCaption("Resolution");
+        mOptionGraphicsLabel_Resolution->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Resolution->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_Resolution->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Resolution->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Resolution);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Resolution_Val = createTextArea("MainWindowOptionGraphicsResolutionValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+        Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+        Ogre::ConfigOption videoMode = configOpts["Video Mode"];
+        mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
+        mOptionGraphicsLabel_Resolution_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Resolution_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Resolution_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Resolution_Val->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Resolution_Val);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(267.0f, 122.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Resolution_Apply = createTextArea("MainWindowOptionGraphicsResolutionApplyLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Resolution_Apply->setCaption("Apply");
+        mOptionGraphicsLabel_Resolution_Apply->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution_Apply->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Resolution_Apply->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Resolution_Apply->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Resolution_Apply->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Resolution_Apply->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Resolution_Apply);
     }
 
     //Options Race Opponents
@@ -766,6 +867,94 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
+    if(mOptionGraphicsLabel_VSync_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_VSync_Val, pos, 0))
+    {
+        if(mModeContext.getRenderWindow()->isVSyncEnabled())
+        {
+            mModeContext.getRenderWindow()->setVSyncEnabled(false);
+            mOptionGraphicsLabel_VSync_Val->setCaption("No");
+        }
+        else
+        {
+            mModeContext.getRenderWindow()->setVSyncEnabled(true);
+            mModeContext.getRenderWindow()->setVSyncInterval(1);
+            mOptionGraphicsLabel_VSync_Val->setCaption("Yes");
+        }
+    }
+
+    if(mOptionGraphicsLabel_Fulscreen_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Fulscreen_Val, pos, 0))
+    {
+        if(mModeContext.getRenderWindow()->isFullScreen())
+        {
+            unsigned int width, height, colourDepth;
+            int left, top;
+            mModeContext.getRenderWindow()->getMetrics(width, height, colourDepth, left, top);
+            mModeContext.getRenderWindow()->setFullscreen(false, width, height);
+            mOptionGraphicsLabel_Fulscreen_Val->setCaption("No");
+
+            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+            Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption videoMode = configOpts["Video Mode"];
+            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
+        }
+        else
+        {
+            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+            Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
+            unsigned int curWidth, curHeight;
+            sscanf(videoMode.currentValue.c_str(), "%d x %d", &curWidth, &curHeight);
+            //unsigned int width, height, colourDepth;
+            //int left, top;
+            //mModeContext.getRenderWindow()->getMetrics(width, height, colourDepth, left, top);
+
+            mModeContext.getRenderWindow()->setFullscreen(true, curWidth, curHeight);
+            //mModeContext.getRenderWindow()->resize(curWidth, curHeight);
+            mOptionGraphicsLabel_Fulscreen_Val->setCaption("Yes");
+            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
+        }
+
+        mModeContext.getGameModeSwitcher()->recreateMenu();
+    }
+
+    if(mOptionGraphicsLabel_Resolution_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Val, pos, 0))
+    {
+            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+            Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
+            size_t curVal = 0;
+            for(size_t q = 0; q < videoMode.possibleValues.size(); ++q)
+            {
+                if(mOptionGraphicsLabel_Resolution_Val->getCaption() == videoMode.possibleValues[q])
+                {
+                    curVal = q;
+                    break;
+                }
+            }
+            ++curVal;
+            if(curVal >= videoMode.possibleValues.size()) curVal = 0;
+            videoMode.currentValue = videoMode.possibleValues[curVal];
+            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.possibleValues[curVal]);
+    }
+
+    if(mOptionGraphicsLabel_Resolution_Apply->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Apply, pos, 0))
+    {
+        unsigned int desiredWidth, desiredHeight;
+        std::string desiredRes = mOptionGraphicsLabel_Resolution_Val->getCaption();
+        sscanf(desiredRes.c_str(), "%d x %d", &desiredWidth, &desiredHeight);
+        if(mModeContext.getRenderWindow()->isFullScreen())
+        {
+            mModeContext.getRenderWindow()->setFullscreen(true, desiredWidth, desiredHeight);
+        }
+        else
+        {
+            mModeContext.getRenderWindow()->setFullscreen(false, desiredWidth, desiredHeight);
+            mModeContext.getRenderWindow()->resize(desiredWidth, desiredHeight);
+        }
+
+        mModeContext.getGameModeSwitcher()->recreateMenu();
+    }
+
     if(mOptionRaceLabel_Opponents_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Opponents_Val, pos, 0))
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
@@ -885,6 +1074,10 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
         bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
     }
     checkCursorOverLabel(pos, mOptionGraphicsLabel_Shadow_Val);
+    checkCursorOverLabel(pos, mOptionGraphicsLabel_VSync_Val);
+    checkCursorOverLabel(pos, mOptionGraphicsLabel_Fulscreen_Val);
+    checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Val);
+    checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Apply);
     checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_KMPH_Val);
@@ -952,6 +1145,16 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
 {
     mOptionGraphicsLabel_Shadow->show();
     mOptionGraphicsLabel_Shadow_Val->show();
+
+    mOptionGraphicsLabel_VSync->show();
+    mOptionGraphicsLabel_VSync_Val->show();
+
+    mOptionGraphicsLabel_Fulscreen->show();
+    mOptionGraphicsLabel_Fulscreen_Val->show();
+
+    mOptionGraphicsLabel_Resolution->show();
+    mOptionGraphicsLabel_Resolution_Val->show();
+    mOptionGraphicsLabel_Resolution_Apply->show();
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -1067,6 +1270,13 @@ void UIMainMenuLabels::hideAllLabels()
 
     mOptionGraphicsLabel_Shadow->hide();
     mOptionGraphicsLabel_Shadow_Val->hide();
+    mOptionGraphicsLabel_VSync->hide();
+    mOptionGraphicsLabel_VSync_Val->hide();
+    mOptionGraphicsLabel_Fulscreen->hide();
+    mOptionGraphicsLabel_Fulscreen_Val->hide();
+    mOptionGraphicsLabel_Resolution->hide();
+    mOptionGraphicsLabel_Resolution_Val->hide();
+    mOptionGraphicsLabel_Resolution_Apply->hide();
     mOptionRaceLabel_Opponents->hide();
     mOptionRaceLabel_Opponents_Val->hide();
     mOptionRaceLabel_Transmission->hide();

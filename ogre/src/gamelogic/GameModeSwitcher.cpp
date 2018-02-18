@@ -21,7 +21,8 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
     mGameMode(ModeMenu), mIsSwitchMode(false),
     mIsInitialLoadPassed(false),
     mIsLoadPassed(true),
-    mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp")
+    mUIBackground(mContext, modeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "em.bmp"),
+    mIsRecreate(false)
 {
 
     mContext.setGameModeSwitcher(this);
@@ -77,6 +78,23 @@ void GameModeSwitcher::frameEnded()
 {
     bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
     bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceMulti;
+
+    if(mIsRecreate)
+    {
+        ++mRecreateFramesCount;
+        if(mRecreateFramesCount > 1)//mRecreateFramesCount - to make sure OverlayManager changed
+        {
+            mIsInitialLoadPassed = false;//to disable unloader progress
+            clear();
+            mGameMode = ModeMenu;
+            mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
+            mMenuMode->initData(this);
+            mMenuMode->initCamera();
+            mIsInitialLoadPassed = true;
+            mIsRecreate = false;
+            return;
+        }
+    }
 
     //exit on time
     const unsigned long afterFinishTimeThreshold = 10000; // ms
@@ -260,6 +278,12 @@ void GameModeSwitcher::switchMode(GameMode nextMode)
 {
     mGameModeNext = nextMode;
     mIsSwitchMode = true;
+}
+
+void GameModeSwitcher::recreateMenu()
+{
+    mIsRecreate = true;
+    mRecreateFramesCount = 0;
 }
 
 void GameModeSwitcher::restartRace()

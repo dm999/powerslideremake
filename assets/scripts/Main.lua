@@ -2,9 +2,9 @@ Main = {}
 Main.LevelLogDetailed = false;
 
 Window = {}
-Window.IsFullScreen = "No";
+Window.IsFullScreen = "Yes";
 Window.FSAA = "0";
-Window.Resolution = "1280 x 1024";
+Window.Resolution = "800 x 600";
 Window.VSync = "No"
 Window.VSyncInterval = "1"
 

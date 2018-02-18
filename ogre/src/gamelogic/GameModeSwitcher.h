@@ -35,6 +35,7 @@ public:
     void frameEnded();
 
     void switchMode(GameMode nextMode);
+    void recreateMenu();
 
     void restartRace();
 
@@ -74,6 +75,9 @@ private:
     GameMode mGameMode;//current
     GameMode mGameModeNext;//next
     bool mIsSwitchMode;
+
+    bool mIsRecreate;
+    size_t mRecreateFramesCount;
 
     bool mIsInitialLoadPassed;
     bool mIsLoadPassed;
