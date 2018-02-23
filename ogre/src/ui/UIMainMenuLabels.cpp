@@ -267,6 +267,8 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     mOptionLabels[5]->setCaption("Change Name");
     mOptionLabels[6]->setCaption("Trophies");
 
+    const size_t maxValStr = 20;
+
     //Options Graphics Vendor
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
@@ -284,6 +286,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Vendor_Val = createTextArea("MainWindowOptionGraphicsVendorValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         Ogre::String vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+        if(vendor.length() > maxValStr)
+        {
+            vendor = vendor.substr(0, maxValStr);
+            vendor += "...";
+        }
         mOptionGraphicsLabel_Vendor_Val->setCaption(vendor);
         mOptionGraphicsLabel_Vendor_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mOptionGraphicsLabel_Vendor_Val->setSpaceWidth(9.0f);
@@ -311,6 +318,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Renderer_Val = createTextArea("MainWindowOptionGraphicsRendererValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         Ogre::String renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+        if(renderer.length() > maxValStr)
+        {
+            renderer = renderer.substr(0, maxValStr);
+            renderer += "...";
+        }
         mOptionGraphicsLabel_Renderer_Val->setCaption(renderer);
         mOptionGraphicsLabel_Renderer_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mOptionGraphicsLabel_Renderer_Val->setSpaceWidth(9.0f);
