@@ -267,9 +267,63 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     mOptionLabels[5]->setCaption("Change Name");
     mOptionLabels[6]->setCaption("Trophies");
 
-    //Options Graphics Shadow
+    //Options Graphics Vendor
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Vendor = createTextArea("MainWindowOptionGraphicsVendorLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Vendor->setCaption("Vendor");
+        mOptionGraphicsLabel_Vendor->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Vendor->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Vendor->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Vendor->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_Vendor->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Vendor->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Vendor);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Vendor_Val = createTextArea("MainWindowOptionGraphicsVendorValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::String vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+        mOptionGraphicsLabel_Vendor_Val->setCaption(vendor);
+        mOptionGraphicsLabel_Vendor_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Vendor_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Vendor_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Vendor_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Vendor_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Vendor_Val->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Vendor_Val);
+    }
+
+    //Options Graphics Renderer
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Renderer = createTextArea("MainWindowOptionGraphicsRendrereLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionGraphicsLabel_Renderer->setCaption("Renderer");
+        mOptionGraphicsLabel_Renderer->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Renderer->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Renderer->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Renderer->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionGraphicsLabel_Renderer->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Renderer->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Renderer);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Renderer_Val = createTextArea("MainWindowOptionGraphicsRendererValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::String renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+        mOptionGraphicsLabel_Renderer_Val->setCaption(renderer);
+        mOptionGraphicsLabel_Renderer_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Renderer_Val->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Renderer_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Renderer_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionGraphicsLabel_Renderer_Val->setFontName("SdkTrays/Caption");
+        mOptionGraphicsLabel_Renderer_Val->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Renderer_Val);
+    }
+
+    //Options Graphics Shadow
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 102.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Shadow = createTextArea("MainWindowOptionGraphicsShadowLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionGraphicsLabel_Shadow->setCaption("Shadows");
         mOptionGraphicsLabel_Shadow->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -281,7 +335,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 102.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Shadow_Val = createTextArea("MainWindowOptionGraphicsShadowValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         if(mModeContext.getGameState().isCastShadows())
             mOptionGraphicsLabel_Shadow_Val->setCaption("Yes");
@@ -298,7 +352,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     //Options Graphics VSync
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 82.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 122.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_VSync = createTextArea("MainWindowOptionGraphicsVsyncLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionGraphicsLabel_VSync->setCaption("VSync");
         mOptionGraphicsLabel_VSync->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -310,7 +364,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_VSync);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_VSync_Val = createTextArea("MainWindowOptionGraphicsVSyncValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         if(mModeContext.getRenderWindow()->isVSyncEnabled())
             mOptionGraphicsLabel_VSync_Val->setCaption("Yes");
@@ -327,7 +381,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     //Options Graphics Fullscreen
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 102.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 142.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Fulscreen = createTextArea("MainWindowOptionGraphicsFullscreenLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionGraphicsLabel_Fulscreen->setCaption("Fullscreen");
         mOptionGraphicsLabel_Fulscreen->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -339,7 +393,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Fulscreen);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 102.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 142.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Fulscreen_Val = createTextArea("MainWindowOptionGraphicsFullscreenValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         if(mModeContext.getRenderWindow()->isFullScreen())
             mOptionGraphicsLabel_Fulscreen_Val->setCaption("Yes");
@@ -356,7 +410,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     //Options Graphics Resolution
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 122.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 162.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Resolution = createTextArea("MainWindowOptionGraphicsResolutionLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionGraphicsLabel_Resolution->setCaption("Resolution");
         mOptionGraphicsLabel_Resolution->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -368,7 +422,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Resolution);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 162.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Resolution_Val = createTextArea("MainWindowOptionGraphicsResolutionValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
         Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
@@ -383,9 +437,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Resolution_Val);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(267.0f, 122.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(267.0f, 162.0f, 0.0f, 0.0f);;
         mOptionGraphicsLabel_Resolution_Apply = createTextArea("MainWindowOptionGraphicsResolutionApplyLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mOptionGraphicsLabel_Resolution_Apply->setCaption("Apply");
+        mOptionGraphicsLabel_Resolution_Apply->setCaption("apply");
         mOptionGraphicsLabel_Resolution_Apply->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mOptionGraphicsLabel_Resolution_Apply->setSpaceWidth(9.0f);
         mOptionGraphicsLabel_Resolution_Apply->setHeight(26.0f * viewportHeight / 1024.0f);
@@ -1150,6 +1204,12 @@ void UIMainMenuLabels::showOptionLabels()
 
 void UIMainMenuLabels::showOptionGraphicsLabels()
 {
+    mOptionGraphicsLabel_Vendor->show();
+    mOptionGraphicsLabel_Vendor_Val->show();
+
+    mOptionGraphicsLabel_Renderer->show();
+    mOptionGraphicsLabel_Renderer_Val->show();
+
     mOptionGraphicsLabel_Shadow->show();
     mOptionGraphicsLabel_Shadow_Val->show();
 
@@ -1279,6 +1339,10 @@ void UIMainMenuLabels::hideAllLabels()
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->hide();
 
+    mOptionGraphicsLabel_Vendor->hide();
+    mOptionGraphicsLabel_Vendor_Val->hide();
+    mOptionGraphicsLabel_Renderer->hide();
+    mOptionGraphicsLabel_Renderer_Val->hide();
     mOptionGraphicsLabel_Shadow->hide();
     mOptionGraphicsLabel_Shadow_Val->hide();
     mOptionGraphicsLabel_VSync->hide();

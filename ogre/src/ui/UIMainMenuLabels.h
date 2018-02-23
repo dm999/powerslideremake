@@ -62,6 +62,10 @@ private:
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mOptionLabels;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor_Val;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer;
+    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_VSync;
