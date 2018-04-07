@@ -29,7 +29,7 @@
 
 namespace{
     const size_t CHATBUTTONS_COUNT = 4;
-}//anonimuos namespace
+}//anonymous namespace
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : UIBaseMenu(modeContext),

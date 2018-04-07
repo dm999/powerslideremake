@@ -14,7 +14,7 @@ namespace
         bool isCheckpoint; 
         Ogre::Vector3 dir;
     };
-}//anonimous namespace
+}//anonymous namespace
 
 LLTLoader::LLTLoader() : mNameGenNodes("Scene/Node/LLT/Name")
 {}

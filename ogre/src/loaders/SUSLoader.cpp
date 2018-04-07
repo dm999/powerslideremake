@@ -13,7 +13,7 @@ namespace
         std::vector<Ogre::Vector3> backLeft;
         std::vector<Ogre::Vector3> backRight;
     };
-}//anonimoys namespace
+}//anonymous namespace
 
 void SUSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, std::vector<std::vector<Ogre::Vector3> >& suspensionData) const
 {
