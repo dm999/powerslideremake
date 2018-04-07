@@ -75,11 +75,8 @@ private:
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_VSync;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_VSync_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Fulscreen;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Fulscreen_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Apply;
@@ -90,9 +87,12 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror_Val;
+    UIButtonTick mShadowVal;
+    UIButtonTick mVSyncVal;
+    UIButtonTick mFulscreenVal;
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
+    UIButtonTick mMirrorVal;
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 

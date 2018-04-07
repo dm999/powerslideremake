@@ -125,3 +125,67 @@ void UIButton::hide()
 
     mIsShown = false;
 }
+
+
+void UIButtonTick::init(const Ogre::Matrix4& screenAdaptionRelative, 
+                        Ogre::OverlayContainer* mainBackground, 
+                        const Ogre::Vector4& dimensions,
+                        bool isChecked,
+                        bool isActive)
+{
+    UIButton::init(screenAdaptionRelative, mainBackground, dimensions);
+
+    mIsChecked = isChecked;
+    mIsActive = isActive;
+
+    if(!mIsChecked)
+    {
+        mBackground->setUV(0.0f, 15.0f / 60.0f, 1.0f, 30.0f / 60.0f);
+    }
+
+    if(!mIsActive && mIsChecked)
+    {
+        mBackground->setUV(0.0f, 30.0f / 60.0f, 1.0f, 45.0f / 60.0f);
+    }
+
+    if(!mIsActive && !mIsChecked)
+    {
+        mBackground->setUV(0.0f, 45.0f / 60.0f, 1.0f, 60.0f / 60.0f);
+    }
+}
+
+void UIButtonTick::mousePressed(const Ogre::Vector2& pos)
+{
+    if(mBackground && mIsShown && mIsActive)
+    {
+        if(OgreBites::Widget::isCursorOver(mBackground, pos, 0))
+        {
+            mIsChecked = !mIsChecked;
+
+            if(mIsChecked)
+                mBackground->setUV(0.0f, 0.0f / 60.0f, 1.0f, 15.0f / 60.0f);
+            else
+                mBackground->setUV(0.0f, 15.0f / 60.0f, 1.0f, 30.0f / 60.0f);
+
+            mIsPressed = true;
+
+            if(mOnAction)
+            {
+                mOnAction->onButtonPressed(this);
+            }
+        }
+    }
+}
+
+void UIButtonTick::mouseReleased(const Ogre::Vector2& pos)
+{
+    if(mBackground && mIsShown && mIsPressed && mIsActive)
+    {
+        mIsPressed = false;
+
+        if(mOnAction)
+        {
+            mOnAction->onButtonReleased(this);
+        }
+    }
+}

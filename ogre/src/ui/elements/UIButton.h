@@ -43,7 +43,7 @@ public:
 
     void setButtonOnAction(UIButtonOnAction* onAction) {mOnAction = onAction;}
 
-private:
+protected:
 
     bool mIsShown;
     bool mIsPressed;
@@ -58,6 +58,28 @@ private:
 
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenPanel;
+};
+
+class UIButtonTick : public UIButton
+{
+public:
+
+    void init(const Ogre::Matrix4& screenAdaptionRelative, 
+        Ogre::OverlayContainer* mainBackground, 
+        const Ogre::Vector4& dimensions,// original sizes (640x480), before adaptation
+        bool isChecked,
+        bool isActive); 
+
+    void mousePressed(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseMoved(const Ogre::Vector2& pos) {}
+
+    bool getChecked() const {return mIsChecked;}
+
+private:
+
+    bool mIsChecked;
+    bool mIsActive;
 };
 
 #endif

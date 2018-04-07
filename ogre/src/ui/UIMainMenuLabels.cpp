@@ -15,6 +15,60 @@ void UIMainMenuLabels::onButtonPressed(UIButton * button)
 
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
 {
+    if(button == &mShadowVal)
+    {
+        if(mShadowVal.getChecked())
+        {
+            mModeContext.getGameState().setCastShadows(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setCastShadows(false);
+        }
+    }
+
+    if(button == &mVSyncVal)
+    {
+        if(mVSyncVal.getChecked())
+        {
+            mModeContext.getRenderWindow()->setVSyncEnabled(true);
+            mModeContext.getRenderWindow()->setVSyncInterval(1);
+        }
+        else
+        {
+            mModeContext.getRenderWindow()->setVSyncEnabled(false);
+        }
+    }
+
+    if(button == &mFulscreenVal)
+    {
+        if(mFulscreenVal.getChecked())
+        {
+            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+            Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
+            unsigned int curWidth, curHeight;
+            sscanf(videoMode.currentValue.c_str(), "%d x %d", &curWidth, &curHeight);
+
+            mModeContext.getRenderWindow()->setFullscreen(true, curWidth, curHeight);
+            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
+        }
+        else
+        {
+            unsigned int width, height, colourDepth;
+            int left, top;
+            mModeContext.getRenderWindow()->getMetrics(width, height, colourDepth, left, top);
+            mModeContext.getRenderWindow()->setFullscreen(false, width, height);
+
+            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+            Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+            Ogre::ConfigOption videoMode = configOpts["Video Mode"];
+            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
+        }
+
+        mModeContext.getGameModeSwitcher()->recreateMenu();
+    }
+
     if(button == &mOpponentsValLeft)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
@@ -34,6 +88,18 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getGameState().setAICount(aiCount);
             mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+        }
+    }
+
+    if(button == &mMirrorVal)
+    {
+        if(mMirrorVal.getChecked())
+        {
+            mModeContext.getGameState().setMirrorEnabled(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setMirrorEnabled(false);
         }
     }
 }
@@ -376,19 +442,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 102.0f, 0.0f, 0.0f);;
-        mOptionGraphicsLabel_Shadow_Val = createTextArea("MainWindowOptionGraphicsShadowValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        if(mModeContext.getGameState().isCastShadows())
-            mOptionGraphicsLabel_Shadow_Val->setCaption("Yes");
-        else
-            mOptionGraphicsLabel_Shadow_Val->setCaption("No");
-        mOptionGraphicsLabel_Shadow_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_Shadow_Val->setSpaceWidth(9.0f);
-        mOptionGraphicsLabel_Shadow_Val->setHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_Shadow_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mOptionGraphicsLabel_Shadow_Val->setFontName("SdkTrays/Caption");
-        mOptionGraphicsLabel_Shadow_Val->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mOptionGraphicsLabel_Shadow_Val);
+        mShadowVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mShadowVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 102.0f, 12.0f, 12.0f), mModeContext.getGameState().isCastShadows(), true);
+        mShadowVal.setButtonOnAction(this);
     }
 
     //Options Graphics VSync
@@ -405,19 +461,13 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_VSync);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
-        mOptionGraphicsLabel_VSync_Val = createTextArea("MainWindowOptionGraphicsVSyncValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        if(mModeContext.getRenderWindow()->isVSyncEnabled())
-            mOptionGraphicsLabel_VSync_Val->setCaption("Yes");
-        else
-            mOptionGraphicsLabel_VSync_Val->setCaption("No");
-        mOptionGraphicsLabel_VSync_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_VSync_Val->setSpaceWidth(9.0f);
-        mOptionGraphicsLabel_VSync_Val->setHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_VSync_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mOptionGraphicsLabel_VSync_Val->setFontName("SdkTrays/Caption");
-        mOptionGraphicsLabel_VSync_Val->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mOptionGraphicsLabel_VSync_Val);
+        bool isActive = true;
+#if defined(__ANDROID__)
+        isActive = false;
+#endif
+        mVSyncVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mVSyncVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 122.0f, 12.0f, 12.0f), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
+        mVSyncVal.setButtonOnAction(this);
     }
 
     //Options Graphics Fullscreen
@@ -434,19 +484,13 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Fulscreen);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 142.0f, 0.0f, 0.0f);;
-        mOptionGraphicsLabel_Fulscreen_Val = createTextArea("MainWindowOptionGraphicsFullscreenValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        if(mModeContext.getRenderWindow()->isFullScreen())
-            mOptionGraphicsLabel_Fulscreen_Val->setCaption("Yes");
-        else
-            mOptionGraphicsLabel_Fulscreen_Val->setCaption("No");
-        mOptionGraphicsLabel_Fulscreen_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_Fulscreen_Val->setSpaceWidth(9.0f);
-        mOptionGraphicsLabel_Fulscreen_Val->setHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionGraphicsLabel_Fulscreen_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mOptionGraphicsLabel_Fulscreen_Val->setFontName("SdkTrays/Caption");
-        mOptionGraphicsLabel_Fulscreen_Val->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mOptionGraphicsLabel_Fulscreen_Val);
+        bool isActive = true;
+#if defined(__ANDROID__)
+        isActive = false;
+#endif
+        mFulscreenVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mFulscreenVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 142.0f, 12.0f, 12.0f), mModeContext.getRenderWindow()->isFullScreen(), isActive);
+        mFulscreenVal.setButtonOnAction(this);
     }
 
     //Options Graphics Resolution
@@ -602,19 +646,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Mirror);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 122.0f, 0.0f, 0.0f);;
-        mOptionRaceLabel_Mirror_Val = createTextArea("MainWindowOptionRaceMirrorValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        if(mModeContext.getGameState().getMirrorEnabled())
-            mOptionRaceLabel_Mirror_Val->setCaption("Yes");
-        else
-            mOptionRaceLabel_Mirror_Val->setCaption("No");
-        mOptionRaceLabel_Mirror_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionRaceLabel_Mirror_Val->setSpaceWidth(9.0f);
-        mOptionRaceLabel_Mirror_Val->setHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionRaceLabel_Mirror_Val->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mOptionRaceLabel_Mirror_Val->setFontName("SdkTrays/Caption");
-        mOptionRaceLabel_Mirror_Val->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mOptionRaceLabel_Mirror_Val);
+        mMirrorVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mMirrorVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 122.0f, 12.0f, 12.0f), mModeContext.getGameState().getMirrorEnabled(), true);
+        mMirrorVal.setButtonOnAction(this);
     }
 
     {
@@ -828,8 +862,12 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
 
+    mShadowVal.mousePressed(pos);
+    mVSyncVal.mousePressed(pos);
+    mFulscreenVal.mousePressed(pos);
     mOpponentsValLeft.mousePressed(pos);
     mOpponentsValRight.mousePressed(pos);
+    mMirrorVal.mousePressed(pos);
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -970,70 +1008,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
-    if(mOptionGraphicsLabel_Shadow_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Shadow_Val, pos, 0))
-    {
-        if(mModeContext.getGameState().isCastShadows())
-        {
-            mModeContext.getGameState().setCastShadows(false);
-            mOptionGraphicsLabel_Shadow_Val->setCaption("No");
-        }
-        else
-        {
-            mModeContext.getGameState().setCastShadows(true);
-            mOptionGraphicsLabel_Shadow_Val->setCaption("Yes");
-        }
-    }
-
-    if(mOptionGraphicsLabel_VSync_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_VSync_Val, pos, 0))
-    {
-        if(mModeContext.getRenderWindow()->isVSyncEnabled())
-        {
-            mModeContext.getRenderWindow()->setVSyncEnabled(false);
-            mOptionGraphicsLabel_VSync_Val->setCaption("No");
-        }
-        else
-        {
-            mModeContext.getRenderWindow()->setVSyncEnabled(true);
-            mModeContext.getRenderWindow()->setVSyncInterval(1);
-            mOptionGraphicsLabel_VSync_Val->setCaption("Yes");
-        }
-    }
-
-    if(mOptionGraphicsLabel_Fulscreen_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Fulscreen_Val, pos, 0))
-    {
-        if(mModeContext.getRenderWindow()->isFullScreen())
-        {
-            unsigned int width, height, colourDepth;
-            int left, top;
-            mModeContext.getRenderWindow()->getMetrics(width, height, colourDepth, left, top);
-            mModeContext.getRenderWindow()->setFullscreen(false, width, height);
-            mOptionGraphicsLabel_Fulscreen_Val->setCaption("No");
-
-            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
-            Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
-            Ogre::ConfigOption videoMode = configOpts["Video Mode"];
-            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
-        }
-        else
-        {
-            Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
-            Ogre::ConfigOptionMap& configOpts = rs->getConfigOptions();
-            Ogre::ConfigOption& videoMode = configOpts["Video Mode"];
-            unsigned int curWidth, curHeight;
-            sscanf(videoMode.currentValue.c_str(), "%d x %d", &curWidth, &curHeight);
-            //unsigned int width, height, colourDepth;
-            //int left, top;
-            //mModeContext.getRenderWindow()->getMetrics(width, height, colourDepth, left, top);
-
-            mModeContext.getRenderWindow()->setFullscreen(true, curWidth, curHeight);
-            //mModeContext.getRenderWindow()->resize(curWidth, curHeight);
-            mOptionGraphicsLabel_Fulscreen_Val->setCaption("Yes");
-            mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
-        }
-
-        mModeContext.getGameModeSwitcher()->recreateMenu();
-    }
-
     if(mOptionGraphicsLabel_Resolution_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Val, pos, 0))
     {
             Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
@@ -1113,20 +1087,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
-    if(mOptionRaceLabel_Mirror_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Mirror_Val, pos, 0))
-    {
-        if(mModeContext.getGameState().getMirrorEnabled())
-        {
-            mModeContext.getGameState().setMirrorEnabled(false);
-            mOptionRaceLabel_Mirror_Val->setCaption("No");
-        }
-        else
-        {
-            mModeContext.getGameState().setMirrorEnabled(true);
-            mOptionRaceLabel_Mirror_Val->setCaption("Yes");
-        }
-    }
-
     if(mGameExitYesLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitYesLabel, pos, 0))
     {
         mModeContext.getBaseApp()->setShutdown(false);
@@ -1139,8 +1099,12 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    mShadowVal.mouseReleased(pos);
+    mVSyncVal.mouseReleased(pos);
+    mFulscreenVal.mouseReleased(pos);
     mOpponentsValLeft.mouseReleased(pos);
     mOpponentsValRight.mouseReleased(pos);
+    mMirrorVal.mouseReleased(pos);
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -1196,15 +1160,12 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     {
         bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
     }
-    checkCursorOverLabel(pos, mOptionGraphicsLabel_Shadow_Val);
-    checkCursorOverLabel(pos, mOptionGraphicsLabel_VSync_Val);
-    checkCursorOverLabel(pos, mOptionGraphicsLabel_Fulscreen_Val);
+
     checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Val);
     checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Apply);
     checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_KMPH_Val);
-    checkCursorOverLabel(pos, mOptionRaceLabel_Mirror_Val);
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
@@ -1217,8 +1178,12 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
 {
     UIBase::destroy(trayMgr);
 
+    mShadowVal.destroy(trayMgr);
+    mVSyncVal.destroy(trayMgr);
+    mFulscreenVal.destroy(trayMgr);
     mOpponentsValLeft.destroy(trayMgr);
     mOpponentsValRight.destroy(trayMgr);
+    mMirrorVal.destroy(trayMgr);
 }
 
 void UIMainMenuLabels::showModeSingleMulti()
@@ -1288,13 +1253,10 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mOptionGraphicsLabel_Renderer_Val->show();
 
     mOptionGraphicsLabel_Shadow->show();
-    mOptionGraphicsLabel_Shadow_Val->show();
 
     mOptionGraphicsLabel_VSync->show();
-    mOptionGraphicsLabel_VSync_Val->show();
 
     mOptionGraphicsLabel_Fulscreen->show();
-    mOptionGraphicsLabel_Fulscreen_Val->show();
 
     Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
     Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
@@ -1303,6 +1265,10 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mOptionGraphicsLabel_Resolution->show();
     mOptionGraphicsLabel_Resolution_Val->show();
     mOptionGraphicsLabel_Resolution_Apply->show();
+
+    mShadowVal.show();
+    mVSyncVal.show();
+    mFulscreenVal.show();
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -1314,10 +1280,10 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mOptionRaceLabel_KMPH->show();
     mOptionRaceLabel_KMPH_Val->show();
     mOptionRaceLabel_Mirror->show();
-    mOptionRaceLabel_Mirror_Val->show();
 
     mOpponentsValLeft.show();
     mOpponentsValRight.show();
+    mMirrorVal.show();
 }
 
 void UIMainMenuLabels::showGameExitLabels()
@@ -1424,11 +1390,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionGraphicsLabel_Renderer->hide();
     mOptionGraphicsLabel_Renderer_Val->hide();
     mOptionGraphicsLabel_Shadow->hide();
-    mOptionGraphicsLabel_Shadow_Val->hide();
     mOptionGraphicsLabel_VSync->hide();
-    mOptionGraphicsLabel_VSync_Val->hide();
     mOptionGraphicsLabel_Fulscreen->hide();
-    mOptionGraphicsLabel_Fulscreen_Val->hide();
     mOptionGraphicsLabel_Resolution->hide();
     mOptionGraphicsLabel_Resolution_Val->hide();
     mOptionGraphicsLabel_Resolution_Apply->hide();
@@ -1439,7 +1402,6 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_KMPH->hide();
     mOptionRaceLabel_KMPH_Val->hide();
     mOptionRaceLabel_Mirror->hide();
-    mOptionRaceLabel_Mirror_Val->hide();
 
     mStartingGridTimeLabel->hide();
 
@@ -1469,8 +1431,12 @@ void UIMainMenuLabels::hideAllLabels()
         mPodiumTable4Label[q]->hide();
     }
 
+    mShadowVal.hide();
+    mVSyncVal.hide();
+    mFulscreenVal.hide();
     mOpponentsValLeft.hide();
     mOpponentsValRight.hide();
+    mMirrorVal.hide();
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

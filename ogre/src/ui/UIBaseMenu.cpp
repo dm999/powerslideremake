@@ -83,6 +83,10 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 "data/gameshell", "down.bmp", 
                                 "OriginalButtonDown", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "stickbox.bmp", 
+                                "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
+
     loadColorTextures();
 
     TextureLoader().loadChroma( pfLoaderGameshell, 
