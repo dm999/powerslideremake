@@ -204,7 +204,8 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
-    UIBaseMenu::mousePressed(pos);
+    UIMainMenuLabels::mousePressed(pos);
+
     mEditBox.mouseReleased(pos);
     mEditBoxIP.mouseReleased(pos);
     mEditBoxUserName.mouseReleased(pos);
@@ -238,7 +239,8 @@ void UIMainMenu::setTopmostSubmenu()
 
 void UIMainMenu::destroy(CustomTrayManager* trayMgr)
 {
-    UIBase::destroy(trayMgr);
+    UIMainMenuLabels::destroy(trayMgr);
+
     mEditBox.destroy(trayMgr);
     mEditBoxIP.destroy(trayMgr);
     mEditBoxUserName.destroy(trayMgr);

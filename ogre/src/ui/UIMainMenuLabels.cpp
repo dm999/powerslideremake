@@ -9,6 +9,35 @@
 
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
+void UIMainMenuLabels::onButtonPressed(UIButton * button)
+{
+}
+
+void UIMainMenuLabels::onButtonReleased(UIButton * button)
+{
+    if(button == &mOpponentsValLeft)
+    {
+        size_t aiCount = mModeContext.getGameState().getAICount();
+        --aiCount;
+        if(aiCount >= GameState::mAIMin)
+        {
+            mModeContext.getGameState().setAICount(aiCount);
+            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+        }
+    }
+
+    if(button == &mOpponentsValRight)
+    {
+        size_t aiCount = mModeContext.getGameState().getAICount();
+        ++aiCount;
+        if(aiCount <= GameState::mAIMax)
+        {
+            mModeContext.getGameState().setAICount(aiCount);
+            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+        }
+    }
+}
+
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 {
     Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
@@ -486,6 +515,15 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mOptionRaceLabel_Opponents_Val->setColour(mInactiveLabel);
         getMainBackground()->addChild(mOptionRaceLabel_Opponents_Val);
     }
+    {
+        mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f));
+        mOpponentsValLeft.setButtonOnAction(this);
+
+        mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f));
+        mOpponentsValRight.setButtonOnAction(this);
+    }
 
     //Options Race Transmission
     {
@@ -514,6 +552,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mOptionRaceLabel_Transmission_Val->setFontName("SdkTrays/Caption");
         mOptionRaceLabel_Transmission_Val->setColour(mInactiveLabel);
         getMainBackground()->addChild(mOptionRaceLabel_Transmission_Val);
+    }
+    {
+        //mTransmissionValLeft.setBackgroundMaterial(mOpponentsValLeft.getMaterialName());
+        //mTransmissionValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 82.0f, 12.0f, 12.0f));
+        //mTransmissionValLeft.setButtonOnAction(this);
     }
 
     //Options Race KMPH
@@ -781,6 +824,14 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 }
 
+void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
+{
+    UIBaseMenu::mousePressed(pos);
+
+    mOpponentsValLeft.mousePressed(pos);
+    mOpponentsValRight.mousePressed(pos);
+}
+
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mouseReleased(pos);
@@ -1028,7 +1079,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
         ++aiCount;
-        if(aiCount > GameState::mAIMax) aiCount = 3;
+        if(aiCount > GameState::mAIMax) aiCount = GameState::mAIMin;
 
         mModeContext.getGameState().setAICount(aiCount);
         mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
@@ -1087,6 +1138,9 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         switchState(State_SingleMulti);
         return;
     }
+
+    mOpponentsValLeft.mouseReleased(pos);
+    mOpponentsValRight.mouseReleased(pos);
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -1154,6 +1208,17 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
+
+    mOpponentsValLeft.mouseMoved(pos);
+    mOpponentsValRight.mouseMoved(pos);
+}
+
+void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
+{
+    UIBase::destroy(trayMgr);
+
+    mOpponentsValLeft.destroy(trayMgr);
+    mOpponentsValRight.destroy(trayMgr);
 }
 
 void UIMainMenuLabels::showModeSingleMulti()
@@ -1250,6 +1315,9 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mOptionRaceLabel_KMPH_Val->show();
     mOptionRaceLabel_Mirror->show();
     mOptionRaceLabel_Mirror_Val->show();
+
+    mOpponentsValLeft.show();
+    mOpponentsValRight.show();
 }
 
 void UIMainMenuLabels::showGameExitLabels()
@@ -1400,6 +1468,9 @@ void UIMainMenuLabels::hideAllLabels()
         mPodiumTable3Label[q]->hide();
         mPodiumTable4Label[q]->hide();
     }
+
+    mOpponentsValLeft.hide();
+    mOpponentsValRight.hide();
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

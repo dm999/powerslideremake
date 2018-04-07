@@ -3,11 +3,16 @@
 
 #include "UIMainMenuBackground.h"
 
-class UIMainMenuLabels : public UIMainMenuBackground
+#include "elements/UIButton.h"
+
+class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction
 {
 public:
     UIMainMenuLabels(const ModeContext& modeContext) : UIMainMenuBackground(modeContext){}
     ~UIMainMenuLabels(){}
+
+    void onButtonPressed(UIButton * button) override;
+    void onButtonReleased(UIButton * button) override;
 
     static const Ogre::ColourValue mInactiveLabel;
 
@@ -17,8 +22,11 @@ protected:
 
     void createLabels(const Ogre::Matrix4& screenAdaptionRelative);
 
-    void mouseReleased(const Ogre::Vector2& pos);
-    void mouseMoved(const Ogre::Vector2& pos);
+    void mousePressed(const Ogre::Vector2& pos) override;
+    void mouseReleased(const Ogre::Vector2& pos) override;
+    void mouseMoved(const Ogre::Vector2& pos) override;
+
+    void destroy(CustomTrayManager* trayMgr)override;
 
     virtual void switchState(const SinglePlayerMenuStates& state) = 0;
     virtual void startRace() = 0;
@@ -83,6 +91,8 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror_Val;
+    UIButton mOpponentsValLeft;
+    UIButton mOpponentsValRight;
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 

@@ -50,9 +50,9 @@ protected:
     void createCommonMaterials();
     void createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogre::PanelOverlayElement* base);
 
-    void mousePressed(const Ogre::Vector2& pos);
-    void mouseReleased(const Ogre::Vector2& pos);
-    void mouseMoved(const Ogre::Vector2& pos);
+    virtual void mousePressed(const Ogre::Vector2& pos);
+    virtual void mouseReleased(const Ogre::Vector2& pos);
+    virtual void mouseMoved(const Ogre::Vector2& pos);
 
     virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0;
 

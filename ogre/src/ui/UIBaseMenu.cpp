@@ -75,6 +75,14 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 Ogre::ColourValue(0.0f, 1.0f, 0.0f), 0.2f, false, 64, true);
 #endif
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "up.bmp", 
+                                "OriginalButtonUp", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "down.bmp", 
+                                "OriginalButtonDown", TEMP_RESOURCE_GROUP_NAME);
+
     loadColorTextures();
 
     TextureLoader().loadChroma( pfLoaderGameshell, 

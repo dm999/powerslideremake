@@ -67,6 +67,7 @@ public:
     PSPlayerCar& getPlayerCar();
 
     static const size_t mRaceGridCarsMax = 12;
+    static const int mAIMin = 3;
     static const int mAIMax = 11;
 
     void setAICount(size_t opponentsAmount);
