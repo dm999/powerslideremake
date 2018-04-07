@@ -1175,7 +1175,7 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
           <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2856.02734375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="50.58301093086084">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2900.130859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="28.531253118360837">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1206,6 +1206,9 @@ const PSAICar&amp; getAICar(size_t index) const
 PSAICar&amp; getAICar(size_t index)
 const PSPlayerCar&amp; getPlayerCar() const
 PSPlayerCar&amp; getPlayerCar()
+
+static const int mLapsMin = 3
+static const int mLapsMax = 10
 
 static const size_t mRaceGridCarsMax = 12
 static const int mAIMin = 3

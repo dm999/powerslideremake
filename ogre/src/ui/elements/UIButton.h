@@ -28,7 +28,8 @@ public:
 
     void init(const Ogre::Matrix4& screenAdaptionRelative, 
         Ogre::OverlayContainer* mainBackground, 
-        const Ogre::Vector4& dimensions); // original sizes (640x480), before adaptation
+        const Ogre::Vector4& dimensions,// original sizes (640x480), before adaptation
+        bool isActive);
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
@@ -47,6 +48,7 @@ protected:
 
     bool mIsShown;
     bool mIsPressed;
+    bool mIsActive;
 
     Ogre::String mMaterialName;
 
@@ -79,7 +81,6 @@ public:
 private:
 
     bool mIsChecked;
-    bool mIsActive;
 };
 
 #endif

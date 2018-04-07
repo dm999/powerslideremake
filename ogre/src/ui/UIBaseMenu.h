@@ -72,6 +72,7 @@ protected:
 private:
 
     void loadColorTextures();
+    void loadUITextures(const PFLoader& pfLoaderGameshell);
     void createColorMaterials();
 
     bool mControlActivated[mControlsCount];

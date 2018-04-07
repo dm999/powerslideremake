@@ -42,22 +42,28 @@ void UIButton::setBackgroundMaterial(const std::string& name)
 
 void UIButton::init(const Ogre::Matrix4& screenAdaptionRelative, 
                     Ogre::OverlayContainer* mainBackground, 
-                    const Ogre::Vector4& dimensions)
+                    const Ogre::Vector4& dimensions,
+                    bool isActive)
 {
     Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
+
+    mIsActive = isActive;
 
     {
         Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(dimensions.x, dimensions.y, dimensions.x + dimensions.z, dimensions.y + dimensions.w);
 
         mBackground = createPanel(mPanelName, background, mMaterialName);
-        mBackground->setUV(0.0f, 0.0f, 1.0f, 15.0f / 60.0f);
+        if(isActive)
+            mBackground->setUV(0.0f, 0.0f, 1.0f, 15.0f / 60.0f);
+        else
+            mBackground->setUV(0.0f, 45.0f / 60.0f, 1.0f, 60.0f / 60.0f);
         mainBackground->addChild(mBackground);
     }
 }
 
 void UIButton::mousePressed(const Ogre::Vector2& pos)
 {
-    if(mBackground && mIsShown)
+    if(mBackground && mIsShown && mIsActive)
     {
         if(OgreBites::Widget::isCursorOver(mBackground, pos, 0))
         {
@@ -75,7 +81,7 @@ void UIButton::mousePressed(const Ogre::Vector2& pos)
 
 void UIButton::mouseReleased(const Ogre::Vector2& pos)
 {
-    if(mBackground && mIsShown && mIsPressed)
+    if(mBackground && mIsShown && mIsPressed && mIsActive)
     {
         if(OgreBites::Widget::isCursorOver(mBackground, pos, 0))
             mBackground->setUV(0.0f, 15.0f / 60.0f, 1.0f, 30.0f / 60.0f);
@@ -93,7 +99,7 @@ void UIButton::mouseReleased(const Ogre::Vector2& pos)
 
 void UIButton::mouseMoved(const Ogre::Vector2& pos)
 {
-    if(mBackground && mIsShown)
+    if(mBackground && mIsShown && mIsActive)
     {
         if(OgreBites::Widget::isCursorOver(mBackground, pos, 0))
         {
@@ -133,7 +139,7 @@ void UIButtonTick::init(const Ogre::Matrix4& screenAdaptionRelative,
                         bool isChecked,
                         bool isActive)
 {
-    UIButton::init(screenAdaptionRelative, mainBackground, dimensions);
+    UIButton::init(screenAdaptionRelative, mainBackground, dimensions, isActive);
 
     mIsChecked = isChecked;
     mIsActive = isActive;

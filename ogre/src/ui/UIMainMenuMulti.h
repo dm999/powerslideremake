@@ -13,10 +13,11 @@
 #include "../GameState.h"
 
 #include "elements/UIEditBox.h"
+#include "elements/UIButton.h"
 
 class MenuMultiMode;
 
-class UIMainMenuMulti : public UIBaseMenu
+class UIMainMenuMulti : public UIBaseMenu, public UIButtonOnAction
 {
 public:
 
@@ -24,6 +25,9 @@ public:
     ~UIMainMenuMulti(){}
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu, const std::map<std::string, std::string>& playersSkins);
+
+    void onButtonPressed(UIButton * button) override {}
+    void onButtonReleased(UIButton * button) override;
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 
@@ -74,6 +78,9 @@ private:
     void addCurrentPlayer(const std::string& player);
     void addOtherPlayer(size_t index, const std::string& player, bool isInSession);
 
+    void switchTrack(size_t trackIndex);
+    void switchCar(size_t carIndex);
+    void switchCharacter(size_t characterIndex);
     bool isAITrack() const;
     std::string getLapsCountString() const;
     std::string getAIStrengthString() const;
@@ -113,7 +120,6 @@ private:
     Ogre::TextAreaOverlayElement * mModeVal;
 
     Ogre::TextAreaOverlayElement * mWeapons;
-    Ogre::TextAreaOverlayElement * mWeaponsVal;
 
     Ogre::TextAreaOverlayElement * mCar;
     Ogre::TextAreaOverlayElement * mCarVal;
@@ -122,6 +128,20 @@ private:
     Ogre::TextAreaOverlayElement * mCharacterVal;
 
     Ogre::TextAreaOverlayElement * mChatroom;
+    
+    UIButtonTick mWeaponsVal;
+
+    UIButton mTracksValLeft;
+    UIButton mTracksValRight;
+
+    UIButton mLapsValLeft;
+    UIButton mLapsValRight;
+
+    UIButton mCarValLeft;
+    UIButton mCarValRight;
+
+    UIButton mCharacterValLeft;
+    UIButton mCharacterValRight;
 
     /*
     MyGUI::Button* mWidgetJoin;

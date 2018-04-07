@@ -40,7 +40,6 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
     mLapsCount(NULL),
     mAIStrengthVal(NULL),
     mModeVal(NULL),
-    mWeaponsVal(NULL),
     mCarVal(NULL),
     mCharacterVal(NULL)
 {
@@ -285,11 +284,17 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mTrackNameSelected->setHeight(16.0f * viewportHeight / 1024.0f);
         mTrackNameSelected->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mTrackNameSelected->setFontName("SdkTrays/Caption");
-        if(mModeContext.mGameState.isMultiplayerMaster())
-            mTrackNameSelected->setColour(UIMainMenuLabels::mInactiveLabel);
-        else
-            mTrackNameSelected->setColour(Ogre::ColourValue::White);
+        mTrackNameSelected->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mTrackNameSelected);
+    }
+    {
+        mTracksValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mTracksValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(320.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
+        mTracksValLeft.setButtonOnAction(this);
+
+        mTracksValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mTracksValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(340.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
+        mTracksValRight.setButtonOnAction(this);
     }
 
     //Laps
@@ -314,11 +319,17 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mLapsCount->setHeight(16.0f * viewportHeight / 1024.0f);
         mLapsCount->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mLapsCount->setFontName("SdkTrays/Caption");
-        if(mModeContext.mGameState.isMultiplayerMaster())
-            mLapsCount->setColour(UIMainMenuLabels::mInactiveLabel);
-        else
-            mLapsCount->setColour(Ogre::ColourValue::White);
+        mLapsCount->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mLapsCount);
+    }
+    {
+        mLapsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mLapsValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(380.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
+        mLapsValLeft.setButtonOnAction(this);
+
+        mLapsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mLapsValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(400.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
+        mLapsValRight.setButtonOnAction(this);
     }
 
     //Car
@@ -343,8 +354,17 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mCarVal->setHeight(16.0f * viewportHeight / 1024.0f);
         mCarVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mCarVal->setFontName("SdkTrays/Caption");
-        mCarVal->setColour(UIMainMenuLabels::mInactiveLabel);
+        mCarVal->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mCarVal);
+    }
+    {
+        mCarValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mCarValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(440.0f, 33.0f, 12.0f, 12.0f), true);
+        mCarValLeft.setButtonOnAction(this);
+
+        mCarValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mCarValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(460.0f, 33.0f, 12.0f, 12.0f), true);
+        mCarValRight.setButtonOnAction(this);
     }
 
     //Character
@@ -369,8 +389,17 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mCharacterVal->setHeight(16.0f * viewportHeight / 1024.0f);
         mCharacterVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mCharacterVal->setFontName("SdkTrays/Caption");
-        mCharacterVal->setColour(UIMainMenuLabels::mInactiveLabel);
+        mCharacterVal->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mCharacterVal);
+    }
+    {
+        mCharacterValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mCharacterValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(500.0f, 33.0f, 12.0f, 12.0f), true);
+        mCharacterValLeft.setButtonOnAction(this);
+
+        mCharacterValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mCharacterValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(520.0f, 33.0f, 12.0f, 12.0f), true);
+        mCharacterValRight.setButtonOnAction(this);
     }
 
     //Mode
@@ -445,21 +474,11 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mWeapons);
     }
     {
-        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(210.0f, 34.0f, 0.0f, 0.0f);
-        mWeaponsVal = createTextArea("MainWindowWeaponsVal", 0.0f, 0.0f, pos.x, pos.y); 
-        mWeaponsVal->setCaption("Yes");
-        mWeaponsVal->setCharHeight(16.0f * viewportHeight / 1024.0f);
-        mWeaponsVal->setSpaceWidth(9.0f);
-        mWeaponsVal->setHeight(16.0f * viewportHeight / 1024.0f);
-        mWeaponsVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mWeaponsVal->setFontName("SdkTrays/Caption");
-        if(mModeContext.mGameState.isMultiplayerMaster())
-            mWeaponsVal->setColour(UIMainMenuLabels::mInactiveLabel);
-        else
-            mWeaponsVal->setColour(Ogre::ColourValue::White);
-        mMainBackground->addChild(mWeaponsVal);
+        mWeaponsVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTickMulti");
+        //mWeaponsVal.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(210.0f, 34.0f, 12.0f, 12.0f), true, mModeContext.mGameState.isMultiplayerMaster());
+        mWeaponsVal.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(210.0f, 34.0f, 12.0f, 12.0f), true, false);
+        mWeaponsVal.setButtonOnAction(this);
     }
-
 
     if(!isEnterFromBaseMenu)
     {
@@ -536,6 +555,91 @@ void UIMainMenuMulti::reloadTextures(const GameState& gameState)
 }
 #endif
 
+void UIMainMenuMulti::onButtonReleased(UIButton * button)
+{
+    if(button == &mTracksValLeft)
+    {
+        size_t totalTracks;
+        int currentTrack = getCurrentTrackIndex(totalTracks);
+        --currentTrack;
+        if(currentTrack < 0)currentTrack = 0;
+
+        switchTrack(currentTrack);
+    }
+
+    if(button == &mTracksValRight)
+    {
+        size_t totalTracks;
+        size_t currentTrack = getCurrentTrackIndex(totalTracks);
+        ++currentTrack;
+        if(currentTrack >= totalTracks)currentTrack = totalTracks - 1;
+
+        switchTrack(currentTrack);
+    }
+
+    if(button == &mLapsValLeft)
+    {
+        int lapsCount = mModeContext.getGameState().getLapsCount();
+        --lapsCount;
+        if(lapsCount < GameState::mLapsMin) lapsCount = GameState::mLapsMin;
+
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), lapsCount);
+        mLapsCount->setCaption(getLapsCountString());
+        updateRoomState();
+    }
+
+    if(button == &mLapsValRight)
+    {
+        size_t lapsCount = mModeContext.getGameState().getLapsCount();
+        ++lapsCount;
+        if(lapsCount > GameState::mLapsMax) lapsCount = GameState::mLapsMax;
+
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), lapsCount);
+        mLapsCount->setCaption(getLapsCountString());
+        updateRoomState();
+    }
+
+    if(button == &mCarValLeft)
+    {
+        size_t totalCars;
+        int carIndex = getCurrentCarIndex(totalCars);
+        --carIndex;
+        if(carIndex < 0) carIndex = 0;
+
+        switchCar(carIndex);
+    }
+
+    if(button == &mCarValRight)
+    {
+        size_t totalCars;
+        size_t carIndex = getCurrentCarIndex(totalCars);
+        ++carIndex;
+        if(carIndex >= totalCars) carIndex = totalCars - 1;
+
+        switchCar(carIndex);
+    }
+
+    if(button == &mCharacterValLeft)
+    {
+        size_t totalChars;
+        int characterIndex = getCurrentCharacterIndex(totalChars);
+        --characterIndex;
+        if(characterIndex < 0) characterIndex = 0;
+
+        switchCharacter(characterIndex);
+    }
+
+    if(button == &mCharacterValRight)
+    {
+        size_t totalChars;
+        size_t characterIndex = getCurrentCharacterIndex(totalChars);
+        ++characterIndex;
+        if(characterIndex >= totalChars) characterIndex = totalChars - 1;
+
+        switchCharacter(characterIndex);
+    }
+}
+
 void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)
 {
     mEditBoxMessage.frameStarted(evt);
@@ -557,6 +661,16 @@ void UIMainMenuMulti::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
     //mEditBoxMessage.mouseReleased(pos);
+
+    mWeaponsVal.mousePressed(pos);
+    mTracksValLeft.mousePressed(pos);
+    mTracksValRight.mousePressed(pos);
+    mLapsValLeft.mousePressed(pos);
+    mLapsValRight.mousePressed(pos);
+    mCarValLeft.mousePressed(pos);
+    mCarValRight.mousePressed(pos);
+    mCharacterValLeft.mousePressed(pos);
+    mCharacterValRight.mousePressed(pos);
 }
 
 void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
@@ -580,46 +694,6 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
             }
         }
 
-        //track name
-        if(mTrackNameSelected && mTrackNameSelected->isVisible() && OgreBites::Widget::isCursorOver(mTrackNameSelected, pos, 0))
-        {
-            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-
-            size_t totalTracks;
-            size_t currentTrack = getCurrentTrackIndex(totalTracks);
-            ++currentTrack;
-            if(currentTrack >= totalTracks)currentTrack = 0;
-
-            mModeContext.getGameState().setRaceParameters(availTracks[currentTrack], mModeContext.getGameState().getAIStrength());
-            mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[currentTrack]));
-            mLapsCount->setCaption(getLapsCountString());
-            if(!isAITrack())
-            {
-                mModeContext.getGameState().setAICount(0);
-                hostTrackUpdate(0);
-            }
-            else
-            {
-                mModeContext.getGameState().setAICount(mAICountBeforeNonAITrack);
-                hostTrackUpdate(mAICountBeforeNonAITrack);
-            }
-            selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
-            updateRoomState();
-        }
-
-        //laps
-        if(mLapsCount && mLapsCount->isVisible() && OgreBites::Widget::isCursorOver(mLapsCount, pos, 0))
-        {
-            size_t lapsCount = mModeContext.getGameState().getLapsCount();
-            ++lapsCount;
-            if(lapsCount > 10) lapsCount = 1;
-
-            mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), mModeContext.getGameState().getAIStrength(), lapsCount);
-            mLapsCount->setCaption(getLapsCountString());
-            updateRoomState();
-        }
-
         //AI strength
         if(mAIStrengthVal && mAIStrengthVal->isVisible() && OgreBites::Widget::isCursorOver(mAIStrengthVal, pos, 0))
         {
@@ -633,57 +707,15 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
-    //Car
-    if(mCarVal && mCarVal->isVisible() && OgreBites::Widget::isCursorOver(mCarVal, pos, 0))
-    {
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-
-        size_t totalCars;
-        size_t carIndex = getCurrentCarIndex(totalCars);
-        ++carIndex;
-        if(carIndex >= totalCars) carIndex = 0;
-
-        std::string characterCar = availCars[carIndex];
-
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
-        mCarVal->setCaption(getCarString());
-        mCharacterVal->setCaption(getCharacterString());
-        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[0] + " parameters", "icon", "car0_0s.bmp");
-        std::string matName = "Test/" + iconName;
-        mMainCarIcons[0]->setMaterialName(matName);
-        selectCar(characterCar);
-
-        updateRoomState();
-    }
-
-    //Character
-    if(mCharacterVal && mCharacterVal->isVisible() && OgreBites::Widget::isCursorOver(mCharacterVal, pos, 0))
-    {
-        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-
-        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-        size_t totalChars;
-        size_t characterIndex = getCurrentCharacterIndex(totalChars);
-        ++characterIndex;
-        if(characterIndex >= totalChars) characterIndex = 0;
-
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[characterIndex]);
-        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[characterIndex] + " parameters", "icon", "car0_0s.bmp");
-        std::string matName = "Test/" + iconName;
-        mMainCarIcons[0]->setMaterialName(matName);
-
-        mCharacterVal->setCaption(getCharacterString());
-        selectCar(characterCar);
-
-        updateRoomState();
-    }
+    mWeaponsVal.mouseReleased(pos);
+    mTracksValLeft.mouseReleased(pos);
+    mTracksValRight.mouseReleased(pos);
+    mLapsValLeft.mouseReleased(pos);
+    mLapsValRight.mouseReleased(pos);
+    mCarValLeft.mouseReleased(pos);
+    mCarValRight.mouseReleased(pos);
+    mCharacterValLeft.mouseReleased(pos);
+    mCharacterValRight.mouseReleased(pos);
 }
 
 void UIMainMenuMulti::mouseMoved(const Ogre::Vector2& pos)
@@ -693,13 +725,17 @@ void UIMainMenuMulti::mouseMoved(const Ogre::Vector2& pos)
     //race params highlight
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
-        UIMainMenuLabels::checkCursorOverLabel(pos, mTrackNameSelected);
-        UIMainMenuLabels::checkCursorOverLabel(pos, mLapsCount);
         UIMainMenuLabels::checkCursorOverLabel(pos, mAIStrengthVal);
     }
 
-    UIMainMenuLabels::checkCursorOverLabel(pos, mCarVal);
-    UIMainMenuLabels::checkCursorOverLabel(pos, mCharacterVal);
+    mTracksValLeft.mouseMoved(pos);
+    mTracksValRight.mouseMoved(pos);
+    mLapsValLeft.mouseMoved(pos);
+    mLapsValRight.mouseMoved(pos);
+    mCarValLeft.mouseMoved(pos);
+    mCarValRight.mouseMoved(pos);
+    mCharacterValLeft.mouseMoved(pos);
+    mCharacterValRight.mouseMoved(pos);
 }
 
 void UIMainMenuMulti::readySwitcher()
@@ -788,6 +824,16 @@ void UIMainMenuMulti::destroy(CustomTrayManager* trayMgr)
     UIBase::destroy(trayMgr);
 
     mEditBoxMessage.destroy(trayMgr);
+
+    mWeaponsVal.destroy(trayMgr);
+    mTracksValLeft.destroy(trayMgr);
+    mTracksValRight.destroy(trayMgr);
+    mLapsValLeft.destroy(trayMgr);
+    mLapsValRight.destroy(trayMgr);
+    mCarValLeft.destroy(trayMgr);
+    mCarValRight.destroy(trayMgr);
+    mCharacterValLeft.destroy(trayMgr);
+    mCharacterValRight.destroy(trayMgr);
 }
 
 #if 0
@@ -1069,6 +1115,68 @@ void UIMainMenuMulti::addOtherPlayer(size_t index, const std::string& player, bo
     {
         mMainChatButtons[index + 1]->setMaterialName("Test/OriginalChatBut3");
     }
+}
+
+void UIMainMenuMulti::switchTrack(size_t trackIndex)
+{
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    mModeContext.getGameState().setRaceParameters(availTracks[trackIndex], mModeContext.getGameState().getAIStrength());
+    mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[trackIndex]));
+    mLapsCount->setCaption(getLapsCountString());
+    if(!isAITrack())
+    {
+        mModeContext.getGameState().setAICount(0);
+        hostTrackUpdate(0);
+    }
+    else
+    {
+        mModeContext.getGameState().setAICount(mAICountBeforeNonAITrack);
+        hostTrackUpdate(mAICountBeforeNonAITrack);
+    }
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
+    updateRoomState();
+}
+
+void UIMainMenuMulti::switchCar(size_t carIndex)
+{
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+
+        std::string characterCar = availCars[carIndex];
+
+        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
+        mCarVal->setCaption(getCarString());
+        mCharacterVal->setCaption(getCharacterString());
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[0] + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[0]->setMaterialName(matName);
+        selectCar(characterCar);
+
+        updateRoomState();
+}
+
+void UIMainMenuMulti::switchCharacter(size_t characterIndex)
+{
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+
+        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[characterIndex]);
+        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[characterIndex] + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mMainCarIcons[0]->setMaterialName(matName);
+
+        mCharacterVal->setCaption(getCharacterString());
+        selectCar(characterCar);
+
+        updateRoomState();
 }
 
 bool UIMainMenuMulti::isAITrack() const

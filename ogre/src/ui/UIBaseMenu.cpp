@@ -66,7 +66,7 @@ void UIBaseMenu::loadColorTextures()
     TextureLoader().generate("CustomBackgroundRedTransparent", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 0.5f));
 }
 
-void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
+void UIBaseMenu::loadUITextures(const PFLoader& pfLoaderGameshell)
 {
 #if !defined(__ANDROID__)
     TextureLoader().loadChroma( pfLoaderGameshell, 
@@ -84,9 +84,26 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 "OriginalButtonDown", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "up_m.bmp", 
+                                "OriginalButtonUpMulti", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "down_m.bmp", 
+                                "OriginalButtonDownMulti", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "stickbox.bmp", 
                                 "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "mtickbox.bmp", 
+                                "OriginalButtonTickMulti", TEMP_RESOURCE_GROUP_NAME);
+
+}
+
+void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
+{
+    loadUITextures(pfLoaderGameshell);
     loadColorTextures();
 
     TextureLoader().loadChroma( pfLoaderGameshell, 

@@ -66,6 +66,9 @@ public:
     const PSPlayerCar& getPlayerCar() const;
     PSPlayerCar& getPlayerCar();
 
+    static const int mLapsMin = 1;
+    static const int mLapsMax = 10;
+
     static const size_t mRaceGridCarsMax = 12;
     static const int mAIMin = 3;
     static const int mAIMax = 11;

@@ -9,10 +9,6 @@
 
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
-void UIMainMenuLabels::onButtonPressed(UIButton * button)
-{
-}
-
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
 {
     if(button == &mShadowVal)
@@ -561,11 +557,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
-        mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f));
+        mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValLeft.setButtonOnAction(this);
 
         mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
-        mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f));
+        mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValRight.setButtonOnAction(this);
     }
 

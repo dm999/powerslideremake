@@ -11,7 +11,7 @@ public:
     UIMainMenuLabels(const ModeContext& modeContext) : UIMainMenuBackground(modeContext){}
     ~UIMainMenuLabels(){}
 
-    void onButtonPressed(UIButton * button) override;
+    void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
 
     static const Ogre::ColourValue mInactiveLabel;
