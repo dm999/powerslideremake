@@ -446,6 +446,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Input:
         mIsInStartingGrid = false;
         showOptionLabels();
+        showOptionInputLabels();
         break;
 
     case State_Options_Sound:

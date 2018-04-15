@@ -43,6 +43,7 @@ protected:
     void showCharacterLabels();
     void showOptionLabels();
     void showOptionGraphicsLabels();
+    void showOptionInputLabels();
     void showOptionRaceLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showGameExitLabels();
@@ -66,6 +67,7 @@ private:
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane;
 
+
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
@@ -80,6 +82,11 @@ private:
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Val;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Apply;
+    
+    Ogre::TextAreaOverlayElement * mOptionInputLabel_Type;
+    UIButton mInputTypeValLeft;
+    UIButton mInputTypeValRight;
+
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission;
@@ -93,6 +100,7 @@ private:
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
     UIButtonTick mMirrorVal;
+
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 

@@ -8,7 +8,6 @@ function createVehicle()
     
     Model.IsAttenuateExcludeBox = false;
     
-    Model.MouseControl = false;
     
     Model.Sfx = {}
     Model.Sfx.ReferenceDist = 30.0;

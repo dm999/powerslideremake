@@ -43,7 +43,7 @@ UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode *
     mCarVal(NULL),
     mCharacterVal(NULL)
 {
-    memset(mMainChatButtons, 0, sizeof(Ogre::PanelOverlayElement*));
+    memset(mMainChatButtons, 0, sizeof(Ogre::PanelOverlayElement*) * GameState::mRaceGridCarsMax);
 }
 
 void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell)

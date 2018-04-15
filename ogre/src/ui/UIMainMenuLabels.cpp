@@ -65,6 +65,24 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameModeSwitcher()->recreateMenu();
     }
 
+    if(button == &mInputTypeValLeft || button == &mInputTypeValRight)
+    {
+#if !defined(__ANDROID__)
+        InputType input = mModeContext.getGameState().getInputType();
+
+        if(input == itKeyboard)
+        {
+            mModeContext.getGameState().setInputType(itMouse);
+            mOptionInputLabel_Type->setCaption("Mouse");
+        }
+        if(input == itMouse)
+        {
+            mModeContext.getGameState().setInputType(itKeyboard);
+            mOptionInputLabel_Type->setCaption("Keyboard");
+        }
+#endif
+    }
+
     if(button == &mOpponentsValLeft)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
@@ -530,6 +548,38 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Resolution_Apply);
     }
 
+
+    //Options Input Type
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionInputLabel_Type = createTextArea("MainWindowInputTypeLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+#if !defined(__ANDROID__)
+        if(mModeContext.getGameState().getInputType() == itKeyboard)
+            mOptionInputLabel_Type->setCaption("Keyboard");
+        if(mModeContext.getGameState().getInputType() == itMouse)
+            mOptionInputLabel_Type->setCaption("Mouse");
+#else
+        mOptionInputLabel_Type->setCaption("Touchscreen");
+#endif
+        mOptionInputLabel_Type->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionInputLabel_Type->setSpaceWidth(9.0f);
+        mOptionInputLabel_Type->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionInputLabel_Type->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionInputLabel_Type->setFontName("SdkTrays/Caption");
+        mOptionInputLabel_Type->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionInputLabel_Type);
+    }
+    {
+        mInputTypeValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        mInputTypeValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
+        mInputTypeValLeft.setButtonOnAction(this);
+
+        mInputTypeValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        mInputTypeValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
+        mInputTypeValRight.setButtonOnAction(this);
+    }
+
+
     //Options Race Opponents
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
@@ -556,11 +606,13 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Opponents_Val);
     }
     {
-        mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        //mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        mOpponentsValLeft.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
         mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValLeft.setButtonOnAction(this);
 
-        mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        //mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        mOpponentsValRight.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
         mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValRight.setButtonOnAction(this);
     }
@@ -861,6 +913,8 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mShadowVal.mousePressed(pos);
     mVSyncVal.mousePressed(pos);
     mFulscreenVal.mousePressed(pos);
+    mInputTypeValLeft.mousePressed(pos);
+    mInputTypeValRight.mousePressed(pos);
     mOpponentsValLeft.mousePressed(pos);
     mOpponentsValRight.mousePressed(pos);
     mMirrorVal.mousePressed(pos);
@@ -1098,6 +1152,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mShadowVal.mouseReleased(pos);
     mVSyncVal.mouseReleased(pos);
     mFulscreenVal.mouseReleased(pos);
+    mInputTypeValLeft.mouseReleased(pos);
+    mInputTypeValRight.mouseReleased(pos);
     mOpponentsValLeft.mouseReleased(pos);
     mOpponentsValRight.mouseReleased(pos);
     mMirrorVal.mouseReleased(pos);
@@ -1166,6 +1222,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
 
+    mInputTypeValLeft.mouseMoved(pos);
+    mInputTypeValRight.mouseMoved(pos);
+
     mOpponentsValLeft.mouseMoved(pos);
     mOpponentsValRight.mouseMoved(pos);
 }
@@ -1177,6 +1236,8 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mShadowVal.destroy(trayMgr);
     mVSyncVal.destroy(trayMgr);
     mFulscreenVal.destroy(trayMgr);
+    mInputTypeValLeft.destroy(trayMgr);
+    mInputTypeValRight.destroy(trayMgr);
     mOpponentsValLeft.destroy(trayMgr);
     mOpponentsValRight.destroy(trayMgr);
     mMirrorVal.destroy(trayMgr);
@@ -1265,6 +1326,14 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mShadowVal.show();
     mVSyncVal.show();
     mFulscreenVal.show();
+}
+
+void UIMainMenuLabels::showOptionInputLabels()
+{
+    mOptionInputLabel_Type->show();
+
+    mInputTypeValLeft.show();
+    mInputTypeValRight.show();
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -1391,6 +1460,7 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionGraphicsLabel_Resolution->hide();
     mOptionGraphicsLabel_Resolution_Val->hide();
     mOptionGraphicsLabel_Resolution_Apply->hide();
+    mOptionInputLabel_Type->hide();
     mOptionRaceLabel_Opponents->hide();
     mOptionRaceLabel_Opponents_Val->hide();
     mOptionRaceLabel_Transmission->hide();
@@ -1430,6 +1500,8 @@ void UIMainMenuLabels::hideAllLabels()
     mShadowVal.hide();
     mVSyncVal.hide();
     mFulscreenVal.hide();
+    mInputTypeValLeft.hide();
+    mInputTypeValRight.hide();
     mOpponentsValLeft.hide();
     mOpponentsValRight.hide();
     mMirrorVal.hide();
