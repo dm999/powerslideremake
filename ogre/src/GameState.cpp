@@ -4,6 +4,8 @@
 
 #include "PowerslideRemakeConfig.h"
 
+#include "tools/Conversions.h"
+
 GameState::GameState() :
     mVersion(GAMEVERSION),
     mPlayerName("Rasputin"),
@@ -45,8 +47,6 @@ void GameState::initOriginalData()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
 
-    loadPlayerData();
-
     bool isLoaded = mPFLoaderData.init("data.pf", mDataDir);
 
     if(isLoaded)
@@ -62,6 +62,10 @@ void GameState::initOriginalData()
                 mSTRPowerslide.parse(mPFLoaderStore);
                 mSTRRacecrud.parse(mPFLoaderStore);
                 mSTRRacetimes.parse(mPFLoaderStore);
+
+                mPlayerSettings.parse(mDataDir);
+                mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
+                loadPlayerData();
 
                 mOriginalDataInited = true;
             }
@@ -83,11 +87,13 @@ void GameState::initOriginalData()
 
 void GameState::loadPlayerData()
 {
-    STRPlayerSettings::PlayerData playerData = mPlayerSettings.load(mPlayerName, mDataDir);
-    mGameLevel = playerData.level;
+    const std::string section = mPlayerName + " parameters";
+    const std::string level = mPlayerSettings.getValue(section, "Level", Conversions::DMToString(static_cast<AIStrength>(mGameLevel)));
+    Ogre::uint32 levelData;
+    Conversions::DMFromString(level, levelData);
+    mGameLevel = static_cast<AIStrength>(levelData);
 
-    //reset settings
-    mTrackName = "desert track";
+    setRaceParameters("desert track", mGameLevel);
     mPSPlayerCar.setCharacterName("frantic");
 }
 

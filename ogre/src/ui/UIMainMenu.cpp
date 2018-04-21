@@ -26,7 +26,9 @@ UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, Sing
     mIsInStartingGrid(false),
     mMenuMode(menuMode),
     mCurrentState(state),
-    mEditBox(10)
+    mEditBoxUserName(20),
+    mEditBoxMultiUserName(20),
+    mEditBoxMultiRoomName(20)
 {}
 
 UIMainMenu::~UIMainMenu()
@@ -125,20 +127,23 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     createControls(screenAdaptionRelative, getMainBackground());
 
     //mEditBox.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
-    mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
-    mEditBox.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 200.0f, 250.0f, 42.0f), 86.0f);
-    mEditBoxIP.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
-    mEditBoxIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 175.0f, 170.0f, 18.0f), 36.0f);
-    mEditBoxIP.setCharType(UIEditBox::IP);
-    mEditBoxIP.setText("78.47.85.155");//d.polubotko: FIXME
-
-    mEditBoxUserName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
-    mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 250.0f, 170.0f, 18.0f), 36.0f);
+    //mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
+    mEditBoxUserName.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 82.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
 
-    mEditBoxRoomName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
-    mEditBoxRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
-    mEditBoxRoomName.setText("Powerslide!");//d.polubotko: FIXME
+    mEditBoxMultiIP.setBackgroundMaterial(mEditBoxUserName.getMaterialName());
+    mEditBoxMultiIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 175.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiIP.setCharType(UIEditBox::IP);
+    mEditBoxMultiIP.setText("78.47.85.155");//d.polubotko: FIXME
+
+    mEditBoxMultiUserName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
+    mEditBoxMultiUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 250.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
+
+    mEditBoxMultiRoomName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
+    mEditBoxMultiRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiRoomName.setText("Powerslide!");//d.polubotko: FIXME
 
     {
         Ogre::Vector4 roomsTablePos = screenAdaptionRelative * Ogre::Vector4(500.0f, 180.0f, 140.0f, 0.0f);
@@ -179,26 +184,26 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
         }
     }
 
-    mEditBox.frameStarted(evt);
-    mEditBoxIP.frameStarted(evt);
     mEditBoxUserName.frameStarted(evt);
-    mEditBoxRoomName.frameStarted(evt);
+    mEditBoxMultiIP.frameStarted(evt);
+    mEditBoxMultiUserName.frameStarted(evt);
+    mEditBoxMultiRoomName.frameStarted(evt);
 }
 
 void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
-    mEditBox.keyUp(_key, _char);
-    mEditBoxIP.keyUp(_key, _char);
     mEditBoxUserName.keyUp(_key, _char);
-    mEditBoxRoomName.keyUp(_key, _char);
+    mEditBoxMultiIP.keyUp(_key, _char);
+    mEditBoxMultiUserName.keyUp(_key, _char);
+    mEditBoxMultiRoomName.keyUp(_key, _char);
 
-    if(mEditBoxIP.isActive())
+    if(mEditBoxMultiIP.isActive())
         setColorMultiIP(mInactiveLabel);
 
-    if(mEditBoxUserName.isActive())
+    if(mEditBoxMultiUserName.isActive())
         setColorMultiUserName(mInactiveLabel);
 
-    if(mEditBoxRoomName.isActive())
+    if(mEditBoxMultiRoomName.isActive())
         setColorMultiRoomName(mInactiveLabel);
 }
 
@@ -206,10 +211,10 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 {
     UIMainMenuLabels::mousePressed(pos);
 
-    mEditBox.mouseReleased(pos);
-    mEditBoxIP.mouseReleased(pos);
     mEditBoxUserName.mouseReleased(pos);
-    mEditBoxRoomName.mouseReleased(pos);
+    mEditBoxMultiIP.mouseReleased(pos);
+    mEditBoxMultiUserName.mouseReleased(pos);
+    mEditBoxMultiRoomName.mouseReleased(pos);
 }
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
@@ -241,10 +246,10 @@ void UIMainMenu::destroy(CustomTrayManager* trayMgr)
 {
     UIMainMenuLabels::destroy(trayMgr);
 
-    mEditBox.destroy(trayMgr);
-    mEditBoxIP.destroy(trayMgr);
     mEditBoxUserName.destroy(trayMgr);
-    mEditBoxRoomName.destroy(trayMgr);
+    mEditBoxMultiIP.destroy(trayMgr);
+    mEditBoxMultiUserName.destroy(trayMgr);
+    mEditBoxMultiRoomName.destroy(trayMgr);
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -359,6 +364,15 @@ finishBoard_v UIMainMenu::prepareFinishBoard()const
     return ret;
 }
 
+void UIMainMenu::onNameChange()
+{
+    std::string userName = mEditBoxUserName.getText().asUTF8();
+    mModeContext.getGameState().setPlayerName(userName);
+    mModeContext.getGameState().loadPlayerData();
+    mModeContext.getGameState().savePlayerData();//save selected player
+    switchState(State_SingleMulti);
+}
+
 void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 {
     hideAll();
@@ -378,10 +392,9 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showModeMulti();
         showMultiIPLabels();
         showBackgrounds();
-        //mEditBox.show();
-        mEditBoxIP.show();
-        mEditBoxUserName.show();
-        mEditBoxRoomName.show();
+        mEditBoxMultiIP.show();
+        mEditBoxMultiUserName.show();
+        mEditBoxMultiRoomName.show();
         break;
 
     case State_MultiConnect:
@@ -390,10 +403,9 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showModeMulti();
         showMultiIPLabels();
         showBackgrounds();
-        //mEditBox.show();
-        mEditBoxIP.show();
-        mEditBoxUserName.show();
-        mEditBoxRoomName.show();
+        mEditBoxMultiIP.show();
+        mEditBoxMultiUserName.show();
+        mEditBoxMultiRoomName.show();
         connectToServer();
         break;
 
@@ -468,8 +480,9 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Name:
         mIsInStartingGrid = false;
         showOptionLabels();
-        mModeContext.getGameState().loadPlayerData();//d.polubotko: debug
-        mModeContext.getGameState().savePlayerData();//d.polubotko: debug
+        showOptionNameLabels();
+        mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
+        mEditBoxUserName.show();
         break;
 
     case State_Options_Trophies:
@@ -523,20 +536,20 @@ void UIMainMenu::hideAll()
 {
     hideAllBackgrounds();
     hideAllLabels();
-    mEditBox.hide();
-    mEditBoxIP.hide();
     mEditBoxUserName.hide();
-    mEditBoxRoomName.hide();
+    mEditBoxMultiIP.hide();
+    mEditBoxMultiUserName.hide();
+    mEditBoxMultiRoomName.hide();
     mRoomsTable->hide();
 }
 
 void UIMainMenu::connectToServer()
 {
 #ifndef NO_MULTIPLAYER
-    mEditBoxIP.setColor(Ogre::ColourValue::White);
+    mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
     mRoomsTable->hide();
 
-    std::string ip = mEditBoxIP.getText().asUTF8();
+    std::string ip = mEditBoxMultiIP.getText().asUTF8();
     if(!ip.empty())
     {
         std::vector<std::string> rooms;
@@ -551,7 +564,7 @@ void UIMainMenu::connectToServer()
 
         if(isConnected)
         {
-            mEditBoxIP.setColor(Ogre::ColourValue::Green);
+            mEditBoxMultiIP.setColor(Ogre::ColourValue::Green);
             mRoomsTable->clearItems();
             mRoomsTable->show();
 
@@ -573,7 +586,7 @@ void UIMainMenu::connectToServer()
         }
         else
         {
-            mEditBoxIP.setColor(Ogre::ColourValue::Red);
+            mEditBoxMultiIP.setColor(Ogre::ColourValue::Red);
         }
     }
 #endif
@@ -581,9 +594,9 @@ void UIMainMenu::connectToServer()
 
 void UIMainMenu::createRoom()
 {
-    std::string serverIP = mEditBoxIP.getText().asUTF8();
-    std::string roomName = mEditBoxRoomName.getText().asUTF8();
-    std::string userName = mEditBoxUserName.getText().asUTF8();
+    std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
+    std::string roomName = mEditBoxMultiRoomName.getText().asUTF8();
+    std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
     if(!serverIP.empty() && !roomName.empty() && !userName.empty())
     {
@@ -610,9 +623,9 @@ void UIMainMenu::createRoom()
 
 void UIMainMenu::joinRoom()
 {
-    std::string serverIP = mEditBoxIP.getText().asUTF8();
+    std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
     std::string roomName = mRoomsTable->getSelectedItem();
-    std::string userName = mEditBoxUserName.getText().asUTF8();
+    std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
     if(!serverIP.empty() && !roomName.empty() && !userName.empty())
     {

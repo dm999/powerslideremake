@@ -509,9 +509,8 @@ void STRRacetimes::parse(const PFLoader& pfLoaderStore)
     STRSettings::parse(pfLoaderStore, "data/misc", "racetimes.str");
 }
 
-STRPlayerSettings::PlayerData STRPlayerSettings::load(const std::string& playerName, const std::string& dataDir)
+void STRPlayerSettings::parse(const std::string& dataDir)
 {
-    PlayerData ret;
     mIsSTRLoaded = false;
 
     Ogre::DataStreamPtr stream;
@@ -523,7 +522,7 @@ STRPlayerSettings::PlayerData STRPlayerSettings::load(const std::string& playerN
     }
     else
     {
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory " + Ogre::String(dataDir.c_str()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::parse]: Load from directory " + Ogre::String(dataDir.c_str()));
 
         std::ios::openmode mode = std::ios::in | std::ios::binary;
         std::ifstream* roStream = 0;
@@ -540,49 +539,31 @@ STRPlayerSettings::PlayerData STRPlayerSettings::load(const std::string& playerN
 
     if(stream.get() && stream->isReadable())
     {
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 1");
         mSTR.Reset();
-
-        const std::string section = playerName + " parameters";
 
         size_t size = stream->size();
 
         std::vector<char> buf(size);
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 2");
 
         stream->read(&buf[0],size);
 
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 3");
-
         std::string data(buf.begin(), buf.end());
-
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 4");
 
         SI_Error rc = mSTR.LoadData(data.c_str(), data.size());
 
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 5");
         if (rc >= 0)
         {
             mIsSTRLoaded = true;
-
-            std::string level = getValue(section, "Level");
-            if(!level.empty())
-            {
-                Ogre::uint32 levelData;
-                Conversions::DMFromString(level, levelData);
-                ret.level = static_cast<AIStrength>(levelData);
-            }
         }
 
         stream->close();
     }
-
-    return ret;
 }
 
 void STRPlayerSettings::save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData)
 {
-    mSTR.Reset();
+
+    mSTR.SetValue("", "player name", playerName.c_str());
 
     const std::string section = playerName + " parameters";
 

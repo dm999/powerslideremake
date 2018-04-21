@@ -699,6 +699,33 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mMirrorVal.setButtonOnAction(this);
     }
 
+    //Options Name
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionNameLabel = createTextArea("MainWindowOptionNameLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionNameLabel->setCaption("Player Name");
+        mOptionNameLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel->setSpaceWidth(9.0f);
+        mOptionNameLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionNameLabel->setFontName("SdkTrays/Caption");
+        mOptionNameLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionNameLabel);
+    }
+    //Options Name Save
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(220.0f, 82.0f, 0.0f, 0.0f);;
+        mOptionNameLabel_Save = createTextArea("MainWindowOptionNameSaveLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionNameLabel_Save->setCaption("Save");
+        mOptionNameLabel_Save->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel_Save->setSpaceWidth(9.0f);
+        mOptionNameLabel_Save->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel_Save->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionNameLabel_Save->setFontName("SdkTrays/Caption");
+        mOptionNameLabel_Save->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mOptionNameLabel_Save);
+    }
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -1137,6 +1164,11 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 
+    if(mOptionNameLabel_Save->isVisible() && OgreBites::Widget::isCursorOver(mOptionNameLabel_Save, pos, 0))
+    {
+        onNameChange();
+    }
+
     if(mGameExitYesLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitYesLabel, pos, 0))
     {
         mModeContext.getBaseApp()->setShutdown(false);
@@ -1218,6 +1250,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mOptionRaceLabel_Opponents_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_Transmission_Val);
     checkCursorOverLabel(pos, mOptionRaceLabel_KMPH_Val);
+    checkCursorOverLabel(pos, mOptionNameLabel_Save);
 
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
@@ -1381,6 +1414,12 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mMirrorVal.show();
 }
 
+void UIMainMenuLabels::showOptionNameLabels()
+{
+    mOptionNameLabel->show();
+    mOptionNameLabel_Save->show();
+}
+
 void UIMainMenuLabels::showGameExitLabels()
 {
     mGameExitLabel->show();
@@ -1498,6 +1537,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_KMPH->hide();
     mOptionRaceLabel_KMPH_Val->hide();
     mOptionRaceLabel_Mirror->hide();
+    mOptionNameLabel->hide();
+    mOptionNameLabel_Save->hide();
 
     mStartingGridTimeLabel->hide();
 

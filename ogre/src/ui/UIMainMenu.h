@@ -56,6 +56,8 @@ private:
 
     finishBoard_v prepareFinishBoard()const;
 
+    void onNameChange() override;
+
     Ogre::Timer mStartingGridTimer;
     bool mIsInStartingGrid;
 
@@ -63,10 +65,10 @@ private:
 
     SinglePlayerMenuStates mCurrentState;
 
-    UIEditBox mEditBox;
-    UIEditBox mEditBoxIP;
     UIEditBox mEditBoxUserName;
-    UIEditBox mEditBoxRoomName;
+    UIEditBox mEditBoxMultiIP;
+    UIEditBox mEditBoxMultiUserName;
+    UIEditBox mEditBoxMultiRoomName;
 
     OgreBites::SelectMenu* mRoomsTable;
 };

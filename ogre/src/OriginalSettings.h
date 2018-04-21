@@ -134,7 +134,7 @@ public:
 
     STRPlayerSettings() : mIsSaved(false), mFileName("player.txt"){}
 
-    PlayerData load(const std::string& playerName, const std::string& dataDir);
+    void parse(const std::string& dataDir);
     void save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData);
 
     bool getIsLoaded() const {return mIsSTRLoaded;}

@@ -45,6 +45,7 @@ protected:
     void showOptionGraphicsLabels();
     void showOptionInputLabels();
     void showOptionRaceLabels();
+    void showOptionNameLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showGameExitLabels();
     void showRaceGridCharactersLabels();
@@ -57,6 +58,8 @@ protected:
     void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
 
 private:
+
+    virtual void onNameChange() = 0;
 
     Ogre::TextAreaOverlayElement * mWindowTitle;
 
@@ -100,6 +103,9 @@ private:
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
     UIButtonTick mMirrorVal;
+
+    Ogre::TextAreaOverlayElement * mOptionNameLabel;
+    Ogre::TextAreaOverlayElement * mOptionNameLabel_Save;
 
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
