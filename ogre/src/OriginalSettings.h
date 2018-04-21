@@ -9,12 +9,16 @@
 #define SI_SUPPORT_IOSTREAMS
 #include "SimpleIni.h"
 
+#include "Enums.h"
+
 /**
  * Parser of str files
  */
 class STRSettings
 {
 public:
+
+    STRSettings() : mIsSTRLoaded(false) {}
 
     void parse(const PFLoader& pfLoaderStore, const std::string& relativeDir, const std::string& fileName);
 
@@ -113,6 +117,34 @@ public:
     void parse(const PFLoader& pfLoaderStore);
 
 private:
+};
+
+/**
+ * 
+ */
+class STRPlayerSettings : public STRSettings
+{
+public:
+
+    struct PlayerData
+    {
+        PlayerData() : level(Easy) {}
+        AIStrength level;
+    };
+
+    STRPlayerSettings() : mIsSaved(false), mFileName("player.txt"){}
+
+    PlayerData load(const std::string& playerName, const std::string& dataDir);
+    void save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData);
+
+    bool getIsLoaded() const {return mIsSTRLoaded;}
+    bool getIsSaved() const {return mIsSaved;}
+
+private:
+
+    const std::string mFileName;
+
+    bool mIsSaved;
 };
 
 #endif

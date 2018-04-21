@@ -27,14 +27,23 @@ public:
 
     std::string getVersion()const{return mVersion;}
 
+    void setPlayerName(std::string option){mPlayerName = option;}
+    std::string getPlayerName()const{return mPlayerName;}
+
+    void setGameLevel(AIStrength option){mGameLevel = option;}
+    AIStrength getGameLevel()const{return mGameLevel;}
+
+
     /**
      * init data to read from *.pf and *.str files
      * originalPathData - should contain data.pf, gameshell.pf
      * originalPathCommon - should contain store.pf
      */
     void initOriginalData();
-
     bool isOriginalDataInited()const {return mOriginalDataInited;}
+
+    void loadPlayerData();
+    void savePlayerData();
 
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
@@ -169,6 +178,10 @@ private:
 
     std::string mVersion;
 
+    std::string mPlayerName;
+
+    AIStrength mGameLevel; //level of available tracks/cars
+
     std::string mTrackName;
     size_t mLapsCount;
 
@@ -183,6 +196,7 @@ private:
     STRPowerslide mSTRPowerslide;
     STRRacecrud mSTRRacecrud;
     STRRacetimes mSTRRacetimes;
+    STRPlayerSettings mPlayerSettings;
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;

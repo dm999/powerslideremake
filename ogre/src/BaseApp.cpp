@@ -284,7 +284,15 @@ void BaseApp::setupResources()
             typeName = i->first;
             archName = i->second;
 
-            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+            if(secName != "PF")
+            {
+                Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+            }
+            else
+            {
+                //d.polubotko: use [PF] to write player settings file, so make it not read-only
+                Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName, false, false);
+            }
         }
     }
 

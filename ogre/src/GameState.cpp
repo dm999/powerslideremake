@@ -6,6 +6,8 @@
 
 GameState::GameState() :
     mVersion(GAMEVERSION),
+    mPlayerName("Rasputin"),
+    mGameLevel(Easy),
     mTrackName("desert track"),
     mLapsCount(3),
     mTransmissionType(trAuto),
@@ -26,7 +28,7 @@ GameState::GameState() :
     mInputType(itKeyboard),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
-    mMultiplayerUserName("Rasputin"),
+    mMultiplayerUserName(mPlayerName),
     mMultiplayerServerIP(""),
     mMultiplayerServerPort(8800),
     mMultiplayerAmountAI(0),
@@ -42,6 +44,8 @@ GameState::~GameState()
 void GameState::initOriginalData()
 {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::initOriginalData]: " + Ogre::String(mVersion.c_str()));
+
+    loadPlayerData();
 
     bool isLoaded = mPFLoaderData.init("data.pf", mDataDir);
 
@@ -74,6 +78,33 @@ void GameState::initOriginalData()
     else
     {
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[CRITICAL]: Unable to locate data.pf file");
+    }
+}
+
+void GameState::loadPlayerData()
+{
+    STRPlayerSettings::PlayerData playerData = mPlayerSettings.load(mPlayerName, mDataDir);
+    mGameLevel = playerData.level;
+
+    //reset settings
+    mTrackName = "desert track";
+    mPSPlayerCar.setCharacterName("frantic");
+}
+
+void GameState::savePlayerData()
+{
+    STRPlayerSettings::PlayerData playerData;
+    playerData.level = mGameLevel;
+
+    mPlayerSettings.save(mPlayerName, mDataDir, playerData);
+
+    if(mPlayerSettings.getIsSaved())
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::savePlayerData]: save sucess");
+    }
+    else
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::savePlayerData]: save error");
     }
 }
 

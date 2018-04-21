@@ -1172,10 +1172,10 @@ CommonIncludes::shared_ptr&lt;Ogre::MovableText&gt; mPlayerTitle</y:NodeLabel>
     <node id="n18">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="2957.1933656117208" width="608.5912499495803" x="11335.70437502521" y="-9338.596682805859"/>
+          <y:Geometry height="3413.683703513784" width="608.5912499495803" x="11335.70437502521" y="-9566.84185175689"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="2900.130859375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="28.531253118360837">&lt;&lt;GameState.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="3076.544921875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="517.568359375" x="45.51144528728946" y="168.56939081939163">&lt;&lt;GameState.h&gt;&gt;
 
 GameState
 
@@ -1183,9 +1183,16 @@ public:
 
 std::string getVersion()const
 
-void initOriginalData(const std::string&amp; originalPathData, const std::string&amp; originalPathCommon)
+void setPlayerName(std::string option)
+std::string getPlayerName()const
 
+void setGameLevel(AIStrength option)
+AIStrength getGameLevel()const
+
+void initOriginalData(const std::string&amp; originalPathData, const std::string&amp; originalPathCommon)
 bool isOriginalDataInited()const
+
+void savePlayerData()
 
 void setRaceParameters(const std::string&amp; trackName, AIStrength aiStrength)
 void setRaceParameters(const std::string&amp; trackName, AIStrength aiStrength, size_t lapsCount)
@@ -1309,6 +1316,10 @@ private:
 
 std::string mVersion
 
+std::string mPlayerName
+
+AIStrength mGameLevel
+
 std::string mTrackName
 
 bool mOriginalDataInited
@@ -1318,6 +1329,7 @@ PFLoader mPFLoaderStore
 STRPowerslide mSTRPowerslide
 STRRacecrud mSTRRacecrud
 STRRacetimes mSTRRacetimes
+STRPlayerSettings mPlayerSettings
 
 static const int mAIMax = 11
 

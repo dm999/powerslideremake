@@ -134,7 +134,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 
     mEditBoxUserName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
     mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 250.0f, 170.0f, 18.0f), 36.0f);
-    mEditBoxUserName.setText("DM");//d.polubotko: FIXME
+    mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
 
     mEditBoxRoomName.setBackgroundMaterial(mEditBoxIP.getMaterialName());
     mEditBoxRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
@@ -468,6 +468,8 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Name:
         mIsInStartingGrid = false;
         showOptionLabels();
+        mModeContext.getGameState().loadPlayerData();//d.polubotko: debug
+        mModeContext.getGameState().savePlayerData();//d.polubotko: debug
         break;
 
     case State_Options_Trophies:

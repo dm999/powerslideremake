@@ -28,6 +28,8 @@ public:
 
     size_t getFileSize(const std::string& relativeDir, const std::string& file) const;
 
+    static const std::string mAndroidStorageDir;
+
 private:
 
     typedef unsigned int DWORD;

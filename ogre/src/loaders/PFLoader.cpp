@@ -5,9 +5,9 @@
 
 #include "../tools/Tools.h"
 
-namespace{
-    const std::string androidStorageDir = "powerslide";
-}
+
+const std::string PFLoader::mAndroidStorageDir = "powerslide";
+
 
 PFLoader::PFLoader()
     : mFileName("data.pf")
@@ -30,11 +30,14 @@ bool PFLoader::init(const std::string& file, const std::string& dataDir)
         std::ios::openmode mode = std::ios::in | std::ios::binary;
         std::ifstream* roStream = 0;
         roStream = OGRE_NEW_T(std::ifstream, Ogre::MEMCATEGORY_GENERAL)();
-        roStream->open((mDataDir + "/" + androidStorageDir + "/" + mFileName).c_str(), mode);
+        roStream->open((mDataDir + "/" + mAndroidStorageDir + "/" + mFileName).c_str(), mode);
 
-        Ogre::FileStreamDataStream* streamtmp = 0;
-        streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), roStream, true);
-        stream = Ogre::DataStreamPtr(streamtmp);
+        if(!roStream->fail())
+        {
+            Ogre::FileStreamDataStream* streamtmp = 0;
+            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), roStream, true);
+            stream = Ogre::DataStreamPtr(streamtmp);
+        }
     }
 
     if(stream.get() && stream->isReadable())
@@ -106,11 +109,14 @@ Ogre::DataStreamPtr PFLoader::getFile(const std::string& relativeDir, const std:
             std::ios::openmode mode = std::ios::in | std::ios::binary;
             std::ifstream* roStream = 0;
             roStream = OGRE_NEW_T(std::ifstream, Ogre::MEMCATEGORY_GENERAL)();
-            roStream->open((mDataDir + "/" + androidStorageDir + "/" + mFileName).c_str(), mode);
+            roStream->open((mDataDir + "/" + mAndroidStorageDir + "/" + mFileName).c_str(), mode);
 
-            Ogre::FileStreamDataStream* streamtmp = 0;
-            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), roStream, true);
-            ret = Ogre::DataStreamPtr(streamtmp);
+            if(!roStream->fail())
+            {
+                Ogre::FileStreamDataStream* streamtmp = 0;
+                streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), roStream, true);
+                ret = Ogre::DataStreamPtr(streamtmp);
+            }
         }
 
         if(ret.get() && ret->isReadable())

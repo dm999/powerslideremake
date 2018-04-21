@@ -300,7 +300,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     for(size_t q = 0; q < availTracks.size(); ++q)
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 56.0f + q * 25.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 56.0f + q * 30.0f, 0.0f, 0.0f);
         mTracksLabels.push_back(NULL);
         mTracksLabels[q] = createTextArea("MainWindowTrackLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mTracksLabels[q]->setCaption(strPowerslide.getTrackTitle(availTracks[q]));
@@ -607,12 +607,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         //mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
-        mOpponentsValLeft.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
+        mOpponentsValLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
         mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValLeft.setButtonOnAction(this);
 
         //mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
-        mOpponentsValRight.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
+        mOpponentsValRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
         mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
         mOpponentsValRight.setButtonOnAction(this);
     }
@@ -1253,22 +1253,52 @@ void UIMainMenuLabels::showModeSingleMulti()
 
 void UIMainMenuLabels::showModeDifficulty()
 {
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+
     mModeSingleDifficultyNovice->show();
-    mModeSingleDifficultyAdvanced->show();
-    mModeSingleDifficultyExpert->show();
-    mModeSingleDifficultyInsane->show();
+
+    if(gameLevel >= Medium)
+        mModeSingleDifficultyAdvanced->show();
+
+    if(gameLevel >= Hard)
+        mModeSingleDifficultyExpert->show();
+
+    if(gameLevel >= Insane)
+        mModeSingleDifficultyInsane->show();
 }
 
 void UIMainMenuLabels::showTrackLabels()
 {
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
+    {
+        if(gameLevel == Easy    && q >= 3) break;
+        if(gameLevel == Medium  && q >= 5) break;
+        if(gameLevel == Hard    && q >= 9) break;
+        if(gameLevel == Insane  && q >= 10) break;
         mTracksLabels[q]->show();
+    }
 }
 
 void UIMainMenuLabels::showCarLabels()
 {
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+
     for(size_t q = 0; q < mCarsLabels.size(); ++q)
+    {
+        if(gameLevel == Easy && q == 2) continue;
+        if(gameLevel == Easy && q == 5) continue;
+        if(gameLevel == Easy && q == 6) continue;
+
+        if(gameLevel == Medium && q == 2) continue;
+        if(gameLevel == Medium && q == 5) continue;
+        if(gameLevel == Medium && q == 6) continue;
+
+        if(gameLevel == Hard && q == 6) continue;
+
         mCarsLabels[q]->show();
+    }
 }
 
 void UIMainMenuLabels::showCharacterLabels()
@@ -1368,7 +1398,7 @@ void UIMainMenuLabels::showRaceGridCharactersLabels()
 
 void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
 {
-    std::string playerName = "Dima";//d.polubotko: FIXME - add player name
+    std::string playerName = mModeContext.getGameState().getPlayerName();
 
     size_t podiumChars = mPodiumCharacters;
     if(finishBoard.size() < podiumChars) podiumChars = finishBoard.size();

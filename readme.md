@@ -2,10 +2,12 @@
 
 ### Goal ###
 
-"Powerslide remake" remakes main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment, advanced AI based on neural network, multiplayer gaming. It has been implemented using programmable rendering pipeline and crossplatform (windows, linux, android) ready.
+"Powerslide remake" project remakes main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment, advanced AI based on neural network, multiplayer gaming. It has been implemented using programmable rendering pipeline and crossplatform (windows, linux, android) ready.
 
 ### Build ###
 To build the project you need:  
+- [CMake 2.8 or higher](https://cmake.org/)  
+- C++03 compiler  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org) (only if PowerslideRemake_OPENAL ON)  
 - [Boost](https://www.boost.org) (only if PowerslideRemake_MULTIPLAYER ON)  
@@ -28,7 +30,7 @@ To build project you need:
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
 ### Run ###
-To run builded project you need to support original game assets (packed files - pf). Game assets could be found on original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
+To run builded project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
 You need to have: data.pf, gameshell.pf, store.pf. Place them in the folder with builded application.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
 

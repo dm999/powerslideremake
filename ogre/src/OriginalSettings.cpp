@@ -508,3 +508,123 @@ void STRRacetimes::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "data/misc", "racetimes.str");
 }
+
+STRPlayerSettings::PlayerData STRPlayerSettings::load(const std::string& playerName, const std::string& dataDir)
+{
+    PlayerData ret;
+    mIsSTRLoaded = false;
+
+    Ogre::DataStreamPtr stream;
+    if(dataDir.empty())
+    {
+        try{
+            stream = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName, "PF" );
+        }catch(...){}
+    }
+    else
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory " + Ogre::String(dataDir.c_str()));
+
+        std::ios::openmode mode = std::ios::in | std::ios::binary;
+        std::ifstream* roStream = 0;
+        roStream = OGRE_NEW_T(std::ifstream, Ogre::MEMCATEGORY_GENERAL)();
+        roStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + mFileName).c_str(), mode);
+
+        if(!roStream->fail())
+        {
+            Ogre::FileStreamDataStream* streamtmp = 0;
+            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), roStream, true);
+            stream = Ogre::DataStreamPtr(streamtmp);
+        }
+    }
+
+    if(stream.get() && stream->isReadable())
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 1");
+        mSTR.Reset();
+
+        const std::string section = playerName + " parameters";
+
+        size_t size = stream->size();
+
+        std::vector<char> buf(size);
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 2");
+
+        stream->read(&buf[0],size);
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 3");
+
+        std::string data(buf.begin(), buf.end());
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 4");
+
+        SI_Error rc = mSTR.LoadData(data.c_str(), data.size());
+
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::load]: Load from directory 5");
+        if (rc >= 0)
+        {
+            mIsSTRLoaded = true;
+
+            std::string level = getValue(section, "Level");
+            if(!level.empty())
+            {
+                Ogre::uint32 levelData;
+                Conversions::DMFromString(level, levelData);
+                ret.level = static_cast<AIStrength>(levelData);
+            }
+        }
+
+        stream->close();
+    }
+
+    return ret;
+}
+
+void STRPlayerSettings::save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData)
+{
+    mSTR.Reset();
+
+    const std::string section = playerName + " parameters";
+
+    mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
+
+    std::string str;
+
+    mIsSaved = false;
+
+    SI_Error rc = mSTR.Save(str);
+    if (rc >= 0)
+    {
+        Ogre::DataStreamPtr stream;
+        if(dataDir.empty())
+        {
+            try{
+                stream = Ogre::ResourceGroupManager::getSingleton().createResource( mFileName, "PF", true );
+            }catch(...){}
+        }
+        else
+        {
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::save]: Save to directory " + Ogre::String(dataDir.c_str()));
+
+            std::ios::openmode mode = std::ios::out | std::ios::binary;
+            std::fstream* ioStream = 0;
+            ioStream = OGRE_NEW_T(std::fstream, Ogre::MEMCATEGORY_GENERAL)();
+            ioStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + mFileName).c_str(), mode);
+
+            if(!ioStream->fail())
+            {
+                Ogre::FileStreamDataStream* streamtmp = 0;
+                streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), ioStream, true);
+                stream = Ogre::DataStreamPtr(streamtmp);
+            }
+        }
+
+        if(stream.get() && stream->isWriteable())
+        {
+            stream->write(str.c_str(), str.length());
+            mIsSaved = true;
+
+            stream->close();
+        }
+    }
+}
