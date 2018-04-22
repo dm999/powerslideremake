@@ -130,11 +130,16 @@ public:
     struct GlobalData
     {
         std::string playerName;
+        std::string track;
         Ogre::uint32 numOpponents;
         std::string resolution;
         bool vsync;
         bool fullscreen;
         bool shadows;
+        bool mirror;
+        bool kmph;
+        Ogre::uint32 transmission;
+        Ogre::uint32 input;
     };
 
     struct PlayerData

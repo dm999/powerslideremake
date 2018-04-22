@@ -50,20 +50,20 @@ enum AIStrength
 
 enum VehicleType
 {
-    HumanVehicle = 2,
-    AIVehicle = 4
+    HumanVehicle    = 2,
+    AIVehicle       = 4
 };
 
 enum TransmissionType
 {
-    trManual,
-    trAuto
+    trManual    = 0,
+    trAuto      = 1
 };
 
 enum InputType
 {
-    itKeyboard,
-    itMouse
+    itKeyboard  = 0,
+    itMouse     = 1
 };
 
 #endif

@@ -73,7 +73,12 @@ void GameState::initOriginalData()
                 mIsVsync = mPlayerSettings.getIntValue("", "vsync", static_cast<int>(mIsVsync));
                 mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
                 mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
+                mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
+                mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
+                mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
+                mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
                 loadPlayerData();
+                setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mGameLevel);
 
                 mOriginalDataInited = true;
             }
@@ -119,6 +124,12 @@ void GameState::savePlayerData()
     globalData.vsync = static_cast<Ogre::RenderWindow*>(Ogre::Root::getSingletonPtr()->getRenderTarget("Powerslide Remake"))->isVSyncEnabled();
     globalData.fullscreen = static_cast<Ogre::RenderWindow*>(Ogre::Root::getSingletonPtr()->getRenderTarget("Powerslide Remake"))->isFullScreen();
     globalData.shadows = mIsCastShadows;
+    globalData.mirror = mIsMirrorEnabled;
+    globalData.kmph = mIsKMPh;
+    globalData.transmission = mTransmissionType;
+    globalData.input = mInputType;
+
+    globalData.track = mTrackName;
 
     STRPlayerSettings::PlayerData playerData;
     playerData.level = mGameLevel;
@@ -229,7 +240,7 @@ PSPlayerCar& GameState::getPlayerCar()
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
+    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

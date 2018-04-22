@@ -576,11 +576,16 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
 {
 
     mSTR.SetValue("", "player name", globalData.playerName.c_str());
+    mSTR.SetValue("", "track choice", globalData.track.c_str());
     mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
     mSTR.SetValue("", "resolution", globalData.resolution.c_str());
     mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
     mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
     mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
+    mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
+    mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
+    mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
+    mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
 
     const std::string section = globalData.playerName + " parameters";
 

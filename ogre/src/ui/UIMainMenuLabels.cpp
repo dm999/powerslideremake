@@ -86,6 +86,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
             mModeContext.getGameState().setInputType(itKeyboard);
             mOptionInputLabel_Type->setCaption("Keyboard");
         }
+
+        mModeContext.getGameState().savePlayerData();
 #endif
     }
 
@@ -125,6 +127,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getGameState().setMirrorEnabled(false);
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 }
 
@@ -1054,6 +1058,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
             selectTrack(mModeContext.getGameState().getTrackNameAsOriginal());
 
+            mModeContext.getGameState().savePlayerData();
+
             switchState(State_Car);
             return;
         }
@@ -1174,6 +1180,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
             mModeContext.getGameState().setTransmissionType(trAuto);
             mOptionRaceLabel_Transmission_Val->setCaption("Auto");
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(mOptionRaceLabel_KMPH_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_KMPH_Val, pos, 0))
@@ -1188,6 +1196,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
             mModeContext.getGameState().setKMPh(true);
             mOptionRaceLabel_KMPH_Val->setCaption("Kph");
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(mOptionNameLabel_Save->isVisible() && OgreBites::Widget::isCursorOver(mOptionNameLabel_Save, pos, 0))
