@@ -6,10 +6,10 @@
 
 #include "mesh/StaticMeshProcesser.h"
 
-CameraMan::CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser) 
+CameraMan::CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser, CameraPositions camPos) 
 : mRearCamera(NULL),
     mCamera(cam),
-    mCamPositonType(CameraPosition_ChassisB),
+    mCamPositonType(camPos),
     mStaticMeshProcesser(staticMeshProcesser),
     mCamTypeSwitched(true)
 {}

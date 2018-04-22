@@ -18,6 +18,7 @@ GameState::GameState() :
     mResolution("800 x 600"),
     mIsVsync(false),
     mIsFullscreen(true),
+    mCameraPos(CameraPosition_ChassisB),
     mOriginalDataInited(false),
     mAiOpponentsAmount(3),
     mAIStrength(Easy),
@@ -77,6 +78,7 @@ void GameState::initOriginalData()
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
+                mCameraPos = static_cast<CameraPositions>(mPlayerSettings.getIntValue("", "camera setting", static_cast<int>(mCameraPos)));
                 loadPlayerData();
                 setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mGameLevel);
 
@@ -128,6 +130,7 @@ void GameState::savePlayerData()
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;
+    globalData.cameraPos = mCameraPos;
 
     globalData.track = mTrackName;
 

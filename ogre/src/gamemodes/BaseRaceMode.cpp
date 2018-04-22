@@ -154,7 +154,7 @@ void BaseRaceMode::initCamera()
     mCamera->setAspectRatio(1.0f * Ogre::Real(actualWidth) / Ogre::Real(actualHeight) / (640.0f / 480.0f));
     mCamera->setFOVy(Ogre::Degree(90.0f));
 
-    mCameraMan.reset(new CameraMan(mCamera, mStaticMeshProcesser));
+    mCameraMan.reset(new CameraMan(mCamera, mStaticMeshProcesser, mModeContext.getGameState().getCameraPositionType()));
     mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
     Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);

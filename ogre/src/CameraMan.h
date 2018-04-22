@@ -13,7 +13,7 @@ class StaticMeshProcesser;
 class CameraMan
 {
 public :
-    CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser);
+    CameraMan(Ogre::Camera* cam, StaticMeshProcesser& staticMeshProcesser, CameraPositions camPos);
 
     virtual ~CameraMan() {}
 

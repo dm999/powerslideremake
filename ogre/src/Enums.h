@@ -3,10 +3,10 @@
 
 enum CameraPositions
 {
-    CameraPosition_Bumper,
-    CameraPosition_ChassisA,
-    CameraPosition_ChassisB,
-    CameraPosition_ChassisC
+    CameraPosition_Bumper       = 0,
+    CameraPosition_ChassisA     = 1,
+    CameraPosition_ChassisB     = 2,
+    CameraPosition_ChassisC     = 3
 };
 
 enum GameMode

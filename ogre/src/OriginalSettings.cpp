@@ -586,6 +586,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
     mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
     mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
+    mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
 
     const std::string section = globalData.playerName + " parameters";
 

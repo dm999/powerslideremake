@@ -68,6 +68,9 @@ public:
     bool isVsync() const {return mIsVsync;}
     bool isFullscreen() const {return mIsFullscreen;}
 
+    CameraPositions getCameraPositionType() const {return mCameraPos;}
+    void setCameraPositionType(CameraPositions type){mCameraPos = type;}
+
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
 
@@ -195,6 +198,7 @@ private:
     std::string mResolution;
     bool mIsVsync;
     bool mIsFullscreen;
+    CameraPositions mCameraPos;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;

@@ -124,32 +124,19 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
             baseApp->switchRenderType();
         }
     }
-    else if (arg.key == OIS::KC_1)
+    else if (arg.key == OIS::KC_V)
     {
         if(mCameraMan)
         {
-            mCameraMan->setCameraPositionType(CameraPosition_Bumper);
-        }
-    }
-    else if (arg.key == OIS::KC_2)
-    {
-        if(mCameraMan)
-        {
-            mCameraMan->setCameraPositionType(CameraPosition_ChassisA);
-        }
-    }
-    else if (arg.key == OIS::KC_3)
-    {
-        if(mCameraMan)
-        {
-            mCameraMan->setCameraPositionType(CameraPosition_ChassisB);
-        }
-    }
-    else if (arg.key == OIS::KC_4)
-    {
-        if(mCameraMan)
-        {
-            mCameraMan->setCameraPositionType(CameraPosition_ChassisC);
+            int camPos = static_cast<int>(mCameraMan->getCameraPositionType());
+            ++camPos;
+            if(camPos > CameraPosition_ChassisC)
+            {
+                camPos = CameraPosition_Bumper;
+            }
+            mCameraMan->setCameraPositionType(static_cast<CameraPositions>(camPos));
+            baseApp->getGameState().setCameraPositionType(static_cast<CameraPositions>(camPos));
+            baseApp->getGameState().savePlayerData();
         }
     }
     else if (arg.key == OIS::KC_P)
