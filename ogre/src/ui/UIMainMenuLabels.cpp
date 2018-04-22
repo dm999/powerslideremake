@@ -1342,13 +1342,17 @@ void UIMainMenuLabels::showTrackLabels()
 {
     AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
 
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
-        if(gameLevel == Easy    && q >= 3) break;
-        if(gameLevel == Medium  && q >= 5) break;
-        if(gameLevel == Hard    && q >= 9) break;
-        if(gameLevel == Insane  && q >= 10) break;
-        mTracksLabels[q]->show();
+        int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
+
+        if(difficultyAvailable <= gameLevel)
+        {
+            mTracksLabels[q]->show();
+        }
     }
 }
 
@@ -1356,19 +1360,17 @@ void UIMainMenuLabels::showCarLabels()
 {
     AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
 
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+
     for(size_t q = 0; q < mCarsLabels.size(); ++q)
     {
-        if(gameLevel == Easy && q == 2) continue;
-        if(gameLevel == Easy && q == 5) continue;
-        if(gameLevel == Easy && q == 6) continue;
+        int difficultyAvailable = strPowerslide.getIntValue(availCars[q] + " parameters", "difficulty available", 0);
 
-        if(gameLevel == Medium && q == 2) continue;
-        if(gameLevel == Medium && q == 5) continue;
-        if(gameLevel == Medium && q == 6) continue;
-
-        if(gameLevel == Hard && q == 6) continue;
-
-        mCarsLabels[q]->show();
+        if(difficultyAvailable <= gameLevel)
+        {
+            mCarsLabels[q]->show();
+        }
     }
 }
 
@@ -1379,11 +1381,24 @@ void UIMainMenuLabels::showCharacterLabels()
     std::string characterCar = strPowerslide.getCarFromCharacter(character);
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
     characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+    std::vector<std::string> availCharsForCar = strPowerslide.getCharactersByBaseCar(characterCar);
+
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
     {
         if(mCharactersLabels[q]->getCaption() != "")
-            mCharactersLabels[q]->show();
+        {
+            if(availCharsForCar.size() > q)
+            {
+                int difficultyAvailable = strPowerslide.getIntValue(availCharsForCar[q] + " parameters", "difficulty available", 0);
+
+                if(difficultyAvailable <= gameLevel)
+                {
+                    mCharactersLabels[q]->show();
+                }
+            }
+        }
     }
     for (size_t q = 0; q < availableCharacters.size(); ++q)
     {
