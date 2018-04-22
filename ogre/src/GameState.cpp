@@ -69,7 +69,7 @@ void GameState::initOriginalData()
 
                 mPlayerSettings.parse(mDataDir);
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
-                setAICount(mPlayerSettings.getIntValue("", "num opponents"));
+                setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
                 mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
                 mIsVsync = mPlayerSettings.getIntValue("", "vsync", static_cast<int>(mIsVsync));
                 mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
@@ -165,6 +165,10 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     if(mAIStrength > Easy && mTrackName == "speedway track")
     {
         mTrackName = "speedway night track";
+    }
+    if(mAIStrength == Easy && mTrackName == "speedway night track")
+    {
+        mTrackName = "speedway track";
     }
 
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
