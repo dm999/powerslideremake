@@ -2,10 +2,7 @@ Main = {}
 Main.LevelLogDetailed = false;
 
 Window = {}
-Window.IsFullScreen = "Yes";
 Window.FSAA = "0";
-Window.Resolution = "800 x 600";
-Window.VSync = "No"
 Window.VSyncInterval = "1"
 
 -- executed from native code

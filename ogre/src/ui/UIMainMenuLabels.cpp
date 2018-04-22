@@ -21,6 +21,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getGameState().setCastShadows(false);
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(button == &mVSyncVal)
@@ -34,6 +36,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getRenderWindow()->setVSyncEnabled(false);
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(button == &mFulscreenVal)
@@ -61,6 +65,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
             Ogre::ConfigOption videoMode = configOpts["Video Mode"];
             mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.currentValue);
         }
+
+        mModeContext.getGameState().savePlayerData();
 
         mModeContext.getGameModeSwitcher()->recreateMenu();
     }
@@ -92,6 +98,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
             mModeContext.getGameState().setAICount(aiCount);
             mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(button == &mOpponentsValRight)
@@ -103,6 +111,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
             mModeContext.getGameState().setAICount(aiCount);
             mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
         }
+
+        mModeContext.getGameState().savePlayerData();
     }
 
     if(button == &mMirrorVal)
@@ -1122,6 +1132,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
             mModeContext.getRenderWindow()->setFullscreen(false, desiredWidth, desiredHeight);
             mModeContext.getRenderWindow()->resize(desiredWidth, desiredHeight);
         }
+
+        mModeContext.getGameState().savePlayerData();
 
         mModeContext.getGameModeSwitcher()->recreateMenu();
     }

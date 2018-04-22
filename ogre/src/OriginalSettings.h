@@ -52,6 +52,7 @@ public:
 
     int getIntValue(const std::string& section, const std::string& key, bool& isFound) const;
     int getIntValue(const std::string& section, const std::string& key) const;
+    int getIntValue(const std::string& section, const std::string& key, int defaultVal) const;
 
 
 protected:
@@ -126,6 +127,16 @@ class STRPlayerSettings : public STRSettings
 {
 public:
 
+    struct GlobalData
+    {
+        std::string playerName;
+        Ogre::uint32 numOpponents;
+        std::string resolution;
+        bool vsync;
+        bool fullscreen;
+        bool shadows;
+    };
+
     struct PlayerData
     {
         PlayerData() : level(Easy) {}
@@ -135,12 +146,14 @@ public:
     STRPlayerSettings() : mIsSaved(false), mFileName("player.txt"){}
 
     void parse(const std::string& dataDir);
-    void save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData);
+    void save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData);
 
     bool getIsLoaded() const {return mIsSTRLoaded;}
     bool getIsSaved() const {return mIsSaved;}
 
 private:
+
+    void writeFile(const std::string& dataDir);
 
     const std::string mFileName;
 

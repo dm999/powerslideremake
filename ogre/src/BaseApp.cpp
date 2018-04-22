@@ -193,7 +193,7 @@ bool BaseApp::configure()
     Ogre::ConfigOptionMap& configOptions = selectedRenderSystem->getConfigOptions();
     
     if(configOptions.find("Full Screen") != configOptions.end())
-        selectedRenderSystem->setConfigOption("Full Screen", mLuaManager.ReadScalarString("Window.IsFullScreen", mPipeline));
+        selectedRenderSystem->setConfigOption("Full Screen", mGameState.isFullscreen() ? "Yes" : "No");
     
     if(configOptions.find("FSAA") != configOptions.end())
         selectedRenderSystem->setConfigOption("FSAA", mLuaManager.ReadScalarString("Window.FSAA", mPipeline));
@@ -205,10 +205,10 @@ bool BaseApp::configure()
         selectedRenderSystem->setConfigOption("RTT Preferred Mode", "FBO");
 
     if(configOptions.find("Video Mode") != configOptions.end())
-        selectedRenderSystem->setConfigOption("Video Mode", mLuaManager.ReadScalarString("Window.Resolution", mPipeline));
+        selectedRenderSystem->setConfigOption("Video Mode", mGameState.getResolution());
 
     if(configOptions.find("VSync") != configOptions.end())
-        selectedRenderSystem->setConfigOption("VSync", mLuaManager.ReadScalarString("Window.VSync", mPipeline));
+        selectedRenderSystem->setConfigOption("VSync", mGameState.isVsync() ? "Yes" : "No");
 
     if(configOptions.find("VSync Interval") != configOptions.end())
         selectedRenderSystem->setConfigOption("VSync Interval", mLuaManager.ReadScalarString("Window.VSyncInterval", mPipeline));
@@ -327,6 +327,13 @@ bool BaseApp::setup()
     if(mLuaManager.ReadScalarBool("Main.LevelLogDetailed", mPipeline))
         Ogre::LogManager::getSingleton().setLogDetail(Ogre::LL_BOREME);
 
+    mGameState.initOriginalData();
+    if(!mGameState.isOriginalDataInited())
+    {
+        OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
+        return false;
+    }
+
 
     //setup renderer, create window, init input
     bool carryOn = configure();
@@ -341,16 +348,6 @@ bool BaseApp::setup()
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
     //mTrayMgr->toggleAdvancedFrameStats();
-
-    //mPlatform.reset(new MyGUI::OgrePlatform());
-    //mGUI.reset(new MyGUI::Gui());
-
-    mGameState.initOriginalData();
-    if(!mGameState.isOriginalDataInited())
-    {
-        OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
-        return false;
-    }
 
     mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 
@@ -1007,7 +1004,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             Ogre::NameValuePairList opt;
             opt["externalWindowHandle"] = Ogre::StringConverter::toString((int)nativeWnd);
             opt["androidConfig"] = Ogre::StringConverter::toString((int)config); 
-            mWindow = Ogre::Root::getSingleton().createRenderWindow("OgreWindow", 0, 0, false, &opt);
+            mWindow = Ogre::Root::getSingleton().createRenderWindow("Powerslide Remake", 0, 0, false, &opt);
 
             mInputHandler.reset(new InputHandler(mWindow, this));
 

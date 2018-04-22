@@ -392,6 +392,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showModeMulti();
         showMultiIPLabels();
         showBackgrounds();
+        mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
         mEditBoxMultiIP.show();
         mEditBoxMultiUserName.show();
         mEditBoxMultiRoomName.show();

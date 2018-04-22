@@ -15,6 +15,9 @@ GameState::GameState() :
     mTransmissionType(trAuto),
     mIsKMPh(true),
     mIsCastShadows(true),
+    mResolution("800 x 600"),
+    mIsVsync(false),
+    mIsFullscreen(true),
     mOriginalDataInited(false),
     mAiOpponentsAmount(3),
     mAIStrength(Easy),
@@ -65,6 +68,11 @@ void GameState::initOriginalData()
 
                 mPlayerSettings.parse(mDataDir);
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
+                setAICount(mPlayerSettings.getIntValue("", "num opponents"));
+                mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
+                mIsVsync = mPlayerSettings.getIntValue("", "vsync", static_cast<int>(mIsVsync));
+                mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
+                mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
                 loadPlayerData();
 
                 mOriginalDataInited = true;
@@ -99,10 +107,23 @@ void GameState::loadPlayerData()
 
 void GameState::savePlayerData()
 {
+    STRPlayerSettings::GlobalData globalData;
+    globalData.playerName = mPlayerName;
+    globalData.numOpponents = mAiOpponentsAmount;
+
+    Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
+    Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
+    Ogre::ConfigOption videoMode = configOpts["Video Mode"];
+    globalData.resolution = videoMode.currentValue;
+
+    globalData.vsync = static_cast<Ogre::RenderWindow*>(Ogre::Root::getSingletonPtr()->getRenderTarget("Powerslide Remake"))->isVSyncEnabled();
+    globalData.fullscreen = static_cast<Ogre::RenderWindow*>(Ogre::Root::getSingletonPtr()->getRenderTarget("Powerslide Remake"))->isFullScreen();
+    globalData.shadows = mIsCastShadows;
+
     STRPlayerSettings::PlayerData playerData;
     playerData.level = mGameLevel;
 
-    mPlayerSettings.save(mPlayerName, mDataDir, playerData);
+    mPlayerSettings.save(mDataDir, globalData, playerData);
 
     if(mPlayerSettings.getIsSaved())
     {
@@ -208,7 +229,7 @@ PSPlayerCar& GameState::getPlayerCar()
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
+    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

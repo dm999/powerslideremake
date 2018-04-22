@@ -196,6 +196,18 @@ int STRSettings::getIntValue(const std::string& section, const std::string& key)
     return getIntValue(section, key, isFound);
 }
 
+int STRSettings::getIntValue(const std::string& section, const std::string& key, int defaultVal) const
+{
+    bool isFound;
+    int ret =  getIntValue(section, key, isFound);
+    if(!isFound)
+    {
+        ret = defaultVal;
+    }
+
+    return ret;
+}
+
 void STRPowerslide::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "", "powerslide.str");
@@ -308,7 +320,7 @@ std::string STRPowerslide::getCharacterTitle(const std::string& character)
     originalToTitle["panther"] = "Panther";
     originalToTitle["volt"] = "Volt";
     originalToTitle["razer"] = "Razer";
-    originalToTitle["argon"] = "Argo";
+    originalToTitle["argon"] = "Argon";
 
 
     std::string res = originalToTitle[character];
@@ -560,15 +572,25 @@ void STRPlayerSettings::parse(const std::string& dataDir)
     }
 }
 
-void STRPlayerSettings::save(const std::string& playerName, const std::string& dataDir, const PlayerData& playerData)
+void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData)
 {
 
-    mSTR.SetValue("", "player name", playerName.c_str());
+    mSTR.SetValue("", "player name", globalData.playerName.c_str());
+    mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
+    mSTR.SetValue("", "resolution", globalData.resolution.c_str());
+    mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
+    mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
+    mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
 
-    const std::string section = playerName + " parameters";
+    const std::string section = globalData.playerName + " parameters";
 
     mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
 
+    writeFile(dataDir);
+}
+
+void STRPlayerSettings::writeFile(const std::string& dataDir)
+{
     std::string str;
 
     mIsSaved = false;

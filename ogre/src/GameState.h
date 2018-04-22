@@ -64,6 +64,10 @@ public:
     bool isCastShadows() const {return mIsCastShadows;}
     void setCastShadows(bool isCastShadows){mIsCastShadows = isCastShadows;}
 
+    std::string getResolution() const {return mResolution;}
+    bool isVsync() const {return mIsVsync;}
+    bool isFullscreen() const {return mIsFullscreen;}
+
     std::string getTrackName() const {return mTrackName;}
     std::string getTrackNameAsOriginal() const;
 
@@ -188,6 +192,9 @@ private:
     TransmissionType mTransmissionType;
     bool mIsKMPh;
     bool mIsCastShadows;
+    std::string mResolution;
+    bool mIsVsync;
+    bool mIsFullscreen;
 
     bool mOriginalDataInited;
     PFLoader mPFLoaderData;
