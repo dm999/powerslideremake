@@ -107,6 +107,8 @@ private:
     Ogre::TextAreaOverlayElement * mOptionNameLabel;
     Ogre::TextAreaOverlayElement * mOptionNameLabel_Save;
 
+    Ogre::TextAreaOverlayElement * mOptionVersionLabel;
+
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 

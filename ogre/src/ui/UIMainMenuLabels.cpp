@@ -736,6 +736,20 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionNameLabel_Save);
     }
 
+    //Options Version
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(630.0f, 360.0f, 0.0f, 0.0f);
+        mOptionVersionLabel = createTextArea("MainWindowOptionVersionLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionVersionLabel->setCaption(mModeContext.getGameState().getVersion());
+        mOptionVersionLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionVersionLabel->setSpaceWidth(9.0f);
+        mOptionVersionLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionVersionLabel->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionVersionLabel->setFontName("SdkTrays/Caption");
+        mOptionVersionLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionVersionLabel);
+    }
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -1371,6 +1385,8 @@ void UIMainMenuLabels::showOptionLabels()
     for(size_t q = 0; q < mOptionLabels.size(); ++q)
         mOptionLabels[q]->show();
 
+    mOptionVersionLabel->show();
+
 #ifdef NO_OPENAL
     mOptionLabels[2]->hide();
 #endif
@@ -1551,6 +1567,7 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_Mirror->hide();
     mOptionNameLabel->hide();
     mOptionNameLabel_Save->hide();
+    mOptionVersionLabel->hide();
 
     mStartingGridTimeLabel->hide();
 
