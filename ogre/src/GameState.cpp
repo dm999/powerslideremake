@@ -81,6 +81,7 @@ void GameState::initOriginalData()
                 mCameraPos = static_cast<CameraPositions>(mPlayerSettings.getIntValue("", "camera setting", static_cast<int>(mCameraPos)));
                 loadPlayerData();
                 setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mGameLevel);
+                mPSPlayerCar.setCharacterName(mPlayerSettings.getValue("", "character choice", "frantic"));
 
                 mOriginalDataInited = true;
             }
@@ -133,6 +134,7 @@ void GameState::savePlayerData()
     globalData.cameraPos = mCameraPos;
 
     globalData.track = mTrackName;
+    globalData.character = mPSPlayerCar.getCharacterName();
 
     STRPlayerSettings::PlayerData playerData;
     playerData.level = mGameLevel;

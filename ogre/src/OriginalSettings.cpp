@@ -577,6 +577,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
 
     mSTR.SetValue("", "player name", globalData.playerName.c_str());
     mSTR.SetValue("", "track choice", globalData.track.c_str());
+    mSTR.SetValue("", "character choice", globalData.character.c_str());
     mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
     mSTR.SetValue("", "resolution", globalData.resolution.c_str());
     mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());

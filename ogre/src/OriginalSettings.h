@@ -131,6 +131,7 @@ public:
     {
         std::string playerName;
         std::string track;
+        std::string character;
         Ogre::uint32 numOpponents;
         std::string resolution;
         bool vsync;

@@ -1100,6 +1100,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
             mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
 
+            mModeContext.getGameState().savePlayerData();
+
             switchState(State_StartingGrid);
             return;
         }
