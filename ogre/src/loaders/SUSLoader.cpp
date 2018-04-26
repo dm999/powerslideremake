@@ -67,7 +67,7 @@ std::vector<Ogre::Vector3> SUSLoader::readWheelSuspension(const Ogre::DataStream
 {
     std::vector<Ogre::Vector3> res;
 
-    size_t pointsAmount;
+    Ogre::uint32 pointsAmount;
     char buf[1025];
     fileToLoad->readLine(buf, 1024);
     sscanf(buf, "%d\n", &pointsAmount);

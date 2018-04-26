@@ -70,9 +70,9 @@ std::string Tools::SecondsToString(Ogre::Real timeSeconds)
         size_t timeInMilliseconds = static_cast<size_t>(timeSeconds * 100.0f);
 
         //hours = (timeInMilliseconds / 60 / 60) % 24;
-        size_t minutes = (timeInSeconds / 60) % 60;
-        size_t seconds = timeInSeconds % 60;
-        size_t miliseconds = timeInMilliseconds % 100;
+        Ogre::uint32 minutes = (timeInSeconds / 60) % 60;
+        Ogre::uint32 seconds = timeInSeconds % 60;
+        Ogre::uint32 miliseconds = timeInMilliseconds % 100;
         char buf[256];
         sprintf(buf, "%02d:%02d.%02d", minutes, seconds, miliseconds);
         res = buf;

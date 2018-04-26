@@ -611,11 +611,11 @@ std::string OgreColorToString(const Ogre::ColourValue& color)
     Ogre::Real b = color.b * 255.0f;
 
     char buf[10];
-    sprintf(buf, "%02x", static_cast<size_t>(r));
+    sprintf(buf, "%02x", static_cast<Ogre::uint32>(r));
     ret += buf;
-    sprintf(buf, "%02x", static_cast<size_t>(g));
+    sprintf(buf, "%02x", static_cast<Ogre::uint32>(g));
     ret += buf;
-    sprintf(buf, "%02x", static_cast<size_t>(b));
+    sprintf(buf, "%02x", static_cast<Ogre::uint32>(b));
     ret += buf;
 
     return ret;

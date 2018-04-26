@@ -18,7 +18,7 @@ struct AIWhole
     std::vector<std::vector<float> > slotMatrix;
     std::vector<std::vector<float> > activation;
     Ogre::Vector3 multiplier;
-    std::vector<std::vector<size_t> > remapper;
+    std::vector<std::vector<Ogre::uint32> > remapper;
 
     //rec
     std::vector<AIData> aiData;

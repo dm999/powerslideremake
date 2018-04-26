@@ -40,7 +40,7 @@ bool ExclusionBoxesObjectListener::isBoxFalloff(const Ogre::Vector3& min, const 
 
 size_t ExclusionBoxesObjectListener::getDE2LightIndex(const std::string& lightName)
 {
-    size_t res = 0;
+    Ogre::uint32 res = 0;
 
     std::map<std::string, size_t>::const_iterator found = mLightNameToDE2Name.find(lightName);
     if(found == mLightNameToDE2Name.end())

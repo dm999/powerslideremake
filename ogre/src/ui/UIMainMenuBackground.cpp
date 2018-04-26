@@ -61,8 +61,8 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
         for (size_t q = 0; q < availableCharacters.size(); ++q)
         {
             std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
-            size_t carIndex = 0;
-            size_t charIndex = 0;
+            Ogre::uint32 carIndex = 0;
+            Ogre::uint32 charIndex = 0;
             sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
 
             std::string carName = "car" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex) + ".bmp";
@@ -207,8 +207,8 @@ void UIMainMenuBackground::createBackgroundMaterials()
     for (size_t q = 0; q < availableCharacters.size(); ++q)
     {
         std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availableCharacters[q] + " parameters", "icon", "car0_0s.bmp");
-        size_t carIndex = 0;
-        size_t charIndex = 0;
+        Ogre::uint32 carIndex = 0;
+        Ogre::uint32 charIndex = 0;
         sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
 
         {
