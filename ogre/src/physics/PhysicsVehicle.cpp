@@ -402,7 +402,9 @@ Ogre::Vector2 PhysicsVehicle::findTexCoordinates(const Ogre::Vector3& normal,
     diffBC = valB - valC;
     diffFA = valF - valA;
 
-    Ogre::Real weight = 1.0f / (diffFA * diffBC - diffDC * diffEA);
+    Ogre::Real denom = diffFA * diffBC - diffDC * diffEA;
+    if(denom == 0.0f) denom = 1.0f;
+    Ogre::Real weight = 1.0f / (denom);
 
     Ogre::Vector2 diffProj = proj - Ogre::Vector2(valA, valC);
     Ogre::Vector2 diffProjWeight = diffProj * Ogre::Vector2(diffBC, diffFA);
