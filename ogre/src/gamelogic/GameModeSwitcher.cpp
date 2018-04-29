@@ -27,9 +27,10 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
 
     mContext.setGameModeSwitcher(this);
 
-    mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
+    mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
     mUIBackground.show();
     mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
+    mUILoaderChampionship.reset(new UIBackgroundLoaderProgressTracksChampionship(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
     mUIUnloader.reset(new UIBackgroundLoaderProgress(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f));
     mMenuMode->initData(this);
     mUIBackground.hide();
@@ -76,8 +77,8 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
  */
 void GameModeSwitcher::frameEnded()
 {
-    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti;
-    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceMulti;
+    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceMulti;
+    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceMulti;
 
     if(mIsRecreate)
     {
@@ -87,7 +88,7 @@ void GameModeSwitcher::frameEnded()
             mIsInitialLoadPassed = false;//to disable unloader progress
             clear();
             mGameMode = ModeMenu;
-            mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
+            mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
             mMenuMode->initData(this);
             mMenuMode->initCamera();
             mIsInitialLoadPassed = true;
@@ -142,6 +143,11 @@ void GameModeSwitcher::frameEnded()
         {
             mContext.setLapController(mPlayerMode->getLapController());
         }
+        //extract lap data after championship race
+        if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit)
+        {
+            mContext.setLapController(mPlayerMode->getLapController());
+        }
 #ifndef NO_MULTIPLAYER
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit)
         {
@@ -149,8 +155,17 @@ void GameModeSwitcher::frameEnded()
         }
 #endif
 
-        //clear all modes
-        clear();
+        //in case of switch from championship to menu keep mMenuMode
+        if(
+            mGameMode == ModeMenuChampionship && mGameModeNext == ModeMenu
+            )
+        {
+        }
+        else
+        {
+            //clear all modes
+            clear();
+        }
 
         //race -> main menu (single | multi)
         if(modeRace && mIsSwitchMode || raceOverAndReadyToQuit)
@@ -164,7 +179,21 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMode.reset(new MenuMode(mContext, State_Podium));
+                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Podium));
+                mIsLoadPassed = false;
+                mUIUnloader->show();
+                mMenuMode->initData(this);
+                mUIUnloader->hide();
+                mIsLoadPassed = true;
+                mMenuMode->initCamera();
+            }
+
+            //championship -> single main menu (championship)
+            if(mGameMode == ModeRaceChampionship)
+            {
+                mGameMode = ModeMenuChampionship;
+
+                mMenuMode.reset(new MenuMode(mContext, ModeMenuChampionship, State_Podium));
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -192,7 +221,7 @@ void GameModeSwitcher::frameEnded()
 #endif
         }
 
-        //main menu single -> race
+        //main menu single -> race single
         if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceSingle)
         {
             mIsSwitchMode = false;
@@ -208,6 +237,35 @@ void GameModeSwitcher::frameEnded()
             mUILoader->hide();
             mIsLoadPassed = true;
             mPlayerMode->initCamera();
+        }
+
+        //main menu single (championship) -> race championship
+        if((mGameMode == ModeMenu || mGameMode == ModeMenuChampionship) && mIsSwitchMode && mGameModeNext == ModeRaceChampionship)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = mGameModeNext;
+
+            //mContext.mTrayMgr->hideCursor();
+
+            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mIsLoadPassed = false;
+            mUILoaderChampionship->show(0, mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mPlayerMode->initData(this);
+            mUILoaderChampionship->hide();
+            mIsLoadPassed = true;
+            mPlayerMode->initCamera();
+        }
+
+        //main menu championship -> main menu single
+        if(mGameMode == ModeMenuChampionship && mIsSwitchMode && mGameModeNext == ModeMenu)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = mGameModeNext;
+
+            mIsLoadPassed = false;
+            mIsLoadPassed = true;
         }
 
 #ifndef NO_MULTIPLAYER
@@ -240,7 +298,7 @@ void GameModeSwitcher::frameEnded()
             //mContext.mTrayMgr->hideCursor();
 
             mIsInitialLoadPassed = false;//to disable unloader progress
-            mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
+            mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
             mMenuMode->initData(this);
             mMenuMode->initCamera();
             mIsInitialLoadPassed = true;
@@ -264,7 +322,7 @@ void GameModeSwitcher::frameEnded()
             {
                 clear();
                 mGameMode = ModeMenu;
-                mMenuMode.reset(new MenuMode(mContext, State_SingleMulti));
+                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
                 mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }
@@ -376,6 +434,7 @@ void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
 void GameModeSwitcher::reloadTextures()
 {
     mUILoader->reloadTextures(mContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga");
+    mUILoaderChampionship->reloadTextures(mContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga");
     mUIUnloader->reloadTextures(mContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga");
 
     if(mMenuMode.get())
@@ -406,14 +465,14 @@ bool GameModeSwitcher::isExitSubmenu()const
     return ret;
 }
 
-void GameModeSwitcher::setExitSubmenu()
+void GameModeSwitcher::setSubmenu(const std::string& title)
 {
     if(mMenuMode.get())
-        mMenuMode->setExitSubmenu();
+        mMenuMode->setSubmenu(title);
 
 #ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
-        mMenuMultiMode->setExitSubmenu();
+        mMenuMultiMode->setSubmenu(title);
 #endif
 }
 
@@ -426,6 +485,12 @@ void GameModeSwitcher::setTopmostSubmenu()
     if(mMenuMultiMode.get())
         mMenuMultiMode->setTopmostSubmenu();
 #endif
+}
+
+void GameModeSwitcher::setPodiumSubmenu()
+{
+    if(mMenuMode.get())
+        mMenuMode->setPodiumSubmenu();
 }
 
 void GameModeSwitcher::clear()
@@ -456,7 +521,12 @@ void GameModeSwitcher::loadState(float percent, const std::string& info)
         mUILoader->setPercent(percent, info);
     }
 
-    if(mGameMode == ModeMenu || mGameMode == ModeMenuMulti)
+    if(mGameMode == ModeRaceChampionship)
+    {
+        mUILoaderChampionship->setPercent(percent, info);
+    }
+
+    if(mGameMode == ModeMenu || mGameMode == ModeMenuChampionship || mGameMode == ModeMenuMulti)
     {
         if(mIsInitialLoadPassed)
             mUIUnloader->setPercent(percent, info);

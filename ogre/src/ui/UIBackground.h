@@ -137,4 +137,73 @@ private:
     Ogre::PanelOverlayElement* mUIStrength;
 };
 
+class UIBackgroundLoaderProgressTracksChampionship : public UIBackgroundLoaderProgress
+{
+public:
+
+    UIBackgroundLoaderProgressTracksChampionship(const ModeContext& modeContext, 
+        const PFLoader& loader,
+        const std::string& path, const std::string& fileName,
+        float progressTop, float progressBottom, float progressLeft, float progressRight);
+
+    void show(size_t trackIndex, const std::string& trackName, bool showAIStrength, AIStrength strength);
+    void hide();
+
+#if defined(__ANDROID__)
+    virtual void reloadTextures(const PFLoader& loader, const std::string& path, const std::string& fileName);
+#endif
+
+private:
+
+    void loadThirds(const PFLoader& loader);
+    void loadFifths(const PFLoader& loader);
+    void loadEighths(const PFLoader& loader);
+
+    void loadTextureAndCreateMaterial(
+    const PFLoader& loader,
+    const std::string& loadingFilePath, const std::string& fileName,
+#if defined(__ANDROID__)
+    std::vector<Ogre::String>& textureList,
+#endif
+    std::vector<Ogre::String>& materialList
+        );
+
+#if defined(__ANDROID__)
+    std::vector<Ogre::String> mTextureTrackNamesThirdsDark;
+    std::vector<Ogre::String> mTextureTrackNamesThirdsLight;
+    std::vector<Ogre::String> mTextureTrackNamesFifthsDark;
+    std::vector<Ogre::String> mTextureTrackNamesFifthsLight;
+    std::vector<Ogre::String> mTextureTrackNamesEighthsDark;
+    std::vector<Ogre::String> mTextureTrackNamesEighthsLight;
+
+    std::vector<Ogre::String> mTextureTrackTitlesNames;
+
+    Ogre::String mTextureAIEasyName;
+    Ogre::String mTextureAIMediumName;
+    Ogre::String mTextureAIHardName;
+    Ogre::String mTextureAIInsaneName;
+#endif
+
+    std::vector<Ogre::String> mMaterialTrackNamesThirdsDark;
+    std::vector<Ogre::String> mMaterialTrackNamesThirdsLight;
+    std::vector<Ogre::String> mMaterialTrackNamesFifthsDark;
+    std::vector<Ogre::String> mMaterialTrackNamesFifthsLight;
+    std::vector<Ogre::String> mMaterialTrackNamesEighthsDark;
+    std::vector<Ogre::String> mMaterialTrackNamesEighthsLight;
+
+    std::map<std::string, Ogre::String> mMaterialTrackTitlesNames;
+
+    Ogre::String mMaterialAIEasyName;
+    Ogre::String mMaterialAIMediumName;
+    Ogre::String mMaterialAIHardName;
+    Ogre::String mMaterialAIInsaneName;
+
+    static const int mMaxTracks = 8;
+    Ogre::PanelOverlayElement* mTrack[mMaxTracks];
+    Ogre::PanelOverlayElement* mTrackTitle;
+    Ogre::PanelOverlayElement* mUIStrength;
+
+    AIStrength mStrength;
+
+};
 #endif

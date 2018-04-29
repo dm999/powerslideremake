@@ -434,7 +434,10 @@ void BaseApp::restartRace()
 
 void BaseApp::enablePause()
 {
-    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        )
     {
         if(getGameState().isGamePaused())
         {
@@ -455,7 +458,10 @@ void BaseApp::tabPressed()
 
 void BaseApp::switchRenderType()
 {
-    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        )
     {
         Ogre::PolygonMode pm;
 
@@ -524,6 +530,7 @@ bool BaseApp::setShutdown(bool isOnEsc)
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceChampionship  ||
         mGameModeSwitcher->getMode() == ModeMenuMulti   ||
         mGameModeSwitcher->getMode() == ModeRaceMulti
     )
@@ -534,6 +541,12 @@ bool BaseApp::setShutdown(bool isOnEsc)
             isOnEsc
             )
             mGameModeSwitcher->switchMode(ModeMenu);
+
+        if( mGameModeSwitcher->getMode() == ModeRaceChampionship  &&
+            mGameModeSwitcher->isLoadPassed()               &&
+            isOnEsc
+            )
+            mGameModeSwitcher->switchMode(ModeMenuChampionship);
 
         if( mGameModeSwitcher->getMode() == ModeMenuMulti    &&
             isOnEsc
@@ -551,7 +564,7 @@ bool BaseApp::setShutdown(bool isOnEsc)
         mGameModeSwitcher->isLoadPassed()
         )
     {
-        if(mGameModeSwitcher->isExitSubmenu())
+        if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
         {
             if(!isOnEsc)
                 mShutDown = true;
@@ -560,7 +573,28 @@ bool BaseApp::setShutdown(bool isOnEsc)
         }
         else
             if(isOnEsc)
-                mGameModeSwitcher->setExitSubmenu();
+                mGameModeSwitcher->setSubmenu("Exit the game?");
+    }
+
+    if( mGameModeSwitcher->getMode() == ModeMenuChampionship    &&
+        mGameModeSwitcher->isLoadPassed()
+        )
+    {
+        if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
+        {
+            if(!isOnEsc)
+            {
+                mGameModeSwitcher->switchMode(ModeMenu);
+                mGameModeSwitcher->setTopmostSubmenu();
+            }
+            else
+            {
+                mGameModeSwitcher->setPodiumSubmenu();
+            }
+        }
+        else
+            if(isOnEsc)
+                mGameModeSwitcher->setSubmenu("Retire from Championship?");
     }
 
     return mShutDown;
@@ -569,7 +603,11 @@ bool BaseApp::setShutdown(bool isOnEsc)
 void BaseApp::keyDown(const OIS::KeyEvent &arg )
 {
     if(mGameModeSwitcher->isLoadPassed() && 
-        (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            (
+            mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+            mGameModeSwitcher->getMode() == ModeRaceMulti
+            )
         )
     {
         if(!mGameState.isGamePaused())
@@ -581,7 +619,11 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
 void BaseApp::keyUp(const OIS::KeyEvent &arg )
 {
     if(mGameModeSwitcher->isLoadPassed() &&
-        (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+            (
+            mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+            mGameModeSwitcher->getMode() == ModeRaceMulti
+            )
         )
     {
         mGameState.getPlayerCar().keyUp(arg.key);
@@ -611,7 +653,11 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
         if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
-                (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+                    (
+                    mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                    mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+                    mGameModeSwitcher->getMode() == ModeRaceMulti
+                    )
                 )
             {
                 if(!mGameState.isGamePaused())
@@ -636,7 +682,11 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
         if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
-                (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+                    (
+                        mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                        mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+                        mGameModeSwitcher->getMode() == ModeRaceMulti
+                    )
                 )
             {
                 if(!mGameState.isGamePaused())
@@ -658,7 +708,11 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
         if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
-                (mGameModeSwitcher->getMode() == ModeRaceSingle || mGameModeSwitcher->getMode() == ModeRaceMulti)
+                    (
+                    mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                    mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+                    mGameModeSwitcher->getMode() == ModeRaceMulti
+                    )
                 )
             {
                 if(!mGameState.isGamePaused())
@@ -1161,7 +1215,10 @@ void BaseApp::androidPause(JNIEnv * env)
 {
     LOGI("BaseApp[androidPause]: Begin"); 
 
-    if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        )
     {
         mGameState.setGamePaused();
     }

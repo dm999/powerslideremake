@@ -3,10 +3,10 @@
 
 #include "../ui/UIMainMenu.h"
 
-MenuMode::MenuMode(const ModeContext& modeContext, SinglePlayerMenuStates state) :
+MenuMode::MenuMode(const ModeContext& modeContext, const GameMode gameMode, SinglePlayerMenuStates state) :
     BaseMenuMode(modeContext, true)
 {
-    mUIMainMenu.reset(new UIMainMenu(modeContext, this, state));
+    mUIMainMenu.reset(new UIMainMenu(modeContext, gameMode, this, state));
 }
 
 void MenuMode::doInitData(LoaderListener* loaderListener)
@@ -49,14 +49,19 @@ bool MenuMode::isExitSubmenu() const
     return mUIMainMenu->isExitSubmenu();
 }
 
-void MenuMode::setExitSubmenu()
+void MenuMode::setSubmenu(const std::string& title)
 {
-    mUIMainMenu->setExitSubmenu();
+    mUIMainMenu->setSubmenu(title);
 }
 
 void MenuMode::setTopmostSubmenu()
 {
     mUIMainMenu->setTopmostSubmenu();
+}
+
+void MenuMode::setPodiumSubmenu()
+{
+    mUIMainMenu->setPodiumSubmenu();
 }
 
 #if defined(__ANDROID__)

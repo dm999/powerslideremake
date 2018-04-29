@@ -8,7 +8,7 @@
 class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction
 {
 public:
-    UIMainMenuLabels(const ModeContext& modeContext) : UIMainMenuBackground(modeContext){}
+    UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : UIMainMenuBackground(modeContext, gameMode){}
     ~UIMainMenuLabels(){}
 
     void onButtonPressed(UIButton * button) override {}
@@ -37,6 +37,7 @@ protected:
     void showModeSingleMulti();
     void showModeSingle(){mModeSingle->show();}
     void showModeMulti(){mModeMulti->show();}
+    void showModeSingleType();
     void showModeDifficulty();
     void showTrackLabels();
     void showCarLabels();
@@ -47,7 +48,7 @@ protected:
     void showOptionRaceLabels();
     void showOptionNameLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
-    void showGameExitLabels();
+    void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
     void showPodiumLabels(const finishBoard_v& finishBoard);
     void showMultiIPLabels();
@@ -65,6 +66,9 @@ private:
 
     Ogre::TextAreaOverlayElement * mModeSingle;
     Ogre::TextAreaOverlayElement * mModeMulti;
+    Ogre::TextAreaOverlayElement * mModeSingleTypeRace;
+    Ogre::TextAreaOverlayElement * mModeSingleTypeChampionship;
+    Ogre::TextAreaOverlayElement * mModeSingleTypeTimetrial;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
@@ -112,7 +116,7 @@ private:
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 
-    Ogre::TextAreaOverlayElement * mGameExitLabel;
+    Ogre::TextAreaOverlayElement * mExitLabel;
     Ogre::TextAreaOverlayElement * mGameExitYesLabel;
     Ogre::TextAreaOverlayElement * mGameExitNoLabel;
 

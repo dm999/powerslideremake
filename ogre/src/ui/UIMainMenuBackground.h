@@ -8,7 +8,7 @@ class LoaderListener;
 class UIMainMenuBackground : public UIBaseMenu
 {
 public:
-    UIMainMenuBackground(const ModeContext& modeContext) : UIBaseMenu(modeContext){}
+    UIMainMenuBackground(const ModeContext& modeContext, const GameMode gameMode) : UIBaseMenu(modeContext, gameMode){}
     ~UIMainMenuBackground(){}
 
 protected:

@@ -33,7 +33,7 @@ typedef std::vector<finishBoardElement> finishBoard_v;
 class UIBaseMenu : public UIBase
 {
 public:
-    UIBaseMenu(const ModeContext& modeContext);
+    UIBaseMenu(const ModeContext& modeContext, const GameMode gameMode);
     virtual ~UIBaseMenu(){}
 
     virtual void frameStarted(const Ogre::FrameEvent &evt) = 0;
@@ -68,6 +68,8 @@ protected:
     ModeContext mModeContext;
 
     static const size_t mPodiumCharacters = 3;
+
+    GameMode mGameModeSelected;//ModeMenu, ModeMenuChampionship, ModeMenuTimetrial
 
 private:
 

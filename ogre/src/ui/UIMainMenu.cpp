@@ -21,8 +21,8 @@
     #include "../multiplayer/MultiplayerRoomInfo.h"
 #endif
 
-UIMainMenu::UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, SinglePlayerMenuStates state)
-    : UIMainMenuLabels(modeContext),
+UIMainMenu::UIMainMenu(const ModeContext& modeContext, const GameMode gameMode, MenuMode * menuMode, SinglePlayerMenuStates state)
+    : UIMainMenuLabels(modeContext, gameMode),
     mIsInStartingGrid(false),
     mMenuMode(menuMode),
     mCurrentState(state),
@@ -162,6 +162,12 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     selectCar(characterCar);
 
     switchState(mCurrentState);
+
+    if(mGameModeSelected == ModeMenuChampionship)
+    {
+        for(size_t q = 0; q < mControlsCount - 2; ++q)
+            setControlActive(q, false);
+    }
 }
 
 #if defined(__ANDROID__)
@@ -232,14 +238,25 @@ bool UIMainMenu::isExitSubmenu()const
     return mCurrentState == State_ExitGame;
 }
 
-void UIMainMenu::setExitSubmenu()
+void UIMainMenu::setSubmenu(const std::string& title)
 {
+    mExitSubmenuTitle = title;
     switchState(State_ExitGame);
 }
 
 void UIMainMenu::setTopmostSubmenu()
 {
+    mGameModeSelected = ModeMenu;
+
+    for(size_t q = 0; q < mControlsCount - 2; ++q)
+        setControlActive(q, true);
+
     switchState(State_SingleMulti);
+}
+
+void UIMainMenu::setPodiumSubmenu()
+{
+    switchState(State_Podium);
 }
 
 void UIMainMenu::destroy(CustomTrayManager* trayMgr)
@@ -278,7 +295,14 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
 
 void UIMainMenu::startRace()
 {
-    mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+    if(mGameModeSelected == ModeMenuChampionship)
+    {
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceChampionship);
+    }
+    else
+    {
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
+    }
 }
 
 finishBoard_v UIMainMenu::prepareFinishBoard()const
@@ -380,6 +404,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     switch(state)
     {
     case State_SingleMulti:
+        mGameModeSelected = ModeMenu;
         mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
         showModeSingleMulti();
@@ -416,6 +441,14 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_MultiJoinRoom:
         joinRoom();
+        break;
+
+    case State_SingleType:
+        mIsInStartingGrid = false;
+        setWindowTitle("Game Mode");
+        showModeSingle();
+        showModeSingleType();
+        showBackgrounds();
         break;
 
     case State_Difficulty:
@@ -508,6 +541,10 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showRaceGridCharactersLabels();
         mStartingGridTimer.reset();
         setWindowTitle("Starting Grid");
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            setWindowTitle("Starting Grid Championship");
+        }
         showStartingGridTimer();
         break;
 
@@ -525,7 +562,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_ExitGame:
         mIsInStartingGrid = false;
         showBackgroundExitSign();
-        showGameExitLabels();
+        showExitLabels(mExitSubmenuTitle);
         setWindowTitle("");
         break;
     }

@@ -29,8 +29,9 @@ public:
     void mouseMoved(const Ogre::Vector2& pos)override;
 
     bool isExitSubmenu()const override{return true;}
-    void setExitSubmenu()override {}
+    void setSubmenu(const std::string& title)override {}
     void setTopmostSubmenu()override {}
+    void setPodiumSubmenu()override {}
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}
 

@@ -32,7 +32,7 @@ namespace{
 }//anonymous namespace
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
-    : UIBaseMenu(modeContext),
+    : UIBaseMenu(modeContext, ModeMenu),
     mAICountBeforeNonAITrack(mModeContext.getGameState().getAICount()),
     mMenuMultiMode(menuMultiMode),
     mEditBoxMessage(50),

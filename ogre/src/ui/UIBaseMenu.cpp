@@ -28,8 +28,8 @@ namespace{
     const size_t UIBaseMenu::mPodiumCharacters;
 #endif
 
-UIBaseMenu::UIBaseMenu(const ModeContext& modeContext)
-    : mModeContext(modeContext)
+UIBaseMenu::UIBaseMenu(const ModeContext& modeContext, const GameMode gameMode)
+    : mModeContext(modeContext), mGameModeSelected(gameMode)
 {
     memset(mControls, 0, sizeof(Ogre::PanelOverlayElement*) * mControlsCount);
     memset(mControlClicked, 0, sizeof(bool) * mControlsCount);

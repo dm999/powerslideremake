@@ -58,8 +58,9 @@ public:
     GameMode getMode()const{return mGameMode;}
 
     bool isExitSubmenu()const;
-    void setExitSubmenu();
+    void setSubmenu(const std::string& title);
     void setTopmostSubmenu();
+    void setPodiumSubmenu();
 
     //LoaderListener
     void loadState(float percent, const std::string& info) override;
@@ -84,6 +85,7 @@ private:
 
     UIBackground mUIBackground;
     CommonIncludes::shared_ptr<UIBackgroundLoaderProgressTracks> mUILoader;
+    CommonIncludes::shared_ptr<UIBackgroundLoaderProgressTracksChampionship> mUILoaderChampionship;
     CommonIncludes::shared_ptr<UIBackgroundLoaderProgress> mUIUnloader;
 
 

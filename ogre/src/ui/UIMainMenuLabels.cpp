@@ -256,6 +256,45 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
+        mModeSingleTypeRace = createTextArea("MainWindowSingleTypeRace", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeRace->setCaption("Single Race");
+        mModeSingleTypeRace->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeRace->setSpaceWidth(9.0f);
+        mModeSingleTypeRace->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeRace->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeRace->setFontName("SdkTrays/Caption");
+        mModeSingleTypeRace->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mModeSingleTypeRace);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 213.0f, 0.0f, 0.0f);
+        mModeSingleTypeChampionship = createTextArea("MainWindowSingleTypeChampionship", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeChampionship->setCaption("Championship");
+        mModeSingleTypeChampionship->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeChampionship->setSpaceWidth(9.0f);
+        mModeSingleTypeChampionship->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeChampionship->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeChampionship->setFontName("SdkTrays/Caption");
+        mModeSingleTypeChampionship->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mModeSingleTypeChampionship);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 233.0f, 0.0f, 0.0f);
+        mModeSingleTypeTimetrial = createTextArea("MainWindowSingleTypeTimetrial", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeTimetrial->setCaption("Time Trial");
+        mModeSingleTypeTimetrial->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeTimetrial->setSpaceWidth(9.0f);
+        mModeSingleTypeTimetrial->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeTimetrial->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeTimetrial->setFontName("SdkTrays/Caption");
+        mModeSingleTypeTimetrial->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mModeSingleTypeTimetrial);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
         mModeSingleDifficultyNovice = createTextArea("MainWindowSingleDiffNovice", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleDifficultyNovice->setCaption("Novice");
         mModeSingleDifficultyNovice->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -769,15 +808,15 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 198.0f, 0.0f, 0.0f);
-        mGameExitLabel = createTextArea("MainWindowExitGame", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mGameExitLabel->setCaption("Exit the game?");
-        mGameExitLabel->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mGameExitLabel->setSpaceWidth(9.0f);
-        mGameExitLabel->setHeight(46.0f * viewportHeight / 1024.0f);
-        mGameExitLabel->setAlignment(Ogre::TextAreaOverlayElement::Center);
-        mGameExitLabel->setFontName("SdkTrays/Caption");
-        mGameExitLabel->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mGameExitLabel);
+        mExitLabel = createTextArea("MainWindowExitGame", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mExitLabel->setCaption("Exit the game?");
+        mExitLabel->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mExitLabel->setSpaceWidth(9.0f);
+        mExitLabel->setHeight(46.0f * viewportHeight / 1024.0f);
+        mExitLabel->setAlignment(Ogre::TextAreaOverlayElement::Center);
+        mExitLabel->setFontName("SdkTrays/Caption");
+        mExitLabel->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mExitLabel);
     }
 
     {
@@ -981,7 +1020,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     if(mModeSingle->isVisible() && OgreBites::Widget::isCursorOver(mModeSingle, pos, 0))
     {
-        switchState(State_Difficulty);
+        switchState(State_SingleType);
         return;
     }
 
@@ -1011,31 +1050,91 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     }
 #endif
 
+    if(mModeSingleTypeRace->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeRace, pos, 0))
+    {
+        mGameModeSelected = ModeMenu;
+        switchState(State_Difficulty);
+        return;
+    }
+
+    if(mModeSingleTypeChampionship->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeChampionship, pos, 0))
+    {
+        mGameModeSelected = ModeMenuChampionship;
+        switchState(State_Difficulty);
+        return;
+    }
+
+    if(mModeSingleTypeTimetrial->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeTimetrial, pos, 0))
+    {
+        mGameModeSelected = ModeMenuTimetrial;
+        //switchState(State_Difficulty);
+        return;
+    }
+
     if(mModeSingleDifficultyNovice->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyNovice, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
+
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
         return;
     }
 
     if(mModeSingleDifficultyAdvanced->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyAdvanced, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+
         return;
     }
 
     if(mModeSingleDifficultyExpert->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyExpert, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+
         return;
     }
 
     if(mModeSingleDifficultyInsane->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyInsane, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
-        switchState(State_Track);
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+
         return;
     }
 
@@ -1215,7 +1314,15 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     if(mGameExitNoLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitNoLabel, pos, 0))
     {
-        switchState(State_SingleMulti);
+        if(mGameModeSelected == ModeMenu)
+        {
+            switchState(State_SingleMulti);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Podium);
+        }
         return;
     }
 
@@ -1240,6 +1347,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeMultiCreateRoom);
     checkCursorOverLabel(pos, mModeMultiJoinRoom);
 #endif
+    checkCursorOverLabel(pos, mModeSingleTypeRace);
+    checkCursorOverLabel(pos, mModeSingleTypeChampionship);
+    checkCursorOverLabel(pos, mModeSingleTypeTimetrial);
     checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
     checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
     checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
@@ -1320,6 +1430,13 @@ void UIMainMenuLabels::showModeSingleMulti()
 #ifndef NO_MULTIPLAYER
     mModeMulti->show();
 #endif
+}
+
+void UIMainMenuLabels::showModeSingleType()
+{
+    mModeSingleTypeRace->show();
+    mModeSingleTypeChampionship->show();
+    mModeSingleTypeTimetrial->show();
 }
 
 void UIMainMenuLabels::showModeDifficulty()
@@ -1475,9 +1592,10 @@ void UIMainMenuLabels::showOptionNameLabels()
     mOptionNameLabel_Save->show();
 }
 
-void UIMainMenuLabels::showGameExitLabels()
+void UIMainMenuLabels::showExitLabels(const std::string& title)
 {
-    mGameExitLabel->show();
+    mExitLabel->setCaption(title);
+    mExitLabel->show();
     mGameExitYesLabel->show();
     mGameExitNoLabel->show();
 }
@@ -1557,6 +1675,9 @@ void UIMainMenuLabels::hideAllLabels()
     mModeMultiCreateRoom->hide();
     mModeMultiJoinRoom->hide();
 #endif
+    mModeSingleTypeRace->hide();
+    mModeSingleTypeChampionship->hide();
+    mModeSingleTypeTimetrial->hide();
     mModeSingleDifficultyNovice->hide();
     mModeSingleDifficultyAdvanced->hide();
     mModeSingleDifficultyExpert->hide();
@@ -1598,7 +1719,7 @@ void UIMainMenuLabels::hideAllLabels()
 
     mStartingGridTimeLabel->hide();
 
-    mGameExitLabel->hide();
+    mExitLabel->hide();
     mGameExitYesLabel->hide();
     mGameExitNoLabel->hide();
 

@@ -17,7 +17,7 @@ class MenuMode :
 {
 public:
 
-    MenuMode(const ModeContext& modeContext, SinglePlayerMenuStates state);
+    MenuMode(const ModeContext& modeContext, const GameMode gameMode, SinglePlayerMenuStates state);
     virtual ~MenuMode(){}
 
     void frameStarted(const Ogre::FrameEvent &evt)override;
@@ -34,8 +34,9 @@ public:
     void mouseMoved(const Ogre::Vector2& pos)override;
 
     bool isExitSubmenu()const override;
-    void setExitSubmenu()override;
+    void setSubmenu(const std::string& title)override;
     void setTopmostSubmenu()override;
+    void setPodiumSubmenu()override;
 
 protected:
 

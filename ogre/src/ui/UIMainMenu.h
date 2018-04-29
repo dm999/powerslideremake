@@ -14,7 +14,7 @@ class UIMainMenu : public UIMainMenuLabels
 {
 public:
 
-    UIMainMenu(const ModeContext& modeContext, MenuMode * menuMode, SinglePlayerMenuStates state);
+    UIMainMenu(const ModeContext& modeContext, const GameMode gameMode, MenuMode * menuMode, SinglePlayerMenuStates state);
     ~UIMainMenu();
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener);
@@ -32,8 +32,9 @@ public:
     void mouseMoved(const Ogre::Vector2& pos) override;
 
     bool isExitSubmenu()const;
-    void setExitSubmenu();
+    void setSubmenu(const std::string& title);
     void setTopmostSubmenu();
+    void setPodiumSubmenu();
 
     void destroy(CustomTrayManager* trayMgr) override;
 
@@ -71,6 +72,8 @@ private:
     UIEditBox mEditBoxMultiRoomName;
 
     OgreBites::SelectMenu* mRoomsTable;
+
+    std::string mExitSubmenuTitle;
 };
 
 #endif

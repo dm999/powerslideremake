@@ -12,8 +12,12 @@ enum CameraPositions
 enum GameMode
 {
     ModeMenu,
+    ModeMenuChampionship,
+    ModeMenuTimetrial,
     ModeMenuMulti,          // after connection happen
     ModeRaceSingle,
+    ModeRaceChampionship,
+    ModeRaceTimetrial,
     ModeRaceMulti,
 };
 
@@ -24,6 +28,7 @@ enum SinglePlayerMenuStates // multiplayer menus too but before connection happe
     State_MultiConnect,
     State_MultiCreateRoom,
     State_MultiJoinRoom,
+    State_SingleType,
     State_Difficulty,
     State_Track,
     State_Car,
