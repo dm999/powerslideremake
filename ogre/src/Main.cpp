@@ -12,7 +12,6 @@
 
 #if defined(__ANDROID__)
     #include <jni.h>
-    #include <android/keycodes.h>
     #include <android/log.h>
 
     #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
@@ -139,8 +138,6 @@
         JNIEXPORT void JNICALL Java_com_powerslide_remake_OgreActivityJNI_handleKeyUp(JNIEnv* env, jobject obj, jint pKeyCode, jint _text)
         {
             //LOGI("Keycode: %x", pKeyCode);
-            if(pKeyCode == AKEYCODE_DEL) pKeyCode = OIS::KC_BACK;
-
             //http://www.ogre3d.org/forums/viewtopic.php?f=21&t=80571
             OIS::KeyEvent evt(NULL, OIS::KeyCode(pKeyCode), _text);
             base->keyUp(evt);

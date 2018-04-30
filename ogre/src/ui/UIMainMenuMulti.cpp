@@ -23,6 +23,7 @@
 #if defined(__ANDROID__)
     #include "../BaseApp.h"
 
+    #include <android/keycodes.h>
     #include <android/log.h>
 
     #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
@@ -661,7 +662,7 @@ void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         mEditBoxMessage.setText("");
     }
 #else
-    if(_key == MyGUI::KeyCode::F8)
+    if(_key == MyGUI::KeyCode::Enum(AKEYCODE_ENTER))
     {
         mEditBoxMessage.setText("");
     }

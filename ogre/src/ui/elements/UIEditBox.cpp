@@ -4,6 +4,10 @@
 
 #include "../../tools/OgreTools.h"
 
+#if defined(__ANDROID__)
+    #include <android/keycodes.h>
+#endif
+
 Ogre::NameGenerator UIEditBox::nameGenTextures("UIEditBox/Texture");
 Ogre::NameGenerator UIEditBox::nameGenMaterials("UIEditBox/Material");
 Ogre::NameGenerator UIEditBox::nameGenPanel("UIEditBox/Panel");
@@ -121,7 +125,11 @@ void UIEditBox::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
     if(mIsActive)
     {
+#if defined(__ANDROID__)
+        if (_key == MyGUI::KeyCode::Enum(AKEYCODE_DEL))
+#else
         if (_key == MyGUI::KeyCode::Backspace)
+#endif
         {
             if(mCaption.length() > 0)
             {
@@ -166,25 +174,13 @@ bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
     {
 #if defined(__ANDROID__)
         if(
-            _key != MyGUI::KeyCode::None            &&
-            _key != MyGUI::KeyCode::Escape          &&
-            _key != MyGUI::KeyCode::Delete          &&
-            _key != MyGUI::KeyCode::Insert          &&
-            _key != MyGUI::KeyCode::Return          &&
-            _key != MyGUI::KeyCode::NumpadEnter     &&
-            _key != MyGUI::KeyCode::ArrowRight      &&
-            _key != MyGUI::KeyCode::ArrowLeft       &&
-            _key != MyGUI::KeyCode::ArrowUp         &&
-            _key != MyGUI::KeyCode::ArrowDown       &&
-            _key != MyGUI::KeyCode::Home            &&
-            _key != MyGUI::KeyCode::End             &&
-            _key != MyGUI::KeyCode::Tab             &&
-            _key != MyGUI::KeyCode::PageUp          &&
-            _key != MyGUI::KeyCode::PageDown        &&
-            _key != MyGUI::KeyCode::Capital         &&
-            _key != MyGUI::KeyCode::NumLock         &&
-            _key != MyGUI::KeyCode::F8              &&
-            _key != MyGUI::KeyCode::ScrollLock
+            _key == MyGUI::KeyCode::Enum(AKEYCODE_DEL)          ||
+            _key == MyGUI::KeyCode::Enum(AKEYCODE_COMMA)        ||
+            _key == MyGUI::KeyCode::Enum(AKEYCODE_PERIOD)       ||
+            _key == MyGUI::KeyCode::Enum(AKEYCODE_SPACE)        ||
+            (_key >= MyGUI::KeyCode::Enum(AKEYCODE_MINUS) && _key <= MyGUI::KeyCode::Enum(AKEYCODE_AT)) ||
+            (_key >= MyGUI::KeyCode::Enum(AKEYCODE_0) && _key <= MyGUI::KeyCode::Enum(AKEYCODE_9))      ||
+            (_key >= MyGUI::KeyCode::Enum(AKEYCODE_A) && _key <= MyGUI::KeyCode::Enum(AKEYCODE_Z))
         ) ret = true;
 #else
         if(
@@ -230,10 +226,17 @@ bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
 
     if(mCharType == IP)
     {
+#if defined(__ANDROID__)
+        if(
+            _key == MyGUI::KeyCode::Enum(AKEYCODE_PERIOD) ||
+            (_key >= MyGUI::KeyCode::Enum(AKEYCODE_0) && _key <= MyGUI::KeyCode::Enum(AKEYCODE_9))
+        ) ret = true;
+#else
         if(
             _key == MyGUI::KeyCode::Period  ||
             (_key >= MyGUI::KeyCode::One && _key <= MyGUI::KeyCode::Zero)
         ) ret = true;
+#endif
     }
 
     return ret;
