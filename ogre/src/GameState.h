@@ -16,6 +16,8 @@
 
 #include "physics/InitialVehicleSetup.h"
 
+#include "gamelogic/Championship.h"
+
 #include "Enums.h"
 
 class GameState
@@ -146,6 +148,8 @@ public:
     InputType getInputType() const {return mInputType;}
     void setInputType(InputType type) {mInputType = type;}
 
+    Championship& getChampionship() {return mChampionship;}
+
     void setMultiplayerMaster(bool option){mIsMultiplayerMaster = option;}
     bool isMultiplayerMaster()const{return mIsMultiplayerMaster;}
 
@@ -245,6 +249,8 @@ private:
     bool mIsGamePaused;
 
     InputType mInputType;
+
+    Championship mChampionship;
 
     //multiplayer
     bool mIsMultiplayerMaster;

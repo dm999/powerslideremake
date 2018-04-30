@@ -7,7 +7,6 @@
 
 #include "../tools/OgreTools.h"
 #include "../tools/Conversions.h"
-#include "../tools/Randomizer.h"
 
 #include "../customs/CustomTrayManager.h"
 
@@ -285,7 +284,46 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
         switchState(State_Options);
 
     if(panel != NULL && panel->getName() == "Race")
-        switchState(State_StartingGrid);
+    {
+        if(mGameModeSelected == ModeMenu)
+        {
+            switchState(State_StartingGrid);
+        }
+
+        //first step in championship
+        if(mGameModeSelected == ModeMenuChampionship && mModeContext.getGameModeSwitcher()->getMode() != ModeMenuChampionship)
+        {
+            mModeContext.getGameState().getChampionship().init();
+            switchState(State_StartingGrid);
+        }
+
+        //next steps in championship
+        if(mGameModeSelected == ModeMenuChampionship && mModeContext.getGameModeSwitcher()->getMode() == ModeMenuChampionship)
+        {
+            if(mCurrentState == State_Leaderboard)
+            {
+                if(!mModeContext.getGameState().getChampionship().isFinished(mModeContext))
+                    switchState(State_StartingGrid);
+                else
+                {
+                    mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
+                    setTopmostSubmenu();
+                }
+            }
+            else
+            {
+                if(!mModeContext.getGameState().getChampionship().getIsShownLeaderboard())
+                {
+                    mModeContext.getGameState().getChampionship().setShownLeaderboard();
+                    switchState(State_Leaderboard);
+                }
+                else
+                {
+                    switchState(State_StartingGrid);
+                }
+            }
+        }
+    }
 
     if(panel != NULL && panel->getName() == "Exit")
     {
@@ -303,89 +341,6 @@ void UIMainMenu::startRace()
     {
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceSingle);
     }
-}
-
-finishBoard_v UIMainMenu::prepareFinishBoard()const
-{
-    finishBoard_v ret;
-
-    LapController lapController = mModeContext.getLapController();
-    size_t lap = mModeContext.getGameState().getPlayerCar().getLapUtils().getCurrentLap() - 1;
-
-    bool isPlayerFinishRace = false;
-
-    if(lap == mModeContext.getGameState().getLapsCount())//race finished
-    {
-        isPlayerFinishRace = true;
-    }
-
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
-    {
-        ret.push_back(finishBoardElement(
-            isPlayerFinishRace ? lapController.getTotalPosition(q + 1) : q, 
-            false, 
-            isPlayerFinishRace ? mModeContext.getGameState().getAICar(q).getLapUtils().getTotalTime() : 0.0f,
-            mModeContext.getGameState().getAICar(q).getLapUtils().getBestLapTime(),
-            mModeContext.getGameState().getAICar(q).getCharacterName()));
-    }
-
-    //player
-    ret.push_back(finishBoardElement(
-        isPlayerFinishRace ? lapController.getTotalPosition(0) : mModeContext.getGameState().getAICount(), 
-        true, 
-        isPlayerFinishRace ? mModeContext.getGameState().getPlayerCar().getLapUtils().getTotalTime() : 0.0f,
-        mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime(),
-        mModeContext.getGameState().getPlayerCar().getCharacterName()
-        ));
-
-    if(isPlayerFinishRace)
-    {
-        std::sort(ret.begin(), ret.end());
-
-        finishBoard_v::const_iterator i = std::find_if(ret.begin(), ret.end(), finishBoardElement::findPlayer);
-        size_t playerIndexAfterSort = i - ret.begin();
-        for(size_t q = playerIndexAfterSort + 1; q < ret.size(); ++q)
-        {
-            ret[q].mRaceTime = ret[q - 1].mRaceTime + Randomizer::GetInstance().GetRandomFloat(1.0f, 10.0f);
-            if(ret[q].mBestLapTime == 0.0f)
-            {
-                if(mModeContext.getGameState().getLapsCount() == 1)
-                    ret[q].mBestLapTime = ret[q].mRaceTime;
-                else
-                    ret[q].mBestLapTime = ret[q - 1].mBestLapTime + Randomizer::GetInstance().GetRandomFloat(1.0f, 2.0f);
-            }
-        }
-    }
-    else
-    {
-        for(size_t q = 0; q < ret.size() - 1; ++q)
-        {
-            if(ret[q].mBestLapTime == 0.0f)
-            {
-                const STRRacetimes& raceTimes = mModeContext.getGameState().getSTRRacetimes();
-                Ogre::Vector2 lapTime = raceTimes.getArray2Value(mModeContext.getGameState().getTrackName() + " times", ret[q].mCharName + " lap times");
-                
-                float normalLapTime = lapTime.x;
-                
-                if(mModeContext.getGameState().getAIStrength() == Easy)
-                    normalLapTime = lapTime.y;
-
-                ret[q].mBestLapTime = normalLapTime + Randomizer::GetInstance().GetRandomFloat(normalLapTime / 20.0f, normalLapTime / 10.0f);
-                ret[q].mRaceTime = mModeContext.getGameState().getLapsCount() * (normalLapTime + Randomizer::GetInstance().GetRandomFloat(normalLapTime / 10.0f, normalLapTime / 5.0f));
-            }
-            else
-            {
-                ret[q].mRaceTime = mModeContext.getGameState().getLapsCount() * ret[q].mBestLapTime + Randomizer::GetInstance().GetRandomFloat(ret[q].mBestLapTime / 20.0f, ret[q].mBestLapTime / 10.0f);
-            }
-        }
-
-        std::sort(ret.begin(), ret.end() - 1, finishBoardElement::sortByRaceTime);
-
-        for(size_t q = 0; q < ret.size() - 1; ++q)
-            ret[q].mPos = q;
-    }
-
-    return ret;
 }
 
 void UIMainMenu::onNameChange()
@@ -552,11 +507,16 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         showBackgroundFirstSecondThird();
         {
-            finishBoard_v finishBoard = prepareFinishBoard();
+            finishBoardVec finishBoard = FinishBoard::prepareFinishBoard(mModeContext);
             showBackgroundCharacterSmallPodium(finishBoard);
             showPodiumLabels(finishBoard);
         }
         setWindowTitle("Podium");
+        break;
+
+    case State_Leaderboard:
+        mIsInStartingGrid = false;
+        setWindowTitle("Leaderboard");
         break;
 
     case State_ExitGame:

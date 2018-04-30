@@ -565,7 +565,7 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
     }
 }
 
-void UIMainMenuBackground::showBackgroundCharacterSmallPodium(const finishBoard_v& finishBoard)
+void UIMainMenuBackground::showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard)
 {
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
 

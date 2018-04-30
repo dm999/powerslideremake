@@ -3,6 +3,8 @@
 
 #include "UIBaseMenu.h"
 
+#include "../gamelogic/FinishBoard.h"
+
 class LoaderListener;
 
 class UIMainMenuBackground : public UIBaseMenu
@@ -35,7 +37,7 @@ protected:
     void showBackgroundCharacterSmall();
     void showBackgroundExitSign(){mBackgroundExitSign->show();}
     void showBackgroundFirstSecondThird(){mBackground1st->show();mBackground2nd->show();mBackground3rd->show();}
-    void showBackgroundCharacterSmallPodium(const finishBoard_v& finishBoard);
+    void showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard);
     void hideAllBackgrounds();
 
 private:

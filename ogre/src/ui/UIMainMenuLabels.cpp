@@ -1608,7 +1608,7 @@ void UIMainMenuLabels::showRaceGridCharactersLabels()
     }
 }
 
-void UIMainMenuLabels::showPodiumLabels(const finishBoard_v& finishBoard)
+void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
 {
     std::string playerName = mModeContext.getGameState().getPlayerName();
 

@@ -42,6 +42,7 @@ enum SinglePlayerMenuStates // multiplayer menus too but before connection happe
     State_Options_Trophies,
     State_StartingGrid,
     State_Podium,
+    State_Leaderboard,//championship
     State_ExitGame
 };
 

@@ -50,7 +50,7 @@ protected:
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
-    void showPodiumLabels(const finishBoard_v& finishBoard);
+    void showPodiumLabels(const finishBoardVec& finishBoard);
     void showMultiIPLabels();
     void hideAllLabels();
 

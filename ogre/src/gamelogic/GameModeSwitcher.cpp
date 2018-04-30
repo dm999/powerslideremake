@@ -139,23 +139,24 @@ void GameModeSwitcher::frameEnded()
 #endif
 
         //extract lap data after race
-        if(mGameMode == ModeRaceSingle && mGameModeNext == ModeMenu || raceOverAndReadyToQuit)
+        if(mGameMode == ModeRaceSingle && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceSingle)
         {
             mContext.setLapController(mPlayerMode->getLapController());
         }
         //extract lap data after championship race
-        if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit)
+        if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
         {
             mContext.setLapController(mPlayerMode->getLapController());
+            mContext.getGameState().getChampionship().trackFinished(mContext);
         }
 #ifndef NO_MULTIPLAYER
-        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit)
+        if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit && mGameMode == ModeRaceMulti)
         {
             mContext.setLapController(mPlayerMode->getLapController());
         }
 #endif
 
-        //in case of switch from championship to menu keep mMenuMode
+        //in case of switch from menu championship to menu keep mMenuMode
         if(
             mGameMode == ModeMenuChampionship && mGameModeNext == ModeMenu
             )
@@ -246,11 +247,15 @@ void GameModeSwitcher::frameEnded()
 
             mGameMode = mGameModeNext;
 
-            //mContext.mTrayMgr->hideCursor();
+            size_t championshipTrack = mContext.getGameState().getChampionship().getCurrentTrack();
+
+            const STRPowerslide& strPowerslide = mContext.getGameState().getSTRPowerslide();
+            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+            mContext.getGameState().setRaceParameters(availTracks[championshipTrack], mContext.getGameState().getAIStrength());
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mIsLoadPassed = false;
-            mUILoaderChampionship->show(0, mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mUILoaderChampionship->show(championshipTrack, mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
             mUILoaderChampionship->hide();
             mIsLoadPassed = true;

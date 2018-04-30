@@ -55,8 +55,6 @@ private:
     void createRoom();
     void joinRoom();
 
-    finishBoard_v prepareFinishBoard()const;
-
     void onNameChange() override;
 
     Ogre::Timer mStartingGridTimer;
