@@ -15,6 +15,8 @@
 #if defined(__ANDROID__)
     #include "../BaseApp.h"
 
+    #include "../gamelogic/GameModeSwitcher.h"
+
     #include <android/log.h>
 
     #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
@@ -786,12 +788,26 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mPanelBurn = createPanel("CheatBurn", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft, cheatButtonTop, "Test/CustomBackgroundRed");
         mPanelBurn->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBurn);
-        mPanelBurn->show();
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        {
+            mPanelBurn->show();
+        }
+        else
+        {
+            mPanelBurn->hide();
+        }
 
         mPanelBomb = createPanel("CheatBomb", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft + cheatButtonWidth + cheatButtonWidth / 2.0f, cheatButtonTop, "Test/CustomBackgroundRed");
         mPanelBomb->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBomb);
-        mPanelBomb->show();
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        {
+            mPanelBomb->show();
+        }
+        else
+        {
+            mPanelBomb->hide();
+        }
     }
 #endif
 

@@ -21,6 +21,8 @@
 #include "../multiplayer/MultiplayerControllerSlave.h"
 
 #if defined(__ANDROID__)
+    #include "../BaseApp.h"
+
     #include <android/log.h>
 
     #define LOGI(...) ((void)__android_log_write(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
@@ -647,20 +649,37 @@ void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)
 
 void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
-#if !defined(__ANDROID__)
     mEditBoxMessage.keyUp(_key, _char);
+#if !defined(__ANDROID__)
     if(_key == MyGUI::KeyCode::Return || _key == MyGUI::KeyCode::NumpadEnter)
     {
         mEditBoxMessage.setText("");
     }
-    updateRoomState(mEditBoxMessage.getText());
+#else
+    if(_key == MyGUI::KeyCode::F8)
+    {
+        mEditBoxMessage.setText("");
+    }
 #endif
+    updateRoomState(mEditBoxMessage.getText());
+
 }
 
 void UIMainMenuMulti::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
+
     //mEditBoxMessage.mouseReleased(pos);
+#if defined(__ANDROID__)
+    if(OgreBites::Widget::isCursorOver(mEditBoxMessage.getBackgroundElement(), pos, 0))
+    {
+        mModeContext.getBaseApp()->androidShowKeyboard();
+    }
+    else
+    {
+        mModeContext.getBaseApp()->androidHideKeyboard();
+    }
+#endif
 
     mWeaponsVal.mousePressed(pos);
     mTracksValLeft.mousePressed(pos);

@@ -128,7 +128,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
                             if (!wndCreate && lastSurface != null) {
                                 wndCreate = true;
-                                OgreActivityJNI.initWindow(lastSurface);
+                                OgreActivityJNI.initWindow(lastSurface, MainActivity.this);
                                 handler.post(this);
                                 return;
                             }

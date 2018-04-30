@@ -220,6 +220,22 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
     mEditBoxMultiIP.mouseReleased(pos);
     mEditBoxMultiUserName.mouseReleased(pos);
     mEditBoxMultiRoomName.mouseReleased(pos);
+
+#if defined(__ANDROID__)
+    bool isAnyActive =  mEditBoxUserName.isActive() |
+                        mEditBoxMultiIP.isActive() |
+                        mEditBoxMultiUserName.isActive() |
+                        mEditBoxMultiRoomName.isActive();
+
+    if(isAnyActive)
+    {
+        mModeContext.getBaseApp()->androidShowKeyboard();
+    }
+    else
+    {
+        mModeContext.getBaseApp()->androidHideKeyboard();
+    }
+#endif
 }
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)

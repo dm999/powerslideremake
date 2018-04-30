@@ -164,6 +164,29 @@ bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
 
     if(mCharType == Any)
     {
+#if defined(__ANDROID__)
+        if(
+            _key != MyGUI::KeyCode::None            &&
+            _key != MyGUI::KeyCode::Escape          &&
+            _key != MyGUI::KeyCode::Delete          &&
+            _key != MyGUI::KeyCode::Insert          &&
+            _key != MyGUI::KeyCode::Return          &&
+            _key != MyGUI::KeyCode::NumpadEnter     &&
+            _key != MyGUI::KeyCode::ArrowRight      &&
+            _key != MyGUI::KeyCode::ArrowLeft       &&
+            _key != MyGUI::KeyCode::ArrowUp         &&
+            _key != MyGUI::KeyCode::ArrowDown       &&
+            _key != MyGUI::KeyCode::Home            &&
+            _key != MyGUI::KeyCode::End             &&
+            _key != MyGUI::KeyCode::Tab             &&
+            _key != MyGUI::KeyCode::PageUp          &&
+            _key != MyGUI::KeyCode::PageDown        &&
+            _key != MyGUI::KeyCode::Capital         &&
+            _key != MyGUI::KeyCode::NumLock         &&
+            _key != MyGUI::KeyCode::F8              &&
+            _key != MyGUI::KeyCode::ScrollLock
+        ) ret = true;
+#else
         if(
             _key != MyGUI::KeyCode::None            &&
             _key != MyGUI::KeyCode::Escape          &&
@@ -202,6 +225,7 @@ bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
             _key != MyGUI::KeyCode::NumLock         &&
             _key != MyGUI::KeyCode::ScrollLock
         ) ret = true;
+#endif
     }
 
     if(mCharType == IP)

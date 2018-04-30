@@ -769,6 +769,30 @@ void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
 
     LOGI("BaseApp[touchReleased]: End"); 
 }
+
+void BaseApp::androidShowKeyboard()
+{
+    LOGI("BaseApp[androidShowKeyboard]: Begin"); 
+
+    JNIEnv *env;
+    gVM->AttachCurrentThread(&env, NULL);
+    jmethodID method = env->GetMethodID(activityClass, "showKeyboard", "()V");
+    env->CallVoidMethod(activityObj, method);
+
+    LOGI("BaseApp[androidShowKeyboard]: End"); 
+}
+
+void BaseApp::androidHideKeyboard()
+{
+    LOGI("BaseApp[androidHideKeyboard]: Begin"); 
+
+    JNIEnv *env;
+    gVM->AttachCurrentThread(&env, NULL);
+    jmethodID method = env->GetMethodID(activityClass, "hideKeyboard", "()V");
+    env->CallVoidMethod(activityObj, method);
+
+    LOGI("BaseApp[androidHideKeyboard]: End"); 
+}
 #endif
 
 void BaseApp::parseFile(const std::string& fileName)

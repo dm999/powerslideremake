@@ -48,6 +48,8 @@ public:
 
     bool isVisible() const {return mIsShown;}
 
+    Ogre::PanelOverlayElement* getBackgroundElement(){return mBackground;}
+
 private:
 
     void adjustCaptionLength();

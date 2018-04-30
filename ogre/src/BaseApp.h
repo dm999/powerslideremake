@@ -65,6 +65,9 @@ public:
     void touchMoved(const OIS::MultiTouchEvent& arg);
     void touchPressed(const OIS::MultiTouchEvent& arg);
     void touchReleased(const OIS::MultiTouchEvent& arg);
+
+    void androidShowKeyboard();
+    void androidHideKeyboard();
 #endif
 
     GameState& getGameState(){return mGameState;}
@@ -88,6 +91,8 @@ public:
 
     AAssetManager* mAssetMgr;
     JavaVM* gVM;
+    jclass activityClass;
+    jobject activityObj;
 
     int mTouchLeftID;
     int mTouchRightID;
