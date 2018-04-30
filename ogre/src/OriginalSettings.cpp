@@ -559,7 +559,7 @@ void STRPlayerSettings::parse(const std::string& dataDir)
 
         stream->read(&buf[0],size);
 
-        std::string data(buf.begin(), buf.end());
+        std::string data = STRLoader().decode(buf);
 
         SI_Error rc = mSTR.LoadData(data.c_str(), data.size());
 
@@ -605,6 +605,8 @@ void STRPlayerSettings::writeFile(const std::string& dataDir)
     SI_Error rc = mSTR.Save(str);
     if (rc >= 0)
     {
+        str = STRLoader().decode(std::vector<char>(str.begin(), str.end()));
+
         Ogre::DataStreamPtr stream;
         if(dataDir.empty())
         {

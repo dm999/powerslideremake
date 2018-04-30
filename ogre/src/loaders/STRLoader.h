@@ -14,6 +14,7 @@ public:
     STRLoader(){}
 
     std::string load(const PFLoader& pfLoader, const std::string& relativeDir, const std::string& file) const;
+    std::string decode(std::vector<char> buf) const;
 
 private:
 };

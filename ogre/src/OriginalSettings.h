@@ -150,7 +150,7 @@ public:
         AIStrength level;
     };
 
-    STRPlayerSettings() : mIsSaved(false), mFileName("player.txt"){}
+    STRPlayerSettings() : mIsSaved(false), mFileName("player.str"){}
 
     void parse(const std::string& dataDir);
     void save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData);
