@@ -261,7 +261,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             handler.post(new Runnable() {
                 public void run() {
                     OgreActivityJNI.handleActionUp(idPointerUp, xPointerUp, yPointerUp);
-                    //showKeyboard();
                 }
             });
             break;

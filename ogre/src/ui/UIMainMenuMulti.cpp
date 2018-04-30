@@ -649,7 +649,12 @@ void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)
 
 void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
+#if defined(__ANDROID__)
+    if(_key == MyGUI::KeyCode::ArrowLeft || _key == MyGUI::KeyCode::ArrowRight || _key == MyGUI::KeyCode::ArrowDown) return;
+#endif
+
     mEditBoxMessage.keyUp(_key, _char);
+
 #if !defined(__ANDROID__)
     if(_key == MyGUI::KeyCode::Return || _key == MyGUI::KeyCode::NumpadEnter)
     {
@@ -661,6 +666,7 @@ void UIMainMenuMulti::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         mEditBoxMessage.setText("");
     }
 #endif
+
     updateRoomState(mEditBoxMessage.getText());
 
 }
