@@ -303,7 +303,9 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
             if(mCurrentState == State_Leaderboard)
             {
                 if(!mModeContext.getGameState().getChampionship().isFinished(mModeContext))
+                {
                     switchState(State_StartingGrid);
+                }
                 else
                 {
                     mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
@@ -507,7 +509,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         showBackgroundFirstSecondThird();
         {
-            finishBoardVec finishBoard = FinishBoard::prepareFinishBoard(mModeContext);
+            const finishBoardVec& finishBoard = mModeContext.getFinishBoard();
             showBackgroundCharacterSmallPodium(finishBoard);
             showPodiumLabels(finishBoard);
         }
@@ -516,6 +518,10 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_Leaderboard:
         mIsInStartingGrid = false;
+        {
+            finishBoardVec leaderBoard = mModeContext.getGameState().getChampionship().getLeaderboard();
+            showLeaderboardLabels(leaderBoard);
+        }
         setWindowTitle("Leaderboard");
         break;
 

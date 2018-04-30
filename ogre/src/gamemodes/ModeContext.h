@@ -61,6 +61,9 @@ public:
     void setLapController(const LapController& lapController){mLapController = lapController;}
     const LapController& getLapController() const{return mLapController;}
 
+    void setFinishBoard(const finishBoardVec& finishBoard){mFinishBoard = finishBoard;}
+    const finishBoardVec& getFinishBoard() const{return mFinishBoard;}
+
     friend class GameModeSwitcher;
     friend class BaseMenuMode;
     friend class MenuMode;
@@ -95,6 +98,8 @@ private:
     BaseApp * mBaseApp;
 
     LapController mLapController;
+
+    finishBoardVec mFinishBoard;
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;

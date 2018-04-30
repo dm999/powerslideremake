@@ -31,7 +31,8 @@ ModeContext::ModeContext(const ModeContext& other)
         mGameModeSwitcher(other.mGameModeSwitcher),
         mGameState(other.mGameState),
         mBaseApp(other.mBaseApp),
-        mLapController(other.mLapController)
+        mLapController(other.mLapController),
+        mFinishBoard(other.mFinishBoard)
 #ifndef NO_OPENAL
         ,mSoundsProcesser(other.mSoundsProcesser)
 #endif

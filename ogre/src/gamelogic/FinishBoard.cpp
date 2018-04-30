@@ -1,6 +1,9 @@
 #include "Finishboard.h"
 
+#include "../includes/OgreInclude.h"
+
 #include "../gamemodes/ModeContext.h"
+#include "../GameState.h"
 
 #include "LapController.h"
 

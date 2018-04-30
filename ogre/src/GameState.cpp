@@ -108,7 +108,7 @@ void GameState::initOriginalData()
 void GameState::loadPlayerData()
 {
     const std::string section = mPlayerName + " parameters";
-    const std::string level = mPlayerSettings.getValue(section, "Level", Conversions::DMToString(static_cast<AIStrength>(mGameLevel)));
+    const std::string level = mPlayerSettings.getValue(section, "Level", Conversions::DMToString(static_cast<AIStrength>(0)));
     Ogre::uint32 levelData;
     Conversions::DMFromString(level, levelData);
     mGameLevel = static_cast<AIStrength>(levelData);

@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include "FinishBoard.h"
+
 class ModeContext;
 
 class Championship
@@ -16,6 +18,8 @@ public:
     bool isFinished(const ModeContext& modeContext) const;
 
     size_t getCurrentTrack() const {return mCurrentTrack;}
+
+    finishBoardVec getLeaderboard() const;
 
     bool getIsShownLeaderboard() const{ return mIsShownLeaderboardAfterFinish;}
     void setShownLeaderboard(){mIsShownLeaderboardAfterFinish = true;}

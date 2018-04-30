@@ -997,6 +997,59 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
             mPodiumTable4Label[q]->setColour(Ogre::ColourValue::White);
             getMainBackground()->addChild(mPodiumTable4Label[q]);
         }
+
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
+            mLeaderboardTable1Label[q] = createTextArea("MainWindowLeaderTable1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mLeaderboardTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
+            mLeaderboardTable1Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable1Label[q]->setSpaceWidth(9.0f);
+            mLeaderboardTable1Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable1Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mLeaderboardTable1Label[q]->setFontName("SdkTrays/Caption");
+            mLeaderboardTable1Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mLeaderboardTable1Label[q]);
+        }
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
+            mLeaderboardTable2Label[q] = createTextArea("MainWindowLeaderTable2_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mLeaderboardTable2Label[q]->setCaption("");
+            mLeaderboardTable2Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable2Label[q]->setSpaceWidth(9.0f);
+            mLeaderboardTable2Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable2Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mLeaderboardTable2Label[q]->setFontName("SdkTrays/Caption");
+            mLeaderboardTable2Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mLeaderboardTable2Label[q]);
+        }
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(490.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
+            mLeaderboardTable3Label[q] = createTextArea("MainWindowLeaderTable3_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mLeaderboardTable3Label[q]->setCaption("");
+            mLeaderboardTable3Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable3Label[q]->setSpaceWidth(9.0f);
+            mLeaderboardTable3Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable3Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mLeaderboardTable3Label[q]->setFontName("SdkTrays/Caption");
+            mLeaderboardTable3Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mLeaderboardTable3Label[q]);
+        }
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(560.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
+            mLeaderboardTable4Label[q] = createTextArea("MainWindowLeaderTable4_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mLeaderboardTable4Label[q]->setCaption("");
+            mLeaderboardTable4Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable4Label[q]->setSpaceWidth(9.0f);
+            mLeaderboardTable4Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mLeaderboardTable4Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mLeaderboardTable4Label[q]->setFontName("SdkTrays/Caption");
+            mLeaderboardTable4Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mLeaderboardTable4Label[q]);
+        }
     }
 }
 
@@ -1653,6 +1706,26 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
     }
 }
 
+void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
+{
+    std::string playerName = mModeContext.getGameState().getPlayerName();
+
+    for(size_t q = 0; q < finishBoard.size(); ++q)
+    {
+        if(finishBoard[q].mIsPlayer)
+            mLeaderboardTable2Label[q]->setCaption(playerName);
+        else
+            mLeaderboardTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(finishBoard[q].mCharName));
+
+        mLeaderboardTable4Label[q]->setCaption(Conversions::DMToString(finishBoard[q].mPos));
+
+        mLeaderboardTable1Label[q]->show();
+        mLeaderboardTable2Label[q]->show();
+        //mLeaderboardTable3Label[q]->show();
+        mLeaderboardTable4Label[q]->show();
+    }
+}
+
 void UIMainMenuLabels::showMultiIPLabels()
 {
     mModeMultiIP->show();
@@ -1743,6 +1816,11 @@ void UIMainMenuLabels::hideAllLabels()
         mPodiumTable2Label[q]->hide();
         mPodiumTable3Label[q]->hide();
         mPodiumTable4Label[q]->hide();
+
+        mLeaderboardTable1Label[q]->hide();
+        mLeaderboardTable2Label[q]->hide();
+        mLeaderboardTable3Label[q]->hide();
+        mLeaderboardTable4Label[q]->hide();
     }
 
     mShadowVal.hide();

@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "../includes/OgreInclude.h"
-#include "../GameState.h"
-
 class ModeContext;
 
 struct finishBoardElement
@@ -20,6 +17,7 @@ struct finishBoardElement
         : mPos(pos), mIsPlayer(isPlayer), mRaceTime(raceTime), mBestLapTime(bestLapTime), mCharName(charName){}
 
     bool operator< (const finishBoardElement& other)const{return mPos < other.mPos;}
+    friend bool operator>(const finishBoardElement& a, const finishBoardElement& b) {return a.mPos > b.mPos;}
 
     static bool sortByRaceTime(const finishBoardElement& a, const finishBoardElement& b){return a.mRaceTime < b.mRaceTime;}
     static bool findPlayer(const finishBoardElement& other){return other.mIsPlayer;}

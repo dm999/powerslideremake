@@ -2,8 +2,6 @@
 
 #include "../gamemodes/ModeContext.h"
 
-#include "FinishBoard.h"
-
 void Championship::init()
 {
     mCurrentTrack = 0;
@@ -14,7 +12,7 @@ void Championship::init()
 void Championship::trackFinished(const ModeContext& modeContext)
 {
     mIsShownLeaderboardAfterFinish = false;
-    finishBoardVec finishBoard = FinishBoard::prepareFinishBoard(modeContext);
+    const finishBoardVec& finishBoard = modeContext.getFinishBoard();
 
     for(size_t q = 0; q < finishBoard.size(); ++q)
     {
@@ -94,6 +92,22 @@ bool Championship::isFinished(const ModeContext& modeContext) const
         if(mCurrentTrack >= 8)
             ret = true;
     }
+
+    return ret;
+}
+
+finishBoardVec Championship::getLeaderboard() const
+{
+    finishBoardVec ret;
+
+    ret.push_back(finishBoardElement(mUserPoints, true, 0.0f, 0.0f, mUserCharacter));
+
+    for(std::map<std::string, size_t>::const_iterator i = mCharToPoints.begin(); i != mCharToPoints.end(); ++i)
+    {
+        ret.push_back(finishBoardElement((*i).second, false, 0.0f, 0.0f, (*i).first));
+    }
+
+    std::sort(ret.begin(), ret.end(), std::greater<finishBoardElement>());
 
     return ret;
 }

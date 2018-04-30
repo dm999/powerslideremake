@@ -142,12 +142,29 @@ void GameModeSwitcher::frameEnded()
         if(mGameMode == ModeRaceSingle && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceSingle)
         {
             mContext.setLapController(mPlayerMode->getLapController());
+            mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
         }
         //extract lap data after championship race
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
         {
             mContext.setLapController(mPlayerMode->getLapController());
+            mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
+
             mContext.getGameState().getChampionship().trackFinished(mContext);
+
+            if(mContext.getGameState().getChampionship().isFinished(mContext))
+            {
+                finishBoardVec leaderBoard = mContext.getGameState().getChampionship().getLeaderboard();
+                if(leaderBoard[0].mIsPlayer)
+                {
+                    AIStrength strength = mContext.getGameState().getAIStrength();
+                    if(mContext.getGameState().getGameLevel() <= strength && strength != Insane)
+                    {
+                        mContext.getGameState().setGameLevel(static_cast<AIStrength>(mContext.getGameState().getGameLevel() + 1));
+                        mContext.getGameState().savePlayerData();
+                    }
+                }
+            }
         }
 #ifndef NO_MULTIPLAYER
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit && mGameMode == ModeRaceMulti)
