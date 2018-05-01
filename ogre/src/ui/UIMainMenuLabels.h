@@ -118,6 +118,7 @@ private:
     Ogre::TextAreaOverlayElement * mOptionHighScoresTable2Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mOptionHighScoresTable3Label[GameState::mRaceGridCarsMax];
     Ogre::PanelOverlayElement* mOptionHighScoresTable4Icon[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mOptionHighScoresEmergentGunLabel;
     size_t mHighScoreTrackIndex;
     void fillHighScoreTable();
 

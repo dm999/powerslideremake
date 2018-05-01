@@ -830,7 +830,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         {
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(35.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(15.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
             mOptionHighScoresTable1Label[q] = createTextArea("MainWindowHiscoreTable1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
             mOptionHighScoresTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
             mOptionHighScoresTable1Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -843,7 +843,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         }
 
         {
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(60.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(40.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
             mOptionHighScoresTable2Label[q] = createTextArea("MainWindowHiscoreTable2_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
             mOptionHighScoresTable2Label[q]->setCaption("");
             mOptionHighScoresTable2Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -869,13 +869,25 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         }
 
         {
-            const Ogre::Real left = 260.0f;
+            const Ogre::Real left = 250.0f;
             const Ogre::Real top = 90.0f;
             Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, 20.0f * q + top, left + 52.0f, 20.0f * q + top + 20.0f);
             mOptionHighScoresTable4Icon[q] = createPanel("MainWindowHiscoreTable4Icon_" + Conversions::DMToString(q), pos, "Test/car0_0s.bmp");
             mOptionHighScoresTable4Icon[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
             getMainBackground()->addChild(mOptionHighScoresTable4Icon[q]);
         }
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(100.0f, 330.0f, 0.0f, 0.0f);
+        mOptionHighScoresEmergentGunLabel = createTextArea("MainWindowOptionHighscoresEmergentGunLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionHighScoresEmergentGunLabel->setCaption("");
+        mOptionHighScoresEmergentGunLabel->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresEmergentGunLabel->setSpaceWidth(9.0f);
+        mOptionHighScoresEmergentGunLabel->setHeight(16.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresEmergentGunLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionHighScoresEmergentGunLabel->setFontName("SdkTrays/Caption");
+        mOptionHighScoresEmergentGunLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionHighScoresEmergentGunLabel);
     }
 
 
@@ -1839,6 +1851,7 @@ void UIMainMenuLabels::showOptionHiscoreLabels()
     mHighScoresTrackRight.show();
     mOptionHighScoresButtonLabel->show();
     mOptionHighScoresTrackLabel->show();
+    mOptionHighScoresEmergentGunLabel->show();
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
@@ -2010,6 +2023,7 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_Mirror->hide();
     mOptionHighScoresButtonLabel->hide();
     mOptionHighScoresTrackLabel->hide();
+    mOptionHighScoresEmergentGunLabel->hide();
     mOptionNameLabel->hide();
     mOptionNameLabel_Save->hide();
     mOptionVersionLabel->hide();
@@ -2100,17 +2114,29 @@ void UIMainMenuLabels::fillHighScoreTable()
     std::vector<std::string> names = strHiscores.getArrayValue(curTrack + " parameters", "names");
     std::vector<std::string> times = strHiscores.getArrayValue(curTrack + " parameters", "lap times");
     std::vector<std::string> characters = strHiscores.getArrayValue(curTrack + " parameters", "characters");
+    std::vector<std::string> dimCoeff = strHiscores.getArrayValue(curTrack + " parameters", "4th dimension coefficient");
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         float time;
         Conversions::DMFromString(times[q], time);
 
-        mOptionHighScoresTable2Label[q]->setCaption(strPowerslide.getCharacterTitle(names[q]));
+        if(dimCoeff[q] == "0")
+            mOptionHighScoresTable2Label[q]->setCaption(strPowerslide.getCharacterTitle(names[q]));
+        else
+            mOptionHighScoresTable2Label[q]->setCaption(names[q]);
         mOptionHighScoresTable3Label[q]->setCaption(Tools::SecondsToString(time));
 
         std::string iconName = strPowerslide.getValue(characters[q] + " parameters", "icon", "car0_0s.bmp");
         std::string matName = "Test/" + iconName;
         mOptionHighScoresTable4Icon[q]->setMaterialName(matName);
     }
+
+    const STRRacetimes& strRacetimes = mModeContext.getGameState().getSTRRacetimes();
+    float emergentGun = strRacetimes.getFloatValue("emergent gun times", curTrack);
+    if(emergentGun != 0.0f)
+        mOptionHighScoresEmergentGunLabel->setCaption("Ratbag`s Hot Time: " + Tools::SecondsToString(emergentGun));
+    else
+        mOptionHighScoresEmergentGunLabel->setCaption("");
+
 }

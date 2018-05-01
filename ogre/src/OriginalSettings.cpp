@@ -323,12 +323,7 @@ std::string STRPowerslide::getCharacterTitle(const std::string& character)
     originalToTitle["argon"] = "Argon";
 
 
-    std::string res = character;
-
-    std::map<std::string, std::string>::const_iterator i = originalToTitle.find(character);
-    if(i != originalToTitle.end())
-        res = (*i).second;
-
+    std::string res = originalToTitle[character];
 
     return res;
 }
