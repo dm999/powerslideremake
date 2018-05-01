@@ -70,7 +70,7 @@ void GameState::initOriginalData()
                 mSTRPowerslide.parse(mPFLoaderStore);
                 mSTRRacecrud.parse(mPFLoaderStore);
                 mSTRRacetimes.parse(mPFLoaderStore);
-                mSTRHiscores.parse(mPFLoaderStore);
+                mSTRHiscores.parse(mPFLoaderStore, mDataDir);
 
                 mPlayerSettings.parse(mDataDir);
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
@@ -156,6 +156,11 @@ void GameState::savePlayerData()
     }
 }
 
+void GameState::saveHiscoresData()
+{
+    mSTRHiscores.save(mDataDir);
+}
+
 void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStrength)
 {
     setRaceParameters(trackName, aiStrength, mSTRPowerslide.getLapsCount(trackName));
@@ -217,6 +222,12 @@ const STRRacetimes& GameState::getSTRRacetimes() const
 }
 
 const STRHiscores& GameState::getSTRHiscores() const
+{
+    assert(mOriginalDataInited);
+    return mSTRHiscores;
+}
+
+STRHiscores& GameState::getSTRHiscores()
 {
     assert(mOriginalDataInited);
     return mSTRHiscores;

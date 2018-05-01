@@ -54,6 +54,7 @@ public:
     int getIntValue(const std::string& section, const std::string& key) const;
     int getIntValue(const std::string& section, const std::string& key, int defaultVal) const;
 
+    std::string arrayToString(std::vector<std::string>& data)const;
 
 protected:
 
@@ -120,23 +121,52 @@ public:
 private:
 };
 
+
+class WritableSettings
+{
+public:
+
+    WritableSettings(const std::string& fileName) : mFileName(fileName), mIsSaved(false){}
+
+    bool getIsSaved() const {return mIsSaved;}
+
+protected:
+
+    std::string parse(const std::string& dataDir);
+
+    void writeFile(const std::string& dataDir, const std::string& str);
+
+    const std::string& getFileName() const {return mFileName;}
+
+private:
+
+    const std::string mFileName;
+
+    bool mIsSaved;
+};
+
 /**
  * Parser of original hiscores.str
  */
-class STRHiscores : public STRSettings
+class STRHiscores : public STRSettings, public WritableSettings
 {
 public:
-    STRHiscores(){}
+    STRHiscores() : WritableSettings("hiscores.str"){}
 
-    void parse(const PFLoader& pfLoaderStore);
+    void parse(const PFLoader& pfLoaderStore, const std::string& dataDir);
 
-private:
+    void save(const std::string& dataDir);
+
+    /**
+     * return - is best time beaten
+     */
+    bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew);
 };
 
 /**
  * 
  */
-class STRPlayerSettings : public STRSettings
+class STRPlayerSettings : public STRSettings, public WritableSettings
 {
 public:
 
@@ -163,21 +193,15 @@ public:
         AIStrength level;
     };
 
-    STRPlayerSettings() : mIsSaved(false), mFileName("player.str"){}
+    STRPlayerSettings() : WritableSettings("player.str"){}
 
     void parse(const std::string& dataDir);
     void save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData);
 
     bool getIsLoaded() const {return mIsSTRLoaded;}
-    bool getIsSaved() const {return mIsSaved;}
 
 private:
 
-    void writeFile(const std::string& dataDir);
-
-    const std::string mFileName;
-
-    bool mIsSaved;
 };
 
 #endif

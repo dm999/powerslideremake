@@ -208,6 +208,24 @@ int STRSettings::getIntValue(const std::string& section, const std::string& key,
     return ret;
 }
 
+std::string STRSettings::arrayToString(std::vector<std::string>& data)const
+{
+    std::string ret = "{";
+
+    for(size_t q = 0; q < data.size(); ++q)
+    {
+        ret += data[q];
+        if(q != data.size() - 1)
+        {
+            ret += ",";
+        }
+    }
+
+    ret += "}";
+
+    return ret;
+}
+
 void STRPowerslide::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "", "powerslide.str");
@@ -521,14 +539,9 @@ void STRRacetimes::parse(const PFLoader& pfLoaderStore)
     STRSettings::parse(pfLoaderStore, "data/misc", "racetimes.str");
 }
 
-void STRHiscores::parse(const PFLoader& pfLoaderStore)
+std::string WritableSettings::parse(const std::string& dataDir)
 {
-    STRSettings::parse(pfLoaderStore, "data/gamestructure", "hiscores.str");
-}
-
-void STRPlayerSettings::parse(const std::string& dataDir)
-{
-    mIsSTRLoaded = false;
+    std::string ret = "";
 
     Ogre::DataStreamPtr stream;
     if(dataDir.empty())
@@ -539,7 +552,7 @@ void STRPlayerSettings::parse(const std::string& dataDir)
     }
     else
     {
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::parse]: Load from directory " + Ogre::String(dataDir.c_str()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[WritableSettings::parse]: Load from directory " + Ogre::String(dataDir.c_str()));
 
         std::ios::openmode mode = std::ios::in | std::ios::binary;
         std::ifstream* roStream = 0;
@@ -556,15 +569,156 @@ void STRPlayerSettings::parse(const std::string& dataDir)
 
     if(stream.get() && stream->isReadable())
     {
-        mSTR.Reset();
-
         size_t size = stream->size();
 
         std::vector<char> buf(size);
 
         stream->read(&buf[0],size);
 
-        std::string data = STRLoader().decode(buf);
+        ret = STRLoader().decode(buf);
+
+        stream->close();
+    }
+
+    return ret;
+}
+
+void WritableSettings::writeFile(const std::string& dataDir, const std::string& str)
+{
+    mIsSaved = false;
+
+    std::string strDecoded = STRLoader().decode(std::vector<char>(str.begin(), str.end()));
+
+    Ogre::DataStreamPtr stream;
+    if(dataDir.empty())
+    {
+        try{
+            stream = Ogre::ResourceGroupManager::getSingleton().createResource( mFileName, "PF", true );
+        }catch(...){}
+    }
+    else //android
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[WritableSettings::writeFile]: Save to directory " + Ogre::String(dataDir.c_str()));
+
+        std::ios::openmode mode = std::ios::out | std::ios::binary;
+        std::fstream* ioStream = 0;
+        ioStream = OGRE_NEW_T(std::fstream, Ogre::MEMCATEGORY_GENERAL)();
+        ioStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + mFileName).c_str(), mode);
+
+        if(!ioStream->fail())
+        {
+            Ogre::FileStreamDataStream* streamtmp = 0;
+            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), ioStream, true);
+            stream = Ogre::DataStreamPtr(streamtmp);
+        }
+    }
+
+    if(stream.get() && stream->isWriteable())
+    {
+        stream->write(strDecoded.c_str(), strDecoded.length());
+        mIsSaved = true;
+
+        stream->close();
+    }
+    else
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[WritableSettings::writeFile]: Unable to save file to directory " + Ogre::String(dataDir.c_str()));
+    }
+}
+
+void STRHiscores::parse(const PFLoader& pfLoaderStore, const std::string& dataDir)
+{
+    STRSettings::parse(pfLoaderStore, "data/gamestructure", getFileName());
+
+    std::string data = WritableSettings::parse(dataDir);
+    if(!data.empty())
+    {
+        mSTR.Reset();
+        SI_Error rc = mSTR.LoadData(data.c_str(), data.size());
+        if (rc >= 0)
+        {
+            mIsSTRLoaded = true;
+        }
+    }
+}
+
+void STRHiscores::save(const std::string& dataDir)
+{
+    std::string str;
+
+    SI_Error rc = mSTR.Save(str);
+
+    if (rc >= 0)
+        writeFile(dataDir, str);
+}
+
+bool STRHiscores::updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew)
+{
+    bool isBestBeaten = false;
+
+    if(mIsSTRLoaded)
+    {
+        const std::string sectionName = trackName + " parameters";
+
+        size_t entries = getIntValue(sectionName, "Number of Entries");
+        std::vector<std::string> names = getArrayValue(sectionName, "names");
+        std::vector<std::string> times = getArrayValue(sectionName, "lap times");
+        std::vector<std::string> characters = getArrayValue(sectionName, "characters");
+        std::vector<std::string> dimCoeff = getArrayValue(sectionName, "4th dimension coefficient");
+
+        bool isUpdated = false;
+        for(size_t q = 0; q < entries; ++q)
+        {
+            float time;
+            Conversions::DMFromString(times[q], time);
+
+            if(time > timeNew)
+            {
+                if(q == 0) isBestBeaten = true;
+
+                for(size_t w = entries - 1; w > q; --w)
+                {
+                    times[w] = times[w - 1];
+                    names[w] = names[w - 1];
+                    characters[w] = characters[w - 1];
+                    dimCoeff[w] = dimCoeff[w - 1];
+                }
+
+                isUpdated = true;
+                times[q] = Conversions::DMToString(timeNew);
+                names[q] = playerName;
+                characters[q] = character;
+                dimCoeff[q] = "1";//d.polubotko: unclear value, 0 assumed to be untuched
+                break;
+            }
+        }
+
+        if(isUpdated)
+        {
+            std::string plainNames = arrayToString(names);
+            std::string plainTimes = arrayToString(times);
+            std::string plainChars = arrayToString(characters);
+            std::string plainDimCoeffs = arrayToString(dimCoeff);
+
+            mSTR.SetValue(sectionName.c_str(), "names", plainNames.c_str());
+            mSTR.SetValue(sectionName.c_str(), "lap times", plainTimes.c_str());
+            mSTR.SetValue(sectionName.c_str(), "characters", plainChars.c_str());
+            mSTR.SetValue(sectionName.c_str(), "4th dimension coefficient", plainDimCoeffs.c_str());
+        }
+    }
+
+    return isBestBeaten;
+}
+
+void STRPlayerSettings::parse(const std::string& dataDir)
+{
+    mIsSTRLoaded = false;
+
+    std::string data = WritableSettings::parse(dataDir);
+
+    if(!data.empty())
+    {
+        mSTR.Reset();
 
         SI_Error rc = mSTR.LoadData(data.c_str(), data.size());
 
@@ -572,76 +726,37 @@ void STRPlayerSettings::parse(const std::string& dataDir)
         {
             mIsSTRLoaded = true;
         }
-
-        stream->close();
     }
 }
 
 void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData)
 {
-
-    mSTR.SetValue("", "player name", globalData.playerName.c_str());
-    mSTR.SetValue("", "track choice", globalData.track.c_str());
-    mSTR.SetValue("", "character choice", globalData.character.c_str());
-    mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
-    mSTR.SetValue("", "resolution", globalData.resolution.c_str());
-    mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
-    mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
-    mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
-    mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
-    mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
-    mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
-    mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
-    mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
-
-    const std::string section = globalData.playerName + " parameters";
-
-    mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
-
-    writeFile(dataDir);
-}
-
-void STRPlayerSettings::writeFile(const std::string& dataDir)
-{
-    std::string str;
-
-    mIsSaved = false;
-
-    SI_Error rc = mSTR.Save(str);
-    if (rc >= 0)
+    if(mIsSTRLoaded)
     {
-        str = STRLoader().decode(std::vector<char>(str.begin(), str.end()));
+        mSTR.SetValue("", "player name", globalData.playerName.c_str());
+        mSTR.SetValue("", "track choice", globalData.track.c_str());
+        mSTR.SetValue("", "character choice", globalData.character.c_str());
+        mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
+        mSTR.SetValue("", "resolution", globalData.resolution.c_str());
+        mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
+        mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
+        mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
+        mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
+        mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
+        mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
+        mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
+        mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
 
-        Ogre::DataStreamPtr stream;
-        if(dataDir.empty())
-        {
-            try{
-                stream = Ogre::ResourceGroupManager::getSingleton().createResource( mFileName, "PF", true );
-            }catch(...){}
-        }
-        else
-        {
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PlayerSettings::save]: Save to directory " + Ogre::String(dataDir.c_str()));
+        const std::string section = globalData.playerName + " parameters";
 
-            std::ios::openmode mode = std::ios::out | std::ios::binary;
-            std::fstream* ioStream = 0;
-            ioStream = OGRE_NEW_T(std::fstream, Ogre::MEMCATEGORY_GENERAL)();
-            ioStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + mFileName).c_str(), mode);
+        mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
 
-            if(!ioStream->fail())
-            {
-                Ogre::FileStreamDataStream* streamtmp = 0;
-                streamtmp = OGRE_NEW Ogre::FileStreamDataStream(mFileName.c_str(), ioStream, true);
-                stream = Ogre::DataStreamPtr(streamtmp);
-            }
-        }
+        std::string str;
 
-        if(stream.get() && stream->isWriteable())
-        {
-            stream->write(str.c_str(), str.length());
-            mIsSaved = true;
+        SI_Error rc = mSTR.Save(str);
 
-            stream->close();
-        }
+        if (rc >= 0)
+            writeFile(dataDir, str);
     }
 }
+

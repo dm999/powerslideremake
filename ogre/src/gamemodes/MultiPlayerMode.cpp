@@ -106,7 +106,8 @@ void MultiPlayerMode::onLapFinished()
 
     if(lap <= mModeContext.mGameState.getLapsCount())
     {
-        std::string time = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime());
+        Ogre::Real lastLapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime();
+        std::string time = Tools::SecondsToString(lastLapTime);
         std::string lapS = Conversions::DMToString(lap);
         mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
     }
@@ -115,9 +116,30 @@ void MultiPlayerMode::onLapFinished()
     if(lap == mModeContext.mGameState.getLapsCount())
     {
 
+        //update hiscores
+        {
+            bool isBestBeaten = mModeContext.getGameState().getSTRHiscores().updateTrackTime(
+                mModeContext.getGameState().getTrackNameAsOriginal(),
+                mModeContext.getGameState().getPlayerCar().getCharacterName(),
+                mModeContext.getGameState().getPlayerName(),
+                mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+
+            mModeContext.getGameState().saveHiscoresData();
+
+            if(isBestBeaten)
+            {
+                std::string bestTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime());
+                mUIRace->addMiscPanelText("Track record updated: [" + bestTime + "]", Ogre::ColourValue::Red);
+            }
+        }
+
+
         mSelfTotalRaceTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime();
 
-        MultiplayerLobbyData multiplayerLobbyData(lobbyDataLapTime, mSelfTotalRaceTime);
+        MultiplayerLobbyData multiplayerLobbyData(lobbyDataRaceTime, 
+            mSelfTotalRaceTime, 
+            mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime(),
+            mModeContext.getGameState().getPlayerCar().getCharacterName());
 
         bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
 
@@ -141,7 +163,7 @@ void MultiPlayerMode::onRaceFinishedByAI(PSAICar& aiCar)
 {
     Ogre::Real aiTotalRaceTime = aiCar.getLapUtils().getTotalTime();
 
-    MultiplayerLobbyData multiplayerLobbyData(lobbyDataLapTimeAI, aiTotalRaceTime);
+    MultiplayerLobbyData multiplayerLobbyData(lobbyDataRaceTimeAI, aiTotalRaceTime, 0.0f, "");
 
     bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, true, 10);
 }
@@ -261,14 +283,14 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
         {
             mIsBurn = false;
 
-            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 10.0f);
+            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 10.0f, 0.0f, "");
             bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
         }
         if(mIsBomb)
         {
             mIsBomb = false;
 
-            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 11.0f);
+            MultiplayerLobbyData multiplayerLobbyData(lobbyDataCheats, 11.0f, 0.0f, "");
             bool success = mMultiplayerController->sendLobbyMessage(multiplayerLobbyData, false, 10);
         }
 
@@ -409,17 +431,34 @@ void MultiPlayerMode::onLobbyMessage(const std::string& player, const Multiplaye
     }
 
     //check other players finished all laps
-    if(data.mDataType == lobbyDataLapTime)
+    if(data.mDataType == lobbyDataRaceTime)
     {
         std::string time = Tools::SecondsToString(data.mRaceTotalTime);
         mUIRace->addMiscPanelText("Race finished by [" + player + "]: " + Ogre::String(time), mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+
+        //update hiscores
+        {
+            bool isBestBeaten = mModeContext.getGameState().getSTRHiscores().updateTrackTime(
+                mModeContext.getGameState().getTrackNameAsOriginal(),
+                data.mCharacterName,
+                player,
+                data.mRaceBestTime);
+
+            mModeContext.getGameState().saveHiscoresData();
+
+            if(isBestBeaten)
+            {
+                std::string bestTime = Tools::SecondsToString(data.mRaceBestTime);
+                mUIRace->addMiscPanelText("Track record updated: [" + bestTime + "] by " + player, Ogre::ColourValue::Red);
+            }
+        }
 
         mIsRaceFinishedByHuman[player] = true;
         mRaceTimeByHuman[player] = data.mRaceTotalTime;
         checkRaceFinished();
     }
 
-    if(data.mDataType == lobbyDataLapTimeAI)
+    if(data.mDataType == lobbyDataRaceTimeAI)
     {
         std::string time = Tools::SecondsToString(data.mRaceTotalTime);
         mUIRace->addMiscPanelText("Race finished by AI: " + Ogre::String(time), mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));

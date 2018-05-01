@@ -47,6 +47,8 @@ public:
     void loadPlayerData();
     void savePlayerData();
 
+    void saveHiscoresData();
+
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
 
@@ -57,6 +59,7 @@ public:
     const STRRacecrud& getSTRRacecrud() const;
     const STRRacetimes& getSTRRacetimes() const;
     const STRHiscores& getSTRHiscores() const;
+    STRHiscores& getSTRHiscores();
 
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}

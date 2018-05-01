@@ -363,9 +363,23 @@ void MultiplayerController::parseLobbyMessage(const std::string& message, Multip
     }
     else
     {
+        data.mCharacterName = "frantic";
+        data.mRaceTotalTime = 9999.00f;
+        data.mRaceBestTime = 9999.00f;
+
+        if(jsonObject.has<jsonxx::String>("characterName"))
+        {
+            data.mCharacterName = jsonObject.get<jsonxx::String>("characterName");
+        }
+
         if(jsonObject.has<jsonxx::Number>("totalTime"))
         {
             data.mRaceTotalTime = static_cast<Ogre::Real>(jsonObject.get<jsonxx::Number>("totalTime"));
+        }
+
+        if(jsonObject.has<jsonxx::Number>("bestTime"))
+        {
+            data.mRaceBestTime = static_cast<Ogre::Real>(jsonObject.get<jsonxx::Number>("bestTime"));
         }
     }
 }
@@ -389,6 +403,8 @@ std::string MultiplayerController::fillLobbyMessage(const MultiplayerLobbyData& 
     else
     {
         jsonObject << "totalTime" << data.mRaceTotalTime;
+        jsonObject << "bestTime" << data.mRaceBestTime;
+        jsonObject << "characterName" << data.mCharacterName;
     }
 
     return jsonObject.json();

@@ -10,8 +10,8 @@
 enum MultiplayerLobbyDataType
 {
     lobbyDataRegular = 0,
-    lobbyDataLapTime = 1,
-    lobbyDataLapTimeAI = 2,
+    lobbyDataRaceTime = 1,
+    lobbyDataRaceTimeAI = 2,
     lobbyDataCheats = 3,
 };
 
@@ -36,7 +36,8 @@ struct MultiplayerLobbyData
     size_t mLapsCount;
 
 
-    //race total time data
+    //race time data
+    Ogre::Real mRaceBestTime;
     Ogre::Real mRaceTotalTime;
 
     MultiplayerLobbyData(){}
@@ -60,9 +61,12 @@ struct MultiplayerLobbyData
     {}
 
     //race message constructor
-    MultiplayerLobbyData(MultiplayerLobbyDataType dataType, Ogre::Real raceTotalTime) :
+    MultiplayerLobbyData(MultiplayerLobbyDataType dataType, Ogre::Real raceTotalTime, Ogre::Real raceBestTime,
+        const std::string& characterName) :
         mDataType(dataType),
-        mRaceTotalTime(raceTotalTime)
+        mRaceTotalTime(raceTotalTime),
+        mRaceBestTime(raceBestTime),
+        mCharacterName(characterName)
     {}
 };
 
