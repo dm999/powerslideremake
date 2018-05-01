@@ -109,9 +109,10 @@ void GameState::initOriginalData()
 void GameState::loadPlayerData()
 {
     const std::string section = mPlayerName + " parameters";
-    const std::string level = mPlayerSettings.getValue(section, "Level", Conversions::DMToString(static_cast<AIStrength>(0)));
+    const std::string level = mPlayerSettings.getValue(section, "Level", "0");
     Ogre::uint32 levelData;
     Conversions::DMFromString(level, levelData);
+    if(mPlayerName == "megasaxon")levelData = 3;//http://www.mobygames.com/developer/sheet/view/developerId,47107/
     mGameLevel = static_cast<AIStrength>(levelData);
 
     setRaceParameters("desert track", mGameLevel);
