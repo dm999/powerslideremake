@@ -133,9 +133,13 @@ private:
     Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
 
+    Ogre::TextAreaOverlayElement * mLeaderboardTableTitle1Label;
+    Ogre::TextAreaOverlayElement * mLeaderboardTableTitle2Label;
+    Ogre::TextAreaOverlayElement * mLeaderboardTableTitle3Label;
+    Ogre::TextAreaOverlayElement * mLeaderboardTableTitle4Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTable1Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mLeaderboardTable2Label[GameState::mRaceGridCarsMax];
-    Ogre::TextAreaOverlayElement * mLeaderboardTable3Label[GameState::mRaceGridCarsMax];
+    Ogre::PanelOverlayElement* mLeaderboardTable3Icon[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mLeaderboardTable4Label[GameState::mRaceGridCarsMax];
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;

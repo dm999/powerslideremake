@@ -10,6 +10,8 @@
 
 #include "../loaders/TextureLoader.h"
 
+#include "UIRace.h"
+
 void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
     TextureLoader().load( pfLoaderGameshell, 
@@ -93,6 +95,8 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
         }
 
     }
+
+    UIRace::loadDashboardCars(mModeContext.getGameState());
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
@@ -238,6 +242,24 @@ void UIMainMenuBackground::createBackgroundMaterials()
             newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
             Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        //small icons
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("chroma_" + iconName);
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/" + iconName, 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setSceneBlending (Ogre::SBT_TRANSPARENT_ALPHA);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
     }

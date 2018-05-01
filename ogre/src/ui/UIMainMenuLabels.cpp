@@ -944,6 +944,59 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mPodiumTableTitle4Label);
     }
 
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, 57.0f, 0.0f, 0.0f);
+        mLeaderboardTableTitle1Label = createTextArea("MainWindowTableLeaderboardTitle1", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mLeaderboardTableTitle1Label->setCaption("Rank");
+        mLeaderboardTableTitle1Label->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle1Label->setSpaceWidth(9.0f);
+        mLeaderboardTableTitle1Label->setHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle1Label->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLeaderboardTableTitle1Label->setFontName("SdkTrays/Caption");
+        mLeaderboardTableTitle1Label->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mLeaderboardTableTitle1Label);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, 57.0f, 0.0f, 0.0f);
+        mLeaderboardTableTitle2Label = createTextArea("MainWindowTableLeaderboardTitle2", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mLeaderboardTableTitle2Label->setCaption("Name");
+        mLeaderboardTableTitle2Label->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle2Label->setSpaceWidth(9.0f);
+        mLeaderboardTableTitle2Label->setHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle2Label->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLeaderboardTableTitle2Label->setFontName("SdkTrays/Caption");
+        mLeaderboardTableTitle2Label->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mLeaderboardTableTitle2Label);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(490.0f, 57.0f, 0.0f, 0.0f);
+        mLeaderboardTableTitle3Label = createTextArea("MainWindowTableLeaderboardTitle3", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mLeaderboardTableTitle3Label->setCaption("Vehicle");
+        mLeaderboardTableTitle3Label->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle3Label->setSpaceWidth(9.0f);
+        mLeaderboardTableTitle3Label->setHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle3Label->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLeaderboardTableTitle3Label->setFontName("SdkTrays/Caption");
+        mLeaderboardTableTitle3Label->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mLeaderboardTableTitle3Label);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(560.0f, 57.0f, 0.0f, 0.0f);
+        mLeaderboardTableTitle4Label = createTextArea("MainWindowTableLeaderboardTitle4", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mLeaderboardTableTitle4Label->setCaption("Points");
+        mLeaderboardTableTitle4Label->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle4Label->setSpaceWidth(9.0f);
+        mLeaderboardTableTitle4Label->setHeight(16.0f * viewportHeight / 1024.0f);
+        mLeaderboardTableTitle4Label->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mLeaderboardTableTitle4Label->setFontName("SdkTrays/Caption");
+        mLeaderboardTableTitle4Label->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mLeaderboardTableTitle4Label);
+    }
+
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         {
@@ -1026,16 +1079,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         }
 
         {
-            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(490.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
-            mLeaderboardTable3Label[q] = createTextArea("MainWindowLeaderTable3_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-            mLeaderboardTable3Label[q]->setCaption("");
-            mLeaderboardTable3Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
-            mLeaderboardTable3Label[q]->setSpaceWidth(9.0f);
-            mLeaderboardTable3Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
-            mLeaderboardTable3Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-            mLeaderboardTable3Label[q]->setFontName("SdkTrays/Caption");
-            mLeaderboardTable3Label[q]->setColour(Ogre::ColourValue::White);
-            getMainBackground()->addChild(mLeaderboardTable3Label[q]);
+            const Ogre::Real left = 490.0f;
+            const Ogre::Real top = 80.0f;
+            Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, 22.0f * q + top, left + 52.0f, 22.0f * q + top + 18.0f);
+            mLeaderboardTable3Icon[q] = createPanel("MainWindowLeaderTable3Icon_" + Conversions::DMToString(q), pos, "Test/car0_0s.bmp");
+            mLeaderboardTable3Icon[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            getMainBackground()->addChild(mLeaderboardTable3Icon[q]);
         }
 
         {
@@ -1710,6 +1759,13 @@ void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
 {
     std::string playerName = mModeContext.getGameState().getPlayerName();
 
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+
+    mLeaderboardTableTitle1Label->show();
+    mLeaderboardTableTitle2Label->show();
+    mLeaderboardTableTitle3Label->show();
+    mLeaderboardTableTitle4Label->show();
+
     for(size_t q = 0; q < finishBoard.size(); ++q)
     {
         if(finishBoard[q].mIsPlayer)
@@ -1721,7 +1777,12 @@ void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
 
         mLeaderboardTable1Label[q]->show();
         mLeaderboardTable2Label[q]->show();
-        //mLeaderboardTable3Label[q]->show();
+
+        std::string iconName = strPowerslide.getValue(finishBoard[q].mCharName + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mLeaderboardTable3Icon[q]->setMaterialName(matName);
+        mLeaderboardTable3Icon[q]->show();
+
         mLeaderboardTable4Label[q]->show();
     }
 }
@@ -1810,6 +1871,12 @@ void UIMainMenuLabels::hideAllLabels()
     mPodiumTableTitle2Label->hide();
     mPodiumTableTitle3Label->hide();
     mPodiumTableTitle4Label->hide();
+
+    mLeaderboardTableTitle1Label->hide();
+    mLeaderboardTableTitle2Label->hide();
+    mLeaderboardTableTitle3Label->hide();
+    mLeaderboardTableTitle4Label->hide();
+
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         mPodiumTable1Label[q]->hide();
@@ -1819,7 +1886,7 @@ void UIMainMenuLabels::hideAllLabels()
 
         mLeaderboardTable1Label[q]->hide();
         mLeaderboardTable2Label[q]->hide();
-        mLeaderboardTable3Label[q]->hide();
+        mLeaderboardTable3Icon[q]->hide();
         mLeaderboardTable4Label[q]->hide();
     }
 
