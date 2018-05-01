@@ -40,6 +40,8 @@ protected:
     void showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard);
     void hideAllBackgrounds();
 
+    void setMainBackgroundMaterial(const std::string& material){mMainBackground->setMaterialName(material);}
+
 private:
 
     Ogre::PanelOverlayElement* mMainBackground;

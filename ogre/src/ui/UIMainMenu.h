@@ -31,6 +31,7 @@ public:
     void mouseReleased(const Ogre::Vector2& pos) override;
     void mouseMoved(const Ogre::Vector2& pos) override;
 
+    SinglePlayerMenuStates getSubmenuState() const { return mCurrentState;}
     bool isExitSubmenu()const;
     void setSubmenu(const std::string& title);
     void setTopmostSubmenu();

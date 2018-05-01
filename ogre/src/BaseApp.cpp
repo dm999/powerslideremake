@@ -580,21 +580,28 @@ bool BaseApp::setShutdown(bool isOnEsc)
         mGameModeSwitcher->isLoadPassed()
         )
     {
-        if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
+        if(mGameModeSwitcher->getSubmenuState() != State_FinishChampionship)
         {
-            if(!isOnEsc)
+            if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
             {
-                mGameModeSwitcher->switchMode(ModeMenu);
-                mGameModeSwitcher->setTopmostSubmenu();
+                if(!isOnEsc)
+                {
+                    mGameModeSwitcher->switchMode(ModeMenu);
+                    mGameModeSwitcher->setTopmostSubmenu();
+                }
+                else
+                {
+                    mGameModeSwitcher->setPodiumSubmenu();
+                }
             }
             else
             {
-                mGameModeSwitcher->setPodiumSubmenu();
+                if(isOnEsc)
+                {
+                    mGameModeSwitcher->setSubmenu("Retire from Championship?");
+                }
             }
         }
-        else
-            if(isOnEsc)
-                mGameModeSwitcher->setSubmenu("Retire from Championship?");
     }
 
     return mShutDown;

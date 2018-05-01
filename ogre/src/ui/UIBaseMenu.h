@@ -38,6 +38,7 @@ protected:
     virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0;
 
     void setControlActive(size_t index, bool isActive);
+    void setControlShow(size_t index, bool isShow);
 
     static const int mControlsCount = 6;
     Ogre::PanelOverlayElement* mControls[mControlsCount];

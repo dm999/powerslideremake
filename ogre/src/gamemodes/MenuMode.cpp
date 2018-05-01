@@ -44,6 +44,11 @@ void MenuMode::mouseMoved(const Ogre::Vector2& pos)
     mUIMainMenu->mouseMoved(pos);
 }
 
+SinglePlayerMenuStates MenuMode::getSubmenuState() const
+{
+    return mUIMainMenu->getSubmenuState();
+}
+
 bool MenuMode::isExitSubmenu() const
 {
     return mUIMainMenu->isExitSubmenu();

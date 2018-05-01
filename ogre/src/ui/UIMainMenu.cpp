@@ -241,6 +241,19 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
     UIMainMenuLabels::mouseReleased(pos);
+
+    if(mCurrentState == State_FinishChampionship)
+    {
+        setMainBackgroundMaterial("Test/MainBackground");
+        
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, true);
+        }
+
+        mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
+        setTopmostSubmenu();
+    }
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
@@ -540,6 +553,16 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             showLeaderboardLabels(leaderBoard);
         }
         setWindowTitle("Leaderboard");
+        break;
+
+    case State_FinishChampionship:
+        mIsInStartingGrid = false;
+        setMainBackgroundMaterial("Test/EndChampionshipBackground");
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
         break;
 
     case State_ExitGame:

@@ -57,6 +57,7 @@ public:
 
     GameMode getMode()const{return mGameMode;}
 
+    SinglePlayerMenuStates getSubmenuState() const;
     bool isExitSubmenu()const;
     void setSubmenu(const std::string& title);
     void setTopmostSubmenu();

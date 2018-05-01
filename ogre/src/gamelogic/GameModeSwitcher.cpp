@@ -211,7 +211,11 @@ void GameModeSwitcher::frameEnded()
             {
                 mGameMode = ModeMenuChampionship;
 
-                mMenuMode.reset(new MenuMode(mContext, ModeMenuChampionship, State_Podium));
+                SinglePlayerMenuStates state = State_Podium;
+                if(mContext.getGameState().getChampionship().isFinished(mContext))
+                    state = State_FinishChampionship;
+
+                mMenuMode.reset(new MenuMode(mContext, ModeMenuChampionship, state));
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -471,6 +475,16 @@ void GameModeSwitcher::reloadTextures()
         mPlayerMode->reloadTextures();
 }
 #endif
+
+SinglePlayerMenuStates GameModeSwitcher::getSubmenuState() const
+{
+    SinglePlayerMenuStates state(State_SingleMulti);
+
+    if(mMenuMode.get())
+        state = mMenuMode->getSubmenuState();
+
+    return state;
+}
 
 bool GameModeSwitcher::isExitSubmenu()const
 {

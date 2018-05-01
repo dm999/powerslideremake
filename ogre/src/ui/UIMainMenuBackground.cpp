@@ -26,6 +26,10 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", "tmgb.bmp", 
                                 "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "endchamp.bmp", 
+                                "OriginalBackgroundEndChampionship", TEMP_RESOURCE_GROUP_NAME);
+
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
 
@@ -173,6 +177,22 @@ void UIMainMenuBackground::createBackgroundMaterials()
             state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
             state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
         }
+    }
+
+    //championship finish background
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalBackgroundEndChampionship");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/EndChampionshipBackground", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
     }
 
     for(size_t q = 0; q < amountTracks; ++q)

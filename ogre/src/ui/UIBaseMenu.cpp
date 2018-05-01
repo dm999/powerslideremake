@@ -542,6 +542,22 @@ void UIBaseMenu::setControlActive(size_t index, bool isActive)
     }
 }
 
+void UIBaseMenu::setControlShow(size_t index, bool isShow)
+{
+    if(index < mControlsCount)
+    {
+        if(isShow)
+        {
+            mControls[index]->show();
+        }
+        else
+        {
+            mControls[index]->hide();
+            mControlsText[index]->hide();
+        }
+    }
+}
+
 void UIBaseMenu::selectTrack(const std::string& trackName)
 {
     if(mRemapTrack.find(trackName) != mRemapTrack.end())
