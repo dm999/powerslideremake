@@ -152,7 +152,7 @@ void GameState::savePlayerData()
     }
     else
     {
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameState::savePlayerData]: save error");
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[GameState::savePlayerData]: save error");
     }
 }
 

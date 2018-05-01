@@ -571,13 +571,23 @@ std::string WritableSettings::parse(const std::string& dataDir)
     {
         size_t size = stream->size();
 
-        std::vector<char> buf(size);
+        if(size > 0)
+        {
+            std::vector<char> buf(size);
 
-        stream->read(&buf[0],size);
+            stream->read(&buf[0],size);
 
-        ret = STRLoader().decode(buf);
+            ret = STRLoader().decode(buf);
+        }
+    }
 
+    if(stream.get())
+    {
         stream->close();
+    }
+    else
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[WritableSettings::parse]: Error - no stream available");
     }
 
     return ret;
@@ -594,7 +604,10 @@ void WritableSettings::writeFile(const std::string& dataDir, const std::string& 
     {
         try{
             stream = Ogre::ResourceGroupManager::getSingleton().createResource( mFileName, "PF", true );
-        }catch(...){}
+        }catch(Ogre::Exception& e)
+        {
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[WritableSettings::writeFile]: CreateResource error: " + Ogre::String(e.what()));
+        }
     }
     else //android
     {
@@ -617,12 +630,15 @@ void WritableSettings::writeFile(const std::string& dataDir, const std::string& 
     {
         stream->write(strDecoded.c_str(), strDecoded.length());
         mIsSaved = true;
+    }
 
+    if(stream.get())
+    {
         stream->close();
     }
     else
     {
-        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[WritableSettings::writeFile]: Unable to save file to directory " + Ogre::String(dataDir.c_str()));
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[WritableSettings::writeFile]: Error - no stream available");
     }
 }
 
@@ -731,32 +747,29 @@ void STRPlayerSettings::parse(const std::string& dataDir)
 
 void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globalData, const PlayerData& playerData)
 {
-    if(mIsSTRLoaded)
-    {
-        mSTR.SetValue("", "player name", globalData.playerName.c_str());
-        mSTR.SetValue("", "track choice", globalData.track.c_str());
-        mSTR.SetValue("", "character choice", globalData.character.c_str());
-        mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
-        mSTR.SetValue("", "resolution", globalData.resolution.c_str());
-        mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
-        mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
-        mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
-        mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
-        mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
-        mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
-        mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
-        mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
+    mSTR.SetValue("", "player name", globalData.playerName.c_str());
+    mSTR.SetValue("", "track choice", globalData.track.c_str());
+    mSTR.SetValue("", "character choice", globalData.character.c_str());
+    mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
+    mSTR.SetValue("", "resolution", globalData.resolution.c_str());
+    mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
+    mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
+    mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
+    mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
+    mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
+    mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
+    mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
+    mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
 
-        const std::string section = globalData.playerName + " parameters";
+    const std::string section = globalData.playerName + " parameters";
 
-        mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
+    mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
 
-        std::string str;
+    std::string str;
 
-        SI_Error rc = mSTR.Save(str);
+    SI_Error rc = mSTR.Save(str);
 
-        if (rc >= 0)
-            writeFile(dataDir, str);
-    }
+    if (rc >= 0)
+        writeFile(dataDir, str);
 }
 
