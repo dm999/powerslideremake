@@ -528,77 +528,73 @@ void BaseApp::dropCamera()
 
 bool BaseApp::setShutdown(bool isOnEsc)
 {
-    if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeRaceChampionship  ||
-        mGameModeSwitcher->getMode() == ModeMenuMulti   ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
-    )
+    if(mGameModeSwitcher->isLoadPassed())
     {
-
-        if( mGameModeSwitcher->getMode() == ModeRaceSingle  &&
-            mGameModeSwitcher->isLoadPassed()               &&
-            isOnEsc
-            )
-            mGameModeSwitcher->switchMode(ModeMenu);
-
-        if( mGameModeSwitcher->getMode() == ModeRaceChampionship  &&
-            mGameModeSwitcher->isLoadPassed()               &&
-            isOnEsc
-            )
-            mGameModeSwitcher->switchMode(ModeMenuChampionship);
-
-        if( mGameModeSwitcher->getMode() == ModeMenuMulti    &&
-            isOnEsc
-            )
-            mGameModeSwitcher->switchMode(ModeMenu);
-
-        if( mGameModeSwitcher->getMode() == ModeRaceMulti   &&
-            mGameModeSwitcher->isLoadPassed()               &&
-            isOnEsc
-            )
-            mGameModeSwitcher->switchMode(ModeMenuMulti);
-    }
-
-    if( mGameModeSwitcher->getMode() == ModeMenu    &&
-        mGameModeSwitcher->isLoadPassed()
+        if(
+            mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship  ||
+            mGameModeSwitcher->getMode() == ModeMenuMulti   ||
+            mGameModeSwitcher->getMode() == ModeRaceMulti
         )
-    {
-        if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
         {
-            if(!isOnEsc)
-                mShutDown = true;
-            else
-                mGameModeSwitcher->setTopmostSubmenu();
-        }
-        else
-            if(isOnEsc)
-                mGameModeSwitcher->setSubmenu("Exit the game?");
-    }
 
-    if( mGameModeSwitcher->getMode() == ModeMenuChampionship    &&
-        mGameModeSwitcher->isLoadPassed()
-        )
-    {
-        if(mGameModeSwitcher->getSubmenuState() != State_FinishChampionship)
+            if( mGameModeSwitcher->getMode() == ModeRaceSingle  &&
+                isOnEsc
+                )
+                mGameModeSwitcher->switchMode(ModeMenu);
+
+            if( mGameModeSwitcher->getMode() == ModeRaceChampionship  &&
+                isOnEsc
+                )
+                mGameModeSwitcher->switchMode(ModeMenuChampionship);
+
+            if( mGameModeSwitcher->getMode() == ModeMenuMulti    &&
+                isOnEsc
+                )
+                mGameModeSwitcher->switchMode(ModeMenu);
+
+            if( mGameModeSwitcher->getMode() == ModeRaceMulti   &&
+                isOnEsc
+                )
+                mGameModeSwitcher->switchMode(ModeMenuMulti);
+        }
+
+        if(mGameModeSwitcher->getMode() == ModeMenu)
         {
             if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
             {
                 if(!isOnEsc)
-                {
-                    mGameModeSwitcher->switchMode(ModeMenu);
+                    mShutDown = true;
+                else
                     mGameModeSwitcher->setTopmostSubmenu();
+            }
+            else
+                if(isOnEsc)
+                    mGameModeSwitcher->setSubmenu("Exit the game?");
+        }
+
+        if(mGameModeSwitcher->getMode() == ModeMenuChampionship)
+        {
+            if(mGameModeSwitcher->getSubmenuState() != State_FinishChampionship)
+            {
+                if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
+                {
+                    if(!isOnEsc)
+                    {
+                        mGameModeSwitcher->switchMode(ModeMenu);
+                        mGameModeSwitcher->setTopmostSubmenu();
+                    }
+                    else
+                    {
+                        mGameModeSwitcher->setPodiumSubmenu();
+                    }
                 }
                 else
                 {
-                    mGameModeSwitcher->setPodiumSubmenu();
-                }
-            }
-            else
-            {
-                if(isOnEsc)
-                {
-                    mGameModeSwitcher->setSubmenu("Retire from Championship?");
+                    if(isOnEsc)
+                    {
+                        mGameModeSwitcher->setSubmenu("Retire from Championship?");
+                    }
                 }
             }
         }
