@@ -46,6 +46,7 @@ protected:
     void showOptionGraphicsLabels();
     void showOptionInputLabels();
     void showOptionRaceLabels();
+    void showOptionHiscoreLabels();
     void showOptionNameLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
@@ -108,6 +109,17 @@ private:
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
     UIButtonTick mMirrorVal;
+
+    UIButton mHighScoresTrackLeft;
+    UIButton mHighScoresTrackRight;
+    Ogre::TextAreaOverlayElement * mOptionHighScoresButtonLabel;
+    Ogre::TextAreaOverlayElement * mOptionHighScoresTrackLabel;
+    Ogre::TextAreaOverlayElement * mOptionHighScoresTable1Label[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mOptionHighScoresTable2Label[GameState::mRaceGridCarsMax];
+    Ogre::TextAreaOverlayElement * mOptionHighScoresTable3Label[GameState::mRaceGridCarsMax];
+    Ogre::PanelOverlayElement* mOptionHighScoresTable4Icon[GameState::mRaceGridCarsMax];
+    size_t mHighScoreTrackIndex;
+    void fillHighScoreTable();
 
     Ogre::TextAreaOverlayElement * mOptionNameLabel;
     Ogre::TextAreaOverlayElement * mOptionNameLabel_Save;

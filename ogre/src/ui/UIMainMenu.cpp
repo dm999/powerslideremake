@@ -482,6 +482,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Scores:
         mIsInStartingGrid = false;
         showOptionLabels();
+        showOptionHiscoreLabels();
         break;
 
     case State_Options_Name:

@@ -70,6 +70,7 @@ void GameState::initOriginalData()
                 mSTRPowerslide.parse(mPFLoaderStore);
                 mSTRRacecrud.parse(mPFLoaderStore);
                 mSTRRacetimes.parse(mPFLoaderStore);
+                mSTRHiscores.parse(mPFLoaderStore);
 
                 mPlayerSettings.parse(mDataDir);
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
@@ -213,6 +214,12 @@ const STRRacetimes& GameState::getSTRRacetimes() const
 {
     assert(mOriginalDataInited);
     return mSTRRacetimes;
+}
+
+const STRHiscores& GameState::getSTRHiscores() const
+{
+    assert(mOriginalDataInited);
+    return mSTRHiscores;
 }
 
 std::string GameState::getTrackNameAsOriginal() const

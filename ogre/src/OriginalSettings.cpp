@@ -323,7 +323,12 @@ std::string STRPowerslide::getCharacterTitle(const std::string& character)
     originalToTitle["argon"] = "Argon";
 
 
-    std::string res = originalToTitle[character];
+    std::string res = character;
+
+    std::map<std::string, std::string>::const_iterator i = originalToTitle.find(character);
+    if(i != originalToTitle.end())
+        res = (*i).second;
+
 
     return res;
 }
@@ -519,6 +524,11 @@ void STRRacecrud::parse(const PFLoader& pfLoaderStore)
 void STRRacetimes::parse(const PFLoader& pfLoaderStore)
 {
     STRSettings::parse(pfLoaderStore, "data/misc", "racetimes.str");
+}
+
+void STRHiscores::parse(const PFLoader& pfLoaderStore)
+{
+    STRSettings::parse(pfLoaderStore, "data/gamestructure", "hiscores.str");
 }
 
 void STRPlayerSettings::parse(const std::string& dataDir)

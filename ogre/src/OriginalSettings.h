@@ -121,6 +121,19 @@ private:
 };
 
 /**
+ * Parser of original hiscores.str
+ */
+class STRHiscores : public STRSettings
+{
+public:
+    STRHiscores(){}
+
+    void parse(const PFLoader& pfLoaderStore);
+
+private:
+};
+
+/**
  * 
  */
 class STRPlayerSettings : public STRSettings

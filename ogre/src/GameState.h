@@ -56,6 +56,7 @@ public:
     const STRPowerslide& getSTRPowerslide() const;
     const STRRacecrud& getSTRRacecrud() const;
     const STRRacetimes& getSTRRacetimes() const;
+    const STRHiscores& getSTRHiscores() const;
 
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}
@@ -211,6 +212,7 @@ private:
     STRPowerslide mSTRPowerslide;
     STRRacecrud mSTRRacecrud;
     STRRacetimes mSTRRacetimes;
+    STRHiscores mSTRHiscores;
     STRPlayerSettings mPlayerSettings;
 
     PSPlayerCar mPSPlayerCar;

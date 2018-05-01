@@ -130,6 +130,47 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
 
         mModeContext.getGameState().savePlayerData();
     }
+
+
+    if(button == &mHighScoresTrackLeft)
+    {
+        const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
+        std::vector<std::string> hiscoresTracks = strHiscores.getArrayValue("", "hiscore tracks");
+        if(mHighScoreTrackIndex > 0)
+            --mHighScoreTrackIndex;
+
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+        std::string availTrack = availTracks[mHighScoreTrackIndex];
+        if(mHighScoreTrackIndex == 8)
+            availTrack = availTracks[mHighScoreTrackIndex + 1];
+
+        mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTrack));
+
+        fillHighScoreTable();
+    }
+
+    if(button == &mHighScoresTrackRight)
+    {
+        const size_t amountOfHighScoreTracks = 8;
+
+        const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
+        std::vector<std::string> hiscoresTracks = strHiscores.getArrayValue("", "hiscore tracks");
+        if(mHighScoreTrackIndex < amountOfHighScoreTracks)
+            ++mHighScoreTrackIndex;
+
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+        std::string availTrack = availTracks[mHighScoreTrackIndex];
+        if(mHighScoreTrackIndex == 8)
+            availTrack = availTracks[mHighScoreTrackIndex + 1];
+
+        mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTrack));
+
+        fillHighScoreTable();
+    }
 }
 
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
@@ -752,6 +793,92 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mMirrorVal.setButtonOnAction(this);
     }
 
+    //Options Highscores
+    {
+        mHighScoresTrackLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
+        mHighScoresTrackLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(100.0f, 32.0f, 12.0f, 12.0f), true);
+        mHighScoresTrackLeft.setButtonOnAction(this);
+
+        mHighScoresTrackRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
+        mHighScoresTrackRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(180.0f, 32.0f, 12.0f, 12.0f), true);
+        mHighScoresTrackRight.setButtonOnAction(this);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(128.0f, 32.0f, 0.0f, 0.0f);
+        mOptionHighScoresButtonLabel = createTextArea("MainWindowOptionHighscoresButtonLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionHighScoresButtonLabel->setCaption("TRACK");
+        mOptionHighScoresButtonLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresButtonLabel->setSpaceWidth(9.0f);
+        mOptionHighScoresButtonLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresButtonLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionHighScoresButtonLabel->setFontName("SdkTrays/Caption");
+        mOptionHighScoresButtonLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionHighScoresButtonLabel);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(211.0f, 32.0f, 0.0f, 0.0f);
+        mOptionHighScoresTrackLabel = createTextArea("MainWindowOptionHighscoresTrackLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionHighScoresTrackLabel->setCaption("SandBlaster");
+        mOptionHighScoresTrackLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresTrackLabel->setSpaceWidth(9.0f);
+        mOptionHighScoresTrackLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresTrackLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionHighScoresTrackLabel->setFontName("SdkTrays/Caption");
+        mOptionHighScoresTrackLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionHighScoresTrackLabel);
+    }
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(35.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
+            mOptionHighScoresTable1Label[q] = createTextArea("MainWindowHiscoreTable1_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mOptionHighScoresTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
+            mOptionHighScoresTable1Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable1Label[q]->setSpaceWidth(9.0f);
+            mOptionHighScoresTable1Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable1Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mOptionHighScoresTable1Label[q]->setFontName("SdkTrays/Caption");
+            mOptionHighScoresTable1Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mOptionHighScoresTable1Label[q]);
+        }
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(60.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
+            mOptionHighScoresTable2Label[q] = createTextArea("MainWindowHiscoreTable2_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mOptionHighScoresTable2Label[q]->setCaption("");
+            mOptionHighScoresTable2Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable2Label[q]->setSpaceWidth(9.0f);
+            mOptionHighScoresTable2Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable2Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mOptionHighScoresTable2Label[q]->setFontName("SdkTrays/Caption");
+            mOptionHighScoresTable2Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mOptionHighScoresTable2Label[q]);
+        }
+
+        {
+            Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(190.0f, 20.0f * q + 90.0f, 0.0f, 0.0f);
+            mOptionHighScoresTable3Label[q] = createTextArea("MainWindowHiscoreTable3_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+            mOptionHighScoresTable3Label[q]->setCaption("");
+            mOptionHighScoresTable3Label[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable3Label[q]->setSpaceWidth(9.0f);
+            mOptionHighScoresTable3Label[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+            mOptionHighScoresTable3Label[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            mOptionHighScoresTable3Label[q]->setFontName("SdkTrays/Caption");
+            mOptionHighScoresTable3Label[q]->setColour(Ogre::ColourValue::White);
+            getMainBackground()->addChild(mOptionHighScoresTable3Label[q]);
+        }
+
+        {
+            const Ogre::Real left = 260.0f;
+            const Ogre::Real top = 90.0f;
+            Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, 20.0f * q + top, left + 52.0f, 20.0f * q + top + 20.0f);
+            mOptionHighScoresTable4Icon[q] = createPanel("MainWindowHiscoreTable4Icon_" + Conversions::DMToString(q), pos, "Test/car0_0s.bmp");
+            mOptionHighScoresTable4Icon[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            getMainBackground()->addChild(mOptionHighScoresTable4Icon[q]);
+        }
+    }
+
+
     //Options Name
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 62.0f, 0.0f, 0.0f);;
@@ -1114,6 +1241,8 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mOpponentsValLeft.mousePressed(pos);
     mOpponentsValRight.mousePressed(pos);
     mMirrorVal.mousePressed(pos);
+    mHighScoresTrackLeft.mousePressed(pos);
+    mHighScoresTrackRight.mousePressed(pos);
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -1436,6 +1565,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mOpponentsValLeft.mouseReleased(pos);
     mOpponentsValRight.mouseReleased(pos);
     mMirrorVal.mouseReleased(pos);
+    mHighScoresTrackLeft.mouseReleased(pos);
+    mHighScoresTrackRight.mouseReleased(pos);
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -1510,6 +1641,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     mOpponentsValLeft.mouseMoved(pos);
     mOpponentsValRight.mouseMoved(pos);
+
+    mHighScoresTrackLeft.mouseMoved(pos);
+    mHighScoresTrackRight.mouseMoved(pos);
 }
 
 void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
@@ -1524,6 +1658,8 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mOpponentsValLeft.destroy(trayMgr);
     mOpponentsValRight.destroy(trayMgr);
     mMirrorVal.destroy(trayMgr);
+    mHighScoresTrackLeft.destroy(trayMgr);
+    mHighScoresTrackRight.destroy(trayMgr);
 }
 
 void UIMainMenuLabels::showModeSingleMulti()
@@ -1688,6 +1824,31 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mMirrorVal.show();
 }
 
+void UIMainMenuLabels::showOptionHiscoreLabels()
+{
+    mHighScoreTrackIndex = 0;
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTracks[mHighScoreTrackIndex]));
+
+    fillHighScoreTable();
+
+    mHighScoresTrackLeft.show();
+    mHighScoresTrackRight.show();
+    mOptionHighScoresButtonLabel->show();
+    mOptionHighScoresTrackLabel->show();
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        mOptionHighScoresTable1Label[q]->show();
+        mOptionHighScoresTable2Label[q]->show();
+        mOptionHighScoresTable3Label[q]->show();
+        mOptionHighScoresTable4Icon[q]->show();
+    }
+}
+
 void UIMainMenuLabels::showOptionNameLabels()
 {
     mOptionNameLabel->show();
@@ -1847,6 +2008,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_KMPH->hide();
     mOptionRaceLabel_KMPH_Val->hide();
     mOptionRaceLabel_Mirror->hide();
+    mOptionHighScoresButtonLabel->hide();
+    mOptionHighScoresTrackLabel->hide();
     mOptionNameLabel->hide();
     mOptionNameLabel_Save->hide();
     mOptionVersionLabel->hide();
@@ -1879,6 +2042,11 @@ void UIMainMenuLabels::hideAllLabels()
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
+        mOptionHighScoresTable1Label[q]->hide();
+        mOptionHighScoresTable2Label[q]->hide();
+        mOptionHighScoresTable3Label[q]->hide();
+        mOptionHighScoresTable4Icon[q]->hide();
+
         mPodiumTable1Label[q]->hide();
         mPodiumTable2Label[q]->hide();
         mPodiumTable3Label[q]->hide();
@@ -1898,6 +2066,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOpponentsValLeft.hide();
     mOpponentsValRight.hide();
     mMirrorVal.hide();
+    mHighScoresTrackLeft.hide();
+    mHighScoresTrackRight.hide();
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)
@@ -1914,4 +2084,33 @@ bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::Text
     }
 
     return ret;
+}
+
+void UIMainMenuLabels::fillHighScoreTable()
+{
+    const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    std::string curTrack = availTracks[mHighScoreTrackIndex];
+    if(mHighScoreTrackIndex == 8)
+        curTrack = availTracks[mHighScoreTrackIndex + 1];
+
+    std::vector<std::string> names = strHiscores.getArrayValue(curTrack + " parameters", "names");
+    std::vector<std::string> times = strHiscores.getArrayValue(curTrack + " parameters", "lap times");
+    std::vector<std::string> characters = strHiscores.getArrayValue(curTrack + " parameters", "characters");
+
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        float time;
+        Conversions::DMFromString(times[q], time);
+
+        mOptionHighScoresTable2Label[q]->setCaption(strPowerslide.getCharacterTitle(names[q]));
+        mOptionHighScoresTable3Label[q]->setCaption(Tools::SecondsToString(time));
+
+        std::string iconName = strPowerslide.getValue(characters[q] + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mOptionHighScoresTable4Icon[q]->setMaterialName(matName);
+    }
 }
