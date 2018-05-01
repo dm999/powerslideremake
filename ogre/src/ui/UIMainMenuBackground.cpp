@@ -30,6 +30,10 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", "endchamp.bmp", 
                                 "OriginalBackgroundEndChampionship", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "fruit.bmp", 
+                                "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
+
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
 
@@ -184,6 +188,22 @@ void UIMainMenuBackground::createBackgroundMaterials()
         std::vector<Ogre::String> texName;
         texName.push_back("OriginalBackgroundEndChampionship");
         Ogre::MaterialPtr newMat = CloneMaterial(  "Test/EndChampionshipBackground", 
+                            "Test/Diffuse", 
+                            texName, 
+                            1.0f,
+                            TEMP_RESOURCE_GROUP_NAME);
+        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+    }
+
+    //trophies background
+    {
+        std::vector<Ogre::String> texName;
+        texName.push_back("OriginalBackgroundTrophies");
+        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/TrophiesBackground", 
                             "Test/Diffuse", 
                             texName, 
                             1.0f,

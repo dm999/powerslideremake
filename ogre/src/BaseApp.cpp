@@ -561,16 +561,23 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
         if(mGameModeSwitcher->getMode() == ModeMenu)
         {
-            if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
+            if(mGameModeSwitcher->getSubmenuState() != State_Options_Trophies)
             {
-                if(!isOnEsc)
-                    mShutDown = true;
+                if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
+                {
+                    if(!isOnEsc)
+                        mShutDown = true;
+                    else
+                        mGameModeSwitcher->setTopmostSubmenu();
+                }
                 else
-                    mGameModeSwitcher->setTopmostSubmenu();
+                {
+                    if(isOnEsc)
+                    {
+                        mGameModeSwitcher->setSubmenu("Exit the game?");
+                    }
+                }
             }
-            else
-                if(isOnEsc)
-                    mGameModeSwitcher->setSubmenu("Exit the game?");
         }
 
         if(mGameModeSwitcher->getMode() == ModeMenuChampionship)

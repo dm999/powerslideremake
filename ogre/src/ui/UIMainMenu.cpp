@@ -240,7 +240,21 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
+    SinglePlayerMenuStates prevState = mCurrentState;
+
     UIMainMenuLabels::mouseReleased(pos);
+
+    if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
+    {
+        setMainBackgroundMaterial("Test/MainBackground");
+        
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, true);
+        }
+
+        switchState(State_Options);
+    }
 
     if(mCurrentState == State_FinishChampionship)
     {
@@ -508,7 +522,12 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_Options_Trophies:
         mIsInStartingGrid = false;
-        showOptionLabels();
+        setMainBackgroundMaterial("Test/TrophiesBackground");
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
         break;
 
     case State_StartingGrid:
