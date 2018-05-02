@@ -8,13 +8,6 @@
 #include <stdio.h>
 #include <cassert>
 
-#if defined(__ANDROID__)
-    #include <android/log.h>
-
-    #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
-    #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
-#endif
-
 #ifdef NDEBUG
 #define ENABLE_AL_CHECK 0
 #else

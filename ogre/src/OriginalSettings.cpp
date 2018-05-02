@@ -760,7 +760,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
     mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
     mSTR.SetValue("", "camera setting", Conversions::DMToString(globalData.cameraPos).c_str());
-    mSTR.SetValue("", "sound fx volume", Conversions::DMToString(static_cast<size_t>(globalData.fxVolume / 9.0f)).c_str());
+    mSTR.SetValue("", "sound fx volume", Conversions::DMToString(static_cast<size_t>(globalData.fxVolume * 9.0f)).c_str());
 
     const std::string section = globalData.playerName + " parameters";
 
