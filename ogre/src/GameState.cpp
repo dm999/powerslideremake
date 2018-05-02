@@ -87,6 +87,14 @@ void GameState::initOriginalData()
                 mCameraPos = static_cast<CameraPositions>(mPlayerSettings.getIntValue("", "camera setting", static_cast<int>(mCameraPos)));
                 loadPlayerData();
                 setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mGameLevel);
+                if(!isAITrack())
+                {
+                    setAICountInRace(0);
+                }
+                else
+                {
+                    setAICountInRace(mAiOpponentsAmount);
+                }
                 mPSPlayerCar.setCharacterName(mPlayerSettings.getValue("", "character choice", "frantic"));
 
                 mOriginalDataInited = true;
@@ -243,6 +251,15 @@ std::string GameState::getTrackNameAsOriginal() const
         res = "speedway track";
 
     return res;
+}
+
+bool GameState::isAITrack() const
+{
+    return 
+        mTrackName != "stunt track"         &&
+        mTrackName != "luge track"          &&
+        mTrackName != "Foxnhound1 track"    &&
+        mTrackName != "Foxnhound2 track";
 }
 
 const PSAICar& GameState::getAICar(size_t index)const

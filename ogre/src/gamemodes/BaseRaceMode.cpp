@@ -318,6 +318,11 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
     if(loaderListener)
         loaderListener->loadState(0.14f, "PHY loaded");
 
+    //init multiplayer (before AILoader().load due to getAICountInRace dependance)
+    {
+        customInitScene();
+    }
+
     {
         bool isDebugAI = mLuaManager.ReadScalarBool("Terrain.Scene.IsDebugAI", mModeContext.mPipeline);
 
@@ -325,11 +330,6 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
         if(loaderListener)
             loaderListener->loadState(0.18f, "AI loaded");
-    }
-
-    //init multiplayer
-    {
-        customInitScene();
     }
 
     ParticlesLoader().load(mModeContext.mGameState);

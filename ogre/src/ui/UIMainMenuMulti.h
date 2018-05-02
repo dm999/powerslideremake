@@ -81,7 +81,6 @@ private:
     void switchTrack(size_t trackIndex);
     void switchCar(size_t carIndex);
     void switchCharacter(size_t characterIndex);
-    bool isAITrack() const;
     std::string getLapsCountString() const;
     std::string getAIStrengthString() const;
     std::string getCarString() const;

@@ -507,7 +507,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
     characterCar = strPowerslide.getBaseCarFromCar(characterCar);
     selectCar(characterCar);
 
-    hostTrackUpdate(mModeContext.getGameState().getAICount());
+    hostTrackUpdate(mModeContext.getGameState().getAICountInRace());
 
 
 #if 0
@@ -808,7 +808,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
 {
     if(index >= mPlayerToChatList.size())
     {
-        if(isAITrack())
+        if(mModeContext.getGameState().isAITrack())
         {
             //increase
             if(
@@ -820,8 +820,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                 )
             {
                 mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
-                mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() + 1);
-                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() + 1);
                 static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
                 updateRoomState();
             }
@@ -834,8 +833,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                     )
                 {
                     mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
-                    mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() - 1);
-                    mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+                    mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() - 1);
                     static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
                     updateRoomState();
                 }
@@ -1151,7 +1149,7 @@ void UIMainMenuMulti::switchTrack(size_t trackIndex)
     mModeContext.getGameState().setRaceParameters(availTracks[trackIndex], mModeContext.getGameState().getAIStrength());
     mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[trackIndex]));
     mLapsCount->setCaption(getLapsCountString());
-    if(!isAITrack())
+    if(!mModeContext.getGameState().isAITrack())
     {
         mModeContext.getGameState().setAICountInRace(0);
         hostTrackUpdate(0);
@@ -1204,20 +1202,11 @@ void UIMainMenuMulti::switchCharacter(size_t characterIndex)
         updateRoomState();
 }
 
-bool UIMainMenuMulti::isAITrack() const
-{
-    return 
-        mModeContext.getGameState().getTrackName() != "stunt track"         &&
-        mModeContext.getGameState().getTrackName() != "luge track"          &&
-        mModeContext.getGameState().getTrackName() != "Foxnhound1 track"    &&
-        mModeContext.getGameState().getTrackName() != "Foxnhound2 track";
-}
-
 std::string UIMainMenuMulti::getLapsCountString() const
 {
     std::string ret = "N/A";
 
-    if(isAITrack())
+    if(mModeContext.getGameState().isAITrack())
     {
         ret = Conversions::DMToString(mModeContext.getGameState().getLapsCount());
     }

@@ -330,12 +330,27 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
     {
         if(mGameModeSelected == ModeMenu)
         {
+            if(!mModeContext.getGameState().isAITrack())
+            {
+                mModeContext.getGameState().setAICountInRace(0);
+            }
+            else
+            {
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+            }
             switchState(State_StartingGrid);
+        }
+
+        if(mGameModeSelected == ModeMenuTimetrial)
+        {
+            mModeContext.getGameState().setAICountInRace(0);
+            startRace();
         }
 
         //first step in championship
         if(mGameModeSelected == ModeMenuChampionship && mModeContext.getGameModeSwitcher()->getMode() != ModeMenuChampionship)
         {
+            mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
             mModeContext.getGameState().getChampionship().init();
             switchState(State_StartingGrid);
         }

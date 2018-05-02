@@ -308,7 +308,7 @@ bool MultiplayerControllerMaster::checkAllPlayersReady()const
         }
     }
 
-    if(readyAmount == mAllPlayers.size()) res = true;
+    if(readyAmount == mAllPlayers.size() && readyAmount > 1) res = true;
 
     return res;
 }

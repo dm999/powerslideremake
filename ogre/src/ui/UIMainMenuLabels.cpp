@@ -1392,15 +1392,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         if(mTracksLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mTracksLabels[q], pos, 0))
         {
             mModeContext.getGameState().setRaceParameters(availTracks[q], mModeContext.getGameState().getAIStrength());
-            if(
-                mModeContext.getGameState().getTrackName() == "stunt track"         ||
-                mModeContext.getGameState().getTrackName() == "luge track"          ||
-                mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
-                mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
-                )
-                mModeContext.getGameState().setAICountInRace(0);
-            else
-                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
 
             selectTrack(mModeContext.getGameState().getTrackNameAsOriginal());
 
