@@ -89,6 +89,8 @@ private:
     size_t getCurrentTrackIndex() const;
     size_t getCurrentCarIndex(size_t& total) const;
     size_t getCurrentCarIndex() const;
+    size_t getNextCarIndex() const;
+    size_t getPrevCarIndex() const;
     size_t getCurrentCharacterIndex(size_t& total) const;
     size_t getCurrentCharacterIndex() const;
 

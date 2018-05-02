@@ -603,22 +603,12 @@ void UIMainMenuMulti::onButtonReleased(UIButton * button)
 
     if(button == &mCarValLeft)
     {
-        size_t totalCars;
-        int carIndex = getCurrentCarIndex(totalCars);
-        --carIndex;
-        if(carIndex < 0) carIndex = 0;
-
-        switchCar(carIndex);
+        switchCar(getPrevCarIndex());
     }
 
     if(button == &mCarValRight)
     {
-        size_t totalCars;
-        size_t carIndex = getCurrentCarIndex(totalCars);
-        ++carIndex;
-        if(carIndex >= totalCars) carIndex = totalCars - 1;
-
-        switchCar(carIndex);
+        switchCar(getNextCarIndex());
     }
 
     if(button == &mCharacterValLeft)
@@ -723,12 +713,19 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         if(mAIStrengthVal && mAIStrengthVal->isVisible() && OgreBites::Widget::isCursorOver(mAIStrengthVal, pos, 0))
         {
             size_t strenthIndex = mModeContext.getGameState().getAIStrength();
-            ++strenthIndex;
-            if(strenthIndex > Insane)strenthIndex = Easy;
 
-            mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(strenthIndex), mModeContext.getGameState().getLapsCount());
-            mAIStrengthVal->setCaption(getAIStrengthString());
-            updateRoomState();
+            size_t gameLevel = static_cast<size_t>(mModeContext.getGameState().getGameLevel());
+
+            ++strenthIndex;
+
+            if(strenthIndex <= (gameLevel + 1))
+            {
+                if(strenthIndex > gameLevel)strenthIndex = Easy;
+
+                mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), static_cast<AIStrength>(strenthIndex), mModeContext.getGameState().getLapsCount());
+                mAIStrengthVal->setCaption(getAIStrengthString());
+                updateRoomState();
+            }
         }
     }
 
@@ -1146,20 +1143,22 @@ void UIMainMenuMulti::switchTrack(size_t trackIndex)
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
-    mModeContext.getGameState().setRaceParameters(availTracks[trackIndex], mModeContext.getGameState().getAIStrength());
-    mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[trackIndex]));
-    mLapsCount->setCaption(getLapsCountString());
-    if(!mModeContext.getGameState().isAITrack())
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    int difficultyAvailable = strPowerslide.getIntValue(availTracks[trackIndex] + " parameters", "difficulty available", 0);
+
+    if(difficultyAvailable <= gameLevel)
     {
-        mModeContext.getGameState().setAICountInRace(0);
-        hostTrackUpdate(0);
+        mModeContext.getGameState().setRaceParameters(availTracks[trackIndex], mModeContext.getGameState().getAIStrength());
+        mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[trackIndex]));
+        mLapsCount->setCaption(getLapsCountString());
+        if(!mModeContext.getGameState().isAITrack())
+        {
+            mModeContext.getGameState().setAICountInRace(0);
+            hostTrackUpdate(0);
+        }
+        selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
+        updateRoomState();
     }
-    else
-    {
-        hostTrackUpdate(mModeContext.getGameState().getAICount());
-    }
-    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
-    updateRoomState();
 }
 
 void UIMainMenuMulti::switchCar(size_t carIndex)
@@ -1167,19 +1166,25 @@ void UIMainMenuMulti::switchCar(size_t carIndex)
         const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
         std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
 
-        std::string characterCar = availCars[carIndex];
+        AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+        int difficultyAvailable = strPowerslide.getIntValue(availCars[carIndex] + " parameters", "difficulty available", 0);
 
-        std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+        if(difficultyAvailable <= gameLevel)
+        {
+            std::string characterCar = availCars[carIndex];
 
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
-        mCarVal->setCaption(getCarString());
-        mCharacterVal->setCaption(getCharacterString());
-        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[0] + " parameters", "icon", "car0_0s.bmp");
-        std::string matName = "Test/" + iconName;
-        mMainCarIcons[0]->setMaterialName(matName);
-        selectCar(characterCar);
+            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
 
-        updateRoomState();
+            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
+            mCarVal->setCaption(getCarString());
+            mCharacterVal->setCaption(getCharacterString());
+            std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[0] + " parameters", "icon", "car0_0s.bmp");
+            std::string matName = "Test/" + iconName;
+            mMainCarIcons[0]->setMaterialName(matName);
+            selectCar(characterCar);
+
+            updateRoomState();
+        }
 }
 
 void UIMainMenuMulti::switchCharacter(size_t characterIndex)
@@ -1191,15 +1196,21 @@ void UIMainMenuMulti::switchCharacter(size_t characterIndex)
 
         std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
 
-        mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[characterIndex]);
-        std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[characterIndex] + " parameters", "icon", "car0_0s.bmp");
-        std::string matName = "Test/" + iconName;
-        mMainCarIcons[0]->setMaterialName(matName);
+        AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+        int difficultyAvailable = strPowerslide.getIntValue(availChars[characterIndex] + " parameters", "difficulty available", 0);
 
-        mCharacterVal->setCaption(getCharacterString());
-        selectCar(characterCar);
+        if(difficultyAvailable <= gameLevel)
+        {
+            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[characterIndex]);
+            std::string iconName = mModeContext.getGameState().getSTRPowerslide().getValue(availChars[characterIndex] + " parameters", "icon", "car0_0s.bmp");
+            std::string matName = "Test/" + iconName;
+            mMainCarIcons[0]->setMaterialName(matName);
 
-        updateRoomState();
+            mCharacterVal->setCaption(getCharacterString());
+            selectCar(characterCar);
+
+            updateRoomState();
+        }
 }
 
 std::string UIMainMenuMulti::getLapsCountString() const
@@ -1316,6 +1327,43 @@ size_t UIMainMenuMulti::getCurrentCarIndex() const
 {
     size_t total;
     return getCurrentCarIndex(total);
+}
+
+size_t UIMainMenuMulti::getNextCarIndex() const
+{
+    size_t totalCars;
+    size_t carIndex = getCurrentCarIndex(totalCars);
+    ++carIndex;
+    if(carIndex >= totalCars) carIndex = totalCars - 1;
+
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+    int difficultyAvailable = strPowerslide.getIntValue(availCars[carIndex] + " parameters", "difficulty available", 0);
+    if(difficultyAvailable > gameLevel && carIndex != 6)
+    {
+        ++carIndex;
+    }
+
+    return carIndex;
+}
+
+size_t UIMainMenuMulti::getPrevCarIndex() const
+{
+    int carIndex = getCurrentCarIndex();
+    --carIndex;
+    if(carIndex < 0) carIndex = 0;
+
+    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+    int difficultyAvailable = strPowerslide.getIntValue(availCars[carIndex] + " parameters", "difficulty available", 0);
+    if(difficultyAvailable > gameLevel && carIndex != 1)
+    {
+        --carIndex;
+    }
+
+    return carIndex;
 }
 
 size_t UIMainMenuMulti::getCurrentCharacterIndex(size_t& total) const
