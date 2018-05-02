@@ -20,34 +20,34 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
     switch(gameState.getAIStrength())
     {
     case Medium :
-        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
+        aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
         aiIndexes = getMediumIndexes();
         break;
     case Hard :
-        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
+        aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
         aiIndexes = getHardIndexes();
         break;
     case Insane :
-        aiLinearIndexes = getLinearInsaneIndexes(gameState.getAICount());
+        aiLinearIndexes = getLinearInsaneIndexes(gameState.getAICountInRace());
         aiIndexes = getHardIndexes();
         break;
     default:
-        aiLinearIndexes = getLinearIndexes(gameState.getAICount());
+        aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
         aiIndexes = getEasyIndexes();
     }
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
 
-    for(size_t q = 0; q < gameState.getAICount(); ++q)
+    for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]]);
+        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]]);
     }
 
-    for(size_t q = 0; q < gameState.getAICount(); ++q)
+    for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
         if(gameState.getAIStrength() == Insane)
-            resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]));
+            resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
         else
-            resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICount() - q - 1]]));
+            resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
     }
 
     //solve collision

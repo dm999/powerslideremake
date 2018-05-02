@@ -98,6 +98,9 @@ public:
     void setAICount(size_t opponentsAmount);
     size_t getAICount()const{return mAiOpponentsAmount;}
 
+    void setAICountInRace(size_t opponentsAmount);
+    size_t getAICountInRace()const{return mAiOpponentsAmountInRace;}
+
     AIStrength getAIStrength()const{return mAIStrength;}
 
     Ogre::Vector3 getPLayerCarPrevVel()const{return mPlayerCarPrevVel;}
@@ -220,6 +223,7 @@ private:
 
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;
+    size_t mAiOpponentsAmountInRace;
     std::vector<std::string> mAICharacters;
     AIStrength mAIStrength;
     PSAICar mPSCar[mAIMax];

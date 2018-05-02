@@ -352,7 +352,7 @@ void BaseRaceMode::clearScene()
     //clear sounds of cars as well
     mModeContext.mGameState.getPlayerCar().clear();
     mModeContext.mGameState.getPlayerCar().deinitSounds();
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
     {
         mModeContext.mGameState.getAICar(q).clear();
         mModeContext.mGameState.getAICar(q).deinitSounds();
@@ -458,7 +458,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         loaderListener->loadState(0.8f, "player model loading");
 
     mModeContext.mGameState.getPlayerCar().initModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mWorld.get(), mModeContext.mGameState.getPlayerCar().getCharacterName(), 
-        mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICount()], 
+        mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICountInRace()], 
         !isCamToAI);
     mModeContext.mGameState.getPlayerCar().initSounds(mModeContext.mPipeline, mModeContext.mGameState);
 
@@ -469,7 +469,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
 
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
     {
         PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
 
@@ -486,7 +486,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         aiCar.getLapUtils().setEvents(NULL);
 
         if(loaderListener)
-            loaderListener->loadState(0.81f + 0.09f * static_cast<float>(q) / static_cast<float>(mModeContext.mGameState.getAICount()), "ai model loaded");
+            loaderListener->loadState(0.81f + 0.09f * static_cast<float>(q) / static_cast<float>(mModeContext.mGameState.getAICountInRace()), "ai model loaded");
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Exit");
@@ -626,7 +626,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 #endif
 
         mModeContext.mGameState.getPlayerCar().raceStarted();
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             mModeContext.mGameState.getAICar(q).raceStarted();
         }
@@ -639,7 +639,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         {
             mModeContext.mGameState.getMultiplayerCarHuman(q).getLapUtils().resetLapTimer();
         }
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             mModeContext.mGameState.getAICar(q).getLapUtils().resetLapTimer();
         }
@@ -683,7 +683,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
         Ogre::Real currentPlayerLapPos = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
         mUIRace->setPlayerDashBoardSkin(mModeContext.mGameState);
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             mUIRace->setAIDashBoardSkin(mModeContext.mGameState, q, mModeContext.mGameState.getAICar(q).getCharacterName());
             mUIRace->setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap(), mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition());
@@ -795,7 +795,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
     {
         mModeContext.mGameState.getPlayerCar().processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
 
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             if(!mModeContext.mGameState.getRaceFinished())
                 mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
@@ -829,7 +829,7 @@ void BaseRaceMode::reloadTextures()
 
     mModeContext.mGameState.getPlayerCar().reloadTextures(mModeContext.mGameState);
 
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
     {
         mModeContext.mGameState.getAICar(q).reloadTextures(mModeContext.mGameState);
     }
@@ -901,7 +901,7 @@ void BaseRaceMode::processSounds()
     }
 
     //ai with player crash sounds
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
     {
         if(mModeContext.mGameState.getPlayerCar().isCollideChassis(mModeContext.mGameState.getAICar(q)))
         {
@@ -981,7 +981,7 @@ void BaseRaceMode::unloadResources()
 
     //clear sounds of cars as well
     mModeContext.mGameState.getPlayerCar().deinitSounds();
-    for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         mModeContext.mGameState.getAICar(q).deinitSounds();
 
     customUnloadResources();

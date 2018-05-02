@@ -231,7 +231,7 @@ void AIUtils::calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& game
     cars.reserve(GameState::mRaceGridCarsMax);
 
     cars.push_back(gameState.getPlayerCar().getPhysicsVehicle());
-    for(size_t q = 0; q < gameState.getAICount(); ++q)
+    for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
         cars.push_back(gameState.getAICar(q).getPhysicsVehicle());
     }

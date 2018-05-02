@@ -597,12 +597,12 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
 
     std::vector<std::string> aiNames;
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace(); ++q)
     {
         aiNames.push_back(mModeContext.getGameState().getAICar(q).getCharacterName());
     }
 
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount() + 1; ++q)
+    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
     {
         if(q < aiNames.size())
         {
@@ -620,7 +620,7 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
         mBackgroundCharacterSmall[q]->show();
     }
 
-    for(size_t q = mModeContext.getGameState().getAICount() + 1; q < GameState::mRaceGridCarsMax; ++q)
+    for(size_t q = mModeContext.getGameState().getAICountInRace() + 1; q < GameState::mRaceGridCarsMax; ++q)
     {
         mBackgroundCharacterSmall[q]->setMaterialName("Test/Background_Grid_" + Conversions::DMToString(q));
         mBackgroundCharacterSmall[q]->show();

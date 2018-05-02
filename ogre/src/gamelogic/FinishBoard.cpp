@@ -23,7 +23,7 @@ finishBoardVec FinishBoard::prepareFinishBoard(const ModeContext& modeContext)
         isPlayerFinishRace = true;
     }
 
-    for(size_t q = 0; q < modeContext.getGameState().getAICount(); ++q)
+    for(size_t q = 0; q < modeContext.getGameState().getAICountInRace(); ++q)
     {
         ret.push_back(finishBoardElement(
             isPlayerFinishRace ? lapController.getTotalPosition(q + 1) : q, 
@@ -35,7 +35,7 @@ finishBoardVec FinishBoard::prepareFinishBoard(const ModeContext& modeContext)
 
     //player
     ret.push_back(finishBoardElement(
-        isPlayerFinishRace ? lapController.getTotalPosition(0) : modeContext.getGameState().getAICount(), 
+        isPlayerFinishRace ? lapController.getTotalPosition(0) : modeContext.getGameState().getAICountInRace(), 
         true, 
         isPlayerFinishRace ? modeContext.getGameState().getPlayerCar().getLapUtils().getTotalTime() : 0.0f,
         modeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime(),

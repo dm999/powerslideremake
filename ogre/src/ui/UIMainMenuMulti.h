@@ -92,7 +92,6 @@ private:
     size_t getCurrentCarIndex() const;
     size_t getCurrentCharacterIndex(size_t& total) const;
     size_t getCurrentCharacterIndex() const;
-    size_t mAICountBeforeNonAITrack;
 
     MenuMultiMode * mMenuMultiMode;
 

@@ -36,7 +36,6 @@ namespace{
 
 UIMainMenuMulti::UIMainMenuMulti(const ModeContext& modeContext, MenuMultiMode * menuMultiMode)
     : UIBaseMenu(modeContext, ModeMenu),
-    mAICountBeforeNonAITrack(mModeContext.getGameState().getAICount()),
     mMenuMultiMode(menuMultiMode),
     mEditBoxMessage(50),
     mTrackNameSelected(NULL),
@@ -787,7 +786,7 @@ void UIMainMenuMulti::readySwitcher()
         mModeContext.mGameState.getPlayerCar().getCharacterName(), 
         "", 
         trackName, 
-        mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
+        mModeContext.mGameState.getAICountInRace(), mModeContext.mGameState.getAIStrength(), 
         mModeContext.mGameState.getLapsCount());
 
     bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
@@ -822,6 +821,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
             {
                 mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
                 mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() + 1);
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
                 static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
                 updateRoomState();
             }
@@ -835,12 +835,12 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                 {
                     mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
                     mModeContext.getGameState().setAICount(mModeContext.getGameState().getAICount() - 1);
+                    mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
                     static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
                     updateRoomState();
                 }
             }
 
-            mAICountBeforeNonAITrack = mModeContext.getGameState().getAICount();
         }
     }
 }
@@ -1027,7 +1027,7 @@ void UIMainMenuMulti::hostTrackUpdate(size_t aiCount)
 {
 
     //ai count
-    mModeContext.getGameState().setAICount(aiCount);
+    mModeContext.getGameState().setAICountInRace(aiCount);
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         if(mMainChatButtons[q]->getMaterialName() == "Test/OriginalChatBut2")
@@ -1035,7 +1035,7 @@ void UIMainMenuMulti::hostTrackUpdate(size_t aiCount)
             mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut0");
         }
 
-        if(q >= GameState::mRaceGridCarsMax - mModeContext.getGameState().getAICount())
+        if(q >= GameState::mRaceGridCarsMax - mModeContext.getGameState().getAICountInRace())
         {
             mMainChatButtons[q]->setMaterialName("Test/OriginalChatBut2");
         }
@@ -1069,7 +1069,7 @@ void UIMainMenuMulti::updateRoomState(const std::string& playerMessage)const
             mModeContext.mGameState.getPlayerCar().getCharacterName(), 
             playerMessage, 
             mModeContext.mGameState.getTrackName(), 
-            mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAIStrength(), 
+            mModeContext.mGameState.getAICountInRace(), mModeContext.mGameState.getAIStrength(), 
             mModeContext.mGameState.getLapsCount());
 
         bool success = mMenuMultiMode->getMultiplayerController()->sendLobbyMessage(multiplayerLobbyData, true, 10);
@@ -1106,7 +1106,7 @@ void UIMainMenuMulti::panelHit(Ogre::PanelOverlayElement* panel)
             mMenuMultiMode->recalculateCharacterNames(static_cast<MultiplayerControllerMaster*>(mMenuMultiMode->getMultiplayerController().get())->getAllPlayersSkins());
 
             std::vector<std::string> gameCars;
-            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
             {
                 gameCars.push_back(mModeContext.mGameState.getAICar(q).getCharacterName());
             }
@@ -1153,13 +1153,12 @@ void UIMainMenuMulti::switchTrack(size_t trackIndex)
     mLapsCount->setCaption(getLapsCountString());
     if(!isAITrack())
     {
-        mModeContext.getGameState().setAICount(0);
+        mModeContext.getGameState().setAICountInRace(0);
         hostTrackUpdate(0);
     }
     else
     {
-        mModeContext.getGameState().setAICount(mAICountBeforeNonAITrack);
-        hostTrackUpdate(mAICountBeforeNonAITrack);
+        hostTrackUpdate(mModeContext.getGameState().getAICount());
     }
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
     updateRoomState();

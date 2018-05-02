@@ -34,7 +34,7 @@ void BaseMenuMode::recalculateCharacterNames(const std::vector<std::string>& pla
     std::vector<size_t> resAISlot;
     std::vector<std::string> aiCharacters = RacingGridGeneration().generate(mModeContext.getGameState(), playersCharacters, resAISlot);
     mModeContext.getGameState().setAICharacters(aiCharacters);
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount(); ++q)
+    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace(); ++q)
     {
         mModeContext.getGameState().getAICar(q).setCharacterName(aiCharacters[q]);
         mModeContext.getGameState().getAICar(q).setSlotIndex(resAISlot[q]);

@@ -25,6 +25,7 @@ GameState::GameState() :
     mCameraPos(CameraPosition_ChassisB),
     mOriginalDataInited(false),
     mAiOpponentsAmount(3),
+    mAiOpponentsAmountInRace(3),
     mAIStrength(Easy),
     mLLTObject(NULL),
     mGlobalLight(NULL),
@@ -272,7 +273,12 @@ PSPlayerCar& GameState::getPlayerCar()
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
+    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
+}
+
+void GameState::setAICountInRace(size_t opponentsAmount)
+{
+    mAiOpponentsAmountInRace = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)
@@ -293,7 +299,7 @@ void GameState::setGamePaused()
         Ogre::ControllerManager::getSingleton().setTimeFactor(0.0f);
         mBeforeStartTimer.pause();
         mPSPlayerCar.getLapUtils().pauseLapTimer();
-        for(size_t q = 0; q < mAiOpponentsAmount; ++q)
+        for(size_t q = 0; q < mAiOpponentsAmountInRace; ++q)
         {
             mPSCar[q].getLapUtils().pauseLapTimer();
         }
@@ -306,7 +312,7 @@ void GameState::resetGamePaused()
     Ogre::ControllerManager::getSingleton().setTimeFactor(1.0f);
     mBeforeStartTimer.resume();
     mPSPlayerCar.getLapUtils().resumeLapTimer();
-    for(size_t q = 0; q < mAiOpponentsAmount; ++q)
+    for(size_t q = 0; q < mAiOpponentsAmountInRace; ++q)
     {
         mPSCar[q].getLapUtils().resumeLapTimer();
     }

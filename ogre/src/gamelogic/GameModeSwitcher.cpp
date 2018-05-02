@@ -323,6 +323,9 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
+            mContext.getGameState().setRaceParameters("desert track", mContext.getGameState().getAIStrength());
+            mContext.getGameState().setAICountInRace(mContext.getGameState().getAICount());
+
             mIsInitialLoadPassed = false;//to disable unloader progress
             mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
             mMenuMode->initData(this);

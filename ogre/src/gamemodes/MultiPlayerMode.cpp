@@ -172,7 +172,7 @@ void MultiPlayerMode::customInitScene()
 {
     if(!mModeContext.mGameState.isMultiplayerMaster())
     {
-        mModeContext.mGameState.setAICount(0);
+        mModeContext.mGameState.setAICountInRace(0);
     }
 }
 
@@ -316,7 +316,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameAfterPhysics()
             data.lapPosition = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapPosition();
 
             std::vector<MultiplayerSessionData> dataAI;
-            for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+            for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
             {
                 Ogre::Vector3 aiVel = mModeContext.mGameState.getAICar(q).getLinearImpulse();
                 Ogre::Vector3 aiAngVel = mModeContext.mGameState.getAICar(q).getAngularImpulse();
@@ -384,16 +384,16 @@ void MultiPlayerMode::customFrameRenderingQueuedDo2DUI()
     //AI
     for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
     {
-        mUIRace->setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
-        mUIRace->setDashCarPos(mModeContext.mGameState.getAICount() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapUtils().getLapPosition());
+        mUIRace->setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICountInRace() + q, mModeContext.mGameState.getMultiplayerCarAI(q).getCharacterName());
+        mUIRace->setDashCarPos(mModeContext.mGameState.getAICountInRace() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarAI(q).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarAI(q).getLapUtils().getLapPosition());
     }
 
     //human
     std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
     for(size_t q = 0; q < playerNames.size(); ++q)
     {
-        mUIRace->setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
-        mUIRace->setDashCarPos(mModeContext.mGameState.getAICount() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().getLapPosition());
+        mUIRace->setAIDashBoardSkin(mModeContext.mGameState, mModeContext.mGameState.getAICountInRace() + mModeContext.mGameState.getMultiplayerCountAI() + q, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCharacterName());
+        mUIRace->setDashCarPos(mModeContext.mGameState.getAICountInRace() + mModeContext.mGameState.getMultiplayerCountAI() + q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getCurrentLap(), mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().getLapPosition());
     }
 }
 
@@ -581,7 +581,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
         }
 
         //add AI cars laps listener
-        for(size_t q = 0; q < mModeContext.mGameState.getAICount(); ++q)
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
             CommonIncludes::shared_ptr<MultiplayerAILapFinishController> humanLapsController(new MultiplayerAILapFinishController(mModeContext.mGameState, this, aiCar));

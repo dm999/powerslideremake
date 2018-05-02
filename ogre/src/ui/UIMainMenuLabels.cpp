@@ -98,7 +98,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         if(aiCount >= GameState::mAIMin)
         {
             mModeContext.getGameState().setAICount(aiCount);
-            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+            mModeContext.getGameState().setAICountInRace(aiCount);
+            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICountInRace()));
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -111,7 +112,8 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         if(aiCount <= GameState::mAIMax)
         {
             mModeContext.getGameState().setAICount(aiCount);
-            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+            mModeContext.getGameState().setAICountInRace(aiCount);
+            mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICountInRace()));
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -1396,7 +1398,9 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
                 mModeContext.getGameState().getTrackName() == "Foxnhound1 track"    ||
                 mModeContext.getGameState().getTrackName() == "Foxnhound2 track"
                 )
-                mModeContext.getGameState().setAICount(0);
+                mModeContext.getGameState().setAICountInRace(0);
+            else
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
 
             selectTrack(mModeContext.getGameState().getTrackNameAsOriginal());
 
@@ -1509,7 +1513,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         if(aiCount > GameState::mAIMax) aiCount = GameState::mAIMin;
 
         mModeContext.getGameState().setAICount(aiCount);
-        mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICount()));
+        mModeContext.getGameState().setAICountInRace(aiCount);
+        mOptionRaceLabel_Opponents_Val->setCaption(Conversions::DMToString(mModeContext.getGameState().getAICountInRace()));
     }
 
     if(mOptionRaceLabel_Transmission_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionRaceLabel_Transmission_Val, pos, 0))
@@ -1878,7 +1883,7 @@ void UIMainMenuLabels::showExitLabels(const std::string& title)
 
 void UIMainMenuLabels::showRaceGridCharactersLabels()
 {
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount() + 1; ++q)
+    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
     {
         mRaceGridCharactersLabel[q]->show();
     }
@@ -1905,7 +1910,7 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
     mPodiumTableTitle3Label->show();
     mPodiumTableTitle4Label->show();
 
-    for(size_t q = 0; q < mModeContext.getGameState().getAICount() + 1; ++q)
+    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
     {
         if(finishBoard[q].mIsPlayer)
             mPodiumTable2Label[q]->setCaption(playerName);
