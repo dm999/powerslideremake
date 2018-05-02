@@ -74,6 +74,7 @@ void GameState::initOriginalData()
                 mSTRHiscores.parse(mPFLoaderStore, mDataDir);
 
                 mPlayerSettings.parse(mDataDir);
+                mListenerGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound fx volume", 9)) / 9.0f;
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
                 setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
                 mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
@@ -147,6 +148,7 @@ void GameState::savePlayerData()
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;
     globalData.cameraPos = mCameraPos;
+    globalData.fxVolume = mListenerGain;
 
     globalData.track = mTrackName;
     globalData.character = mPSPlayerCar.getCharacterName();

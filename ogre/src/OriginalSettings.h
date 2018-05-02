@@ -185,6 +185,7 @@ public:
         Ogre::uint32 transmission;
         Ogre::uint32 input;
         Ogre::uint32 cameraPos;
+        Ogre::Real fxVolume;
     };
 
     struct PlayerData

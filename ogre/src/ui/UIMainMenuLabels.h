@@ -45,6 +45,7 @@ protected:
     void showOptionLabels();
     void showOptionGraphicsLabels();
     void showOptionInputLabels();
+    void showOptionSoundLabels();
     void showOptionRaceLabels();
     void showOptionHiscoreLabels();
     void showOptionNameLabels();
@@ -96,6 +97,11 @@ private:
     Ogre::TextAreaOverlayElement * mOptionInputLabel_Type;
     UIButton mInputTypeValLeft;
     UIButton mInputTypeValRight;
+
+    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX;
+    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX_Val;
+    UIButton mSoundVolumeFXValLeft;
+    UIButton mSoundVolumeFXValRight;
 
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;

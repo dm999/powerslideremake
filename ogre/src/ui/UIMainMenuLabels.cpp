@@ -91,6 +91,28 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
 #endif
     }
 
+    if(button == &mSoundVolumeFXValLeft)
+    {
+        size_t gain = mModeContext.getGameState().getListenerGain() * 9.0f;
+        if(gain > 0)
+            --gain;
+        mModeContext.getGameState().setListenerGain(gain / 9.0f);
+        mOptionSoundLabel_VolumeFX_Val->setCaption(Conversions::DMToString(static_cast<size_t>(mModeContext.getGameState().getListenerGain() * 9.0f)));
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == &mSoundVolumeFXValRight)
+    {
+        size_t gain = mModeContext.getGameState().getListenerGain() * 9.0f;
+        if(gain < 9)
+            ++gain;
+        mModeContext.getGameState().setListenerGain(gain / 9.0f);
+        mOptionSoundLabel_VolumeFX_Val->setCaption(Conversions::DMToString(static_cast<size_t>(mModeContext.getGameState().getListenerGain() * 9.0f)));
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
     if(button == &mOpponentsValLeft)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
@@ -675,6 +697,41 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mInputTypeValRight.setButtonOnAction(this);
     }
 
+    //Options Sound
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionSoundLabel_VolumeFX = createTextArea("MainWindowSoundVolumeFXLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionSoundLabel_VolumeFX->setCaption("SoundFX");
+        mOptionSoundLabel_VolumeFX->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionSoundLabel_VolumeFX->setSpaceWidth(9.0f);
+        mOptionSoundLabel_VolumeFX->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionSoundLabel_VolumeFX->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionSoundLabel_VolumeFX->setFontName("SdkTrays/Caption");
+        mOptionSoundLabel_VolumeFX->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionSoundLabel_VolumeFX);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 62.0f, 0.0f, 0.0f);;
+        mOptionSoundLabel_VolumeFX_Val = createTextArea("MainWindowSoundVolumeFXValLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionSoundLabel_VolumeFX_Val->setCaption("");
+        mOptionSoundLabel_VolumeFX_Val->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionSoundLabel_VolumeFX_Val->setSpaceWidth(9.0f);
+        mOptionSoundLabel_VolumeFX_Val->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionSoundLabel_VolumeFX_Val->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionSoundLabel_VolumeFX_Val->setFontName("SdkTrays/Caption");
+        mOptionSoundLabel_VolumeFX_Val->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionSoundLabel_VolumeFX_Val);
+    }
+    {
+        mSoundVolumeFXValLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
+        mSoundVolumeFXValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
+        mSoundVolumeFXValLeft.setButtonOnAction(this);
+
+        mSoundVolumeFXValRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
+        mSoundVolumeFXValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
+        mSoundVolumeFXValRight.setButtonOnAction(this);
+    }
+
 
     //Options Race Opponents
     {
@@ -1252,6 +1309,8 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mFulscreenVal.mousePressed(pos);
     mInputTypeValLeft.mousePressed(pos);
     mInputTypeValRight.mousePressed(pos);
+    mSoundVolumeFXValLeft.mousePressed(pos);
+    mSoundVolumeFXValRight.mousePressed(pos);
     mOpponentsValLeft.mousePressed(pos);
     mOpponentsValRight.mousePressed(pos);
     mMirrorVal.mousePressed(pos);
@@ -1580,6 +1639,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mFulscreenVal.mouseReleased(pos);
     mInputTypeValLeft.mouseReleased(pos);
     mInputTypeValRight.mouseReleased(pos);
+    mSoundVolumeFXValLeft.mouseReleased(pos);
+    mSoundVolumeFXValRight.mouseReleased(pos);
     mOpponentsValLeft.mouseReleased(pos);
     mOpponentsValRight.mouseReleased(pos);
     mMirrorVal.mouseReleased(pos);
@@ -1657,6 +1718,9 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     mInputTypeValLeft.mouseMoved(pos);
     mInputTypeValRight.mouseMoved(pos);
 
+    mSoundVolumeFXValLeft.mouseMoved(pos);
+    mSoundVolumeFXValRight.mouseMoved(pos);
+
     mOpponentsValLeft.mouseMoved(pos);
     mOpponentsValRight.mouseMoved(pos);
 
@@ -1673,6 +1737,8 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mFulscreenVal.destroy(trayMgr);
     mInputTypeValLeft.destroy(trayMgr);
     mInputTypeValRight.destroy(trayMgr);
+    mSoundVolumeFXValLeft.destroy(trayMgr);
+    mSoundVolumeFXValRight.destroy(trayMgr);
     mOpponentsValLeft.destroy(trayMgr);
     mOpponentsValRight.destroy(trayMgr);
     mMirrorVal.destroy(trayMgr);
@@ -1825,6 +1891,17 @@ void UIMainMenuLabels::showOptionInputLabels()
 
     mInputTypeValLeft.show();
     mInputTypeValRight.show();
+}
+
+void UIMainMenuLabels::showOptionSoundLabels()
+{
+    mOptionSoundLabel_VolumeFX_Val->setCaption(Conversions::DMToString(static_cast<size_t>(mModeContext.getGameState().getListenerGain() * 9.0f)));
+
+    mOptionSoundLabel_VolumeFX->show();
+    mOptionSoundLabel_VolumeFX_Val->show();
+
+    mSoundVolumeFXValLeft.show();
+    mSoundVolumeFXValRight.show();
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -2020,6 +2097,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionGraphicsLabel_Resolution_Val->hide();
     mOptionGraphicsLabel_Resolution_Apply->hide();
     mOptionInputLabel_Type->hide();
+    mOptionSoundLabel_VolumeFX->hide();
+    mOptionSoundLabel_VolumeFX_Val->hide();
     mOptionRaceLabel_Opponents->hide();
     mOptionRaceLabel_Opponents_Val->hide();
     mOptionRaceLabel_Transmission->hide();
@@ -2083,6 +2162,8 @@ void UIMainMenuLabels::hideAllLabels()
     mFulscreenVal.hide();
     mInputTypeValLeft.hide();
     mInputTypeValRight.hide();
+    mSoundVolumeFXValLeft.hide();
+    mSoundVolumeFXValRight.hide();
     mOpponentsValLeft.hide();
     mOpponentsValRight.hide();
     mMirrorVal.hide();

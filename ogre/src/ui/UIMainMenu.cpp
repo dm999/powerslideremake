@@ -419,6 +419,7 @@ void UIMainMenu::onNameChange()
     mModeContext.getGameState().loadPlayerData();
     mModeContext.getGameState().savePlayerData();//save selected player
     switchState(State_SingleMulti);
+    selectMode();
 }
 
 void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
@@ -522,6 +523,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Sound:
         mIsInStartingGrid = false;
         showOptionLabels();
+        showOptionSoundLabels();
         break;
 
     case State_Options_Race:
