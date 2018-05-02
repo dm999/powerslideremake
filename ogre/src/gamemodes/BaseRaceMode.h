@@ -127,6 +127,8 @@ protected:
 
 private:
 
+    void beforeStartSequence();
+
     float mShadowLightDistanceFromCar;
 
     bool mIsGlobalReset;

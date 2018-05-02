@@ -23,6 +23,8 @@
 
 #include "../listeners/LoaderListener.h"
 
+#include "../gamelogic/GameModeSwitcher.h"
+
 #include "../cheats/Cheats.h"
 
 #include "../ui/UIRace.h"
@@ -592,68 +594,17 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     customFrameRenderingQueuedDoBegining();
 
-    if( !mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
+    if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
     {
-        mUIRace->setRearViewMirrorPanelShow(false);
-        mUIRace->hideAllStart();
-        mUIRace->showBeforeStart1();
-#ifndef NO_OPENAL
-        mModeContext.mSoundsProcesser.playBeforeStart1();
-#endif
+        beforeStartSequence();
     }
-
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
+    else
     {
-        mUIRace->hideAllStart();
-        mUIRace->showBeforeStart2();
-#ifndef NO_OPENAL
-        mModeContext.mSoundsProcesser.playBeforeStart2();
-#endif
-    }
-
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
-        !mModeContext.mGameState.isGamePaused())
-    {
-        mUIRace->hideAllStart();
-        mUIRace->showBeforeStart3();
-#ifndef NO_OPENAL
-        mModeContext.mSoundsProcesser.playBeforeStart3();
-#endif
-
-        mModeContext.mGameState.getPlayerCar().raceStarted();
-        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+        if(!mModeContext.mGameState.getRaceStarted() && !mModeContext.mGameState.isGamePaused())
         {
-            mModeContext.mGameState.getAICar(q).raceStarted();
-        }
-
-        customFrameRenderingQueuedDoRaceStarted();
-
-        //reset lap timer before race started (for every human player include self, and ai)
-        mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
-        for(int q = 0; q < mModeContext.mGameState.getMaxMultiplayerHumans(); ++q)
-        {
-            mModeContext.mGameState.getMultiplayerCarHuman(q).getLapUtils().resetLapTimer();
-        }
-        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
-        {
-            mModeContext.mGameState.getAICar(q).getLapUtils().resetLapTimer();
-        }
-
-        mModeContext.mGameState.setRaceStarted(true);
-    }
-
-    if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
-    {
-        mUIRace->hideAllStart();
-
-        if(mModeContext.mGameState.getMirrorEnabled() && !mModeContext.mGameState.getRaceFinished())
-        {
-            mUIRace->setRearViewMirrorPanelShow(true);
+            mModeContext.mGameState.getPlayerCar().raceStarted();
+            mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
+            mModeContext.mGameState.setRaceStarted(true);
         }
     }
 
@@ -769,6 +720,74 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameRenderingQueued]: Exit");
+}
+
+void BaseRaceMode::beforeStartSequence()
+{
+    if( !mModeContext.mGameState.getRaceStarted() && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
+        !mModeContext.mGameState.isGamePaused())
+    {
+        mUIRace->setRearViewMirrorPanelShow(false);
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart1();
+#ifndef NO_OPENAL
+        mModeContext.mSoundsProcesser.playBeforeStart1();
+#endif
+    }
+
+    if(!mModeContext.mGameState.getRaceStarted() && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
+        !mModeContext.mGameState.isGamePaused())
+    {
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart2();
+#ifndef NO_OPENAL
+        mModeContext.mSoundsProcesser.playBeforeStart2();
+#endif
+    }
+
+    if(!mModeContext.mGameState.getRaceStarted() && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
+        !mModeContext.mGameState.isGamePaused())
+    {
+        mUIRace->hideAllStart();
+        mUIRace->showBeforeStart3();
+#ifndef NO_OPENAL
+        mModeContext.mSoundsProcesser.playBeforeStart3();
+#endif
+
+        mModeContext.mGameState.getPlayerCar().raceStarted();
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+        {
+            mModeContext.mGameState.getAICar(q).raceStarted();
+        }
+
+        customFrameRenderingQueuedDoRaceStarted();
+
+        //reset lap timer before race started (for every human player include self, and ai)
+        mModeContext.mGameState.getPlayerCar().getLapUtils().resetLapTimer();
+        for(int q = 0; q < mModeContext.mGameState.getMaxMultiplayerHumans(); ++q)
+        {
+            mModeContext.mGameState.getMultiplayerCarHuman(q).getLapUtils().resetLapTimer();
+        }
+        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+        {
+            mModeContext.mGameState.getAICar(q).getLapUtils().resetLapTimer();
+        }
+
+        mModeContext.mGameState.setRaceStarted(true);
+    }
+
+    if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
+    {
+        mUIRace->hideAllStart();
+
+        if(mModeContext.mGameState.getMirrorEnabled() && !mModeContext.mGameState.getRaceFinished())
+        {
+            mUIRace->setRearViewMirrorPanelShow(true);
+        }
+    }
 }
 
 void BaseRaceMode::timeStepBefore(Physics * physics)
@@ -1012,34 +1031,35 @@ void BaseRaceMode::onLapFinished()
         mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
     }
 
-    //race finished
-    if(lap == mModeContext.mGameState.getLapsCount())
+    
+    if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
     {
-        mModeContext.mGameState.resetAfterFinishTimer();
-
-        std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
-        mUIRace->addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
-
-        mModeContext.mGameState.getPlayerCar().setDisableMouse(false);
-        mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(mModeContext.mGameState.getTrackName()));
-        mUIRace->setRearViewMirrorPanelShow(false);
-        mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
-        mModeContext.mGameState.setRaceFinished(true);
-
-        //update hiscores
+        //race finished
+        if(lap == mModeContext.mGameState.getLapsCount())
         {
-            bool isBestBeaten = mModeContext.getGameState().getSTRHiscores().updateTrackTime(
-                mModeContext.getGameState().getTrackNameAsOriginal(),
-                mModeContext.getGameState().getPlayerCar().getCharacterName(),
-                mModeContext.getGameState().getPlayerName(),
-                mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+            mModeContext.mGameState.resetAfterFinishTimer();
 
-            mModeContext.getGameState().saveHiscoresData();
+            std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
+            mUIRace->addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
 
-            if(isBestBeaten)
+            mModeContext.mGameState.getPlayerCar().setDisableMouse(false);
+            mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(mModeContext.mGameState.getTrackName()));
+            mUIRace->setRearViewMirrorPanelShow(false);
+            mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
+            mModeContext.mGameState.setRaceFinished(true);
+
+            //update hiscores
             {
-                std::string bestTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime());
-                mUIRace->addMiscPanelText("Track record updated: [" + bestTime + "]", Ogre::ColourValue::Red);
+                bool isBestBeaten = mModeContext.getGameState().updateHiscores(
+                    mModeContext.getGameState().getPlayerCar().getCharacterName(),
+                    mModeContext.getGameState().getPlayerName(),
+                    mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+
+                if(isBestBeaten)
+                {
+                    std::string bestTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime());
+                    mUIRace->addMiscPanelText("Track record updated: [" + bestTime + "]", Ogre::ColourValue::Red);
+                }
             }
         }
     }

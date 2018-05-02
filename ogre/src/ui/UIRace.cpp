@@ -12,10 +12,10 @@
 #include "../loaders/TextureLoader.h"
 #include "../loaders/TEXLoader.h"
 
+#include "../gamelogic/GameModeSwitcher.h"
+
 #if defined(__ANDROID__)
     #include "../BaseApp.h"
-
-    #include "../gamelogic/GameModeSwitcher.h"
 
     #include <android/log.h>
 
@@ -527,9 +527,12 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         {
             Ogre::Real dashDigitLeftLapDiv = viewportWidth - tachoWidth - dashDigitWidth * 19.5f;
-            Ogre::PanelOverlayElement* tachoLapDigitDiv = createPanel("DashDigitLapDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftLapDiv, dashDigitTopSmall, "Test/DashFont");
-            tachoLapDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
-            dashboard->addChild(tachoLapDigitDiv);
+            mTachoLapDigitDiv = createPanel("DashDigitLapDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftLapDiv, dashDigitTopSmall, "Test/DashFont");
+            mTachoLapDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
+            dashboard->addChild(mTachoLapDigitDiv);
+
+            if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+                mTachoLapDigitDiv->hide();
         }
 
         mDashDigitLeftTotalLap1 = viewportWidth - tachoWidth - dashDigitWidth * 17.5f;
@@ -563,9 +566,12 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
         {
             Ogre::Real dashDigitLeftTotalCarsDiv = viewportWidth - tachoWidth - dashDigitWidth * 28.5f;
-            Ogre::PanelOverlayElement* tachoTotalCarsDigitDiv = createPanel("DashDigitTotalCarsDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCarsDiv, dashDigitTopSmall, "Test/DashFont");
-            tachoTotalCarsDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
-            dashboard->addChild(tachoTotalCarsDigitDiv);
+            mTachoTotalCarsDigitDiv = createPanel("DashDigitTotalCarsDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCarsDiv, dashDigitTopSmall, "Test/DashFont");
+            mTachoTotalCarsDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
+            dashboard->addChild(mTachoTotalCarsDigitDiv);
+
+            if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+                mTachoTotalCarsDigitDiv->hide();
         }
 
 
@@ -1392,7 +1398,11 @@ std::pair<Ogre::Real, Ogre::Real> UIRace::getDashDigitOffsetY(unsigned char digi
 void UIRace::setCurrentLap(unsigned short lap, unsigned short totallap)
 {
     if(lap < 1) lap = 1;
-    if(lap > totallap) lap = totallap;
+
+    if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
+    {
+        if(lap > totallap) lap = totallap;
+    }
 
     unsigned char digit1 = lap % 10;
     unsigned char digit2 = lap / 10 % 10;
@@ -1402,6 +1412,10 @@ void UIRace::setCurrentLap(unsigned short lap, unsigned short totallap)
 
     mDashLap2->hide();
     mDashTotalLap2->hide();
+    if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+    {
+        mDashTotalLap1->hide();
+    }
 
     std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(digit1);
     std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(digit1);
@@ -1431,7 +1445,10 @@ void UIRace::setCurrentLap(unsigned short lap, unsigned short totallap)
 
         mDashTotalLap2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
 
-        mDashTotalLap2->show();
+        if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
+        {
+            mDashTotalLap2->show();
+        }
 
         mDashTotalLap1->setLeft(mDashDigitLeftTotalLap1);
     }
@@ -1450,46 +1467,56 @@ void UIRace::setCarGear(unsigned char gear)
 
 void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
 {
-    mTachoTotalCarsDigit2->hide();
-    mTachoPosDigit2->hide();
-
-    unsigned char digitpos1 = pos % 10;
-    unsigned char digitpos2 = pos / 10 % 10;
-
-    unsigned char digittotal1 = totalcars % 10;
-    unsigned char digittotal2 = totalcars / 10 % 10;
-
-    std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(digitpos1);
-    std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(digitpos1);
-
-    mTachoPosDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-
-    if(pos >= 10)
+    if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
     {
-        texCoordsX = getDashDigitOffsetX(digitpos2);
-        texCoordsY = getDashDigitOffsetY(digitpos2);
+        mTachoTotalCarsDigit2->hide();
+        mTachoPosDigit2->hide();
 
-        mTachoPosDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+        unsigned char digitpos1 = pos % 10;
+        unsigned char digitpos2 = pos / 10 % 10;
 
-        mTachoPosDigit2->show();
+        unsigned char digittotal1 = totalcars % 10;
+        unsigned char digittotal2 = totalcars / 10 % 10;
+
+        std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(digitpos1);
+        std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(digitpos1);
+
+        mTachoPosDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+
+        if(pos >= 10)
+        {
+            texCoordsX = getDashDigitOffsetX(digitpos2);
+            texCoordsY = getDashDigitOffsetY(digitpos2);
+
+            mTachoPosDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+
+            mTachoPosDigit2->show();
+        }
+
+        texCoordsX = getDashDigitOffsetX(digittotal1);
+        texCoordsY = getDashDigitOffsetY(digittotal1);
+
+        mTachoTotalCarsDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+        mTachoTotalCarsDigit1->setLeft(mTachoTotalCarsDigit2->getLeft());
+
+        if(totalcars >= 10)
+        {
+            texCoordsX = getDashDigitOffsetX(digittotal2);
+            texCoordsY = getDashDigitOffsetY(digittotal2);
+
+            mTachoTotalCarsDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+
+            mTachoTotalCarsDigit2->show();
+
+            mTachoTotalCarsDigit1->setLeft(mDashDigitLeftTotalCars1);
+        }
     }
-
-    texCoordsX = getDashDigitOffsetX(digittotal1);
-    texCoordsY = getDashDigitOffsetY(digittotal1);
-
-    mTachoTotalCarsDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-    mTachoTotalCarsDigit1->setLeft(mTachoTotalCarsDigit2->getLeft());
-
-    if(totalcars >= 10)
+    else
     {
-        texCoordsX = getDashDigitOffsetX(digittotal2);
-        texCoordsY = getDashDigitOffsetY(digittotal2);
-
-        mTachoTotalCarsDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-
-        mTachoTotalCarsDigit2->show();
-
-        mTachoTotalCarsDigit1->setLeft(mDashDigitLeftTotalCars1);
+        mTachoTotalCarsDigit2->hide();
+        mTachoTotalCarsDigit1->hide();
+        mTachoPosDigit2->hide();
+        mTachoPosDigit1->hide();
     }
 }
 

@@ -118,13 +118,10 @@ void MultiPlayerMode::onLapFinished()
 
         //update hiscores
         {
-            bool isBestBeaten = mModeContext.getGameState().getSTRHiscores().updateTrackTime(
-                mModeContext.getGameState().getTrackNameAsOriginal(),
+            bool isBestBeaten = mModeContext.getGameState().updateHiscores(
                 mModeContext.getGameState().getPlayerCar().getCharacterName(),
                 mModeContext.getGameState().getPlayerName(),
                 mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
-
-            mModeContext.getGameState().saveHiscoresData();
 
             if(isBestBeaten)
             {
@@ -438,13 +435,10 @@ void MultiPlayerMode::onLobbyMessage(const std::string& player, const Multiplaye
 
         //update hiscores
         {
-            bool isBestBeaten = mModeContext.getGameState().getSTRHiscores().updateTrackTime(
-                mModeContext.getGameState().getTrackNameAsOriginal(),
+            bool isBestBeaten = mModeContext.getGameState().updateHiscores(
                 data.mCharacterName,
                 player,
                 data.mRaceBestTime);
-
-            mModeContext.getGameState().saveHiscoresData();
 
             if(isBestBeaten)
             {

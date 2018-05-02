@@ -47,8 +47,6 @@ public:
     void loadPlayerData();
     void savePlayerData();
 
-    void saveHiscoresData();
-
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
 
@@ -60,6 +58,8 @@ public:
     const STRRacetimes& getSTRRacetimes() const;
     const STRHiscores& getSTRHiscores() const;
     STRHiscores& getSTRHiscores();
+
+    bool updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time);
 
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}

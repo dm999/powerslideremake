@@ -129,12 +129,14 @@ private:
     Ogre::PanelOverlayElement* mTachoTotalCarsDigit2;
     Ogre::PanelOverlayElement* mTachoPosDigit1;
     Ogre::PanelOverlayElement* mTachoPosDigit2;
+    Ogre::PanelOverlayElement* mTachoTotalCarsDigitDiv;
     Ogre::Real mDashDigitLeftTotalCars1;
 
     Ogre::PanelOverlayElement* mDashLap1;
     Ogre::PanelOverlayElement* mDashLap2;
     Ogre::PanelOverlayElement* mDashTotalLap1;
     Ogre::PanelOverlayElement* mDashTotalLap2;
+    Ogre::PanelOverlayElement* mTachoLapDigitDiv;
     Ogre::Real mDashDigitLeftTotalLap1;
 
     Ogre::PanelOverlayElement* mDashLapTime1;

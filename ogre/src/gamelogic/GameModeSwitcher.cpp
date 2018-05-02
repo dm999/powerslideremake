@@ -166,6 +166,14 @@ void GameModeSwitcher::frameEnded()
                 }
             }
         }
+        //update hiscores after time trial
+        if(mGameMode == ModeRaceTimetrial && mGameModeNext == ModeMenuTimetrial)
+        {
+            mContext.getGameState().updateHiscores(
+                mContext.getGameState().getPlayerCar().getCharacterName(),
+                mContext.getGameState().getPlayerName(),
+                mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+        }
 #ifndef NO_MULTIPLAYER
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit && mGameMode == ModeRaceMulti)
         {
@@ -308,7 +316,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mIsLoadPassed = false;
-            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), false, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;

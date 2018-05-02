@@ -166,11 +166,6 @@ void GameState::savePlayerData()
     }
 }
 
-void GameState::saveHiscoresData()
-{
-    mSTRHiscores.save(mDataDir);
-}
-
 void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStrength)
 {
     setRaceParameters(trackName, aiStrength, mSTRPowerslide.getLapsCount(trackName));
@@ -241,6 +236,17 @@ STRHiscores& GameState::getSTRHiscores()
 {
     assert(mOriginalDataInited);
     return mSTRHiscores;
+}
+
+bool GameState::updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time)
+{
+    bool isBestBeaten = mSTRHiscores.updateTrackTime(
+        getTrackNameAsOriginal(),
+        character, playerName, time);
+
+    mSTRHiscores.save(mDataDir);
+
+    return isBestBeaten;
 }
 
 std::string GameState::getTrackNameAsOriginal() const
