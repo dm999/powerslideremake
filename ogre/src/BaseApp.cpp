@@ -435,7 +435,8 @@ void BaseApp::restartRace()
 void BaseApp::enablePause()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+        mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
         mGameModeSwitcher->getMode() == ModeRaceChampionship
         )
     {
@@ -459,7 +460,8 @@ void BaseApp::tabPressed()
 void BaseApp::switchRenderType()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+        mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
         mGameModeSwitcher->getMode() == ModeRaceChampionship
         )
     {
@@ -531,9 +533,10 @@ bool BaseApp::setShutdown(bool isOnEsc)
     if(mGameModeSwitcher->isLoadPassed())
     {
         if(
-            mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-            mGameModeSwitcher->getMode() == ModeRaceChampionship  ||
-            mGameModeSwitcher->getMode() == ModeMenuMulti   ||
+            mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+            mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+            mGameModeSwitcher->getMode() == ModeMenuMulti           ||
             mGameModeSwitcher->getMode() == ModeRaceMulti
         )
         {
@@ -542,6 +545,11 @@ bool BaseApp::setShutdown(bool isOnEsc)
                 isOnEsc
                 )
                 mGameModeSwitcher->switchMode(ModeMenu);
+
+            if( mGameModeSwitcher->getMode() == ModeRaceTimetrial  &&
+                isOnEsc
+                )
+                mGameModeSwitcher->switchMode(ModeMenuTimetrial);
 
             if( mGameModeSwitcher->getMode() == ModeRaceChampionship  &&
                 isOnEsc
@@ -615,6 +623,7 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
     if(mGameModeSwitcher->isLoadPassed() && 
             (
             mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+            mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
             mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
             mGameModeSwitcher->getMode() == ModeRaceMulti
             )
@@ -631,6 +640,7 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
     if(mGameModeSwitcher->isLoadPassed() &&
             (
             mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+            mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
             mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
             mGameModeSwitcher->getMode() == ModeRaceMulti
             )
@@ -665,6 +675,7 @@ void BaseApp::mouseMoved(const OIS::MouseEvent &arg)
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
                     mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                    mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
                     mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
                     mGameModeSwitcher->getMode() == ModeRaceMulti
                     )
@@ -694,6 +705,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
                         mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                        mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
                         mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
                         mGameModeSwitcher->getMode() == ModeRaceMulti
                     )
@@ -720,6 +732,7 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
                     mGameModeSwitcher->getMode() == ModeRaceSingle          ||
+                    mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
                     mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
                     mGameModeSwitcher->getMode() == ModeRaceMulti
                     )
@@ -1250,7 +1263,8 @@ void BaseApp::androidPause(JNIEnv * env)
     LOGI("BaseApp[androidPause]: Begin"); 
 
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+        mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
         mGameModeSwitcher->getMode() == ModeRaceChampionship
         )
     {

@@ -77,8 +77,8 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
  */
 void GameModeSwitcher::frameEnded()
 {
-    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceMulti;
-    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceMulti;
+    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceTimetrial ||mGameMode == ModeRaceMulti;
+    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceTimetrial || mGameModeNext == ModeRaceMulti;
 
     if(mIsRecreate)
     {
@@ -224,6 +224,20 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initCamera();
             }
 
+            //timetrial race -> single main menu
+            if(mGameMode == ModeRaceTimetrial)
+            {
+                mGameMode = ModeMenu;
+
+                mMenuMode.reset(new MenuMode(mContext, ModeMenuTimetrial, State_Track));
+                mIsLoadPassed = false;
+                mUIUnloader->show();
+                mMenuMode->initData(this);
+                mUIUnloader->hide();
+                mIsLoadPassed = true;
+                mMenuMode->initCamera();
+            }
+
 #ifndef NO_MULTIPLAYER
             //race -> multi main menu
             if(mGameMode == ModeRaceMulti)
@@ -279,6 +293,24 @@ void GameModeSwitcher::frameEnded()
             mUILoaderChampionship->show(championshipTrack, mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
             mPlayerMode->initData(this);
             mUILoaderChampionship->hide();
+            mIsLoadPassed = true;
+            mPlayerMode->initCamera();
+        }
+
+        //main menu single (timetrial) -> race timetrial
+        if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceTimetrial)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = mGameModeNext;
+
+            //mContext.mTrayMgr->hideCursor();
+
+            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mIsLoadPassed = false;
+            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mPlayerMode->initData(this);
+            mUILoader->hide();
             mIsLoadPassed = true;
             mPlayerMode->initCamera();
         }
@@ -555,7 +587,7 @@ void GameModeSwitcher::loadState(float percent, const std::string& info)
     if(mIsInitialLoadPassed)
         mContext.mInputHandler->capture();
 
-    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceMulti)
+    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceTimetrial || mGameMode == ModeRaceMulti)
     {
         mUILoader->setPercent(percent, info);
     }
@@ -565,7 +597,7 @@ void GameModeSwitcher::loadState(float percent, const std::string& info)
         mUILoaderChampionship->setPercent(percent, info);
     }
 
-    if(mGameMode == ModeMenu || mGameMode == ModeMenuChampionship || mGameMode == ModeMenuMulti)
+    if(mGameMode == ModeMenu || mGameMode == ModeMenuChampionship || mGameMode == ModeMenuTimetrial || mGameMode == ModeMenuMulti)
     {
         if(mIsInitialLoadPassed)
             mUIUnloader->setPercent(percent, info);

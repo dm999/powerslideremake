@@ -24,6 +24,7 @@ public:
 
 protected:
 
+    void selectMode();
     void selectTrack(const std::string& trackName);
     void selectCar(const std::string& carName);
 

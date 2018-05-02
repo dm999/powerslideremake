@@ -294,6 +294,8 @@ void UIMainMenu::setTopmostSubmenu()
         setControlActive(q, true);
 
     switchState(State_SingleMulti);
+
+    selectMode();
 }
 
 void UIMainMenu::setPodiumSubmenu()
@@ -315,7 +317,10 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
 {
 
     if(panel != NULL && panel->getName() == "Mode")
+    {
         switchState(State_SingleMulti);
+        selectMode();
+    }
 
     if(panel != NULL && panel->getName() == "Track")
         switchState(State_Track);
@@ -396,6 +401,10 @@ void UIMainMenu::startRace()
     if(mGameModeSelected == ModeMenuChampionship)
     {
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceChampionship);
+    }
+    else if(mGameModeSelected == ModeMenuTimetrial)
+    {
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceTimetrial);
     }
     else
     {

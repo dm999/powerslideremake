@@ -111,6 +111,16 @@ void UIBaseMenu::loadCommonTextures(const PFLoader& pfLoaderGameshell)
                                 "OriginalBackgroundSingle", TEMP_RESOURCE_GROUP_NAME,
                                 Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
 
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "champ.bmp", 
+                                "OriginalBackgroundChamp", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
+    TextureLoader().loadChroma( pfLoaderGameshell, 
+                                "data/gameshell", "time.bmp", 
+                                "OriginalBackgroundTimetrial", TEMP_RESOURCE_GROUP_NAME,
+                                Ogre::ColourValue(0.0f, 0.0f, 0.0f), 0.2f);
+
     for(size_t q = 0; q < amountTracks; ++q)
     {
         TextureLoader().loadChroma( pfLoaderGameshell, 
@@ -252,6 +262,36 @@ void UIBaseMenu::createCommonMaterials()
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalBackgroundSingle");
             Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundSingle", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundChamp");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundChampionship", 
+                                "Test/DiffuseTransparent", 
+                                texName, 
+                                1.0f,
+                                TEMP_RESOURCE_GROUP_NAME);
+            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalBackgroundTimetrial");
+            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundTimetrial", 
                                 "Test/DiffuseTransparent", 
                                 texName, 
                                 1.0f,
@@ -457,6 +497,8 @@ void UIBaseMenu::createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogr
             mControls[5]->addChild(mControlsText[5]);
         }
     }//controls
+
+    selectMode();
 }
 
 void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
@@ -555,6 +597,22 @@ void UIBaseMenu::setControlShow(size_t index, bool isShow)
             mControls[index]->hide();
             mControlsText[index]->hide();
         }
+    }
+}
+
+void UIBaseMenu::selectMode()
+{
+    if(mGameModeSelected == ModeMenuChampionship)
+    {
+        mControls[0]->setMaterialName("Test/BackgroundChampionship");
+    }
+    else if(mGameModeSelected == ModeMenuTimetrial)
+    {
+        mControls[0]->setMaterialName("Test/BackgroundTimetrial");
+    }
+    else
+    {
+        mControls[0]->setMaterialName("Test/BackgroundSingle");
     }
 }
 

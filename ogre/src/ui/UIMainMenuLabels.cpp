@@ -1306,13 +1306,15 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     {
         mGameModeSelected = ModeMenuChampionship;
         switchState(State_Difficulty);
+        selectMode();
         return;
     }
 
     if(mModeSingleTypeTimetrial->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeTimetrial, pos, 0))
     {
         mGameModeSelected = ModeMenuTimetrial;
-        //switchState(State_Difficulty);
+        switchState(State_Track);
+        selectMode();
         return;
     }
 
