@@ -507,7 +507,7 @@ void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            if(mControlActivated[q])
+            if(mControlActivated[q] && mControls[q]->isVisible())
             {
                 if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
                 {
@@ -525,7 +525,7 @@ void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            if(mControlActivated[q])
+            if(mControlActivated[q] && mControls[q]->isVisible())
             {
                 mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
                 mControlClicked[q] = false;
@@ -546,7 +546,7 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
     {
         if(mControls[q])
         {
-            if(mControlActivated[q])
+            if(mControlActivated[q] && mControls[q]->isVisible())
             {
                 if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
                 {
