@@ -432,25 +432,6 @@ void BaseApp::restartRace()
         mGameModeSwitcher->restartRace();
 }
 
-void BaseApp::enablePause()
-{
-    if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle      ||
-        mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-        mGameModeSwitcher->getMode() == ModeRaceChampionship
-        )
-    {
-        if(getGameState().isGamePaused())
-        {
-            getGameState().resetGamePaused();
-        }
-        else
-        {
-            getGameState().setGamePaused();
-        }
-    }
-}
-
 void BaseApp::tabPressed()
 {
     if(mGameModeSwitcher->isLoadPassed())
@@ -532,6 +513,7 @@ bool BaseApp::setShutdown(bool isOnEsc)
 {
     if(mGameModeSwitcher->isLoadPassed())
     {
+        //in race
         if(
             mGameModeSwitcher->getMode() == ModeRaceSingle          ||
             mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
@@ -541,30 +523,37 @@ bool BaseApp::setShutdown(bool isOnEsc)
         )
         {
 
-            if( mGameModeSwitcher->getMode() == ModeRaceSingle  &&
-                isOnEsc
-                )
-                mGameModeSwitcher->switchMode(ModeMenu);
+            if(isOnEsc)
+            {
+                if(
+                    mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+                    mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
+                    mGameModeSwitcher->getMode() == ModeRaceChampionship
+                    )
+                {
+                    if(getGameState().isGamePaused())
+                    {
+                        if(mGameModeSwitcher->getMode() == ModeRaceSingle)
+                            mGameModeSwitcher->switchMode(ModeMenu);
 
-            if( mGameModeSwitcher->getMode() == ModeRaceTimetrial  &&
-                isOnEsc
-                )
-                mGameModeSwitcher->switchMode(ModeMenuTimetrial);
+                        if(mGameModeSwitcher->getMode() == ModeRaceTimetrial)
+                            mGameModeSwitcher->switchMode(ModeMenuTimetrial);
 
-            if( mGameModeSwitcher->getMode() == ModeRaceChampionship  &&
-                isOnEsc
-                )
-                mGameModeSwitcher->switchMode(ModeMenuChampionship);
+                        if(mGameModeSwitcher->getMode() == ModeRaceChampionship)
+                            mGameModeSwitcher->switchMode(ModeMenuChampionship);
+                    }
+                    else
+                    {
+                        getGameState().setGamePaused();
+                    }
+                }
 
-            if( mGameModeSwitcher->getMode() == ModeMenuMulti    &&
-                isOnEsc
-                )
-                mGameModeSwitcher->switchMode(ModeMenu);
+                if(mGameModeSwitcher->getMode() == ModeMenuMulti)
+                    mGameModeSwitcher->switchMode(ModeMenu);
 
-            if( mGameModeSwitcher->getMode() == ModeRaceMulti   &&
-                isOnEsc
-                )
-                mGameModeSwitcher->switchMode(ModeMenuMulti);
+                if(mGameModeSwitcher->getMode() == ModeRaceMulti)
+                    mGameModeSwitcher->switchMode(ModeMenuMulti);
+            }
         }
 
         if(mGameModeSwitcher->getMode() == ModeMenu)
@@ -647,6 +636,18 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
         )
     {
         mGameState.getPlayerCar().keyUp(arg.key);
+    }
+
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+        mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
+        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        )
+    {
+        if(getGameState().isGamePaused() && arg.key == OIS::KC_RETURN)
+        {
+            getGameState().resetGamePaused();
+        }
     }
 
     if(mGameModeSwitcher->isLoadPassed())
@@ -742,6 +743,18 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
                     mGameState.getPlayerCar().mouseReleased(id);
             }
         }
+
+        if(
+            mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+            mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship
+            )
+        {
+            if(getGameState().isGamePaused())
+            {
+                getGameState().resetGamePaused();
+            }
+        }
     }
 }
 #else
@@ -787,6 +800,18 @@ void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
             LOGI("BaseApp[touchPressed]: %d %d", arg.state.X.abs, arg.state.Y.abs); 
             mTrayMgr->injectMouseUp(arg);
             mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+        }
+
+        if(
+            mGameModeSwitcher->getMode() == ModeRaceSingle      ||
+            mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
+            mGameModeSwitcher->getMode() == ModeRaceChampionship
+            )
+        {
+            if(getGameState().isGamePaused())
+            {
+                getGameState().resetGamePaused();
+            }
         }
     }
 
