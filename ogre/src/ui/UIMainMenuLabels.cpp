@@ -1441,7 +1441,15 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
             mModeContext.getGameState().savePlayerData();
 
-            switchState(State_StartingGrid);
+            if(mGameModeSelected == ModeMenuTimetrial)
+            {
+                mModeContext.getGameState().setAICountInRace(0);
+                startRace();
+            }
+            else
+            {
+                switchState(State_StartingGrid);
+            }
             return;
         }
     }

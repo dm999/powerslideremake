@@ -240,11 +240,15 @@ STRHiscores& GameState::getSTRHiscores()
 
 bool GameState::updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time)
 {
-    bool isBestBeaten = mSTRHiscores.updateTrackTime(
-        getTrackNameAsOriginal(),
-        character, playerName, time);
+    bool isBestBeaten = false;
 
-    mSTRHiscores.save(mDataDir);
+    if(time > 0.0f)
+    {
+        isBestBeaten = mSTRHiscores.updateTrackTime(getTrackNameAsOriginal(),
+            character, playerName, time);
+
+        mSTRHiscores.save(mDataDir);
+    }
 
     return isBestBeaten;
 }
