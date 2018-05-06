@@ -410,6 +410,19 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mModeSingleDifficultyInsane);
     }
 
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 350.0f, 0.0f, 0.0f);
+        mSingleTrackBestTime = createTextArea("MainWindowSingleTrackBestTime", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackBestTime->setCaption("");
+        mSingleTrackBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackBestTime->setSpaceWidth(9.0f);
+        mSingleTrackBestTime->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackBestTime->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleTrackBestTime->setFontName("SdkTrays/Caption");
+        mSingleTrackBestTime->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mSingleTrackBestTime);
+    }
+
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
     std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
@@ -1707,6 +1720,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
         if(isOver)
         {
             setTrackLogo(q);
+            setTrackBestTime(q);
         }
     }
 
@@ -1827,6 +1841,8 @@ void UIMainMenuLabels::showTrackLabels()
             mTracksLabels[q]->show();
         }
     }
+
+    mSingleTrackBestTime->show();
 }
 
 void UIMainMenuLabels::showCarLabels()
@@ -2108,6 +2124,8 @@ void UIMainMenuLabels::hideAllLabels()
     mModeSingleDifficultyExpert->hide();
     mModeSingleDifficultyInsane->hide();
 
+    mSingleTrackBestTime->hide();
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
         mTracksLabels[q]->hide();
 
@@ -2203,6 +2221,30 @@ void UIMainMenuLabels::hideAllLabels()
     mMirrorVal.hide();
     mHighScoresTrackLeft.hide();
     mHighScoresTrackRight.hide();
+}
+
+void UIMainMenuLabels::setCurrentTrackBestTime()
+{
+    setTrackBestTime(mRemapTrack[mModeContext.getGameState().getTrackNameAsOriginal()]);
+}
+
+void UIMainMenuLabels::setTrackBestTime(size_t index)
+{
+    const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    std::string curTrack = availTracks[index];
+    if(index == 8)
+        curTrack = availTracks[index + 1];
+
+    float time;
+    std::vector<std::string> times = strHiscores.getArrayValue(curTrack + " parameters", "lap times");
+
+    Conversions::DMFromString(times[0], time);
+
+    mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

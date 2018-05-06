@@ -57,6 +57,9 @@ protected:
     void showMultiIPLabels();
     void hideAllLabels();
 
+    void setCurrentTrackBestTime();
+    void setTrackBestTime(size_t index);
+
     void setColorMultiIP(const Ogre::ColourValue& val){mModeMultiIP->setColour(val);}
     void setColorMultiUserName(const Ogre::ColourValue& val){mModeMultiUserName->setColour(val);}
     void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
@@ -78,6 +81,8 @@ private:
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane;
+
+    Ogre::TextAreaOverlayElement * mSingleTrackBestTime;
 
 
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
