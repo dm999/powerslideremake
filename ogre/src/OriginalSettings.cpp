@@ -292,53 +292,117 @@ std::string STRPowerslide::getCarTitle(const std::string& car)const
 
 std::string STRPowerslide::getCharacterTitle(const std::string& character)
 {
-    std::map<std::string, std::string> originalToTitle;
-    originalToTitle["frantic"] = "Fran Tick";
-    originalToTitle["cyber"] = "Cyberasta";
-    originalToTitle["radiation"] = "Radiation Boy";
-    originalToTitle["zig"] = "Blade";
-    originalToTitle["zag"] = "Chain";
-    originalToTitle["beryl"] = "Feryl";
-    originalToTitle["stig"] = "Stig Mata";
+    static std::map<std::string, std::string> originalToTitle;
 
-    originalToTitle["dodgy"] = "Dodgy Dave";
-    originalToTitle["pepper"] = "Boris";
-    originalToTitle["colonel"] = "Colonel Slanders";
-    originalToTitle["furnace"] = "Furnace Chan";
-    originalToTitle["pablo"] = "Pablo Martinez";
-    originalToTitle["dwayne"] = "Dwayne Schmitt";
-    originalToTitle["massie"] = "Chopper";
+    if(originalToTitle.empty())
+    {
+        originalToTitle["frantic"] = "Fran Tick";
+        originalToTitle["cyber"] = "Cyberasta";
+        originalToTitle["radiation"] = "Radiation Boy";
+        originalToTitle["zig"] = "Blade";
+        originalToTitle["zag"] = "Chain";
+        originalToTitle["beryl"] = "Feryl";
+        originalToTitle["stig"] = "Stig Mata";
 
-    originalToTitle["jean"] = "Jean-Marc Laplace";
-    originalToTitle["hemp"] = "Hemp Girl";
-    originalToTitle["hardy"] = "Hardy Buckmeister";
-    originalToTitle["bill"] = "William Grates";
-    originalToTitle["upjohn"] = "Upjohn Worthington";
-    originalToTitle["bendito"] = "Bendito Mescalini";
+        originalToTitle["dodgy"] = "Dodgy Dave";
+        originalToTitle["pepper"] = "Boris";
+        originalToTitle["colonel"] = "Colonel Slanders";
+        originalToTitle["furnace"] = "Furnace Chan";
+        originalToTitle["pablo"] = "Pablo Martinez";
+        originalToTitle["dwayne"] = "Dwayne Schmitt";
+        originalToTitle["massie"] = "Chopper";
 
-    originalToTitle["marl"] = "Mal Burro";
-    originalToTitle["yukio"] = "Yukio";
-    originalToTitle["bimbeau"] = "Bimbeau Escargeaugeau";
-    originalToTitle["miki"] = "Miki Yamamoto";
-    originalToTitle["rosie"] = "Rosie Crippler";
-    originalToTitle["cinnamon"] = "Cinnamon Conrad";
+        originalToTitle["jean"] = "Jean-Marc Laplace";
+        originalToTitle["hemp"] = "Hemp Girl";
+        originalToTitle["hardy"] = "Hardy Buckmeister";
+        originalToTitle["bill"] = "William Grates";
+        originalToTitle["upjohn"] = "Upjohn Worthington";
+        originalToTitle["bendito"] = "Bendito Mescalini";
 
-    originalToTitle["crayz"] = "CrayZ 1000";
-    originalToTitle["mad"] = "Mad Vlad Alexovich";
-    originalToTitle["max"] = "Max Alexovich";
+        originalToTitle["marl"] = "Mal Burro";
+        originalToTitle["yukio"] = "Yukio";
+        originalToTitle["bimbeau"] = "Bimbeau Escargeaugeau";
+        originalToTitle["miki"] = "Miki Yamamoto";
+        originalToTitle["rosie"] = "Rosie Crippler";
+        originalToTitle["cinnamon"] = "Cinnamon Conrad";
 
-    originalToTitle["driverx"] = "Driver X";
-    originalToTitle["chuck"] = "Chuck Schmitt";
-    originalToTitle["punch"] = "Punch";
+        originalToTitle["crayz"] = "CrayZ 1000";
+        originalToTitle["mad"] = "Mad Vlad Alexovich";
+        originalToTitle["max"] = "Max Alexovich";
 
-    originalToTitle["mach"] = "Mach";
-    originalToTitle["armadillo"] = "Armadillo";
-    originalToTitle["alter"] = "Alter";
-    originalToTitle["komodo"] = "Komodo";
-    originalToTitle["panther"] = "Panther";
-    originalToTitle["volt"] = "Volt";
-    originalToTitle["razer"] = "Razer";
-    originalToTitle["argon"] = "Argon";
+        originalToTitle["driverx"] = "Driver X";
+        originalToTitle["chuck"] = "Chuck Schmitt";
+        originalToTitle["punch"] = "Punch";
+
+        originalToTitle["mach"] = "Mach";
+        originalToTitle["armadillo"] = "Armadillo";
+        originalToTitle["alter"] = "Alter";
+        originalToTitle["komodo"] = "Komodo";
+        originalToTitle["panther"] = "Panther";
+        originalToTitle["volt"] = "Volt";
+        originalToTitle["razer"] = "Razer";
+        originalToTitle["argon"] = "Argon";
+    }
+
+
+    std::string res = originalToTitle[character];
+
+    return res;
+}
+
+std::string STRPowerslide::getCharacterFolderForBio(const std::string& character)
+{
+    static std::map<std::string, std::string> originalToTitle;
+
+    if(originalToTitle.empty())
+    {
+        originalToTitle["frantic"] = "twitch";
+        originalToTitle["cyber"] = "rasta!";
+        originalToTitle["radiation"] = "the kid";
+        originalToTitle["zig"] = "blade";
+        originalToTitle["zag"] = "chain";
+        originalToTitle["beryl"] = "feryl";
+        originalToTitle["stig"] = "stig";
+
+        originalToTitle["dodgy"] = "dodgy";
+        originalToTitle["pepper"] = "boris";
+        originalToTitle["colonel"] = "slur";
+        originalToTitle["furnace"] = "burner";
+        originalToTitle["pablo"] = "diablo";
+        originalToTitle["dwayne"] = "gimp";
+        originalToTitle["massie"] = "chopper";
+
+        originalToTitle["jean"] = "skidkid";
+        originalToTitle["hemp"] = "roach";
+        originalToTitle["hardy"] = "hardbuck";
+        originalToTitle["bill"] = "bill";
+        originalToTitle["upjohn"] = "upjohn";
+        originalToTitle["bendito"] = "trip";
+
+        originalToTitle["marl"] = "snort";
+        originalToTitle["yukio"] = "yukio";
+        originalToTitle["bimbeau"] = "bimbeau";
+        originalToTitle["miki"] = "buggirl";
+        originalToTitle["rosie"] = "tootsie";
+        originalToTitle["cinnamon"] = "spicey";
+
+        originalToTitle["crayz"] = "crayz";
+        originalToTitle["mad"] = "mad vlad";
+        originalToTitle["max"] = "the axe";
+
+        originalToTitle["driverx"] = "x";
+        originalToTitle["chuck"] = "schmuck";
+        originalToTitle["punch"] = "punch";
+
+        originalToTitle["mach"] = "";
+        originalToTitle["armadillo"] = "";
+        originalToTitle["alter"] = "";
+        originalToTitle["komodo"] = "";
+        originalToTitle["panther"] = "";
+        originalToTitle["volt"] = "";
+        originalToTitle["razer"] = "";
+        originalToTitle["argon"] = "";
+    }
 
 
     std::string res = originalToTitle[character];

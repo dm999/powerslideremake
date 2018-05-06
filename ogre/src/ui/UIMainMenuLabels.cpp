@@ -1302,7 +1302,35 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     //Track description, bio`s
     if(mModeContext.getGameState().isPatchDataInited())
     {
-        std::string desc = getTextFileContent("data/tracks/desert", "english.blah");
+        mTrackDesc.clear();
+        mCharacterDesc.clear();
+
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+        for(size_t q = 0; q < availTracks.size(); ++q)
+        {
+            std::string desc = getTextFileContent("data/tracks/" + strPowerslide.getBaseDir(availTracks[q]), "english.blah");
+            if(!desc.empty())
+            {
+                mTrackDesc.insert(std::make_pair(availTracks[q], desc));
+            }
+        }
+
+        std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+
+        for(size_t q = 0; q < availableCharacters.size(); ++q)
+        {
+            std::string folder = strPowerslide.getCharacterFolderForBio(availableCharacters[q]);
+            if(!folder.empty())
+            {
+                std::string desc = getTextFileContent("data/gameshell/bios/" + folder, "english.blah");
+                if(!desc.empty())
+                {
+                    mCharacterDesc.insert(std::make_pair(availableCharacters[q], desc));
+                }
+            }
+        }
     }
 }
 

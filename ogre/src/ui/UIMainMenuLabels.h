@@ -170,6 +170,9 @@ private:
     Ogre::TextAreaOverlayElement * mModeMultiRoomName;
     Ogre::TextAreaOverlayElement * mModeMultiCreateRoom;
     Ogre::TextAreaOverlayElement * mModeMultiJoinRoom;
+
+    std::map<std::string, std::string> mTrackDesc;
+    std::map<std::string, std::string> mCharacterDesc;
 };
 
 #endif
