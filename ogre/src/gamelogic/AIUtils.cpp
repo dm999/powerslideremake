@@ -59,7 +59,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
 
     calcFeatures(physicsAICar, gameState, initialVehicleSetup);
     inference(steeringVal, accelerationVal);
-    adjustInferenceResults(steeringVal, accelerationVal, breaksVal, gameState.getTrackName(), afterStartCounter);
+    adjustInferenceResults(steeringVal, accelerationVal, breaksVal, gameState, afterStartCounter);
 
     if(gameState.getRaceStarted())
     {
@@ -289,10 +289,10 @@ void AIUtils::calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& game
     mPrevRot = carRotV[0];
 }
 
-void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float& breaks, const std::string& trackName, Ogre::int32 afterStartCounter) const
+void AIUtils::adjustInferenceResults(float& steering, float& acceleration, float& breaks, const GameState& gameState, Ogre::int32 afterStartCounter) const
 {
-    bool isMineshafted = trackName == "mineshaft";
-    bool isSpeedway = (trackName == "speedway track") || (trackName == "speedway night track");
+    bool isMineshafted = gameState.isMineshaftedTrack();
+    bool isSpeedway = gameState.isSpeedwayTrack();
 
     if(acceleration > mAIWhole.accelerationCoeff)
         acceleration = mAIWhole.accelerationCoeff;

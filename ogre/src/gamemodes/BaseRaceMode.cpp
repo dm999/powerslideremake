@@ -540,7 +540,13 @@ void BaseRaceMode::initMisc()
     mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNode());
     mModeContext.mGameState.getArrowNode()->setPosition(-0.75f, 0.55f, -1.0f);
     mModeContext.mGameState.getArrowNode()->setScale(0.20f, 0.20f, 0.20f);
-    mModeContext.mGameState.getArrowNode()->setVisible(true);
+    if( !mModeContext.mGameState.isStuntTrack()         &&
+        !mModeContext.mGameState.isFoxnhound1Track()    &&
+        !mModeContext.mGameState.isFoxnhound2Track()
+        )
+        mModeContext.mGameState.getArrowNode()->setVisible(true);
+    else
+        mModeContext.mGameState.getArrowNode()->setVisible(false);
 
     mIsGlobalReset = false;
 
@@ -1103,7 +1109,12 @@ void BaseRaceMode::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
     }
     if(evt.source == mViewPortScene)//for arrow
     {
-        mModeContext.mGameState.getArrowNode()->setVisible(true);
+        if( !mModeContext.mGameState.isStuntTrack()         &&
+            !mModeContext.mGameState.isFoxnhound1Track()    &&
+            !mModeContext.mGameState.isFoxnhound2Track()
+            )
+            mModeContext.mGameState.getArrowNode()->setVisible(true);
+
         mUIRace->setVisible(false);
     }
 }

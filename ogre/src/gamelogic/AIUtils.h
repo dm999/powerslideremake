@@ -46,7 +46,7 @@ private:
     //NN based functions
     void calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& gameState, const InitialVehicleSetup& initialVehicleSetup);
     void inference(float& steering, float& acceleration);//return steering (-1.0 right, 1.0 left)
-    void adjustInferenceResults(float& steering, float& acceleration, float& breaks, const std::string& trackName, Ogre::int32 afterStartCounter) const;
+    void adjustInferenceResults(float& steering, float& acceleration, float& breaks, const GameState& gameState, Ogre::int32 afterStartCounter) const;
 
     size_t getClosestSplinePoint(const Ogre::Vector3& carPos) const;
     size_t getRelativeClosestSplinePoint(const Ogre::Vector3& carPos);

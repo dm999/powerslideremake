@@ -49,6 +49,12 @@ public:
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
 
+    bool isSpeedwayTrack() const {return mIsSpeedwayTrack;}
+    bool isMineshaftedTrack() const {return mIsMineshaftedTrack;}
+    bool isStuntTrack() const {return mIsStuntTrack;}
+    bool isFoxnhound1Track() const {return mIsFoxnhound1Track;}
+    bool isFoxnhound2Track() const {return mIsFoxnhound2Track;}
+
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;
     const PFLoader& getPFLoaderStore() const;
@@ -202,6 +208,11 @@ private:
     AIStrength mGameLevel; //level of available tracks/cars
 
     std::string mTrackName;
+    bool mIsSpeedwayTrack;
+    bool mIsMineshaftedTrack;
+    bool mIsStuntTrack;
+    bool mIsFoxnhound1Track;
+    bool mIsFoxnhound2Track;
     size_t mLapsCount;
 
     TransmissionType mTransmissionType;

@@ -15,6 +15,11 @@ GameState::GameState() :
     mPlayerName("Rasputin"),
     mGameLevel(Easy),
     mTrackName("desert track"),
+    mIsSpeedwayTrack(false),
+    mIsMineshaftedTrack(false),
+    mIsStuntTrack(false),
+    mIsFoxnhound1Track(false),
+    mIsFoxnhound2Track(false),
     mLapsCount(3),
     mTransmissionType(trAuto),
     mIsKMPh(true),
@@ -190,6 +195,27 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     {
         mTrackName = "speedway track";
     }
+
+    mIsSpeedwayTrack = false;
+    mIsMineshaftedTrack = false;
+    mIsStuntTrack = false;
+    mIsFoxnhound1Track = false;
+    mIsFoxnhound2Track = false;
+
+    if(mTrackName == "speedway night track" || mTrackName == "speedway track")
+        mIsSpeedwayTrack = true;
+
+    if(mTrackName == "mineshaft")
+        mIsMineshaftedTrack = true;
+
+    if(mTrackName == "stunt track")
+        mIsStuntTrack = true;
+
+    if(mTrackName == "Foxnhound1 track")
+        mIsFoxnhound1Track = true;
+
+    if(mTrackName == "Foxnhound2 track")
+        mIsFoxnhound2Track = true;
 
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
     mLapsCount = lapsCount;
