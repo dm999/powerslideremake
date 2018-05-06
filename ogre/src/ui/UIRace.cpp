@@ -647,16 +647,15 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPausedPanel);
         mPausedPanel->hide();
 
-        Ogre::Real pausedTextWidth = pausedPanelWidth / 1.5f;
-        Ogre::Real pausedTextHeight = pausedPanelHeight / 10.0f;
         Ogre::Real pausedTextLeft = pausedPanelWidth / 2.0f;
-        Ogre::Real pausedTextTop = pausedPanelHeight / 2.0f - pausedTextHeight / 2.0f;
+        Ogre::Real pausedTextTop = pausedPanelHeight / 2.0f - 36.0f * viewportHeight / 1024.0f / 2;
 
         {
-            Ogre::TextAreaOverlayElement * pauseText = createTextArea("PausedTextBox", pausedTextWidth, pausedTextHeight, pausedTextLeft, pausedTextTop); 
+            Ogre::TextAreaOverlayElement * pauseText = createTextArea("PausedTextBox", 0.0f, 0.0f, pausedTextLeft, pausedTextTop); 
             pauseText->setCaption("PAUSED");
-            pauseText->setCharHeight(16.0f);
+            pauseText->setCharHeight(36.0f * viewportHeight / 1024.0f);
             pauseText->setSpaceWidth(9.0f);
+            pauseText->setHeight(36.0f * viewportHeight / 1024.0f);
             pauseText->setAlignment(Ogre::TextAreaOverlayElement::Center);
             pauseText->setFontName("SdkTrays/Caption");
             pauseText->setColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
@@ -1078,10 +1077,9 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", TEMP_RESOURCE_GROUP_NAME);
 
-    Ogre::TexturePtr chromaTexture = TextureLoader().loadChroma( pfLoaderData, 
+    Ogre::TexturePtr chromaTexture = TextureLoader().load( pfLoaderData, 
                                 "data/misc", "paused_bg.tga", 
-                                "OriginalPaused", TEMP_RESOURCE_GROUP_NAME, 
-                                Ogre::ColourValue::Black, 0.1f);
+                                "OriginalPaused", TEMP_RESOURCE_GROUP_NAME);
 
     Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName("Test/Paused");
     if(!mat.isNull())
