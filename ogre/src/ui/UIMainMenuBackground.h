@@ -39,6 +39,7 @@ protected:
     void showBackgroundFirstSecondThird(){mBackground1st->show();mBackground2nd->show();mBackground3rd->show();}
     void showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard);
     void hideAllBackgrounds();
+    void hideBackgroundTrack(){mBackgroundTrack->hide();}
 
     void setMainBackgroundMaterial(const std::string& material){mMainBackground->setMaterialName(material);}
 

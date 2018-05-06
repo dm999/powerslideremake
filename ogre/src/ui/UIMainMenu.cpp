@@ -491,6 +491,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showTrackLabels();
         setCurrentTrackLogo();
         setCurrentTrackBestTime();
+        setCurrentTrackDescription();
         break;
 
     case State_Car:

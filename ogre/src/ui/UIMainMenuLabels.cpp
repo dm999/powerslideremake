@@ -9,6 +9,11 @@
 
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
+UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
+    UIMainMenuBackground(modeContext, gameMode),
+    mIsViewByDescription(false)
+{}
+
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
 {
     if(button == &mShadowVal)
@@ -411,7 +416,20 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 20.0f, 0.0f, 0.0f);
+        mSingleTrackDescription = createTextArea("MainWindowSingleTrackDescription", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackDescription->setCaption("");
+        mSingleTrackDescription->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackDescription->setSpaceWidth(9.0f);
+        mSingleTrackDescription->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackDescription->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleTrackDescription->setFontName("SdkTrays/Caption");
+        mSingleTrackDescription->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mSingleTrackDescription);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 340.0f, 0.0f, 0.0f);
         mSingleTrackBestTime = createTextArea("MainWindowSingleTrackBestTime", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mSingleTrackBestTime->setCaption("");
         mSingleTrackBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -421,6 +439,32 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mSingleTrackBestTime->setFontName("SdkTrays/Caption");
         mSingleTrackBestTime->setColour(Ogre::ColourValue::White);
         getMainBackground()->addChild(mSingleTrackBestTime);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 360.0f, 0.0f, 0.0f);
+        mSingleTrackViewBy = createTextArea("MainWindowSingleTrackViewBy", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackViewBy->setCaption("View By");
+        mSingleTrackViewBy->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBy->setSpaceWidth(9.0f);
+        mSingleTrackViewBy->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBy->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleTrackViewBy->setFontName("SdkTrays/Caption");
+        mSingleTrackViewBy->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mSingleTrackViewBy);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(70.0f, 360.0f, 0.0f, 0.0f);
+        mSingleTrackViewBySelection = createTextArea("MainWindowSingleTrackViewBySelection", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackViewBySelection->setCaption("Image");
+        mSingleTrackViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBySelection->setSpaceWidth(9.0f);
+        mSingleTrackViewBySelection->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBySelection->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleTrackViewBySelection->setFontName("SdkTrays/Caption");
+        mSingleTrackViewBySelection->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mSingleTrackViewBySelection);
     }
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
@@ -1491,6 +1535,27 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    if(mSingleTrackViewBySelection->isVisible() && OgreBites::Widget::isCursorOver(mSingleTrackViewBySelection, pos, 0))
+    {
+        mIsViewByDescription = !mIsViewByDescription;
+
+        if(mIsViewByDescription)
+        {
+            mSingleTrackViewBySelection->setCaption("Description");
+            hideBackgroundTrack();
+            mSingleTrackDescription->show();
+        }
+        else
+        {
+            mSingleTrackViewBySelection->setCaption("Image");
+            showBackgroundTrack();
+            mSingleTrackDescription->hide();
+        }
+
+
+        return;
+    }
+
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
     std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
@@ -1713,6 +1778,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
     checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
     checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
+    checkCursorOverLabel(pos, mSingleTrackViewBySelection);
 
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
@@ -1721,6 +1787,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
         {
             setTrackLogo(q);
             setTrackBestTime(q);
+            setTrackDescription(q);
         }
     }
 
@@ -1842,7 +1909,17 @@ void UIMainMenuLabels::showTrackLabels()
         }
     }
 
+    mIsViewByDescription = false;
+
     mSingleTrackBestTime->show();
+
+    if(mModeContext.getGameState().isPatchDataInited())
+    {
+        mSingleTrackViewBySelection->setCaption("Image");
+
+        mSingleTrackViewBy->show();
+        mSingleTrackViewBySelection->show();
+    }
 }
 
 void UIMainMenuLabels::showCarLabels()
@@ -2124,7 +2201,10 @@ void UIMainMenuLabels::hideAllLabels()
     mModeSingleDifficultyExpert->hide();
     mModeSingleDifficultyInsane->hide();
 
+    mSingleTrackDescription->hide();
     mSingleTrackBestTime->hide();
+    mSingleTrackViewBy->hide();
+    mSingleTrackViewBySelection->hide();
 
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
         mTracksLabels[q]->hide();
@@ -2245,6 +2325,89 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
     Conversions::DMFromString(times[0], time);
 
     mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
+}
+
+void UIMainMenuLabels::setCurrentTrackDescription()
+{
+    setTrackDescription(mRemapTrack[mModeContext.getGameState().getTrackNameAsOriginal()]);
+}
+
+void UIMainMenuLabels::setTrackDescription(size_t index)
+{
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+    std::string desc = mTrackDesc[availTracks[index]];
+    if(!desc.empty())
+    {
+
+        size_t surfPos = desc.find("Track surface");
+        if(surfPos != std::string::npos)
+        {
+            desc[surfPos - 1] = '\n';
+        }
+
+        surfPos = desc.find("Length:");
+        if(surfPos != std::string::npos)
+        {
+            desc[surfPos - 1] = '\n';
+            desc.insert(surfPos, "\n");
+        }
+
+        //word wrap
+
+        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleTrackDescription->getFontName()).getPointer();
+
+        bool firstWord = true;
+        unsigned int lastSpace = 0;
+        Ogre::Real lineWidth = 0.0f;
+        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleTrackDescription->getLeft() - viewportWidth / 50.0f;
+
+        for(size_t q = 0; q < desc.size(); ++q)
+        {
+            if (desc[q] == ' ')
+            {
+                if (mSingleTrackDescription->getSpaceWidth() != 0) lineWidth += mSingleTrackDescription->getSpaceWidth();
+                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleTrackDescription->getCharHeight();
+
+                firstWord = false;
+                lastSpace = q;
+            }
+            else if (desc[q] == '\n')
+            {
+                firstWord = true;
+                lineWidth = 0;
+            }
+            else
+            {
+                // use glyph information to calculate line width
+                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleTrackDescription->getCharHeight();
+                if (lineWidth > rightBoundary)
+                {
+                    if (firstWord)
+                    {
+                        desc.insert(q, "\n");
+                        q = q - 1;
+                    }
+                    else
+                    {
+                        desc[lastSpace] = '\n';
+                        q = lastSpace - 1;
+                    }
+                }
+            }
+        }
+
+        mSingleTrackDescription->setCaption(desc);
+    }
+    else
+    {
+        mSingleTrackDescription->setCaption("N/A");
+    }
+
 }
 
 bool UIMainMenuLabels::checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label)

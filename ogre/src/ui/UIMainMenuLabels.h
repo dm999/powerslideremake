@@ -8,7 +8,7 @@
 class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction
 {
 public:
-    UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : UIMainMenuBackground(modeContext, gameMode){}
+    UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode);
     ~UIMainMenuLabels(){}
 
     void onButtonPressed(UIButton * button) override {}
@@ -60,6 +60,9 @@ protected:
     void setCurrentTrackBestTime();
     void setTrackBestTime(size_t index);
 
+    void setCurrentTrackDescription();
+    void setTrackDescription(size_t index);
+
     void setColorMultiIP(const Ogre::ColourValue& val){mModeMultiIP->setColour(val);}
     void setColorMultiUserName(const Ogre::ColourValue& val){mModeMultiUserName->setColour(val);}
     void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
@@ -82,7 +85,11 @@ private:
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
     Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane;
 
+    Ogre::TextAreaOverlayElement * mSingleTrackDescription;
     Ogre::TextAreaOverlayElement * mSingleTrackBestTime;
+    Ogre::TextAreaOverlayElement * mSingleTrackViewBy;
+    Ogre::TextAreaOverlayElement * mSingleTrackViewBySelection;
+    bool mIsViewByDescription;
 
 
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
