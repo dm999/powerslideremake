@@ -22,7 +22,14 @@ bool PFLoader::init(const std::string& file, const std::string& dataDir)
 
     Ogre::DataStreamPtr stream;
     if(mDataDir.empty())
-        stream = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
+    {
+        try{
+            stream = Ogre::ResourceGroupManager::getSingleton().openResource( mFileName.c_str(), "PF" );
+        }catch(Ogre::Exception& e)
+        {
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[PFLoader::init]: Init pf file error: " + Ogre::String(e.what()));
+        }
+    }
     else
     {
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[PFLoader::init]: Load from directory " + Ogre::String(mDataDir.c_str()));

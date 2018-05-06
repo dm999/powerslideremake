@@ -1298,6 +1298,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
             getMainBackground()->addChild(mLeaderboardTable4Label[q]);
         }
     }
+
+    //Track description, bio`s
+    if(mModeContext.getGameState().isPatchDataInited())
+    {
+        std::string desc = getTextFileContent("data/tracks/desert", "english.blah");
+    }
 }
 
 void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
@@ -2226,4 +2232,22 @@ void UIMainMenuLabels::fillHighScoreTable()
     else
         mOptionHighScoresEmergentGunLabel->setCaption("");
 
+}
+
+std::string UIMainMenuLabels::getTextFileContent(const std::string& dir, const std::string& filename) const
+{
+    std::string ret = "";
+
+    const PFLoader& patchLoader = mModeContext.getGameState().getPFLoaderPatch();
+    Ogre::DataStreamPtr fileToLoad = patchLoader.getFile(dir, filename);
+    if(fileToLoad.get() && fileToLoad->isReadable())
+    {
+        size_t fileSize = patchLoader.getFileSize(dir, filename);
+        std::vector<char> fileBuffer(fileSize);
+        fileToLoad->read(&fileBuffer[0], fileSize);
+
+        ret = std::string(fileBuffer.begin(), fileBuffer.end());
+    }
+
+    return ret;
 }

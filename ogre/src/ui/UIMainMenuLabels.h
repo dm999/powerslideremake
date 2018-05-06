@@ -63,6 +63,8 @@ protected:
 
 private:
 
+    std::string getTextFileContent(const std::string& dir, const std::string& filename) const;
+
     virtual void onNameChange() = 0;
 
     Ogre::TextAreaOverlayElement * mWindowTitle;

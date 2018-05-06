@@ -24,6 +24,7 @@ GameState::GameState() :
     mIsFullscreen(true),
     mCameraPos(CameraPosition_ChassisB),
     mOriginalDataInited(false),
+    mPatchDataInited(false),
     mAiOpponentsAmount(3),
     mAiOpponentsAmountInRace(3),
     mAIStrength(Easy),
@@ -65,6 +66,8 @@ void GameState::initOriginalData()
         if(isLoaded)
         {
             isLoaded = mPFLoaderStore.init("store.pf", mDataDir);
+
+            mPatchDataInited = mPFLoaderPatch.init("patch.pf", mDataDir);
 
             if(isLoaded)
             {
@@ -208,6 +211,11 @@ const PFLoader& GameState::getPFLoaderStore() const
 {
     assert(mOriginalDataInited);
     return mPFLoaderStore;
+}
+
+const PFLoader& GameState::getPFLoaderPatch() const
+{
+    return mPFLoaderPatch;
 }
 
 const STRPowerslide& GameState::getSTRPowerslide() const

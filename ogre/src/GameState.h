@@ -38,11 +38,10 @@ public:
 
     /**
      * init data to read from *.pf and *.str files
-     * originalPathData - should contain data.pf, gameshell.pf
-     * originalPathCommon - should contain store.pf
      */
     void initOriginalData();
     bool isOriginalDataInited()const {return mOriginalDataInited;}
+    bool isPatchDataInited()const {return mPatchDataInited;}
 
     void loadPlayerData();
     void savePlayerData();
@@ -53,6 +52,7 @@ public:
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;
     const PFLoader& getPFLoaderStore() const;
+    const PFLoader& getPFLoaderPatch() const;
     const STRPowerslide& getSTRPowerslide() const;
     const STRRacecrud& getSTRRacecrud() const;
     const STRRacetimes& getSTRRacetimes() const;
@@ -213,9 +213,11 @@ private:
     CameraPositions mCameraPos;
 
     bool mOriginalDataInited;
+    bool mPatchDataInited;
     PFLoader mPFLoaderData;
     PFLoader mPFLoaderGameshell;
     PFLoader mPFLoaderStore;
+    PFLoader mPFLoaderPatch;
     STRPowerslide mSTRPowerslide;
     STRRacecrud mSTRRacecrud;
     STRRacetimes mSTRRacetimes;

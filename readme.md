@@ -31,7 +31,7 @@ Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](h
 
 ### Run ###
 To run builded project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
-You need to have: data.pf, gameshell.pf, store.pf. Place them in the folder with builded application.  
+You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Place them in the folder with builded application.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
 
 ### License ###
