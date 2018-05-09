@@ -144,7 +144,7 @@ void GameModeSwitcher::frameEnded()
             mContext.setLapController(mPlayerMode->getLapController());
             mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
         }
-        //extract lap data after championship race
+        //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
         {
             mContext.setLapController(mPlayerMode->getLapController());
@@ -154,14 +154,21 @@ void GameModeSwitcher::frameEnded()
 
             if(mContext.getGameState().getChampionship().isFinished())
             {
-                if(mContext.getGameState().getChampionship().isWinner())
+                if(mContext.getGameState().getChampionship().isFirstFruitAvailable())
                 {
-                    AIStrength strength = mContext.getGameState().getAIStrength();
-                    if(mContext.getGameState().getPlayerData().level <= strength && strength != Insane)
+                    STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
+                    int oldStrength = playerData.level;
+
+                    playerData.fruit[oldStrength] = true;
+
+                    if(mContext.getGameState().getChampionship().isSecondFruitAvailable())
                     {
-                        mContext.getGameState().setGameLevel(static_cast<AIStrength>(mContext.getGameState().getPlayerData().level + 1));
-                        mContext.getGameState().savePlayerData();
+                        playerData.fruit[oldStrength + Championship::mEveryWinnerFruitOffset] = true;
                     }
+
+                    playerData.level = static_cast<AIStrength>(oldStrength + 1);
+
+                    mContext.getGameState().savePlayerData();
                 }
             }
         }
@@ -221,7 +228,7 @@ void GameModeSwitcher::frameEnded()
                 SinglePlayerMenuStates state = State_Podium;
                 if(mContext.getGameState().getChampionship().isFinished())
                 {
-                    if(mContext.getGameState().getChampionship().isWinner())
+                    if(mContext.getGameState().getChampionship().isFirstFruitAvailable())
                     {
                         state = State_FinishChampionship;
                     }

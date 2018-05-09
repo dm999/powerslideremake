@@ -54,6 +54,7 @@ protected:
     void showRaceGridCharactersLabels();
     void showPodiumLabels(const finishBoardVec& finishBoard);
     void showLeaderboardLabels(const finishBoardVec& finishBoard);
+    void showChampionshipResultsLabels();
     void showMultiIPLabels();
     void hideAllLabels();
 
@@ -185,6 +186,14 @@ private:
     Ogre::TextAreaOverlayElement * mLeaderboardTable2Label[GameState::mRaceGridCarsMax];
     Ogre::PanelOverlayElement* mLeaderboardTable3Icon[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mLeaderboardTable4Label[GameState::mRaceGridCarsMax];
+
+    protected:
+
+    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel;
+    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel2;
+    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel3;
+
+    private:
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;
     Ogre::TextAreaOverlayElement * mModeMultiConnect;

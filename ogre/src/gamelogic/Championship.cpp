@@ -10,7 +10,8 @@ void Championship::init()
     mUserPoints = 0;
     mCharToPoints.clear();
     mIsFinished = false;
-    mIsWinner = false;
+    mIsFirstFruitAvailable = false;
+    mIsSecondFruitAvailable = false;
 
 }
 
@@ -68,13 +69,31 @@ void Championship::trackFinished(const ModeContext& modeContext)
         }
     }
 
-    //check winner
+    //check fruts
     if(mIsFinished)
     {
         finishBoardVec leaderBoard = getLeaderboard();
+
         if(leaderBoard[0].mIsPlayer)
-            mIsWinner = true;
+        {
+            int strength = modeContext.getGameState().getAIStrength();
+            const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
+
+            //winner for current strength
+            if(!playerData.fruit[strength])
+            {
+                mIsFirstFruitAvailable = true;
+            }
+
+            if(mCurrentTrack * 10 == leaderBoard[0].mPos && !playerData.fruit[strength + mEveryWinnerFruitOffset])
+            {
+                mIsSecondFruitAvailable = true;
+            }
+
+        }
+
     }
+
 }
 
 size_t Championship::getPointsFromPosition(size_t position) const
@@ -122,7 +141,7 @@ finishBoardVec Championship::getLeaderboard() const
     return ret;
 }
 
-std::string Championship::getAwardString(const ModeContext& modeContext) const
+std::string Championship::getAwardString(int index, const ModeContext& modeContext) const
 {
     std::string res = "";
 
@@ -156,10 +175,10 @@ std::string Championship::getAwardString(const ModeContext& modeContext) const
         "coming last in every race..."
     };
 
-    AIStrength strength = modeContext.getGameState().getAIStrength();
-    if(modeContext.getGameState().getPlayerData().level <= strength)
+
+    if(index < 12)
     {
-        res = std::string("You have been awarded ") + std::string(stringsFruit[strength]) + std::string(" for ") + std::string(stringsWinning[strength]);
+        res = std::string("You have been awarded ") + std::string(stringsFruit[index]) + std::string(" for ") + std::string(stringsWinning[index]);
 
         const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
         Tools::replace(res, "%carname%", STRPowerslide::getCarTitle(strPowerslide.getCarFromCharacter(modeContext.getGameState().getPlayerCar().getCharacterName())));
@@ -169,7 +188,7 @@ std::string Championship::getAwardString(const ModeContext& modeContext) const
     return res;
 }
 
-std::string Championship::getUnlockedString(const ModeContext& modeContext) const
+std::string Championship::getUnlockedString(int index) const
 {
     std::string res = "";
 
@@ -179,10 +198,9 @@ std::string Championship::getUnlockedString(const ModeContext& modeContext) cons
         "the Luge track and the Supercar!"
     };
 
-    AIStrength strength = modeContext.getGameState().getAIStrength();
-    if(modeContext.getGameState().getPlayerData().level <= strength && strength != Insane)
+    if(index < 3)
     {
-        res = std::string("This has unlocked ") + std::string(stringsUnlock[strength]);
+        res = std::string("This has unlocked ") + std::string(stringsUnlock[index]);
     }
 
     return res;

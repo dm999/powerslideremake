@@ -16,7 +16,8 @@ public:
     void trackFinished(const ModeContext& modeContext);
 
     bool isFinished() const {return mIsFinished;}
-    bool isWinner() const {return mIsWinner;}
+    bool isFirstFruitAvailable() const {return mIsFirstFruitAvailable;}
+    bool isSecondFruitAvailable() const {return mIsSecondFruitAvailable;}
 
     size_t getCurrentTrack() const {return mCurrentTrack;}
 
@@ -25,8 +26,15 @@ public:
     bool getIsShownLeaderboard() const{ return mIsShownLeaderboardAfterFinish;}
     void setShownLeaderboard(){mIsShownLeaderboardAfterFinish = true;}
 
-    std::string getAwardString(const ModeContext& modeContext) const;
-    std::string getUnlockedString(const ModeContext& modeContext) const;
+    std::string getAwardString(int index, const ModeContext& modeContext) const;
+    std::string getUnlockedString(int index) const;
+
+    static const int mWinnerFruitOffset             = 0;
+    static const int mEveryWinnerFruitOffset        = mWinnerFruitOffset            + 4;//novice, advanced, expert, insane
+    static const int mExpertCarFruitOffset          = mEveryWinnerFruitOffset       + 4;//novice, advanced, expert, insane
+    static const int mInsaneCarFruitOffset          = mExpertCarFruitOffset         + 7;//7 cars
+    static const int mBeatEmergentGunFruitOffset    = mInsaneCarFruitOffset         + 7;//7 cars
+    static const int mBrusselFruitOffset            = mBeatEmergentGunFruitOffset   + 8;//8 tracks
 
 private:
 
@@ -40,7 +48,8 @@ private:
     bool mIsShownLeaderboardAfterFinish;
 
     bool mIsFinished;
-    bool mIsWinner;
+    bool mIsFirstFruitAvailable;
+    bool mIsSecondFruitAvailable;
 };
 
 #endif

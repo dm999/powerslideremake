@@ -32,8 +32,8 @@ public:
     void setPlayerName(std::string option){mPlayerName = option;}
     std::string getPlayerName()const{return mPlayerName;}
 
-    void setGameLevel(AIStrength option){mPlayerData.level = option;}
     const STRPlayerSettings::PlayerData& getPlayerData()const{return mPlayerData;}
+    STRPlayerSettings::PlayerData& getPlayerData(){return mPlayerData;}
 
 
     /**
