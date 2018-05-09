@@ -15,7 +15,8 @@ public:
 
     void trackFinished(const ModeContext& modeContext);
 
-    bool isFinished(const ModeContext& modeContext) const;
+    bool isFinished() const {return mIsFinished;}
+    bool isWinner() const {return mIsWinner;}
 
     size_t getCurrentTrack() const {return mCurrentTrack;}
 
@@ -23,6 +24,9 @@ public:
 
     bool getIsShownLeaderboard() const{ return mIsShownLeaderboardAfterFinish;}
     void setShownLeaderboard(){mIsShownLeaderboardAfterFinish = true;}
+
+    std::string getAwardString(const ModeContext& modeContext) const;
+    std::string getUnlockedString(const ModeContext& modeContext) const;
 
 private:
 
@@ -34,6 +38,9 @@ private:
     std::map<std::string, size_t> mCharToPoints;//not includes user
 
     bool mIsShownLeaderboardAfterFinish;
+
+    bool mIsFinished;
+    bool mIsWinner;
 };
 
 #endif

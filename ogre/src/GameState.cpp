@@ -13,7 +13,6 @@
 GameState::GameState() :
     mVersion(GAMEVERSION),
     mPlayerName("Rasputin"),
-    mGameLevel(Easy),
     mTrackName("desert track"),
     mIsSpeedwayTrack(false),
     mIsMineshaftedTrack(false),
@@ -95,7 +94,7 @@ void GameState::initOriginalData()
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
                 mCameraPos = static_cast<CameraPositions>(mPlayerSettings.getIntValue("", "camera setting", static_cast<int>(mCameraPos)));
                 loadPlayerData();
-                setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mGameLevel);
+                setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mPlayerData.level);
                 if(!isAITrack())
                 {
                     setAICountInRace(0);
@@ -131,9 +130,24 @@ void GameState::loadPlayerData()
     Ogre::uint32 levelData;
     Conversions::DMFromString(level, levelData);
     if(mPlayerName == "megasaxon")levelData = 3;//http://www.mobygames.com/developer/sheet/view/developerId,47107/
-    mGameLevel = static_cast<AIStrength>(levelData);
+    mPlayerData.level = static_cast<AIStrength>(levelData);
 
-    setRaceParameters("desert track", mGameLevel);
+    std::vector<std::string> fruits = mPlayerSettings.getArrayValue(section, "fruit");
+    if(!fruits.empty())
+    {
+        for(size_t q = 0; q < fruits.size(); ++q)
+        {
+            bool fruitPred;
+            Conversions::DMFromString(fruits[q], fruitPred);
+            mPlayerData.fruit[q] = fruitPred;
+        }
+    }
+    else
+    {
+        mPlayerData.fruit = std::vector<bool>(STRPlayerSettings::PlayerData::mFruitAmount, false);
+    }
+
+    setRaceParameters("desert track", mPlayerData.level);
     mPSPlayerCar.setCharacterName("frantic");
 }
 
@@ -161,10 +175,7 @@ void GameState::savePlayerData()
     globalData.track = mTrackName;
     globalData.character = mPSPlayerCar.getCharacterName();
 
-    STRPlayerSettings::PlayerData playerData;
-    playerData.level = mGameLevel;
-
-    mPlayerSettings.save(mDataDir, globalData, playerData);
+    mPlayerSettings.save(mDataDir, globalData, mPlayerData);
 
     if(mPlayerSettings.getIsSaved())
     {

@@ -123,3 +123,15 @@ std::vector<std::string> Tools::splitpath(const std::string& str, const std::set
 
     return result;
 }
+
+bool Tools::replace(std::string& str, const std::string& from, const std::string& to)
+{
+
+    //https://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string/3418285
+
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}

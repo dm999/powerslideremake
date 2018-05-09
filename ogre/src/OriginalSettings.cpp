@@ -274,16 +274,19 @@ std::string STRPowerslide::getTrackTitle(const std::string& track)const
     return res;
 }
 
-std::string STRPowerslide::getCarTitle(const std::string& car)const
+std::string STRPowerslide::getCarTitle(const std::string& car)
 {
-    std::map<std::string, std::string> originalToTitle;
-    originalToTitle["feral max"] = "Warthog";
-    originalToTitle["mustang"] = "Big Heaver";
-    originalToTitle["pickup"] = "Pickup";
-    originalToTitle["exotic"] = "Sabre";
-    originalToTitle["orc"] = "Orc";
-    originalToTitle["skeeto"] = "Skeeto";
-    originalToTitle["supercar"] = "Supercar";
+    static std::map<std::string, std::string> originalToTitle;
+    if(originalToTitle.empty())
+    {
+        originalToTitle["feral max"] = "Warthog";
+        originalToTitle["mustang"] = "Big Heaver";
+        originalToTitle["pickup"] = "Pickup";
+        originalToTitle["exotic"] = "Sabre";
+        originalToTitle["orc"] = "Orc";
+        originalToTitle["skeeto"] = "Skeeto";
+        originalToTitle["supercar"] = "Supercar";
+    }
 
     std::string res = originalToTitle[car];
 
@@ -829,6 +832,15 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     const std::string section = globalData.playerName + " parameters";
 
     mSTR.SetValue(section.c_str(), "Level", Conversions::DMToString(playerData.level).c_str());
+
+    {
+        std::vector<std::string> fruits;
+        for(size_t q = 0; q < playerData.fruit.size(); ++q)
+        {
+            fruits.push_back(Conversions::DMToString(playerData.fruit[q]));
+        }
+        mSTR.SetValue(section.c_str(), "fruit", arrayToString(fruits).c_str());
+    }
 
     std::string str;
 

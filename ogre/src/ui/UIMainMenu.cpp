@@ -365,7 +365,7 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
         {
             if(mCurrentState == State_Leaderboard)
             {
-                if(!mModeContext.getGameState().getChampionship().isFinished(mModeContext))
+                if(!mModeContext.getGameState().getChampionship().isFinished())
                 {
                     switchState(State_StartingGrid);
                 }

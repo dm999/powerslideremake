@@ -76,7 +76,7 @@ public:
     std::string getCarFromCharacter(const std::string& character) const;
     std::vector<std::string> getCharactersByBaseCar(const std::string& car)const;
     std::string getTrackTitle(const std::string& track)const;
-    std::string getCarTitle(const std::string& car)const;
+    static std::string getCarTitle(const std::string& car);
     static std::string getCharacterTitle(const std::string& character);
     static std::string getCharacterFolderForBio(const std::string& character);
 
@@ -191,8 +191,12 @@ public:
 
     struct PlayerData
     {
-        PlayerData() : level(Easy) {}
-        AIStrength level;
+        static const int mFruitAmount = 34;
+
+        PlayerData() : level(Easy), fruit(mFruitAmount, false) {}
+
+        AIStrength level;   //level of available tracks/cars
+        std::vector<bool> fruit;
     };
 
     STRPlayerSettings() : WritableSettings("player.str"){}

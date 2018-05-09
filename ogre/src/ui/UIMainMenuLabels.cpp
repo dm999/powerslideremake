@@ -542,7 +542,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * pos;
         mCarsLabels.push_back(NULL);
         mCarsLabels[q] = createTextArea("MainWindowCarLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCarsLabels[q]->setCaption(strPowerslide.getCarTitle(availCars[q]));
+        mCarsLabels[q]->setCaption(STRPowerslide::getCarTitle(availCars[q]));
         mCarsLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
         mCarsLabels[q]->setSpaceWidth(9.0f);
         mCarsLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
@@ -1949,7 +1949,7 @@ void UIMainMenuLabels::showModeSingleType()
 
 void UIMainMenuLabels::showModeDifficulty()
 {
-    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     mModeSingleDifficultyNovice->show();
 
@@ -1965,7 +1965,7 @@ void UIMainMenuLabels::showModeDifficulty()
 
 void UIMainMenuLabels::showTrackLabels()
 {
-    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
@@ -2004,7 +2004,7 @@ void UIMainMenuLabels::showTrackLabels()
 
 void UIMainMenuLabels::showCarLabels()
 {
-    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
@@ -2042,7 +2042,7 @@ void UIMainMenuLabels::showCharacterLabels()
         mSingleBioViewBySelection->setCaption("Bio");
     }
 
-    AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
     {

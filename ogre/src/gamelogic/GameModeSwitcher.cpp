@@ -152,15 +152,14 @@ void GameModeSwitcher::frameEnded()
 
             mContext.getGameState().getChampionship().trackFinished(mContext);
 
-            if(mContext.getGameState().getChampionship().isFinished(mContext))
+            if(mContext.getGameState().getChampionship().isFinished())
             {
-                finishBoardVec leaderBoard = mContext.getGameState().getChampionship().getLeaderboard();
-                if(leaderBoard[0].mIsPlayer)
+                if(mContext.getGameState().getChampionship().isWinner())
                 {
                     AIStrength strength = mContext.getGameState().getAIStrength();
-                    if(mContext.getGameState().getGameLevel() <= strength && strength != Insane)
+                    if(mContext.getGameState().getPlayerData().level <= strength && strength != Insane)
                     {
-                        mContext.getGameState().setGameLevel(static_cast<AIStrength>(mContext.getGameState().getGameLevel() + 1));
+                        mContext.getGameState().setGameLevel(static_cast<AIStrength>(mContext.getGameState().getPlayerData().level + 1));
                         mContext.getGameState().savePlayerData();
                     }
                 }
@@ -220,10 +219,20 @@ void GameModeSwitcher::frameEnded()
                 mGameMode = ModeMenuChampionship;
 
                 SinglePlayerMenuStates state = State_Podium;
-                if(mContext.getGameState().getChampionship().isFinished(mContext))
-                    state = State_FinishChampionship;
+                if(mContext.getGameState().getChampionship().isFinished())
+                {
+                    if(mContext.getGameState().getChampionship().isWinner())
+                    {
+                        state = State_FinishChampionship;
+                    }
+                    else
+                    {
+                        mGameMode = ModeMenu;
+                        state = State_SingleMulti;
+                    }
+                }
 
-                mMenuMode.reset(new MenuMode(mContext, ModeMenuChampionship, state));
+                mMenuMode.reset(new MenuMode(mContext, mGameMode, state));
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);

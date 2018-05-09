@@ -112,6 +112,8 @@ public:
 
     static std::vector<std::string> splitpath(const std::string& str, const std::set<char> delimiters, bool insertEmpty = true);
 
+    static bool replace(std::string& str, const std::string& from, const std::string& to);
+
     static void Sleep(size_t milliseconds)
     {
         SLEEP(milliseconds);
