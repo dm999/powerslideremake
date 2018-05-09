@@ -11,7 +11,8 @@ const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
     UIMainMenuBackground(modeContext, gameMode),
-    mIsViewByDescription(false)
+    mIsViewByDescription(false),
+    mIsBioByDescription(false)
 {}
 
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
@@ -416,7 +417,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 20.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(25.0f, 20.0f, 0.0f, 0.0f);
         mSingleTrackDescription = createTextArea("MainWindowSingleTrackDescription", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mSingleTrackDescription->setCaption("");
         mSingleTrackDescription->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -465,6 +466,45 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mSingleTrackViewBySelection->setFontName("SdkTrays/Caption");
         mSingleTrackViewBySelection->setColour(mInactiveLabel);
         getMainBackground()->addChild(mSingleTrackViewBySelection);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(25.0f, 20.0f, 0.0f, 0.0f);
+        mSingleBioDescription = createTextArea("MainWindowSingleBioDescription", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleBioDescription->setCaption("");
+        mSingleBioDescription->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioDescription->setSpaceWidth(9.0f);
+        mSingleBioDescription->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioDescription->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleBioDescription->setFontName("SdkTrays/Caption");
+        mSingleBioDescription->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mSingleBioDescription);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 360.0f, 0.0f, 0.0f);
+        mSingleBioViewBy = createTextArea("MainWindowSingleBioViewBy", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleBioViewBy->setCaption("View By");
+        mSingleBioViewBy->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBy->setSpaceWidth(9.0f);
+        mSingleBioViewBy->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBy->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleBioViewBy->setFontName("SdkTrays/Caption");
+        mSingleBioViewBy->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mSingleBioViewBy);
+    }
+
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(70.0f, 360.0f, 0.0f, 0.0f);
+        mSingleBioViewBySelection = createTextArea("MainWindowSingleBioViewBySelection", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleBioViewBySelection->setCaption("Bio");
+        mSingleBioViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBySelection->setSpaceWidth(9.0f);
+        mSingleBioViewBySelection->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBySelection->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleBioViewBySelection->setFontName("SdkTrays/Caption");
+        mSingleBioViewBySelection->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mSingleBioViewBySelection);
     }
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
@@ -1556,6 +1596,27 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    if(mSingleBioViewBySelection->isVisible() && OgreBites::Widget::isCursorOver(mSingleBioViewBySelection, pos, 0))
+    {
+        mIsBioByDescription = !mIsBioByDescription;
+
+        if(mIsBioByDescription)
+        {
+            mSingleBioViewBySelection->setCaption("Description");
+            hideBackgroundCharacter();
+            mSingleBioDescription->show();
+        }
+        else
+        {
+            mSingleBioViewBySelection->setCaption("Bio");
+            showBackgroundCharacter();
+            mSingleBioDescription->hide();
+        }
+
+
+        return;
+    }
+
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
     std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
@@ -1779,6 +1840,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
     checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
     checkCursorOverLabel(pos, mSingleTrackViewBySelection);
+    checkCursorOverLabel(pos, mSingleBioViewBySelection);
 
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
@@ -1810,7 +1872,10 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
             for (size_t w = 0; w < availableCharacters.size(); ++w)
             {
                 if(STRPowerslide::getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
+                {
                     setCharacterLogo(w);
+                    setBioDescription(w);
+                }
             }
         }
     }
@@ -1909,14 +1974,23 @@ void UIMainMenuLabels::showTrackLabels()
         }
     }
 
-    mIsViewByDescription = false;
+    if(mIsViewByDescription)
+    {
+        mSingleTrackViewBySelection->setCaption("Description");
+        hideBackgroundTrack();
+        mSingleTrackDescription->show();
+    }
+    else
+    {
+        mSingleTrackViewBySelection->setCaption("Image");
+        showBackgroundTrack();
+        mSingleTrackDescription->hide();
+    }
 
     mSingleTrackBestTime->show();
 
     if(mModeContext.getGameState().isPatchDataInited())
     {
-        mSingleTrackViewBySelection->setCaption("Image");
-
         mSingleTrackViewBy->show();
         mSingleTrackViewBySelection->show();
     }
@@ -1949,6 +2023,19 @@ void UIMainMenuLabels::showCharacterLabels()
     characterCar = strPowerslide.getBaseCarFromCar(characterCar);
     std::vector<std::string> availCharsForCar = strPowerslide.getCharactersByBaseCar(characterCar);
 
+    if(mIsBioByDescription)
+    {
+        hideBackgroundCharacter();
+        mSingleBioDescription->show();
+        mSingleBioViewBySelection->setCaption("Description");
+    }
+    else
+    {
+        showBackgroundCharacter();
+        mSingleBioDescription->hide();
+        mSingleBioViewBySelection->setCaption("Bio");
+    }
+
     AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
@@ -1971,6 +2058,13 @@ void UIMainMenuLabels::showCharacterLabels()
         if(STRPowerslide::getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getCaption().asUTF8())
             setCharacterLogo(q);
     }
+
+    if(mModeContext.getGameState().isPatchDataInited())
+    {
+        mSingleBioViewBy->show();
+        mSingleBioViewBySelection->show();
+    }
+
 }
 
 void UIMainMenuLabels::showOptionLabels()
@@ -2206,6 +2300,10 @@ void UIMainMenuLabels::hideAllLabels()
     mSingleTrackViewBy->hide();
     mSingleTrackViewBySelection->hide();
 
+    mSingleBioDescription->hide();
+    mSingleBioViewBy->hide();
+    mSingleBioViewBySelection->hide();
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
         mTracksLabels[q]->hide();
 
@@ -2406,6 +2504,79 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
     else
     {
         mSingleTrackDescription->setCaption("N/A");
+    }
+
+}
+
+void UIMainMenuLabels::setCurrentBioDescription()
+{
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+    std::vector<std::string>::iterator i = std::find(availableCharacters.begin(), availableCharacters.end(), mModeContext.getGameState().getPlayerCar().getCharacterName());
+    setBioDescription(i - availableCharacters.begin());
+}
+
+void UIMainMenuLabels::setBioDescription(size_t index)
+{
+
+    Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
+    Ogre::Real viewportWidth = om.getViewportWidth(); 
+
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+    std::string desc = mCharacterDesc[availableCharacters[index]];
+    if(!desc.empty())
+    {
+        //word wrap
+
+        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleBioDescription->getFontName()).getPointer();
+
+        bool firstWord = true;
+        unsigned int lastSpace = 0;
+        Ogre::Real lineWidth = 0.0f;
+        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleBioDescription->getLeft() - viewportWidth / 50.0f;
+
+        for(size_t q = 0; q < desc.size(); ++q)
+        {
+            if (desc[q] == ' ')
+            {
+                if (mSingleBioDescription->getSpaceWidth() != 0) lineWidth += mSingleBioDescription->getSpaceWidth();
+                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleBioDescription->getCharHeight();
+
+                firstWord = false;
+                lastSpace = q;
+            }
+            else if (desc[q] == '\n')
+            {
+                firstWord = true;
+                lineWidth = 0;
+            }
+            else
+            {
+                // use glyph information to calculate line width
+                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleBioDescription->getCharHeight();
+                if (lineWidth > rightBoundary)
+                {
+                    if (firstWord)
+                    {
+                        desc.insert(q, "\n");
+                        q = q - 1;
+                    }
+                    else
+                    {
+                        desc[lastSpace] = '\n';
+                        q = lastSpace - 1;
+                    }
+                }
+            }
+        }
+
+        std::replace( desc.begin(), desc.end(), (char)(0xe9), 'y');
+        mSingleBioDescription->setCaption(desc);
+    }
+    else
+    {
+        mSingleBioDescription->setCaption("N/A");
     }
 
 }

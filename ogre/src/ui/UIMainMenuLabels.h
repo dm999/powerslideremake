@@ -61,13 +61,16 @@ protected:
     void setTrackBestTime(size_t index);
 
     void setCurrentTrackDescription();
-    void setTrackDescription(size_t index);
+    void setCurrentBioDescription();
 
     void setColorMultiIP(const Ogre::ColourValue& val){mModeMultiIP->setColour(val);}
     void setColorMultiUserName(const Ogre::ColourValue& val){mModeMultiUserName->setColour(val);}
     void setColorMultiRoomName(const Ogre::ColourValue& val){mModeMultiRoomName->setColour(val);}
 
 private:
+
+    void setTrackDescription(size_t index);
+    void setBioDescription(size_t index);
 
     std::string getTextFileContent(const std::string& dir, const std::string& filename) const;
 
@@ -90,6 +93,11 @@ private:
     Ogre::TextAreaOverlayElement * mSingleTrackViewBy;
     Ogre::TextAreaOverlayElement * mSingleTrackViewBySelection;
     bool mIsViewByDescription;
+
+    Ogre::TextAreaOverlayElement * mSingleBioDescription;
+    Ogre::TextAreaOverlayElement * mSingleBioViewBy;
+    Ogre::TextAreaOverlayElement * mSingleBioViewBySelection;
+    bool mIsBioByDescription;
 
 
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;

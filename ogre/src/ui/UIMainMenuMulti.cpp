@@ -1146,7 +1146,7 @@ void UIMainMenuMulti::switchTrack(size_t trackIndex)
     AIStrength gameLevel = mModeContext.getGameState().getGameLevel();
     int difficultyAvailable = strPowerslide.getIntValue(availTracks[trackIndex] + " parameters", "difficulty available", 0);
 
-    if(difficultyAvailable <= gameLevel)
+    if(difficultyAvailable <= gameLevel || difficultyAvailable == 6)
     {
         mModeContext.getGameState().setRaceParameters(availTracks[trackIndex], mModeContext.getGameState().getAIStrength());
         mTrackNameSelected->setCaption(strPowerslide.getTrackTitle(availTracks[trackIndex]));

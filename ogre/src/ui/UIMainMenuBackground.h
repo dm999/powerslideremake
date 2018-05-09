@@ -40,6 +40,7 @@ protected:
     void showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard);
     void hideAllBackgrounds();
     void hideBackgroundTrack(){mBackgroundTrack->hide();}
+    void hideBackgroundCharacter(){mBackgroundCharacter->hide();}
 
     void setMainBackgroundMaterial(const std::string& material){mMainBackground->setMaterialName(material);}
 

@@ -507,6 +507,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         showBackgroundCharacter();
         setWindowTitle("Select Character");
         showCharacterLabels();
+        setCurrentBioDescription();
         break;
 
     case State_Options:
