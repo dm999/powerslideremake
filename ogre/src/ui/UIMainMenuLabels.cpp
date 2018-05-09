@@ -456,8 +456,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(70.0f, 360.0f, 0.0f, 0.0f);
-        mSingleTrackViewBySelection = createTextArea("MainWindowSingleTrackViewBySelection", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::Real viewBySize = getTextWidth(mSingleTrackViewBy->getCaption(), mSingleTrackViewBy);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 360.0f, 0.0f, 0.0f);
+        mSingleTrackViewBySelection = createTextArea("MainWindowSingleTrackViewBySelection", 0.0f, 0.0f, mSingleTrackViewBy->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
         mSingleTrackViewBySelection->setCaption("Image");
         mSingleTrackViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mSingleTrackViewBySelection->setSpaceWidth(9.0f);
@@ -495,8 +496,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(70.0f, 360.0f, 0.0f, 0.0f);
-        mSingleBioViewBySelection = createTextArea("MainWindowSingleBioViewBySelection", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::Real viewBySize = getTextWidth(mSingleBioViewBy->getCaption(), mSingleBioViewBy);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 360.0f, 0.0f, 0.0f);
+        mSingleBioViewBySelection = createTextArea("MainWindowSingleBioViewBySelection", 0.0f, 0.0f, mSingleBioViewBy->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
         mSingleBioViewBySelection->setCaption("Bio");
         mSingleBioViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mSingleBioViewBySelection->setSpaceWidth(9.0f);
@@ -751,8 +753,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Resolution_Val);
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(267.0f, 162.0f, 0.0f, 0.0f);;
-        mOptionGraphicsLabel_Resolution_Apply = createTextArea("MainWindowOptionGraphicsResolutionApplyLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        Ogre::Real viewBySize = getTextWidth(mOptionGraphicsLabel_Resolution_Val->getCaption(), mOptionGraphicsLabel_Resolution_Val);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 162.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Resolution_Apply = createTextArea("MainWindowOptionGraphicsResolutionApplyLabel", 0.0f, 0.0f, mOptionGraphicsLabel_Resolution_Val->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
         mOptionGraphicsLabel_Resolution_Apply->setCaption("apply");
         mOptionGraphicsLabel_Resolution_Apply->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mOptionGraphicsLabel_Resolution_Apply->setSpaceWidth(9.0f);
@@ -1062,7 +1065,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     //Options Name Save
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(220.0f, 82.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(208.0f, 85.0f, 0.0f, 0.0f);;
         mOptionNameLabel_Save = createTextArea("MainWindowOptionNameSaveLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionNameLabel_Save->setCaption("Save");
         mOptionNameLabel_Save->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -1713,6 +1716,9 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
             ++curVal;
             if(curVal >= videoMode.possibleValues.size()) curVal = 0;
             mOptionGraphicsLabel_Resolution_Val->setCaption(videoMode.possibleValues[curVal]);
+
+            Ogre::Real viewBySize = getTextWidth(mOptionGraphicsLabel_Resolution_Val->getCaption(), mOptionGraphicsLabel_Resolution_Val);
+            mOptionGraphicsLabel_Resolution_Apply->setLeft(mOptionGraphicsLabel_Resolution_Val->getLeft() + viewBySize + 9.0f);
     }
 
     if(mOptionGraphicsLabel_Resolution_Apply->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Apply, pos, 0))
@@ -2423,6 +2429,31 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
     Conversions::DMFromString(times[0], time);
 
     mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
+}
+
+Ogre::Real UIMainMenuLabels::getTextWidth(const std::string& text, Ogre::TextAreaOverlayElement * element) const
+{
+
+    unsigned int lastSpace = 0;
+    Ogre::Real lineWidth = 0.0f;
+
+    Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(element->getFontName()).getPointer();
+
+    for(size_t q = 0; q < text.size(); ++q)
+    {
+        if (text[q] == ' ')
+        {
+            if (element->getSpaceWidth() != 0) lineWidth += element->getSpaceWidth();
+            else lineWidth += font->getGlyphAspectRatio(' ') * element->getCharHeight();
+        }
+        else
+        {
+            // use glyph information to calculate line width
+            lineWidth += font->getGlyphAspectRatio(text[q]) * element->getCharHeight();
+        }
+    }
+
+    return lineWidth;
 }
 
 void UIMainMenuLabels::setCurrentTrackDescription()

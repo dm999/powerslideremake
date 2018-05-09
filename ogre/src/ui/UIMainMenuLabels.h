@@ -69,6 +69,8 @@ protected:
 
 private:
 
+    Ogre::Real getTextWidth(const std::string& text, Ogre::TextAreaOverlayElement * element) const;
+
     void setTrackDescription(size_t index);
     void setBioDescription(size_t index);
 
