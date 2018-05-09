@@ -7,6 +7,7 @@
 
 #include "../BaseApp.h"
 
+const Ogre::ColourValue UIMainMenuLabels::mDisabledLabel(0.31f, 0.31f, 0.31f);
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
 
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
@@ -217,6 +218,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mWindowTitle->setFontName("SdkTrays/Caption");
         mWindowTitle->setColour(Ogre::ColourValue::White);
         getMainBackground()->addChild(mWindowTitle);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(430.0f, 10.0f, 0.0f, 0.0f);
+        mWindowTitleTrophies = createTextArea("MainWindowTitleTrophies", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mWindowTitleTrophies->setCaption("Trophies");
+        mWindowTitleTrophies->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mWindowTitleTrophies->setSpaceWidth(9.0f);
+        mWindowTitleTrophies->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mWindowTitleTrophies->setFontName("SdkTrays/Caption");
+        mWindowTitleTrophies->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mWindowTitleTrophies);
     }
 
     {
@@ -1495,6 +1507,8 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mouseReleased(pos);
 
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
+
     if(mModeSingle->isVisible() && OgreBites::Widget::isCursorOver(mModeSingle, pos, 0))
     {
         switchState(State_SingleType);
@@ -1566,6 +1580,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    if(gameLevel >= Medium)
     if(mModeSingleDifficultyAdvanced->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyAdvanced, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
@@ -1583,6 +1598,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    if(gameLevel >= Hard)
     if(mModeSingleDifficultyExpert->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyExpert, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
@@ -1600,6 +1616,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
+    if(gameLevel >= Insane)
     if(mModeSingleDifficultyInsane->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyInsane, pos, 0))
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
@@ -1665,6 +1682,9 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
+        int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
+
+        if(difficultyAvailable <= gameLevel)
         if(mTracksLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mTracksLabels[q], pos, 0))
         {
             mModeContext.getGameState().setRaceParameters(availTracks[q], mModeContext.getGameState().getAIStrength());
@@ -1704,27 +1724,33 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
     {
-        if(mCharactersLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mCharactersLabels[q], pos, 0))
+        if(mCharactersLabels[q]->isVisible())
         {
             std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
             characterCar = strPowerslide.getBaseCarFromCar(characterCar);
 
             std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
 
-            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
+            int difficultyAvailable = strPowerslide.getIntValue(availChars[q] + " parameters", "difficulty available", 0);
 
-            mModeContext.getGameState().savePlayerData();
+            if(difficultyAvailable <= gameLevel)
+            if(OgreBites::Widget::isCursorOver(mCharactersLabels[q], pos, 0))
+            {
+                mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
 
-            if(mGameModeSelected == ModeMenuTimetrial)
-            {
-                mModeContext.getGameState().setAICountInRace(0);
-                startRace();
+                mModeContext.getGameState().savePlayerData();
+
+                if(mGameModeSelected == ModeMenuTimetrial)
+                {
+                    mModeContext.getGameState().setAICountInRace(0);
+                    startRace();
+                }
+                else
+                {
+                    switchState(State_StartingGrid);
+                }
+                return;
             }
-            else
-            {
-                switchState(State_StartingGrid);
-            }
-            return;
         }
     }
 
@@ -1880,21 +1906,59 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingleTypeRace);
     checkCursorOverLabel(pos, mModeSingleTypeChampionship);
     checkCursorOverLabel(pos, mModeSingleTypeTimetrial);
+    
     checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
-    checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
-    checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
-    checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
+
+    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
+    if(gameLevel >= Medium)
+    {
+        mModeSingleDifficultyAdvanced->setColour(mInactiveLabel);
+        checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
+    }
+    else
+    {
+        mModeSingleDifficultyAdvanced->setColour(mDisabledLabel);
+    }
+
+    if(gameLevel >= Hard)
+    {
+        mModeSingleDifficultyExpert->setColour(mInactiveLabel);
+        checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
+    }
+    else
+    {
+        mModeSingleDifficultyExpert->setColour(mDisabledLabel);
+    }
+
+    if(gameLevel >= Insane)
+    {
+        mModeSingleDifficultyInsane->setColour(mInactiveLabel);
+        checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
+    }
+    else
+    {
+        mModeSingleDifficultyInsane->setColour(mDisabledLabel);
+    }
+
     checkCursorOverLabel(pos, mSingleTrackViewBySelection);
     checkCursorOverLabel(pos, mSingleBioViewBySelection);
 
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
-        bool isOver = checkCursorOverLabel(pos, mTracksLabels[q]);
-        if(isOver)
+        int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
+
+        if(difficultyAvailable <= gameLevel)
         {
-            setTrackLogo(q);
-            setTrackBestTime(q);
-            setTrackDescription(q);
+            bool isOver = checkCursorOverLabel(pos, mTracksLabels[q]);
+            if(isOver)
+            {
+                setTrackLogo(q);
+                setTrackBestTime(q);
+                setTrackDescription(q);
+            }
         }
     }
 
@@ -1909,17 +1973,32 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
     {
-        bool isOver = checkCursorOverLabel(pos, mCharactersLabels[q]);
-        if(isOver)
+        if(mCharactersLabels[q]->isVisible())
         {
             const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-            std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-            for (size_t w = 0; w < availableCharacters.size(); ++w)
+
+            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+            int difficultyAvailable = strPowerslide.getIntValue(availChars[q] + " parameters", "difficulty available", 0);
+
+            if(difficultyAvailable <= gameLevel)
             {
-                if(STRPowerslide::getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
+                bool isOver = checkCursorOverLabel(pos, mCharactersLabels[q]);
+                if(isOver)
                 {
-                    setCharacterLogo(w);
-                    setBioDescription(w);
+                    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+
+                    for (size_t w = 0; w < availableCharacters.size(); ++w)
+                    {
+                        if(STRPowerslide::getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
+                        {
+                            setCharacterLogo(w);
+                            setBioDescription(w);
+                        }
+                    }
                 }
             }
         }
@@ -1971,6 +2050,11 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mHighScoresTrackRight.destroy(trayMgr);
 }
 
+void UIMainMenuLabels::setWindowTitle(const std::string& title)
+{
+    mWindowTitle->setCaption(title);
+}
+
 void UIMainMenuLabels::showModeSingleMulti()
 {
     mModeSingle->show();
@@ -1991,15 +2075,9 @@ void UIMainMenuLabels::showModeDifficulty()
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     mModeSingleDifficultyNovice->show();
-
-    if(gameLevel >= Medium)
-        mModeSingleDifficultyAdvanced->show();
-
-    if(gameLevel >= Hard)
-        mModeSingleDifficultyExpert->show();
-
-    if(gameLevel >= Insane)
-        mModeSingleDifficultyInsane->show();
+    mModeSingleDifficultyAdvanced->show();
+    mModeSingleDifficultyExpert->show();
+    mModeSingleDifficultyInsane->show();
 }
 
 void UIMainMenuLabels::showTrackLabels()
@@ -2015,6 +2093,13 @@ void UIMainMenuLabels::showTrackLabels()
 
         if(difficultyAvailable <= gameLevel)
         {
+            mTracksLabels[q]->setColour(mInactiveLabel);
+            mTracksLabels[q]->show();
+        }
+
+        if(difficultyAvailable == (gameLevel + 1))
+        {
+            mTracksLabels[q]->setColour(mDisabledLabel);
             mTracksLabels[q]->show();
         }
     }
@@ -2093,6 +2178,13 @@ void UIMainMenuLabels::showCharacterLabels()
 
                 if(difficultyAvailable <= gameLevel)
                 {
+                    mCharactersLabels[q]->setColour(mInactiveLabel);
+                    mCharactersLabels[q]->show();
+                }
+
+                if(difficultyAvailable == (gameLevel + 1))
+                {
+                    mCharactersLabels[q]->setColour(mDisabledLabel);
                     mCharactersLabels[q]->show();
                 }
             }
@@ -2330,6 +2422,7 @@ void UIMainMenuLabels::showMultiIPLabels()
 void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
+    mWindowTitleTrophies->hide();
 #ifndef NO_MULTIPLAYER
     mModeMulti->hide();
     mModeMultiIP->hide();

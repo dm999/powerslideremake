@@ -14,6 +14,7 @@ public:
     void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
 
+    static const Ogre::ColourValue mDisabledLabel;
     static const Ogre::ColourValue mInactiveLabel;
 
     static bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
@@ -31,7 +32,7 @@ protected:
     virtual void switchState(const SinglePlayerMenuStates& state) = 0;
     virtual void startRace() = 0;
 
-    void setWindowTitle(const std::string& title){mWindowTitle->setCaption(title);}
+    void setWindowTitle(const std::string& title);
     void setStartingGridTime(const std::string& title){mStartingGridTimeLabel->setCaption(title);}
 
     void showModeSingleMulti();
@@ -49,6 +50,7 @@ protected:
     void showOptionRaceLabels();
     void showOptionHiscoreLabels();
     void showOptionNameLabels();
+    void showOptionTrophies(){mWindowTitleTrophies->show();}
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
@@ -80,6 +82,7 @@ private:
     virtual void onNameChange() = 0;
 
     Ogre::TextAreaOverlayElement * mWindowTitle;
+    Ogre::TextAreaOverlayElement * mWindowTitleTrophies;
 
     Ogre::TextAreaOverlayElement * mModeSingle;
     Ogre::TextAreaOverlayElement * mModeMulti;

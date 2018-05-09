@@ -556,6 +556,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         {
             setControlShow(q, false);
         }
+        showOptionTrophies();
         setWindowTitle("");
         break;
 
