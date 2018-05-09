@@ -130,7 +130,7 @@ void GameState::loadPlayerData()
     Ogre::uint32 levelData;
     Conversions::DMFromString(level, levelData);
     if(mPlayerName == "megasaxon")levelData = 3;//http://www.mobygames.com/developer/sheet/view/developerId,47107/
-    mPlayerData.level = static_cast<AIStrength>(levelData);
+    mPlayerData.level = static_cast<AIStrength>(Ogre::Math::Clamp<Ogre::uint32>(levelData, 0, 3));
 
     std::vector<std::string> fruits = mPlayerSettings.getArrayValue(section, "fruit");
     if(!fruits.empty())

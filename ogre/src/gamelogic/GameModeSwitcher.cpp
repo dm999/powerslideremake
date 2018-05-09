@@ -166,7 +166,7 @@ void GameModeSwitcher::frameEnded()
                         playerData.fruit[oldStrength + Championship::mEveryWinnerFruitOffset] = true;
                     }
 
-                    playerData.level = static_cast<AIStrength>(oldStrength + 1);
+                    playerData.level = static_cast<AIStrength>(Ogre::Math::Clamp(oldStrength + 1, 0, 3));
 
                     mContext.getGameState().savePlayerData();
                 }
