@@ -18,6 +18,7 @@ public:
     bool isFinished() const {return mIsFinished;}
     bool isFirstFruitAvailable() const {return mIsFirstFruitAvailable;}
     bool isSecondFruitAvailable() const {return mIsSecondFruitAvailable;}
+    bool isBrusselAvailable() const {return mIsBrusselAvailable;}
 
     size_t getCurrentTrack() const {return mCurrentTrack;}
 
@@ -50,6 +51,7 @@ private:
     bool mIsFinished;
     bool mIsFirstFruitAvailable;
     bool mIsSecondFruitAvailable;
+    bool mIsBrusselAvailable;
 };
 
 #endif

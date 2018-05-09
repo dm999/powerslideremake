@@ -610,15 +610,24 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         {
             setControlShow(q, false);
         }
+        
         {
-            int beatenAIStrength = mModeContext.getGameState().getAIStrength();
-
             Championship& champ = mModeContext.getGameState().getChampionship();
-            mChampionshipResultsLabel->setCaption(champ.getAwardString(beatenAIStrength, mModeContext));
-            mChampionshipResultsLabel2->setCaption(champ.getUnlockedString(beatenAIStrength));
-            if(champ.isSecondFruitAvailable())
+
+            if(champ.isFirstFruitAvailable())
             {
-                mChampionshipResultsLabel3->setCaption(champ.getAwardString(beatenAIStrength + Championship::mEveryWinnerFruitOffset, mModeContext));
+                int beatenAIStrength = mModeContext.getGameState().getAIStrength();
+                mChampionshipResultsLabel->setCaption(champ.getAwardString(beatenAIStrength, mModeContext));
+                mChampionshipResultsLabel2->setCaption(champ.getUnlockedString(beatenAIStrength));
+                if(champ.isSecondFruitAvailable())
+                {
+                    mChampionshipResultsLabel3->setCaption(champ.getAwardString(beatenAIStrength + Championship::mEveryWinnerFruitOffset, mModeContext));
+                }
+            }
+
+            if(champ.isBrusselAvailable())
+            {
+                mChampionshipResultsLabel->setCaption(champ.getAwardString(11, mModeContext));
             }
         }
         showChampionshipResultsLabels();

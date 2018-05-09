@@ -12,6 +12,7 @@ void Championship::init()
     mIsFinished = false;
     mIsFirstFruitAvailable = false;
     mIsSecondFruitAvailable = false;
+    mIsBrusselAvailable = false;
 
 }
 
@@ -72,12 +73,24 @@ void Championship::trackFinished(const ModeContext& modeContext)
     //check fruts
     if(mIsFinished)
     {
+        const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
+        
         finishBoardVec leaderBoard = getLeaderboard();
 
-        if(leaderBoard[0].mIsPlayer)
+        size_t playerIndexInLeaderBoard = 0;
+
+        for(size_t q = 0; q < leaderBoard.size(); ++q)
+        {
+            if(leaderBoard[q].mIsPlayer)
+            {
+                playerIndexInLeaderBoard = q;
+                break;
+            }
+        }
+
+        if(playerIndexInLeaderBoard == 0)//is winner
         {
             int strength = modeContext.getGameState().getAIStrength();
-            const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
 
             //winner for current strength
             if(!playerData.fruit[strength])
@@ -85,11 +98,18 @@ void Championship::trackFinished(const ModeContext& modeContext)
                 mIsFirstFruitAvailable = true;
             }
 
+            //is first in every race
             if(mCurrentTrack * 10 == leaderBoard[0].mPos && !playerData.fruit[strength + mEveryWinnerFruitOffset])
             {
                 mIsSecondFruitAvailable = true;
             }
 
+        }
+
+        //is last in every race
+        if(mCurrentTrack * getPointsFromPosition(modeContext.getGameState().getAICount()) == leaderBoard[playerIndexInLeaderBoard].mPos && !playerData.fruit[mBrusselFruitOffset])
+        {
+            mIsBrusselAvailable = true;
         }
 
     }

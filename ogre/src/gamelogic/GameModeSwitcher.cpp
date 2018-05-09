@@ -170,6 +170,13 @@ void GameModeSwitcher::frameEnded()
 
                     mContext.getGameState().savePlayerData();
                 }
+
+                if(mContext.getGameState().getChampionship().isBrusselAvailable())
+                {
+                    STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
+                    playerData.fruit[Championship::mBrusselFruitOffset] = true;
+                    mContext.getGameState().savePlayerData();
+                }
             }
         }
         //update hiscores after time trial
@@ -228,7 +235,10 @@ void GameModeSwitcher::frameEnded()
                 SinglePlayerMenuStates state = State_Podium;
                 if(mContext.getGameState().getChampionship().isFinished())
                 {
-                    if(mContext.getGameState().getChampionship().isFirstFruitAvailable())
+                    if(
+                        mContext.getGameState().getChampionship().isFirstFruitAvailable()   ||
+                        mContext.getGameState().getChampionship().isBrusselAvailable()
+                        )
                     {
                         state = State_FinishChampionship;
                     }
