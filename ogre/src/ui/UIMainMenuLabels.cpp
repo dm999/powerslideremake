@@ -2543,7 +2543,7 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
     std::string curTrack = availTracks[index];
-    if(index == 8)
+    if(index == 8)//stunt
         curTrack = availTracks[index + 1];
 
     float time;
@@ -2551,7 +2551,10 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
 
     Conversions::DMFromString(times[0], time);
 
-    mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
+    if(index == 8)//stunt
+        mSingleTrackBestTime->setCaption("");
+    else
+        mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
 }
 
 Ogre::Real UIMainMenuLabels::getTextWidth(const std::string& text, Ogre::TextAreaOverlayElement * element) const
