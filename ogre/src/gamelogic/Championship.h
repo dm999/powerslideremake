@@ -14,7 +14,7 @@ public:
 
     void init();
 
-    void trackFinished(const ModeContext& modeContext);
+    void trackFinished(const ModeContext& modeContext, Ogre::Real bestLap);
 
     bool isFinished() const {return mIsFinished;}
     bool isFruitsAvailable() const {return mIsFruitsAvailable;}
@@ -27,7 +27,7 @@ public:
     bool getIsShownLeaderboard() const{ return mIsShownLeaderboardAfterFinish;}
     void setShownLeaderboard(){mIsShownLeaderboardAfterFinish = true;}
 
-    std::string getAwardString(int index, const ModeContext& modeContext) const;
+    std::string getAwardString(int index, const ModeContext& modeContext, size_t trackIndex = 0) const;
     std::string getUnlockedString(int index) const;
 
     static const int mWinnerFruitOffset             = 0;
@@ -51,6 +51,7 @@ private:
     bool mIsFinished;
     bool mIsFruitsAvailable;
     std::vector<size_t> mAvailableFruits;
+    std::vector<size_t> mAvailableEmergentGunBeatenTracks;
 };
 
 #endif

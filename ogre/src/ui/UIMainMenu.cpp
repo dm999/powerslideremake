@@ -643,7 +643,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
                 if(fruitsIndexes[q] >= Championship::mBeatEmergentGunFruitOffset && fruitsIndexes[q] < Championship::mBrusselFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(10, mModeContext));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(10, mModeContext, fruitsIndexes[q] - Championship::mBeatEmergentGunFruitOffset));
                 }
 
                 if(fruitsIndexes[q] == Championship::mBrusselFruitOffset)

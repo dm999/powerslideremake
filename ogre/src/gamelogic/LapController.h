@@ -31,7 +31,7 @@ public:
 private:
 
     std::vector<size_t> mLapPositions;
-    std::vector<PSBaseCar *> mCars;
+    std::vector<PSBaseCar *> mCars;//player is first
 };
 
 #endif

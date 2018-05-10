@@ -12,10 +12,11 @@ void Championship::init()
     mIsFinished = false;
     mIsFruitsAvailable = false;
     mAvailableFruits.clear();
+    mAvailableEmergentGunBeatenTracks.clear();
 
 }
 
-void Championship::trackFinished(const ModeContext& modeContext)
+void Championship::trackFinished(const ModeContext& modeContext, Ogre::Real bestLap)
 {
     mIsShownLeaderboardAfterFinish = false;
     const finishBoardVec& finishBoard = modeContext.getFinishBoard();
@@ -44,6 +45,20 @@ void Championship::trackFinished(const ModeContext& modeContext)
     }
 
     ++mCurrentTrack;
+
+    //check emergent gun
+    {
+        const STRRacetimes& strRacetimes = modeContext.getGameState().getSTRRacetimes();
+        std::string trackName = modeContext.getGameState().getTrackNameAsOriginal();
+        float emergentGun = strRacetimes.getFloatValue("emergent gun times", trackName);
+        if(bestLap <= emergentGun && bestLap > 0.0f)
+        {
+            const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
+            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+            size_t trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
+            mAvailableEmergentGunBeatenTracks.push_back(trackIndex + mBeatEmergentGunFruitOffset);
+        }
+    }
 
     //check finished
     {
@@ -137,7 +152,10 @@ void Championship::trackFinished(const ModeContext& modeContext)
         }
 
         //beat emergent gun
+        if(!mAvailableEmergentGunBeatenTracks.empty())
         {
+            mIsFruitsAvailable = true;
+            mAvailableFruits.insert(mAvailableFruits.end(), mAvailableEmergentGunBeatenTracks.begin(), mAvailableEmergentGunBeatenTracks.end());
         }
 
     }
@@ -189,7 +207,7 @@ finishBoardVec Championship::getLeaderboard() const
     return ret;
 }
 
-std::string Championship::getAwardString(int index, const ModeContext& modeContext) const
+std::string Championship::getAwardString(int index, const ModeContext& modeContext, size_t trackIndex) const
 {
     std::string res = "";
 
@@ -229,8 +247,9 @@ std::string Championship::getAwardString(int index, const ModeContext& modeConte
         res = std::string("You have been awarded ") + std::string(stringsFruit[index]) + std::string(" for ") + std::string(stringsWinning[index]);
 
         const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
         Tools::replace(res, "%carname%", STRPowerslide::getCarTitle(strPowerslide.getCarFromCharacter(modeContext.getGameState().getPlayerCar().getCharacterName())));
-        Tools::replace(res, "%trackname%", strPowerslide.getTrackTitle(modeContext.getGameState().getTrackNameAsOriginal()));
+        Tools::replace(res, "%trackname%", strPowerslide.getTrackTitle(availTracks[trackIndex]));
     }
 
     return res;

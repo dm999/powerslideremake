@@ -150,7 +150,9 @@ void GameModeSwitcher::frameEnded()
             mContext.setLapController(mPlayerMode->getLapController());
             mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
 
-            mContext.getGameState().getChampionship().trackFinished(mContext);
+            Ogre::Real bestLap = mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime();
+
+            mContext.getGameState().getChampionship().trackFinished(mContext, bestLap);
 
             if(mContext.getGameState().getChampionship().isFinished())
             {
