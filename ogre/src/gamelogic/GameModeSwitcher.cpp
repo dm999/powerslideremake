@@ -154,27 +154,22 @@ void GameModeSwitcher::frameEnded()
 
             if(mContext.getGameState().getChampionship().isFinished())
             {
-                if(mContext.getGameState().getChampionship().isFirstFruitAvailable())
+                if(mContext.getGameState().getChampionship().isFruitsAvailable())
                 {
+                    std::vector<size_t> fruitsIndexes = mContext.getGameState().getChampionship().getAvailableFruits();
+
                     STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
-                    int oldStrength = playerData.level;
 
-                    playerData.fruit[oldStrength] = true;
-
-                    if(mContext.getGameState().getChampionship().isSecondFruitAvailable())
+                    if(fruitsIndexes[0] < Championship::mEveryWinnerFruitOffset)//unlock happened
                     {
-                        playerData.fruit[oldStrength + Championship::mEveryWinnerFruitOffset] = true;
+                        playerData.level = static_cast<AIStrength>(Ogre::Math::Clamp(playerData.level + 1, 0, 3));
                     }
 
-                    playerData.level = static_cast<AIStrength>(Ogre::Math::Clamp(oldStrength + 1, 0, 3));
+                    for(size_t q = 0; q < fruitsIndexes.size(); ++q)
+                    {
+                        playerData.fruit[fruitsIndexes[q]] = true;
+                    }
 
-                    mContext.getGameState().savePlayerData();
-                }
-
-                if(mContext.getGameState().getChampionship().isBrusselAvailable())
-                {
-                    STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
-                    playerData.fruit[Championship::mBrusselFruitOffset] = true;
                     mContext.getGameState().savePlayerData();
                 }
             }
@@ -235,10 +230,7 @@ void GameModeSwitcher::frameEnded()
                 SinglePlayerMenuStates state = State_Podium;
                 if(mContext.getGameState().getChampionship().isFinished())
                 {
-                    if(
-                        mContext.getGameState().getChampionship().isFirstFruitAvailable()   ||
-                        mContext.getGameState().getChampionship().isBrusselAvailable()
-                        )
+                    if(mContext.getGameState().getChampionship().isFruitsAvailable())
                     {
                         state = State_FinishChampionship;
                     }

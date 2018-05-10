@@ -614,21 +614,42 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         
         {
             Championship& champ = mModeContext.getGameState().getChampionship();
+            std::vector<size_t> fruitsIndexes = champ.getAvailableFruits();
+            size_t labelsOccupied = 0;
 
-            if(champ.isFirstFruitAvailable())
+            if(fruitsIndexes[0] < Championship::mEveryWinnerFruitOffset)//unlock happened
             {
-                int beatenAIStrength = mModeContext.getGameState().getAIStrength();
-                mChampionshipResultsLabel->setCaption(champ.getAwardString(beatenAIStrength, mModeContext));
-                mChampionshipResultsLabel2->setCaption(champ.getUnlockedString(beatenAIStrength));
-                if(champ.isSecondFruitAvailable())
-                {
-                    mChampionshipResultsLabel3->setCaption(champ.getAwardString(beatenAIStrength + Championship::mEveryWinnerFruitOffset, mModeContext));
-                }
+                mChampionshipResultsLabel[0]->setCaption(champ.getAwardString(fruitsIndexes[0], mModeContext));
+                mChampionshipResultsLabel[1]->setCaption(champ.getUnlockedString(fruitsIndexes[0]));
+                labelsOccupied += 2;
             }
 
-            if(champ.isBrusselAvailable())
+            for(size_t q = 0; q < fruitsIndexes.size(); ++q)
             {
-                mChampionshipResultsLabel->setCaption(champ.getAwardString(11, mModeContext));
+                if(fruitsIndexes[q] >= Championship::mEveryWinnerFruitOffset && fruitsIndexes[q] < Championship::mExpertCarFruitOffset)
+                {
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(fruitsIndexes[q], mModeContext));
+                }
+
+                if(fruitsIndexes[q] >= Championship::mExpertCarFruitOffset && fruitsIndexes[q] < Championship::mInsaneCarFruitOffset)
+                {
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(8, mModeContext));
+                }
+
+                if(fruitsIndexes[q] >= Championship::mInsaneCarFruitOffset && fruitsIndexes[q] < Championship::mBeatEmergentGunFruitOffset)
+                {
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(9, mModeContext));
+                }
+
+                if(fruitsIndexes[q] >= Championship::mBeatEmergentGunFruitOffset && fruitsIndexes[q] < Championship::mBrusselFruitOffset)
+                {
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(10, mModeContext));
+                }
+
+                if(fruitsIndexes[q] == Championship::mBrusselFruitOffset)
+                {
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(11, mModeContext));
+                }
             }
         }
         showChampionshipResultsLabels();

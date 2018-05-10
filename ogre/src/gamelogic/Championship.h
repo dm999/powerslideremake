@@ -2,6 +2,7 @@
 #define CHAMPIONSHIP
 
 #include <map>
+#include <vector>
 
 #include "FinishBoard.h"
 
@@ -16,9 +17,8 @@ public:
     void trackFinished(const ModeContext& modeContext);
 
     bool isFinished() const {return mIsFinished;}
-    bool isFirstFruitAvailable() const {return mIsFirstFruitAvailable;}
-    bool isSecondFruitAvailable() const {return mIsSecondFruitAvailable;}
-    bool isBrusselAvailable() const {return mIsBrusselAvailable;}
+    bool isFruitsAvailable() const {return mIsFruitsAvailable;}
+    std::vector<size_t> getAvailableFruits() const {return mAvailableFruits;}
 
     size_t getCurrentTrack() const {return mCurrentTrack;}
 
@@ -49,9 +49,8 @@ private:
     bool mIsShownLeaderboardAfterFinish;
 
     bool mIsFinished;
-    bool mIsFirstFruitAvailable;
-    bool mIsSecondFruitAvailable;
-    bool mIsBrusselAvailable;
+    bool mIsFruitsAvailable;
+    std::vector<size_t> mAvailableFruits;
 };
 
 #endif

@@ -192,9 +192,8 @@ private:
 
     protected:
 
-    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel;
-    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel2;
-    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel3;
+    static const int mChampionshipResultsLabelsAmountMax = 12;//2 - unlock, 1 win all, 1 win expert/insane with car, 8 beat emergent gun on track
+    Ogre::TextAreaOverlayElement * mChampionshipResultsLabel[mChampionshipResultsLabelsAmountMax];
 
     private:
 

@@ -7,8 +7,8 @@
 
 #include "../BaseApp.h"
 
-const Ogre::ColourValue UIMainMenuLabels::mDisabledLabel(0.31f, 0.31f, 0.31f);
-const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.51f, 0.51f, 0.51f);
+const Ogre::ColourValue UIMainMenuLabels::mDisabledLabel(0.25f, 0.25f, 0.25f);
+const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.50f, 0.50f, 0.50f);
 
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
     UIMainMenuBackground(modeContext, gameMode),
@@ -1412,42 +1412,20 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     //championship results
+    for(size_t q = 0; q < mChampionshipResultsLabelsAmountMax; ++q)
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 40.0f, 0.0f, 0.0f);
-        mChampionshipResultsLabel = createTextArea("MainWindowChampionshipResults", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mChampionshipResultsLabel->setCaption("");
-        mChampionshipResultsLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel->setSpaceWidth(9.0f);
-        mChampionshipResultsLabel->setHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel->setAlignment(Ogre::TextAreaOverlayElement::Center);
-        mChampionshipResultsLabel->setFontName("SdkTrays/Caption");
-        mChampionshipResultsLabel->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mChampionshipResultsLabel);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 40.0f + q * 20.0f, 0.0f, 0.0f);
+        mChampionshipResultsLabel[q] = createTextArea("MainWindowChampionshipResults" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mChampionshipResultsLabel[q]->setCaption("");
+        mChampionshipResultsLabel[q]->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mChampionshipResultsLabel[q]->setSpaceWidth(9.0f);
+        mChampionshipResultsLabel[q]->setHeight(26.0f * viewportHeight / 1024.0f);
+        mChampionshipResultsLabel[q]->setAlignment(Ogre::TextAreaOverlayElement::Center);
+        mChampionshipResultsLabel[q]->setFontName("SdkTrays/Caption");
+        mChampionshipResultsLabel[q]->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mChampionshipResultsLabel[q]);
     }
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 60.0f, 0.0f, 0.0f);
-        mChampionshipResultsLabel2 = createTextArea("MainWindowChampionshipResults2", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mChampionshipResultsLabel2->setCaption("");
-        mChampionshipResultsLabel2->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel2->setSpaceWidth(9.0f);
-        mChampionshipResultsLabel2->setHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel2->setAlignment(Ogre::TextAreaOverlayElement::Center);
-        mChampionshipResultsLabel2->setFontName("SdkTrays/Caption");
-        mChampionshipResultsLabel2->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mChampionshipResultsLabel2);
-    }
-    {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 0.0f, 0.0f);
-        mChampionshipResultsLabel3 = createTextArea("MainWindowChampionshipResults3", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mChampionshipResultsLabel3->setCaption("");
-        mChampionshipResultsLabel3->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel3->setSpaceWidth(9.0f);
-        mChampionshipResultsLabel3->setHeight(26.0f * viewportHeight / 1024.0f);
-        mChampionshipResultsLabel3->setAlignment(Ogre::TextAreaOverlayElement::Center);
-        mChampionshipResultsLabel3->setFontName("SdkTrays/Caption");
-        mChampionshipResultsLabel3->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mChampionshipResultsLabel3);
-    }
+
 
 
     //Track description, bio`s
@@ -2404,9 +2382,10 @@ void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
 
 void UIMainMenuLabels::showChampionshipResultsLabels()
 {
-    mChampionshipResultsLabel->show();
-    mChampionshipResultsLabel2->show();
-    mChampionshipResultsLabel3->show();
+    for(size_t q = 0; q < mChampionshipResultsLabelsAmountMax; ++q)
+    {
+        mChampionshipResultsLabel[q]->show();
+    }
 }
 
 void UIMainMenuLabels::showMultiIPLabels()
@@ -2514,9 +2493,10 @@ void UIMainMenuLabels::hideAllLabels()
     mLeaderboardTableTitle3Label->hide();
     mLeaderboardTableTitle4Label->hide();
 
-    mChampionshipResultsLabel->hide();
-    mChampionshipResultsLabel2->hide();
-    mChampionshipResultsLabel3->hide();
+    for(size_t q = 0; q < mChampionshipResultsLabelsAmountMax; ++q)
+    {
+        mChampionshipResultsLabel[q]->hide();
+    }
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {

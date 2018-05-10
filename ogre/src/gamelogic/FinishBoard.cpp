@@ -1,4 +1,4 @@
-#include "Finishboard.h"
+#include "FinishBoard.h"
 
 #include "../includes/OgreInclude.h"
 

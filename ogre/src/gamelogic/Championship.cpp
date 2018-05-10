@@ -10,9 +10,8 @@ void Championship::init()
     mUserPoints = 0;
     mCharToPoints.clear();
     mIsFinished = false;
-    mIsFirstFruitAvailable = false;
-    mIsSecondFruitAvailable = false;
-    mIsBrusselAvailable = false;
+    mIsFruitsAvailable = false;
+    mAvailableFruits.clear();
 
 }
 
@@ -95,21 +94,50 @@ void Championship::trackFinished(const ModeContext& modeContext)
             //winner for current strength
             if(!playerData.fruit[strength])
             {
-                mIsFirstFruitAvailable = true;
+                mIsFruitsAvailable = true;
+                mAvailableFruits.push_back(strength);
             }
 
             //is first in every race
-            if(mCurrentTrack * 10 == leaderBoard[0].mPos && !playerData.fruit[strength + mEveryWinnerFruitOffset])
+            if( mCurrentTrack * 10 == leaderBoard[0].mPos && 
+                !playerData.fruit[strength + mEveryWinnerFruitOffset])
             {
-                mIsSecondFruitAvailable = true;
+                mIsFruitsAvailable = true;
+                mAvailableFruits.push_back(strength + mEveryWinnerFruitOffset);
+            }
+
+            const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
+            std::string characterCar = strPowerslide.getCarFromCharacter(modeContext.getGameState().getPlayerCar().getCharacterName());
+            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+            std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+            size_t carIndex = std::find(availCars.begin(), availCars.end(), characterCar) - availCars.begin();
+
+            //beat expert on car
+            if(strength == Hard && !playerData.fruit[carIndex + mExpertCarFruitOffset])
+            {
+                mIsFruitsAvailable = true;
+                mAvailableFruits.push_back(carIndex + mExpertCarFruitOffset);
+            }
+
+            //beat insane on car
+            if(strength == Insane && !playerData.fruit[carIndex + mInsaneCarFruitOffset])
+            {
+                mIsFruitsAvailable = true;
+                mAvailableFruits.push_back(carIndex + mInsaneCarFruitOffset);
             }
 
         }
 
         //is last in every race
-        if(mCurrentTrack * getPointsFromPosition(modeContext.getGameState().getAICount()) == leaderBoard[playerIndexInLeaderBoard].mPos && !playerData.fruit[mBrusselFruitOffset])
+        if( mCurrentTrack * getPointsFromPosition(modeContext.getGameState().getAICount()) == leaderBoard[playerIndexInLeaderBoard].mPos && 
+            !playerData.fruit[mBrusselFruitOffset])
         {
-            mIsBrusselAvailable = true;
+            mIsFruitsAvailable = true;
+            mAvailableFruits.push_back(mBrusselFruitOffset);
+        }
+
+        //beat emergent gun
+        {
         }
 
     }
