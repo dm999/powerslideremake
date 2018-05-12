@@ -15,6 +15,8 @@ public:
 
 protected:
 
+    void mouseMoved(const Ogre::Vector2& pos) override;
+
     void createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
     void createBackgroundMaterials();
     void createBackgroundUI(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr);

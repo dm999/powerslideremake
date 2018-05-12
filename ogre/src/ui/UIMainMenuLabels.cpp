@@ -1872,7 +1872,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 {
-    UIBaseMenu::mouseMoved(pos);
+    UIMainMenuBackground::mouseMoved(pos);
 
     checkCursorOverLabel(pos, mModeSingle);
 #ifndef NO_MULTIPLAYER

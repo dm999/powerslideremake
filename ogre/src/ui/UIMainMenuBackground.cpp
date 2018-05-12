@@ -12,6 +12,105 @@
 
 #include "UIRace.h"
 
+void UIMainMenuBackground::mouseMoved(const Ogre::Vector2& pos)
+{
+    UIBaseMenu::mouseMoved(pos);
+
+    bool overFruit = false;
+    std::string materialName;
+
+    if(mBackgroundFruitApple->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitApple, pos, 0))
+    {
+        materialName = mBackgroundFruitApple->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitBanana->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitBanana, pos, 0))
+    {
+        materialName = mBackgroundFruitBanana->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitOrange->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitOrange, pos, 0))
+    {
+        materialName = mBackgroundFruitOrange->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitSberry->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitSberry, pos, 0))
+    {
+        materialName = mBackgroundFruitSberry->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitTangelo->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitTangelo, pos, 0))
+    {
+        materialName = mBackgroundFruitTangelo->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitPeach->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPeach, pos, 0))
+    {
+        materialName = mBackgroundFruitPeach->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitPassion->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPassion, pos, 0))
+    {
+        materialName = mBackgroundFruitPassion->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(mBackgroundFruitCherries->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitCherries, pos, 0))
+    {
+        materialName = mBackgroundFruitCherries->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        if(mBackgroundFruitPapaya[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPapaya[q], pos, 0))
+        {
+            materialName = "Test/Background_FruitPapaya+";
+            overFruit = true;
+            break;
+        }
+
+        if(mBackgroundFruitMango[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitMango[q], pos, 0))
+        {
+            materialName = "Test/Background_FruitMango+";
+            overFruit = true;
+            break;
+        }
+    }
+
+    for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+    {
+        if(mBackgroundFruitRberry[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitRberry[q], pos, 0))
+        {
+            materialName = "Test/Background_FruitRberry+";
+            overFruit = true;
+            break;
+        }
+    }
+
+    if(mBackgroundFruitBrussel->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitBrussel, pos, 0))
+    {
+        materialName = mBackgroundFruitBrussel->getMaterialName() + "+";
+        overFruit = true;
+    }
+
+    if(overFruit)
+    {
+        mBackgroundFruitEnlarge->setMaterialName(materialName);
+        mBackgroundFruitEnlarge->show();
+    }
+    else
+    {
+        mBackgroundFruitEnlarge->hide();
+    }
+}
+
 void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
     TextureLoader().load( pfLoaderGameshell, 
@@ -721,7 +820,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(205.0f, 100.0f, 205.0f + 195.0f, 100.0f + 285.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(442.0f, 45.0f, 442.0f + 195.0f, 45.0f + 285.0f);
 
             mBackgroundFruitEnlarge = createPanel("Background_FruitEnlarge", background, "Test/Background_FruitBrussel+");
             mBackgroundFruitEnlarge->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -924,6 +1023,7 @@ void UIMainMenuBackground::showBackgroundFruis(const STRPlayerSettings::PlayerDa
 
     if(fruits[Championship::mBrusselFruitOffset + 0])
         mBackgroundFruitBrussel->show();
+
 }
 
 void UIMainMenuBackground::hideAllBackgrounds()
