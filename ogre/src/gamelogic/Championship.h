@@ -30,12 +30,12 @@ public:
     std::string getAwardString(int index, const ModeContext& modeContext, size_t trackIndex = 0) const;
     std::string getUnlockedString(int index) const;
 
-    static const int mWinnerFruitOffset             = 0;
-    static const int mEveryWinnerFruitOffset        = mWinnerFruitOffset            + 4;//novice, advanced, expert, insane
-    static const int mExpertCarFruitOffset          = mEveryWinnerFruitOffset       + 4;//novice, advanced, expert, insane
-    static const int mInsaneCarFruitOffset          = mExpertCarFruitOffset         + 7;//7 cars
-    static const int mBeatEmergentGunFruitOffset    = mInsaneCarFruitOffset         + 7;//7 cars
-    static const int mBrusselFruitOffset            = mBeatEmergentGunFruitOffset   + 8;//8 tracks
+    static const size_t mWinnerFruitOffset          = 0;
+    static const size_t mEveryWinnerFruitOffset     = mWinnerFruitOffset            + 4;//novice, advanced, expert, insane
+    static const size_t mExpertCarFruitOffset       = mEveryWinnerFruitOffset       + 4;//novice, advanced, expert, insane
+    static const size_t mInsaneCarFruitOffset       = mExpertCarFruitOffset         + 7;//7 cars
+    static const size_t mBeatEmergentGunFruitOffset = mInsaneCarFruitOffset         + 7;//7 cars
+    static const size_t mBrusselFruitOffset         = mBeatEmergentGunFruitOffset   + 8;//8 tracks with fruits
 
 private:
 

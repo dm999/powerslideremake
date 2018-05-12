@@ -104,6 +104,114 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
     }
 
+    //fruits
+    {
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "apple.bmp", 
+                                "OriginalFruitApple", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "apple+.bmp", 
+                                "OriginalFruitApple+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "banana.bmp", 
+                                "OriginalFruitBanana", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "banana+.bmp", 
+                                "OriginalFruitBanana+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "orange.bmp", 
+                                "OriginalFruitOrange", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "orange+.bmp", 
+                                "OriginalFruitOrange+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "sberry.bmp", 
+                                "OriginalFruitSberry", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "sberry+.bmp", 
+                                "OriginalFruitSberry+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "tangelo.bmp", 
+                                "OriginalFruitTangelo", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "tangelo+.bmp", 
+                                "OriginalFruitTangelo+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "peach.bmp", 
+                                "OriginalFruitPeach", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "peach+.bmp", 
+                                "OriginalFruitPeach+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "passion.bmp", 
+                                "OriginalFruitPassion", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "passion+.bmp", 
+                                "OriginalFruitPassion+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "cherries.bmp", 
+                                "OriginalFruitCherries", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "cherry+.bmp", 
+                                "OriginalFruitCherries+", TEMP_RESOURCE_GROUP_NAME);
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", "papaya" + Conversions::DMToString(q) + ".bmp", 
+                                    "OriginalFruitPapaya" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "papaya+.bmp", 
+                                "OriginalFruitPapaya+", TEMP_RESOURCE_GROUP_NAME);
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", "mango" + Conversions::DMToString(q) + ".bmp", 
+                                    "OriginalFruitMango" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "mango+.bmp", 
+                                "OriginalFruitMango+", TEMP_RESOURCE_GROUP_NAME);
+
+        for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+        {
+            TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", "rberry" + Conversions::DMToString(q) + ".bmp", 
+                                    "OriginalFruitRberry" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "rberry+.bmp", 
+                                "OriginalFruitRberry+", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "brussel.bmp", 
+                                "OriginalFruitBrussel", TEMP_RESOURCE_GROUP_NAME);
+
+        TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "brussel+.bmp", 
+                                "OriginalFruitBrussel+", TEMP_RESOURCE_GROUP_NAME);
+    }
+
     UIRace::loadDashboardCars(mModeContext.getGameState());
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
@@ -136,115 +244,33 @@ void UIMainMenuBackground::createBackgroundMaterials()
 
     //main background
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalMainBackground");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/MainBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalMainBackground", "Test/MainBackground");
     }
 
     //additional background (feryl)
     {
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundA");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundA", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalBackgroundB");
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/BackgroundB", 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
+        clone2DMaterial("OriginalBackgroundA", "Test/BackgroundA");
+        clone2DMaterial("OriginalBackgroundB", "Test/BackgroundB");
     }
 
     //championship finish background
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalBackgroundEndChampionship");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/EndChampionshipBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalBackgroundEndChampionship", "Test/EndChampionshipBackground");
     }
 
     //trophies background
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalBackgroundTrophies");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/TrophiesBackground", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalBackgroundTrophies", "Test/TrophiesBackground");
     }
 
     for(size_t q = 0; q < amountTracks; ++q)
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalTrack" + Conversions::DMToString(q));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Track_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalTrack" + Conversions::DMToString(q), "Test/Background_Track_" + Conversions::DMToString(q));
     }
 
     for(size_t q = 0; q < amountCars; ++q)
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalCar" + Conversions::DMToString(q));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Car_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalCar" + Conversions::DMToString(q), "Test/Background_Car_" + Conversions::DMToString(q));
     }
 
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
@@ -256,36 +282,11 @@ void UIMainMenuBackground::createBackgroundMaterials()
         sscanf(iconName.c_str(), "car%d_%ds.bmp", &carIndex, &charIndex);
 
         {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_" + Conversions::DMToString(q), 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+            clone2DMaterial("OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), "Test/Background_Character_" + Conversions::DMToString(q));
+            clone2DMaterial("OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), "Test/Background_Character_Small_" + Conversions::DMToString(q));
         }
 
-        {
-            std::vector<Ogre::String> texName;
-            texName.push_back("OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex));
-            Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Character_Small_" + Conversions::DMToString(q), 
-                                "Test/Diffuse", 
-                                texName, 
-                                1.0f,
-                                TEMP_RESOURCE_GROUP_NAME);
-            newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-            newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-            Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-            state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-        }
-
-        //small icons
+        //small icons of cars
         {
             std::vector<Ogre::String> texName;
             texName.push_back("chroma_" + iconName);
@@ -306,39 +307,70 @@ void UIMainMenuBackground::createBackgroundMaterials()
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalGrid" + Conversions::DMToString(q));
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_Grid_" + Conversions::DMToString(q), 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalGrid" + Conversions::DMToString(q), "Test/Background_Grid_" + Conversions::DMToString(q));
+    }
+
+    //fruits
+    {
+        clone2DMaterial("OriginalFruitApple", "Test/Background_FruitApple");
+        clone2DMaterial("OriginalFruitApple+", "Test/Background_FruitApple+");
+
+        clone2DMaterial("OriginalFruitBanana", "Test/Background_FruitBanana");
+        clone2DMaterial("OriginalFruitBanana+", "Test/Background_FruitBanana+");
+
+        clone2DMaterial("OriginalFruitOrange", "Test/Background_FruitOrange");
+        clone2DMaterial("OriginalFruitOrange+", "Test/Background_FruitOrange+");
+
+        clone2DMaterial("OriginalFruitSberry", "Test/Background_FruitSberry");
+        clone2DMaterial("OriginalFruitSberry+", "Test/Background_FruitSberry+");
+
+        clone2DMaterial("OriginalFruitTangelo", "Test/Background_FruitTangelo");
+        clone2DMaterial("OriginalFruitTangelo+", "Test/Background_FruitTangelo+");
+
+        clone2DMaterial("OriginalFruitPeach", "Test/Background_FruitPeach");
+        clone2DMaterial("OriginalFruitPeach+", "Test/Background_FruitPeach+");
+
+        clone2DMaterial("OriginalFruitPassion", "Test/Background_FruitPassion");
+        clone2DMaterial("OriginalFruitPassion+", "Test/Background_FruitPassion+");
+
+        clone2DMaterial("OriginalFruitCherries", "Test/Background_FruitCherries");
+        clone2DMaterial("OriginalFruitCherries+", "Test/Background_FruitCherries+");
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            clone2DMaterial("OriginalFruitPapaya" + Conversions::DMToString(q), "Test/Background_FruitPapaya" + Conversions::DMToString(q));
+        }
+        clone2DMaterial("OriginalFruitPapaya+", "Test/Background_FruitPapaya+");
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            clone2DMaterial("OriginalFruitMango" + Conversions::DMToString(q), "Test/Background_FruitMango" + Conversions::DMToString(q));
+        }
+        clone2DMaterial("OriginalFruitMango+", "Test/Background_FruitMango+");
+
+        for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+        {
+            clone2DMaterial("OriginalFruitRberry" + Conversions::DMToString(q), "Test/Background_FruitRberry" + Conversions::DMToString(q));
+        }
+        clone2DMaterial("OriginalFruitRberry+", "Test/Background_FruitRberry+");
+
+        clone2DMaterial("OriginalFruitBrussel", "Test/Background_FruitBrussel");
+        clone2DMaterial("OriginalFruitBrussel+", "Test/Background_FruitBrussel+");
     }
 
     {
-        std::vector<Ogre::String> texName;
-        texName.push_back("OriginalExitSign");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_ExitSign", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
+        clone2DMaterial("OriginalExitSign", "Test/Background_ExitSign");
+        clone2DMaterial("Original1st", "Test/Background_1st");
+        clone2DMaterial("Original2nd", "Test/Background_2nd");
+        clone2DMaterial("Original3rd", "Test/Background_3rd");
     }
+}
 
-    {
+void UIMainMenuBackground::clone2DMaterial(const std::string& textureName, const std::string& newMaterialName) const
+{
         std::vector<Ogre::String> texName;
-        texName.push_back("Original1st");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_1st", 
+        texName.push_back(textureName);
+        Ogre::MaterialPtr newMat = CloneMaterial( newMaterialName, 
                             "Test/Diffuse", 
                             texName, 
                             1.0f,
@@ -348,37 +380,6 @@ void UIMainMenuBackground::createBackgroundMaterials()
         Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
         state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("Original2nd");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_2nd", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
-
-    {
-        std::vector<Ogre::String> texName;
-        texName.push_back("Original3rd");
-        Ogre::MaterialPtr newMat = CloneMaterial(  "Test/Background_3rd", 
-                            "Test/Diffuse", 
-                            texName, 
-                            1.0f,
-                            TEMP_RESOURCE_GROUP_NAME);
-        newMat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        newMat->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-        Ogre::TextureUnitState *state = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-        state->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-        state->setTextureFiltering(Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_NONE);
-    }
 }
 
 void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptionRelative, CustomTrayManager* trayMgr)

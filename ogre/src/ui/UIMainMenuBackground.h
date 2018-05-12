@@ -44,7 +44,11 @@ protected:
 
     void setMainBackgroundMaterial(const std::string& material){mMainBackground->setMaterialName(material);}
 
+    static const size_t mAmountTracksWithFruits = 8;
+
 private:
+
+    void clone2DMaterial(const std::string& textureName, const std::string& newMaterialName) const;
 
     Ogre::PanelOverlayElement* mMainBackground;
 
