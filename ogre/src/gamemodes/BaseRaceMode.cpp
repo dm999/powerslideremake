@@ -1035,6 +1035,14 @@ void BaseRaceMode::onLapFinished()
         std::string time = Tools::SecondsToString(lastLapTime);
         std::string lapS = Conversions::DMToString(lap);
         mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+        {
+            Ogre::Real bestLapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime();
+            std::string bestTime = Tools::SecondsToString(bestLapTime);
+            mUIRace->setMiscText(bestTime);
+            mUIRace->setShowMiscText(true);
+        }
     }
 
     
