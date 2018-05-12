@@ -296,6 +296,7 @@ void UIMainMenu::setTopmostSubmenu()
     switchState(State_SingleMulti);
 
     selectMode();
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
 }
 
 void UIMainMenu::setPodiumSubmenu()
@@ -420,6 +421,11 @@ void UIMainMenu::onNameChange()
     mModeContext.getGameState().savePlayerData();//save selected player
     switchState(State_SingleMulti);
     selectMode();
+    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+    selectCar(characterCar);
 }
 
 void UIMainMenu::switchState(const SinglePlayerMenuStates& state)

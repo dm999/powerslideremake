@@ -509,7 +509,8 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
     //fruits
     {
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(77.0f, 161.0f, 77.0f + 31.0f, 161.0f + 34.0f);
+            //0x004D5AA0
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(71.0f, 158.0f, 71.0f + 31.0f, 158.0f + 34.0f);
 
             mBackgroundFruitApple = createPanel("Background_FruitApple", background, "Test/Background_FruitApple");
             mBackgroundFruitApple->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -517,7 +518,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(110.0f, 153.0f, 110.0f + 43.0f, 153.0f + 44.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(105.0f, 148.0f, 105.0f + 43.0f, 148.0f + 44.0f);
 
             mBackgroundFruitBanana = createPanel("Background_FruitBanana", background, "Test/Background_FruitBanana");
             mBackgroundFruitBanana->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -525,7 +526,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(153.0f, 165.0f, 153.0f + 31.0f, 165.0f + 40.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(150.0f, 156.0f, 150.0f + 31.0f, 156.0f + 40.0f);
 
             mBackgroundFruitOrange = createPanel("Background_FruitOrange", background, "Test/Background_FruitOrange");
             mBackgroundFruitOrange->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -533,7 +534,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(187.0f, 176.0f, 187.0f + 17.0f, 176.0f + 22.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(185.0f, 170.0f, 185.0f + 17.0f, 170.0f + 22.0f);
 
             mBackgroundFruitSberry = createPanel("Background_FruitSberry", background, "Test/Background_FruitSberry");
             mBackgroundFruitSberry->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -541,7 +542,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(74.0f, 265.0f, 74.0f + 21.0f, 265.0f + 23.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(69.0f, 260.0f, 69.0f + 21.0f, 260.0f + 23.0f);
 
             mBackgroundFruitTangelo = createPanel("Background_FruitTangelo", background, "Test/Background_FruitTangelo");
             mBackgroundFruitTangelo->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -549,7 +550,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(98.0f, 249.0f, 98.0f + 36.0f, 249.0f + 34.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(97.0f, 248.0f, 97.0f + 36.0f, 248.0f + 34.0f);
 
             mBackgroundFruitPeach = createPanel("Background_FruitPeach", background, "Test/Background_FruitPeach");
             mBackgroundFruitPeach->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -557,7 +558,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(182.0f, 262.0f, 182.0f + 16.0f, 262.0f + 22.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(181.0f, 259.0f, 181.0f + 16.0f, 259.0f + 22.0f);
 
             mBackgroundFruitPassion = createPanel("Background_FruitPassion", background, "Test/Background_FruitPassion");
             mBackgroundFruitPassion->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -565,7 +566,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(149.0f, 249.0f, 149.0f + 26.0f, 249.0f + 36.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(146.0f, 247.0f, 146.0f + 26.0f, 247.0f + 36.0f);
 
             mBackgroundFruitCherries = createPanel("Background_FruitCherries", background, "Test/Background_FruitCherries");
             mBackgroundFruitCherries->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -574,18 +575,40 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
 
         for(size_t q = 0; q < amountCars; ++q)
         {
-            Ogre::Vector2 leftPoint(263.0f + q * 20.0f, 283.0f);
+            Ogre::Vector2 leftPoint;
             Ogre::Vector2 size(0.0f, 0.0f);
+
+            switch(q)
+            {
+            case 0:
+                leftPoint = Ogre::Vector2(261.0f, 281.0f);
+                break;
+            case 1:
+                leftPoint = Ogre::Vector2(281.0f, 281.0f);
+                break;
+            case 2:
+                leftPoint = Ogre::Vector2(302.0f, 281.0f);
+                break;
+            case 3:
+                leftPoint = Ogre::Vector2(327.0f, 279.0f);
+                break;
+            case 4:
+                leftPoint = Ogre::Vector2(346.0f, 278.0f);
+                break;
+            case 5:
+                leftPoint = Ogre::Vector2(369.0f, 276.0f);
+                break;
+            case 6:
+                leftPoint = Ogre::Vector2(344.0f, 323.0f);
+                break;
+            }
 
             if(q < 4)
                 size = Ogre::Vector2(16.0f, 51.0f);
             if(q >= 4 && q < 6)
                 size = Ogre::Vector2(18.0f, 45.0f);
             if(q >= 6)
-            {
-                leftPoint = Ogre::Vector2(347.0f, 324.0f);
                 size = Ogre::Vector2(27.0f, 23.0f);
-            }
 
             Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(leftPoint.x, leftPoint.y, leftPoint.x + size.x, leftPoint.y + size.y);
 
@@ -596,8 +619,33 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
 
         for(size_t q = 0; q < amountCars; ++q)
         {
-            Ogre::Vector2 leftPoint(262.0f + q * 20.0f, 208.0f);
+            Ogre::Vector2 leftPoint;
             Ogre::Vector2 size(0.0f, 0.0f);
+
+            switch(q)
+            {
+            case 0:
+                leftPoint = Ogre::Vector2(259.0f, 205.0f);
+                break;
+            case 1:
+                leftPoint = Ogre::Vector2(281.0f, 202.0f);
+                break;
+            case 2:
+                leftPoint = Ogre::Vector2(300.0f, 204.0f);
+                break;
+            case 3:
+                leftPoint = Ogre::Vector2(319.0f, 201.0f);
+                break;
+            case 4:
+                leftPoint = Ogre::Vector2(339.0f, 200.0f);
+                break;
+            case 5:
+                leftPoint = Ogre::Vector2(353.0f, 201.0f);
+                break;
+            case 6:
+                leftPoint = Ogre::Vector2(374.0f, 197.0f);
+                break;
+            }
 
             if(q == 0)
                 size = Ogre::Vector2(22.0f, 43.0f);
@@ -619,8 +667,36 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
 
         for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
         {
-            Ogre::Vector2 leftPoint(258.0f + q * 16.0f, 173.0f);
+            Ogre::Vector2 leftPoint;
             Ogre::Vector2 size(0.0f, 0.0f);
+
+            switch(q)
+            {
+            case 0:
+                leftPoint = Ogre::Vector2(255.0f, 167.0f);
+                break;
+            case 1:
+                leftPoint = Ogre::Vector2(273.0f, 167.0f);
+                break;
+            case 2:
+                leftPoint = Ogre::Vector2(289.0f, 164.0f);
+                break;
+            case 3:
+                leftPoint = Ogre::Vector2(308.0f, 162.0f);
+                break;
+            case 4:
+                leftPoint = Ogre::Vector2(324.0f, 162.0f);
+                break;
+            case 5:
+                leftPoint = Ogre::Vector2(339.0f, 162.0f);
+                break;
+            case 6:
+                leftPoint = Ogre::Vector2(355.0f, 157.0f);
+                break;
+            case 7:
+                leftPoint = Ogre::Vector2(372.0f, 154.0f);
+                break;
+            }
 
             if(q == 0)
                 size = Ogre::Vector2(19.0f, 34.0f);
@@ -637,7 +713,7 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         }
 
         {
-            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(157.0f, 339.0f, 157.0f + 17.0f, 339.0f + 18.0f);
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(150.0f, 335.0f, 150.0f + 17.0f, 335.0f + 18.0f);
 
             mBackgroundFruitBrussel = createPanel("Background_FruitBrussel", background, "Test/Background_FruitBrussel");
             mBackgroundFruitBrussel->setUV(0.0f, 0.0f, 1.0f, 1.0f);
