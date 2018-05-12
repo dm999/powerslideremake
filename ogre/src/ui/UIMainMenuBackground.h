@@ -38,6 +38,7 @@ protected:
     void showBackgroundExitSign(){mBackgroundExitSign->show();}
     void showBackgroundFirstSecondThird(){mBackground1st->show();mBackground2nd->show();mBackground3rd->show();}
     void showBackgroundCharacterSmallPodium(const finishBoardVec& finishBoard);
+    void showBackgroundFruis(const STRPlayerSettings::PlayerData& playerData);
     void hideAllBackgrounds();
     void hideBackgroundTrack(){mBackgroundTrack->hide();}
     void hideBackgroundCharacter(){mBackgroundCharacter->hide();}
@@ -68,6 +69,20 @@ private:
     Ogre::PanelOverlayElement* mBackground3rd;
 
     Ogre::PanelOverlayElement* mBackgroundCharacterSmallPodium[mPodiumCharacters];
+
+    Ogre::PanelOverlayElement* mBackgroundFruitApple;
+    Ogre::PanelOverlayElement* mBackgroundFruitBanana;
+    Ogre::PanelOverlayElement* mBackgroundFruitOrange;
+    Ogre::PanelOverlayElement* mBackgroundFruitSberry;
+    Ogre::PanelOverlayElement* mBackgroundFruitTangelo;
+    Ogre::PanelOverlayElement* mBackgroundFruitPeach;
+    Ogre::PanelOverlayElement* mBackgroundFruitPassion;
+    Ogre::PanelOverlayElement* mBackgroundFruitCherries;
+    Ogre::PanelOverlayElement* mBackgroundFruitPapaya[amountCars];
+    Ogre::PanelOverlayElement* mBackgroundFruitMango[amountCars];
+    Ogre::PanelOverlayElement* mBackgroundFruitRberry[mAmountTracksWithFruits];
+    Ogre::PanelOverlayElement* mBackgroundFruitBrussel;
+    Ogre::PanelOverlayElement* mBackgroundFruitEnlarge;
 
 };
 

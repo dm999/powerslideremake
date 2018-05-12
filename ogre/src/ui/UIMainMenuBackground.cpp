@@ -505,6 +505,153 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         if(q == 2)
             mBackground3rd->addChild(mBackgroundCharacterSmallPodium[q]);
     }
+
+    //fruits
+    {
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(77.0f, 161.0f, 77.0f + 31.0f, 161.0f + 34.0f);
+
+            mBackgroundFruitApple = createPanel("Background_FruitApple", background, "Test/Background_FruitApple");
+            mBackgroundFruitApple->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitApple);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(110.0f, 153.0f, 110.0f + 43.0f, 153.0f + 44.0f);
+
+            mBackgroundFruitBanana = createPanel("Background_FruitBanana", background, "Test/Background_FruitBanana");
+            mBackgroundFruitBanana->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitBanana);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(153.0f, 165.0f, 153.0f + 31.0f, 165.0f + 40.0f);
+
+            mBackgroundFruitOrange = createPanel("Background_FruitOrange", background, "Test/Background_FruitOrange");
+            mBackgroundFruitOrange->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitOrange);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(187.0f, 176.0f, 187.0f + 17.0f, 176.0f + 22.0f);
+
+            mBackgroundFruitSberry = createPanel("Background_FruitSberry", background, "Test/Background_FruitSberry");
+            mBackgroundFruitSberry->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitSberry);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(74.0f, 265.0f, 74.0f + 21.0f, 265.0f + 23.0f);
+
+            mBackgroundFruitTangelo = createPanel("Background_FruitTangelo", background, "Test/Background_FruitTangelo");
+            mBackgroundFruitTangelo->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitTangelo);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(98.0f, 249.0f, 98.0f + 36.0f, 249.0f + 34.0f);
+
+            mBackgroundFruitPeach = createPanel("Background_FruitPeach", background, "Test/Background_FruitPeach");
+            mBackgroundFruitPeach->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitPeach);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(182.0f, 262.0f, 182.0f + 16.0f, 262.0f + 22.0f);
+
+            mBackgroundFruitPassion = createPanel("Background_FruitPassion", background, "Test/Background_FruitPassion");
+            mBackgroundFruitPassion->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitPassion);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(149.0f, 249.0f, 149.0f + 26.0f, 249.0f + 36.0f);
+
+            mBackgroundFruitCherries = createPanel("Background_FruitCherries", background, "Test/Background_FruitCherries");
+            mBackgroundFruitCherries->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitCherries);
+        }
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            Ogre::Vector2 leftPoint(263.0f + q * 20.0f, 283.0f);
+            Ogre::Vector2 size(0.0f, 0.0f);
+
+            if(q < 4)
+                size = Ogre::Vector2(16.0f, 51.0f);
+            if(q >= 4 && q < 6)
+                size = Ogre::Vector2(18.0f, 45.0f);
+            if(q >= 6)
+            {
+                leftPoint = Ogre::Vector2(347.0f, 324.0f);
+                size = Ogre::Vector2(27.0f, 23.0f);
+            }
+
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(leftPoint.x, leftPoint.y, leftPoint.x + size.x, leftPoint.y + size.y);
+
+            mBackgroundFruitPapaya[q] = createPanel("Background_FruitPapaya" + Conversions::DMToString(q), background, "Test/Background_FruitPapaya" + Conversions::DMToString(q));
+            mBackgroundFruitPapaya[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitPapaya[q]);
+        }
+
+        for(size_t q = 0; q < amountCars; ++q)
+        {
+            Ogre::Vector2 leftPoint(262.0f + q * 20.0f, 208.0f);
+            Ogre::Vector2 size(0.0f, 0.0f);
+
+            if(q == 0)
+                size = Ogre::Vector2(22.0f, 43.0f);
+            if(q >= 1 && q < 4)
+                size = Ogre::Vector2(18.0f, 43.0f);
+            if(q == 4)
+                size = Ogre::Vector2(14.0f, 43.0f);
+            if(q == 5)
+                size = Ogre::Vector2(17.0f, 43.0f);
+            if(q == 6)
+                size = Ogre::Vector2(13.0f, 32.0f);
+
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(leftPoint.x, leftPoint.y, leftPoint.x + size.x, leftPoint.y + size.y);
+
+            mBackgroundFruitMango[q] = createPanel("Background_FruitMango" + Conversions::DMToString(q), background, "Test/Background_FruitMango" + Conversions::DMToString(q));
+            mBackgroundFruitMango[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitMango[q]);
+        }
+
+        for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+        {
+            Ogre::Vector2 leftPoint(258.0f + q * 16.0f, 173.0f);
+            Ogre::Vector2 size(0.0f, 0.0f);
+
+            if(q == 0)
+                size = Ogre::Vector2(19.0f, 34.0f);
+            if(q >= 1 && q < 6)
+                size = Ogre::Vector2(16.0f, 34.0f);
+            if(q >= 6 && q < 8)
+                size = Ogre::Vector2(14.0f, 34.0f);
+
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(leftPoint.x, leftPoint.y, leftPoint.x + size.x, leftPoint.y + size.y);
+
+            mBackgroundFruitRberry[q] = createPanel("Background_FruitRberry" + Conversions::DMToString(q), background, "Test/Background_FruitRberry" + Conversions::DMToString(q));
+            mBackgroundFruitRberry[q]->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitRberry[q]);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(157.0f, 339.0f, 157.0f + 17.0f, 339.0f + 18.0f);
+
+            mBackgroundFruitBrussel = createPanel("Background_FruitBrussel", background, "Test/Background_FruitBrussel");
+            mBackgroundFruitBrussel->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitBrussel);
+        }
+
+        {
+            Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(205.0f, 100.0f, 205.0f + 195.0f, 100.0f + 285.0f);
+
+            mBackgroundFruitEnlarge = createPanel("Background_FruitEnlarge", background, "Test/Background_FruitBrussel+");
+            mBackgroundFruitEnlarge->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+            mMainBackground->addChild(mBackgroundFruitEnlarge);
+        }
+    }
 }
 
 void UIMainMenuBackground::setCurrentTrackLogo()
@@ -653,6 +800,56 @@ void UIMainMenuBackground::showBackgroundCharacterSmallPodium(const finishBoardV
     }
 }
 
+void UIMainMenuBackground::showBackgroundFruis(const STRPlayerSettings::PlayerData& playerData)
+{
+    const std::vector<bool>& fruits = playerData.fruit;
+
+    if(fruits[Championship::mWinnerFruitOffset + 0])
+        mBackgroundFruitApple->show();
+
+    if(fruits[Championship::mWinnerFruitOffset + 1])
+        mBackgroundFruitBanana->show();
+
+    if(fruits[Championship::mWinnerFruitOffset + 2])
+        mBackgroundFruitOrange->show();
+
+    if(fruits[Championship::mWinnerFruitOffset + 3])
+        mBackgroundFruitSberry->show();
+
+    if(fruits[Championship::mEveryWinnerFruitOffset + 0])
+        mBackgroundFruitTangelo->show();
+
+    if(fruits[Championship::mEveryWinnerFruitOffset + 1])
+        mBackgroundFruitPeach->show();
+
+    if(fruits[Championship::mEveryWinnerFruitOffset + 2])
+        mBackgroundFruitPassion->show();
+
+    if(fruits[Championship::mEveryWinnerFruitOffset + 3])
+        mBackgroundFruitCherries->show();
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        if(fruits[Championship::mExpertCarFruitOffset + q])
+            mBackgroundFruitPapaya[q]->show();
+    }
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        if(fruits[Championship::mInsaneCarFruitOffset + q])
+            mBackgroundFruitMango[q]->show();
+    }
+
+    for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+    {
+        if(fruits[Championship::mBeatEmergentGunFruitOffset + q])
+            mBackgroundFruitRberry[q]->show();
+    }
+
+    if(fruits[Championship::mBrusselFruitOffset + 0])
+        mBackgroundFruitBrussel->show();
+}
+
 void UIMainMenuBackground::hideAllBackgrounds()
 {
     mBackgroundA->hide(); 
@@ -677,4 +874,24 @@ void UIMainMenuBackground::hideAllBackgrounds()
     {
         mBackgroundCharacterSmallPodium[q]->hide();
     }
+
+    mBackgroundFruitApple->hide();
+    mBackgroundFruitBanana->hide();
+    mBackgroundFruitOrange->hide();
+    mBackgroundFruitSberry->hide();
+    mBackgroundFruitTangelo->hide();
+    mBackgroundFruitPeach->hide();
+    mBackgroundFruitPassion->hide();
+    mBackgroundFruitCherries->hide();
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        mBackgroundFruitPapaya[q]->hide();
+        mBackgroundFruitMango[q]->hide();
+    }
+    for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+    {
+        mBackgroundFruitRberry[q]->hide();
+    }
+    mBackgroundFruitBrussel->hide();
+    mBackgroundFruitEnlarge->hide();
 }

@@ -552,6 +552,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Trophies:
         mIsInStartingGrid = false;
         setMainBackgroundMaterial("Test/TrophiesBackground");
+        showBackgroundFruis(mModeContext.getGameState().getPlayerData());
         for(size_t q = 0; q < mControlsCount; ++q)
         {
             setControlShow(q, false);
