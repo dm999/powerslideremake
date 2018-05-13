@@ -585,9 +585,12 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
     }//AI strength
 }
 
-void UIBackgroundLoaderProgressTracks::show(const std::string& trackName, bool showAIStrength, AIStrength strength)
+void UIBackgroundLoaderProgressTracks::show(const ModeContext& modeContext, bool showAIStrength)
 {
     UIBackgroundLoaderProgress::show();
+
+    const std::string trackName = modeContext.getGameState().getTrackNameAsOriginal();
+    const AIStrength strength = modeContext.getGameState().getAIStrength();
     
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -600,8 +603,9 @@ void UIBackgroundLoaderProgressTracks::show(const std::string& trackName, bool s
         0.0f,                   0.0f,                       0.0f,                   viewportHeight / 480.0f);
 
     Ogre::Vector4 trackPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 140.0f, 640.0f, 328.0f);
-    Ogre::Vector4 trackTitlePos = screenAdaptionRelative * Ogre::Vector4(133.0f, 341.0f, 133.0f + 363.0f, 341.0f + 40.0f);
-
+    const Ogre::Vector2 trackTitleOriginalPos(133.0f, 341.0f);
+    Ogre::Vector4 trackTitlePos = screenAdaptionRelative * Ogre::Vector4(trackTitleOriginalPos.x, trackTitleOriginalPos.y, trackTitleOriginalPos.x + 363.0f, trackTitleOriginalPos.y + 40.0f);
+    Ogre::Vector4 bestPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 320.0f, 440.0f);
 
     mTrack = createPanel("LoaderScreenProgressTrack", trackPos, mMaterialTrackNames[trackName]);
     mTrack->setUV(0.0f, 0.0f, 1.0f, 1.0f);
@@ -642,12 +646,29 @@ void UIBackgroundLoaderProgressTracks::show(const std::string& trackName, bool s
         mUIStrength->show();
     }
 
+    const STRHiscores& strHiscores = modeContext.getGameState().getSTRHiscores();
+    std::vector<std::string> names = strHiscores.getArrayValue(trackName + " parameters", "names");
+    std::vector<std::string> times = strHiscores.getArrayValue(trackName + " parameters", "lap times");
+
+    float time;
+    Conversions::DMFromString(times[0], time);
+
+    mBestTime = createTextArea("LoaderScreenProgressBestTime", 0.0f, 0.0f, bestPos.z, bestPos.w); 
+    mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
+    mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
+    mBestTime->setSpaceWidth(9.0f);
+    mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);
+    mBestTime->setFontName("SdkTrays/Caption");
+    mBestTime->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    mLoaderScreen->addChild(mBestTime);
+    mBestTime->show();
 
     mModeContext.mWindow->update(true);// update draw
 }
 
 void UIBackgroundLoaderProgressTracks::hide()
 {
+    mLoaderScreen->removeChild(mBestTime->getName());
     mLoaderScreen->removeChild(mTrack->getName());
     mLoaderScreen->removeChild(mTrackTitle->getName());
     if(mUIStrength)
@@ -656,6 +677,7 @@ void UIBackgroundLoaderProgressTracks::hide()
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
     om.destroyOverlayElement(mTrack);
     om.destroyOverlayElement(mTrackTitle);
+    om.destroyOverlayElement(mBestTime);
     if(mUIStrength)
         om.destroyOverlayElement(mUIStrength);
 
@@ -1116,11 +1138,12 @@ void UIBackgroundLoaderProgressTracksChampionship::loadTextureAndCreateMaterial(
 
 }
 
-void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const std::string& trackName, bool showAIStrength, AIStrength strength)
+void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const ModeContext& modeContext, bool showAIStrength)
 {
     UIBackgroundLoaderProgress::show();
 
-    mStrength = strength;
+    const std::string trackName = modeContext.getGameState().getTrackNameAsOriginal();
+    mStrength = modeContext.getGameState().getAIStrength();
     
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
@@ -1134,6 +1157,7 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
 
     Ogre::Vector4 trackPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 140.0f, 640.0f, 328.0f);
     Ogre::Vector4 trackTitlePos = screenAdaptionRelative * Ogre::Vector4(133.0f, 341.0f, 133.0f + 363.0f, 341.0f + 40.0f);
+    Ogre::Vector4 bestPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 320.0f, 440.0f);
 
 
     if(mStrength == Easy)
@@ -1216,7 +1240,7 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
         Ogre::Vector4 uiStrengthPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 280.0f, 119.0f);
 
         Ogre::String uiStrengthName = mMaterialAIEasyName;
-        switch(strength)
+        switch(mStrength)
         {
             case Medium:
                 uiStrengthName = mMaterialAIMediumName;
@@ -1234,6 +1258,23 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
         mLoaderScreen->addChild(mUIStrength);
         mUIStrength->show();
     }
+
+    const STRHiscores& strHiscores = modeContext.getGameState().getSTRHiscores();
+    std::vector<std::string> names = strHiscores.getArrayValue(trackName + " parameters", "names");
+    std::vector<std::string> times = strHiscores.getArrayValue(trackName + " parameters", "lap times");
+
+    float time;
+    Conversions::DMFromString(times[0], time);
+
+    mBestTime = createTextArea("LoaderScreenProgressBestTimeChampionship", 0.0f, 0.0f, bestPos.z, bestPos.w); 
+    mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
+    mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
+    mBestTime->setSpaceWidth(9.0f);
+    mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);
+    mBestTime->setFontName("SdkTrays/Caption");
+    mBestTime->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    mLoaderScreen->addChild(mBestTime);
+    mBestTime->show();
 
 
     mModeContext.getRenderWindow()->update(true);// update draw
@@ -1265,6 +1306,7 @@ void UIBackgroundLoaderProgressTracksChampionship::hide()
         }
     }
 
+    mLoaderScreen->removeChild(mBestTime->getName());
     mLoaderScreen->removeChild(mTrackTitle->getName());
     if(mUIStrength)
         mLoaderScreen->removeChild(mUIStrength->getName());
@@ -1291,6 +1333,7 @@ void UIBackgroundLoaderProgressTracksChampionship::hide()
             om.destroyOverlayElement(mTrack[q]);
         }
     }
+    om.destroyOverlayElement(mBestTime);
     om.destroyOverlayElement(mTrackTitle);
     if(mUIStrength)
         om.destroyOverlayElement(mUIStrength);

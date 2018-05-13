@@ -105,7 +105,7 @@ public:
         const std::string& path, const std::string& fileName,
         float progressTop, float progressBottom, float progressLeft, float progressRight);
 
-    void show(const std::string& trackName, bool showAIStrength, AIStrength strength);
+    void show(const ModeContext& modeContext, bool showAIStrength);
     void hide();
 
 #if defined(__ANDROID__)
@@ -135,6 +135,8 @@ private:
     Ogre::PanelOverlayElement* mTrack;
     Ogre::PanelOverlayElement* mTrackTitle;
     Ogre::PanelOverlayElement* mUIStrength;
+
+    Ogre::TextAreaOverlayElement * mBestTime;
 };
 
 class UIBackgroundLoaderProgressTracksChampionship : public UIBackgroundLoaderProgress
@@ -146,7 +148,7 @@ public:
         const std::string& path, const std::string& fileName,
         float progressTop, float progressBottom, float progressLeft, float progressRight);
 
-    void show(size_t trackIndex, const std::string& trackName, bool showAIStrength, AIStrength strength);
+    void show(size_t trackIndex, const ModeContext& modeContext, bool showAIStrength);
     void hide();
 
 #if defined(__ANDROID__)
@@ -197,6 +199,8 @@ private:
     Ogre::String mMaterialAIMediumName;
     Ogre::String mMaterialAIHardName;
     Ogre::String mMaterialAIInsaneName;
+
+    Ogre::TextAreaOverlayElement * mBestTime;
 
     static const int mMaxTracks = 8;
     Ogre::PanelOverlayElement* mTrack[mMaxTracks];

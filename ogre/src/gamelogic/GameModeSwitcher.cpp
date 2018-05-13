@@ -296,7 +296,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mIsLoadPassed = false;
-            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;
@@ -318,7 +318,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mIsLoadPassed = false;
-            mUILoaderChampionship->show(championshipTrack, mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mUILoaderChampionship->show(championshipTrack, mContext, true);
             mPlayerMode->initData(this);
             mUILoaderChampionship->hide();
             mIsLoadPassed = true;
@@ -336,7 +336,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new SinglePlayerMode(mContext));
             mIsLoadPassed = false;
-            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), false, mContext.getGameState().getAIStrength());
+            mUILoader->show(mContext, false);
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;
@@ -366,7 +366,7 @@ void GameModeSwitcher::frameEnded()
 
             mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
             mIsLoadPassed = false;
-            mUILoader->show(mContext.getGameState().getTrackNameAsOriginal(), true, mContext.getGameState().getAIStrength());
+            mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;
