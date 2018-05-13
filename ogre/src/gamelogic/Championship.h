@@ -30,6 +30,8 @@ public:
     std::string getAwardString(int index, const ModeContext& modeContext, size_t trackIndex = 0) const;
     std::string getUnlockedString(int index) const;
 
+    static bool checkEmergentGunBeaten(const ModeContext& modeContext, Ogre::Real bestLap, size_t& trackIndex);
+
     static const size_t mWinnerFruitOffset          = 0;
     static const size_t mEveryWinnerFruitOffset     = mWinnerFruitOffset            + 4;//novice, advanced, expert, insane
     static const size_t mExpertCarFruitOffset       = mEveryWinnerFruitOffset       + 4;//novice, advanced, expert, insane

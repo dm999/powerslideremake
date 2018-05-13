@@ -46,21 +46,13 @@ void Championship::trackFinished(const ModeContext& modeContext, Ogre::Real best
 
     ++mCurrentTrack;
 
+    
     //check emergent gun
     {
-        const STRRacetimes& strRacetimes = modeContext.getGameState().getSTRRacetimes();
-        std::string trackName = modeContext.getGameState().getTrackNameAsOriginal();
-        float emergentGun = strRacetimes.getFloatValue("emergent gun times", trackName);
-        if(bestLap <= emergentGun && bestLap > 0.0f)
+        size_t trackIndex;
+        if(checkEmergentGunBeaten(modeContext, bestLap, trackIndex))
         {
-            const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
-            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-            size_t trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
-            const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
-            if(!playerData.fruit[trackIndex + mBeatEmergentGunFruitOffset])
-            {
-                mAvailableEmergentGunBeatenTracks.push_back(trackIndex + mBeatEmergentGunFruitOffset);
-            }
+            mAvailableEmergentGunBeatenTracks.push_back(trackIndex + mBeatEmergentGunFruitOffset);
         }
     }
 
@@ -275,4 +267,27 @@ std::string Championship::getUnlockedString(int index) const
     }
 
     return res;
+}
+
+bool Championship::checkEmergentGunBeaten(const ModeContext& modeContext, Ogre::Real bestLap, size_t& trackIndex)
+{
+    bool ret = false;
+
+    const STRRacetimes& strRacetimes = modeContext.getGameState().getSTRRacetimes();
+    std::string trackName = modeContext.getGameState().getTrackNameAsOriginal();
+    float emergentGun = strRacetimes.getFloatValue("emergent gun times", trackName);
+    if(bestLap <= emergentGun && bestLap > 0.0f)
+    {
+        const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
+        std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+        trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
+        const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
+        if(!playerData.fruit[trackIndex + mBeatEmergentGunFruitOffset])
+        {
+            ret = true;
+        }
+    }
+
+
+    return ret;
 }

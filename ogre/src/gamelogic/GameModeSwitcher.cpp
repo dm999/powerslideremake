@@ -147,20 +147,12 @@ void GameModeSwitcher::frameEnded()
             //check emergent gun
             {
                 Ogre::Real bestLap = mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime();
-                const STRRacetimes& strRacetimes = mContext.getGameState().getSTRRacetimes();
-                std::string trackName = mContext.getGameState().getTrackNameAsOriginal();
-                float emergentGun = strRacetimes.getFloatValue("emergent gun times", trackName);
-                if(bestLap <= emergentGun && bestLap > 0.0f)
+                size_t trackIndex;
+                if(Championship::checkEmergentGunBeaten(mContext, bestLap, trackIndex))
                 {
-                    const STRPowerslide& strPowerslide = mContext.getGameState().getSTRPowerslide();
-                    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-                    size_t trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
                     STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
-                    if(!playerData.fruit[trackIndex + Championship::mBeatEmergentGunFruitOffset])
-                    {
-                        playerData.fruit[trackIndex + Championship::mBeatEmergentGunFruitOffset] = true;
-                        mContext.getGameState().savePlayerData();
-                    }
+                    playerData.fruit[trackIndex + Championship::mBeatEmergentGunFruitOffset] = true;
+                    mContext.getGameState().savePlayerData();
                 }
             }
         }
