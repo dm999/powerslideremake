@@ -107,8 +107,18 @@ private:
 
 
     std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
+
     std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
+    Ogre::TextAreaOverlayElement * mCarParam_Mass;
+    Ogre::TextAreaOverlayElement * mCarParam_Power;
+    Ogre::TextAreaOverlayElement * mCarParam_Acceleration;
+    Ogre::TextAreaOverlayElement * mCarParam_Traction;
+    Ogre::TextAreaOverlayElement * mCarParam_TopSpeed;
+    Ogre::TextAreaOverlayElement * mCarParam_AeroDynamics;
+    Ogre::TextAreaOverlayElement * mCarParam_Stability;
+
     std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
+
     std::vector<Ogre::TextAreaOverlayElement *> mOptionLabels;
 
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor;

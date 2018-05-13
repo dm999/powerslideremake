@@ -232,7 +232,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 107.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 100.0f, 0.0f, 0.0f);
         mModeSingle = createTextArea("MainWindowSingle", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingle->setCaption("Single Player");
         mModeSingle->setCharHeight(46.0f * viewportHeight / 1024.0f);
@@ -246,7 +246,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
 #ifndef NO_MULTIPLAYER
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 137.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 135.0f, 0.0f, 0.0f);
         mModeMulti = createTextArea("MainWindowMulti", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMulti->setCaption("Multi Player");
         mModeMulti->setCharHeight(46.0f * viewportHeight / 1024.0f);
@@ -259,7 +259,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 160.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 160.0f, 0.0f, 0.0f);
         mModeMultiIP = createTextArea("MainWindowMultiIP", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiIP->setCaption("Server IP:");
         mModeMultiIP->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -272,7 +272,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 200.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 200.0f, 0.0f, 0.0f);
         mModeMultiConnect = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiConnect->setCaption("Get List of Rooms");
         mModeMultiConnect->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -285,7 +285,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 240.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 240.0f, 0.0f, 0.0f);
         mModeMultiUserName = createTextArea("MainWindowMultiUserName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiUserName->setCaption("User Name:");
         mModeMultiUserName->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -298,7 +298,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 290.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 290.0f, 0.0f, 0.0f);
         mModeMultiRoomName = createTextArea("MainWindowMultiRoomName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiRoomName->setCaption("Room Name:");
         mModeMultiRoomName->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -311,7 +311,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 350.0f, 0.0f, 0.0f);
         mModeMultiCreateRoom = createTextArea("MainWindowMultiCreateRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiCreateRoom->setCaption("Create Room");
         mModeMultiCreateRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -338,7 +338,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #endif
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 175.0f, 0.0f, 0.0f);
         mModeSingleTypeRace = createTextArea("MainWindowSingleTypeRace", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeRace->setCaption("Single Race");
         mModeSingleTypeRace->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -351,7 +351,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 213.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 200.0f, 0.0f, 0.0f);
         mModeSingleTypeChampionship = createTextArea("MainWindowSingleTypeChampionship", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeChampionship->setCaption("Championship");
         mModeSingleTypeChampionship->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -364,7 +364,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 233.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 225.0f, 0.0f, 0.0f);
         mModeSingleTypeTimetrial = createTextArea("MainWindowSingleTypeTimetrial", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeTimetrial->setCaption("Time Trial");
         mModeSingleTypeTimetrial->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -377,7 +377,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 193.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 193.0f, 0.0f, 0.0f);
         mModeSingleDifficultyNovice = createTextArea("MainWindowSingleDiffNovice", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleDifficultyNovice->setCaption("Novice");
         mModeSingleDifficultyNovice->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -390,7 +390,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 213.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 213.0f, 0.0f, 0.0f);
         mModeSingleDifficultyAdvanced = createTextArea("MainWindowSingleDiffAdv", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleDifficultyAdvanced->setCaption("Advanced");
         mModeSingleDifficultyAdvanced->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -403,7 +403,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 233.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 233.0f, 0.0f, 0.0f);
         mModeSingleDifficultyExpert = createTextArea("MainWindowSingleDiffExpert", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleDifficultyExpert->setCaption("Expert");
         mModeSingleDifficultyExpert->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -416,7 +416,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 253.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 253.0f, 0.0f, 0.0f);
         mModeSingleDifficultyInsane = createTextArea("MainWindowSingleDiffInsane", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleDifficultyInsane->setCaption("Insane");
         mModeSingleDifficultyInsane->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -562,6 +562,90 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mCarsLabels[q]->setFontName("SdkTrays/Caption");
         mCarsLabels[q]->setColour(mInactiveLabel);
         getMainBackground()->addChild(mCarsLabels[q]);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 223.0f, 0.0f, 0.0f);
+        mCarParam_Mass = createTextArea("MainWindowSingleCarParamMass", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_Mass->setCaption("Mass:");
+        mCarParam_Mass->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Mass->setSpaceWidth(9.0f);
+        mCarParam_Mass->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Mass->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_Mass->setFontName("SdkTrays/Caption");
+        mCarParam_Mass->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_Mass);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 243.0f, 0.0f, 0.0f);
+        mCarParam_Power = createTextArea("MainWindowSingleCarParamPower", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_Power->setCaption("Power:");
+        mCarParam_Power->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Power->setSpaceWidth(9.0f);
+        mCarParam_Power->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Power->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_Power->setFontName("SdkTrays/Caption");
+        mCarParam_Power->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_Power);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 263.0f, 0.0f, 0.0f);
+        mCarParam_Acceleration = createTextArea("MainWindowSingleCarParamAccel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_Acceleration->setCaption("Acceleration:");
+        mCarParam_Acceleration->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Acceleration->setSpaceWidth(9.0f);
+        mCarParam_Acceleration->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Acceleration->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_Acceleration->setFontName("SdkTrays/Caption");
+        mCarParam_Acceleration->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_Acceleration);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 281.0f, 0.0f, 0.0f);
+        mCarParam_Traction = createTextArea("MainWindowSingleCarParamTraction", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_Traction->setCaption("Traction:");
+        mCarParam_Traction->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Traction->setSpaceWidth(9.0f);
+        mCarParam_Traction->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Traction->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_Traction->setFontName("SdkTrays/Caption");
+        mCarParam_Traction->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_Traction);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 300.0f, 0.0f, 0.0f);
+        mCarParam_TopSpeed = createTextArea("MainWindowSingleCarParamTopSpeed", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_TopSpeed->setCaption("Top Speed:");
+        mCarParam_TopSpeed->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_TopSpeed->setSpaceWidth(9.0f);
+        mCarParam_TopSpeed->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_TopSpeed->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_TopSpeed->setFontName("SdkTrays/Caption");
+        mCarParam_TopSpeed->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_TopSpeed);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 319.0f, 0.0f, 0.0f);
+        mCarParam_AeroDynamics = createTextArea("MainWindowSingleCarParamAero", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_AeroDynamics->setCaption("AeroDynamics:");
+        mCarParam_AeroDynamics->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_AeroDynamics->setSpaceWidth(9.0f);
+        mCarParam_AeroDynamics->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_AeroDynamics->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_AeroDynamics->setFontName("SdkTrays/Caption");
+        mCarParam_AeroDynamics->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_AeroDynamics);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 338.0f, 0.0f, 0.0f);
+        mCarParam_Stability = createTextArea("MainWindowSingleCarParamStability", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarParam_Stability->setCaption("Stability:");
+        mCarParam_Stability->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Stability->setSpaceWidth(9.0f);
+        mCarParam_Stability->setHeight(20.0f * viewportHeight / 1024.0f);
+        mCarParam_Stability->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mCarParam_Stability->setFontName("SdkTrays/Caption");
+        mCarParam_Stability->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mCarParam_Stability);
     }
 
     mCharactersLabels.clear();
@@ -2120,6 +2204,14 @@ void UIMainMenuLabels::showCarLabels()
             mCarsLabels[q]->show();
         }
     }
+
+    mCarParam_Mass->show();
+    mCarParam_Power->show();
+    mCarParam_Acceleration->show();
+    mCarParam_Traction->show();
+    mCarParam_TopSpeed->show();
+    mCarParam_AeroDynamics->show();
+    mCarParam_Stability->show();
 }
 
 void UIMainMenuLabels::showCharacterLabels()
@@ -2433,6 +2525,13 @@ void UIMainMenuLabels::hideAllLabels()
 
     for(size_t q = 0; q < mCarsLabels.size(); ++q)
         mCarsLabels[q]->hide();
+    mCarParam_Mass->hide();
+    mCarParam_Power->hide();
+    mCarParam_Acceleration->hide();
+    mCarParam_Traction->hide();
+    mCarParam_TopSpeed->hide();
+    mCarParam_AeroDynamics->hide();
+    mCarParam_Stability->hide();
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
         mCharactersLabels[q]->hide();

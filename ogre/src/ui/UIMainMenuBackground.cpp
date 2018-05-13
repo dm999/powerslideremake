@@ -370,6 +370,7 @@ void UIMainMenuBackground::createBackgroundMaterials()
     for(size_t q = 0; q < amountCars; ++q)
     {
         clone2DMaterial("OriginalCar" + Conversions::DMToString(q), "Test/Background_Car_" + Conversions::DMToString(q));
+        clone2DMaterial("OriginalCarS" + Conversions::DMToString(q), "Test/Background_CarS_" + Conversions::DMToString(q));
     }
 
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
@@ -521,6 +522,13 @@ void UIMainMenuBackground::createBackgroundUI(const Ogre::Matrix4& screenAdaptio
         mBackgroundCar = createPanel("BackgroundCar", background, "Test/Background_Car_0");
         mBackgroundCar->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         mMainBackground->addChild(mBackgroundCar);
+    }
+    {
+        Ogre::Vector4 background = screenAdaptionRelative * Ogre::Vector4(169.0f, 219.0f, 169.0f + 119.0f, 219.0f + 136.0f);
+
+        mBackgroundCarS = createPanel("BackgroundCarS", background, "Test/Background_CarS_0");
+        mBackgroundCarS->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        mMainBackground->addChild(mBackgroundCarS);
     }
 
     {
@@ -854,6 +862,7 @@ void UIMainMenuBackground::setCurrentCarLogo()
 void UIMainMenuBackground::setCarLogo(size_t index)
 {
     mBackgroundCar->setMaterialName("Test/Background_Car_" + Conversions::DMToString(index));
+    mBackgroundCarS->setMaterialName("Test/Background_CarS_" + Conversions::DMToString(index));
 }
 
 void UIMainMenuBackground::setCharacterLogo(size_t index)
@@ -1033,6 +1042,7 @@ void UIMainMenuBackground::hideAllBackgrounds()
 
     mBackgroundTrack->hide();
     mBackgroundCar->hide();
+    mBackgroundCarS->hide();
     mBackgroundCharacter->hide();
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
