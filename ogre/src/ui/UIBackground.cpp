@@ -649,12 +649,16 @@ void UIBackgroundLoaderProgressTracks::show(const ModeContext& modeContext, bool
     const STRHiscores& strHiscores = modeContext.getGameState().getSTRHiscores();
     std::vector<std::string> names = strHiscores.getArrayValue(trackName + " parameters", "names");
     std::vector<std::string> times = strHiscores.getArrayValue(trackName + " parameters", "lap times");
+    std::vector<std::string> dimCoeff = strHiscores.getArrayValue(trackName + " parameters", "4th dimension coefficient");
 
     float time;
     Conversions::DMFromString(times[0], time);
 
     mBestTime = createTextArea("LoaderScreenProgressBestTime", 0.0f, 0.0f, bestPos.z, bestPos.w); 
-    mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
+    if(dimCoeff[0] == "0")
+        mBestTime->setCaption(STRPowerslide::getCharacterTitle(names[0]) + " " + Tools::SecondsToString(time));
+    else
+        mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
     mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
     mBestTime->setSpaceWidth(9.0f);
     mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);
@@ -1262,12 +1266,16 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
     const STRHiscores& strHiscores = modeContext.getGameState().getSTRHiscores();
     std::vector<std::string> names = strHiscores.getArrayValue(trackName + " parameters", "names");
     std::vector<std::string> times = strHiscores.getArrayValue(trackName + " parameters", "lap times");
+    std::vector<std::string> dimCoeff = strHiscores.getArrayValue(trackName + " parameters", "4th dimension coefficient");
 
     float time;
     Conversions::DMFromString(times[0], time);
 
     mBestTime = createTextArea("LoaderScreenProgressBestTimeChampionship", 0.0f, 0.0f, bestPos.z, bestPos.w); 
-    mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
+    if(dimCoeff[0] == "0")
+        mBestTime->setCaption(STRPowerslide::getCharacterTitle(names[0]) + " " + Tools::SecondsToString(time));
+    else
+        mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
     mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
     mBestTime->setSpaceWidth(9.0f);
     mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);

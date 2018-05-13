@@ -56,7 +56,11 @@ void Championship::trackFinished(const ModeContext& modeContext, Ogre::Real best
             const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
             std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
             size_t trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
-            mAvailableEmergentGunBeatenTracks.push_back(trackIndex + mBeatEmergentGunFruitOffset);
+            const STRPlayerSettings::PlayerData& playerData = modeContext.getGameState().getPlayerData();
+            if(!playerData.fruit[trackIndex + mBeatEmergentGunFruitOffset])
+            {
+                mAvailableEmergentGunBeatenTracks.push_back(trackIndex + mBeatEmergentGunFruitOffset);
+            }
         }
     }
 

@@ -2875,7 +2875,7 @@ void UIMainMenuLabels::fillHighScoreTable()
         Conversions::DMFromString(times[q], time);
 
         if(dimCoeff[q] == "0")
-            mOptionHighScoresTable2Label[q]->setCaption(strPowerslide.getCharacterTitle(names[q]));
+            mOptionHighScoresTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(names[q]));
         else
             mOptionHighScoresTable2Label[q]->setCaption(names[q]);
         mOptionHighScoresTable3Label[q]->setCaption(Tools::SecondsToString(time));

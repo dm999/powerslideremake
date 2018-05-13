@@ -143,6 +143,26 @@ void GameModeSwitcher::frameEnded()
         {
             mContext.setLapController(mPlayerMode->getLapController());
             mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
+
+            //check emergent gun
+            {
+                Ogre::Real bestLap = mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime();
+                const STRRacetimes& strRacetimes = mContext.getGameState().getSTRRacetimes();
+                std::string trackName = mContext.getGameState().getTrackNameAsOriginal();
+                float emergentGun = strRacetimes.getFloatValue("emergent gun times", trackName);
+                if(bestLap <= emergentGun && bestLap > 0.0f)
+                {
+                    const STRPowerslide& strPowerslide = mContext.getGameState().getSTRPowerslide();
+                    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+                    size_t trackIndex = std::find(availTracks.begin(), availTracks.end(), trackName) - availTracks.begin();
+                    STRPlayerSettings::PlayerData& playerData = mContext.getGameState().getPlayerData();
+                    if(!playerData.fruit[trackIndex + Championship::mBeatEmergentGunFruitOffset])
+                    {
+                        playerData.fruit[trackIndex + Championship::mBeatEmergentGunFruitOffset] = true;
+                        mContext.getGameState().savePlayerData();
+                    }
+                }
+            }
         }
         //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
