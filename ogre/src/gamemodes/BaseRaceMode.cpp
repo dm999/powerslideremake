@@ -1029,7 +1029,7 @@ void BaseRaceMode::onLapFinished()
 {
     size_t lap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
 
-    if(lap <= mModeContext.mGameState.getLapsCount())
+    if(lap <= mModeContext.mGameState.getLapsCount() || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
     {
         Ogre::Real lastLapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime();
         std::string time = Tools::SecondsToString(lastLapTime);

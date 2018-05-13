@@ -173,6 +173,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 void UIMainMenu::reloadTextures(const GameState& gameState)
 {
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell(), NULL);
+    mEditBoxUserName.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
 }
 #endif
 
