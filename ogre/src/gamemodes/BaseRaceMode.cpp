@@ -469,6 +469,16 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
     if(loaderListener)
         loaderListener->loadState(0.81f, "player model loaded");
 
+    //ghost
+    if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+    {
+        mTrialGhost.init();
+        mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICountInRace()], false);
+        mGhost.setVisibility(false);
+    }
+    mIsGhostVisible = false;
+    mGhostBestLapTime = 0.0f;
+
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
 
     for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
@@ -842,6 +852,21 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
         processSounds();
     }
 
+    if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+    {
+        if(!mModeContext.mGameState.isGamePaused() && mModeContext.mGameState.getRaceStarted())
+        {
+            mTrialGhost.storePoint(GhostPos(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition(), mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation()));
+
+            if(mIsGhostVisible)
+            {
+                Ogre::Real lapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
+                GhostPos ghostPoint = mTrialGhost.getInterpolatedPoint(lapTime);
+                mGhost.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot);
+            }
+        }
+    }
+
     customFrameStartedDoProcessFrameAfterPhysics();
 }
 
@@ -1042,6 +1067,27 @@ void BaseRaceMode::onLapFinished()
             std::string bestTime = Tools::SecondsToString(bestLapTime);
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
+
+            if(!mIsGhostVisible)
+            {
+                mGhost.setVisibility(true);
+            }
+            mIsGhostVisible = true;
+
+            mTrialGhost.lapFinished();
+            if(mGhostBestLapTime == 0.0f)
+            {
+                mGhostBestLapTime = bestLapTime;
+                mTrialGhost.swapData();
+            }
+            else
+            {
+                if(mGhostBestLapTime > bestLapTime)
+                {
+                    mGhostBestLapTime = bestLapTime;
+                    mTrialGhost.swapData();
+                }
+            }
         }
     }
 

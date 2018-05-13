@@ -3,6 +3,7 @@
 #define PSBASECAR_H
 
 #include "PSBaseVehicle.h"
+#include "PSBaseGraphicsVehicle.h"
 
 #include "../loaders/PFLoader.h"
 #include "../OriginalSettings.h"
@@ -18,7 +19,7 @@ class OpenALSource;
 
 class GameState;
 
-class PSBaseCar : public PSBaseVehicle, public PhysicsListener
+class PSBaseCar : public PSBaseVehicle, public PSBaseGraphicsVehicle, public PhysicsListener
 {
 public:
 
@@ -58,9 +59,6 @@ public:
     Ogre::Vector3 getAngularImpulse()const;//multiplayer
     void setAngularImpulse(const Ogre::Vector3& val);//multiplayer
 
-    Ogre::SceneNode* getModelNode(){return mModelNode;}
-    Ogre::SceneNode* getModelNode() const{return mModelNode;}
-
     void clear()override;
 
     std::string getFrontLWheelColliderString(){return mWheelFrontLColliderString;}
@@ -70,15 +68,6 @@ public:
 
     virtual size_t getCurrentLap() const = 0;
     virtual Ogre::Real getLapPosition() const = 0;
-
-    std::string getCharacterName() const {return mCharacterName;}
-    void setCharacterName(const std::string& character) {mCharacterName = character;}
-
-    void setVisibility(bool isVisible);
-
-#if defined(__ANDROID__)
-    void reloadTextures(const GameState& gameState);
-#endif
 
 protected:
 
@@ -91,29 +80,12 @@ protected:
     std::vector<Ogre::Real> convertSplinePoints(const std::vector<std::string>& points) const;
 
 
-    Ogre::SceneNode* mModelNode;
-    Ogre::Entity* mModelEntity[InitialVehicleSetup::mWheelsAmount + 1];//Cockpit, RR, RL, FR, FL
-
-    std::vector<std::vector<Ogre::Vector3> > mSuspensionData;
-    std::vector<std::vector<size_t> > mSuspensionIndices;
-    std::vector<std::vector<Ogre::Vector3> > mSuspensionPointOriginalPos;
-    Ogre::Vector3 mFrontLOriginalPos;
-    Ogre::Vector3 mFrontROriginalPos;
-    Ogre::Vector3 mBackLOriginalPos;
-    Ogre::Vector3 mBackROriginalPos;
-
-
-    Ogre::Entity * mWheelEntitys[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-    Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
-
 
 
     std::string mWheelFrontLColliderString;
     std::string mWheelFrontRColliderString;
     std::string mWheelBackLColliderString;
     std::string mWheelBackRColliderString;
-
-    std::string mCharacterName;
 
     //sounds
 #ifndef NO_OPENAL
@@ -124,14 +96,6 @@ protected:
 
 private:
 
-    void initSuspension(const GameState& gameState);
-
-    std::string loadTexture(const GameState& gameState, const std::string& textureName, std::string& carPath);
-
-#if defined(__ANDROID__)
-    std::string mTextureName;
-#endif
-
     //param.str
     STRSettings mCarSettings;
     STRSettings mTrackSettings;
@@ -141,9 +105,6 @@ private:
     STRSettings mCarSplines;
     STRSettings mTrackSplines;
     STRSettings mDefaultSplines;
-
-    static Ogre::NameGenerator nameGenMaterials;
-    static Ogre::NameGenerator nameGenTextures;
 
 };
 

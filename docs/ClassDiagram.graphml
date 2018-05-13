@@ -337,10 +337,10 @@
     <node id="n1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1946.5757539876045" width="735.5387943622018" x="5962.2306028189" y="-6373.2878769938025"/>
+          <y:Geometry height="1614.0603100121803" width="735.5387943622018" x="5962.2306028189" y="-6207.03015500609"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1871.048828125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="37.763462931302456">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1503.51953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="55.270389381090354">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
@@ -413,21 +413,6 @@ std::vector&lt;Ogre::Real&gt; convertSplinePoints(const std::vector&lt;std::stri
 
 bool mIsAI
 
-Ogre::SceneNode* mModelNode
-Ogre::Entity* mModelEntity
-
-std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionData
-std::vector&lt;std::vector&lt;size_t&gt; &gt; mSuspensionIndices
-std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionPointOriginalPos
-Ogre::Vector3 mFrontLOriginalPos
-Ogre::Vector3 mFrontROriginalPos
-Ogre::Vector3 mBackLOriginalPos
-Ogre::Vector3 mBackROriginalPos
-
-
-Ogre::Entity * mWheelEntitys[mWheelsAmount]
-Ogre::SceneNode *mWheelNodes[mWheelsAmount]
-
 std::string mWheelFrontLColliderString
 std::string mWheelFrontRColliderString
 std::string mWheelBackLColliderString
@@ -449,13 +434,6 @@ CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngHigh
 
 private:
 
-void initSuspension(lua_State * pipeline)
-
-std::string loadTexture(const GameState&amp; gameState, const std::string&amp; textureName, std::string&amp; carPath)
-
-#if defined(__ANDROID__)
-    std::string mTextureName
-#endif
 
 STRSettings mCarSettings
 STRSettings mTrackSettings
@@ -464,9 +442,7 @@ STRSettings mDefaultSettings
 STRSettings mCarSplines
 STRSettings mTrackSplines
 STRSettings mDefaultSplines
-
-static Ogre::NameGenerator nameGenMaterials
-static Ogre::NameGenerator nameGenTextures</y:NodeLabel>
+</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -485,7 +461,7 @@ static Ogre::NameGenerator nameGenTextures</y:NodeLabel>
     <node id="n3">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="232.04078247193968" x="5613.97960876403" y="-5415.0"/>
+          <y:Geometry height="30.0" width="232.04078247193968" x="5013.97960876403" y="-5415.0"/>
           <y:Fill color="#00FF00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="27.34375" x="102.34851623597024" y="5.6494140625">LUA</y:NodeLabel>
@@ -4062,6 +4038,80 @@ static Ogre::NameGenerator nameGenPanel
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n93">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="1034.7914277982027" width="665.0064059053398" x="4797.49679704733" y="-7327.395713899101"/>
+          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="944.875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="511.193359375" x="76.90652326517011" y="44.95821389910088">&lt;&lt;PSBaseGraphicsVehicle.h&gt;&gt;
+
+PSBaseGraphicsVehicle
+
+public:
+
+void initGraphicsModel( lua_State * pipeline, 
+                            const GameState&amp; gameState,
+                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                            ModelsPool* modelsPool,
+                            const std::string&amp; characterName,
+                            const InitialVehicleSetup&amp; initialVehicleSetup,
+                            bool isAI)
+
+#if defined(__ANDROID__)
+    void reloadTextures(const GameState&amp; gameState)
+#endif
+
+std::string getCharacterName() const
+void setCharacterName(const std::string&amp; character)
+
+void setVisibility(bool isVisible)
+
+Ogre::SceneNode* getModelNode()
+Ogre::SceneNode* getModelNode() const
+
+void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot)
+
+protected:
+
+std::string getCarPath(const GameState&amp; gameState) const
+
+
+Ogre::SceneNode* mModelNode
+Ogre::Entity* mModelEntity[InitialVehicleSetup::mWheelsAmount + 1];//Cockpit, RR, RL, FR, FL
+
+std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionData
+std::vector&lt;std::vector&lt;size_t&gt; &gt; mSuspensionIndices
+std::vector&lt;std::vector&lt;Ogre::Vector3&gt; &gt; mSuspensionPointOriginalPos
+
+
+Ogre::Entity * mWheelEntitys[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+Ogre::SceneNode *mWheelNodes[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+
+private:
+
+void initSuspension(const GameState&amp; gameState)
+
+std::string loadTexture(const GameState&amp; gameState, const std::string&amp; textureName)
+
+#if defined(__ANDROID__)
+std::string mTextureName
+#endif
+
+std::string mCharacterName
+
+Ogre::Vector3 mFrontLOriginalPos
+Ogre::Vector3 mFrontROriginalPos
+Ogre::Vector3 mBackLOriginalPos
+Ogre::Vector3 mBackROriginalPos
+
+static Ogre::NameGenerator nameGenMaterials
+static Ogre::NameGenerator nameGenTextures</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:PolyLineEdge>
@@ -4988,6 +5038,26 @@ static Ogre::NameGenerator nameGenPanel
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e87" source="n1" target="n93">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e88" source="n93" target="n3">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

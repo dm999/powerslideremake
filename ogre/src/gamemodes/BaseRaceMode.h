@@ -11,6 +11,7 @@
 #include "../mesh/ModelsPool.h"
 
 #include "../gamelogic/LapController.h"
+#include "../gamelogic/TrialGhost.h"
 
 class CameraMan;
 class UIRace;
@@ -155,6 +156,11 @@ private:
 
     Ogre::Viewport * mViewPortScene;
     Ogre::Viewport * mViewPortCarUI;
+
+    PSBaseGraphicsVehicle mGhost;//time trial
+    TrialGhost mTrialGhost;
+    bool mIsGhostVisible;
+    Ogre::Real mGhostBestLapTime;
 };
 
 
