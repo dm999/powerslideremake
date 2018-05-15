@@ -856,7 +856,7 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
     {
         if(!mModeContext.mGameState.isGamePaused() && mModeContext.mGameState.getRaceStarted())
         {
-            Ogre::Real lapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
+            Ogre::Real lapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTimer().getMilliseconds() / 1000.0f;
             GhostPos ghostPos(mModeContext.mGameState.getPlayerCar());
             mTrialGhost.storePoint(ghostPos, lapTime);
 

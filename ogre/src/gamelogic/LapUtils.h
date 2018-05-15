@@ -44,6 +44,7 @@ public:
     void resetLapTimer(){mLapTimer.reset(); mAfterFinishLinePassTimer.reset();}
     void pauseLapTimer(){mLapTimer.pause();}
     void resumeLapTimer(){mLapTimer.resume();}
+    const PausedTimer& getLapTimer() const{return mLapTimer;}//for time trial
 
     Ogre::Real getAfterFinishLinePassTime();
 

@@ -13,12 +13,12 @@ public:
     void pause();
     void resume();
 
-    unsigned long getMilliseconds();
+    unsigned long getMilliseconds() const;
     void reset();
 
 private:
 
-    Ogre::Timer mTimer;
+    mutable Ogre::Timer mTimer;
     unsigned long mTimeLengthBeforePause;
     unsigned long mPauseLength;
     bool mIsPaused;

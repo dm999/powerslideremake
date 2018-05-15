@@ -5,7 +5,7 @@ PausedTimer::PausedTimer() : mTimeLengthBeforePause(0), mPauseLength(0), mIsPaus
 {
 }
 
-unsigned long PausedTimer::getMilliseconds()
+unsigned long PausedTimer::getMilliseconds() const
 {
     unsigned long res = 0;
 
