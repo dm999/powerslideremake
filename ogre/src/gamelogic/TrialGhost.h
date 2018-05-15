@@ -20,6 +20,8 @@ struct GhostPos
 
     Ogre::Vector3 wheelPos[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
     Ogre::Quaternion wheelRot[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+
+    GhostPos lerp(const GhostPos& other, Ogre::Real min, Ogre::Real max, Ogre::Real cur) const;
 };
 
 class TrialGhost
@@ -36,6 +38,8 @@ private:
 
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositions;
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositionsPrev;
+    Ogre::SimpleSpline mPosSpline;
+    Ogre::SimpleSpline mPosSplineWheels[InitialVehicleSetup::mWheelsAmount];
 
 };
 

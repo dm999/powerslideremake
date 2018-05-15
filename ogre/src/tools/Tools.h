@@ -97,7 +97,7 @@ public:
     template<typename T>
     static T herp3(const T& start, const T& end, float t)
     {
-        T time = t * t * (static_cast<T>(3.0f) - static_cast<T>(2.0f) * t);
+        float time = t * t * (3.0f - 2.0f * t);
         return start + time * (end - start);
     }
 

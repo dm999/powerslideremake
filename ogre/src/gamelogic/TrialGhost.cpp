@@ -24,10 +24,33 @@ GhostPos::GhostPos(PSBaseGraphicsVehicle& playerCar)
     }
 }
 
+GhostPos GhostPos::lerp(const GhostPos& other, Ogre::Real min, Ogre::Real max, Ogre::Real cur) const
+{
+    GhostPos ret;
+
+    Ogre::Real step = (cur - min) / (max - min);
+
+    ret.chassisRot = Ogre::Quaternion::Slerp(step, chassisRot, other.chassisRot);
+
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        ret.wheelRot[q] = Ogre::Quaternion::Slerp(step, wheelRot[q], other.wheelRot[q]);
+    }
+
+    return ret;
+}
+
 void TrialGhost::init()
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
+    
+    mPosSpline.clear();
+
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        mPosSplineWheels[q].clear();
+    }
 }
 
 void TrialGhost::storePoint(const GhostPos& pos, Ogre::Real time)
@@ -53,9 +76,17 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
 
             if(time >= timeA && time < timeB)
             {
-                res = mTimedPositionsPrev[q + 0].second;
-                //res.chassisPos = Tools::lerp(mTimedPositionsPrev[q + 0].second.chassisPos, mTimedPositionsPrev[q + 1].second.chassisPos, (time - timeA) / (timeB - timeA));
-                //res.chassisRot = Tools::lerp(mTimedPositionsPrev[q + 0].second.chassisRot, mTimedPositionsPrev[q + 0].second.chassisRot, (time - timeA) / (timeB - timeA));
+                res = mTimedPositionsPrev[q + 0].second.lerp(mTimedPositionsPrev[q + 1].second, timeA, timeB, time);
+
+                Ogre::Real step = Ogre::Math::Clamp(time / mTimedPositionsPrev[mTimedPositionsPrev.size() - 1].first, 0.0f, 1.0f);
+
+                res.chassisPos = mPosSpline.interpolate(step);
+
+                for(size_t w = 0; w < InitialVehicleSetup::mWheelsAmount; ++w)
+                {
+                    res.wheelPos[w] = mPosSplineWheels[w].interpolate(step);
+                }
+
                 break;
             }
         }
@@ -67,6 +98,23 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
 void TrialGhost::swapData()
 {
     mTimedPositionsPrev = mTimedPositions;
+
+    mPosSpline.clear();
+
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        mPosSplineWheels[q].clear();
+    }
+
+    for(size_t q = 0; q < mTimedPositionsPrev.size(); ++q)
+    {
+        mPosSpline.addPoint(mTimedPositionsPrev[q].second.chassisPos);
+
+        for(size_t w = 0; w < InitialVehicleSetup::mWheelsAmount; ++w)
+        {
+            mPosSplineWheels[w].addPoint(mTimedPositionsPrev[q].second.wheelPos[w]);
+        }
+    }
 }
 
 void TrialGhost::clearCurrent()
