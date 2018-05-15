@@ -40,7 +40,13 @@ public:
     Ogre::SceneNode* getModelNode(){return mModelNode;}
     Ogre::SceneNode* getModelNode() const{return mModelNode;}
 
-    void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot); // for multiplayer, time trial ghost
+    //for time trial ghost
+    const Ogre::SceneNode *const* getWheelNodes() const{return mWheelNodes;}
+    void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot,
+        const Ogre::Vector3 wheelPos[InitialVehicleSetup::mWheelsAmount], const Ogre::Quaternion wheelRot[InitialVehicleSetup::mWheelsAmount]);
+
+    // for multiplayer
+    void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
 
 protected:
 
@@ -74,6 +80,7 @@ private:
     Ogre::Vector3 mFrontROriginalPos;
     Ogre::Vector3 mBackLOriginalPos;
     Ogre::Vector3 mBackROriginalPos;
+    Ogre::Vector3 mCOG;
 
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenTextures;

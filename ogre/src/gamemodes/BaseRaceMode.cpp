@@ -857,13 +857,13 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
         if(!mModeContext.mGameState.isGamePaused() && mModeContext.mGameState.getRaceStarted())
         {
             Ogre::Real lapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
-//printf("%.2f\n", lapTime);
-            mTrialGhost.storePoint(GhostPos(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition(), mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation()), lapTime);
+            GhostPos ghostPos(mModeContext.mGameState.getPlayerCar());
+            mTrialGhost.storePoint(ghostPos, lapTime);
 
             if(mIsGhostVisible)
             {
                 GhostPos ghostPoint = mTrialGhost.getInterpolatedPoint(lapTime);
-                mGhost.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot);
+                mGhost.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot, ghostPoint.wheelPos, ghostPoint.wheelRot);
             }
         }
     }
@@ -1075,7 +1075,6 @@ void BaseRaceMode::onLapFinished()
             }
             mIsGhostVisible = true;
 
-            mTrialGhost.lapFinished();
             if(mGhostBestLapTime == 0.0f)
             {
                 mGhostBestLapTime = bestLapTime;

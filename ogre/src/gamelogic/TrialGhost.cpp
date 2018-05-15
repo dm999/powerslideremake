@@ -3,24 +3,44 @@
 
 #include "../tools/Tools.h"
 
+#include "../pscar/PSBaseGraphicsVehicle.h"
+
+namespace{
+    const size_t maxRecordedSamples = 10000;
+}
+
+GhostPos::GhostPos() 
+    : chassisPos(Ogre::Vector3::ZERO), chassisRot(Ogre::Quaternion::IDENTITY)
+{}
+
+GhostPos::GhostPos(PSBaseGraphicsVehicle& playerCar)
+    :   chassisPos(playerCar.getModelNode()->getPosition()),
+        chassisRot(playerCar.getModelNode()->getOrientation())
+{
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        wheelPos[q] = playerCar.getWheelNodes()[q]->getPosition();
+        wheelRot[q] = playerCar.getWheelNodes()[q]->getOrientation();
+    }
+}
+
 void TrialGhost::init()
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
-    mLapTimer.reset();
 }
 
 void TrialGhost::storePoint(const GhostPos& pos, Ogre::Real time)
 {
-    //mTimedPositions.push_back(std::make_pair(mLapTimer.getMilliseconds() / 1000.0f, pos));
-    mTimedPositions.push_back(std::make_pair(time, pos));
+    if(mTimedPositions.size() < maxRecordedSamples)
+    {
+        mTimedPositions.push_back(std::make_pair(time, pos));
+    }
 }
 
 GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
 {
     GhostPos res;
-
-    time = mLapTimer.getMilliseconds() / 1000.0f;
 
     if(!mTimedPositionsPrev.empty())
     {
@@ -42,11 +62,6 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
     }
 
     return res;
-}
-
-void TrialGhost::lapFinished()
-{
-    mLapTimer.reset();
 }
 
 void TrialGhost::swapData()

@@ -192,7 +192,28 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
     mBackLOriginalPos = initialVehicleSetup.mConnectionPointWheel[1];
     mFrontROriginalPos = initialVehicleSetup.mConnectionPointWheel[2];
     mFrontLOriginalPos = initialVehicleSetup.mConnectionPointWheel[3];
+    mCOG = initialVehicleSetup.mCOG;
 
+}
+
+void PSBaseGraphicsVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot,
+    const Ogre::Vector3 wheelPos[InitialVehicleSetup::mWheelsAmount], const Ogre::Quaternion wheelRot[InitialVehicleSetup::mWheelsAmount])
+{
+    mModelNode->setPosition(chassisPos);
+    mModelNode->setOrientation(chassisRot);
+
+    for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        mWheelNodes[q]->setPosition(wheelPos[q]);
+        mWheelNodes[q]->setOrientation(wheelRot[q]);
+    }
+
+    AdjustSuspension(   mModelEntity[0]->getMesh().get(),
+                        mSuspensionIndices, mSuspensionPointOriginalPos,
+                        -(chassisPos + chassisRot * (mFrontLOriginalPos - mCOG)).distance(wheelPos[3]),
+                        -(chassisPos + chassisRot * (mFrontROriginalPos - mCOG)).distance(wheelPos[2]),
+                        -(chassisPos + chassisRot * (mBackLOriginalPos - mCOG)).distance(wheelPos[1]),
+                        -(chassisPos + chassisRot * (mBackROriginalPos - mCOG)).distance(wheelPos[0]));
 }
 
 void PSBaseGraphicsVehicle::repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot)

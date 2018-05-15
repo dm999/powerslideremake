@@ -7,12 +7,19 @@
 #include "../includes/OgreInclude.h"
 #include "../tools/PausedTimer.h"
 
+#include "../physics/InitialVehicleSetup.h"
+
+class PSBaseGraphicsVehicle;
+
 struct GhostPos
 {
-    GhostPos() : chassisPos(Ogre::Vector3::ZERO), chassisRot(Ogre::Quaternion::IDENTITY){}
-    GhostPos(const Ogre::Vector3& pos, const Ogre::Quaternion& rot) : chassisPos(pos), chassisRot(rot){}
+    GhostPos();
+    GhostPos(PSBaseGraphicsVehicle& playerCar);
     Ogre::Vector3 chassisPos;
     Ogre::Quaternion chassisRot;
+
+    Ogre::Vector3 wheelPos[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
+    Ogre::Quaternion wheelRot[InitialVehicleSetup::mWheelsAmount];//RR, RL, FR, FL
 };
 
 class TrialGhost
@@ -22,7 +29,6 @@ public:
     void init();
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
-    void lapFinished();
     void swapData();
     void clearCurrent();
 
@@ -30,8 +36,6 @@ private:
 
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositions;
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositionsPrev;
-
-    PausedTimer mLapTimer;
 
 };
 
