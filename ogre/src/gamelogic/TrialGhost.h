@@ -20,17 +20,16 @@ class TrialGhost
 public:
 
     void init();
-    void storePoint(const GhostPos& pos);
+    void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
     void lapFinished();
     void swapData();
+    void clearCurrent();
 
 private:
 
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositions;
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositionsPrev;
-
-    bool mIsSwapped;
 
     PausedTimer mLapTimer;
 

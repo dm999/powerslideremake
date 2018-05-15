@@ -37,7 +37,7 @@ public:
     static const size_t mExpertCarFruitOffset       = mEveryWinnerFruitOffset       + 4;//novice, advanced, expert, insane
     static const size_t mInsaneCarFruitOffset       = mExpertCarFruitOffset         + 7;//7 cars
     static const size_t mBeatEmergentGunFruitOffset = mInsaneCarFruitOffset         + 7;//7 cars
-    static const size_t mBrusselFruitOffset         = mBeatEmergentGunFruitOffset   + 8;//8 tracks with fruits
+    static const int mBrusselFruitOffset         = mBeatEmergentGunFruitOffset   + 8;//8 tracks with fruits
 
 private:
 

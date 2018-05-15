@@ -7,16 +7,13 @@ void TrialGhost::init()
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
-    mIsSwapped = true;
     mLapTimer.reset();
 }
 
-void TrialGhost::storePoint(const GhostPos& pos)
+void TrialGhost::storePoint(const GhostPos& pos, Ogre::Real time)
 {
-    if(mIsSwapped)
-    {
-        mTimedPositions.push_back(std::make_pair(mLapTimer.getMilliseconds() / 1000.0f, pos));
-    }
+    //mTimedPositions.push_back(std::make_pair(mLapTimer.getMilliseconds() / 1000.0f, pos));
+    mTimedPositions.push_back(std::make_pair(time, pos));
 }
 
 GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
@@ -50,12 +47,14 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
 void TrialGhost::lapFinished()
 {
     mLapTimer.reset();
-    mIsSwapped = false;
 }
 
 void TrialGhost::swapData()
 {
     mTimedPositionsPrev = mTimedPositions;
+}
+
+void TrialGhost::clearCurrent()
+{
     mTimedPositions.clear();
-    mIsSwapped = true;
 }
