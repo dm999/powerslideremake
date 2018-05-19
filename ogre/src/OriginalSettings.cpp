@@ -3,7 +3,6 @@
 
 #include "loaders/STRLoader.h"
 
-#include "tools/Conversions.h"
 #include "tools/Tools.h"
 
 void STRSettings::parse(const PFLoader& pfLoaderStore, const std::string& relativeDir, const std::string& fileName)
@@ -735,7 +734,7 @@ void STRHiscores::save(const std::string& dataDir)
         writeFile(dataDir, str);
 }
 
-bool STRHiscores::updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew)
+bool STRHiscores::updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew, const TrialGhost::GhostData& ghostData)
 {
     bool isBestBeaten = false;
 
@@ -787,6 +786,42 @@ bool STRHiscores::updateTrackTime(const std::string& trackName, const std::strin
             mSTR.SetValue(sectionName.c_str(), "lap times", plainTimes.c_str());
             mSTR.SetValue(sectionName.c_str(), "characters", plainChars.c_str());
             mSTR.SetValue(sectionName.c_str(), "4th dimension coefficient", plainDimCoeffs.c_str());
+
+            if(isBestBeaten && !ghostData.empty())
+            {
+                std::vector<std::vector<Ogre::Real> > ghostPlainData(InitialVehicleSetup::mWheelsAmount * 7 + 7 + 1, std::vector<Ogre::Real>());
+                for(size_t q = 0; q < ghostData.size(); ++q)
+                {
+                    ghostPlainData[0].push_back(ghostData[q].first);
+                    ghostPlainData[1].push_back(ghostData[q].second.chassisPos.x);
+                    ghostPlainData[2].push_back(ghostData[q].second.chassisPos.y);
+                    ghostPlainData[3].push_back(ghostData[q].second.chassisPos.z);
+                    ghostPlainData[4].push_back(ghostData[q].second.chassisRot.x);
+                    ghostPlainData[5].push_back(ghostData[q].second.chassisRot.y);
+                    ghostPlainData[6].push_back(ghostData[q].second.chassisRot.z);
+                    ghostPlainData[7].push_back(ghostData[q].second.chassisRot.w);
+
+                    for(size_t w = 0; w < InitialVehicleSetup::mWheelsAmount; ++w)
+                    {
+                        ghostPlainData[8 + w * 7 + 0].push_back(ghostData[q].second.wheelPos[w].x);
+                        ghostPlainData[8 + w * 7 + 1].push_back(ghostData[q].second.wheelPos[w].y);
+                        ghostPlainData[8 + w * 7 + 2].push_back(ghostData[q].second.wheelPos[w].z);
+                        ghostPlainData[8 + w * 7 + 3].push_back(ghostData[q].second.wheelRot[w].x);
+                        ghostPlainData[8 + w * 7 + 4].push_back(ghostData[q].second.wheelRot[w].y);
+                        ghostPlainData[8 + w * 7 + 5].push_back(ghostData[q].second.wheelRot[w].z);
+                        ghostPlainData[8 + w * 7 + 6].push_back(ghostData[q].second.wheelRot[w].w);
+                    }
+
+                }
+
+                mSTR.SetValue(sectionName.c_str(), "ghost records size", Conversions::DMToString(ghostData.size()).c_str());
+
+                for(size_t q = 0; q < ghostPlainData.size(); ++q)
+                {
+                    std::string plainData = arrayToString(ghostPlainData[q]);
+                    mSTR.SetValue(sectionName.c_str(), std::string("ghost plain data " + Conversions::DMToString(q)).c_str(), plainData.c_str());
+                }
+            }
         }
     }
 

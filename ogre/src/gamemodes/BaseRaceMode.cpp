@@ -472,9 +472,64 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
     //ghost
     if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
     {
-        mTrialGhost.init();
+        TrialGhost::GhostData ghostData;
+        Ogre::Real bestTime = 0.0f;
+
+        {
+            const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
+
+            std::vector<std::string> times = strHiscores.getArrayValue(mModeContext.mGameState.getTrackNameAsOriginal() + " parameters", "lap times");
+            if(!times.empty())
+            {
+                Conversions::DMFromString(times[0], bestTime);
+            }
+
+            bool isFound;
+            int recordsSize = strHiscores.getIntValue(mModeContext.mGameState.getTrackNameAsOriginal() + " parameters", "ghost records size", isFound);
+            if(isFound)
+            {
+                std::vector<std::vector<Ogre::Real> > ghostPlainData(InitialVehicleSetup::mWheelsAmount * 7 + 7 + 1, std::vector<Ogre::Real>());
+                for(size_t q = 0; q < ghostPlainData.size(); ++q)
+                {
+                    std::vector<std::string> plainData = strHiscores.getArrayValue(mModeContext.mGameState.getTrackNameAsOriginal() + " parameters", "ghost plain data " + Conversions::DMToString(q));
+
+                    for(size_t w = 0; w < plainData.size(); ++w)
+                    {
+                        Ogre::Real tmp;
+                        Conversions::DMFromString(plainData[w], tmp);
+                        ghostPlainData[q].push_back(tmp);
+                    }
+                }
+
+                for(size_t q = 0; q < ghostPlainData[0].size(); ++q)
+                {
+                    GhostPos ghostPos;
+                    ghostPos.chassisPos.x = ghostPlainData[1][q];
+                    ghostPos.chassisPos.y = ghostPlainData[2][q];
+                    ghostPos.chassisPos.z = ghostPlainData[3][q];
+                    ghostPos.chassisRot.x = ghostPlainData[4][q];
+                    ghostPos.chassisRot.y = ghostPlainData[5][q];
+                    ghostPos.chassisRot.z = ghostPlainData[6][q];
+                    ghostPos.chassisRot.w = ghostPlainData[7][q];
+
+                    for(size_t w = 0; w < InitialVehicleSetup::mWheelsAmount; ++w)
+                    {
+                        ghostPos.wheelPos[w].x = ghostPlainData[8 + w * 7 + 0][q];
+                        ghostPos.wheelPos[w].y = ghostPlainData[8 + w * 7 + 1][q];
+                        ghostPos.wheelPos[w].z = ghostPlainData[8 + w * 7 + 2][q];
+                        ghostPos.wheelRot[w].x = ghostPlainData[8 + w * 7 + 3][q];
+                        ghostPos.wheelRot[w].y = ghostPlainData[8 + w * 7 + 4][q];
+                        ghostPos.wheelRot[w].z = ghostPlainData[8 + w * 7 + 5][q];
+                        ghostPos.wheelRot[w].w = ghostPlainData[8 + w * 7 + 6][q];
+                    }
+
+                    ghostData.push_back(std::make_pair(ghostPlainData[0][q], ghostPos));
+                }
+            }
+        }
+        mTrialGhost.init(ghostData, bestTime);
         mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICountInRace()], false);
-        mGhost.setVisibility(false);
+        mGhost.setVisibility(mTrialGhost.isVisible());
     }
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();

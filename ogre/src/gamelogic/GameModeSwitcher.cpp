@@ -194,7 +194,8 @@ void GameModeSwitcher::frameEnded()
             mContext.getGameState().updateHiscores(
                 mContext.getGameState().getPlayerCar().getCharacterName(),
                 mContext.getGameState().getPlayerName(),
-                mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+                mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime(),
+                mPlayerMode->getGhostData());
         }
 #ifndef NO_MULTIPLAYER
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit && mGameMode == ModeRaceMulti)

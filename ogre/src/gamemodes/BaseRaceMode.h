@@ -90,6 +90,8 @@ public:
 
     LapController getLapController() const {return mLapController;}
 
+    const TrialGhost::GhostData& getGhostData()const{return mTrialGhost.getGhostData();}
+
 protected:
 
     StaticMeshProcesser mStaticMeshProcesser;

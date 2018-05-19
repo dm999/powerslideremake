@@ -44,7 +44,7 @@ GhostPos GhostPos::lerp(const GhostPos& other, Ogre::Real min, Ogre::Real max, O
     return ret;
 }
 
-void TrialGhost::init()
+void TrialGhost::init(const GhostData& ghostData, Ogre::Real bestTime)
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
@@ -58,6 +58,13 @@ void TrialGhost::init()
     mTimeIncWeighting.clear();
     mPrevTimePlayback = 0.0f;
     mWeightedTimePlayback = 0.0f;
+
+    if(!ghostData.empty() && bestTime != 0.0f)
+    {
+        mGhostBestLapTime = bestTime;
+        mTimedPositionsPrev = ghostData;
+        mIsGhostVisible = true;
+    }
     //load();
 }
 

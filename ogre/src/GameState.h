@@ -17,6 +17,7 @@
 #include "physics/InitialVehicleSetup.h"
 
 #include "gamelogic/Championship.h"
+#include "gamelogic/TrialGhost.h"
 
 #include "Enums.h"
 
@@ -65,7 +66,7 @@ public:
     const STRHiscores& getSTRHiscores() const;
     STRHiscores& getSTRHiscores();
 
-    bool updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time);
+    bool updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time, const TrialGhost::GhostData& ghostData = TrialGhost::GhostData());
 
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}

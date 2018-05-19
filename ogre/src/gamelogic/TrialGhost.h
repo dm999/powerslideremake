@@ -29,11 +29,14 @@ class TrialGhost
 {
 public:
 
-    void init();
+    typedef std::vector<std::pair<Ogre::Real, GhostPos> > GhostData;
+
+    void init(const GhostData& ghostData, Ogre::Real bestTime);
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
     void lapFinished(Ogre::Real bestTime);
     bool isVisible()const{return mIsGhostVisible;}
+    const GhostData& getGhostData()const{return mTimedPositionsPrev;}
 
 private:
 
@@ -46,8 +49,8 @@ private:
     Ogre::Real mGhostBestLapTime;
     bool mIsGhostVisible;
 
-    std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositions;
-    std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositionsPrev;
+    GhostData mTimedPositions;
+    GhostData mTimedPositionsPrev;
 
     Ogre::Real mPrevTimeRecord;
     Ogre::Real mWeightedTimeRecord;

@@ -10,6 +10,9 @@
 #include "SimpleIni.h"
 
 #include "Enums.h"
+#include "gameLogic/TrialGhost.h"
+
+#include "tools/Conversions.h"
 
 /**
  * Parser of str files
@@ -55,6 +58,25 @@ public:
     int getIntValue(const std::string& section, const std::string& key, int defaultVal) const;
 
     std::string arrayToString(std::vector<std::string>& data)const;
+
+    template <typename T>
+    std::string arrayToString(std::vector<T>& data)const
+    {
+        std::string ret = "{";
+
+        for(size_t q = 0; q < data.size(); ++q)
+        {
+            ret += Conversions::DMToString(data[q]);
+            if(q != data.size() - 1)
+            {
+                ret += ",";
+            }
+        }
+
+        ret += "}";
+
+        return ret;
+    }
 
 protected:
 
@@ -161,7 +183,7 @@ public:
     /**
      * return - is best time beaten
      */
-    bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew);
+    bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew, const TrialGhost::GhostData& ghostData);
 };
 
 /**
