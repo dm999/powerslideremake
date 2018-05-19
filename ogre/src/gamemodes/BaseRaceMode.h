@@ -159,8 +159,6 @@ private:
 
     PSBaseGraphicsVehicle mGhost;//time trial
     TrialGhost mTrialGhost;
-    bool mIsGhostVisible;
-    Ogre::Real mGhostBestLapTime;
 };
 
 

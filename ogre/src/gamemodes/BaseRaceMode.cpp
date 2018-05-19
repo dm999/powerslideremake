@@ -130,7 +130,7 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     //items.push_back("Filtering");
     //items.push_back("Poly Mode");
 
-    mDetailsPanel = mModeContext.mTrayMgr->createParamsPanel(OgreBites::TL_TOPLEFT, "DetailsPanel", 200, items);
+    mDetailsPanel = mModeContext.mTrayMgr->createParamsPanel(OgreBites::TL_LEFT, "DetailsPanel", 200, items);
     //mDetailsPanel->hide();
 #endif
 
@@ -476,8 +476,6 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[mModeContext.mGameState.getAICountInRace()], false);
         mGhost.setVisibility(false);
     }
-    mIsGhostVisible = false;
-    mGhostBestLapTime = 0.0f;
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
 
@@ -683,9 +681,9 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition().y));
         mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition().z));
         
-        mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLinearVelocity().length()));
+        mDetailsPanel->setParamValue(4, "");//Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLinearVelocity().length()));
         mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getAlignedVelocity()));
-        mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLateralVelocity()));
+        mDetailsPanel->setParamValue(6, "");//Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLateralVelocity()));
 #if 0
         mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mModeContext.mGameState.getAICar(0].getLinearVelocity().length()));
         mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mModeContext.mGameState.getAICar(0].getAlignedVelocity()));
@@ -703,10 +701,10 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mDetailsPanel->setParamValue(11, mModeContext.mGameState.getAICar(0].getBackRWheelColliderString());
 #endif
 
-        mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontLWheelColliderIndex())));
-        mDetailsPanel->setParamValue(14, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontRWheelColliderIndex())));
-        mDetailsPanel->setParamValue(15, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getBackLWheelColliderIndex())));
-        mDetailsPanel->setParamValue(16, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getBackRWheelColliderIndex())));
+        mDetailsPanel->setParamValue(13, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontLWheelColliderIndex())));
+        mDetailsPanel->setParamValue(14, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontRWheelColliderIndex())));
+        mDetailsPanel->setParamValue(15, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getBackLWheelColliderIndex())));
+        mDetailsPanel->setParamValue(16, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getPlayerCar().getBackRWheelColliderIndex())));
 #if 0
         mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getAICar(0].getFrontLWheelColliderIndex())));
         mDetailsPanel->setParamValue(14, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getAICar(0].getFrontRWheelColliderIndex())));
@@ -714,10 +712,10 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mDetailsPanel->setParamValue(16, Ogre::StringConverter::toString(mStaticMeshProcesser.getLongtitudeFriction(mModeContext.mGameState.getAICar(0].getBackRWheelColliderIndex())));
 #endif
 
-        mDetailsPanel->setParamValue(18, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontLWheelColliderIndex())));
-        mDetailsPanel->setParamValue(19, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontRWheelColliderIndex())));
-        mDetailsPanel->setParamValue(20, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getBackLWheelColliderIndex())));
-        mDetailsPanel->setParamValue(21, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getBackRWheelColliderIndex())));
+        mDetailsPanel->setParamValue(18, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontLWheelColliderIndex())));
+        mDetailsPanel->setParamValue(19, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getFrontRWheelColliderIndex())));
+        mDetailsPanel->setParamValue(20, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getBackLWheelColliderIndex())));
+        mDetailsPanel->setParamValue(21, "");//Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getPlayerCar().getBackRWheelColliderIndex())));
 #if 0
         mDetailsPanel->setParamValue(18, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getAICar(0].getFrontLWheelColliderIndex())));
         mDetailsPanel->setParamValue(19, Ogre::StringConverter::toString(mStaticMeshProcesser.getLatitudeFriction(mModeContext.mGameState.getAICar(0].getFrontRWheelColliderIndex())));
@@ -730,8 +728,8 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mDetailsPanel->setParamValue(25, Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime()));
         mDetailsPanel->setParamValue(26, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap()));
         mDetailsPanel->setParamValue(27, Ogre::StringConverter::toString(mLapController.getTotalPosition(0)));
-        mDetailsPanel->setParamValue(28, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getCarEngine().getCurrentGear()));
-        mDetailsPanel->setParamValue(29, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getCarEngine().getEngineRPM()));
+        mDetailsPanel->setParamValue(28, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getCarEngine().getCurrentGear()));
+        mDetailsPanel->setParamValue(29, Ogre::StringConverter::toString(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getCarEngine().getEngineRPM()));
 #endif
     }
 
@@ -852,6 +850,7 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
         processSounds();
     }
 
+
     if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
     {
         if(!mModeContext.mGameState.isGamePaused() && mModeContext.mGameState.getRaceStarted())
@@ -860,7 +859,7 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
             GhostPos ghostPos(mModeContext.mGameState.getPlayerCar());
             mTrialGhost.storePoint(ghostPos, lapTime);
 
-            if(mIsGhostVisible)
+            if(mTrialGhost.isVisible())
             {
                 GhostPos ghostPoint = mTrialGhost.getInterpolatedPoint(lapTime);
                 mGhost.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot, ghostPoint.wheelPos, ghostPoint.wheelRot);
@@ -1069,26 +1068,11 @@ void BaseRaceMode::onLapFinished()
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
 
-            if(!mIsGhostVisible)
+            mTrialGhost.lapFinished(bestLapTime);
+            if(mTrialGhost.isVisible())
             {
                 mGhost.setVisibility(true);
             }
-            mIsGhostVisible = true;
-
-            if(mGhostBestLapTime == 0.0f)
-            {
-                mGhostBestLapTime = bestLapTime;
-                mTrialGhost.swapData();
-            }
-            else
-            {
-                if(mGhostBestLapTime > bestLapTime)
-                {
-                    mGhostBestLapTime = bestLapTime;
-                    mTrialGhost.swapData();
-                }
-            }
-            mTrialGhost.clearCurrent();
         }
     }
 
@@ -1130,9 +1114,15 @@ void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     if(evt.source == mModeContext.mWindow)//for arrow
     {
+#if SHOW_DETAILS_PANEL
+        mDetailsPanel->show();
+#endif
     }
     else//rear view mirror
     {
+#if SHOW_DETAILS_PANEL
+        mDetailsPanel->hide();
+#endif
         //http://www.ogre3d.org/forums/viewtopic.php?t=45499
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(false);
@@ -1159,11 +1149,17 @@ void BaseRaceMode::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 {
     if(evt.source == mViewPortCarUI)//for arrow
     {
+#if SHOW_DETAILS_PANEL
+        mDetailsPanel->show();
+#endif
         mModeContext.mGameState.getArrowNode()->setVisible(false);
         mUIRace->setVisible(true);
     }
     if(evt.source == mViewPortScene)//for arrow
     {
+#if SHOW_DETAILS_PANEL
+        mDetailsPanel->hide();
+#endif
         if( !mModeContext.mGameState.isStuntTrack()         &&
             !mModeContext.mGameState.isFoxnhound1Track()    &&
             !mModeContext.mGameState.isFoxnhound2Track()

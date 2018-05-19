@@ -15,6 +15,7 @@ struct GhostPos
 {
     GhostPos();
     GhostPos(PSBaseGraphicsVehicle& playerCar);
+
     Ogre::Vector3 chassisPos;
     Ogre::Quaternion chassisRot;
 
@@ -31,16 +32,30 @@ public:
     void init();
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
-    void swapData();
-    void clearCurrent();
+    void lapFinished(Ogre::Real bestTime);
+    bool isVisible()const{return mIsGhostVisible;}
 
 private:
 
+    void swapData();
+    void clearCurrent();
+
+    void load();//for debug
+    void save();//for debug
+
+    Ogre::Real mGhostBestLapTime;
+    bool mIsGhostVisible;
+
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositions;
     std::vector<std::pair<Ogre::Real, GhostPos> > mTimedPositionsPrev;
-    Ogre::SimpleSpline mPosSpline;
-    Ogre::SimpleSpline mPosSplineWheels[InitialVehicleSetup::mWheelsAmount];
 
+    Ogre::Real mPrevTimeRecord;
+    Ogre::Real mWeightedTimeRecord;
+    std::vector<Ogre::Real> mTimeIncWeightingRecord;
+
+    Ogre::Real mPrevTimePlayback;
+    Ogre::Real mWeightedTimePlayback;
+    std::vector<Ogre::Real> mTimeIncWeighting;
 };
 
 #endif
