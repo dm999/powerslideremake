@@ -143,7 +143,7 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
     return res;
 }
 
-bool TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
+bool TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir, bool isSupercar)
 {
     bool isBestBeaten = false;
 
@@ -152,8 +152,11 @@ bool TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
         isBestBeaten = true;
         mGhostBestLapTime = bestTime;
         swapData();
-        //save();
-        saveBinToFile(dataDir);
+        if(!isSupercar)
+        {
+            //save();
+            saveBinToFile(dataDir);
+        }
     }
     else
     {
@@ -162,8 +165,11 @@ bool TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
             isBestBeaten = true;
             mGhostBestLapTime = bestTime;
             swapData();
-            //save();
-            saveBinToFile(dataDir);
+            if(!isSupercar)
+            {
+                //save();
+                saveBinToFile(dataDir);
+            }
         }
     }
     clearCurrent();

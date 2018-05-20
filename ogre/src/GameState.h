@@ -55,6 +55,8 @@ public:
     bool isFoxnhound1Track() const {return mIsFoxnhound1Track;}
     bool isFoxnhound2Track() const {return mIsFoxnhound2Track;}
 
+    bool isSupercar() const;
+
     const PFLoader& getPFLoaderData() const;
     const PFLoader& getPFLoaderGameshell() const;
     const PFLoader& getPFLoaderStore() const;

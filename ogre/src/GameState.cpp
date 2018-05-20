@@ -232,6 +232,14 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     mLapsCount = lapsCount;
 }
 
+bool GameState::isSupercar() const
+{
+    std::string carName = getSTRPowerslide().getCarFromCharacter(mPSPlayerCar.getCharacterName());
+    bool ret = carName == "supercar";
+
+    return ret;
+}
+
 const PFLoader& GameState::getPFLoaderData() const
 {
     assert(mOriginalDataInited);
@@ -289,7 +297,7 @@ bool GameState::updateHiscores(const std::string& character, const std::string& 
 {
     bool isBestBeaten = false;
 
-    if(time > 0.0f)
+    if(time > 0.0f && !isSupercar())
     {
         isBestBeaten = mSTRHiscores.updateTrackTime(getTrackNameAsOriginal(), character, playerName, time);
 

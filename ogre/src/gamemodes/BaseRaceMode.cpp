@@ -479,7 +479,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
         InitialVehicleSetup vehSetup = mModeContext.mGameState.getInitialVehicleSetup()[0];
         //setup suspension for non user ghost
         {
-            std::string carName = mModeContext.getGameState().getSTRPowerslide().getValue(characters[0] + " parameters", "car", "feral max");
+            std::string carName = mModeContext.getGameState().getSTRPowerslide().getCarFromCharacter(characters[0]);
             mGhost.setCharacterName(characters[0]);
             std::string carPath = mGhost.getCarPath(mModeContext.getGameState());
             STRSettings carSettings;
@@ -1109,7 +1109,7 @@ void BaseRaceMode::onLapFinished()
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
 
-            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, mModeContext.getGameState().getDataDir());
+            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, mModeContext.getGameState().getDataDir(), mModeContext.getGameState().isSupercar());
             if(mTrialGhost.isVisible())
             {
                 if(isBestBeaten)
