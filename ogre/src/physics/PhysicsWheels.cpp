@@ -136,13 +136,12 @@ void PhysicsWheels::rerotation()
 
 }
 
-Ogre::Real PhysicsWheels::calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks)
+Ogre::Real PhysicsWheels::calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks)
 {
 
     throttle *= 1.3f;
 
-    const Ogre::Real handBreak = 0.0f;
-    Ogre::Real breaksHand = handBreak * 2.6f;
+    Ogre::Real breaksHand = handBreaks * 2.6f;
 
     if(vehicleVelocityMod < 0.4f)
     {
@@ -587,7 +586,7 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     return res;
 }
 
-void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster)
+void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster)
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
@@ -616,7 +615,10 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     Ogre::Real rearTraction = mInitialVehicleSetup.mLowRearTraction - lowFrontTraction;
     Ogre::Real frontTraction = lowFrontTraction + mInitialVehicleSetup.mLowFrontTraction;
 
-    //d.polubotko: use handbrake if need
+    if(handBreaks > 0.0f)
+    {
+        breaks = handBreaks;
+    }
     breaks *= 0.17f;
 
     Ogre::Real rearTractionDiff = (mInitialVehicleSetup.mHighRearTraction - mInitialVehicleSetup.mLowRearTraction) * turnFinish;

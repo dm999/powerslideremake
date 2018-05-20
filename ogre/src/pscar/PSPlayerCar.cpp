@@ -56,6 +56,10 @@ void PSPlayerCar::keyDown(OIS::KeyCode key)
         setAcceleration(false);
 #endif
         break;
+    case OIS::KC_LCONTROL: 
+        mWorld->getVehicle(this)->setHandBrakes(1.0f);
+        setBrake(true);
+        break;
     case OIS::KC_UP: 
         setAcceleration(true);
         mWorld->getVehicle(this)->setThrottle(1.0f);
@@ -88,6 +92,10 @@ void PSPlayerCar::keyUp(OIS::KeyCode key)
         setAcceleration(true);
         mWorld->getVehicle(this)->setThrottle(1.0f);
 #endif
+        break;
+    case OIS::KC_LCONTROL: 
+        mWorld->getVehicle(this)->setHandBrakes(0.0f);
+        setBrake(false);
         break;
     case OIS::KC_UP: 
         mWorld->getVehicle(this)->setThrottle(0.0f);

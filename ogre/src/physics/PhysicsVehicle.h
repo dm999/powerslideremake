@@ -39,6 +39,7 @@ public:
     void setSteering(Ogre::Real value) { mSteeringOriginal = value; }
     void setThrottle(Ogre::Real value){ mThrottle = value;}
     void setBrakes(Ogre::Real value){ mBreaks = value;}
+    void setHandBrakes(Ogre::Real value){ mHandBreaks = value;}
     void gearUp();
     void gearDown();
 
@@ -99,6 +100,7 @@ protected:
 
     Ogre::Real mThrottle;
     Ogre::Real mBreaks;
+    Ogre::Real mHandBreaks;
     Ogre::Real mSteeringOriginal;
 
     Ogre::uint8 mThrottleAdjusterCounter;

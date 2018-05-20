@@ -23,6 +23,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mVehicleType(HumanVehicle),
     mThrottle(0.0f),
     mBreaks(0.0f),
+    mHandBreaks(0.0f),
     mSteeringOriginal(0.0f),
     mThrottleAdjusterCounter(0),
     mSlipStreamFactor(0.0f),
@@ -186,7 +187,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     isTurnOver |= mPhysicsBody.process(*this);
     turnOverRestore(isTurnOver);
     calcTransmission();
-    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
+    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, mHandBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
 
     //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
     //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
@@ -272,7 +273,7 @@ Ogre::Real PhysicsVehicle::adjustSteering()
 
 void PhysicsVehicle::calcTransmission()
 {
-    Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks);
+    Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks, mHandBreaks);
     mCarEngine.process(wheelsAverageVel, mThrottle);
     Ogre::Real power = mCarEngine.getPower(mThrottle * doGetThrottleScale(), mImpulseLinear.length());
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());

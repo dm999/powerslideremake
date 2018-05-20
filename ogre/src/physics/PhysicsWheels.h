@@ -30,14 +30,14 @@ public:
     void reposition();
     void rerotation();
 
-    Ogre::Real calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks);
+    Ogre::Real calcVelocity(Ogre::Real vehicleVelocityMod, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks);
     void calcVelocityMore(Ogre::Real power, int gear);
     
     bool getWheelCollision(size_t index) const;
     char getWheelTerainIndex(size_t index) const;
     Ogre::Real getWheelVelocity(size_t index) const;
 
-    void calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster);
+    void calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster);
 
     void setSteering(Ogre::Real value);
 
