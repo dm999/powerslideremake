@@ -35,7 +35,7 @@ public:
     void init(const std::string& dataDir, const std::string& trackName);
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
-    void lapFinished(Ogre::Real bestTime, const std::string& dataDir);
+    bool lapFinished(Ogre::Real bestTime, const std::string& dataDir);
     bool isVisible()const{return mIsGhostVisible;}
 
 private:

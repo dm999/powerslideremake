@@ -143,10 +143,13 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
     return res;
 }
 
-void TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
+bool TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
 {
+    bool isBestBeaten = false;
+
     if(mGhostBestLapTime == 0.0f)
     {
+        isBestBeaten = true;
         mGhostBestLapTime = bestTime;
         swapData();
         //save();
@@ -156,6 +159,7 @@ void TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
     {
         if(mGhostBestLapTime > bestTime)
         {
+            isBestBeaten = true;
             mGhostBestLapTime = bestTime;
             swapData();
             //save();
@@ -164,6 +168,8 @@ void TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
     }
     clearCurrent();
     mIsGhostVisible = true;
+
+    return isBestBeaten;
 }
 
 void TrialGhost::swapData()

@@ -158,6 +158,7 @@ private:
     Ogre::Viewport * mViewPortCarUI;
 
     PSBaseGraphicsVehicle mGhost;//time trial
+    PSBaseGraphicsVehicle mGhostUser;//time trial
     TrialGhost mTrialGhost;
 };
 

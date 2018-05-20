@@ -35,6 +35,7 @@ public:
     std::string getCharacterName() const {return mCharacterName;}
     void setCharacterName(const std::string& character) {mCharacterName = character;}
 
+    bool getVisibility() const {return mModelEntity[0]->isVisible();}
     void setVisibility(bool isVisible);
 
     Ogre::SceneNode* getModelNode(){return mModelNode;}
@@ -48,9 +49,9 @@ public:
     // for multiplayer
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot);
 
-protected:
-
     std::string getCarPath(const GameState& gameState) const;
+
+protected:
 
 
     Ogre::SceneNode* mModelNode;
