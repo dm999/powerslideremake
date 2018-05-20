@@ -1846,6 +1846,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
                 }
                 else
                 {
+                    mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
                     switchState(State_StartingGrid);
                 }
                 return;
