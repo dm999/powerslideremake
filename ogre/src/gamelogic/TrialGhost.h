@@ -32,11 +32,13 @@ public:
 
     TrialGhost() : mFileName("hiscores.dat"){}
 
-    void init(const std::string& dataDir, const std::string& trackName);
+    void init(const std::string& dataDir, const std::string& trackName, const std::string& characterName);
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
     bool lapFinished(Ogre::Real bestTime, const std::string& dataDir, bool isSupercar);
     bool isVisible()const{return mIsGhostVisible;}
+
+    std::string getCharacterName() const{return mCharacterName;}
 
 private:
 
@@ -51,6 +53,7 @@ private:
 
     const std::string mFileName;
     std::string mTrackName;
+    std::string mCharacterName;
 
     Ogre::Real mGhostBestLapTime;
     bool mIsGhostVisible;

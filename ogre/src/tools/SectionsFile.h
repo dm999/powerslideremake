@@ -14,10 +14,11 @@ public:
 
     void load(const std::string& dataDir, const std::string& fileName);
     void save(const std::string& dataDir, const std::string& fileName) const;
-    void updateSection(const std::string& sectionName, Ogre::Real bestTime, const TrialGhost::GhostData& data);
+    void updateSection(const std::string& sectionName, Ogre::Real bestTime, const TrialGhost::GhostData& data, const std::string& characterName);
     bool isSectionExists(const std::string& sectionName) const;
     Ogre::Real getSectionTime(const std::string& sectionName)const;
     const TrialGhost::GhostData& getSectionData(const std::string& sectionName)const;
+    std::string getSectionCharacter(const std::string& sectionName)const;
 
 private:
 
@@ -28,6 +29,7 @@ private:
     std::vector<std::string> mSectionNames;
     std::vector<Ogre::Real> mBestTimes;
     std::vector<TrialGhost::GhostData> mSectionData;
+    std::vector<std::string> mCharacterNames;
 };
 
 #endif

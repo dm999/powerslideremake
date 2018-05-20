@@ -45,7 +45,7 @@ GhostPos GhostPos::lerp(const GhostPos& other, Ogre::Real min, Ogre::Real max, O
     return ret;
 }
 
-void TrialGhost::init(const std::string& dataDir, const std::string& trackName)
+void TrialGhost::init(const std::string& dataDir, const std::string& trackName, const std::string& characterName)
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
@@ -61,6 +61,7 @@ void TrialGhost::init(const std::string& dataDir, const std::string& trackName)
     mWeightedTimePlayback = 0.0f;
 
     mTrackName = trackName;
+    mCharacterName = characterName;
 
     //load();
     loadBinFromFile(dataDir);
@@ -253,7 +254,7 @@ void TrialGhost::saveBinToFile(const std::string& dataDir)
 {
     SectionsFile sectionFile;
     sectionFile.load(dataDir, mFileName);
-    sectionFile.updateSection(mTrackName, mGhostBestLapTime, mTimedPositionsPrev);
+    sectionFile.updateSection(mTrackName, mGhostBestLapTime, mTimedPositionsPrev, mCharacterName);
     sectionFile.save(dataDir, mFileName);
 }
 
@@ -265,6 +266,7 @@ void TrialGhost::loadBinFromFile(const std::string& dataDir)
     {
         mGhostBestLapTime = sectionFile.getSectionTime(mTrackName);
         mTimedPositionsPrev = sectionFile.getSectionData(mTrackName);
+        mCharacterName = sectionFile.getSectionCharacter(mTrackName);
         mIsGhostVisible = true;
     }
 }

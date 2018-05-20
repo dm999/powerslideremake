@@ -27,11 +27,13 @@ void SectionsFile::load(const std::string& dataDir, const std::string& fileName)
             {
                 stream->read(&snapshots[w], sizeof(std::pair<Ogre::Real, GhostPos>));
             }
-            
+
+            std::string characterName = readString(stream);
 
             mSectionNames.push_back(sectionName);
             mBestTimes.push_back(bestTime);
             mSectionData.push_back(snapshots);
+            mCharacterNames.push_back(characterName);
         }
     }
 
@@ -63,6 +65,8 @@ void SectionsFile::save(const std::string& dataDir, const std::string& fileName)
             {
                 stream->write(&mSectionData[q][w], sizeof(std::pair<Ogre::Real, GhostPos>));
             }
+
+            writeString(stream, mCharacterNames[q]);
         }
     }
 
@@ -72,7 +76,7 @@ void SectionsFile::save(const std::string& dataDir, const std::string& fileName)
     }
 }
 
-void SectionsFile::updateSection(const std::string& sectionName, Ogre::Real bestTime, const TrialGhost::GhostData& data)
+void SectionsFile::updateSection(const std::string& sectionName, Ogre::Real bestTime, const TrialGhost::GhostData& data, const std::string& characterName)
 {
     std::vector<std::string>::const_iterator i = std::find(mSectionNames.begin(), mSectionNames.end(), sectionName);
     if(i != mSectionNames.end())
@@ -81,12 +85,14 @@ void SectionsFile::updateSection(const std::string& sectionName, Ogre::Real best
         mSectionNames[index] = sectionName;
         mBestTimes[index] = bestTime;
         mSectionData[index] = data;
+        mCharacterNames[index] = characterName;
     }
     else
     {
         mSectionNames.push_back(sectionName);
         mBestTimes.push_back(bestTime);
         mSectionData.push_back(data);
+        mCharacterNames.push_back(characterName);
     }
 }
 
@@ -122,6 +128,17 @@ const TrialGhost::GhostData& SectionsFile::getSectionData(const std::string& sec
     size_t index = i - mSectionNames.begin();
 
     return mSectionData[index];
+}
+
+std::string SectionsFile::getSectionCharacter(const std::string& sectionName)const
+{
+    std::vector<std::string>::const_iterator i = std::find(mSectionNames.begin(), mSectionNames.end(), sectionName);
+
+    assert(i != mSectionNames.end());
+
+    size_t index = i - mSectionNames.begin();
+
+    return mCharacterNames[index];
 }
 
 std::string SectionsFile::readString(Ogre::DataStreamPtr stream) const

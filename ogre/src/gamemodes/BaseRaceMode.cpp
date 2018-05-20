@@ -472,15 +472,13 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
     //ghost
     if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
     {
-        mTrialGhost.init(mModeContext.getGameState().getDataDir(), mModeContext.getGameState().getTrackNameAsOriginal());
+        mTrialGhost.init(mModeContext.getGameState().getDataDir(), mModeContext.getGameState().getTrackNameAsOriginal(), mModeContext.getGameState().getPlayerCar().getCharacterName());
 
-        const STRHiscores& strHiscores = mModeContext.getGameState().getSTRHiscores();
-        std::vector<std::string> characters = strHiscores.getArrayValue(mModeContext.getGameState().getTrackNameAsOriginal() + " parameters", "characters");
         InitialVehicleSetup vehSetup = mModeContext.mGameState.getInitialVehicleSetup()[0];
         //setup suspension for non user ghost
         {
-            std::string carName = mModeContext.getGameState().getSTRPowerslide().getCarFromCharacter(characters[0]);
-            mGhost.setCharacterName(characters[0]);
+            std::string carName = mModeContext.getGameState().getSTRPowerslide().getCarFromCharacter(mTrialGhost.getCharacterName());
+            mGhost.setCharacterName(mTrialGhost.getCharacterName());
             std::string carPath = mGhost.getCarPath(mModeContext.getGameState());
             STRSettings carSettings;
             carSettings.parse(mModeContext.getGameState().getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
@@ -508,7 +506,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
                 }
         }
 
-        mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, characters[0], vehSetup, false);
+        mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, false);
         mGhost.setVisibility(mTrialGhost.isVisible());
 
         mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], false);
