@@ -2,6 +2,7 @@
 #include "TrialGhost.h"
 
 #include "../tools/Tools.h"
+#include "../tools/SectionsFile.h"
 
 #include "../pscar/PSBaseGraphicsVehicle.h"
 
@@ -44,7 +45,7 @@ GhostPos GhostPos::lerp(const GhostPos& other, Ogre::Real min, Ogre::Real max, O
     return ret;
 }
 
-void TrialGhost::init(const GhostData& ghostData, Ogre::Real bestTime)
+void TrialGhost::init(const std::string& dataDir, const std::string& trackName)
 {
     mTimedPositions.clear();
     mTimedPositionsPrev.clear();
@@ -59,13 +60,10 @@ void TrialGhost::init(const GhostData& ghostData, Ogre::Real bestTime)
     mPrevTimePlayback = 0.0f;
     mWeightedTimePlayback = 0.0f;
 
-    if(!ghostData.empty() && bestTime != 0.0f)
-    {
-        mGhostBestLapTime = bestTime;
-        mTimedPositionsPrev = ghostData;
-        mIsGhostVisible = true;
-    }
+    mTrackName = trackName;
+
     //load();
+    loadBinFromFile(dataDir);
 }
 
 void TrialGhost::storePoint(const GhostPos& pos, Ogre::Real time)
@@ -145,13 +143,14 @@ GhostPos TrialGhost::getInterpolatedPoint(Ogre::Real time)
     return res;
 }
 
-void TrialGhost::lapFinished(Ogre::Real bestTime)
+void TrialGhost::lapFinished(Ogre::Real bestTime, const std::string& dataDir)
 {
     if(mGhostBestLapTime == 0.0f)
     {
         mGhostBestLapTime = bestTime;
         swapData();
         //save();
+        saveBinToFile(dataDir);
     }
     else
     {
@@ -160,6 +159,7 @@ void TrialGhost::lapFinished(Ogre::Real bestTime)
             mGhostBestLapTime = bestTime;
             swapData();
             //save();
+            saveBinToFile(dataDir);
         }
     }
     clearCurrent();
@@ -233,6 +233,26 @@ void TrialGhost::load()
             mTimedPositionsPrev.push_back(std::make_pair(time, pos));
         }
         fclose(f);
+        mIsGhostVisible = true;
+    }
+}
+
+void TrialGhost::saveBinToFile(const std::string& dataDir)
+{
+    SectionsFile sectionFile;
+    sectionFile.load(dataDir, mFileName);
+    sectionFile.updateSection(mTrackName, mGhostBestLapTime, mTimedPositionsPrev);
+    sectionFile.save(dataDir, mFileName);
+}
+
+void TrialGhost::loadBinFromFile(const std::string& dataDir)
+{
+    SectionsFile sectionFile;
+    sectionFile.load(dataDir, mFileName);
+    if(sectionFile.isSectionExists(mTrackName))
+    {
+        mGhostBestLapTime = sectionFile.getSectionTime(mTrackName);
+        mTimedPositionsPrev = sectionFile.getSectionData(mTrackName);
         mIsGhostVisible = true;
     }
 }

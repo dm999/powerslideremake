@@ -2,6 +2,8 @@
 #include "OgreTools.h"
 #include "Tools.h"
 
+#include "../loaders/PFLoader.h"
+
 Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre::String& oldMaterialName, 
                                 const std::vector<Ogre::String> texturesNames, 
                                 float scale,
@@ -685,4 +687,66 @@ Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma)
 size_t getPowerOf2(size_t val)
 {
     return static_cast<size_t>(Ogre::Math::Pow(2.0f, ceil(Ogre::Math::Log2(static_cast<Ogre::Real>(val)))));
+}
+
+Ogre::DataStreamPtr getReadableFile(const std::string& dataDir, const std::string& fileName)
+{
+    Ogre::DataStreamPtr stream;
+
+    if(dataDir.empty())
+    {
+        try{
+            stream = Ogre::ResourceGroupManager::getSingleton().openResource( fileName, "PF" );
+        }catch(...){}
+    }
+    else//android
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[getReadableFile]: Load from directory " + Ogre::String(dataDir.c_str()));
+
+        std::ios::openmode mode = std::ios::in | std::ios::binary;
+        std::ifstream* roStream = 0;
+        roStream = OGRE_NEW_T(std::ifstream, Ogre::MEMCATEGORY_GENERAL)();
+        roStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + fileName).c_str(), mode);
+
+        if(!roStream->fail())
+        {
+            Ogre::FileStreamDataStream* streamtmp = 0;
+            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(fileName.c_str(), roStream, true);
+            stream = Ogre::DataStreamPtr(streamtmp);
+        }
+    }
+
+    return stream;
+}
+
+Ogre::DataStreamPtr getWritibleFile(const std::string& dataDir, const std::string& fileName)
+{
+    Ogre::DataStreamPtr stream;
+    if(dataDir.empty())
+    {
+        try{
+            stream = Ogre::ResourceGroupManager::getSingleton().createResource( fileName, "PF", true );
+        }catch(Ogre::Exception& e)
+        {
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "[getWritibleFile]: CreateResource error: " + Ogre::String(e.what()));
+        }
+    }
+    else //android
+    {
+        Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[getWritibleFile]: Save to directory " + Ogre::String(dataDir.c_str()));
+
+        std::ios::openmode mode = std::ios::out | std::ios::binary;
+        std::fstream* ioStream = 0;
+        ioStream = OGRE_NEW_T(std::fstream, Ogre::MEMCATEGORY_GENERAL)();
+        ioStream->open((dataDir + "/" + PFLoader::mAndroidStorageDir + "/" + fileName).c_str(), mode);
+
+        if(!ioStream->fail())
+        {
+            Ogre::FileStreamDataStream* streamtmp = 0;
+            streamtmp = OGRE_NEW Ogre::FileStreamDataStream(fileName.c_str(), ioStream, true);
+            stream = Ogre::DataStreamPtr(streamtmp);
+        }
+    }
+
+    return stream;
 }

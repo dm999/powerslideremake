@@ -10,7 +10,6 @@
 #include "SimpleIni.h"
 
 #include "Enums.h"
-#include "gameLogic/TrialGhost.h"
 
 #include "tools/Conversions.h"
 
@@ -183,7 +182,7 @@ public:
     /**
      * return - is best time beaten
      */
-    bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew, const TrialGhost::GhostData& ghostData);
+    bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew);
 };
 
 /**

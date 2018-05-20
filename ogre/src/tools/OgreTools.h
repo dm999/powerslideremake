@@ -76,4 +76,7 @@ Ogre::Vector3 XYZToRGB(const Ogre::Vector3& XYZ, float gamma = 2.4f);
 
 size_t getPowerOf2(size_t val);
 
+Ogre::DataStreamPtr getReadableFile(const std::string& dataDir, const std::string& fileName);
+Ogre::DataStreamPtr getWritibleFile(const std::string& dataDir, const std::string& fileName);
+
 #endif

@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "../includes/OgreInclude.h"
-#include "../tools/PausedTimer.h"
 
 #include "../physics/InitialVehicleSetup.h"
 
@@ -31,20 +30,27 @@ public:
 
     typedef std::vector<std::pair<Ogre::Real, GhostPos> > GhostData;
 
-    void init(const GhostData& ghostData, Ogre::Real bestTime);
+    TrialGhost() : mFileName("hiscores.dat"){}
+
+    void init(const std::string& dataDir, const std::string& trackName);
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
-    void lapFinished(Ogre::Real bestTime);
+    void lapFinished(Ogre::Real bestTime, const std::string& dataDir);
     bool isVisible()const{return mIsGhostVisible;}
-    const GhostData& getGhostData()const{return mTimedPositionsPrev;}
 
 private:
 
     void swapData();
     void clearCurrent();
 
+    void saveBinToFile(const std::string& dataDir);
+    void loadBinFromFile(const std::string& dataDir);
+
     void load();//for debug
     void save();//for debug
+
+    const std::string mFileName;
+    std::string mTrackName;
 
     Ogre::Real mGhostBestLapTime;
     bool mIsGhostVisible;

@@ -17,7 +17,6 @@
 #include "physics/InitialVehicleSetup.h"
 
 #include "gamelogic/Championship.h"
-#include "gamelogic/TrialGhost.h"
 
 #include "Enums.h"
 
@@ -66,7 +65,7 @@ public:
     const STRHiscores& getSTRHiscores() const;
     STRHiscores& getSTRHiscores();
 
-    bool updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time, const TrialGhost::GhostData& ghostData = TrialGhost::GhostData());
+    bool updateHiscores(const std::string& character, const std::string& playerName, Ogre::Real time);
 
     TransmissionType getTransmissionType() const {return mTransmissionType;}
     void setTransmissionType(TransmissionType type){mTransmissionType = type;}
@@ -196,6 +195,7 @@ public:
     void clearMultiplayerCarsHuman();
     void removeMultiplayerCarHuman(const std::string& playerName);
 
+    const std::string& getDataDir()const {return mDataDir;}
 #if defined(__ANDROID__)
     void setDataDir(const std::string& dir){ mDataDir = dir; }
 #endif
