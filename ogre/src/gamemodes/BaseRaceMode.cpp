@@ -1109,7 +1109,7 @@ void BaseRaceMode::onLapFinished()
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
 
-            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, gameState.getDataDir(), gameState.isSupercar());
+            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, gameState.getDataDir(), gameState.isSupercar(), mGhostUser.getCharacterName());
             if(mTrialGhost.isVisible())
             {
                 if(isBestBeaten)

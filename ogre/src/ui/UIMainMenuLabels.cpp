@@ -13,6 +13,18 @@
 const Ogre::ColourValue UIMainMenuLabels::mDisabledLabel(0.25f, 0.25f, 0.25f);
 const Ogre::ColourValue UIMainMenuLabels::mInactiveLabel(0.50f, 0.50f, 0.50f);
 
+namespace{
+#if !defined(__ANDROID__)
+    const Ogre::Real buttonSize = 12.0f;
+    const Ogre::Real buttonLeftAdj = 0.0f;
+    const Ogre::Real buttonTopAdj = 0.0f;
+#else
+    const Ogre::Real buttonSize = 18.0f;
+    const Ogre::Real buttonLeftAdj = -3.0f;
+    const Ogre::Real buttonTopAdj = -3.0f;
+#endif
+}
+
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
     UIMainMenuBackground(modeContext, gameMode),
     mIsViewByDescription(false),
@@ -775,7 +787,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         mShadowVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
-        mShadowVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 102.0f, 12.0f, 12.0f), mModeContext.getGameState().isCastShadows(), true);
+        mShadowVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 102.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().isCastShadows(), true);
         mShadowVal.setButtonOnAction(this);
     }
 
@@ -798,7 +810,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         isActive = false;
 #endif
         mVSyncVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
-        mVSyncVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 122.0f, 12.0f, 12.0f), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
+        mVSyncVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
         mVSyncVal.setButtonOnAction(this);
     }
 
@@ -821,7 +833,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         isActive = false;
 #endif
         mFulscreenVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
-        mFulscreenVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 142.0f, 12.0f, 12.0f), mModeContext.getRenderWindow()->isFullScreen(), isActive);
+        mFulscreenVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isFullScreen(), isActive);
         mFulscreenVal.setButtonOnAction(this);
     }
 
@@ -890,11 +902,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         mInputTypeValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
-        mInputTypeValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
+        mInputTypeValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValLeft.setButtonOnAction(this);
 
         mInputTypeValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
-        mInputTypeValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
+        mInputTypeValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValRight.setButtonOnAction(this);
     }
 
@@ -925,11 +937,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         mSoundVolumeFXValLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
-        mSoundVolumeFXValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
+        mSoundVolumeFXValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeFXValLeft.setButtonOnAction(this);
 
         mSoundVolumeFXValRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
-        mSoundVolumeFXValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
+        mSoundVolumeFXValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeFXValRight.setButtonOnAction(this);
     }
 
@@ -962,12 +974,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     {
         //mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
         mOpponentsValLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
-        mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f, 62.0f, 12.0f, 12.0f), true);
+        mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mOpponentsValLeft.setButtonOnAction(this);
 
         //mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
         mOpponentsValRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
-        mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f, 62.0f, 12.0f, 12.0f), true);
+        mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mOpponentsValRight.setButtonOnAction(this);
     }
 
@@ -1049,18 +1061,18 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     {
         mMirrorVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
-        mMirrorVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f, 122.0f, 12.0f, 12.0f), mModeContext.getGameState().getMirrorEnabled(), true);
+        mMirrorVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getMirrorEnabled(), true);
         mMirrorVal.setButtonOnAction(this);
     }
 
     //Options Highscores
     {
         mHighScoresTrackLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
-        mHighScoresTrackLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(100.0f, 32.0f, 12.0f, 12.0f), true);
+        mHighScoresTrackLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(100.0f + buttonLeftAdj, 32.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mHighScoresTrackLeft.setButtonOnAction(this);
 
         mHighScoresTrackRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
-        mHighScoresTrackRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(180.0f, 32.0f, 12.0f, 12.0f), true);
+        mHighScoresTrackRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(180.0f + buttonLeftAdj, 32.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mHighScoresTrackRight.setButtonOnAction(this);
     }
     {
