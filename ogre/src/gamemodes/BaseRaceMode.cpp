@@ -1093,23 +1093,25 @@ void BaseRaceMode::unloadResources()
 
 void BaseRaceMode::onLapFinished()
 {
-    size_t lap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
+    GameState& gameState = mModeContext.getGameState();
 
-    if(lap <= mModeContext.mGameState.getLapsCount() || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
+    size_t lap = gameState.getPlayerCar().getLapUtils().getCurrentLap() - 1;
+
+    if(lap <= gameState.getLapsCount() || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
     {
-        Ogre::Real lastLapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getLastLapTime();
+        Ogre::Real lastLapTime = gameState.getPlayerCar().getLapUtils().getLastLapTime();
         std::string time = Tools::SecondsToString(lastLapTime);
         std::string lapS = Conversions::DMToString(lap);
-        mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+        mUIRace->addMiscPanelText("Lap finished " + Ogre::String(lapS) + ": [" + Ogre::String(time) + "]", gameState.getSTRPowerslide().getTrackTimeTrialColor(gameState.getTrackName()));
 
         if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceTimetrial)
         {
-            Ogre::Real bestLapTime = mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime();
+            Ogre::Real bestLapTime = gameState.getPlayerCar().getLapUtils().getBestLapTime();
             std::string bestTime = Tools::SecondsToString(bestLapTime);
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
 
-            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, mModeContext.getGameState().getDataDir(), mModeContext.getGameState().isSupercar());
+            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, gameState.getDataDir(), gameState.isSupercar());
             if(mTrialGhost.isVisible())
             {
                 if(isBestBeaten)
@@ -1132,29 +1134,29 @@ void BaseRaceMode::onLapFinished()
     if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
     {
         //race finished
-        if(lap == mModeContext.mGameState.getLapsCount())
+        if(lap == gameState.getLapsCount())
         {
-            mModeContext.mGameState.resetAfterFinishTimer();
+            gameState.resetAfterFinishTimer();
 
-            std::string totalTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime());
-            mUIRace->addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", mModeContext.mGameState.getSTRPowerslide().getTrackTimeTrialColor(mModeContext.mGameState.getTrackName()));
+            std::string totalTime = Tools::SecondsToString(gameState.getPlayerCar().getLapUtils().getTotalTime());
+            mUIRace->addMiscPanelText("Race finished: [" + Ogre::String(totalTime) + "]", gameState.getSTRPowerslide().getTrackTimeTrialColor(gameState.getTrackName()));
 
-            mModeContext.mGameState.getPlayerCar().setDisableMouse(false);
-            mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(mModeContext.mGameState.getTrackName()));
+            gameState.getPlayerCar().setDisableMouse(false);
+            mCamera->setPosition(mModeContext.mGameState.getSTRPowerslide().getFinishCameraPos(gameState.getTrackName()));
             mUIRace->setRearViewMirrorPanelShow(false);
             mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
             mModeContext.mGameState.setRaceFinished(true);
 
             //update hiscores
             {
-                bool isBestBeaten = mModeContext.getGameState().updateHiscores(
-                    mModeContext.getGameState().getPlayerCar().getCharacterName(),
-                    mModeContext.getGameState().getPlayerName(),
-                    mModeContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
+                bool isBestBeaten = gameState.updateHiscores(
+                    gameState.getPlayerCar().getCharacterName(),
+                    gameState.getPlayerName(),
+                    gameState.getPlayerCar().getLapUtils().getBestLapTime());
 
                 if(isBestBeaten)
                 {
-                    std::string bestTime = Tools::SecondsToString(mModeContext.mGameState.getPlayerCar().getLapUtils().getBestLapTime());
+                    std::string bestTime = Tools::SecondsToString(gameState.getPlayerCar().getLapUtils().getBestLapTime());
                     mUIRace->addMiscPanelText("Track record updated: [" + bestTime + "]", Ogre::ColourValue::Red);
                 }
             }
