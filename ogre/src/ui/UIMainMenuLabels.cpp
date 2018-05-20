@@ -5,6 +5,9 @@
 
 #include "../gamelogic/GameModeSwitcher.h"
 
+#include "../gamelogic/TrialGhost.h"
+#include "../tools/SectionsFile.h"
+
 #include "../BaseApp.h"
 
 const Ogre::ColourValue UIMainMenuLabels::mDisabledLabel(0.25f, 0.25f, 0.25f);
@@ -180,6 +183,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTrack));
 
         fillHighScoreTable();
+        fillReplayStat();
     }
 
     if(button == &mHighScoresTrackRight)
@@ -201,6 +205,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTrack));
 
         fillHighScoreTable();
+        fillReplayStat();
     }
 }
 
@@ -1081,6 +1086,26 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mOptionHighScoresTrackLabel->setFontName("SdkTrays/Caption");
         mOptionHighScoresTrackLabel->setColour(Ogre::ColourValue::White);
         getMainBackground()->addChild(mOptionHighScoresTrackLabel);
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(15.0f, 62.0f, 0.0f, 0.0f);
+        mOptionHighScoresReplayLabel = createTextArea("MainWindowOptionHighscoresReplayLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionHighScoresReplayLabel->setCaption("");
+        mOptionHighScoresReplayLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresReplayLabel->setSpaceWidth(9.0f);
+        mOptionHighScoresReplayLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionHighScoresReplayLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionHighScoresReplayLabel->setFontName("SdkTrays/Caption");
+        mOptionHighScoresReplayLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionHighScoresReplayLabel);
+    }
+    {
+        const Ogre::Real left = 250.0f;
+        const Ogre::Real top = 55.0f;
+        Ogre::Vector4 pos = screenAdaptionRelative * Ogre::Vector4(left, top, left + 52.0f, top + 20.0f);
+        mOptionHighScoresReplayIcon = createPanel("MainWindowHiscoreReplayIcon", pos, "Test/car0_0s.bmp");
+        mOptionHighScoresReplayIcon->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        getMainBackground()->addChild(mOptionHighScoresReplayIcon);
     }
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
@@ -2357,6 +2382,7 @@ void UIMainMenuLabels::showOptionHiscoreLabels()
     mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTracks[mHighScoreTrackIndex]));
 
     fillHighScoreTable();
+    fillReplayStat();
 
     mHighScoresTrackLeft.show();
     mHighScoresTrackRight.show();
@@ -2561,6 +2587,8 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_Mirror->hide();
     mOptionHighScoresButtonLabel->hide();
     mOptionHighScoresTrackLabel->hide();
+    mOptionHighScoresReplayLabel->hide();
+    mOptionHighScoresReplayIcon->hide();
     mOptionHighScoresEmergentGunLabel->hide();
     mOptionNameLabel->hide();
     mOptionNameLabel_Save->hide();
@@ -2861,7 +2889,7 @@ void UIMainMenuLabels::fillHighScoreTable()
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
     std::string curTrack = availTracks[mHighScoreTrackIndex];
-    if(mHighScoreTrackIndex == 8)
+    if(mHighScoreTrackIndex == 8)//skip stunt
         curTrack = availTracks[mHighScoreTrackIndex + 1];
 
     std::vector<std::string> names = strHiscores.getArrayValue(curTrack + " parameters", "names");
@@ -2892,6 +2920,35 @@ void UIMainMenuLabels::fillHighScoreTable()
     else
         mOptionHighScoresEmergentGunLabel->setCaption("");
 
+}
+
+void UIMainMenuLabels::fillReplayStat()
+{
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+    std::string curTrack = availTracks[mHighScoreTrackIndex];
+    if(mHighScoreTrackIndex == 8)//skip stunt
+        curTrack = availTracks[mHighScoreTrackIndex + 1];
+
+    SectionsFile sectionFile;
+    sectionFile.load(mModeContext.getGameState().getDataDir(), TrialGhost::mFileName);
+
+    if(sectionFile.isSectionExists(curTrack))
+    {
+        mOptionHighScoresReplayLabel->setCaption("Time Trial Replay Available: " + Tools::SecondsToString(sectionFile.getSectionTime(curTrack)));
+        mOptionHighScoresReplayLabel->show();
+
+        std::string iconName = strPowerslide.getValue(sectionFile.getSectionCharacter(curTrack) + " parameters", "icon", "car0_0s.bmp");
+        std::string matName = "Test/" + iconName;
+        mOptionHighScoresReplayIcon->setMaterialName(matName);
+        mOptionHighScoresReplayIcon->show();
+    }
+    else
+    {
+        mOptionHighScoresReplayLabel->hide();
+        mOptionHighScoresReplayIcon->hide();
+    }
 }
 
 std::string UIMainMenuLabels::getTextFileContent(const std::string& dir, const std::string& filename) const

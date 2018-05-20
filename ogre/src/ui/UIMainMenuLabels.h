@@ -159,6 +159,8 @@ private:
     UIButton mHighScoresTrackRight;
     Ogre::TextAreaOverlayElement * mOptionHighScoresButtonLabel;
     Ogre::TextAreaOverlayElement * mOptionHighScoresTrackLabel;
+    Ogre::TextAreaOverlayElement * mOptionHighScoresReplayLabel;
+    Ogre::PanelOverlayElement* mOptionHighScoresReplayIcon;
     Ogre::TextAreaOverlayElement * mOptionHighScoresTable1Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mOptionHighScoresTable2Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mOptionHighScoresTable3Label[GameState::mRaceGridCarsMax];
@@ -166,6 +168,7 @@ private:
     Ogre::TextAreaOverlayElement * mOptionHighScoresEmergentGunLabel;
     size_t mHighScoreTrackIndex;
     void fillHighScoreTable();
+    void fillReplayStat();
 
     Ogre::TextAreaOverlayElement * mOptionNameLabel;
     Ogre::TextAreaOverlayElement * mOptionNameLabel_Save;

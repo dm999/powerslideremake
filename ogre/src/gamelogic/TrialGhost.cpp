@@ -10,6 +10,8 @@ namespace{
     const size_t maxRecordedSamples = 10000;
 }
 
+const std::string TrialGhost::mFileName = "hiscores.dat";
+
 GhostPos::GhostPos() 
     : chassisPos(Ogre::Vector3::ZERO), chassisRot(Ogre::Quaternion::IDENTITY)
 {}

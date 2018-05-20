@@ -30,8 +30,6 @@ public:
 
     typedef std::vector<std::pair<Ogre::Real, GhostPos> > GhostData;
 
-    TrialGhost() : mFileName("hiscores.dat"){}
-
     void init(const std::string& dataDir, const std::string& trackName, const std::string& characterName);
     void storePoint(const GhostPos& pos, Ogre::Real time);
     GhostPos getInterpolatedPoint(Ogre::Real time);
@@ -39,6 +37,8 @@ public:
     bool isVisible()const{return mIsGhostVisible;}
 
     std::string getCharacterName() const{return mCharacterName;}
+
+    static const std::string mFileName;
 
 private:
 
@@ -51,7 +51,6 @@ private:
     void load();//for debug
     void save();//for debug
 
-    const std::string mFileName;
     std::string mTrackName;
     std::string mCharacterName;
 
