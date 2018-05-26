@@ -19,7 +19,7 @@ public:
     UIEditBox(size_t maxSymbols = 256);
     virtual ~UIEditBox(){}
 
-    void loadBackground(const PFLoader& pfLoaderGameshell, const std::string& filename);
+    void loadBackground(const std::string& textureName);
     void setBackgroundMaterial(const std::string& name);
 
     void init(const Ogre::Matrix4& screenAdaptionRelative, 
@@ -63,7 +63,6 @@ private:
     bool mIsCaretShown;
     bool mIsActive;
 
-    Ogre::String mTextureName;
     Ogre::String mMaterialName;
 
     Ogre::String mPanelName;
@@ -80,7 +79,6 @@ private:
 
     EditBoxCharType mCharType;
 
-    static Ogre::NameGenerator nameGenTextures;
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenPanel;
     static Ogre::NameGenerator nameGenText;

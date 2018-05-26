@@ -4,6 +4,7 @@
 #include "UIMainMenuBackground.h"
 
 #include "elements/UIButton.h"
+#include "elements/UITable.h"
 
 class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction
 {
@@ -194,6 +195,7 @@ private:
     Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
 
+    UITable mLeaderboardTable;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle1Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle2Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle3Label;

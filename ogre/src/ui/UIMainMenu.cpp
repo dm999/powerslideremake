@@ -127,7 +127,7 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 
     //mEditBox.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
     //mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
-    mEditBoxUserName.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBoxUserName.loadBackground("OriginalEditBox");
     mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 82.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
 
@@ -173,7 +173,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 void UIMainMenu::reloadTextures(const GameState& gameState)
 {
     loadMisc(gameState.getPFLoaderData(), gameState.getPFLoaderGameshell(), NULL);
-    mEditBoxUserName.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
 }
 #endif
 

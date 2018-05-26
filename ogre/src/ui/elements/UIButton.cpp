@@ -1,6 +1,6 @@
 #include "UIButton.h"
 
-#include "../../loaders/TextureLoader.h"
+#include "../../includes/CommonIncludes.h"
 
 #include "../../tools/OgreTools.h"
 
@@ -17,7 +17,7 @@ UIButton::UIButton() :
     mPanelName = nameGenPanel.generate();
 }
 
-void UIButton::loadBackground(const PFLoader& pfLoaderGameshell, const std::string& textureName)
+void UIButton::loadBackground(const std::string& textureName)
 {
     {
         std::vector<Ogre::String> texName;
@@ -45,8 +45,6 @@ void UIButton::init(const Ogre::Matrix4& screenAdaptionRelative,
                     const Ogre::Vector4& dimensions,
                     bool isActive)
 {
-    Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
-
     mIsActive = isActive;
 
     {

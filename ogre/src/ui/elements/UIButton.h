@@ -4,8 +4,6 @@
 #include "../UIBase.h"
 
 
-class PFLoader;
-
 class UIButton;
 
 class UIButtonOnAction
@@ -23,7 +21,7 @@ public:
     UIButton();
     virtual ~UIButton(){}
 
-    void loadBackground(const PFLoader& pfLoaderGameshell, const std::string& textureName);
+    void loadBackground(const std::string& textureName);
     void setBackgroundMaterial(const std::string& name);
 
     void init(const Ogre::Matrix4& screenAdaptionRelative, 

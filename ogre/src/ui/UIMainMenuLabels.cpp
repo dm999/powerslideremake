@@ -786,7 +786,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
     }
     {
-        mShadowVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mShadowVal.loadBackground("OriginalButtonTick");
         mShadowVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 102.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().isCastShadows(), true);
         mShadowVal.setButtonOnAction(this);
     }
@@ -809,7 +809,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #if defined(__ANDROID__)
         isActive = false;
 #endif
-        mVSyncVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mVSyncVal.loadBackground("OriginalButtonTick");
         mVSyncVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
         mVSyncVal.setButtonOnAction(this);
     }
@@ -832,7 +832,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #if defined(__ANDROID__)
         isActive = false;
 #endif
-        mFulscreenVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mFulscreenVal.loadBackground("OriginalButtonTick");
         mFulscreenVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isFullScreen(), isActive);
         mFulscreenVal.setButtonOnAction(this);
     }
@@ -901,11 +901,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionInputLabel_Type);
     }
     {
-        mInputTypeValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        mInputTypeValLeft.loadBackground("OriginalButtonDown");
         mInputTypeValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValLeft.setButtonOnAction(this);
 
-        mInputTypeValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        mInputTypeValRight.loadBackground("OriginalButtonUp");
         mInputTypeValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValRight.setButtonOnAction(this);
     }
@@ -972,12 +972,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Opponents_Val);
     }
     {
-        //mOpponentsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDown");
+        //mOpponentsValLeft.loadBackground("OriginalButtonDown");
         mOpponentsValLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
         mOpponentsValLeft.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mOpponentsValLeft.setButtonOnAction(this);
 
-        //mOpponentsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUp");
+        //mOpponentsValRight.loadBackground("OriginalButtonUp");
         mOpponentsValRight.setBackgroundMaterial(mInputTypeValRight.getMaterialName());
         mOpponentsValRight.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mOpponentsValRight.setButtonOnAction(this);
@@ -1060,7 +1060,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Mirror);
     }
     {
-        mMirrorVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTick");
+        mMirrorVal.loadBackground("OriginalButtonTick");
         mMirrorVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getMirrorEnabled(), true);
         mMirrorVal.setButtonOnAction(this);
     }
@@ -1377,6 +1377,11 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
 
     {
+        mLeaderboardTable.loadBackground();
+        mLeaderboardTable.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(330.0f, 73.0f, 310.0f, 22.0f), 36.0f);
+        //mLeaderboardTable.setTableOnAction(this);
+    }
+    {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, 57.0f, 0.0f, 0.0f);
         mLeaderboardTableTitle1Label = createTextArea("MainWindowTableLeaderboardTitle1", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mLeaderboardTableTitle1Label->setCaption("Rank");
@@ -1600,6 +1605,7 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mMirrorVal.mousePressed(pos);
     mHighScoresTrackLeft.mousePressed(pos);
     mHighScoresTrackRight.mousePressed(pos);
+    mLeaderboardTable.mousePressed(pos);
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -1990,6 +1996,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mMirrorVal.mouseReleased(pos);
     mHighScoresTrackLeft.mouseReleased(pos);
     mHighScoresTrackRight.mouseReleased(pos);
+    mLeaderboardTable.mouseReleased(pos);
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -2130,6 +2137,8 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     mHighScoresTrackLeft.mouseMoved(pos);
     mHighScoresTrackRight.mouseMoved(pos);
+
+    mLeaderboardTable.mouseMoved(pos);
 }
 
 void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
@@ -2148,6 +2157,7 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mMirrorVal.destroy(trayMgr);
     mHighScoresTrackLeft.destroy(trayMgr);
     mHighScoresTrackRight.destroy(trayMgr);
+    mLeaderboardTable.destroy(trayMgr);
 }
 
 void UIMainMenuLabels::setWindowTitle(const std::string& title)
@@ -2485,6 +2495,7 @@ void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
 
+    //mLeaderboardTable.show();
     mLeaderboardTableTitle1Label->show();
     mLeaderboardTableTitle2Label->show();
     mLeaderboardTableTitle3Label->show();
@@ -2493,9 +2504,15 @@ void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
     for(size_t q = 0; q < finishBoard.size(); ++q)
     {
         if(finishBoard[q].mIsPlayer)
+        {
+            //mLeaderboardTable.setText(playerName, q);
             mLeaderboardTable2Label[q]->setCaption(playerName);
+        }
         else
+        {
+            //mLeaderboardTable.setText(STRPowerslide::getCharacterTitle(finishBoard[q].mCharName), q);
             mLeaderboardTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(finishBoard[q].mCharName));
+        }
 
         mLeaderboardTable4Label[q]->setCaption(Conversions::DMToString(finishBoard[q].mPos));
 
@@ -2628,6 +2645,7 @@ void UIMainMenuLabels::hideAllLabels()
     mPodiumTableTitle3Label->hide();
     mPodiumTableTitle4Label->hide();
 
+    mLeaderboardTable.hide();
     mLeaderboardTableTitle1Label->hide();
     mLeaderboardTableTitle2Label->hide();
     mLeaderboardTableTitle3Label->hide();

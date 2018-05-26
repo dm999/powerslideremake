@@ -290,11 +290,11 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mTrackNameSelected);
     }
     {
-        mTracksValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mTracksValLeft.loadBackground("OriginalButtonDownMulti");
         mTracksValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(320.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
         mTracksValLeft.setButtonOnAction(this);
 
-        mTracksValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mTracksValRight.loadBackground("OriginalButtonUpMulti");
         mTracksValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(340.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
         mTracksValRight.setButtonOnAction(this);
     }
@@ -325,11 +325,11 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mLapsCount);
     }
     {
-        mLapsValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mLapsValLeft.loadBackground("OriginalButtonDownMulti");
         mLapsValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(380.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
         mLapsValLeft.setButtonOnAction(this);
 
-        mLapsValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mLapsValRight.loadBackground("OriginalButtonUpMulti");
         mLapsValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(400.0f, 33.0f, 12.0f, 12.0f), mModeContext.mGameState.isMultiplayerMaster());
         mLapsValRight.setButtonOnAction(this);
     }
@@ -360,11 +360,11 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mCarVal);
     }
     {
-        mCarValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mCarValLeft.loadBackground("OriginalButtonDownMulti");
         mCarValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(440.0f, 33.0f, 12.0f, 12.0f), true);
         mCarValLeft.setButtonOnAction(this);
 
-        mCarValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mCarValRight.loadBackground("OriginalButtonUpMulti");
         mCarValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(460.0f, 33.0f, 12.0f, 12.0f), true);
         mCarValRight.setButtonOnAction(this);
     }
@@ -395,11 +395,11 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mCharacterVal);
     }
     {
-        mCharacterValLeft.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonDownMulti");
+        mCharacterValLeft.loadBackground("OriginalButtonDownMulti");
         mCharacterValLeft.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(500.0f, 33.0f, 12.0f, 12.0f), true);
         mCharacterValLeft.setButtonOnAction(this);
 
-        mCharacterValRight.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonUpMulti");
+        mCharacterValRight.loadBackground("OriginalButtonUpMulti");
         mCharacterValRight.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(520.0f, 33.0f, 12.0f, 12.0f), true);
         mCharacterValRight.setButtonOnAction(this);
     }
@@ -476,7 +476,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mMainBackground->addChild(mWeapons);
     }
     {
-        mWeaponsVal.loadBackground(mModeContext.getGameState().getPFLoaderGameshell(), "OriginalButtonTickMulti");
+        mWeaponsVal.loadBackground("OriginalButtonTickMulti");
         //mWeaponsVal.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(210.0f, 34.0f, 12.0f, 12.0f), true, mModeContext.mGameState.isMultiplayerMaster());
         mWeaponsVal.init(screenAdaptionRelative, mMainBackground, Ogre::Vector4(210.0f, 34.0f, 12.0f, 12.0f), true, false);
         mWeaponsVal.setButtonOnAction(this);

@@ -1,6 +1,6 @@
 #include "UIEditBox.h"
 
-#include "../../loaders/TextureLoader.h"
+#include "../../includes/CommonIncludes.h"
 
 #include "../../tools/OgreTools.h"
 
@@ -8,7 +8,6 @@
     #include <android/keycodes.h>
 #endif
 
-Ogre::NameGenerator UIEditBox::nameGenTextures("UIEditBox/Texture");
 Ogre::NameGenerator UIEditBox::nameGenMaterials("UIEditBox/Material");
 Ogre::NameGenerator UIEditBox::nameGenPanel("UIEditBox/Panel");
 Ogre::NameGenerator UIEditBox::nameGenText("UIEditBox/Text");
@@ -21,21 +20,16 @@ UIEditBox::UIEditBox(size_t maxSymbols) : mCaption(""), mCaptionToDisplay(""),
     mCaretSize(9.0f),
     mCharType(Any)
 {
-    mTextureName = nameGenTextures.generate();
     mMaterialName = nameGenMaterials.generate();
     mPanelName = nameGenPanel.generate();
     mTextName = nameGenText.generate();
 }
 
-void UIEditBox::loadBackground(const PFLoader& pfLoaderGameshell, const std::string& filename)
+void UIEditBox::loadBackground(const std::string& textureName)
 {
-    TextureLoader().load( pfLoaderGameshell, 
-        "data/gameshell", filename, 
-        mTextureName, TEMP_RESOURCE_GROUP_NAME);
-
     {
         std::vector<Ogre::String> texName;
-        texName.push_back(mTextureName);
+        texName.push_back(textureName);
         Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialName, 
                             "Test/Diffuse", 
                             texName, 

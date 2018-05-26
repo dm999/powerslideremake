@@ -76,6 +76,10 @@ void UIBaseMenu::loadUITextures(const PFLoader& pfLoaderGameshell)
 #endif
 
     TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "session.bmp", 
+                                "OriginalEditBox", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "up.bmp", 
                                 "OriginalButtonUp", TEMP_RESOURCE_GROUP_NAME);
 
@@ -84,16 +88,33 @@ void UIBaseMenu::loadUITextures(const PFLoader& pfLoaderGameshell)
                                 "OriginalButtonDown", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "stickbox.bmp", 
+                                "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
+
+    //table left
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", "line" + Conversions::DMToString(q + 1) + ".bmp", 
+                                    "OriginalLTable" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+    }
+
+    //table right
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        TextureLoader().load( pfLoaderGameshell, 
+                                    "data/gameshell", "r_line" + Conversions::DMToString(q + 1) + ".bmp", 
+                                    "OriginalRTable" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+    }
+
+    //multiplayer
+    TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "up_m.bmp", 
                                 "OriginalButtonUpMulti", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "down_m.bmp", 
                                 "OriginalButtonDownMulti", TEMP_RESOURCE_GROUP_NAME);
-
-    TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "stickbox.bmp", 
-                                "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "mtickbox.bmp", 
