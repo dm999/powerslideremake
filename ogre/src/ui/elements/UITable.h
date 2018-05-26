@@ -23,7 +23,7 @@ public:
     UITable();
     virtual ~UITable(){}
 
-    void loadBackground();
+    void loadBackground(bool isRight);
 
     void init(const Ogre::Matrix4& screenAdaptionRelative, 
         Ogre::OverlayContainer* mainBackground, 
@@ -39,7 +39,10 @@ public:
 
     bool isVisible() const {return mIsShown;}
 
-    void setText(const Ogre::String& text, size_t row);
+    void clear();
+
+    void setText(const Ogre::String& text, size_t row, const Ogre::ColourValue& color);
+    Ogre::String getText(size_t row)const;
 
     void setTableOnAction(UITableOnAction* onAction) {mOnAction = onAction;}
 

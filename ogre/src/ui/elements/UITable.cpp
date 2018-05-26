@@ -12,16 +12,21 @@ Ogre::NameGenerator UITable::nameGenText("UITable/Text");
 
 UITable::UITable() : mIsShown(false), mIsPressed(false), mOnAction(NULL) {}
 
-void UITable::loadBackground()
+void UITable::loadBackground(bool isRight)
 {
     mMaterialNames.clear();
+
+    std::string textureNamePrefix = "OriginalLTable";
+
+    if(isRight)
+        textureNamePrefix = "OriginalRTable";
 
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {
         mMaterialNames.push_back(nameGenMaterials.generate());
 
         std::vector<Ogre::String> texName;
-        texName.push_back("OriginalRTable" + Conversions::DMToString(q));
+        texName.push_back(textureNamePrefix + Conversions::DMToString(q));
         Ogre::MaterialPtr newMat = CloneMaterial(  mMaterialNames[q], 
                             "Test/Diffuse", 
                             texName, 
@@ -108,7 +113,14 @@ void UITable::mouseReleased(const Ogre::Vector2& pos)
                 if(OgreBites::Widget::isCursorOver(mBackgrounds[q], pos, 0))
                 {
                     if(mTexts[q]->getCaption() != "")
+                    {
                         mBackgrounds[q]->setUV(0.0f, 22.0f / 44.0f, 1.0f, 44.0f / 44.0f);
+
+                        if(mOnAction)
+                        {
+                            mOnAction->onTableReleased(this, q);
+                        }
+                    }
                 }
                 else
                 {
@@ -116,11 +128,6 @@ void UITable::mouseReleased(const Ogre::Vector2& pos)
                 }
 
                 mIsPressed = false;
-
-                if(mOnAction)
-                {
-                    mOnAction->onTableReleased(this, q);
-                }
             }
         }
     }
@@ -185,13 +192,40 @@ void UITable::hide()
     mIsShown = false;
 }
 
-void UITable::setText(const Ogre::String& text, size_t row)
+void UITable::clear()
+{
+    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    {
+        if(mTexts[q])
+        {
+            mTexts[q]->setCaption("");
+        }
+    }
+}
+
+void UITable::setText(const Ogre::String& text, size_t row, const Ogre::ColourValue& color)
 {
     if(row < GameState::mRaceGridCarsMax)
     {
         if(!mTexts.empty() && mTexts[row])
         {
+            mTexts[row]->setColour(color);
             mTexts[row]->setCaption(text);
         }
     }
+}
+
+Ogre::String UITable::getText(size_t row)const
+{
+    Ogre::String ret = "";
+
+    if(row < GameState::mRaceGridCarsMax)
+    {
+        if(!mTexts.empty() && mTexts[row])
+        {
+            ret = mTexts[row]->getCaption();
+        }
+    }
+
+    return ret;
 }

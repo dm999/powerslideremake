@@ -11,7 +11,7 @@
     #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
 #endif
 
-bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::string>& roomsDesc, std::vector<std::pair<size_t, size_t> >& players)const
+bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::vector<std::string>& rooms, std::vector<std::string>& roomsDesc, std::vector<std::string>& roomHostName, std::vector<std::pair<size_t, size_t> >& players, std::vector<std::vector<std::string>>& playersNamesInRooms)const
 {
 
     bool res = true;
@@ -19,6 +19,8 @@ bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::
     rooms.clear();
     roomsDesc.clear();
     players.clear();
+    roomHostName.clear();
+    playersNamesInRooms.clear();
 
     try{
 
@@ -31,7 +33,9 @@ bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::
         {
             rooms.push_back(roomsGet[q].getName());
             roomsDesc.push_back(roomsGet[q].getDescription());
+            roomHostName.push_back(roomsGet[q].getHostName());
             players.push_back(std::make_pair(roomsGet[q].getPlayersNumber(), roomsGet[q].getReservedPlayersNumber()));
+            playersNamesInRooms.push_back(roomsGet[q].getPlayers());//not filled
         }
 
     }catch(const std::runtime_error& err)

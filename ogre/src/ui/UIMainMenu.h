@@ -10,7 +10,7 @@
 class MenuMode;
 class LoaderListener;
 
-class UIMainMenu : public UIMainMenuLabels
+class UIMainMenu : public UIMainMenuLabels, public UITableOnAction
 {
 public:
 
@@ -38,6 +38,9 @@ public:
     void setPodiumSubmenu();
 
     void destroy(CustomTrayManager* trayMgr) override;
+
+    void onTablePressed(UITable * table, size_t row) override {}
+    void onTableReleased(UITable * table, size_t row) override;
 
 protected:
 
@@ -69,8 +72,13 @@ private:
     UIEditBox mEditBoxMultiIP;
     UIEditBox mEditBoxMultiUserName;
     UIEditBox mEditBoxMultiRoomName;
-
-    OgreBites::SelectMenu* mRoomsTable;
+    UITable mMultiRoomsList;
+    UITable mMultiRoomPlayersList;
+    size_t mSelectedRoomIndex;
+    std::vector<std::string> mRoomsDescriptions;
+    std::vector<std::string> mRoomsHosts;
+    std::vector<std::pair<size_t, size_t> > mPlayersInServerRooms;
+    std::vector<std::vector<std::string>> mPlayersNamesInRooms;
 
     std::string mExitSubmenuTitle;
 };

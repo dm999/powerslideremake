@@ -818,7 +818,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
             {
                 mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut2");
                 mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() + 1);
-                static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
+                static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICountInRace());
                 updateRoomState();
             }
             else
@@ -831,7 +831,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                 {
                     mMainChatButtons[index]->setMaterialName("Test/OriginalChatBut0");
                     mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() - 1);
-                    static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICount());
+                    static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICountInRace());
                     updateRoomState();
                 }
             }

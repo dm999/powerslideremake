@@ -137,21 +137,23 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     mEditBoxMultiIP.setText("78.47.85.155");//d.polubotko: FIXME
 
     mEditBoxMultiUserName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
-    mEditBoxMultiUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 250.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 230.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
 
     mEditBoxMultiRoomName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
-    mEditBoxMultiRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 300.0f, 170.0f, 18.0f), 36.0f);
-    mEditBoxMultiRoomName.setText("Powerslide!");//d.polubotko: FIXME
+    mEditBoxMultiRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 280.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiRoomName.setText("Powerslide!");
 
     {
-        Ogre::Vector4 roomsTablePos = screenAdaptionRelative * Ogre::Vector4(500.0f, 180.0f, 140.0f, 0.0f);
-        mRoomsTable = createSelectMenu(trayMgr, OgreBites::TL_NONE, "roomsTable", "Rooms", roomsTablePos.z, 20, Ogre::StringVector());
-        mRoomsTable->getOverlayElement()->setLeft(roomsTablePos.x);
-        mRoomsTable->getOverlayElement()->setTop(roomsTablePos.y);
-        mRoomsTable->hide();
+        mMultiRoomsList.loadBackground(true);
+        mMultiRoomsList.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(330.0f, 73.0f, 310.0f, 22.0f), 36.0f);
+        mMultiRoomsList.setTableOnAction(this);
     }
 
+    {
+        mMultiRoomPlayersList.loadBackground(false);
+        mMultiRoomPlayersList.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(24.0f, 58.0f, 250.0f, 22.0f), 36.0f);
+    }
 
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
 
@@ -203,7 +205,10 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
     mEditBoxMultiRoomName.keyUp(_key, _char);
 
     if(mEditBoxMultiIP.isActive())
+    {
+        mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
         setColorMultiIP(mInactiveLabel);
+    }
 
     if(mEditBoxMultiUserName.isActive())
         setColorMultiUserName(mInactiveLabel);
@@ -220,6 +225,7 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
     mEditBoxMultiIP.mouseReleased(pos);
     mEditBoxMultiUserName.mouseReleased(pos);
     mEditBoxMultiRoomName.mouseReleased(pos);
+    mMultiRoomsList.mousePressed(pos);
 
 #if defined(__ANDROID__)
     bool isAnyActive =  mEditBoxUserName.isActive() |
@@ -268,11 +274,15 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
         mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
         setTopmostSubmenu();
     }
+
+    mMultiRoomsList.mouseReleased(pos);
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
 {
     UIMainMenuLabels::mouseMoved(pos);
+
+    mMultiRoomsList.mouseMoved(pos);
 }
 
 bool UIMainMenu::isExitSubmenu()const
@@ -312,6 +322,30 @@ void UIMainMenu::destroy(CustomTrayManager* trayMgr)
     mEditBoxMultiIP.destroy(trayMgr);
     mEditBoxMultiUserName.destroy(trayMgr);
     mEditBoxMultiRoomName.destroy(trayMgr);
+    mMultiRoomsList.destroy(trayMgr);
+    mMultiRoomPlayersList.destroy(trayMgr);
+}
+
+void UIMainMenu::onTableReleased(UITable * table, size_t row)
+{
+    mMultiRoomPlayersList.clear();
+    mMultiRoomPlayersList.setText(mMultiRoomsList.getText(row), 0, Ogre::ColourValue::White);
+    mMultiRoomPlayersList.setText("Host: " + mRoomsHosts[row], 1, Ogre::ColourValue::Black);
+    mMultiRoomPlayersList.setText("Desc: " + mRoomsDescriptions[row], 2, Ogre::ColourValue::White);
+    mMultiRoomPlayersList.setText("Human: " + Conversions::DMToString(mPlayersInServerRooms[row].first), 3, Ogre::ColourValue::Black);
+    mMultiRoomPlayersList.setText("AI: " + Conversions::DMToString(mPlayersInServerRooms[row].second), 4, Ogre::ColourValue::White);
+    size_t availSlots = GameState::mRaceGridCarsMax - mPlayersInServerRooms[row].first - mPlayersInServerRooms[row].second;
+    if(availSlots > 0)
+        mMultiRoomPlayersList.setText("Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Black);
+    else
+        mMultiRoomPlayersList.setText("Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Red);
+
+    if(availSlots > 0)
+        showMultiJoin();
+    else
+        hideMultiJoin();
+
+    mSelectedRoomIndex = row;
 }
 
 void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
@@ -457,12 +491,8 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_MultiConnect:
         mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
-        showModeMulti();
-        showMultiIPLabels();
-        showBackgrounds();
-        mEditBoxMultiIP.show();
-        mEditBoxMultiUserName.show();
-        mEditBoxMultiRoomName.show();
+        mMultiRoomsList.show();
+        mMultiRoomPlayersList.show();
         connectToServer();
         break;
 
@@ -682,54 +712,67 @@ void UIMainMenu::hideAll()
     mEditBoxMultiIP.hide();
     mEditBoxMultiUserName.hide();
     mEditBoxMultiRoomName.hide();
-    mRoomsTable->hide();
+    mMultiRoomsList.hide();
+    mMultiRoomPlayersList.hide();
 }
 
 void UIMainMenu::connectToServer()
 {
 #ifndef NO_MULTIPLAYER
-    mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
-    mRoomsTable->hide();
+    std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
+    std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
-    std::string ip = mEditBoxMultiIP.getText().asUTF8();
-    if(!ip.empty())
+    if(!serverIP.empty() && !userName.empty())
     {
-        std::vector<std::string> rooms;
-        std::vector<std::string> roomsDesc;
-        std::vector<std::pair<size_t, size_t> > playersInServerRooms;
-        bool isConnected = false;
-        
-        try{
-            isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, roomsDesc, playersInServerRooms);
-        }catch(...){
-        }
 
-        if(isConnected)
+        mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
+
+        mMultiRoomsList.clear();
+        mMultiRoomPlayersList.clear();
+
+        std::string ip = mEditBoxMultiIP.getText().asUTF8();
+        if(!ip.empty())
         {
-            mEditBoxMultiIP.setColor(Ogre::ColourValue::Green);
-            mRoomsTable->clearItems();
-            mRoomsTable->show();
+            std::vector<std::string> rooms;
+            bool isConnected = false;
+            
+            try{
+                isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, mRoomsDescriptions, mRoomsHosts, mPlayersInServerRooms, mPlayersNamesInRooms);
+            }catch(...){
+            }
 
-            for(size_t q = 0; q < rooms.size(); ++q)
+            if(isConnected)
             {
-                if((playersInServerRooms[q].first + playersInServerRooms[q].second) < 12)
+                mEditBoxMultiIP.setColor(Ogre::ColourValue::Green);
+
+                for(size_t q = 0; q < rooms.size(); ++q)
                 {
-                    mRoomsTable->addItem(rooms[q]);
-                    //mWidgetRooms->addItem("#00FF00" + rooms[q]);
-                    //mWidgetRoomPlayers->addItem("#00FF00" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
-                }
-                else
-                {
-                    mRoomsTable->addItem(rooms[q]);
-                    //mWidgetRooms->addItem("#FF0000" + rooms[q]);
-                    //mWidgetRoomPlayers->addItem("#FF0000" + Conversions::DMToString(playersInServerRooms[q].first) + " " + Conversions::DMToString(playersInServerRooms[q].second) + " " + roomsDesc[q]);
+                    //available for join
+                    if((mPlayersInServerRooms[q].first + mPlayersInServerRooms[q].second) < GameState::mRaceGridCarsMax)
+                    {
+                        mMultiRoomsList.setText(rooms[q], q, Ogre::ColourValue::Green);
+                    }
+                    else //not available for join
+                    {
+                        mMultiRoomsList.setText(rooms[q], q, Ogre::ColourValue::Red);
+                    }
                 }
             }
+            else
+            {
+                mEditBoxMultiIP.setColor(Ogre::ColourValue::Red);
+            }
         }
-        else
-        {
-            mEditBoxMultiIP.setColor(Ogre::ColourValue::Red);
-        }
+    }
+    else
+    {
+        switchState(State_Multi);
+
+        if(serverIP.empty())
+            setColorMultiIP(Ogre::ColourValue::Red);
+
+        if(userName.empty())
+            setColorMultiUserName(Ogre::ColourValue::Red);
     }
 #endif
 }
@@ -766,7 +809,7 @@ void UIMainMenu::createRoom()
 void UIMainMenu::joinRoom()
 {
     std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
-    std::string roomName = mRoomsTable->getSelectedItem();
+    std::string roomName = mMultiRoomsList.getText(mSelectedRoomIndex);
     std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
     if(!serverIP.empty() && !roomName.empty() && !userName.empty())
@@ -780,6 +823,5 @@ void UIMainMenu::joinRoom()
     else
     {
         switchState(State_Multi);
-        //mWidgetUserName->setColour(MyGUI::Colour(1.0f, 0.0f, 0.0f));
     }
 }

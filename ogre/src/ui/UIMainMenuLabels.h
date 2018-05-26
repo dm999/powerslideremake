@@ -59,6 +59,8 @@ protected:
     void showLeaderboardLabels(const finishBoardVec& finishBoard);
     void showChampionshipResultsLabels();
     void showMultiIPLabels();
+    void showMultiJoin();
+    void hideMultiJoin();
     void hideAllLabels();
 
     void setCurrentTrackBestTime();
@@ -195,7 +197,6 @@ private:
     Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
 
-    UITable mLeaderboardTable;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle1Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle2Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle3Label;
@@ -213,7 +214,7 @@ private:
     private:
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;
-    Ogre::TextAreaOverlayElement * mModeMultiConnect;
+    Ogre::TextAreaOverlayElement * mModeMultiListOfRooms;
     Ogre::TextAreaOverlayElement * mModeMultiUserName;
     Ogre::TextAreaOverlayElement * mModeMultiRoomName;
     Ogre::TextAreaOverlayElement * mModeMultiCreateRoom;

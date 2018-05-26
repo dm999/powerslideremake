@@ -289,20 +289,20 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 200.0f, 0.0f, 0.0f);
-        mModeMultiConnect = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeMultiConnect->setCaption("Get List of Rooms");
-        mModeMultiConnect->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mModeMultiConnect->setSpaceWidth(9.0f);
-        mModeMultiConnect->setHeight(26.0f * viewportHeight / 1024.0f);
-        mModeMultiConnect->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeMultiConnect->setFontName("SdkTrays/Caption");
-        mModeMultiConnect->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeMultiConnect);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(420.0f, 350.0f, 0.0f, 0.0f);
+        mModeMultiListOfRooms = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMultiListOfRooms->setCaption("Get List of Rooms");
+        mModeMultiListOfRooms->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiListOfRooms->setSpaceWidth(9.0f);
+        mModeMultiListOfRooms->setHeight(26.0f * viewportHeight / 1024.0f);
+        mModeMultiListOfRooms->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMultiListOfRooms->setFontName("SdkTrays/Caption");
+        mModeMultiListOfRooms->setColour(mInactiveLabel);
+        getMainBackground()->addChild(mModeMultiListOfRooms);
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 240.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 220.0f, 0.0f, 0.0f);
         mModeMultiUserName = createTextArea("MainWindowMultiUserName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiUserName->setCaption("User Name:");
         mModeMultiUserName->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -315,7 +315,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 290.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 270.0f, 0.0f, 0.0f);
         mModeMultiRoomName = createTextArea("MainWindowMultiRoomName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiRoomName->setCaption("Room Name:");
         mModeMultiRoomName->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -341,7 +341,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(420.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 350.0f, 0.0f, 0.0f);
         mModeMultiJoinRoom = createTextArea("MainWindowMultiJoinRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiJoinRoom->setCaption("Join Room");
         mModeMultiJoinRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -1377,11 +1377,6 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
 
     {
-        mLeaderboardTable.loadBackground();
-        mLeaderboardTable.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(330.0f, 73.0f, 310.0f, 22.0f), 36.0f);
-        //mLeaderboardTable.setTableOnAction(this);
-    }
-    {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, 57.0f, 0.0f, 0.0f);
         mLeaderboardTableTitle1Label = createTextArea("MainWindowTableLeaderboardTitle1", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mLeaderboardTableTitle1Label->setCaption("Rank");
@@ -1605,7 +1600,6 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mMirrorVal.mousePressed(pos);
     mHighScoresTrackLeft.mousePressed(pos);
     mHighScoresTrackRight.mousePressed(pos);
-    mLeaderboardTable.mousePressed(pos);
 }
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
@@ -1627,7 +1621,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
-    if(mModeMultiConnect->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiConnect, pos, 0))
+    if(mModeMultiListOfRooms->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiListOfRooms, pos, 0))
     {
         switchState(State_MultiConnect);
         return;
@@ -1996,7 +1990,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mMirrorVal.mouseReleased(pos);
     mHighScoresTrackLeft.mouseReleased(pos);
     mHighScoresTrackRight.mouseReleased(pos);
-    mLeaderboardTable.mouseReleased(pos);
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -2006,7 +1999,7 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mModeSingle);
 #ifndef NO_MULTIPLAYER
     checkCursorOverLabel(pos, mModeMulti);
-    checkCursorOverLabel(pos, mModeMultiConnect);
+    checkCursorOverLabel(pos, mModeMultiListOfRooms);
     checkCursorOverLabel(pos, mModeMultiCreateRoom);
     checkCursorOverLabel(pos, mModeMultiJoinRoom);
 #endif
@@ -2137,8 +2130,6 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 
     mHighScoresTrackLeft.mouseMoved(pos);
     mHighScoresTrackRight.mouseMoved(pos);
-
-    mLeaderboardTable.mouseMoved(pos);
 }
 
 void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
@@ -2157,7 +2148,6 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mMirrorVal.destroy(trayMgr);
     mHighScoresTrackLeft.destroy(trayMgr);
     mHighScoresTrackRight.destroy(trayMgr);
-    mLeaderboardTable.destroy(trayMgr);
 }
 
 void UIMainMenuLabels::setWindowTitle(const std::string& title)
@@ -2539,11 +2529,20 @@ void UIMainMenuLabels::showChampionshipResultsLabels()
 void UIMainMenuLabels::showMultiIPLabels()
 {
     mModeMultiIP->show();
-    mModeMultiConnect->show();
+    mModeMultiListOfRooms->show();
     mModeMultiUserName->show();
     mModeMultiRoomName->show();
     mModeMultiCreateRoom->show();
+}
+
+void UIMainMenuLabels::showMultiJoin()
+{
     mModeMultiJoinRoom->show();
+}
+
+void UIMainMenuLabels::hideMultiJoin()
+{
+    mModeMultiJoinRoom->hide();
 }
 
 void UIMainMenuLabels::hideAllLabels()
@@ -2553,7 +2552,7 @@ void UIMainMenuLabels::hideAllLabels()
 #ifndef NO_MULTIPLAYER
     mModeMulti->hide();
     mModeMultiIP->hide();
-    mModeMultiConnect->hide();
+    mModeMultiListOfRooms->hide();
     mModeMultiUserName->hide();
     mModeMultiRoomName->hide();
     mModeMultiCreateRoom->hide();
@@ -2645,7 +2644,6 @@ void UIMainMenuLabels::hideAllLabels()
     mPodiumTableTitle3Label->hide();
     mPodiumTableTitle4Label->hide();
 
-    mLeaderboardTable.hide();
     mLeaderboardTableTitle1Label->hide();
     mLeaderboardTableTitle2Label->hide();
     mLeaderboardTableTitle3Label->hide();
