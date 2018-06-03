@@ -1966,9 +1966,10 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     if(mGameExitNoLabel->isVisible() && OgreBites::Widget::isCursorOver(mGameExitNoLabel, pos, 0))
     {
-        if(mGameModeSelected == ModeMenu)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
         {
             switchState(State_SingleMulti);
+            selectMode();
         }
 
         if(mGameModeSelected == ModeMenuChampionship)
