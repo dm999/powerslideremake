@@ -166,6 +166,9 @@ public:
 
     Championship& getChampionship() {return mChampionship;}
 
+    void setSpeedCheatUsed(bool isUsed) {mIsSpeedCheatUsed = isUsed;}
+    bool getSpeedCheatUsed() const{return mIsSpeedCheatUsed;}
+
     void setMultiplayerMaster(bool option){mIsMultiplayerMaster = option;}
     bool isMultiplayerMaster()const{return mIsMultiplayerMaster;}
 
@@ -275,6 +278,8 @@ private:
     bool mIsGamePaused;
 
     InputType mInputType;
+
+    bool mIsSpeedCheatUsed;
 
     Championship mChampionship;
 

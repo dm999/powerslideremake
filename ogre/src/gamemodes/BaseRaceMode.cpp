@@ -869,7 +869,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
 #endif
 
     if(!mModeContext.mGameState.getRaceFinished())
-        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos);
+        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos, mModeContext.mGameState.getSpeedCheatUsed());
 
     mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
 
@@ -880,7 +880,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
         for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             if(!mModeContext.mGameState.getRaceFinished())
-                mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition());
+                mModeContext.mGameState.getAICar(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getAICar(q).getModelNode()->getPosition(), false);
 
             mModeContext.mGameState.getAICar(q).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
         }

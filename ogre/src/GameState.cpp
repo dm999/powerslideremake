@@ -42,6 +42,7 @@ GameState::GameState() :
     mListenerGain(1.0f),
     mIsGamePaused(false),
     mInputType(itKeyboard),
+    mIsSpeedCheatUsed(false),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
     mMultiplayerUserName(mPlayerName),

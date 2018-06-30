@@ -23,7 +23,7 @@ public:
 
     LapUtils();
 
-    void checkCheckPoints(const Ogre::Vector3& carPos);
+    void checkCheckPoints(const Ogre::Vector3& carPos, bool isSpeedCheatsUsed);
 
     Ogre::Quaternion getArrowOrientation(const Ogre::Vector3& carPos, Ogre::Vector3 carDir)const;
 
@@ -56,7 +56,7 @@ private:
     Ogre::SceneNode * mDebugSphereNode;
 
     //size_t findLapPosition(const Ogre::Vector3& carPos);
-    void calcLapTime(size_t minIndex);
+    void calcLapTime(size_t minIndex, bool isSpeedCheatsUsed);
 
     size_t getClosestSegment(const Ogre::Vector3& carPos, Ogre::Vector3& pointInLineRes);
     size_t getRelativeClosestSegment(const Ogre::Vector3& carPos);

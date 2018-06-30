@@ -107,6 +107,8 @@ void GameModeSwitcher::frameEnded()
     {
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[GameModeSwitcher::frameEnded]: game mode switching started [" + Conversions::DMToString(mGameMode) + "-" + Conversions::DMToString(mGameModeNext) + "]");
 
+        mContext.getGameState().setSpeedCheatUsed(false);
+
 #ifndef NO_MULTIPLAYER
         MultiplayerSessionStartInfo multiplayerSessionStartInfo;
         CommonIncludes::shared_ptr<MultiplayerController> controller;

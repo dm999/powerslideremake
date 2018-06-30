@@ -520,6 +520,7 @@ void BaseApp::enableNitro()
     {
         if(!mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
         {
+            mGameState.setSpeedCheatUsed(true);
             mGameState.getPlayerCar().getPhysicsVehicle()->enableNitro();
         }
     }

@@ -93,7 +93,7 @@ void LapUtils::setData( const std::vector<Ogre::Vector3>& pos,
     }
 }
 
-void LapUtils::checkCheckPoints(const Ogre::Vector3& carPos)
+void LapUtils::checkCheckPoints(const Ogre::Vector3& carPos, bool isSpeedCheatsUsed)
 {
     //size_t minIndex = findLapPosition(carPos);
     Ogre::Vector3 pointInLine;
@@ -135,7 +135,7 @@ void LapUtils::checkCheckPoints(const Ogre::Vector3& carPos)
 
     mAheadPointForArrow = mSpline.interpolate(nextnextSegment, frac);
 
-    calcLapTime(segment);
+    calcLapTime(segment, isSpeedCheatsUsed);
 
     if(mIsDebugLLT)
     {
@@ -177,7 +177,7 @@ size_t LapUtils::findLapPosition(const Ogre::Vector3& carPos)
 }
 #endif
 
-void LapUtils::calcLapTime(size_t minIndex)
+void LapUtils::calcLapTime(size_t minIndex, bool isSpeedCheatsUsed)
 {
     mLapTime = mLapTimer.getMilliseconds() / 1000.0f;
 
@@ -225,8 +225,11 @@ void LapUtils::calcLapTime(size_t minIndex)
         mLastLapTime = mLapTime;
         mTotalTime += mLastLapTime;
 
-        if(mBestLapTime == 0.0f || mBestLapTime > mLastLapTime)
-            mBestLapTime = mLastLapTime;
+        if(!isSpeedCheatsUsed)
+        {
+            if(mBestLapTime == 0.0f || mBestLapTime > mLastLapTime)
+                mBestLapTime = mLastLapTime;
+        }
 
         ++mCurrentLap;
 

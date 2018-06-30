@@ -255,7 +255,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics()
             mModeContext.mGameState.getMultiplayerCarAI(q).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
 
             if(!mModeContext.mGameState.getRaceFinished())
-                mModeContext.mGameState.getMultiplayerCarAI(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getPosition());
+                mModeContext.mGameState.getMultiplayerCarAI(q).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarAI(q).getModelNode()->getPosition(), false);
         }
 
         //human
@@ -263,7 +263,7 @@ void MultiPlayerMode::customFrameStartedDoProcessFrameBeforePhysics()
         for(size_t q = 0; q < playerNames.size(); ++q)
         {
             if(!mModeContext.mGameState.getRaceFinished())
-                mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getModelNode()->getPosition());
+                mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getLapUtils().checkCheckPoints(mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).getModelNode()->getPosition(), false);
 
             mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processFrameBeforePhysics(mStaticMeshProcesser, mModeContext.mGameState.getRaceStarted());
         }
