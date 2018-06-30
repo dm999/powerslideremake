@@ -157,6 +157,8 @@ private:
     Ogre::Viewport * mViewPortScene;
     Ogre::Viewport * mViewPortCarUI;
 
+    LinearController<float> mFOVNitro;
+
     PSBaseGraphicsVehicle mGhost;//time trial
     PSBaseGraphicsVehicle mGhostUser;//time trial
     TrialGhost mTrialGhost;

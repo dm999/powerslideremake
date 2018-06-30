@@ -14,6 +14,8 @@
 #include "customs/CustomOverlaySystem.h"
 #include "gamelogic/GameModeSwitcher.h"
 
+#include "physics/PhysicsVehicle.h"
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #include "includes/MyGUI_KeyCode.h"
 #include "res/resource.h"
@@ -505,6 +507,20 @@ void BaseApp::dropCamera()
         {
             PSPlayerCar& playerCar = mGameState.getPlayerCar();
             playerCar.setDisableMouse(!playerCar.getDisableMouse());
+        }
+    }
+}
+
+void BaseApp::enableNitro()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceMulti
+    )
+    {
+        if(!mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
+        {
+            mGameState.getPlayerCar().getPhysicsVehicle()->enableNitro();
         }
     }
 }

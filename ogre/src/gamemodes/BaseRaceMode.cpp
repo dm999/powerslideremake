@@ -47,6 +47,9 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     ,mDetailsPanel(0)
 #endif
 {
+    mFOVNitro.addPoint(0, 90.0f);
+    mFOVNitro.addPoint(PhysicsVehicle::mNitroFrames / 2.0f, 120.0f);
+    mFOVNitro.addPoint(PhysicsVehicle::mNitroFrames, 90.0f);
 }
 
 BaseRaceMode::~BaseRaceMode()
@@ -627,6 +630,16 @@ void BaseRaceMode::frameStarted(const Ogre::FrameEvent &evt)
 {
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameStarted]: Enter");
+
+    if(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
+    {
+        //mModeContext.mGameState.getPlayerCar().getAlignedVelocitySpeedometer()
+        mCamera->setFOVy(Ogre::Degree(mFOVNitro.getVal(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getNitroFrames())));
+    }
+    else
+    {
+        mCamera->setFOVy(Ogre::Degree(90.0f));
+    }
 
     mUIRace->setPointerPosition(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getOriginalSteering(), mModeContext.mGameState.getPlayerCar().getBrake());
 

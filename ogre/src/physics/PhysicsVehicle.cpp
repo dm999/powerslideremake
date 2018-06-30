@@ -34,7 +34,9 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mSteeringIncrement(0.0f),
     mTurnOverValue(0),
     mIsRaceStarted(false),
-    mInputType(type)
+    mInputType(type),
+    mIsNitro(false),
+    mNitroCounter(0)
 {
     mCarEngine.setTransmissionType(trAuto);
 
@@ -273,9 +275,24 @@ Ogre::Real PhysicsVehicle::adjustSteering()
 
 void PhysicsVehicle::calcTransmission()
 {
+    Ogre::Real nitroMultiplier = 1.0f;
+    if(mIsNitro)
+    {
+        nitroMultiplier = 5.0f;
+
+        ++mNitroCounter;
+        if(mNitroCounter >= mNitroFrames)
+        {
+            nitroMultiplier = 1.0f;
+            mNitroCounter = 0;
+            mIsNitro = false;
+        }
+    }
+
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks, mHandBreaks);
     mCarEngine.process(wheelsAverageVel, mThrottle);
     Ogre::Real power = mCarEngine.getPower(mThrottle * doGetThrottleScale(), mImpulseLinear.length());
+    power *= nitroMultiplier;
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());
 }
 

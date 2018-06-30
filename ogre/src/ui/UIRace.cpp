@@ -813,6 +813,18 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         {
             mPanelBomb->hide();
         }
+
+        mPanelNitro = createPanel("CheatNitro", cheatButtonWidth, cheatButtonHeight, viewportWidth - cheatButtonLeft * 2.0f, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelNitro->setUV(0.0f, 0.0f, 1.0f, 1.0f);
+        trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelNitro);
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        {
+            mPanelNitro->show();
+        }
+        else
+        {
+            mPanelNitro->hide();
+        }
     }
 #endif
 
@@ -1122,6 +1134,9 @@ void UIRace::panelHit(Ogre::PanelOverlayElement* panel)
     if(panel != NULL && panel->getName() == "CheatBomb")
         mModeContext.getBaseApp()->createBombByPlayer();
 
+    if(panel != NULL && panel->getName() == "CheatNitro")
+        mModeContext.getBaseApp()->enableNitro();
+
     LOGI("UIRace[panelHit]: End"); 
 }
 #endif
@@ -1176,6 +1191,10 @@ void UIRace::mousePressed(const Ogre::Vector2& pos)
     if(OgreBites::Widget::isCursorOver(mPanelBomb, pos, 0))
     {
         panelHit(mPanelBomb);
+    }
+    if(OgreBites::Widget::isCursorOver(mPanelNitro, pos, 0))
+    {
+        panelHit(mPanelNitro);
     }
     LOGI("UIRace[mousePressed]: End"); 
 #endif

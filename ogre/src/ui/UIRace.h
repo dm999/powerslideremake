@@ -92,6 +92,7 @@ private:
 
     Ogre::PanelOverlayElement* mPanelBurn;
     Ogre::PanelOverlayElement* mPanelBomb;
+    Ogre::PanelOverlayElement* mPanelNitro;
 #endif
 
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyL;

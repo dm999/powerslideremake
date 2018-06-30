@@ -43,6 +43,11 @@ public:
     void gearUp();
     void gearDown();
 
+    static const size_t mNitroFrames = 200;
+    void enableNitro(){mIsNitro = true;}
+    bool isNitro() const{return mIsNitro;}
+    size_t getNitroFrames() const {return mNitroCounter;}
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -169,6 +174,9 @@ private:
     bool mIsRaceStarted;
 
     InputType mInputType;
+
+    bool mIsNitro;
+    size_t mNitroCounter;
 
 };
 

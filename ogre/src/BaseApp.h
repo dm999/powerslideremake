@@ -47,6 +47,7 @@ public:
     void createBurnByPlayer();
     void createBombByPlayer();
     void dropCamera();
+    void enableNitro();
 
     // scripting functions
     void parseFile(const std::string& fileName);

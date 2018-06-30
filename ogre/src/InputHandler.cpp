@@ -139,6 +139,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
             baseApp->getGameState().savePlayerData();
         }
     }
+    else if (arg.key == OIS::KC_N)
+    {
+        baseApp->enableNitro();
+    }
     else if (arg.key == OIS::KC_TAB)
     {
         if(noSpecialKey())
