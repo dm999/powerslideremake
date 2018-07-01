@@ -786,7 +786,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 #if defined(__ANDROID__)
     {
         Ogre::Real cheatButtonWidth = viewportWidth / 10.0f;
-        Ogre::Real cheatButtonHeight = viewportHeight / 20.0f;
+        Ogre::Real cheatButtonHeight = viewportHeight / 16.0f;
         Ogre::Real cheatButtonLeft = cheatButtonWidth;
         Ogre::Real cheatButtonTop = 0.0f;;
 

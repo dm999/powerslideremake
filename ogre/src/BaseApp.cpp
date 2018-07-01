@@ -992,13 +992,13 @@ void BaseApp::touchDown(int id, float x, float y)
     state.touchType = OIS::MT_Pressed;
     touchPressed(OIS::MultiTouchEvent(NULL, state));
 
-    if(cursorPos.x < (200.0f * viewportWidth / 1280.0f))
+    if(cursorPos.x < (200.0f * viewportWidth / 1280.0f) && cursorPos.y > 200.0f * viewportHeight / 1024.0f)
     {
         mTouchLeftID = id;
         keyDown(OIS::KeyEvent(NULL, OIS::KC_LEFT, 0));
     }
 
-    if(cursorPos.x > viewportWidth - (200.0f * viewportWidth / 1280.0f))
+    if(cursorPos.x > viewportWidth - (200.0f * viewportWidth / 1280.0f) && cursorPos.y > 200.0f * viewportHeight / 1024.0f)
     {
         mTouchRightID = id;
         keyDown(OIS::KeyEvent(NULL, OIS::KC_RIGHT, 0));
