@@ -30,6 +30,7 @@ public:
 
     void createBurnByPlayer() override;
     void createBombByPlayer() override;
+    void nitroByPlayer() override;
 
     //LapUtils
     void onLapFinished()override;
@@ -108,8 +109,10 @@ private:
 
     bool mIsBurn;                       // self
     bool mIsBomb;                       // self
+    bool mIsNitro;                      // self
     std::set<std::string> mIsOtherBurn; // other
     std::set<std::string> mIsOtherBomb; // other
+    std::set<std::string> mIsOtherNitro;// other
 };
 #endif
 #endif

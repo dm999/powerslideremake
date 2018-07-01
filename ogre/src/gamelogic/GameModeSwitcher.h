@@ -41,6 +41,7 @@ public:
 
     void createBurnByPlayer();
     void createBombByPlayer();
+    void nitroByPlayer();
 
     void tabPressed();
 

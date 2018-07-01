@@ -108,6 +108,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         if(noSpecialKey())
             baseApp->createBombByPlayer();
     }
+    else if (arg.key == OIS::KC_F3)
+    {
+        baseApp->enableNitro();
+    }
     else if (arg.key == OIS::KC_F4)
     {
         if(noSpecialKey())
@@ -138,10 +142,6 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
             baseApp->getGameState().setCameraPositionType(static_cast<CameraPositions>(camPos));
             baseApp->getGameState().savePlayerData();
         }
-    }
-    else if (arg.key == OIS::KC_N)
-    {
-        baseApp->enableNitro();
     }
     else if (arg.key == OIS::KC_TAB)
     {

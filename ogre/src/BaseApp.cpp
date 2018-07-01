@@ -518,10 +518,14 @@ void BaseApp::enableNitro()
         mGameModeSwitcher->getMode() == ModeRaceMulti
     )
     {
-        if(!mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
+        if(mGameState.getRaceStarted())
         {
-            mGameState.setSpeedCheatUsed(true);
-            mGameState.getPlayerCar().getPhysicsVehicle()->enableNitro();
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
+            {
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableNitro();
+                mGameModeSwitcher->nitroByPlayer();//for multiplayer message
+            }
         }
     }
 }

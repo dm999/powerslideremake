@@ -48,6 +48,7 @@ public:
 
     virtual void createBurnByPlayer();
     virtual void createBombByPlayer();
+    virtual void nitroByPlayer(){}
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);

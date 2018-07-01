@@ -281,11 +281,17 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot)
         //mWheelBackLParticle->getEmitter(0)->setParticleVelocity(linearVel);
         //mWheelBackRParticle->getEmitter(0)->setParticleVelocity(linearVel);
         //if(linearVel > 10.0f || linearVel < -10.0f)
+        if(!mPhysicsVehicle->isNitro())
         {
             //Ogre::Real emmisionRate = mParticlesEmmisionRate.getVal(rotAngleAddition);
             Ogre::Real emmisionRate = 1.0f;//Ogre::Math::Abs(rotAngleAddition);
             mWheelBackLParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
             mWheelBackRParticle->getEmitter(0)->setEmissionRate(emmisionRate + 40.0f);
+        }
+        else
+        {
+            mWheelBackLParticle->getEmitter(0)->setEmissionRate(200.0f);
+            mWheelBackRParticle->getEmitter(0)->setEmissionRate(200.0f);
         }
 
         Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialName);

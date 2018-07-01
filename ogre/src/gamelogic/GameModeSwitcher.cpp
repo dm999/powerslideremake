@@ -465,6 +465,12 @@ void GameModeSwitcher::createBombByPlayer()
         mPlayerMode->createBombByPlayer();
 }
 
+void GameModeSwitcher::nitroByPlayer()
+{
+    if(mPlayerMode.get())
+        mPlayerMode->nitroByPlayer();
+}
+
 void GameModeSwitcher::tabPressed()
 {
 #ifndef NO_MULTIPLAYER
