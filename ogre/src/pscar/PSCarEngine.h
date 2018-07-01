@@ -16,7 +16,7 @@ public:
 
     PSCarEngine(const InitialVehicleSetup& setup);
 
-    void process(Ogre::Real wheelsAverageVel, Ogre::Real throttle);
+    void process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool isNitro);
     Ogre::Real getPower(Ogre::Real throttle, Ogre::Real impulseLinearMod) const;
 
     int getCurrentGear()const{return mCurrentGear;}

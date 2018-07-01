@@ -290,7 +290,7 @@ void PhysicsVehicle::calcTransmission()
     }
 
     Ogre::Real wheelsAverageVel = mPhysicsWheels.calcVelocity(mVehicleVelocityMod, mThrottle, mBreaks, mHandBreaks);
-    mCarEngine.process(wheelsAverageVel, mThrottle);
+    mCarEngine.process(wheelsAverageVel, mThrottle, mIsNitro);
     Ogre::Real power = mCarEngine.getPower(mThrottle * doGetThrottleScale(), mImpulseLinear.length());
     power *= nitroMultiplier;
     mPhysicsWheels.calcVelocityMore(power, mCarEngine.getCurrentGear());

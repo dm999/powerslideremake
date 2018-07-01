@@ -8,7 +8,7 @@ PSCarEngine::PSCarEngine(const InitialVehicleSetup& setup) :
     mTransmissionType(trManual)
 {}
 
-void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
+void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool isNitro)
 {
     
     if(mCurrentGear <= 0)
@@ -46,6 +46,9 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle)
             mEngineRPM = absVel / velocityIdle * (mInitialVehicleSetup.mEngineIdleRevsEnd - mInitialVehicleSetup.mEngineIdleRevsStart) + mInitialVehicleSetup.mEngineIdleRevsStart;
         }
     }
+
+    if(isNitro)
+        mEngineRPM *= 1.5f;
 
     if(mTransmissionType == trAuto)
     {
