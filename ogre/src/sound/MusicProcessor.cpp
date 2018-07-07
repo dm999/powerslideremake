@@ -12,7 +12,11 @@ void MusicProcessor::initTrack(const std::string& track)
 
     Ogre::DataStreamPtr file = getReadableFile(mDataDir, track);
 
+    float vol = getVolume();
+
     mMusic = CommonIncludes::shared_ptr<sf::Music>(new sf::Music());
+
+    setVolume(vol);
 
     mBuf.clear();
     if(file.get() && file->isReadable())
@@ -62,6 +66,26 @@ void MusicProcessor::stop()
     {
         mMusic->stop();
     }
+}
+
+void MusicProcessor::setVolume(float vol)
+{
+    if(mMusic.get())
+    {
+        mMusic->setVolume(vol * 100.0f);
+    }
+}
+
+float MusicProcessor::getVolume() const
+{
+    float ret = 1.0f;
+
+    if(mMusic.get())
+    {
+        ret = mMusic->getVolume() * 0.01f;
+    }
+
+    return ret;
 }
 
 #endif

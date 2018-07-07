@@ -447,7 +447,6 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
     DMLuaManager luaManager;
 
     Ogre::Real referenceDist = luaManager.ReadScalarFloat("Model.Sfx.ReferenceDist", pipeline);
-    Ogre::Real maxDist = luaManager.ReadScalarFloat("Model.Sfx.MaxDist", pipeline);
 
     stopSounds();
 
@@ -469,10 +468,6 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
         mEngMid->setReferenceDistance(referenceDist);
         mEngHigh->setReferenceDistance(referenceDist);
 
-        mEngLow->setMaxDistance(maxDist);
-        mEngMid->setMaxDistance(maxDist);
-        mEngHigh->setMaxDistance(maxDist);
-
         mEngLow->setLooping(true);
         mEngMid->setLooping(true);
         mEngHigh->setLooping(true);
@@ -482,8 +477,6 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
         mEngHigh.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
 
         mEngHigh->setReferenceDistance(referenceDist);
-
-        mEngHigh->setMaxDistance(maxDist);
 
         mEngHigh->setLooping(true);
     }

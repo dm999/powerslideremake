@@ -5,6 +5,7 @@
 #ifndef NO_OPENAL
 
 #include <string>
+#include <vector>
 
 #include "../includes/CommonIncludes.h"
 
@@ -24,6 +25,9 @@ public:
     void play();
     void pause();
     void stop();
+
+    void setVolume(float vol);//0.0 - 1.0
+    float getVolume() const;//0.0 - 1.0
 
 private:
 

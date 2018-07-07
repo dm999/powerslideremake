@@ -10,7 +10,6 @@ function createVehicle()
     
     Model.Sfx = {}
     Model.Sfx.ReferenceDist = 30.0;
-    Model.Sfx.MaxDist = 100.0;
     
     Model.Mesh = {}
     Model.Mesh.IsTangents = false;

@@ -47,14 +47,11 @@ public:
     void setRelativeToListener(bool isRelative);
 
     void setPitch(float pitch);
-    void setMinGain(float gain);
-    void setMaxGain(float gain);
     void setGain(float gain);
     float getGain()const;
     void setLooping(bool looping);
     void setPosition(float x, float y, float z);
     void setReferenceDistance(float dist);
-    void setMaxDistance(float dist);
 
 private:
 
