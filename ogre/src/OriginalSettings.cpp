@@ -583,6 +583,19 @@ size_t STRPowerslide::getLapsCount(const std::string& trackName) const
     return ret;
 }
 
+size_t STRPowerslide::getCDTrack(const std::string& trackName) const
+{
+    size_t ret = 0;
+
+    if(mIsSTRLoaded)
+    {
+        std::string value = mSTR.GetValue(std::string(trackName + " parameters").c_str(), "cd track", "");
+        if(value != "") Conversions::DMFromString(value, ret);
+    }
+
+    return ret;
+}
+
 Ogre::Vector3 STRPowerslide::getFinishCameraPos(const std::string& trackName) const
 {
     Ogre::Vector3 ret(0.0f, 0.0f, 0.0f);

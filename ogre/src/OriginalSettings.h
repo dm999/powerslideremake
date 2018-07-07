@@ -110,6 +110,7 @@ public:
     std::string getBaseDir(const std::string& trackName) const;
     std::string getDataSubDir(const std::string& trackName) const;
     size_t getLapsCount(const std::string& trackName) const;
+    size_t getCDTrack(const std::string& trackName) const;
     Ogre::Vector3 getFinishCameraPos(const std::string& trackName) const;
 
 private:

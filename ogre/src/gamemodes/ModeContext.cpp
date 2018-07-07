@@ -9,7 +9,8 @@ ModeContext::ModeContext(
         GameState& gameState,
         BaseApp * baseApp
 #ifndef NO_OPENAL
-        ,SoundsProcesser& soundsProcesser
+        ,SoundsProcesser& soundsProcesser,
+        MusicProcessor& musicProcessor
 #endif
     )
     : mRoot(root), mWindow(window),
@@ -19,7 +20,8 @@ ModeContext::ModeContext(
     mGameState(gameState),
     mBaseApp(baseApp)
 #ifndef NO_OPENAL
-    ,mSoundsProcesser(soundsProcesser)
+    ,mSoundsProcesser(soundsProcesser),
+    mMusicProcessor(musicProcessor)
 #endif
 {}
 
@@ -34,6 +36,7 @@ ModeContext::ModeContext(const ModeContext& other)
         mLapController(other.mLapController),
         mFinishBoard(other.mFinishBoard)
 #ifndef NO_OPENAL
-        ,mSoundsProcesser(other.mSoundsProcesser)
+        ,mSoundsProcesser(other.mSoundsProcesser),
+        mMusicProcessor(other.mMusicProcessor)
 #endif
 {}

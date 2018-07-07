@@ -3,6 +3,7 @@
 
 #include "../GameState.h"
 #include "../sound/SoundsProcesser.h"
+#include "../sound/MusicProcessor.h"
 
 #include "../gamelogic/LapController.h"
 
@@ -38,7 +39,8 @@ public:
         GameState& gameState,
         BaseApp * baseApp
 #ifndef NO_OPENAL
-        ,SoundsProcesser& soundsProcesser
+        ,SoundsProcesser& soundsProcesser,
+        MusicProcessor& musicProcessor
 #endif
     );
 
@@ -103,6 +105,7 @@ private:
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;
+    MusicProcessor& mMusicProcessor;
 #endif
 };
 

@@ -6,11 +6,26 @@
 
 #include "../tools/OgreTools.h"
 
-void MusicProcessor::init(const std::string& dataDir)
+void MusicProcessor::initTrack(const std::string& track)
 {
-    mTrack0 = getReadableFile(dataDir, "track_0.ogg");
+    stop();
+
+    Ogre::DataStreamPtr file = getReadableFile(mDataDir, track);
+
     mMusic = CommonIncludes::shared_ptr<sf::Music>(new sf::Music());
-    mMusic->setLoop(true);
+
+    mBuf.clear();
+    if(file.get() && file->isReadable())
+    {
+        mBuf.resize(file->size());
+        file->read(&mBuf[0], file->size());
+        file->close();
+    }
+
+    if(track == "track_0.ogg")
+    {
+        mMusic->setLoop(true);
+    }
 }
 
 void MusicProcessor::deinit()
@@ -23,17 +38,21 @@ void MusicProcessor::play()
 {
     if(mMusic.get())
     {
-        if(mTrack0.get() && mTrack0->isReadable())
+        if(!mBuf.empty())
         {
-            mBuf.resize(mTrack0->size());
-            mTrack0->read(&mBuf[0], mTrack0->size());
-            mTrack0->close();
-
             if (!mMusic->openFromMemory(&mBuf[0], mBuf.size()))
                 return;
 
             mMusic->play();
         }
+    }
+}
+
+void MusicProcessor::pause()
+{
+    if(mMusic.get())
+    {
+        mMusic->pause();
     }
 }
 

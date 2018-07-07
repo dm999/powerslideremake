@@ -335,7 +335,6 @@ bool BaseApp::setup()
 
 #ifndef NO_OPENAL
     mMusicProcessor.init("");
-    mMusicProcessor.play();
 #endif
 
 
@@ -356,6 +355,11 @@ bool BaseApp::setup()
     mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 
     createFrameListener();
+
+#ifndef NO_OPENAL
+    mMusicProcessor.initTrack("track_0.ogg");
+    mMusicProcessor.play();
+#endif
 
     return true;
 }
@@ -942,7 +946,8 @@ ModeContext BaseApp::createModeContext()
         mGameState,
         this
 #ifndef NO_OPENAL
-        ,mSoundsProcesser
+        ,mSoundsProcesser,
+        mMusicProcessor
 #endif
     );
 }
@@ -1109,7 +1114,6 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
 
 #ifndef NO_OPENAL
     mMusicProcessor.init(dataDir);
-    mMusicProcessor.play();
 #endif
 
     LOGI(std::string("Lua error: " + Conversions::DMToString(mLuaError)).c_str());
@@ -1126,6 +1130,11 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
     mRoot->initialise(false);
 
     registerLuaFunctions();
+
+#ifndef NO_OPENAL
+    mMusicProcessor.initTrack("track_0.ogg");
+    mMusicProcessor.play();
+#endif
 
     LOGI("BaseApp[androidCreate]: End"); 
 }

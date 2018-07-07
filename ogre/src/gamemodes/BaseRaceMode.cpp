@@ -94,6 +94,14 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
     if(loaderListener)
         loaderListener->loadState(1.0f, "all loaded");
 
+#ifndef NO_OPENAL
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+    size_t cdTrack = strPowerslide.getCDTrack(mModeContext.getGameState().getTrackName());
+    mModeContext.mMusicProcessor.stop();
+    mModeContext.mMusicProcessor.initTrack("track_" + Conversions::DMToString(cdTrack) + ".ogg");
+    mModeContext.mMusicProcessor.play();
+#endif
+
 #if SHOW_DETAILS_PANEL
     // create a params panel for displaying sample details
     Ogre::StringVector items;
@@ -285,6 +293,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());
+    mModeContext.mMusicProcessor.stop();
 #endif
 
     //migration from 1.8.1 to 1.9.0
@@ -369,6 +378,8 @@ void BaseRaceMode::clearScene()
 
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.stopSounds();
+    mModeContext.mMusicProcessor.stop();
+    mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
 #endif
 
     mModeContext.mGameState.setGlobalLight(NULL);
@@ -386,6 +397,12 @@ void BaseRaceMode::clearScene()
     mSceneMgrCarUI->clearScene();
     mSceneMgrCarUI->destroyAllCameras();
     mModeContext.mRoot->destroySceneManager(mSceneMgrCarUI);
+
+#ifndef NO_OPENAL
+    mModeContext.mMusicProcessor.stop();
+    mModeContext.mMusicProcessor.initTrack("track_0.ogg");
+    mModeContext.mMusicProcessor.play();
+#endif
 }
 
 void BaseRaceMode::initLightLists()
