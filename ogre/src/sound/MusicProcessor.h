@@ -6,8 +6,6 @@
 
 #include <string>
 
-#include "../GameState.h"
-
 #include "../includes/CommonIncludes.h"
 
 namespace sf
@@ -19,7 +17,7 @@ class MusicProcessor
 {
 public:
 
-    void init(const GameState& gameState);
+    void init(const std::string& dataDir);
     void deinit();
 
     void play();
@@ -29,6 +27,7 @@ private:
 
     CommonIncludes::shared_ptr<sf::Music> mMusic;
     Ogre::DataStreamPtr mTrack0;
+    std::vector<Ogre::uint8> mBuf;
 };
 
 #endif

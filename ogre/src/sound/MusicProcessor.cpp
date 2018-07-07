@@ -6,10 +6,11 @@
 
 #include "../tools/OgreTools.h"
 
-void MusicProcessor::init(const GameState& gameState)
+void MusicProcessor::init(const std::string& dataDir)
 {
-    mTrack0 = getReadableFile("track_0.ogg", gameState.getDataDir());
+    mTrack0 = getReadableFile(dataDir, "track_0.ogg");
     mMusic = CommonIncludes::shared_ptr<sf::Music>(new sf::Music());
+    mMusic->setLoop(true);
 }
 
 void MusicProcessor::deinit()
@@ -22,10 +23,17 @@ void MusicProcessor::play()
 {
     if(mMusic.get())
     {
-        //if (!mMusic->openFromStream(mTrack0.get()))
-            //return;
+        if(mTrack0.get() && mTrack0->isReadable())
+        {
+            mBuf.resize(mTrack0->size());
+            mTrack0->read(&mBuf[0], mTrack0->size());
+            mTrack0->close();
 
-        //mMusic->play();
+            if (!mMusic->openFromMemory(&mBuf[0], mBuf.size()))
+                return;
+
+            mMusic->play();
+        }
     }
 }
 

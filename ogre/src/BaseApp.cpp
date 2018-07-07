@@ -334,7 +334,7 @@ bool BaseApp::setup()
     }
 
 #ifndef NO_OPENAL
-    mMusicProcessor.init(mGameState);
+    mMusicProcessor.init("");
     mMusicProcessor.play();
 #endif
 
@@ -1086,10 +1086,6 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
 
     mGameState.setDataDir(dataDir);
 
-#ifndef NO_OPENAL
-    mMusicProcessor.init(mGameState);
-#endif
-
     mRoot.reset(new Ogre::Root());
     mOverlaySystem.reset(new CustomOverlaySystem());
 
@@ -1110,6 +1106,11 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
     {
         //return false;
     }
+
+#ifndef NO_OPENAL
+    mMusicProcessor.init(dataDir);
+    mMusicProcessor.play();
+#endif
 
     LOGI(std::string("Lua error: " + Conversions::DMToString(mLuaError)).c_str());
 
