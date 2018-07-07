@@ -41,7 +41,6 @@ GameState::GameState() :
     mIsMirrorEnabled(true),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
-    mListenerGain(1.0f),
     mIsGamePaused(false),
     mInputType(itKeyboard),
     mIsSpeedCheatUsed(false),

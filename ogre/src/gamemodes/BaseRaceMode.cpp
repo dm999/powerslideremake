@@ -379,7 +379,7 @@ void BaseRaceMode::clearScene()
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.stopSounds();
     mModeContext.mMusicProcessor.stop();
-    mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
+    mModeContext.mSoundsProcesser.setListenerGain(1.0f);//restore after pause
 #endif
 
     mModeContext.mGameState.setGlobalLight(NULL);
@@ -881,14 +881,18 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
     if(!mModeContext.mGameState.isGamePaused())
     {
         if(mModeContext.mMusicProcessor.isPaused())
+        {
             mModeContext.mMusicProcessor.play();
-        mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
+            mModeContext.mSoundsProcesser.setListenerGain(1.0f);
+        }
     }
     else
     {
         if(!mModeContext.mMusicProcessor.isPaused())
+        {
             mModeContext.mMusicProcessor.pause();
-        mModeContext.mSoundsProcesser.setListenerGain(0.0f);
+            mModeContext.mSoundsProcesser.setListenerGain(0.0f);
+        }
     }
 #endif
 

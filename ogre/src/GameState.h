@@ -160,9 +160,6 @@ public:
     void setMusicGain(Ogre::Real gain){mMusicGain = gain;}
     Ogre::Real getMusicGain()const{return mMusicGain;}
 
-    void setListenerGain(Ogre::Real gain){mListenerGain = gain;}
-    Ogre::Real getListenerGain()const{return mListenerGain;}
-
     void setGamePaused();
     void resetGamePaused();
     bool isGamePaused()const{return mIsGamePaused;}
@@ -281,7 +278,6 @@ private:
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0
-    Ogre::Real mListenerGain; //master volume 0.0 - 1.0
 
     bool mIsGamePaused;
 
