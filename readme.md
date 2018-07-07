@@ -34,8 +34,16 @@ Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](h
 
 ### Run ###
 To run builded project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
-You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Place them in the folder with builded application.  
+You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put them in the folder with builded application.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
+
+### Music ###
+It is possible to listen to in game music. To enable sound/music project should be built with PowerslideRemake_OPENAL. Put original CD tracks compressed as .ogg files into the same directory as .pf files. Name convention for files:  
+track_0.ogg - main theme  
+track_2-8.ogg - other tracks {dam track, sand blaster, speedway, devil`s elbow, mineshafted, freezer, urban brawl}  
+
+### Multiplayer ###
+"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports being used by multiplayer: TCP:8800, UDP:8800  
 
 ### License ###
 The MIT License (MIT)  
