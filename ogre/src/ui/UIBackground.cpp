@@ -651,19 +651,22 @@ void UIBackgroundLoaderProgressTracks::show(const ModeContext& modeContext, bool
     std::vector<std::string> times = strHiscores.getArrayValue(trackName + " parameters", "lap times");
     std::vector<std::string> dimCoeff = strHiscores.getArrayValue(trackName + " parameters", "4th dimension coefficient");
 
-    float time;
-    Conversions::DMFromString(times[0], time);
-
+    float time = 0.0f;
     mBestTime = createTextArea("LoaderScreenProgressBestTime", 0.0f, 0.0f, bestPos.z, bestPos.w); 
-    if(dimCoeff[0] == "0")
-        mBestTime->setCaption(STRPowerslide::getCharacterTitle(names[0]) + " " + Tools::SecondsToString(time));
-    else
-        mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
-    mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
-    mBestTime->setSpaceWidth(9.0f);
-    mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);
-    mBestTime->setFontName("SdkTrays/Caption");
-    mBestTime->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    if(!times.empty())
+    {
+        Conversions::DMFromString(times[0], time);
+
+        if(dimCoeff[0] == "0")
+            mBestTime->setCaption(STRPowerslide::getCharacterTitle(names[0]) + " " + Tools::SecondsToString(time));
+        else
+            mBestTime->setCaption(names[0] + " " + Tools::SecondsToString(time));
+        mBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mBestTime->setSpaceWidth(9.0f);
+        mBestTime->setAlignment(Ogre::TextAreaOverlayElement::Center);
+        mBestTime->setFontName("SdkTrays/Caption");
+        mBestTime->setColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    }
     mLoaderScreen->addChild(mBestTime);
     mBestTime->show();
 
