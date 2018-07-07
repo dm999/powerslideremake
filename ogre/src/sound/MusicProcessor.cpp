@@ -6,7 +6,7 @@
 
 #include "../tools/OgreTools.h"
 
-void MusicProcessor::initTrack(const std::string& track)
+void MusicProcessor::initTrack(const std::string& track, bool isLooped)
 {
     stop();
 
@@ -26,9 +26,11 @@ void MusicProcessor::initTrack(const std::string& track)
         file->close();
     }
 
-    if(track == "track_0.ogg")
+    mMusic->setLoop(isLooped);
+
+    if(!mBuf.empty())
     {
-        mMusic->setLoop(true);
+        mMusic->openFromMemory(&mBuf[0], mBuf.size());
     }
 }
 
@@ -42,13 +44,7 @@ void MusicProcessor::play()
 {
     if(mMusic.get())
     {
-        if(!mBuf.empty())
-        {
-            if (!mMusic->openFromMemory(&mBuf[0], mBuf.size()))
-                return;
-
-            mMusic->play();
-        }
+        mMusic->play();
     }
 }
 
@@ -66,6 +62,18 @@ void MusicProcessor::stop()
     {
         mMusic->stop();
     }
+}
+
+bool MusicProcessor::isPaused() const
+{
+    bool ret = false;
+
+    if(mMusic.get())
+    {
+        ret = mMusic->getStatus() == sf::SoundSource::Paused;
+    }
+
+    return ret;
 }
 
 void MusicProcessor::setVolume(float vol)

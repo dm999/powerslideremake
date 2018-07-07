@@ -97,8 +97,7 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
 #ifndef NO_OPENAL
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     size_t cdTrack = strPowerslide.getCDTrack(mModeContext.getGameState().getTrackName());
-    mModeContext.mMusicProcessor.stop();
-    mModeContext.mMusicProcessor.initTrack("track_" + Conversions::DMToString(cdTrack) + ".ogg");
+    mModeContext.mMusicProcessor.initTrack("track_" + Conversions::DMToString(cdTrack) + ".ogg", mModeContext.getGameState().isStuntTrack());
     mModeContext.mMusicProcessor.play();
 #endif
 
@@ -399,8 +398,7 @@ void BaseRaceMode::clearScene()
     mModeContext.mRoot->destroySceneManager(mSceneMgrCarUI);
 
 #ifndef NO_OPENAL
-    mModeContext.mMusicProcessor.stop();
-    mModeContext.mMusicProcessor.initTrack("track_0.ogg");
+    mModeContext.mMusicProcessor.initTrack("track_0.ogg", true);
     mModeContext.mMusicProcessor.play();
 #endif
 }
@@ -880,9 +878,17 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.setListenerPos(playerPos, mModeContext.mGameState.getPlayerCar().getUpAxis(), playerDir);
     if(!mModeContext.mGameState.isGamePaused())
+    {
+        if(mModeContext.mMusicProcessor.isPaused())
+            mModeContext.mMusicProcessor.play();
         mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
+    }
     else
+    {
+        if(!mModeContext.mMusicProcessor.isPaused())
+            mModeContext.mMusicProcessor.pause();
         mModeContext.mSoundsProcesser.setListenerGain(0.0f);
+    }
 #endif
 
     if(!mModeContext.mGameState.getRaceFinished())

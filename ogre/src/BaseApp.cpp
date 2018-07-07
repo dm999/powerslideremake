@@ -357,7 +357,7 @@ bool BaseApp::setup()
     createFrameListener();
 
 #ifndef NO_OPENAL
-    mMusicProcessor.initTrack("track_0.ogg");
+    mMusicProcessor.initTrack("track_0.ogg", true);
     mMusicProcessor.play();
 #endif
 
@@ -1132,7 +1132,7 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
     registerLuaFunctions();
 
 #ifndef NO_OPENAL
-    mMusicProcessor.initTrack("track_0.ogg");
+    mMusicProcessor.initTrack("track_0.ogg", true);
     mMusicProcessor.play();
 #endif
 
