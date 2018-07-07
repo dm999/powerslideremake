@@ -335,6 +335,7 @@ bool BaseApp::setup()
 
 #ifndef NO_OPENAL
     mMusicProcessor.init("");
+    mMusicProcessor.setVolume(mGameState.getMusicGain());
 #endif
 
 
@@ -1189,6 +1190,10 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
                 OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
                 return;
             }
+
+#ifndef NO_OPENAL
+            mMusicProcessor.setVolume(mGameState.getMusicGain());
+#endif
 
             mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
 

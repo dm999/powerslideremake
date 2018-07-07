@@ -33,6 +33,7 @@ public:
 
 private:
 
+    float mMasterGain;
     std::string mDataDir;
     CommonIncludes::shared_ptr<sf::Music> mMusic;
     std::vector<Ogre::uint8> mBuf;

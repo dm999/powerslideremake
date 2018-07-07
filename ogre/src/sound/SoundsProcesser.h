@@ -46,6 +46,8 @@ public:
     void playSurface(size_t surfaceNumber, Ogre::Real lateralVel);
     void playSurfaceCrash(size_t surfaceNumber);
 
+    void setVolume(float gain); // 0.0 - 1.0
+
 private:
 
 
@@ -74,6 +76,8 @@ private:
     bool mBeforeStartPlayedOnce1;
     bool mBeforeStartPlayedOnce2;
     bool mBeforeStartPlayedOnce3;
+
+    float mMasterGain;
 
 };
 #endif

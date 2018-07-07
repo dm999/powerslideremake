@@ -154,6 +154,12 @@ public:
 
     size_t getLapsCount()const{return mLapsCount;}
 
+    void setSoundsGain(Ogre::Real gain){mSoundsGain = gain;}
+    Ogre::Real getSoundsGain()const{return mSoundsGain;}
+
+    void setMusicGain(Ogre::Real gain){mMusicGain = gain;}
+    Ogre::Real getMusicGain()const{return mMusicGain;}
+
     void setListenerGain(Ogre::Real gain){mListenerGain = gain;}
     Ogre::Real getListenerGain()const{return mListenerGain;}
 
@@ -273,7 +279,9 @@ private:
 
     bool mIsMirrorEnabled;
 
-    Ogre::Real mListenerGain; //master volume
+    Ogre::Real mSoundsGain; //0.0 - 1.0
+    Ogre::Real mMusicGain; //0.0 - 1.0
+    Ogre::Real mListenerGain; //master volume 0.0 - 1.0
 
     bool mIsGamePaused;
 

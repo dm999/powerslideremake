@@ -66,6 +66,9 @@ public:
     void setFinishBoard(const finishBoardVec& finishBoard){mFinishBoard = finishBoard;}
     const finishBoardVec& getFinishBoard() const{return mFinishBoard;}
 
+    SoundsProcesser& getSoundsProcesser(){return mSoundsProcesser;}
+    MusicProcessor& getMusicProcessor(){return mMusicProcessor;}
+
     friend class GameModeSwitcher;
     friend class BaseMenuMode;
     friend class MenuMode;

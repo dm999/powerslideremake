@@ -39,6 +39,8 @@ GameState::GameState() :
     mIsRaceFinished(false),
     mBackgroundColor(0.91372550f, 0.78823531f, 0.52156866f),
     mIsMirrorEnabled(true),
+    mSoundsGain(1.0f),
+    mMusicGain(1.0f),
     mListenerGain(1.0f),
     mIsGamePaused(false),
     mInputType(itKeyboard),
@@ -82,7 +84,8 @@ void GameState::initOriginalData()
                 mSTRHiscores.parse(mPFLoaderStore, mDataDir);
 
                 mPlayerSettings.parse(mDataDir);
-                mListenerGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound fx volume", 9)) / 9.0f;
+                mSoundsGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound fx volume", 9)) / 9.0f;
+                mMusicGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound cd volume", 9)) / 9.0f;
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
                 setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
                 mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
@@ -171,7 +174,8 @@ void GameState::savePlayerData()
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;
     globalData.cameraPos = mCameraPos;
-    globalData.fxVolume = mListenerGain;
+    globalData.fxVolume = mSoundsGain;
+    globalData.musicVolume = mMusicGain;
 
     globalData.track = mTrackName;
     globalData.character = mPSPlayerCar.getCharacterName();

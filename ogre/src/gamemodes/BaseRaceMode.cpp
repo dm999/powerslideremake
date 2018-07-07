@@ -292,6 +292,7 @@ void BaseRaceMode::initScene(LoaderListener* loaderListener)
 
 #ifndef NO_OPENAL
     mModeContext.mSoundsProcesser.initSounds(mModeContext.mGameState.getPFLoaderData());
+    mModeContext.mSoundsProcesser.setVolume(mModeContext.mGameState.getSoundsGain());
     mModeContext.mMusicProcessor.stop();
 #endif
 

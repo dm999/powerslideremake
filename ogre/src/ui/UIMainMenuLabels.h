@@ -144,6 +144,11 @@ private:
     UIButton mSoundVolumeFXValLeft;
     UIButton mSoundVolumeFXValRight;
 
+    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic;
+    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic_Val;
+    UIButton mSoundVolumeMusicValLeft;
+    UIButton mSoundVolumeMusicValRight;
+
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission;

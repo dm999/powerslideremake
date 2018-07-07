@@ -93,6 +93,8 @@ protected:
     CommonIncludes::shared_ptr<SoundSource> mEngLow;
     CommonIncludes::shared_ptr<SoundSource> mEngMid;
     CommonIncludes::shared_ptr<SoundSource> mEngHigh;
+
+    float mMasterGain;
 #endif
 
 private:

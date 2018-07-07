@@ -233,7 +233,7 @@ void SoundsProcesser::playSurface(size_t surfaceNumber, Ogre::Real lateralVel)
             mSurface[remappedSurfaceNumber]->startPlaying();
         }
 
-        mSurface[remappedSurfaceNumber]->setGain(mSurfaceSoundGain.getVal(lateralVel));
+        mSurface[remappedSurfaceNumber]->setGain(mSurfaceSoundGain.getVal(lateralVel) * mMasterGain);
     }
 }
 
@@ -260,6 +260,39 @@ void SoundsProcesser::playSurfaceCrash(size_t surfaceNumber)
             {
                 mSurfaceCrash[remappedSurfaceNumber]->startPlaying();
             }
+        }
+    }
+}
+
+void SoundsProcesser::setVolume(float gain)
+{
+    mMasterGain = gain;
+
+    if(mCrash1.get())
+        mCrash1->setGain(mMasterGain);
+
+    if(mCrash2.get())
+        mCrash2->setGain(mMasterGain);
+
+    if(mBeforeStart1.get())
+        mBeforeStart1->setGain(mMasterGain);
+
+    if(mBeforeStart2.get())
+        mBeforeStart2->setGain(mMasterGain);
+
+    if(mBeforeStart3.get())
+        mBeforeStart3->setGain(mMasterGain);
+
+    for(int q = 0; q < mSurfacesCount; ++q)
+    {
+        if(mSurface[q].get())
+        {
+            mSurface[q]->setGain(mMasterGain);
+        }
+
+        if(mSurfaceCrash[q].get())
+        {
+            mSurfaceCrash[q]->setGain(mMasterGain);
         }
     }
 }

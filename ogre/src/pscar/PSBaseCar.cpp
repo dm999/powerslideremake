@@ -458,6 +458,8 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
     std::vector<std::string> pathComponents = Tools::splitpath(de2Path, delim, false);
     std::string carPath = pathComponents[pathComponents.size() - 1];
 
+    mMasterGain = gameState.getSoundsGain();
+
     if(!mIsAI)
     {
         mEngLow.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData()));
@@ -471,6 +473,10 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
         mEngLow->setLooping(true);
         mEngMid->setLooping(true);
         mEngHigh->setLooping(true);
+
+        mEngLow->setGain(mMasterGain);
+        mEngMid->setGain(mMasterGain);
+        mEngHigh->setGain(mMasterGain);
     }
     else
     {
@@ -479,6 +485,8 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
         mEngHigh->setReferenceDistance(referenceDist);
 
         mEngHigh->setLooping(true);
+
+        mEngHigh->setGain(mMasterGain);
     }
 #endif
 }

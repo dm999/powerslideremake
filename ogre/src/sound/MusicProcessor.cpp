@@ -78,22 +78,17 @@ bool MusicProcessor::isPaused() const
 
 void MusicProcessor::setVolume(float vol)
 {
+    mMasterGain = vol;
+
     if(mMusic.get())
     {
-        mMusic->setVolume(vol * 100.0f);
+        mMusic->setVolume(mMasterGain * 100.0f);
     }
 }
 
 float MusicProcessor::getVolume() const
 {
-    float ret = 1.0f;
-
-    if(mMusic.get())
-    {
-        ret = mMusic->getVolume() * 0.01f;
-    }
-
-    return ret;
+    return mMasterGain;
 }
 
 #endif
