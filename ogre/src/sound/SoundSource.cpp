@@ -1,3 +1,5 @@
+#ifndef NO_OPENAL
+
 #if defined(__ANDROID__)
     #include <android/log.h>
 
@@ -168,3 +170,5 @@ void SoundSource::setMaxDistance(float dist)
         //AL_CHECK(alSourcef(mSource, AL_MAX_DISTANCE, dist));
     }
 }
+
+#endif
