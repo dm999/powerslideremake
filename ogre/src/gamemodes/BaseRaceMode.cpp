@@ -861,7 +861,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
     Ogre::Vector3 playerDir = mModeContext.mGameState.getPlayerCar().getForwardAxis();
 
 #ifndef NO_OPENAL
-    mModeContext.mSoundsProcesser.setListenerPos(playerPos);
+    mModeContext.mSoundsProcesser.setListenerPos(playerPos, mModeContext.mGameState.getPlayerCar().getUpAxis(), playerDir);
     if(!mModeContext.mGameState.isGamePaused())
         mModeContext.mSoundsProcesser.setListenerGain(mModeContext.mGameState.getListenerGain());
     else

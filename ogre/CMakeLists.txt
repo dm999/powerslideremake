@@ -81,6 +81,9 @@ file(GLOB PowerslideRemake_sources_mesh_main_h src/mesh/*.h)
 file(GLOB PowerslideRemake_sources_modes_main src/gamemodes/*.cpp)
 file(GLOB PowerslideRemake_sources_modes_main_h src/gamemodes/*.h)
 
+file(GLOB PowerslideRemake_sources_sound_main src/sound/*.cpp)
+file(GLOB PowerslideRemake_sources_sound_main_h src/sound/*.h)
+
 file(GLOB PowerslideRemake_sources_cheats_main src/cheats/*.cpp)
 file(GLOB PowerslideRemake_sources_cheats_main_h src/cheats/*.h)
 
@@ -109,6 +112,7 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_listeners_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_sound_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_cheats_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_elements})
@@ -153,6 +157,7 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_listeners_main_h
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_tools_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_sound_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_cheats_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_elements_h})
@@ -184,6 +189,7 @@ if(PowerslideRemake_MULTIPLAYER)
 endif()
 
 if(PowerslideRemake_OPENAL)
+    include_directories (${PROJECT_SOURCE_DIR}/../sfml/include)
     include_directories(${PowerslideRemake_OPENALDIR}/include)
     link_directories (${PowerslideRemake_OPENALDIR}/lib)
 endif()
@@ -344,6 +350,10 @@ else() # Not Android
         target_link_libraries(PowerslideRemake Lua ${OIS_LIBRARIES})
 
     endif()
+endif()
+
+if(PowerslideRemake_OPENAL)
+    target_link_libraries(PowerslideRemake sfml-system sfml-audio)
 endif()
 
 if(WIN32)

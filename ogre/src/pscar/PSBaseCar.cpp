@@ -12,7 +12,7 @@
 #include "../mesh/ModelsPool.h"
 
 #ifndef NO_OPENAL
-    #include "../OpenAL/OpenALSource.h"
+    #include "../Sound/SoundSource.h"
 #endif
 
 #include "../loaders/TEXLoader.h"
@@ -416,6 +416,11 @@ Ogre::Vector3 PSBaseCar::getForwardAxis()const
     return mInitialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
 }
 
+Ogre::Vector3 PSBaseCar::getUpAxis()const
+{
+    return mInitialVehicleSetup.mCarRot * Ogre::Vector3::UNIT_Y;
+}
+
 Ogre::Vector3 PSBaseCar::getLinearImpulse()const
 {
     return mPhysicsVehicle->getLinearImpulse();
@@ -456,9 +461,9 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
 
     if(!mIsAI)
     {
-        mEngLow.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData()));
-        mEngMid.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_mid.its", gameState.getPFLoaderData()));
-        mEngHigh.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
+        mEngLow.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData()));
+        mEngMid.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_mid.its", gameState.getPFLoaderData()));
+        mEngHigh.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
 
         mEngLow->setReferenceDistance(referenceDist);
         mEngMid->setReferenceDistance(referenceDist);
@@ -468,19 +473,19 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
         mEngMid->setMaxDistance(maxDist);
         mEngHigh->setMaxDistance(maxDist);
 
-        mEngLow->setLooping(AL_TRUE);
-        mEngMid->setLooping(AL_TRUE);
-        mEngHigh->setLooping(AL_TRUE);
+        mEngLow->setLooping(true);
+        mEngMid->setLooping(true);
+        mEngHigh->setLooping(true);
     }
     else
     {
-        mEngHigh.reset(new OpenALSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData(), 1.0f));
+        mEngHigh.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
 
         mEngHigh->setReferenceDistance(referenceDist);
 
         mEngHigh->setMaxDistance(maxDist);
 
-        mEngHigh->setLooping(AL_TRUE);
+        mEngHigh->setLooping(true);
     }
 #endif
 }
@@ -499,17 +504,17 @@ void PSBaseCar::deinitSounds()
 void PSBaseCar::stopSounds()
 {
 #ifndef NO_OPENAL
-    if(mEngLow.get() && mEngLow->getSourceState() == AL_PLAYING)
+    if(mEngLow.get() && mEngLow->getSourceState() == SoundSource::Playing)
     {
         mEngLow->stopPlaying();
     }
 
-    if(mEngMid.get() && mEngMid->getSourceState() == AL_PLAYING)
+    if(mEngMid.get() && mEngMid->getSourceState() == SoundSource::Playing)
     {
         mEngMid->stopPlaying();
     }
 
-    if(mEngHigh.get() && mEngHigh->getSourceState() == AL_PLAYING)
+    if(mEngHigh.get() && mEngHigh->getSourceState() == SoundSource::Playing)
     {
         mEngHigh->stopPlaying();
     }

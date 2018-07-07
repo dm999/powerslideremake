@@ -174,8 +174,9 @@ BaseApp::~BaseApp()
     mRoot.reset();
 
 #ifndef NO_OPENAL
+    mMusicProcessor.deinit();
     mSoundsProcesser.deinitSounds();
-    mSoundsProcesser.deInitSoundSystem();
+    //mSoundsProcesser.deInitSoundSystem();
 #endif
 }
 
@@ -311,10 +312,6 @@ void BaseApp::go()
 
 bool BaseApp::setup()
 {
-#ifndef NO_OPENAL
-    mSoundsProcesser.initSoundSystem();
-#endif
-
     mRoot.reset(new Ogre::Root());
     mOverlaySystem.reset(new CustomOverlaySystem());
 
@@ -335,6 +332,11 @@ bool BaseApp::setup()
         OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Packed file not found!", "BaseApp::setup");
         return false;
     }
+
+#ifndef NO_OPENAL
+    mMusicProcessor.init(mGameState);
+    mMusicProcessor.play();
+#endif
 
 
     //setup renderer, create window, init input
@@ -1085,7 +1087,7 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
     mGameState.setDataDir(dataDir);
 
 #ifndef NO_OPENAL
-    mSoundsProcesser.initSoundSystem();
+    mMusicProcessor.init(mGameState);
 #endif
 
     mRoot.reset(new Ogre::Root());

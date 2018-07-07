@@ -2,7 +2,7 @@
 #define MODECONTEXT_H
 
 #include "../GameState.h"
-#include "../SoundsProcesser.h"
+#include "../sound/SoundsProcesser.h"
 
 #include "../gamelogic/LapController.h"
 

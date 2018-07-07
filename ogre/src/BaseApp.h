@@ -14,7 +14,8 @@
 #include "tools/Tools.h"
 
 #include "GameState.h"
-#include "SoundsProcesser.h"
+#include "sound/SoundsProcesser.h"
+#include "sound/MusicProcessor.h"
 
 #include "gamemodes/ModeContext.h"
 
@@ -138,6 +139,7 @@ private:
 
 #ifndef NO_OPENAL
     SoundsProcesser mSoundsProcesser;
+    MusicProcessor mMusicProcessor;
 #endif
     GameState mGameState;
 

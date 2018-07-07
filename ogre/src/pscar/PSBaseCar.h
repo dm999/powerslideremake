@@ -15,7 +15,7 @@ struct lua_State;
 class ModelsPool;
 class Physics;
 class StaticMeshProcesser;
-class OpenALSource;
+class SoundSource;
 
 class GameState;
 
@@ -54,6 +54,7 @@ public:
     Ogre::Real getWheelBackRVelocity() const;
     Ogre::Real getLateralVelocitySpeedometer()const;
     Ogre::Vector3 getForwardAxis()const;
+    Ogre::Vector3 getUpAxis()const;//sound
     Ogre::Vector3 getLinearImpulse()const;//ai & multiplayer
     void setLinearImpulse(const Ogre::Vector3& val);//multiplayer
     Ogre::Vector3 getAngularImpulse()const;//multiplayer
@@ -89,9 +90,9 @@ protected:
 
     //sounds
 #ifndef NO_OPENAL
-    CommonIncludes::shared_ptr<OpenALSource> mEngLow;
-    CommonIncludes::shared_ptr<OpenALSource> mEngMid;
-    CommonIncludes::shared_ptr<OpenALSource> mEngHigh;
+    CommonIncludes::shared_ptr<SoundSource> mEngLow;
+    CommonIncludes::shared_ptr<SoundSource> mEngMid;
+    CommonIncludes::shared_ptr<SoundSource> mEngHigh;
 #endif
 
 private:

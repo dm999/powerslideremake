@@ -11,7 +11,7 @@
 #include "../tools/Conversions.h"
 
 #ifndef NO_OPENAL
-    #include "../OpenAL/OpenALSource.h"
+    #include "../Sound/SoundSource.h"
 #endif
 
 #include "../tools/OgreTools.h"
@@ -380,19 +380,19 @@ void PSControllableCar::processSounds()
 
 
 
-    if(!mIsAI && mEngLow->getSourceState() == AL_INITIAL)
+    if(!mIsAI && mEngLow->getSourceState() == SoundSource::Stopped)
     {
         mEngLow->setPitch(defaultLowPitch);
         mEngLow->startPlaying();
     }
 
-    if(!mIsAI && mEngMid->getSourceState() == AL_INITIAL)
+    if(!mIsAI && mEngMid->getSourceState() == SoundSource::Stopped)
     {
         mEngMid->setPitch(defaultMidPitch);
         mEngMid->startPlaying();
     }
 
-    if(mEngHigh->getSourceState() == AL_INITIAL)
+    if(mEngHigh->getSourceState() == SoundSource::Stopped)
     {
         mEngHigh->setPitch(defaultHighPitch);
         mEngHigh->startPlaying();

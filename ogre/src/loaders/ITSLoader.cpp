@@ -20,7 +20,7 @@ namespace
     };
 }//anonymous namespace
 
-size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, std::vector<unsigned char>& rawData) const
+size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, std::vector<signed short>& rawData) const
 {
     size_t res = 0;
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
@@ -47,9 +47,10 @@ size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, c
         {
             //-128 ... 127 maps to 64 ... 191
             short tmpval = static_cast<char>(buf[q]);
-            tmpval >>= 0x1;
-            tmpval += 128;
-            rawData[q] = static_cast<BYTE>(tmpval);
+            //tmpval >>= 0x1;
+            //tmpval += 128;
+            tmpval *= 256;
+            rawData[q] = tmpval;
         }
 
         fileToLoad->close();

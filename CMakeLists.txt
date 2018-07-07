@@ -37,14 +37,24 @@ find_package(OIS REQUIRED)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+if(PowerslideRemake_OPENAL)
+    add_definitions(-DSFML_STATIC)
+endif()
 
 add_subdirectory (lua)
 add_subdirectory (simpleini)
 add_subdirectory (ogre)
+
+if(PowerslideRemake_OPENAL)
+    add_subdirectory (sfml/src/SFML)
+    add_subdirectory (ogg_vorbis)
+endif()
+
 if(PowerslideRemake_MULTIPLAYER)
     add_subdirectory (tools/jsonxx)
     add_subdirectory (multislider/client)
 endif()
+
 if(MSVC)
     #add_subdirectory (gtest)
     #add_subdirectory (tools/mshtobin)
