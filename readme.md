@@ -26,9 +26,9 @@ To build project you need:
 - [JSON++](https://github.com/hjiang/jsonxx)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider) (only if PowerslideRemake_MULTIPLAYER ON)  
 - [Boost::asio](http://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio.html) (only if PowerslideRemake_MULTIPLAYER ON)  
-- [ogg/vorbis] (https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
-- [ogg/vorbis cmake] (https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
-- [SFML] (https://www.sfml-dev.org/) (only if PowerslideRemake_OPENAL ON)  
+- [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
+- [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
+- [SFML](https://www.sfml-dev.org/) (only if PowerslideRemake_OPENAL ON)  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
