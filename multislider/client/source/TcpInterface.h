@@ -159,18 +159,20 @@ namespace multislider
             uint64_t time = 0;
             while (time <= timeoutMilliseconds) {
 
-                std::vector<char> buf(MAX_BUFFER_SIZE);
+                std::vector<char> buf(MAX_BUFFER_SIZE, 0);
+                size_t recievedTotal = 0;
                 size_t recieved;
                 size_t offset = 0;
                 do
                 {
                     status = mSocket.receive(&buf[offset], MAX_BUFFER_SIZE, recieved);
                     offset += recieved;
+                    recievedTotal += recieved;
                 }while(status == sf::Socket::Partial);
 
                 if (status == sf::Socket::Done)
                 {
-                    message = std::string(buf.begin(), buf.end());
+                    message = std::string(buf.begin(), buf.begin() + recievedTotal);
                     break;
                 }
 
