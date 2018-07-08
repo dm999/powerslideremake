@@ -34,6 +34,8 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
         mPlayerTitle->setLocalTranslation(Ogre::Vector3(0.0f, 10.0f, 0.0f));
         mModelNode->attachObject(mPlayerTitle.get());
     }
+
+    mPhysicsVehicle->setVehicleType(AIVehicle);
 }
 
 void PSMultiplayerCar::clear()
