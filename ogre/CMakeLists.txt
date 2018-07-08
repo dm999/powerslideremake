@@ -188,8 +188,9 @@ if(PowerslideRemake_MULTIPLAYER)
     include_directories(../tools/jsonxx/src)
 endif()
 
+include_directories (${PROJECT_SOURCE_DIR}/../sfml/include)
+
 if(PowerslideRemake_OPENAL)
-    include_directories (${PROJECT_SOURCE_DIR}/../sfml/include)
     include_directories(${PowerslideRemake_OPENALDIR}/include)
     link_directories (${PowerslideRemake_OPENALDIR}/lib)
 endif()
@@ -353,7 +354,11 @@ else() # Not Android
 endif()
 
 if(PowerslideRemake_OPENAL)
-    target_link_libraries(PowerslideRemake sfml-system sfml-audio)
+    target_link_libraries(PowerslideRemake sfml-audio)
+endif()
+
+if(PowerslideRemake_MULTIPLAYER)
+    target_link_libraries(PowerslideRemake sfml-network)
 endif()
 
 if(WIN32)

@@ -8,6 +8,8 @@
 #ifndef _MULTI_SLIDER_TCP_INTERFACE_H_
 #define _MULTI_SLIDER_TCP_INTERFACE_H_
 
+#include <SFML/Network.hpp>
+
 #include <boost/asio.hpp>
 
 #include "CommonIncludes.h"
@@ -32,6 +34,8 @@ namespace multislider
         const static size_t MAX_BUFFER_SIZE;
 
     private:
+        sf::TcpSocket mSocket;
+
         boost::asio::io_service mIoService;
         boost::asio::ip::tcp::socket mAsioSocket;
         boost::asio::ip::tcp::endpoint mEndpoint;
@@ -55,7 +59,21 @@ namespace multislider
 #if defined(__ANDROID__)
             LOGI("TcpInterface[connect]: begin");
 #endif
+#if 1
+            sf::IpAddress serverAddress(ip);
 
+            if(serverAddress == sf::IpAddress::None)
+            {
+                return false;
+            }
+
+            if (mSocket.connect(serverAddress, port) != sf::Socket::Done)
+            {
+                return false;
+            }
+
+            mSocket.setBlocking(false);
+#else
             boost::system::error_code err;
 
             boost::asio::ip::address::from_string( ip, err );
@@ -97,24 +115,76 @@ namespace multislider
 #if !defined(__ANDROID__)
             //mPinger.reset(new Pinger(mIoServicePinger, ip.c_str()));
 #endif
-
+#endif
 #if defined(__ANDROID__)
             LOGI("TcpInterface[connect]: end"); 
 #endif
 
-            return !err;
+            return true;
         }
 
         bool send(const std::string & message)
         {
+#if 1
+            bool ret = true;
+
+            sf::Socket::Status status;
+
+            std::vector<char> buf(message.begin(), message.end());
+            size_t offset = 0;
+            do
+            {
+                size_t sent;
+                status = mSocket.send(&buf[offset], buf.size(), sent);
+                offset += sent;
+            }while(status == sf::Socket::Partial);
+
+            if (status != sf::Socket::Done)
+            {
+                ret = false;
+            }
+            return ret;
+#else
             boost::system::error_code err;
             size_t len = mAsioSocket.send(boost::asio::buffer(message), 0, err);
             return !err && (len == message.size());
+#endif
         }
 
         std::string tryReceive(uint64_t timeoutMilliseconds, uint32_t attemptsTimeoutMilliseconds = 100)
         {
             std::string message;
+#if 1
+            sf::Socket::Status status;
+            uint64_t time = 0;
+            while (time <= timeoutMilliseconds) {
+
+                std::vector<char> buf(MAX_BUFFER_SIZE);
+                size_t recieved;
+                size_t offset = 0;
+                do
+                {
+                    status = mSocket.receive(&buf[offset], MAX_BUFFER_SIZE, recieved);
+                    offset += recieved;
+                }while(status == sf::Socket::Partial);
+
+                if (status == sf::Socket::Done)
+                {
+                    message = std::string(buf.begin(), buf.end());
+                    break;
+                }
+
+                if (timeoutMilliseconds > 0)
+                {
+                    sf::sleep(sf::milliseconds(attemptsTimeoutMilliseconds));
+                    time += attemptsTimeoutMilliseconds;
+                }
+                else
+                {
+                    break;
+                }
+            }
+#else
             uint64_t time = 0;
             while (time <= timeoutMilliseconds) {
                 size_t available = mAsioSocket.available();
@@ -132,6 +202,7 @@ namespace multislider
                     break;
                 }
             }
+#endif
             return message;
         }
 

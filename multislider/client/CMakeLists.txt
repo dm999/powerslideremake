@@ -17,7 +17,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 #--------------------------------
 # 3rdParty projects
 
-
+include_directories (../../sfml/include)
 include_directories(../../tools/jsonxx/src)
 
 
@@ -40,3 +40,4 @@ add_library(MultiSlider STATIC ${all_sources})
 
 target_link_libraries(MultiSlider PRIVATE Jsonxx)
 target_link_libraries(MultiSlider PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(MultiSlider PRIVATE sfml-network)

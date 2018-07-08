@@ -18,8 +18,6 @@
 # endif
 #endif
 
-#include <boost/date_time.hpp>
-
 #include "Session.h"
 #include "Exception.h"
 #include "Utility.h"

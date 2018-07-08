@@ -43,7 +43,7 @@ track_0.ogg - main theme
 track_2-8.ogg - other tracks {dam track, sand blaster, speedway, devil`s elbow, mineshafted, freezer, urban brawl}  
 
 ### Multiplayer ###
-"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports being used by multiplayer: TCP:8800, UDP:8800  
+"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports are being used by multiplayer: TCP:8800, UDP:8800, UDP:8700  
 
 ### License ###
 The MIT License (MIT)  
