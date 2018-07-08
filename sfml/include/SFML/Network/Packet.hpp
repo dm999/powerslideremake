@@ -35,7 +35,7 @@
 
 namespace sf
 {
-class String;
+//class String;
 class TcpSocket;
 class UdpSocket;
 
@@ -249,7 +249,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \overload
     ////////////////////////////////////////////////////////////
-    Packet& operator >>(String&       data);
+    //Packet& operator >>(String&       data);//d.polubotko: link error for MSVC
 
     ////////////////////////////////////////////////////////////
     /// Overload of operator << to write data into the packet
@@ -330,7 +330,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \overload
     ////////////////////////////////////////////////////////////
-    Packet& operator <<(const String&       data);
+    //Packet& operator <<(const String&       data);//d.polubotko: link error for MSVC
 
 protected:
 

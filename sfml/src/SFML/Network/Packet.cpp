@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////
 #include <SFML/Network/Packet.hpp>
 #include <SFML/Network/SocketImpl.hpp>
-#include <SFML/System/String.hpp>
+//#include <SFML/System/String.hpp>//d.polubotko: link error for MSVC
 #include <cstring>
 #include <cwchar>
 
@@ -350,6 +350,8 @@ Packet& Packet::operator >>(std::wstring& data)
 
 
 ////////////////////////////////////////////////////////////
+//d.polubotko: link error for MSVC
+/*
 Packet& Packet::operator >>(String& data)
 {
     // First extract the string length
@@ -369,7 +371,7 @@ Packet& Packet::operator >>(String& data)
     }
 
     return *this;
-}
+}*/
 
 
 ////////////////////////////////////////////////////////////
@@ -553,6 +555,8 @@ Packet& Packet::operator <<(const std::wstring& data)
 
 
 ////////////////////////////////////////////////////////////
+//d.polubotko: link error for MSVC
+/*
 Packet& Packet::operator <<(const String& data)
 {
     // First insert the string length
@@ -568,7 +572,7 @@ Packet& Packet::operator <<(const String& data)
 
     return *this;
 }
-
+*/
 
 ////////////////////////////////////////////////////////////
 bool Packet::checkSize(std::size_t size)
