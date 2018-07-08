@@ -2,8 +2,6 @@
 #ifndef MUSICPROCESSOR
 #define MUSICPROCESSOR
 
-#ifndef NO_OPENAL
-
 #include <string>
 #include <vector>
 
@@ -39,5 +37,4 @@ private:
     std::vector<Ogre::uint8> mBuf;
 };
 
-#endif
 #endif

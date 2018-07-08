@@ -2,8 +2,6 @@
 #ifndef SOUNDSOURCE
 #define SOUNDSOURCE
 
-#ifndef NO_OPENAL
-
 #include <string>
 #include <vector>
 
@@ -64,5 +62,4 @@ private:
     std::vector<signed short> mRawData;
 };
 
-#endif
 #endif

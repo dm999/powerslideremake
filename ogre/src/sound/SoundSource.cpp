@@ -1,4 +1,3 @@
-#ifndef NO_OPENAL
 
 #if defined(__ANDROID__)
     #include <android/log.h>
@@ -105,5 +104,3 @@ void SoundSource::setReferenceDistance(float dist)
 {
     mSound->setMinDistance(dist);
 }
-
-#endif

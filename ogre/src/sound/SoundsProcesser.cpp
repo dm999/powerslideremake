@@ -1,6 +1,4 @@
 
-#ifndef NO_OPENAL
-
 #include <SFML/Audio.hpp>
 
 #if defined(__ANDROID__)
@@ -296,5 +294,3 @@ void SoundsProcesser::setVolume(float gain)
         }
     }
 }
-
-#endif

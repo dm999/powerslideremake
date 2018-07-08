@@ -2,7 +2,6 @@
 #ifndef SOUNDSPROCESSER
 #define SOUNDSPROCESSER
 
-#ifndef NO_OPENAL
 #include <vector>
 
 #include "../includes/OgreInclude.h"
@@ -80,5 +79,4 @@ private:
     float mMasterGain;
 
 };
-#endif
 #endif

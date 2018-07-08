@@ -1,5 +1,3 @@
-#ifndef NO_OPENAL
-
 #include "MusicProcessor.h"
 
 #include <SFML/Audio.hpp>
@@ -90,5 +88,3 @@ float MusicProcessor::getVolume() const
 {
     return mMasterGain;
 }
-
-#endif
