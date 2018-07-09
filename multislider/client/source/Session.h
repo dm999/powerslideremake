@@ -9,6 +9,8 @@
 #define _MULTI_SLIDER_SESSION_H_
 
 
+#include <SFML/System/Clock.hpp>
+
 #include "CommonIncludes.h"
 #include "SessionCallback.h"
 
@@ -24,6 +26,8 @@ namespace multislider
 
     class Session
     {
+        sf::Clock mClock;
+
         shared_ptr<UdpInterface> mUdpInterface;
         const std::string mServerIp;
         const uint16_t mServerPort;

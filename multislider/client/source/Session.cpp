@@ -6,6 +6,7 @@
 */
 
 #include <limits>
+#include <ctime>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -110,7 +111,7 @@ namespace multislider
 
     uint64_t Session::getTimeLocalMS() const
     {
-        return boost::posix_time::microsec_clock::local_time().time_of_day().total_milliseconds();
+        return mClock.getElapsedTime().asMilliseconds();
     }
     //-------------------------------------------------------
 

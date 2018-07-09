@@ -3,18 +3,6 @@ cmake_minimum_required (VERSION 2.8)
 project(MultiSlider)
 
 #--------------------------------
-# Boost Asio
-
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-set(BOOST_ROOT ${PowerslideRemake_BOOSTHOME})
-find_package(Boost REQUIRED COMPONENTS system date_time regex)
-
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-#--------------------------------
 # 3rdParty projects
 
 include_directories (../../sfml/include)
@@ -39,5 +27,4 @@ file(GLOB all_sources ./source/*.h ./source/*.cpp)
 add_library(MultiSlider STATIC ${all_sources})
 
 target_link_libraries(MultiSlider PRIVATE Jsonxx)
-target_link_libraries(MultiSlider PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(MultiSlider PRIVATE sfml-network)

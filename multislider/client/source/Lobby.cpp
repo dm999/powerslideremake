@@ -361,7 +361,7 @@ namespace multislider
             throw ProtocolError("Lobby[getLastPing]: I'm not in a room!");
         }
 
-        return mTcpInterface->getPing();
+        return 0;
     }
 
     void Lobby::pollPing()
@@ -370,7 +370,7 @@ namespace multislider
             throw ProtocolError("Lobby[pollPing]: I'm not in a room!");
         }
 
-        mTcpInterface->pollPing();
+        //mTcpInterface->pollPing();
     }
     //-------------------------------------------------------
 

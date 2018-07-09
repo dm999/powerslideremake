@@ -10,7 +10,6 @@ To build the project you need:
 - C++03 compiler  
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org) (only if PowerslideRemake_OPENAL ON)  
-- [Boost](https://www.boost.org) (only if PowerslideRemake_MULTIPLAYER ON)  
 
 Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Boost::asio.  
 
@@ -25,7 +24,6 @@ To build project you need:
 - [SimpleINI](https://github.com/brofield/simpleini)  
 - [JSON++](https://github.com/hjiang/jsonxx)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider) (only if PowerslideRemake_MULTIPLAYER ON)  
-- [Boost::asio](http://www.boost.org/doc/libs/1_60_0/doc/html/boost_asio.html) (only if PowerslideRemake_MULTIPLAYER ON)  
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
 - [SFML](https://www.sfml-dev.org/) (only if PowerslideRemake_OPENAL ON)  
@@ -43,7 +41,7 @@ track_0.ogg - main theme
 track_2-8.ogg - other tracks {dam track, sand blaster, speedway, devil`s elbow, mineshafted, freezer, urban brawl}  
 
 ### Multiplayer ###
-"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports are being used by multiplayer: TCP:8800, UDP:8800, UDP:8700  
+"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports are being used by multiplayer: TCP:8800, UDP:8700  
 
 ### License ###
 The MIT License (MIT)  
