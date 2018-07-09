@@ -16,13 +16,9 @@
 
 namespace multislider
 {
-    /**
-     *  Singleton wrapper for ENet library
-     */
     class UdpInterface
     {
     public:
-        const static size_t MAX_BUFFER_SIZE;
 
     private:
 

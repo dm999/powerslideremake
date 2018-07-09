@@ -22,13 +22,10 @@
 
 namespace multislider
 {
-    /**
-     *  Singleton wrapper for ENet library
-     */
     class TcpInterface
     {
     public:
-        const static size_t MAX_BUFFER_SIZE;
+        const static size_t MAX_BUFFER_SIZE = 4 * 1024 * 1024; // 4 Mb
 
     private:
         sf::TcpSocket mSocket;
