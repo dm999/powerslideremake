@@ -11,22 +11,21 @@ To build the project you need:
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org) (only if PowerslideRemake_OPENAL ON)  
 
-Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL, Boost::asio.  
+Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL.  
 
 To build project you need:  
 - Set CMake variable PowerslideRemake_OGREHOME - path to Ogre includes & binaries (for example C:\Program Files\OGRE\1_9_0)  
 - Set CMake variable PowerslideRemake_OPENALDIR (only if PowerslideRemake_OPENAL ON) - path to OpenAL includes & binaries (for example C:\Program Files\OpenAL)  
-- Set CMake variable PowerslideRemake_BOOSTHOME (only if PowerslideRemake_MULTIPLAYER ON) - path to Boost includes & binaries for libs [system, date_time, regex] builded statically (for example C:\Boost)  
 
 ### Sources ###
 "Powerslide remake" also depends and/or includes sources of such open sourced projects as:  
+- [SFML](https://www.sfml-dev.org/)  
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
 - [JSON++](https://github.com/hjiang/jsonxx)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider) (only if PowerslideRemake_MULTIPLAYER ON)  
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
-- [SFML](https://www.sfml-dev.org/) (only if PowerslideRemake_OPENAL ON)  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
