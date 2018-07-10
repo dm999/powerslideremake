@@ -43,7 +43,7 @@ namespace multislider
                 return false;
             }
 
-            if (mSocket.bind(port) != sf::Socket::Done)
+            if (mSocket.bind(sf::Socket::AnyPort) != sf::Socket::Done)
             {
                 return false;
             }
