@@ -1,8 +1,6 @@
 #ifndef UIMAINMENU_H
 #define UIMAINMENU_H
 
-#ifndef NO_MULTIPLAYER
-
 #include <string>
 
 #include "UIBaseMenu.h"
@@ -162,5 +160,4 @@ private:
     MyGUI::ListBox* mWidgetEvents;
     */
 };
-#endif
 #endif

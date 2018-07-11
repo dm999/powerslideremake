@@ -4,15 +4,11 @@
 #include "../gamemodes/MenuMode.h"
 #include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
-#ifndef NO_MULTIPLAYER
-    #include "../gamemodes/MultiPlayerMode.h"
-#endif
+#include "../gamemodes/MultiPlayerMode.h"
 
 #include "../customs/CustomTrayManager.h"
 
-#ifndef NO_MULTIPLAYER
-    #include "../multiplayer/MultiplayerController.h"
-#endif
+#include "../multiplayer/MultiplayerController.h"
 
 #include "../InputHandler.h"
 
@@ -49,10 +45,8 @@ void GameModeSwitcher::frameStarted(const Ogre::FrameEvent &evt)
     if(mMenuMode.get())
         mMenuMode->frameStarted(evt);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->frameStarted(evt);
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->frameStarted(evt);
@@ -63,10 +57,8 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
     if(mMenuMode.get())
         mMenuMode->frameRenderingQueued(evt);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->frameRenderingQueued(evt);
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->frameRenderingQueued(evt);
@@ -109,7 +101,6 @@ void GameModeSwitcher::frameEnded()
 
         mContext.getGameState().setSpeedCheatUsed(false);
 
-#ifndef NO_MULTIPLAYER
         MultiplayerSessionStartInfo multiplayerSessionStartInfo;
         CommonIncludes::shared_ptr<MultiplayerController> controller;
 
@@ -138,7 +129,6 @@ void GameModeSwitcher::frameEnded()
                 multiplayerSessionStartInfo = mMenuMultiMode->getMultiplayerSessionStartInfo();
             }
         }
-#endif
 
         //extract lap data after race
         if(mGameMode == ModeRaceSingle && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceSingle)
@@ -198,12 +188,10 @@ void GameModeSwitcher::frameEnded()
                 mContext.getGameState().getPlayerName(),
                 mContext.getGameState().getPlayerCar().getLapUtils().getBestLapTime());
         }
-#ifndef NO_MULTIPLAYER
         if(mGameMode == ModeRaceMulti && mGameModeNext == ModeMenuMulti || raceOverAndReadyToQuit && mGameMode == ModeRaceMulti)
         {
             mContext.setLapController(mPlayerMode->getLapController());
         }
-#endif
 
         //in case of switch from menu championship to menu keep mMenuMode
         if(
@@ -280,7 +268,6 @@ void GameModeSwitcher::frameEnded()
                 mMenuMode->initCamera();
             }
 
-#ifndef NO_MULTIPLAYER
             //race -> multi main menu
             if(mGameMode == ModeRaceMulti)
             {
@@ -296,7 +283,6 @@ void GameModeSwitcher::frameEnded()
                 mIsLoadPassed = true;
                 mMenuMultiMode->initCamera();
             }
-#endif
         }
 
         //main menu single -> race single
@@ -368,7 +354,6 @@ void GameModeSwitcher::frameEnded()
             mIsLoadPassed = true;
         }
 
-#ifndef NO_MULTIPLAYER
         //main menu multi -> race multi
         if(mGameMode == ModeMenuMulti && mIsSwitchMode && mGameModeNext == ModeRaceMulti)
         {
@@ -431,7 +416,6 @@ void GameModeSwitcher::frameEnded()
             }
             mIsInitialLoadPassed = true;
         }
-#endif
     }
 }
 
@@ -473,12 +457,10 @@ void GameModeSwitcher::nitroByPlayer()
 
 void GameModeSwitcher::tabPressed()
 {
-#ifndef NO_MULTIPLAYER
     if(mGameMode == ModeRaceMulti)
     {
         static_cast<MultiPlayerMode *>(mPlayerMode.get())->tabPressed();
     }
-#endif
 }
 
 void GameModeSwitcher::keyUp(MyGUI::KeyCode _key, wchar_t _char )
@@ -486,7 +468,6 @@ void GameModeSwitcher::keyUp(MyGUI::KeyCode _key, wchar_t _char )
     if(mMenuMode.get())
         mMenuMode->keyUp(_key, _char);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->keyUp(_key, _char);
 
@@ -494,7 +475,6 @@ void GameModeSwitcher::keyUp(MyGUI::KeyCode _key, wchar_t _char )
     {
         static_cast<MultiPlayerMode *>(mPlayerMode.get())->keyUp(_key, _char);
     }
-#endif
 }
 
 void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
@@ -502,10 +482,8 @@ void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
     if(mMenuMode.get())
         mMenuMode->mousePressed(pos);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->mousePressed(pos);
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->mousePressed(pos);
@@ -516,10 +494,8 @@ void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
     if(mMenuMode.get())
         mMenuMode->mouseReleased(pos);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->mouseReleased(pos);
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->mouseReleased(pos);
@@ -530,10 +506,8 @@ void GameModeSwitcher::mouseMoved(const Ogre::Vector2& pos)
     if(mMenuMode.get())
         mMenuMode->mouseMoved(pos);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->mouseMoved(pos);
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->mouseMoved(pos);
@@ -549,10 +523,8 @@ void GameModeSwitcher::reloadTextures()
     if(mMenuMode.get())
         mMenuMode->reloadTextures();
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->reloadTextures();
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->reloadTextures();
@@ -576,10 +548,8 @@ bool GameModeSwitcher::isExitSubmenu()const
     if(mMenuMode.get())
         ret = mMenuMode->isExitSubmenu();
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         ret = mMenuMultiMode->isExitSubmenu();
-#endif
 
     return ret;
 }
@@ -589,10 +559,8 @@ void GameModeSwitcher::setSubmenu(const std::string& title)
     if(mMenuMode.get())
         mMenuMode->setSubmenu(title);
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->setSubmenu(title);
-#endif
 }
 
 void GameModeSwitcher::setTopmostSubmenu()
@@ -600,10 +568,8 @@ void GameModeSwitcher::setTopmostSubmenu()
     if(mMenuMode.get())
         mMenuMode->setTopmostSubmenu();
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->setTopmostSubmenu();
-#endif
 }
 
 void GameModeSwitcher::setPodiumSubmenu()
@@ -618,11 +584,9 @@ void GameModeSwitcher::clear()
         mMenuMode->clearData();
     mMenuMode.reset();
 
-#ifndef NO_MULTIPLAYER
     if(mMenuMultiMode.get())
         mMenuMultiMode->clearData();
     mMenuMultiMode.reset();
-#endif
 
     if(mPlayerMode.get())
         mPlayerMode->clearData();

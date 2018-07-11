@@ -8,7 +8,5 @@ if(PowerslideRemake_OPENAL)
     add_subdirectory(Audio)
 endif()
 
-if(PowerslideRemake_MULTIPLAYER)
-    # sfml-network
-    add_subdirectory(Network) 
-endif()
+# sfml-network
+add_subdirectory(Network) 

@@ -16,9 +16,7 @@
 
 #include "../BaseApp.h"
 
-#ifndef NO_MULTIPLAYER
-    #include "../multiplayer/MultiplayerRoomInfo.h"
-#endif
+#include "../multiplayer/MultiplayerRoomInfo.h"
 
 UIMainMenu::UIMainMenu(const ModeContext& modeContext, const GameMode gameMode, MenuMode * menuMode, SinglePlayerMenuStates state)
     : UIMainMenuLabels(modeContext, gameMode),
@@ -74,7 +72,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
     }
 
-#ifndef NO_MULTIPLAYER
     {
         Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
         MyGUI::ButtonPtr widgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
@@ -114,7 +111,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mWidgetRoomPlayers = gui->createWidget<MyGUI::ListBox>("ListBox", posRoomPlayers.x, posRoomPlayers.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
         mWidgetRoomPlayers->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
     }
-#endif
 #endif
 
     createCommonMaterials();
@@ -718,7 +714,6 @@ void UIMainMenu::hideAll()
 
 void UIMainMenu::connectToServer()
 {
-#ifndef NO_MULTIPLAYER
     std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
     std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
@@ -774,7 +769,6 @@ void UIMainMenu::connectToServer()
         if(userName.empty())
             setColorMultiUserName(Ogre::ColourValue::Red);
     }
-#endif
 }
 
 void UIMainMenu::createRoom()

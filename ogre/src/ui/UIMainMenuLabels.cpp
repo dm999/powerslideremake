@@ -299,7 +299,6 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mModeSingle);
     }
 
-#ifndef NO_MULTIPLAYER
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 135.0f, 0.0f, 0.0f);
         mModeMulti = createTextArea("MainWindowMulti", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -390,7 +389,6 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mModeMultiJoinRoom->setColour(mInactiveLabel);
         getMainBackground()->addChild(mModeMultiJoinRoom);
     }
-#endif
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 175.0f, 0.0f, 0.0f);
@@ -1687,7 +1685,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
-#ifndef NO_MULTIPLAYER
     if(mModeMulti->isVisible() && OgreBites::Widget::isCursorOver(mModeMulti, pos, 0))
     {
         switchState(State_Multi);
@@ -1711,7 +1708,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         switchState(State_MultiJoinRoom);
         return;
     }
-#endif
 
     if(mModeSingleTypeRace->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeRace, pos, 0))
     {
@@ -2073,12 +2069,10 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     UIMainMenuBackground::mouseMoved(pos);
 
     checkCursorOverLabel(pos, mModeSingle);
-#ifndef NO_MULTIPLAYER
     checkCursorOverLabel(pos, mModeMulti);
     checkCursorOverLabel(pos, mModeMultiListOfRooms);
     checkCursorOverLabel(pos, mModeMultiCreateRoom);
     checkCursorOverLabel(pos, mModeMultiJoinRoom);
-#endif
     checkCursorOverLabel(pos, mModeSingleTypeRace);
     checkCursorOverLabel(pos, mModeSingleTypeChampionship);
     checkCursorOverLabel(pos, mModeSingleTypeTimetrial);
@@ -2239,9 +2233,7 @@ void UIMainMenuLabels::setWindowTitle(const std::string& title)
 void UIMainMenuLabels::showModeSingleMulti()
 {
     mModeSingle->show();
-#ifndef NO_MULTIPLAYER
     mModeMulti->show();
-#endif
 }
 
 void UIMainMenuLabels::showModeSingleType()
@@ -2639,7 +2631,6 @@ void UIMainMenuLabels::hideAllLabels()
 {
     mModeSingle->hide();
     mWindowTitleTrophies->hide();
-#ifndef NO_MULTIPLAYER
     mModeMulti->hide();
     mModeMultiIP->hide();
     mModeMultiListOfRooms->hide();
@@ -2647,7 +2638,6 @@ void UIMainMenuLabels::hideAllLabels()
     mModeMultiRoomName->hide();
     mModeMultiCreateRoom->hide();
     mModeMultiJoinRoom->hide();
-#endif
     mModeSingleTypeRace->hide();
     mModeSingleTypeChampionship->hide();
     mModeSingleTypeTimetrial->hide();

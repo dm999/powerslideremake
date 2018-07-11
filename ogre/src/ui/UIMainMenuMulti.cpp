@@ -1,6 +1,4 @@
 
-#ifndef NO_MULTIPLAYER
-
 #include "UIMainMenuMulti.h"
 
 #include "UIMainMenuLabels.h"
@@ -1391,4 +1389,3 @@ size_t UIMainMenuMulti::getCurrentCharacterIndex() const
     size_t total;
     return getCurrentCharacterIndex(total);
 }
-#endif

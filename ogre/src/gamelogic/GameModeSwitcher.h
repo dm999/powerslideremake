@@ -92,9 +92,7 @@ private:
 
 
     CommonIncludes::shared_ptr<MenuMode> mMenuMode;
-#ifndef NO_MULTIPLAYER
     CommonIncludes::shared_ptr<MenuMultiMode> mMenuMultiMode;
-#endif
     CommonIncludes::shared_ptr<BaseRaceMode> mPlayerMode;
 
     void clear();

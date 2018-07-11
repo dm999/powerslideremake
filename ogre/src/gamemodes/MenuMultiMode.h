@@ -1,7 +1,6 @@
 #ifndef MENUMULTIMODE_H
 #define MENUMULTIMODE_H
 
-#ifndef NO_MULTIPLAYER
 #include "BaseMenuMode.h"
 
 #include "../includes/CommonIncludes.h"
@@ -81,5 +80,4 @@ private:
     bool mIsLobbyEntered;
 
 };
-#endif
 #endif

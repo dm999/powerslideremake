@@ -1,5 +1,4 @@
 
-#ifndef NO_MULTIPLAYER
 #include "UIRaceMulti.h"
 
 #include "../gamemodes/MultiPlayerMode.h"
@@ -115,5 +114,3 @@ void UIRaceMulti::switchVisibleMessageWidget()
         mEditBoxMessage.show();
     }
 }
-
-#endif

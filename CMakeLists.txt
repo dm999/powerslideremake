@@ -7,7 +7,6 @@ cmake_minimum_required(VERSION 2.8)
 project(PowerslideRemake)
 
 option(PowerslideRemake_OPENAL "OpenAL build" ON)
-option(PowerslideRemake_MULTIPLAYER "Multiplayer build" ON)
 set(PowerslideRemake_OGREHOME "" CACHE PATH "")
 set(PowerslideRemake_OPENALDIR "" CACHE PATH "")
 
@@ -44,10 +43,8 @@ if(PowerslideRemake_OPENAL)
     add_subdirectory (ogg_vorbis)
 endif()
 
-if(PowerslideRemake_MULTIPLAYER)
-    add_subdirectory (tools/jsonxx)
-    add_subdirectory (multislider/client)
-endif()
+add_subdirectory (tools/jsonxx)
+add_subdirectory (multislider/client)
 
 if(MSVC)
     #add_subdirectory (gtest)

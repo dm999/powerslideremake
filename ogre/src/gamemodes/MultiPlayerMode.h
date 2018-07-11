@@ -1,8 +1,6 @@
 #ifndef MULTIPLAYERMODE_H
 #define MULTIPLAYERMODE_H
 
-#ifndef NO_MULTIPLAYER
-
 #include "BaseRaceMode.h"
 
 #include "../multiplayer/MultiplayerController.h"
@@ -114,5 +112,4 @@ private:
     std::set<std::string> mIsOtherBomb; // other
     std::set<std::string> mIsOtherNitro;// other
 };
-#endif
 #endif
