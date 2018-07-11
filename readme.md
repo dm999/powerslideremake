@@ -23,7 +23,7 @@ To build project you need:
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
 - [JSON++](https://github.com/hjiang/jsonxx)  
-- [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)
+- [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
 
@@ -35,12 +35,24 @@ You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put th
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
 
 ### Music ###
-It is possible to listen to in game music. To enable sound/music project should be built with PowerslideRemake_OPENAL. Put original CD tracks compressed as .ogg files into the same directory as .pf files. Name convention for files:  
+There are sounds/music support available in project. To enable sounds/music project should be built with PowerslideRemake_OPENAL.
+Put original CD tracks compressed as .ogg (vorbis) files into the same directory as .pf files. Name convention for files:  
 track_0.ogg - main theme  
 track_2-8.ogg - other tracks {dam track, sand blaster, speedway, devil`s elbow, mineshafted, freezer, urban brawl}  
+File track_1.ogg is not used as well as track_9.ogg (extra track on original CD).  
 
 ### Multiplayer ###
-"Powerslide remake" supports multiplayer game through web server. To run multiplayer game web server should be deployed on most power PC of local network or global node. Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)). To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted. Ports are being used by multiplayer: TCP:8800, UDP:8700  
+"Powerslide remake" supports multiplayer game through web server. 
+To run multiplayer game web server should be deployed on mostly powerfull PC of a local network or on a global virtual/physical server with public IP adress.
+Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)).  
+To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted.  
+Ports are being used by multiplayer client: TCP:8800(outbound) - lobby, UDP:8800 (outbound) - list of rooms, 8700 (outbound) - race data.
+Both TCP & UDP inbound ports are randomly set.  
+Before start multiplayer game make sure there are no limitations in firewall for executable (PowerslideRemake.exe) to create network connections and there are no ports being blacklisted in router/proxy.  
+In case of issues there are several actions could be performed:  
+1. Ping server and make sure respond is correct.  
+2. Run client and try to create room. Make sure Lobby UI has been appeared. After UI has been drawn open command line and list opened ports for application (windows: run cmd as administrator and execute: netstat -bna | find "PowerslideRemake") - there should be 2 connections listed (TCP & UDP).  
+3. Invite your friend into created room and start race. After race has been started list opened ports again - there should be 3 connections opened (TCP, 2 UDP).  
 
 ### License ###
 The MIT License (MIT)  
