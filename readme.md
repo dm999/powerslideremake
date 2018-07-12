@@ -51,8 +51,8 @@ Both TCP & UDP inbound ports are randomly set.
 Before start multiplayer game make sure there are no limitations in firewall for executable (PowerslideRemake.exe) to create network connections and there are no ports being blacklisted in router/proxy.  
 In case of issues there are several actions could be performed:  
 1. Ping server and make sure respond is correct.  
-2. Run client and try to create room. Make sure Lobby UI has been appeared. After UI has been drawn open command line and list opened ports for application (windows: run cmd as administrator and execute: netstat -bna | find "PowerslideRemake") - there should be 2 connections listed (TCP & UDP).  
-3. Invite your friend into created room and start race. After race has been started list opened ports again - there should be 3 connections opened (TCP, 2 UDP).  
+2. Run client and try to create room. Make sure Lobby UI has been appeared. After UI has been drawn open command line and list opened ports for application (windows: run cmd as administrator and execute: netstat -bna | find "PowerslideRemake") - there should be 1 connection listed (TCP).  
+3. Invite your friend into created room and start race. After race has been started list opened ports again - there should be 2 connections opened (TCP, UDP).  
 
 ### License ###
 The MIT License (MIT)  
