@@ -35,7 +35,6 @@ namespace multislider
         //-------------------------------------------------------
 
     private:
-        shared_ptr<UdpInterface> mUdpInterface;
         shared_ptr<TcpInterface> mTcpInterface;
 
         std::string mServerIp;
@@ -47,7 +46,6 @@ namespace multislider
         bool mIsJoined;
         bool mIsHost;
 
-        mutable std::vector<RoomInfo> mRooms;
         //-------------------------------------------------------
 
         jsonxx::Object makeEnvelop(const jsonxx::Object & obj) const;
@@ -104,7 +102,7 @@ namespace multislider
          *  Get a list of all opened rooms on the server
          */
         
-        const std::vector<RoomInfo>& getRooms() const;
+        static std::vector<RoomInfo> getRooms(const std::string & serverIp, uint16_t serverPort);
 
         /**
          *  Join a room

@@ -49,11 +49,6 @@ namespace multislider
             throw NetworkError("Lobby[Lobby]: Failed to connect to server");
         }
 
-        mUdpInterface.reset(new UdpInterface());
-        if (!mUdpInterface->open(serverIp, serverPort)) {
-            throw ProtocolError("Lobby[Lobby]: failed to open udp socket");
-        }
-
         std::string response = mTcpInterface->tryReceive(constants::DEFAULT_TIMEOUT_MS);
         if (response.empty()) {
             throw ProtocolError("Lobby[Lobby]: No responce from the server");
@@ -169,26 +164,36 @@ namespace multislider
 
     //-------------------------------------------------------
 
-    const std::vector<RoomInfo>& Lobby::getRooms() const
+    std::vector<RoomInfo> Lobby::getRooms(const std::string & serverIp, uint16_t serverPort)
     {
-        mRooms.clear();
+        UdpInterface udpInterface;
+
+        if (!udpInterface.open(serverIp, serverPort))
+        {
+            throw ProtocolError("Lobby[Lobby]: failed to open udp socket");
+        }
+
+
+        std::vector<RoomInfo> rooms;
         Object jsonGetRooms;
         jsonGetRooms << MESSAGE_KEY_CLASS << frontend::GET_ROOMS;
-        if (!mUdpInterface->sendUpdDatagram(jsonGetRooms.write(JSON))) {
+        if (!udpInterface.sendUpdDatagram(jsonGetRooms.write(JSON)))
+        {
             throw ServerError("Lobby[Lobby]: Failed to request rooms list!");
         }
-        std::string message = mUdpInterface->awaitUdpDatagram(DEFAULT_TIMEOUT_MS);
-        if(message.empty()){
+        std::string message = udpInterface.awaitUdpDatagram(DEFAULT_TIMEOUT_MS);
+        if(message.empty())
+        {
             throw ServerError("Lobby[Lobby]: Failed to get rooms list!");
         }
         Array roomsArray;
         roomsArray.parse(message);
         
-        mRooms.resize(roomsArray.size());
+        rooms.resize(roomsArray.size());
         for (size_t i = 0; i < roomsArray.size(); ++i) {
-            mRooms[i].deserialize(roomsArray.get<Object>(i));
+            rooms[i].deserialize(roomsArray.get<Object>(i));
         }
-        return mRooms;
+        return rooms;
     }
     //-------------------------------------------------------
 
