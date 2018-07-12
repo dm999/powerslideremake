@@ -36,20 +36,6 @@ typedef unsigned __int64 uint64_t;
 #include <cstdint>
 #endif
 
-namespace multislider
-{
-#ifdef _MSC_VER 
-    #if (_MSC_VER > 1500)
-        #define SLEEP_MULTI(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
-    #endif
-    #if (_MSC_VER == 1500)
-        #define SLEEP_MULTI(milliseconds) ::Sleep(milliseconds)
-    #endif
-#else
-    #define SLEEP_MULTI(ms) std::this_thread::sleep_for(std::chrono::milliseconds(ms))
-#endif
-}
-
 #if defined(_MSC_VER) && (_MSC_VER < 1800)
 namespace multislider
 {
