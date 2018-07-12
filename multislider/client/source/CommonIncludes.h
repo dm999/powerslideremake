@@ -12,17 +12,6 @@
 #include <string>
 #include <memory>
 
-#ifdef _MSC_VER 
-    #if (_MSC_VER > 1500)   // vc2010
-        #include <thread>
-    #endif
-    #if (_MSC_VER == 1500)  // vc2008
-    #endif
-#else
-    #include <chrono>
-    #include <thread>
-#endif
-
 #if defined(_MSC_VER) && (_MSC_VER < 1800)
 typedef          __int8  int8_t;
 typedef          __int16 int16_t;
@@ -47,21 +36,6 @@ namespace multislider
     using std::shared_ptr;
 }
 #endif
-
-#define QUOTE_IMPL(s) #s
-#define QUOTE(s) QUOTE_IMPL(s)
-
-#if defined (_MSC_VER)
-# define MULTISLIDER_DEPRECATED(Reason) __declspec(deprecated(QUOTE(Reason)))
-#else
-# define MULTISLIDER_DEPRECATED(Reason) __attribute__ ((deprecated))
-#endif
-
-namespace RakNet
-{
-    struct SystemAddress;
-    class TCPInterface;
-}
 
 namespace multislider
 {
