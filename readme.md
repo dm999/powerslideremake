@@ -11,7 +11,7 @@ To build the project you need:
 - [Ogre 1.9.0](http://www.ogre3d.org/)  
 - [OpenAL](https://www.openal.org) (only if PowerslideRemake_OPENAL ON)  
 
-Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL.  
+Initial steps before building project is preparation of dependencies: you need to build Ogre (static, OpenGL render system), OpenAL (OpenAL Soft).  
 
 To build project you need:  
 - Set CMake variable PowerslideRemake_OGREHOME - path to Ogre includes & binaries (for example C:\Program Files\OGRE\1_9_0)  
