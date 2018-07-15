@@ -45,11 +45,8 @@ size_t ITSLoader::load(const PFLoader& pfLoader, const std::string& subfolder, c
 
         for(size_t q = 0; q < head.length; ++q)
         {
-            //-128 ... 127 maps to 64 ... 191
             short tmpval = static_cast<char>(buf[q]);
-            //tmpval >>= 0x1;
-            //tmpval += 128;
-            tmpval *= 256;
+            tmpval <<= 0x8;
             rawData[q] = tmpval;
         }
 
