@@ -4,6 +4,7 @@
 #include "../includes/OgreInclude.h"
 #include "../listeners/PhysicsListener.h"
 
+class SoundsProcesser;
 class StaticMeshProcesser;
 
 /*all calculations in left hand - like original data*/
@@ -11,7 +12,11 @@ class CheatBurn : public PhysicsListener
 {
 public:
 
-    CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog);
+    CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+        );
     ~CheatBurn();
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);
@@ -26,6 +31,9 @@ private:
 
     StaticMeshProcesser * mMeshProesser;
     Ogre::SceneManager* mSceneMgr;
+#ifndef NO_OPENAL
+    SoundsProcesser * mSoundProcesser;
+#endif
 
     bool mIsBurnInProgress;
     bool mIsBurnExplosionInProgress;
@@ -51,7 +59,11 @@ private:
 class CheatBurns : public PhysicsListener
 {
 public:
-    CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog, size_t burnsMaxAmount = 100);
+    CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+        , size_t burnsMaxAmount = 100);
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);
 

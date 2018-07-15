@@ -104,3 +104,8 @@ void SoundSource::setReferenceDistance(float dist)
 {
     mSound->setMinDistance(dist);
 }
+
+void SoundSource::setAttenuation(float att)
+{
+    mSound->setAttenuation(att);
+}

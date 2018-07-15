@@ -55,9 +55,9 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
     mBeforeStart1->setRelativeToListener(true);
     mBeforeStart2->setRelativeToListener(true);
     mBeforeStart3->setRelativeToListener(true);
-    mBeforeStart1->setPitch(1.1f);
-    mBeforeStart2->setPitch(1.1f);
-    mBeforeStart3->setPitch(1.1f);
+    mBeforeStart1->setPitch(2.0f);
+    mBeforeStart2->setPitch(2.0f);
+    mBeforeStart3->setPitch(2.0f);
 
     for(int q = 0; q < mSurfacesCount; ++q)
     {
@@ -75,6 +75,20 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
 
         }
     }
+
+    mBurn.reset(new SoundSource("data/sfx/misc", "gun.its", mPFLoaderData));
+    mBurn->setRelativeToListener(true);
+    mBurn->setPitch(0.5f);
+
+    mBomb.reset(new SoundSource("data/sfx/misc", "grenade.its", mPFLoaderData));
+    mBomb->setRelativeToListener(true);
+    mBomb->setPitch(0.5f);
+
+    mExplosion.reset(new SoundSource("data/sfx/misc", "esh.its", mPFLoaderData));
+    mExplosion->setPitch(0.5f);
+    mExplosion->setAttenuation(0.05f);
+    mExplosion->setReferenceDistance(30.0f);
+    //mExplosion->setRelativeToListener(true);
 
 }
 
@@ -94,6 +108,10 @@ void SoundsProcesser::deinitSounds()
         mSurface[q].reset();
         mSurfaceCrash[q].reset();
     }
+
+    mBurn.reset();
+    mBomb.reset();
+    mExplosion.reset();
 }
 
 void SoundsProcesser::stopSounds()
@@ -121,6 +139,21 @@ void SoundsProcesser::stopSounds()
     if(mBeforeStart3.get() && mBeforeStart3->getSourceState() == SoundSource::Playing)
     {
         mBeforeStart3->stopPlaying();
+    }
+
+    if(mBurn.get() && mBurn->getSourceState() == SoundSource::Playing)
+    {
+        mBurn->stopPlaying();
+    }
+
+    if(mBomb.get() && mBomb->getSourceState() == SoundSource::Playing)
+    {
+        mBomb->stopPlaying();
+    }
+
+    if(mExplosion.get() && mExplosion->getSourceState() == SoundSource::Playing)
+    {
+        mExplosion->stopPlaying();
     }
 
     stopSoundSurfaces();
@@ -298,6 +331,31 @@ void SoundsProcesser::playSurfaceCrash(size_t surfaceNumber)
     }
 }
 
+void SoundsProcesser::playCheatBurn()
+{
+    if(mBurn.get()/* && mBurn->getSourceState() != SoundSource::Playing*/)
+    {
+        mBurn->startPlaying();
+    }
+}
+
+void SoundsProcesser::playCheatBomb()
+{
+    if(mBomb.get()/* && mBomb->getSourceState() != SoundSource::Playing*/)
+    {
+        mBomb->startPlaying();
+    }
+}
+
+void SoundsProcesser::playExplosion(const Ogre::Vector3& pos)
+{
+    if(mExplosion.get()/* && mExplosion->getSourceState() != SoundSource::Playing*/)
+    {
+        mExplosion->setPosition(pos.x, pos.y, pos.z);
+        mExplosion->startPlaying();
+    }
+}
+
 void SoundsProcesser::playUIOver()
 {
     if(mUIOver.get() && mUIOver->getSourceState() != SoundSource::Playing)
@@ -345,6 +403,16 @@ void SoundsProcesser::setVolume(float gain)
             mSurfaceCrash[q]->setGain(mMasterGain);
         }
     }
+
+    if(mBurn.get())
+        mBurn->setGain(mMasterGain);
+
+    if(mBomb.get())
+        mBomb->setGain(mMasterGain);
+
+    if(mExplosion.get())
+        mExplosion->setGain(mMasterGain);
+
 
     if(mUIOver.get())
         mUIOver->setGain(mMasterGain);

@@ -260,11 +260,19 @@ void BaseRaceMode::restart()
 void BaseRaceMode::createBurnByPlayer()
 {
     mCheats->createBurnByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playCheatBurn();
+#endif
 }
 
 void BaseRaceMode::createBombByPlayer()
 {
     mCheats->createBombByPlayer(mWorld->getVehicle(&mModeContext.mGameState.getPlayerCar()));
+
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playCheatBomb();
+#endif
 }
 
 void BaseRaceMode::mousePressed(const Ogre::Vector2& pos)
@@ -628,7 +636,11 @@ void BaseRaceMode::initWorld()
     mWorld.reset(new Physics(&mStaticMeshProcesser));
     mWorld->addListener(this);
 
-    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled));
+    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled
+#ifndef NO_OPENAL
+        , &mModeContext.getSoundsProcesser()
+#endif
+        ));
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }

@@ -6,12 +6,23 @@
 
 #include "../tools/OgreTools.h"
 
+#ifndef NO_OPENAL
+    #include "../sound/SoundsProcesser.h"
+#endif
+
 Ogre::NameGenerator CheatBomb::nameGenNodes("Cheats/CheatBomb");
 Ogre::NameGenerator CheatBomb::nameGenParticleMaterials("Cheats/CheatBomb/Particle/Material");
 
-CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager)
+CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+    )
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager),
+#ifndef NO_OPENAL
+    mSoundProcesser(soundProcesser),
+#endif
     mIsBombInProgress(false),
     mPlayerVehicle(NULL),
     mSphereNode(NULL)
@@ -199,6 +210,10 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
 
                     mIsBombExplosionInProgress = true;
                     mExplosionCounter = 30;
+
+#ifndef NO_OPENAL
+                    mSoundProcesser->playExplosion(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
+#endif
                 }
 
                 mSphereNode->setPosition(Ogre::Vector3(mBombPosition.x, mBombPosition.y, -mBombPosition.z));//original data is left hand
@@ -217,13 +232,21 @@ void CheatBomb::stopBomb()
     }
 }
 
-CheatBombs::CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, size_t bombsMaxAmount)
+CheatBombs::CheatBombs(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+    , size_t bombsMaxAmount)
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager)
 {
     mBombs.reserve(bombsMaxAmount);
     for(size_t q = 0; q < bombsMaxAmount; ++q)
-        mBombs.push_back(CheatBomb(meshProesser, sceneManager));
+        mBombs.push_back(CheatBomb(meshProesser, sceneManager
+#ifndef NO_OPENAL
+        , soundProcesser
+#endif
+        ));
 }
 
 void CheatBombs::createBombByPlayer(PhysicsVehicle * vehicle)

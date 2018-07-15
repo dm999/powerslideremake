@@ -829,6 +829,8 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
             {
                 bool isBurn = false;
                 bool isBomb = false;
+                bool isNitro = false;
+
                 if(mIsOtherBurn.find((*i).first) != mIsOtherBurn.end())
                 {
                     mIsOtherBurn.erase((*i).first);
@@ -841,13 +843,19 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
                     isBomb = true;
                 }
 
+                if(mIsOtherNitro.find((*i).first) != mIsOtherNitro.end())
+                {
+                    mIsOtherNitro.erase((*i).first);
+                    isNitro = true;
+                }
+
                 const Ogre::Real carMass = humanCar.getPhysicsVehicle()->getVehicleSetup().mChassisMass;
 
                 humanCar.setLastTimeOfUpdate((*i).second.dataUpdateTimestamp);
 
                 Ogre::Vector3 humanPos = humanCar.getPhysicsVehicle()->getVehicleSetup().mCarGlobalPos;
 
-                if(humanPos.distance((*i).second.pos) > posDiffMax || isBurn || isBomb)
+                if(humanPos.distance((*i).second.pos) > posDiffMax || isBurn || isBomb || isNitro)
                 {
                     humanCar.repositionVehicle((*i).second.pos, (*i).second.rot);
                     humanCar.setModelImpulse((*i).second.vel, (*i).second.velang);
@@ -857,6 +865,9 @@ void MultiPlayerMode::onSessionUpdate(const playerToData& otherPlayersSessionDat
 
                     if(isBomb)
                         mCheats->createBombByPlayer(humanCar.getPhysicsVehicle());
+
+                    if(isNitro)
+                        humanCar.getPhysicsVehicle()->enableNitro();
                 }
                 else
                 {

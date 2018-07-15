@@ -6,13 +6,24 @@
 
 #include "../tools/OgreTools.h"
 
+#ifndef NO_OPENAL
+    #include "../sound/SoundsProcesser.h"
+#endif
+
 Ogre::NameGenerator CheatBurn::nameGenNodes("Cheats/CheatBurn");
 Ogre::NameGenerator CheatBurn::nameGenParticleMaterials("Cheats/CheatBurn/Particle/Material");
 
 
-CheatBurn::CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog)
+CheatBurn::CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+    )
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager),
+#ifndef NO_OPENAL
+    mSoundProcesser(soundProcesser),
+#endif
     mIsBurnInProgress(false),
     mPlayerVehicle(NULL),
     mSphereNode(NULL),
@@ -152,6 +163,9 @@ void CheatBurn::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                     mParticle->getEmitter(0)->setParticleVelocity(20.0f);
                     mParticle->getAffector(0)->setParameter("alpha", "-4.0");
                     mIsBurnExplosionInProgress = true;
+#ifndef NO_OPENAL
+                    mSoundProcesser->playExplosion(Ogre::Vector3(mBurnPosition.x, mBurnPosition.y, -mBurnPosition.z));//original data is left hand
+#endif
                     mExplosionCounter = 25;
                 }
 
@@ -171,13 +185,21 @@ void CheatBurn::stopBurn()
     }
 }
 
-CheatBurns::CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog, size_t burnsMaxAmount)
+CheatBurns::CheatBurns(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, bool isFog
+#ifndef NO_OPENAL
+                        , SoundsProcesser * soundProcesser
+#endif
+                        , size_t burnsMaxAmount)
     : mMeshProesser(meshProesser),
     mSceneMgr(sceneManager)
 {
     mBurns.reserve(burnsMaxAmount);
     for(size_t q = 0; q < burnsMaxAmount; ++q)
-        mBurns.push_back(CheatBurn(meshProesser, sceneManager, isFog));
+        mBurns.push_back(CheatBurn(meshProesser, sceneManager, isFog
+#ifndef NO_OPENAL
+        , soundProcesser
+#endif
+        ));
 }
 
 void CheatBurns::createBurnByPlayer(PhysicsVehicle * vehicle)

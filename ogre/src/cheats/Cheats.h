@@ -13,11 +13,16 @@ class Physics;
 class PhysicsVehicle;
 class CheatBurns;
 class CheatBombs;
+class SoundsProcesser;
 
 class Cheats
 {
 public:
-    Cheats(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, Physics* world, bool isFog);
+    Cheats(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneManager, Physics* world, bool isFog
+#ifndef NO_OPENAL
+        , SoundsProcesser * soundProcesser
+#endif
+        );
     ~Cheats();
 
     void createBurnByPlayer(PhysicsVehicle * vehicle);

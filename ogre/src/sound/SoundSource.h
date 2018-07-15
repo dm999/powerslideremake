@@ -50,6 +50,7 @@ public:
     void setLooping(bool looping);
     void setPosition(float x, float y, float z);
     void setReferenceDistance(float dist);
+    void setAttenuation(float att);
 
 private:
 

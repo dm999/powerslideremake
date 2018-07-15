@@ -51,6 +51,10 @@ public:
     void playSurface(size_t surfaceNumber, Ogre::Real lateralVel);
     void playSurfaceCrash(size_t surfaceNumber);
 
+    void playCheatBurn();
+    void playCheatBomb();
+    void playExplosion(const Ogre::Vector3& pos);
+
     void playUIOver();
     void playUIDown();
 
@@ -84,6 +88,10 @@ private:
     bool mBeforeStartPlayedOnce1;
     bool mBeforeStartPlayedOnce2;
     bool mBeforeStartPlayedOnce3;
+
+    CommonIncludes::shared_ptr<SoundSource> mBurn;
+    CommonIncludes::shared_ptr<SoundSource> mBomb;
+    CommonIncludes::shared_ptr<SoundSource> mExplosion;
 
     CommonIncludes::shared_ptr<SoundSource> mUIOver;
     CommonIncludes::shared_ptr<SoundSource> mUIDown;
