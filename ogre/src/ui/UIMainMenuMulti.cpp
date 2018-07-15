@@ -704,6 +704,10 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
     if(mMainChatButtons[0] && OgreBites::Widget::isCursorOver(mMainChatButtons[0], pos, 0))
     {
         readySwitcher();
+
+#ifndef NO_OPENAL
+        mModeContext.getSoundsProcesser().playUIDown();
+#endif
     }
 
     //race params switch
@@ -714,7 +718,14 @@ void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
         {
             if(mMainChatButtons[q] && OgreBites::Widget::isCursorOver(mMainChatButtons[q], pos, 0))
             {
-                aiCountSwitcher(q);
+                bool switched = aiCountSwitcher(q);
+
+#ifndef NO_OPENAL
+                if(switched)
+                {
+                    mModeContext.getSoundsProcesser().playUIDown();
+                }
+#endif
             }
         }
 
@@ -810,8 +821,11 @@ void UIMainMenuMulti::readySwitcher()
     }
 }
 
-void UIMainMenuMulti::aiCountSwitcher(size_t index)
+bool UIMainMenuMulti::aiCountSwitcher(size_t index)
 {
+
+    bool ret = false;
+
     if(index >= mPlayerToChatList.size())
     {
         if(mModeContext.getGameState().isAITrack())
@@ -829,6 +843,7 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                 mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() + 1);
                 static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICountInRace());
                 updateRoomState();
+                ret = true;
             }
             else
             {
@@ -842,11 +857,14 @@ void UIMainMenuMulti::aiCountSwitcher(size_t index)
                     mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICountInRace() - 1);
                     static_cast<MultiplayerControllerMaster *>(mMenuMultiMode->getMultiplayerController().get())->reconfigureSession(mModeContext.getGameState().getAICountInRace());
                     updateRoomState();
+                    ret = true;
                 }
             }
 
         }
     }
+
+    return ret;
 }
 
 void UIMainMenuMulti::destroy(CustomTrayManager* trayMgr)

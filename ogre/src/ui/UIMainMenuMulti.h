@@ -73,7 +73,7 @@ private:
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
     void readySwitcher();
-    void aiCountSwitcher(size_t index);
+    bool aiCountSwitcher(size_t index);
 
     void addCurrentPlayer(const std::string& player);
     void addOtherPlayer(size_t index, const std::string& player, bool isInSession);
