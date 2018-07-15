@@ -9,7 +9,7 @@ Ogre::NameGenerator UIButton::nameGenMaterials("UIButton/Material");
 Ogre::NameGenerator UIButton::nameGenPanel("UIButton/Panel");
 
 UIButton::UIButton() :
-    mIsShown(true), mIsPressed(false),
+    mIsShown(true), mIsPressed(false), mIsOver(false),
     mBackground(NULL),
     mOnAction(NULL)
 {
@@ -105,10 +105,18 @@ void UIButton::mouseMoved(const Ogre::Vector2& pos)
                 mBackground->setUV(0.0f, 30.0f / 60.0f, 1.0f, 45.0f / 60.0f);
             else
                 mBackground->setUV(0.0f, 15.0f / 60.0f, 1.0f, 30.0f / 60.0f);
+
+            if(mOnAction && !mIsOver)
+            {
+                mOnAction->onButtonOver(this);
+            }
+
+            mIsOver = true;
         }
         else
         {
             mBackground->setUV(0.0f, 0.0f, 1.0f, 15.0f / 60.0f);
+            mIsOver = false;
         }
     }
     

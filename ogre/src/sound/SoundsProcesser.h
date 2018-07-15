@@ -30,10 +30,16 @@ public:
 
     void setTerrainData(const std::vector<TerrainData>& terrainData);
 
+    //raceing sounds
     void initSounds(const PFLoader& mPFLoaderData);
     void deinitSounds();
     void stopSounds();
     void stopSoundSurfaces();
+
+    //menu sounds
+    void initSoundsUI(const PFLoader& mPFLoaderShell);
+    void deinitSoundsUI();
+    void stopSoundsUI();
 
     void playCrash1();
     void playCrash2();
@@ -44,6 +50,9 @@ public:
 
     void playSurface(size_t surfaceNumber, Ogre::Real lateralVel);
     void playSurfaceCrash(size_t surfaceNumber);
+
+    void playUIOver();
+    void playUIDown();
 
     void setVolume(float gain); // 0.0 - 1.0
 
@@ -75,6 +84,9 @@ private:
     bool mBeforeStartPlayedOnce1;
     bool mBeforeStartPlayedOnce2;
     bool mBeforeStartPlayedOnce3;
+
+    CommonIncludes::shared_ptr<SoundSource> mUIOver;
+    CommonIncludes::shared_ptr<SoundSource> mUIDown;
 
     float mMasterGain;
 

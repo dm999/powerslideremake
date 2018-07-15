@@ -12,8 +12,10 @@ public:
     UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode);
     ~UIMainMenuLabels(){}
 
+    //UIButtonOnAction
     void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
+    void onButtonOver(UIButton * button) override;
 
     static const Ogre::ColourValue mDisabledLabel;
     static const Ogre::ColourValue mInactiveLabel;

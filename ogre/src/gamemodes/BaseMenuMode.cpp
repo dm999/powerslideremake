@@ -47,6 +47,11 @@ void BaseMenuMode::initData(LoaderListener* loaderListener)
     //to load textures & materials
     mModeContext.mWindow->update(false);
 
+#ifndef NO_OPENAL
+    mModeContext.mSoundsProcesser.initSoundsUI(mModeContext.mGameState.getPFLoaderGameshell());
+    mModeContext.mSoundsProcesser.setVolume(mModeContext.mGameState.getSoundsGain());
+#endif
+
     doInitData(loaderListener);
 
     if(loaderListener)
@@ -95,6 +100,10 @@ void BaseMenuMode::initCamera()
 void BaseMenuMode::clearData()
 {
     doClearData();
+
+#ifndef NO_OPENAL
+    mModeContext.mSoundsProcesser.deinitSoundsUI();
+#endif
 
     //mModeContext.mGUI->shutdown();
     //mModeContext.mPlatform->shutdown();

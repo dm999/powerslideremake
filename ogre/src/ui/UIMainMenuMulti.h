@@ -24,8 +24,10 @@ public:
 
     void load(CustomTrayManager* trayMgr, const GameState& gameState, bool isEnterFromBaseMenu, const std::map<std::string, std::string>& playersSkins);
 
+    //UIButtonOnAction
     void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
+    void onButtonOver(UIButton * button) override {}
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 

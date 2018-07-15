@@ -257,6 +257,17 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         fillHighScoreTable();
         fillReplayStat();
     }
+
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIDown();
+#endif
+}
+
+void UIMainMenuLabels::onButtonOver(UIButton * button)
+{
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIOver();
+#endif
 }
 
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)

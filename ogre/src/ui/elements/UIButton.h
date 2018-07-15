@@ -12,6 +12,7 @@ public:
 
     virtual void onButtonPressed(UIButton * button) = 0;
     virtual void onButtonReleased(UIButton * button) = 0;
+    virtual void onButtonOver(UIButton * button) = 0;
 };
 
 class UIButton : public UIBase
@@ -47,6 +48,7 @@ protected:
     bool mIsShown;
     bool mIsPressed;
     bool mIsActive;
+    bool mIsOver;
 
     Ogre::String mMaterialName;
 

@@ -62,6 +62,7 @@ private:
 
     bool mControlActivated[mControlsCount];
     bool mControlClicked[mControlsCount];
+    bool mControlOver[mControlsCount];
 };
 
 #endif

@@ -34,6 +34,7 @@ UIBaseMenu::UIBaseMenu(const ModeContext& modeContext, const GameMode gameMode)
     memset(mControls, 0, sizeof(Ogre::PanelOverlayElement*) * mControlsCount);
     memset(mControlClicked, 0, sizeof(bool) * mControlsCount);
     memset(mControlActivated, 1, sizeof(bool) * mControlsCount);
+    memset(mControlOver, 0, sizeof(bool) * mControlsCount);
 
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("speedway track", 1));
@@ -555,6 +556,9 @@ void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
                 {
                     mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
                     panelHit(mControls[q]);
+#ifndef NO_OPENAL
+                    mModeContext.getSoundsProcesser().playUIDown();
+#endif
                 }
             }
         }
@@ -576,9 +580,18 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
                     else
                         mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
                     mControlsText[q]->show();
+
+#ifndef NO_OPENAL
+                    if(!mControlOver[q])
+                    {
+                        mControlOver[q] = true;
+                        mModeContext.getSoundsProcesser().playUIOver();
+                    }
+#endif
                 }
                 else
                 {
+                    mControlOver[q] = false;
                     mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
                     mControlsText[q]->hide();
                 }

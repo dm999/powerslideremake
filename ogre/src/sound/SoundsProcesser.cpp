@@ -75,6 +75,7 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
 
         }
     }
+
 }
 
 void SoundsProcesser::deinitSounds()
@@ -141,6 +142,41 @@ void SoundsProcesser::stopSoundSurfaces()
         }
     }
 }
+
+void SoundsProcesser::initSoundsUI(const PFLoader& mPFLoaderShell)
+{
+    stopSoundsUI();
+
+    mUIOver.reset(new SoundSource("data/gameshell", "over.its", mPFLoaderShell));
+    mUIOver->setPitch(2.0f);
+    mUIOver->setRelativeToListener(true);
+
+    mUIDown.reset(new SoundSource("data/gameshell", "down.its", mPFLoaderShell));
+    mUIDown->setPitch(2.0f);
+    mUIDown->setRelativeToListener(true);
+}
+
+void SoundsProcesser::deinitSoundsUI()
+{
+    stopSoundsUI();
+
+    mUIOver.reset();
+    mUIDown.reset();
+}
+
+void SoundsProcesser::stopSoundsUI()
+{
+    if(mUIOver.get() && mUIOver->getSourceState() == SoundSource::Playing)
+    {
+        mUIOver->stopPlaying();
+    }
+
+    if(mUIDown.get() && mUIDown->getSourceState() == SoundSource::Playing)
+    {
+        mUIDown->stopPlaying();
+    }
+}
+
 
 void SoundsProcesser::setTerrainData(const std::vector<TerrainData>& terrainData)
 {
@@ -262,6 +298,22 @@ void SoundsProcesser::playSurfaceCrash(size_t surfaceNumber)
     }
 }
 
+void SoundsProcesser::playUIOver()
+{
+    if(mUIOver.get() && mUIOver->getSourceState() != SoundSource::Playing)
+    {
+        mUIOver->startPlaying();
+    }
+}
+
+void SoundsProcesser::playUIDown()
+{
+    if(mUIDown.get() && mUIDown->getSourceState() != SoundSource::Playing)
+    {
+        mUIDown->startPlaying();
+    }
+}
+
 void SoundsProcesser::setVolume(float gain)
 {
     mMasterGain = gain;
@@ -293,4 +345,10 @@ void SoundsProcesser::setVolume(float gain)
             mSurfaceCrash[q]->setGain(mMasterGain);
         }
     }
+
+    if(mUIOver.get())
+        mUIOver->setGain(mMasterGain);
+
+    if(mUIDown.get())
+        mUIDown->setGain(mMasterGain);
 }
