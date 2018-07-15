@@ -628,6 +628,17 @@ void UIMainMenuMulti::onButtonReleased(UIButton * button)
 
         switchCharacter(characterIndex);
     }
+
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIDown();
+#endif
+}
+
+void UIMainMenuMulti::onButtonOver(UIButton * button)
+{
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIOver();
+#endif
 }
 
 void UIMainMenuMulti::frameStarted(const Ogre::FrameEvent &evt)

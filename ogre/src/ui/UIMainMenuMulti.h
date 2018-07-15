@@ -27,7 +27,7 @@ public:
     //UIButtonOnAction
     void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
-    void onButtonOver(UIButton * button) override {}
+    void onButtonOver(UIButton * button) override;
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 
