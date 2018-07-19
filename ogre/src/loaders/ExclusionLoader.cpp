@@ -28,7 +28,9 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
 
             for(int q = 0; q < count; ++q)
             {
-                float min[3], max[3], trans[4][3], falloff, min_exclude;
+                Ogre::Vector3 rotX, rotY, rotZ, pos;
+
+                float min[3], max[3], falloff, min_exclude;
                 fileToLoad->readLine(buf, 1024);
                 sscanf(buf, "Min : %f,%f,%f\n", &min[0], &min[1], &min[2]);
 
@@ -37,10 +39,10 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
 
                 fileToLoad->readLine(buf, 1024);
                 sscanf(buf, "Trans : %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
-                                                &trans[0][0], &trans[0][1], &trans[0][2],
-                                                &trans[1][0], &trans[1][1], &trans[1][2],
-                                                &trans[2][0], &trans[2][1], &trans[2][2],
-                                                &trans[3][0], &trans[3][1], &trans[3][2]);
+                                                &rotX.x, &rotX.y, &rotX.z,
+                                                &rotY.x, &rotY.y, &rotY.z,
+                                                &rotZ.x, &rotZ.y, &rotZ.z,
+                                                &pos.x, &pos.y, &pos.z);
 
                 fileToLoad->readLine(buf, 1024);
                 sscanf(buf, "Falloff : %f\n", &falloff);
@@ -50,6 +52,7 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
 
                 Exclusion excl;
 
+                //original data is left hand
                 excl.min.x = min[0];
                 excl.min.y = min[2];
                 excl.min.z = min[1];
@@ -59,10 +62,10 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
                 excl.max.z = max[1];
 
                 excl.transform = Ogre::Matrix4(
-                trans[0][0], trans[1][0], trans[2][0], -trans[3][0],
-                trans[0][1], trans[1][1], trans[2][1], -trans[3][2],
-                trans[0][2], trans[1][2], trans[2][2], trans[3][1],
-                0.0f, 0.0f, 0.0f, 1.0f);
+                    rotX.x, rotY.x, rotZ.x, -pos.x,
+                    rotX.y, rotY.y, rotZ.y, -pos.z,
+                    rotX.z, rotY.z, rotZ.z, pos.y,
+                    0.0f, 0.0f, 0.0f, 1.0f);
 
                 excl.falloff = falloff;
                 excl.reciprocalFalloff = 1.0f / excl.falloff;
@@ -105,46 +108,48 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
                          
                         exclObject->begin("Basewhite", Ogre::RenderOperation::OT_LINE_LIST); 
 
+                        const Exclusion& excl = gameState.getExclusions()[q].exclusions[w];
 
                         //lower
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
+                        exclObject->position(excl.min.x, excl.min.y, excl.min.z); 
+                        exclObject->position(excl.max.x, excl.min.y, excl.min.z); 
+
+                        exclObject->position(excl.min.x, excl.min.y, excl.min.z); 
+                        exclObject->position(excl.min.x, excl.min.y, excl.max.z); 
+
+                        exclObject->position(excl.max.x, excl.min.y, excl.max.z); 
+                        exclObject->position(excl.min.x, excl.min.y, excl.max.z); 
+
+                        exclObject->position(excl.max.x, excl.min.y, excl.max.z); 
+                        exclObject->position(excl.max.x, excl.min.y, excl.min.z); 
 
 
                         //upper
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
+                        exclObject->position(excl.min.x, excl.max.y, excl.min.z); 
+                        exclObject->position(excl.max.x, excl.max.y, excl.min.z); 
+
+                        exclObject->position(excl.min.x, excl.max.y, excl.min.z); 
+                        exclObject->position(excl.min.x, excl.max.y, excl.max.z); 
+
+                        exclObject->position(excl.max.x, excl.max.y, excl.max.z); 
+                        exclObject->position(excl.min.x, excl.max.y, excl.max.z); 
+
+                        exclObject->position(excl.max.x, excl.max.y, excl.max.z); 
+                        exclObject->position(excl.max.x, excl.max.y, excl.min.z); 
 
 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].min.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].min.z); 
-                                                                                                                           
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].min.y, gameState.getExclusions()[q].exclusions[w].max.z); 
-                        exclObject->position(gameState.getExclusions()[q].exclusions[w].max.x, gameState.getExclusions()[q].exclusions[w].max.y, gameState.getExclusions()[q].exclusions[w].max.z); 
+                        //sides
+                        exclObject->position(excl.min.x, excl.min.y, excl.min.z); 
+                        exclObject->position(excl.min.x, excl.max.y, excl.min.z); 
+
+                        exclObject->position(excl.min.x, excl.min.y, excl.max.z); 
+                        exclObject->position(excl.min.x, excl.max.y, excl.max.z); 
+
+                        exclObject->position(excl.max.x, excl.min.y, excl.min.z); 
+                        exclObject->position(excl.max.x, excl.max.y, excl.min.z); 
+
+                        exclObject->position(excl.max.x, excl.min.y, excl.max.z); 
+                        exclObject->position(excl.max.x, excl.max.y, excl.max.z); 
 
 
                         exclObject->end(); 
@@ -153,9 +158,8 @@ void ExclusionLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, b
                          
                         exclNode->attachObject(exclObject);
 
-                        Ogre::Vector3 trans = gameState.getExclusions()[q].exclusions[w].transform.getTrans();
-                        Ogre::Quaternion rot = gameState.getExclusions()[q].exclusions[w].transform.extractQuaternion();
-
+                        Ogre::Vector3 trans = excl.transform.getTrans();
+                        Ogre::Quaternion rot = excl.transform.extractQuaternion();
                         Ogre::Radian angle;
                         Ogre::Vector3 axis;
                         rot.ToAngleAxis(angle, axis);
