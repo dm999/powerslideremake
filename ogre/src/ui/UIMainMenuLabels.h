@@ -34,6 +34,7 @@ protected:
 
     virtual void switchState(const SinglePlayerMenuStates& state) = 0;
     virtual void startRace() = 0;
+    virtual void connectToServer() = 0;
 
     void setWindowTitle(const std::string& title);
     void setStartingGridTime(const std::string& title){mStartingGridTimeLabel->setCaption(title);}

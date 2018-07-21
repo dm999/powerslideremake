@@ -34,7 +34,7 @@ public:
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos);
 
-    void show();
+    void show(size_t amountOfRows);
     void hide();
 
     bool isVisible() const {return mIsShown;}

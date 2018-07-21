@@ -410,7 +410,7 @@ void GameModeSwitcher::frameEnded()
             {
                 clear();
                 mGameMode = ModeMenu;
-                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
+                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Multi));
                 mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }

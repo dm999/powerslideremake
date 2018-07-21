@@ -156,9 +156,9 @@ void UITable::mouseMoved(const Ogre::Vector2& pos)
     
 }
 
-void UITable::show()
+void UITable::show(size_t amountOfRows)
 {
-    for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+    for(size_t q = 0; q < amountOfRows; ++q)
     {
         if(mBackgrounds[q])
         {

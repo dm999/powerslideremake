@@ -324,7 +324,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 160.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(24.0f, 200.0f, 0.0f, 0.0f);
         mModeMultiIP = createTextArea("MainWindowMultiIP", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiIP->setCaption("Server IP:");
         mModeMultiIP->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -337,7 +337,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(420.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 350.0f, 0.0f, 0.0f);
         mModeMultiListOfRooms = createTextArea("MainWindowMultiConnect", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiListOfRooms->setCaption("Get List of Rooms");
         mModeMultiListOfRooms->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -350,7 +350,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 220.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(24.0f, 260.0f, 0.0f, 0.0f);
         mModeMultiUserName = createTextArea("MainWindowMultiUserName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiUserName->setCaption("User Name:");
         mModeMultiUserName->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -363,9 +363,9 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 270.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(24.0f, 310.0f, 0.0f, 0.0f);
         mModeMultiRoomName = createTextArea("MainWindowMultiRoomName", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeMultiRoomName->setCaption("Room Name:");
+        mModeMultiRoomName->setCaption("New Room Name:");
         mModeMultiRoomName->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mModeMultiRoomName->setSpaceWidth(9.0f);
         mModeMultiRoomName->setHeight(26.0f * viewportHeight / 1024.0f);
@@ -376,7 +376,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(24.0f, 350.0f, 0.0f, 0.0f);
         mModeMultiCreateRoom = createTextArea("MainWindowMultiCreateRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiCreateRoom->setCaption("Create Room");
         mModeMultiCreateRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -389,7 +389,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 350.0f, 0.0f, 0.0f);
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(460.0f, 350.0f, 0.0f, 0.0f);
         mModeMultiJoinRoom = createTextArea("MainWindowMultiJoinRoom", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeMultiJoinRoom->setCaption("Join Room");
         mModeMultiJoinRoom->setCharHeight(26.0f * viewportHeight / 1024.0f);
@@ -1704,7 +1704,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     if(mModeMultiListOfRooms->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiListOfRooms, pos, 0))
     {
-        switchState(State_MultiConnect);
+        connectToServer();
         return;
     }
 

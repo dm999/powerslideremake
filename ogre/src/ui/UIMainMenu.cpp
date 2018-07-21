@@ -128,16 +128,16 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
 
     mEditBoxMultiIP.setBackgroundMaterial(mEditBoxUserName.getMaterialName());
-    mEditBoxMultiIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 175.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 215.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxMultiIP.setCharType(UIEditBox::IP);
     mEditBoxMultiIP.setText("78.47.85.155");//d.polubotko: FIXME
 
     mEditBoxMultiUserName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
-    mEditBoxMultiUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 230.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 270.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
 
     mEditBoxMultiRoomName.setBackgroundMaterial(mEditBoxMultiIP.getMaterialName());
-    mEditBoxMultiRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(320.0f, 280.0f, 170.0f, 18.0f), 36.0f);
+    mEditBoxMultiRoomName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 320.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxMultiRoomName.setText("Powerslide!");
 
     {
@@ -332,9 +332,9 @@ void UIMainMenu::onTableReleased(UITable * table, size_t row)
     mMultiRoomPlayersList.setText("AI: " + Conversions::DMToString(mPlayersInServerRooms[row].second), 4, Ogre::ColourValue::White);
     size_t availSlots = GameState::mRaceGridCarsMax - mPlayersInServerRooms[row].first - mPlayersInServerRooms[row].second;
     if(availSlots > 0)
-        mMultiRoomPlayersList.setText("Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Black);
+        mMultiRoomPlayersList.setText("Free Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Black);
     else
-        mMultiRoomPlayersList.setText("Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Red);
+        mMultiRoomPlayersList.setText("Free Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Red);
 
     if(availSlots > 0)
         showMultiJoin();
@@ -474,22 +474,14 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_Multi:
         mIsInStartingGrid = false;
-        setWindowTitle("Game Mode");
-        showModeMulti();
+        setWindowTitle("Rooms");
+        mMultiRoomsList.show(GameState::mRaceGridCarsMax);
+        mMultiRoomPlayersList.show(6);
         showMultiIPLabels();
-        showBackgrounds();
         mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
         mEditBoxMultiIP.show();
         mEditBoxMultiUserName.show();
         mEditBoxMultiRoomName.show();
-        break;
-
-    case State_MultiConnect:
-        mIsInStartingGrid = false;
-        setWindowTitle("Game Mode");
-        mMultiRoomsList.show();
-        mMultiRoomPlayersList.show();
-        connectToServer();
         break;
 
     case State_MultiCreateRoom:
@@ -715,10 +707,16 @@ void UIMainMenu::hideAll()
 void UIMainMenu::connectToServer()
 {
     std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
-    std::string userName = mEditBoxMultiUserName.getText().asUTF8();
 
-    if(!serverIP.empty() && !userName.empty())
+    hideMultiJoin();
+    setColorMultiUserName(mInactiveLabel);
+    setColorMultiRoomName(mInactiveLabel);
+
+    if(!serverIP.empty())
     {
+
+        std::string userName = mEditBoxMultiUserName.getText().asUTF8();
+        std::string newRoomName = mEditBoxMultiRoomName.getText().asUTF8();
 
         mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
 
@@ -742,6 +740,16 @@ void UIMainMenu::connectToServer()
 
                 for(size_t q = 0; q < rooms.size(); ++q)
                 {
+                    if(rooms[q] == newRoomName)
+                    {
+                        setColorMultiRoomName(Ogre::ColourValue::Red);
+                    }
+
+                    if(mRoomsHosts[q] == userName)
+                    {
+                        setColorMultiUserName(Ogre::ColourValue::Red);
+                    }
+
                     //available for join
                     if((mPlayersInServerRooms[q].first + mPlayersInServerRooms[q].second) < GameState::mRaceGridCarsMax)
                     {
@@ -761,13 +769,8 @@ void UIMainMenu::connectToServer()
     }
     else
     {
-        switchState(State_Multi);
-
         if(serverIP.empty())
             setColorMultiIP(Ogre::ColourValue::Red);
-
-        if(userName.empty())
-            setColorMultiUserName(Ogre::ColourValue::Red);
     }
 }
 
@@ -817,5 +820,20 @@ void UIMainMenu::joinRoom()
     else
     {
         switchState(State_Multi);
+
+        if(serverIP.empty())
+        {
+            setColorMultiIP(Ogre::ColourValue::Red);
+        }
+
+        if(roomName.empty())
+        {
+            setColorMultiRoomName(Ogre::ColourValue::Red);
+        }
+
+        if(userName.empty())
+        {
+            setColorMultiUserName(Ogre::ColourValue::Red);
+        }
     }
 }

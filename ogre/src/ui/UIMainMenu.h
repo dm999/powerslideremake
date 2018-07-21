@@ -46,6 +46,7 @@ protected:
 
     void switchState(const SinglePlayerMenuStates& state)override;
     void startRace()override;
+    void connectToServer()override;
 
 private:
 
@@ -55,7 +56,6 @@ private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
 
-    void connectToServer();
     void createRoom();
     void joinRoom();
 
