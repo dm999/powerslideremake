@@ -340,66 +340,54 @@
           <y:Geometry height="1614.0603100121803" width="735.5387943622018" x="5962.2306028189" y="-6207.03015500609"/>
           <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1503.51953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="728.623046875" x="3.4578737436004303" y="55.270389381090354">&lt;&lt;PSBaseCar.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="1238.8984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="574.240234375" x="80.64927999360043" y="187.58093625609035">&lt;&lt;PSBaseCar.h&gt;&gt;
 
 PSBaseCar
 
 public:
 
-virtual void processFrameBeforePhysics(const Ogre::FrameEvent &amp;evt, const StaticMeshProcesser&amp; processer, bool isRaceStarted) = 0
-virtual void processFrameAfterPhysics(const Ogre::FrameEvent &amp;evt)
+virtual void processFrameBeforePhysics(const StaticMeshProcesser&amp; processer, bool isRaceStarted) = 0
 
 virtual void initModel( lua_State * pipeline, 
-                            Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
-                            ModelsPool* modelsPool,
-                            Physics * world,
-                            GameCars gameCar,
-                            InitialVehicleSetup&amp; initialVehicleSetup,
-                            bool isAI)
+                        const GameState&amp; gameState,
+                        Ogre::SceneManager* sceneMgr, Ogre::SceneNode* mainNode,
+                        ModelsPool* modelsPool,
+                        Physics * world,
+                        const std::string&amp; characterName,
+                        InitialVehicleSetup&amp; initialVehicleSetup,
+                        bool isAI)
 
-// for multiplayer
+void timeStepAfter(Physics * physics)override
+
 void repositionVehicle(const Ogre::Matrix4&amp; transform)
 void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot)
 
-void initSounds(lua_State * pipeline)
+void initSounds(lua_State * pipeline, const GameState&amp; gameState)
 void deinitSounds()
 
-Ogre::Vector3 getLinearVelocity()const
-Ogre::Vector3 getAngularVelocity()const
+Ogre::Vector3 getLinearVelocitySpeedometer()const
+Ogre::Vector3 getAngularVelocitySpeedometer()const
 Ogre::Real getAlignedVelocity()const
-Ogre::Real getLateralVelocity()const
+Ogre::Real getAlignedVelocitySpeedometer()const
+Ogre::Real getWheelBackLVelocity() const
+Ogre::Real getWheelBackRVelocity() const
+Ogre::Real getLateralVelocitySpeedometer()const
 Ogre::Vector3 getForwardAxis()const
-Ogre::Vector3 getLinearImpulse()const
+Ogre::Vector3 getUpAxis()const//sound
+Ogre::Vector3 getLinearImpulse()const//ai &amp; multiplayer
+void setLinearImpulse(const Ogre::Vector3&amp; val)//multiplayer
+Ogre::Vector3 getAngularImpulse()const//multiplayer
+void setAngularImpulse(const Ogre::Vector3&amp; val)//multiplayer
 
-Ogre::SceneNode* getModelNode()
-Ogre::SceneNode* getModelNode() const
+void clear()override
 
-void clear() override
-
-std::string getFrontLWheelColliderString()
-std::string getFrontRWheelColliderString()
-std::string getBackLWheelColliderString()
-std::string getBackRWheelColliderString()
-
-unsigned char getFrontLWheelColliderIndex()
-unsigned char getFrontRWheelColliderIndex()
-unsigned char getBackLWheelColliderIndex()
-unsigned char getBackRWheelColliderIndex()
-unsigned char getChassisColliderIndex()
-
-const OgreBulletDynamics::RigidBody&amp; getChassis()const
+std::string getFrontLWheelColliderString(){return mWheelFrontLColliderString}
+std::string getFrontRWheelColliderString(){return mWheelFrontRColliderString}
+std::string getBackLWheelColliderString(){return mWheelBackLColliderString}
+std::string getBackRWheelColliderString(){return mWheelBackRColliderString}
 
 virtual size_t getCurrentLap() const = 0
 virtual Ogre::Real getLapPosition() const = 0
-
-GameCars getCarType() const
-void setCarType(GameCars&amp; car)
-
-void setVisibility(bool isVisible)
-
-#if defined(__ANDROID__)
-    void reloadTextures(const GameState&amp; gameState)
-#endif
 
 protected:
 
@@ -411,29 +399,23 @@ Ogre::Vector4 getCarArray4Parameter(const std::string&amp; section, const std::s
 std::vector&lt;std::string&gt; getCarArrayValueParameter(const std::string&amp; section, const std::string&amp; key) const
 std::vector&lt;Ogre::Real&gt; convertSplinePoints(const std::vector&lt;std::string&gt;&amp; points) const
 
-bool mIsAI
+
+
 
 std::string mWheelFrontLColliderString
 std::string mWheelFrontRColliderString
 std::string mWheelBackLColliderString
 std::string mWheelBackRColliderString
 
-unsigned char mWheelFrontLColliderIndex
-unsigned char mWheelFrontRColliderIndex
-unsigned char mWheelBackLColliderIndex
-unsigned char mWheelBackRColliderIndex
-unsigned char mChassisColliderIndex
+#ifndef NO_OPENAL
+CommonIncludes::shared_ptr&lt;SoundSource&gt; mEngLow
+CommonIncludes::shared_ptr&lt;SoundSource&gt; mEngMid
+CommonIncludes::shared_ptr&lt;SoundSource&gt; mEngHigh
 
-// for multiplayer
-GameCars mGameCarType
-
-//sounds
-CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngLow
-CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngMid
-CommonIncludes::shared_ptr&lt;OpenALSource&gt; mEngHigh
+float mMasterGain
+#endif
 
 private:
-
 
 STRSettings mCarSettings
 STRSettings mTrackSettings
@@ -2135,7 +2117,7 @@ void clear()
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="357.0266602690749" width="420.48941532423214" x="14458.752269457724" y="-8158.513330134538"/>
-          <y:Fill color="#FFFF00" transparent="false"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="327.42578125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.84375" x="20.322832662115616" y="14.800439509537682">&lt;&lt;BaseMode.h&gt;&gt;
 
@@ -2841,7 +2823,7 @@ size_t mLapsCount</y:NodeLabel>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="452.11991191777406" width="457.29192897408666" x="13841.354035512957" y="-7576.059955958887"/>
-          <y:Fill color="#FFFF00" transparent="false"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="448.181640625" x="4.555144174542875" y="3.542377833887258">&lt;&lt;BaseMenuMode.h&gt;&gt;
 
@@ -3122,10 +3104,10 @@ http://www.ogre3d.org/tikiwiki/tiki-editpage.php?page=MovableText</y:NodeLabel>
     <node id="n68">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="788.4836915201113" width="894.8936264315575" x="5882.553186784221" y="-7204.241845760056"/>
-          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:Geometry height="490.4736290974206" width="894.8936264315575" x="5882.553186784221" y="-7055.236814548711"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="474.4375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="871.1171875" x="11.888219465779002" y="157.0230957600561">&lt;&lt;PSBaseVehicle.h&gt;&gt;
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="445.03515625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="871.1171875" x="11.888219465779002" y="22.719236423710754">&lt;&lt;PSBaseVehicle.h&gt;&gt;
 
 PSBaseVehicle
 
@@ -3133,31 +3115,28 @@ public:
 
 virtual void clear()
 
+virtual void processCamera(GameState&amp; gameState) = 0
+
+PhysicsVehicle* getPhysicsVehicle() {return mPhysicsVehicle}
+const PhysicsVehicle* getPhysicsVehicle() const {return mPhysicsVehicle}
+
 protected:
 
-static const int mWheelsAmount = 4
-
 void initPhysicalModel(Physics * world, 
-    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4], 
-    const InitialVehicleSetup&amp; initialVehicleSetup)
+    Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], 
+    const InitialVehicleSetup&amp; initialVehicleSetup,
+    InputType type)
 
 void repositionVehicle(const Ogre::Vector3&amp; chassisPos, const Ogre::Quaternion&amp; chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
 
 Physics * mWorld
+PhysicsVehicle * mPhysicsVehicle
 
 InitialVehicleSetup mInitialVehicleSetup
 
-static Ogre::NameGenerator nameGenNodes
+bool mIsAI
 
-private:
-
-void removeFromWorld()
-void addToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
-
-void addRigidsToWorld(Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4])
-void addSpringsToWorld()
-
-</y:NodeLabel>
+static Ogre::NameGenerator nameGenNodes</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>

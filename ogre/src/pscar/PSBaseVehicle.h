@@ -26,7 +26,7 @@ public:
 
     virtual void clear();
 
-    virtual void processCamera(GameState& gameState){}
+    virtual void processCamera(GameState& gameState) = 0;
 
     PhysicsVehicle* getPhysicsVehicle() {return mPhysicsVehicle;}
     const PhysicsVehicle* getPhysicsVehicle() const {return mPhysicsVehicle;}
@@ -38,6 +38,7 @@ protected:
         const InitialVehicleSetup& initialVehicleSetup,
         InputType type);
 
+    //for multiplayer
     void repositionVehicle(const Ogre::Vector3& chassisPos, const Ogre::Quaternion& chassisRot, Ogre::SceneNode* modelNode, Ogre::SceneNode *wheelNodes[4]);
 
     Physics * mWorld;
