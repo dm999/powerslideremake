@@ -19,6 +19,7 @@ struct MSHData
     std::vector<Ogre::Vector3> vertexes;
     std::vector<MSHIndixes> triIndexes;
     std::vector<Ogre::Vector3> texcoords;
+    std::vector<Ogre::ColourValue> colors;
     std::vector<MSHIndixes> texCoordsIndexes;
 
     size_t texturesCount;
@@ -32,6 +33,7 @@ struct MSHData
         vertexes.resize(vertCount);
         triIndexes.resize(triCount);
         texcoords.resize(texCount);
+        colors.resize(texCount);
         texCoordsIndexes.resize(triCount);
         textureForTriangleIndex.resize(triCount);
     }
@@ -50,6 +52,7 @@ struct MSHData
     std::vector<Ogre::Vector3> plainVertices;
     std::vector<Ogre::Vector3> plainNormals;
     std::vector<Ogre::Vector3> plainTexCoords;
+    std::vector<Ogre::ColourValue> plainColors;
 
     std::vector<std::vector<unsigned short> > submeshesTriangleIndixesDiffuse;
     std::vector<std::vector<unsigned int> > submeshesTriangleIndixesTerrainMaps;
@@ -66,6 +69,7 @@ struct MSHData
         plainVertices.resize(triCount * 3);
         plainNormals.resize(triCount * 3);
         plainTexCoords.resize(triCount * 3);
+        plainColors.resize(triCount * 3);
     }
 
 
@@ -88,9 +92,9 @@ struct MSHData
             plainBuffer[q * 10 + 8] = plainTexCoords[q].z;
 
             Ogre::RGBA colour;
-            Ogre::Root::getSingleton().convertColourValue(Ogre::ColourValue(), &colour);
+            Ogre::Root::getSingleton().convertColourValue(plainColors[q], &colour);
 
-            plainBuffer[q * 10 + 9] = static_cast<float>(colour);
+            *reinterpret_cast<Ogre::RGBA *>(&plainBuffer[q * 10 + 9]) = colour;
         }
     }
 
@@ -132,6 +136,7 @@ struct MSHData
         plainVertices.clear();
         plainNormals.clear();
         plainTexCoords.clear();
+        plainColors.clear();
 
         submeshesTriangleIndixesDiffuse.clear();
         submeshesTriangleIndixesTerrainMaps.clear();

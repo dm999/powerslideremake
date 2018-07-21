@@ -16,7 +16,7 @@ function createScene()
 --~     Terrain.Material.IsOverrideSubMaterials = true;
 --~     Terrain.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLRShadow";
 --~     Terrain.Material.SingleSubMaterial = "Test/Multi_2/PointDiffuseLRShadowSoft";
-    Terrain.Scene.IsAdjustNormals = true;
+    Terrain.Scene.IsAdjustNormals = false;
     Terrain.Scene.AdjustNormalsAngleThreshold = math.cos(math.rad(80.0));--average lower than
     
     

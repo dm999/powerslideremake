@@ -97,7 +97,7 @@ namespace DE2
     struct DE2_TextureCoord
     {
         float uv,uw,uz;
-        char hz0,hz1,hz2;
+        unsigned char r,g,b;//prelit color?
 
         bool operator == (const DE2_TextureCoord& other)
         {

@@ -68,5 +68,6 @@ void main()
 
     vec3 ambient = matAmbient.xyz * lightAmbient.xyz;
 
-    gl_FragColor = vec4(texture2DArray(diffuseMap, T).rgb * (ambient + C.rgb) * shadowColor, 1.0);
+    //gl_FragColor = vec4(texture2DArray(diffuseMap, T).rgb * (ambient + C.rgb) * shadowColor, 1.0);
+    gl_FragColor = vec4(texture2DArray(diffuseMap, T).rgb * C.rgb * shadowColor, 1.0);
 }

@@ -380,6 +380,10 @@ void StaticMeshProcesser::mergeMSH(const MSHData& mshData, std::map<std::string,
                 mergedData.plainTexCoords.push_back(mshData.plainTexCoords[w * 3 + 1]);
                 mergedData.plainTexCoords.push_back(mshData.plainTexCoords[w * 3 + 2]);
 
+                mergedData.plainColors.push_back(mshData.plainColors[w * 3 + 0]);
+                mergedData.plainColors.push_back(mshData.plainColors[w * 3 + 1]);
+                mergedData.plainColors.push_back(mshData.plainColors[w * 3 + 2]);
+
                 mergedData.textureForTriangleIndex.push_back(0);
 
                 mergedData.vertexes.push_back(mshData.plainVertices[w * 3 + 0]);
@@ -419,7 +423,8 @@ void StaticMeshProcesser::initPart(lua_State * pipeline,
 
     terrainNode = mainNode->createChildSceneNode();
     terrainNode->attachObject(terrain);
-    terrain->setListener(new TerrainSceneObjectListener(terrain, sceneMgr, gameState.getExclusions()));
+    //use it for normal based & exclusion boxes light model (not like original one)
+    //terrain->setListener(new TerrainSceneObjectListener(terrain, sceneMgr, gameState.getExclusions()));
 
     terrainNode->setPosition(centroid);
     

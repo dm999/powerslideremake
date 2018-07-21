@@ -160,9 +160,7 @@ namespace DE2
 
             for(DWORD q=0;q<DataDE2.Vertexes;q++)
             {
-                stream->read(&DataDE2.Data_Vertexes[q].x,4);
-                stream->read(&DataDE2.Data_Vertexes[q].y,4);
-                stream->read(&DataDE2.Data_Vertexes[q].z,4);
+                stream->read(&DataDE2.Data_Vertexes[q], 4 * 3);
             }
 
             //Decal TexVerts
@@ -174,9 +172,11 @@ namespace DE2
                 DataDE2.Data_Texture_Coord_Decal.resize(DataDE2.TexCoordsDecal);
                 for(DWORD q=0;q<DataDE2.TexCoordsDecal;q++)
                 {
-                    stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uv,4);
-                    stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uw,4);
+                    stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uv, 4 * 2);
                     DataDE2.Data_Texture_Coord_Decal[q].uz = 0.0f;
+                    DataDE2.Data_Texture_Coord_Decal[q].r = 0xFF;
+                    DataDE2.Data_Texture_Coord_Decal[q].g = 0xFF;
+                    DataDE2.Data_Texture_Coord_Decal[q].b = 0xFF;
                 }
             }
 
@@ -195,13 +195,12 @@ namespace DE2
 
                 for(DWORD q=0;q<DataDE2.TexCoords;q++)
                 {
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uv,4);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uw,4);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uz,4);
-                    DataDE2.Data_Texture_Coord[q].hz0=0;
-                    DataDE2.Data_Texture_Coord[q].hz1=0;
-                    DataDE2.Data_Texture_Coord[q].hz2=0;
-                }
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uv, 4 * 3);
+                    DWORD colorMask = *reinterpret_cast<DWORD*>(&DataDE2.Data_Texture_Coord[q].uz);
+                    DataDE2.Data_Texture_Coord[q].r = colorMask & 0xFF;
+                    DataDE2.Data_Texture_Coord[q].g = (colorMask >> 8) & 0xFF;
+                    DataDE2.Data_Texture_Coord[q].b = (colorMask >> 16 ) & 0xFF;
+               }
             }
 
             //Lit TexVerts
@@ -215,12 +214,7 @@ namespace DE2
 
                 for(DWORD q=0;q<DataDE2.TexCoords;q++)
                 {
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uv,4);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uw,4);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].uz,4);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].hz0,1);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].hz1,1);
-                    stream->read(&DataDE2.Data_Texture_Coord[q].hz2,1);
+                    stream->read(&DataDE2.Data_Texture_Coord[q].uv, 4 * 3 + 3);
                 }
             }
 
@@ -382,6 +376,15 @@ namespace DE2
                     }
                 }
             }
+
+            //transformation matrix
+
+            //visibility cells more
+
+            //vis bound box
+
+            //soundregions
+
         }
     }
 
@@ -574,6 +577,8 @@ namespace DE2
                 mshData.texcoords[q].x = TexC[q].uv;
                 mshData.texcoords[q].y = TexC[q].uw;
                 mshData.texcoords[q].z = TexC[q].uz;
+
+                mshData.colors[q] = Ogre::ColourValue(TexC[q].r / 255.0f, TexC[q].g / 255.0f, TexC[q].b / 255.0f);
             }
 
             for(size_t q=0;q<DataDE2.Data_Parts[PartIndex].Triangles;q++)
@@ -682,6 +687,10 @@ bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fil
                 Ogre::Vector3 texB = mshData.texcoords[mshData.texCoordsIndexes[q].b];
                 Ogre::Vector3 texC = mshData.texcoords[mshData.texCoordsIndexes[q].c];
 
+                Ogre::ColourValue colA = mshData.colors[mshData.texCoordsIndexes[q].a];
+                Ogre::ColourValue colB = mshData.colors[mshData.texCoordsIndexes[q].b];
+                Ogre::ColourValue colC = mshData.colors[mshData.texCoordsIndexes[q].c];
+
                 Ogre::Vector3 normal = (B - A).crossProduct(C - A);
                 normal.normalise();
 
@@ -696,6 +705,10 @@ bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fil
                 mshData.plainTexCoords[q * 3 + 0] = texA;
                 mshData.plainTexCoords[q * 3 + 1] = texB;
                 mshData.plainTexCoords[q * 3 + 2] = texC;
+
+                mshData.plainColors[q * 3 + 0] = colA;
+                mshData.plainColors[q * 3 + 1] = colB;
+                mshData.plainColors[q * 3 + 2] = colC;
             }
 
             parts.push_back(mshData);
