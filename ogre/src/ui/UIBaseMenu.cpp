@@ -89,6 +89,14 @@ void UIBaseMenu::loadUITextures(const PFLoader& pfLoaderGameshell)
                                 "OriginalButtonDown", TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "sb_up.bmp", 
+                                "OriginalButtonSBUp", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "sb_down.bmp", 
+                                "OriginalButtonSBDown", TEMP_RESOURCE_GROUP_NAME);
+
+    TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "stickbox.bmp", 
                                 "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
 

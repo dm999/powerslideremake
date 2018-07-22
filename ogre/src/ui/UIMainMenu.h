@@ -17,6 +17,10 @@ public:
     UIMainMenu(const ModeContext& modeContext, const GameMode gameMode, MenuMode * menuMode, SinglePlayerMenuStates state);
     ~UIMainMenu();
 
+    //UIButtonOnAction
+    void onButtonReleased(UIButton * button) override;
+    void onButtonOver(UIButton * button) override;
+
     void load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener);
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
@@ -61,6 +65,8 @@ private:
 
     void onNameChange() override;
 
+    void redrawTable();
+
     Ogre::Timer mStartingGridTimer;
     bool mIsInStartingGrid;
 
@@ -73,8 +79,12 @@ private:
     UIEditBox mEditBoxMultiUserName;
     UIEditBox mEditBoxMultiRoomName;
     UITable mMultiRoomsList;
+    UIButton mRoomsMoveTop;
+    UIButton mRoomsMoveBottom;
     UITable mMultiRoomPlayersList;
     size_t mSelectedRoomIndex;
+    size_t mTableOffset;
+    std::vector<std::string> mRoomNames;
     std::vector<std::string> mRoomsDescriptions;
     std::vector<std::string> mRoomsHosts;
     std::vector<std::pair<size_t, size_t> > mPlayersInServerRooms;

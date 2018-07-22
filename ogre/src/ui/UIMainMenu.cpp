@@ -18,6 +18,18 @@
 
 #include "../multiplayer/MultiplayerRoomInfo.h"
 
+namespace{
+#if !defined(__ANDROID__)
+    const Ogre::Real buttonSize = 12.0f;
+    const Ogre::Real buttonLeftAdj = 0.0f;
+    const Ogre::Real buttonTopAdj = 0.0f;
+#else
+    const Ogre::Real buttonSize = 18.0f;
+    const Ogre::Real buttonLeftAdj = -3.0f;
+    const Ogre::Real buttonTopAdj = -3.0f;
+#endif
+}
+
 UIMainMenu::UIMainMenu(const ModeContext& modeContext, const GameMode gameMode, MenuMode * menuMode, SinglePlayerMenuStates state)
     : UIMainMenuLabels(modeContext, gameMode),
     mIsInStartingGrid(false),
@@ -39,6 +51,37 @@ void UIMainMenu::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoader
 
     if(loaderListener)
         loaderListener->loadState(1.0f, "all loaded");
+}
+
+void UIMainMenu::onButtonReleased(UIButton * button)
+{
+    UIMainMenuLabels::onButtonReleased(button);
+
+    if(button == &mRoomsMoveTop)
+    {
+        if(mTableOffset > 0)
+        {
+            --mTableOffset;
+            redrawTable();
+        }
+    }
+
+    if(button == &mRoomsMoveBottom)
+    {
+        if(!mRoomNames.empty())
+        {
+            if(mTableOffset + GameState::mRaceGridCarsMax < mRoomNames.size())
+            {
+                ++mTableOffset;
+                redrawTable();
+            }
+        }
+    }
+}
+
+void UIMainMenu::onButtonOver(UIButton * button)
+{
+    UIMainMenuLabels::onButtonOver(button);
 }
 
 void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, LoaderListener* loaderListener)
@@ -151,6 +194,16 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
         mMultiRoomPlayersList.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(24.0f, 58.0f, 250.0f, 22.0f), 36.0f);
     }
 
+    {
+        mRoomsMoveTop.loadBackground("OriginalButtonSBUp");
+        mRoomsMoveTop.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(600.0f + buttonLeftAdj, 50.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mRoomsMoveTop.setButtonOnAction(this);
+
+        mRoomsMoveBottom.loadBackground("OriginalButtonSBDown");
+        mRoomsMoveBottom.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(600.0f + buttonLeftAdj, 340.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mRoomsMoveBottom.setButtonOnAction(this);
+    }
+
     selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
@@ -222,6 +275,8 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
     mEditBoxMultiUserName.mouseReleased(pos);
     mEditBoxMultiRoomName.mouseReleased(pos);
     mMultiRoomsList.mousePressed(pos);
+    mRoomsMoveTop.mousePressed(pos);
+    mRoomsMoveBottom.mousePressed(pos);
 
 #if defined(__ANDROID__)
     bool isAnyActive =  mEditBoxUserName.isActive() |
@@ -272,6 +327,8 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
     }
 
     mMultiRoomsList.mouseReleased(pos);
+    mRoomsMoveTop.mouseReleased(pos);
+    mRoomsMoveBottom.mouseReleased(pos);
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
@@ -279,6 +336,8 @@ void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
     UIMainMenuLabels::mouseMoved(pos);
 
     mMultiRoomsList.mouseMoved(pos);
+    mRoomsMoveTop.mouseMoved(pos);
+    mRoomsMoveBottom.mouseMoved(pos);
 }
 
 bool UIMainMenu::isExitSubmenu()const
@@ -320,17 +379,19 @@ void UIMainMenu::destroy(CustomTrayManager* trayMgr)
     mEditBoxMultiRoomName.destroy(trayMgr);
     mMultiRoomsList.destroy(trayMgr);
     mMultiRoomPlayersList.destroy(trayMgr);
+    mRoomsMoveTop.destroy(trayMgr);
+    mRoomsMoveBottom.destroy(trayMgr);
 }
 
 void UIMainMenu::onTableReleased(UITable * table, size_t row)
 {
     mMultiRoomPlayersList.clear();
-    mMultiRoomPlayersList.setText(mMultiRoomsList.getText(row), 0, Ogre::ColourValue::White);
-    mMultiRoomPlayersList.setText("Host: " + mRoomsHosts[row], 1, Ogre::ColourValue::Black);
-    mMultiRoomPlayersList.setText("Desc: " + mRoomsDescriptions[row], 2, Ogre::ColourValue::White);
-    mMultiRoomPlayersList.setText("Human: " + Conversions::DMToString(mPlayersInServerRooms[row].first), 3, Ogre::ColourValue::Black);
-    mMultiRoomPlayersList.setText("AI: " + Conversions::DMToString(mPlayersInServerRooms[row].second), 4, Ogre::ColourValue::White);
-    size_t availSlots = GameState::mRaceGridCarsMax - mPlayersInServerRooms[row].first - mPlayersInServerRooms[row].second;
+    mMultiRoomPlayersList.setText(mRoomNames[row + mTableOffset], 0, Ogre::ColourValue::White);
+    mMultiRoomPlayersList.setText("Host: " + mRoomsHosts[row + mTableOffset], 1, Ogre::ColourValue::Black);
+    mMultiRoomPlayersList.setText("Desc: " + mRoomsDescriptions[row + mTableOffset], 2, Ogre::ColourValue::White);
+    mMultiRoomPlayersList.setText("Human: " + Conversions::DMToString(mPlayersInServerRooms[row + mTableOffset].first), 3, Ogre::ColourValue::Black);
+    mMultiRoomPlayersList.setText("AI: " + Conversions::DMToString(mPlayersInServerRooms[row + mTableOffset].second), 4, Ogre::ColourValue::White);
+    size_t availSlots = GameState::mRaceGridCarsMax - mPlayersInServerRooms[row + mTableOffset].first - mPlayersInServerRooms[row + mTableOffset].second;
     if(availSlots > 0)
         mMultiRoomPlayersList.setText("Free Slots: " + Conversions::DMToString(availSlots), 5, Ogre::ColourValue::Black);
     else
@@ -476,6 +537,8 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         setWindowTitle("Rooms");
         mMultiRoomsList.show(GameState::mRaceGridCarsMax);
+        mRoomsMoveTop.show();
+        mRoomsMoveBottom.show();
         mMultiRoomPlayersList.show(6);
         showMultiIPLabels();
         mEditBoxMultiUserName.setText(mModeContext.getGameState().getPlayerName());
@@ -702,10 +765,62 @@ void UIMainMenu::hideAll()
     mEditBoxMultiRoomName.hide();
     mMultiRoomsList.hide();
     mMultiRoomPlayersList.hide();
+    mRoomsMoveTop.hide();
+    mRoomsMoveBottom.hide();
+}
+
+void UIMainMenu::redrawTable()
+{
+    hideMultiJoin();
+
+    mMultiRoomsList.clear();
+    mMultiRoomPlayersList.clear();
+
+    std::string userName = mEditBoxMultiUserName.getText().asUTF8();
+    std::string newRoomName = mEditBoxMultiRoomName.getText().asUTF8();
+
+    for(size_t q = mTableOffset; q < mRoomNames.size(); ++q)
+    {
+        if(mRoomNames[q] == newRoomName)
+        {
+            setColorMultiRoomName(Ogre::ColourValue::Red);
+        }
+
+        if(mRoomsHosts[q] == userName)
+        {
+            setColorMultiUserName(Ogre::ColourValue::Red);
+        }
+
+        //available for join
+        if((mPlayersInServerRooms[q].first + mPlayersInServerRooms[q].second) < GameState::mRaceGridCarsMax)
+        {
+            mMultiRoomsList.setText(mRoomNames[q], q - mTableOffset, Ogre::ColourValue::Green);
+        }
+        else //not available for join
+        {
+            mMultiRoomsList.setText(mRoomNames[q], q - mTableOffset, Ogre::ColourValue::Red);
+        }
+    }
 }
 
 void UIMainMenu::connectToServer()
 {
+    mTableOffset = 0;
+#if 0//emulation for test
+    mRoomNames.clear();
+    mRoomsDescriptions.clear();
+    mRoomsHosts.clear();
+    mPlayersInServerRooms.clear();
+    mPlayersNamesInRooms.clear();
+    for(size_t q = 0; q < 20; ++q)
+    {
+        mRoomNames.push_back("Pow" + Conversions::DMToString(q));
+        mRoomsDescriptions.push_back("");
+        mRoomsHosts.push_back("dm");
+        mPlayersInServerRooms.push_back(std::make_pair(1, 2));
+    }
+    redrawTable();
+#else
     std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
 
     hideMultiJoin();
@@ -715,9 +830,6 @@ void UIMainMenu::connectToServer()
     if(!serverIP.empty())
     {
 
-        std::string userName = mEditBoxMultiUserName.getText().asUTF8();
-        std::string newRoomName = mEditBoxMultiRoomName.getText().asUTF8();
-
         mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
 
         mMultiRoomsList.clear();
@@ -726,11 +838,10 @@ void UIMainMenu::connectToServer()
         std::string ip = mEditBoxMultiIP.getText().asUTF8();
         if(!ip.empty())
         {
-            std::vector<std::string> rooms;
             bool isConnected = false;
             
             try{
-                isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), rooms, mRoomsDescriptions, mRoomsHosts, mPlayersInServerRooms, mPlayersNamesInRooms);
+                isConnected = MultiplayerRoomInfo().getRoomsList(ip, mModeContext.mGameState.getMultiplayerServerPort(), mRoomNames, mRoomsDescriptions, mRoomsHosts, mPlayersInServerRooms, mPlayersNamesInRooms);
             }catch(...){
             }
 
@@ -738,28 +849,7 @@ void UIMainMenu::connectToServer()
             {
                 mEditBoxMultiIP.setColor(Ogre::ColourValue::Green);
 
-                for(size_t q = 0; q < rooms.size(); ++q)
-                {
-                    if(rooms[q] == newRoomName)
-                    {
-                        setColorMultiRoomName(Ogre::ColourValue::Red);
-                    }
-
-                    if(mRoomsHosts[q] == userName)
-                    {
-                        setColorMultiUserName(Ogre::ColourValue::Red);
-                    }
-
-                    //available for join
-                    if((mPlayersInServerRooms[q].first + mPlayersInServerRooms[q].second) < GameState::mRaceGridCarsMax)
-                    {
-                        mMultiRoomsList.setText(rooms[q], q, Ogre::ColourValue::Green);
-                    }
-                    else //not available for join
-                    {
-                        mMultiRoomsList.setText(rooms[q], q, Ogre::ColourValue::Red);
-                    }
-                }
+                redrawTable();
             }
             else
             {
@@ -772,6 +862,7 @@ void UIMainMenu::connectToServer()
         if(serverIP.empty())
             setColorMultiIP(Ogre::ColourValue::Red);
     }
+#endif
 }
 
 void UIMainMenu::createRoom()
