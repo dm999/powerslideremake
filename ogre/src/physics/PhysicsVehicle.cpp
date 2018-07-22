@@ -15,6 +15,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mChassis(chassis),
     mAICar(NULL),
     mVehicleVelocityMod(0.0f),
+    mVehicleSetup(initialVehicleSetup),
     mInitialVehicleSetup(initialVehicleSetup),
     mPhysicsWheels(initialVehicleSetup, physics, meshProesser),
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
@@ -46,10 +47,10 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mCoreBaseGlobal = chassis->getPosition();
     mCoreBaseGlobalPrev = mCoreBaseGlobal;
 
-    mImpulseLinear = mInitialVehicleSetup.mInitialImpulseLinear;
-    mImpulseLinearInc = mInitialVehicleSetup.mInitialImpulseLinearInc;
-    mImpulseRot = mInitialVehicleSetup.mInitialImpulseRot;
-    mImpulseRotInc = mInitialVehicleSetup.mInitialImpulseRotInc;
+    mImpulseLinear = mVehicleSetup.mInitialImpulseLinear;
+    mImpulseLinearInc = mVehicleSetup.mInitialImpulseLinearInc;
+    mImpulseRot = mVehicleSetup.mInitialImpulseRot;
+    mImpulseRotInc = mVehicleSetup.mInitialImpulseRotInc;
 
     mCOGShift = Ogre::Vector3::ZERO;
     for(int q = 0; q < mShiftValuesAmount; ++q)
@@ -60,18 +61,18 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mMaxCollisionDistance = 0.0f;
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
-        Ogre::Real tmpDist = mInitialVehicleSetup.mConnectionPointWheel[q].length() + mInitialVehicleSetup.mWheelRadius[q];
+        Ogre::Real tmpDist = mVehicleSetup.mConnectionPointWheel[q].length() + mVehicleSetup.mWheelRadius[q];
         if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
 
-        Ogre::Vector3 tmpPoint = mInitialVehicleSetup.mConnectionPointWheel[q];
-        tmpPoint.y -= mInitialVehicleSetup.mMaxTravel;
-        tmpDist = tmpPoint.length() + mInitialVehicleSetup.mWheelRadius[q];
+        Ogre::Vector3 tmpPoint = mVehicleSetup.mConnectionPointWheel[q];
+        tmpPoint.y -= mVehicleSetup.mMaxTravel;
+        tmpDist = tmpPoint.length() + mVehicleSetup.mWheelRadius[q];
         if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
     }
 
     for(int q = 0; q < InitialVehicleSetup::mRoofsAmount; ++q)
     {
-        Ogre::Real tmpDist = mInitialVehicleSetup.mRoofPos[q].length() + mInitialVehicleSetup.mRoofRadius[q];
+        Ogre::Real tmpDist = mVehicleSetup.mRoofPos[q].length() + mVehicleSetup.mRoofRadius[q];
         if(tmpDist > mMaxCollisionDistance) mMaxCollisionDistance = tmpDist;
     }
 }
@@ -92,19 +93,19 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     integrate();
 
-    Ogre::Real velScale = mInitialVehicleSetup.mVelocityScale * doGetVelocityScale();
+    Ogre::Real velScale = mVehicleSetup.mVelocityScale * doGetVelocityScale();
 
     Ogre::Vector3 impulse(mImpulseLinear);
     impulse.z = -impulse.z;//original data is left hand
     Ogre::Real linearImpulseMod = impulse.length();
-    mVehicleVelocityMod = linearImpulseMod * mInitialVehicleSetup.mChassisInvMass;
+    mVehicleVelocityMod = linearImpulseMod * mVehicleSetup.mChassisInvMass;
     if(mVehicleVelocityMod < 0.0001f) mVehicleVelocityMod = 0.0001f;
 
-    mInitialVehicleSetup.mCarGlobalPos += impulse * velScale * mInitialVehicleSetup.mChassisInvMass;
-    Ogre::Real airDensTransCoeff = (mSlipStreamFactor - 1.0f) * mInitialVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
+    mVehicleSetup.mCarGlobalPos += impulse * velScale * mVehicleSetup.mChassisInvMass;
+    Ogre::Real airDensTransCoeff = (mSlipStreamFactor - 1.0f) * mVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
     mImpulseLinear *= airDensTransCoeff;
 
-    //do falloff check
+    //fallOffRestore();
 
     Ogre::Real rotImpulseMod = mImpulseRot.length();
     if(rotImpulseMod > 0.00001f)
@@ -117,7 +118,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
         rotAngle *= doGetVelocityScale();
 
-        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+        mVehicleSetup.mCarRot.ToRotationMatrix(carRot);
         Ogre::Vector3 carRotV[3];//original data is left hand
         carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
         carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
@@ -133,16 +134,16 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
         carRot.SetColumn(1, carRotV[1]);
         carRot.SetColumn(2, carRotV[2]);
 
-        mInitialVehicleSetup.mCarRot.FromRotationMatrix(carRot);
+        mVehicleSetup.mCarRot.FromRotationMatrix(carRot);
 
-        mImpulseRot *= mInitialVehicleSetup.mAirDensityRot;
+        mImpulseRot *= mVehicleSetup.mAirDensityRot;
     }
 
     
-    mCoreBaseGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCoreBase;
-    mMeshProcesser->performCollisionDetection(mInitialVehicleSetup.mCarGlobalPos, mCoreBaseGlobalPrev, mMaxCollisionDistance);
+    mCoreBaseGlobal = mVehicleSetup.mCarGlobalPos + mVehicleSetup.mCarRot * mVehicleSetup.mCoreBase;
+    mMeshProcesser->performCollisionDetection(mVehicleSetup.mCarGlobalPos, mCoreBaseGlobalPrev, mMaxCollisionDistance);
 
-    mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
+    mImpulseLinearInc.y += mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
 
     integrate();
 
@@ -180,7 +181,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
         mCOGShift = mCOGShift * 0.999f;
     }
     mCOGShift += (shiftValue - mCOGShiftValues[mCOGShiftIndex]);
-    mInitialVehicleSetup.mCOGShift = mCOGShift;
+    mVehicleSetup.mCOGShift = mCOGShift;
     mCOGShiftValues[mCOGShiftIndex] = shiftValue;
     mCOGShiftIndex = (mCOGShiftIndex + 1) % mShiftValuesAmount;
 
@@ -191,12 +192,12 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     calcTransmission();
     mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, mHandBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
 
-    //mImpulseLinearInc.y -= mInitialVehicleSetup.mChassisMass * (-mInitialVehicleSetup.mGravityVelocity);
-    //mImpulseLinearInc.x += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
-    //mImpulseLinearInc.y += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
-    //mImpulseLinearInc.z += mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity;
+    //mImpulseLinearInc.y -= mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
+    //mImpulseLinearInc.x += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
+    //mImpulseLinearInc.y += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
+    //mImpulseLinearInc.z += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
 
-    mInitialVehicleSetup.mCOGGlobal = mInitialVehicleSetup.mCarGlobalPos + mInitialVehicleSetup.mCOGShift + mInitialVehicleSetup.mCarRot * mInitialVehicleSetup.mCOG;
+    mVehicleSetup.mCOGGlobal = mVehicleSetup.mCarGlobalPos + mVehicleSetup.mCOGShift + mVehicleSetup.mCarRot * mVehicleSetup.mCOG;
 
     reposition();
     rerotation();
@@ -251,7 +252,7 @@ Ogre::Real PhysicsVehicle::adjustSteering()
     
     Ogre::Real steeringSpline;
     if(mVehicleType == HumanVehicle)
-        steeringSpline = mInitialVehicleSetup.mSteering.getPoint(Ogre::Math::Abs(mSteeringOriginal));
+        steeringSpline = mVehicleSetup.mSteering.getPoint(Ogre::Math::Abs(mSteeringOriginal));
     if(mVehicleType == AIVehicle)
         steeringSpline = doAdjustAISteering(Ogre::Math::Abs(mSteeringOriginal));
 
@@ -298,14 +299,14 @@ void PhysicsVehicle::calcTransmission()
 
 void PhysicsVehicle::reposition()
 {
-    mChassis->setPosition(mInitialVehicleSetup.mCOGGlobal);
+    mChassis->setPosition(mVehicleSetup.mCOGGlobal);
 
     mPhysicsWheels.reposition();
 }
 
 void PhysicsVehicle::rerotation()
 {
-    mChassis->setOrientation(mInitialVehicleSetup.mCarRot);
+    mChassis->setOrientation(mVehicleSetup.mCarRot);
 
     mPhysicsWheels.rerotation();
 }
@@ -324,7 +325,7 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
     Ogre::Real ret = 0.0f;
 
     Ogre::Matrix3 carRot;
-    mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+    mVehicleSetup.mCarRot.ToRotationMatrix(carRot);
     Ogre::Matrix3 carRotPS;
     Ogre::Vector3 carRotV[3];//original data is left hand
     carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
@@ -334,7 +335,7 @@ Ogre::Real PhysicsVehicle::momentOfInertiaProj(const Ogre::Vector3& axis)const
 
     Ogre::Vector3 tmpRes = carRotPS * axis;
 
-    ret = mInitialVehicleSetup.mMomentOfInertia.dotProduct(Ogre::Vector3(tmpRes * tmpRes));
+    ret = mVehicleSetup.mMomentOfInertia.dotProduct(Ogre::Vector3(tmpRes * tmpRes));
 
     return ret;
 }
@@ -508,7 +509,7 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
     if(mTurnOverValue < 0)
     {
         Ogre::Matrix3 carRot;
-        mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
+        mVehicleSetup.mCarRot.ToRotationMatrix(carRot);
         Ogre::Vector3 carRotV[3];//original data is left hand
         carRotV[0] = Ogre::Vector3(carRot[0][0], carRot[1][0], -carRot[2][0]);
         carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
@@ -533,6 +534,27 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
         --mTurnOverValue;
 }
 
+void PhysicsVehicle::fallOffRestore()
+{
+    mVehicleSetup = mInitialVehicleSetup;
+
+    mCOGShift = Ogre::Vector3::ZERO;
+    for(int q = 0; q < mShiftValuesAmount; ++q)
+        mCOGShiftValues[q] = Ogre::Vector3::ZERO;
+    mCOGShiftIndex = 0;
+
+    mImpulseLinear = Ogre::Vector3::ZERO;
+    mImpulseLinearInc = Ogre::Vector3::ZERO;
+    mImpulseRot = Ogre::Vector3::ZERO;
+    mImpulseRotPrev = Ogre::Vector3::ZERO;
+    mImpulseRotInc = Ogre::Vector3::ZERO;
+
+    mPhysicsWheels.init(mInitialVehicleSetup);
+    mPhysicsRoofs.init();
+    mPhysicsBody.init();
+
+}
+
 void PhysicsVehicle::gearUp()
 {
     if(mIsRaceStarted)
@@ -545,7 +567,7 @@ void PhysicsVehicle::gearUp()
             {
                 mThrottleAdjusterCounter = 180;
                 mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
-                mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+                mPhysicsWheels.setBackVelocity(mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
             }
         }
     }
@@ -563,7 +585,7 @@ void PhysicsVehicle::gearDown()
             {
                 mThrottleAdjusterCounter = 180;
                 mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
-                mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mInitialVehicleSetup.mGearRatioMain * mInitialVehicleSetup.mGearRatio[0]);
+                mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
             }
         }
     }
@@ -583,12 +605,12 @@ Ogre::Vector3 PhysicsVehicle::getLinearVelocitySpeedometer() const
 {
     Ogre::Vector3 impulse(mImpulseLinear);
     impulse.z = -impulse.z;//original data is left hand
-    return impulse * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+    return impulse * mVehicleSetup.mChassisInvMass * 33.0f;
 }
 
 Ogre::Vector3 PhysicsVehicle::getAngularVelocitySpeedometer() const
 {
-    return mImpulseRot * mInitialVehicleSetup.mChassisInvMass * 33.0f;
+    return mImpulseRot * mVehicleSetup.mChassisInvMass * 33.0f;
 }
 
 Ogre::Vector3 PhysicsVehicle::getLinearImpulse() const

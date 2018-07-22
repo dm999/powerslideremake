@@ -22,7 +22,7 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 {
     if(mAICar)
-        mAICar->performAICorrection(gameState, this, mInitialVehicleSetup, mPhysics->getAfterStartCounter());
+        mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
 }
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)

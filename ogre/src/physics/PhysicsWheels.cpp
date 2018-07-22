@@ -18,22 +18,27 @@ PhysicsWheels::~PhysicsWheels()
 
 void PhysicsWheels::init(Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount])
 {
-    Ogre::Vector3 carPos (mInitialVehicleSetup.mCarGlobalPos);
-    carPos.z = -carPos.z;//original data is left hand
-
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelNodes[q] = wheelNodes[q];
     }
 
+    init(mInitialVehicleSetup);
+}
+
+void PhysicsWheels::init(const InitialVehicleSetup& vehicleSetup)
+{
+    Ogre::Vector3 carPos (vehicleSetup.mCarGlobalPos);
+    carPos.z = -carPos.z;//original data is left hand
+
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
     {
         mWheelsSuspensionPointGlobal[q] = carPos;
-        mSuspensionHeight[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].x;
+        mSuspensionHeight[q] = vehicleSetup.mSuspensionDataWheel[q].x;
         mSuspensionHeightPrev[q] = mSuspensionHeight[q];
         mSpringVal[q] = 1.0f;
-        mSteering[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].y;
-        mVelocity[q] = mInitialVehicleSetup.mSuspensionDataWheel[q].z;
+        mSteering[q] = vehicleSetup.mSuspensionDataWheel[q].y;
+        mVelocity[q] = vehicleSetup.mSuspensionDataWheel[q].z;
         mIsCollided[q] = false;
         mWheelRotationalAngle[q] = 0.0f;
         mTerrainIndex[q] = -1;

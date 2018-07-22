@@ -21,6 +21,7 @@ public:
     ~PhysicsWheels();
 
     void init(Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount]);
+    void init(const InitialVehicleSetup& vehicleSetup);//to restore falloff
 
     void initStep();
     void calcImpulses(const Ogre::Vector3& impulseRot, const Ogre::Vector3& impulseRotPrev, const Ogre::Vector3& normalisedImpulseRot,

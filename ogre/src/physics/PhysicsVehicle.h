@@ -83,7 +83,7 @@ public:
 
     Ogre::Real getSuspensionHeight(size_t wheelIndex) const{return mPhysicsWheels.getSuspensionHeight(wheelIndex);}
 
-    const InitialVehicleSetup& getVehicleSetup()const{ return mInitialVehicleSetup;}
+    const InitialVehicleSetup& getVehicleSetup()const{ return mVehicleSetup;}
 
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
     static Ogre::Vector2 findTexCoordinates(const Ogre::Vector3& normal, 
@@ -113,7 +113,7 @@ protected:
 
     PSAICar * mAICar;
 
-    InitialVehicleSetup& mInitialVehicleSetup;
+    InitialVehicleSetup& mVehicleSetup;
 
     Ogre::Real mVehicleVelocityMod;
 
@@ -140,12 +140,15 @@ private:
     void calcWheelRoofImpulses();
 
     void turnOverRestore(bool isTurnOver);
+    void fallOffRestore();
 
     Ogre::Real adjustSteering();
 
     StaticMeshProcesser* mMeshProcesser;
 
     Ogre::SceneNode *mChassis;
+
+    const InitialVehicleSetup mInitialVehicleSetup;//to restore original position
 
     PhysicsWheels mPhysicsWheels;
     PhysicsRoofs mPhysicsRoofs;
