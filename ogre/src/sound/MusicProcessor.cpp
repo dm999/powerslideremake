@@ -40,9 +40,12 @@ void MusicProcessor::deinit()
 
 void MusicProcessor::play()
 {
-    if(mMusic.get())
+    if(mMasterGain > 0.0f)
     {
-        mMusic->play();
+        if(mMusic.get())
+        {
+            mMusic->play();
+        }
     }
 }
 
@@ -81,6 +84,18 @@ void MusicProcessor::setVolume(float vol)
     if(mMusic.get())
     {
         mMusic->setVolume(mMasterGain * 100.0f);
+
+        if(mMasterGain == 0.0f)
+        {
+            stop();
+        }
+        else
+        {
+            if(mMusic->getStatus() == sf::SoundSource::Stopped)
+            {
+                play();
+            }
+        }
     }
 }
 

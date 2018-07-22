@@ -16,6 +16,8 @@ class MusicProcessor
 {
 public:
 
+    MusicProcessor() : mMasterGain(1.0f) {}
+
     void init(const std::string& dataDir){mDataDir = dataDir;}
     void initTrack(const std::string& track, bool isLooped = false);
     void deinit();
