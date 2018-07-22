@@ -140,7 +140,7 @@ private:
     void calcWheelRoofImpulses();
 
     void turnOverRestore(bool isTurnOver);
-    void fallOffRestore();
+    bool fallOffRestore();
 
     Ogre::Real adjustSteering();
 
@@ -148,7 +148,7 @@ private:
 
     Ogre::SceneNode *mChassis;
 
-    const InitialVehicleSetup mInitialVehicleSetup;//to restore original position
+    const InitialVehicleSetup mInitialVehicleSetup;//to restore if falloff
 
     PhysicsWheels mPhysicsWheels;
     PhysicsRoofs mPhysicsRoofs;

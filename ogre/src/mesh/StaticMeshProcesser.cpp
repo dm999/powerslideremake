@@ -68,6 +68,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
 
         if(loadResult)
         {
+            mBoundingBoxAABB = de2Loader.getDE2().CollisionInfo_Global[0].subparts[0].aabb;
             mCollisionDetection.init(de2Loader.getDE2());
             createLights(pipeline, sceneMgr, de2Loader.getDE2(), gameState);
         }

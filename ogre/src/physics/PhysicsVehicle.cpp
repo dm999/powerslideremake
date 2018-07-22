@@ -3,6 +3,7 @@
 
 #include "Physics.h"
 #include "../mesh/StaticMeshProcesser.h"
+#include "../loaders/DE2.h"
 
 PhysicsVehicle::PhysicsVehicle(Physics* physics, 
                                StaticMeshProcesser * meshProesser,
@@ -105,7 +106,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     Ogre::Real airDensTransCoeff = (mSlipStreamFactor - 1.0f) * mVehicleSetup.mAirDensityTranslation * linearImpulseMod + 1.0f;
     mImpulseLinear *= airDensTransCoeff;
 
-    //fallOffRestore();
+    bool isFalloff = fallOffRestore();
 
     Ogre::Real rotImpulseMod = mImpulseRot.length();
     if(rotImpulseMod > 0.00001f)
@@ -149,7 +150,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     calcWheelRoofImpulses();
 
-    bool isProcessShift;
+    bool isProcessShift = false;
     Ogre::Vector3 shiftValue(Ogre::Vector3::ZERO);
     mPhysicsWheels.process(*this, isProcessShift);
     if(isProcessShift)
@@ -185,9 +186,12 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     mCOGShiftValues[mCOGShiftIndex] = shiftValue;
     mCOGShiftIndex = (mCOGShiftIndex + 1) % mShiftValuesAmount;
 
-    bool isTurnOver;
-    isTurnOver = mPhysicsRoofs.process(*this);
-    isTurnOver |= mPhysicsBody.process(*this);
+    bool isTurnOver = false;
+    if(!isFalloff)//hack to prevent issue while repositioning
+    {
+        isTurnOver = mPhysicsRoofs.process(*this);
+        isTurnOver |= mPhysicsBody.process(*this);
+    }
     turnOverRestore(isTurnOver);
     calcTransmission();
     mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, mHandBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
@@ -534,25 +538,50 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
         --mTurnOverValue;
 }
 
-void PhysicsVehicle::fallOffRestore()
+bool PhysicsVehicle::fallOffRestore()
 {
-    mVehicleSetup = mInitialVehicleSetup;
+    bool ret = false;
+    const DE2::AABB& boundingBox = mMeshProcesser->getBoundingBoxAABB();
 
-    mCOGShift = Ogre::Vector3::ZERO;
-    for(int q = 0; q < mShiftValuesAmount; ++q)
-        mCOGShiftValues[q] = Ogre::Vector3::ZERO;
-    mCOGShiftIndex = 0;
+    const Ogre::Real margin = 50.0f;
+    if(
+        boundingBox.max.x + margin < mVehicleSetup.mCarGlobalPos.x  ||
+        boundingBox.max.z + margin < -mVehicleSetup.mCarGlobalPos.z ||  //original data is left hand
+        boundingBox.min.x - margin > mVehicleSetup.mCarGlobalPos.x  ||
+        boundingBox.min.y - margin > mVehicleSetup.mCarGlobalPos.y  ||
+        boundingBox.min.z - margin > -mVehicleSetup.mCarGlobalPos.z     //original data is left hand
+        )
+    {
+        mVehicleSetup = mInitialVehicleSetup;
 
-    mImpulseLinear = Ogre::Vector3::ZERO;
-    mImpulseLinearInc = Ogre::Vector3::ZERO;
-    mImpulseRot = Ogre::Vector3::ZERO;
-    mImpulseRotPrev = Ogre::Vector3::ZERO;
-    mImpulseRotInc = Ogre::Vector3::ZERO;
+        mCOGShift = Ogre::Vector3::ZERO;
+        for(int q = 0; q < mShiftValuesAmount; ++q)
+            mCOGShiftValues[q] = Ogre::Vector3::ZERO;
+        mCOGShiftIndex = 0;
 
-    mPhysicsWheels.init(mInitialVehicleSetup);
-    mPhysicsRoofs.init();
-    mPhysicsBody.init();
+        mImpulseLinear = Ogre::Vector3::ZERO;
+        mImpulseLinearInc = Ogre::Vector3::ZERO;
+        mImpulseRot = Ogre::Vector3::ZERO;
+        mImpulseRotPrev = Ogre::Vector3::ZERO;
+        mImpulseRotInc = Ogre::Vector3::ZERO;
 
+        mPhysicsWheels.init(mInitialVehicleSetup);
+        mPhysicsRoofs.init();
+        mPhysicsBody.init();
+
+        mNitroCounter = 0;
+        mIsNitro = false;
+
+        ret = true;
+    }
+
+    Ogre::Real seeling = boundingBox.max.y * 1.2f;
+    if(seeling < mVehicleSetup.mCarGlobalPos.y)
+    {
+        mVehicleSetup.mCarGlobalPos.y = seeling;
+    }
+
+    return ret;
 }
 
 void PhysicsVehicle::gearUp()

@@ -84,6 +84,8 @@ public :
     void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
 #endif
 
+    const DE2::AABB& getBoundingBoxAABB() const {return mBoundingBoxAABB;}//to restore if falloff
+
 private:
 
     void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
@@ -178,6 +180,8 @@ private:
     bool mIsVertexArraySupported;
 
     CollisionDetection mCollisionDetection;
+
+    DE2::AABB mBoundingBoxAABB;//to restore if falloff
 
 };
 
