@@ -215,6 +215,20 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if(button == &mGhostVal)
+    {
+        if(mGhostVal.getChecked())
+        {
+            mModeContext.getGameState().setGhostEnabled(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setGhostEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
 
     if(button == &mHighScoresTrackLeft)
     {
@@ -1145,6 +1159,25 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mMirrorVal.setButtonOnAction(this);
     }
 
+    //Options Race Ghost
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 142.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Ghost = createTextArea("MainWindowOptionRaceGhostLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionRaceLabel_Ghost->setCaption("Timetrial Ghost");
+        mOptionRaceLabel_Ghost->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Ghost->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Ghost->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Ghost->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionRaceLabel_Ghost->setFontName("SdkTrays/Caption");
+        mOptionRaceLabel_Ghost->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionRaceLabel_Ghost);
+    }
+    {
+        mGhostVal.loadBackground("OriginalButtonTick");
+        mGhostVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getGhostEnabled(), true);
+        mGhostVal.setButtonOnAction(this);
+    }
+
     //Options Highscores
     {
         mHighScoresTrackLeft.setBackgroundMaterial(mInputTypeValLeft.getMaterialName());
@@ -1680,6 +1713,7 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mOpponentsValLeft.mousePressed(pos);
     mOpponentsValRight.mousePressed(pos);
     mMirrorVal.mousePressed(pos);
+    mGhostVal.mousePressed(pos);
     mHighScoresTrackLeft.mousePressed(pos);
     mHighScoresTrackRight.mousePressed(pos);
 }
@@ -2071,6 +2105,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     mOpponentsValLeft.mouseReleased(pos);
     mOpponentsValRight.mouseReleased(pos);
     mMirrorVal.mouseReleased(pos);
+    mGhostVal.mouseReleased(pos);
     mHighScoresTrackLeft.mouseReleased(pos);
     mHighScoresTrackRight.mouseReleased(pos);
 }
@@ -2232,6 +2267,7 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
     mOpponentsValLeft.destroy(trayMgr);
     mOpponentsValRight.destroy(trayMgr);
     mMirrorVal.destroy(trayMgr);
+    mGhostVal.destroy(trayMgr);
     mHighScoresTrackLeft.destroy(trayMgr);
     mHighScoresTrackRight.destroy(trayMgr);
 }
@@ -2472,10 +2508,12 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mOptionRaceLabel_KMPH->show();
     mOptionRaceLabel_KMPH_Val->show();
     mOptionRaceLabel_Mirror->show();
+    mOptionRaceLabel_Ghost->show();
 
     mOpponentsValLeft.show();
     mOpponentsValRight.show();
     mMirrorVal.show();
+    mGhostVal.show();
 }
 
 void UIMainMenuLabels::showOptionHiscoreLabels()
@@ -2707,6 +2745,7 @@ void UIMainMenuLabels::hideAllLabels()
     mOptionRaceLabel_KMPH->hide();
     mOptionRaceLabel_KMPH_Val->hide();
     mOptionRaceLabel_Mirror->hide();
+    mOptionRaceLabel_Ghost->hide();
     mOptionHighScoresButtonLabel->hide();
     mOptionHighScoresTrackLabel->hide();
     mOptionHighScoresReplayLabel->hide();
@@ -2777,6 +2816,7 @@ void UIMainMenuLabels::hideAllLabels()
     mOpponentsValLeft.hide();
     mOpponentsValRight.hide();
     mMirrorVal.hide();
+    mGhostVal.hide();
     mHighScoresTrackLeft.hide();
     mHighScoresTrackRight.hide();
 }

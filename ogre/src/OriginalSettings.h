@@ -204,6 +204,7 @@ public:
         bool fullscreen;
         bool shadows;
         bool mirror;
+        bool ghost;
         bool kmph;
         Ogre::uint32 transmission;
         Ogre::uint32 input;

@@ -159,12 +159,14 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
+    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Ghost;
     UIButtonTick mShadowVal;
     UIButtonTick mVSyncVal;
     UIButtonTick mFulscreenVal;
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
     UIButtonTick mMirrorVal;
+    UIButtonTick mGhostVal;
 
     UIButton mHighScoresTrackLeft;
     UIButton mHighScoresTrackRight;

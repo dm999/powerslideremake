@@ -501,43 +501,46 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
     {
         mTrialGhost.init(mModeContext.getGameState().getDataDir(), mModeContext.getGameState().getTrackNameAsOriginal(), mModeContext.getGameState().getPlayerCar().getCharacterName());
 
-        InitialVehicleSetup vehSetup = mModeContext.mGameState.getInitialVehicleSetup()[0];
-        //setup suspension for non user ghost
+        if(mModeContext.getGameState().getGhostEnabled())
         {
-            std::string carName = mModeContext.getGameState().getSTRPowerslide().getCarFromCharacter(mTrialGhost.getCharacterName());
-            mGhost.setCharacterName(mTrialGhost.getCharacterName());
-            std::string carPath = mGhost.getCarPath(mModeContext.getGameState());
-            STRSettings carSettings;
-            carSettings.parse(mModeContext.getGameState().getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
-            vehSetup.mCOG = -carSettings.getArray3Value("", "centre of gravity");
-            vehSetup.mCOG.z = -vehSetup.mCOG.z;
+            InitialVehicleSetup vehSetup = mModeContext.mGameState.getInitialVehicleSetup()[0];
+            //setup suspension for non user ghost
             {
-                    vehSetup.mConnectionPointWheel[0] = carSettings.getArray3Value("", "wheelbase back");
-                    vehSetup.mConnectionPointWheel[0].z = -vehSetup.mConnectionPointWheel[0].z;
+                std::string carName = mModeContext.getGameState().getSTRPowerslide().getCarFromCharacter(mTrialGhost.getCharacterName());
+                mGhost.setCharacterName(mTrialGhost.getCharacterName());
+                std::string carPath = mGhost.getCarPath(mModeContext.getGameState());
+                STRSettings carSettings;
+                carSettings.parse(mModeContext.getGameState().getPFLoaderStore(), "data/cars/" + carPath + "/data/default", "params.str");
+                vehSetup.mCOG = -carSettings.getArray3Value("", "centre of gravity");
+                vehSetup.mCOG.z = -vehSetup.mCOG.z;
+                {
+                        vehSetup.mConnectionPointWheel[0] = carSettings.getArray3Value("", "wheelbase back");
+                        vehSetup.mConnectionPointWheel[0].z = -vehSetup.mConnectionPointWheel[0].z;
 
-                    vehSetup.mConnectionPointWheel[1] = vehSetup.mConnectionPointWheel[0];
-                    vehSetup.mConnectionPointWheel[1].x = -vehSetup.mConnectionPointWheel[1].x;
+                        vehSetup.mConnectionPointWheel[1] = vehSetup.mConnectionPointWheel[0];
+                        vehSetup.mConnectionPointWheel[1].x = -vehSetup.mConnectionPointWheel[1].x;
 
-                    vehSetup.mConnectionPointWheel[0] += vehSetup.mCOG;
-                    vehSetup.mConnectionPointWheel[1] += vehSetup.mCOG;
+                        vehSetup.mConnectionPointWheel[0] += vehSetup.mCOG;
+                        vehSetup.mConnectionPointWheel[1] += vehSetup.mCOG;
 
-                    vehSetup.mConnectionPointWheel[2] = carSettings.getArray3Value("", "wheelbase front");
-                    vehSetup.mConnectionPointWheel[2].z = -vehSetup.mConnectionPointWheel[2].z;
+                        vehSetup.mConnectionPointWheel[2] = carSettings.getArray3Value("", "wheelbase front");
+                        vehSetup.mConnectionPointWheel[2].z = -vehSetup.mConnectionPointWheel[2].z;
 
-                    vehSetup.mConnectionPointWheel[3] = vehSetup.mConnectionPointWheel[2];
-                    vehSetup.mConnectionPointWheel[3].x = -vehSetup.mConnectionPointWheel[3].x;
+                        vehSetup.mConnectionPointWheel[3] = vehSetup.mConnectionPointWheel[2];
+                        vehSetup.mConnectionPointWheel[3].x = -vehSetup.mConnectionPointWheel[3].x;
 
-                    vehSetup.mConnectionPointWheel[2] += vehSetup.mCOG;
-                    vehSetup.mConnectionPointWheel[3] += vehSetup.mCOG;
+                        vehSetup.mConnectionPointWheel[2] += vehSetup.mCOG;
+                        vehSetup.mConnectionPointWheel[3] += vehSetup.mCOG;
 
-                }
+                    }
+            }
+
+            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, false);
+            mGhost.setVisibility(mTrialGhost.isVisible());
+
+            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], false);
+            mGhostUser.setVisibility(false);
         }
-
-        mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, false);
-        mGhost.setVisibility(mTrialGhost.isVisible());
-
-        mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], false);
-        mGhostUser.setVisibility(false);
     }
 
     std::vector<std::string> aiCharacters = mModeContext.getGameState().getAICharacters();
@@ -948,7 +951,7 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
             GhostPos ghostPos(mModeContext.mGameState.getPlayerCar());
             mTrialGhost.storePoint(ghostPos, lapTime);
 
-            if(mTrialGhost.isVisible())
+            if(mTrialGhost.isVisible() && mModeContext.mGameState.getGhostEnabled())
             {
                 GhostPos ghostPoint = mTrialGhost.getInterpolatedPoint(lapTime);
                 if(mGhost.getVisibility())
@@ -1162,19 +1165,22 @@ void BaseRaceMode::onLapFinished()
             mUIRace->setMiscText(bestTime);
             mUIRace->setShowMiscText(true);
 
-            bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, gameState.getDataDir(), gameState.isSupercar(), mGhostUser.getCharacterName());
-            if(mTrialGhost.isVisible())
+            if(gameState.getGhostEnabled())
             {
-                if(isBestBeaten)
+                bool isBestBeaten = mTrialGhost.lapFinished(bestLapTime, gameState.getDataDir(), gameState.isSupercar(), mGhostUser.getCharacterName());
+                if(mTrialGhost.isVisible())
                 {
-                    mGhost.setVisibility(false);
-                    mGhostUser.setVisibility(true);
-                }
-                else
-                {
-                    if(!mGhostUser.getVisibility())
+                    if(isBestBeaten)
                     {
-                        mGhost.setVisibility(true);
+                        mGhost.setVisibility(false);
+                        mGhostUser.setVisibility(true);
+                    }
+                    else
+                    {
+                        if(!mGhostUser.getVisibility())
+                        {
+                            mGhost.setVisibility(true);
+                        }
                     }
                 }
             }

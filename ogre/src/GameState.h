@@ -152,6 +152,9 @@ public:
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
+    void setGhostEnabled(bool enabled){mIsGhostEnabled = enabled;}
+    bool getGhostEnabled()const{return mIsGhostEnabled;}
+
     size_t getLapsCount()const{return mLapsCount;}
 
     void setSoundsGain(Ogre::Real gain){mSoundsGain = gain;}
@@ -275,6 +278,7 @@ private:
     Ogre::ColourValue mBackgroundColor;
 
     bool mIsMirrorEnabled;
+    bool mIsGhostEnabled;
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0

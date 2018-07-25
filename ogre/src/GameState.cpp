@@ -39,6 +39,7 @@ GameState::GameState() :
     mIsRaceFinished(false),
     mBackgroundColor(0.91372550f, 0.78823531f, 0.52156866f),
     mIsMirrorEnabled(true),
+    mIsGhostEnabled(true),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
     mIsGamePaused(false),
@@ -92,6 +93,7 @@ void GameState::initOriginalData()
                 mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
                 mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
                 mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
+                mIsGhostEnabled = mPlayerSettings.getIntValue("", "ghost", static_cast<int>(mIsGhostEnabled));
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
@@ -169,6 +171,7 @@ void GameState::savePlayerData()
     globalData.fullscreen = static_cast<Ogre::RenderWindow*>(Ogre::Root::getSingletonPtr()->getRenderTarget("Powerslide Remake"))->isFullScreen();
     globalData.shadows = mIsCastShadows;
     globalData.mirror = mIsMirrorEnabled;
+    globalData.ghost = mIsGhostEnabled;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;

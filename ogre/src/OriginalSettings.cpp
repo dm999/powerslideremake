@@ -789,6 +789,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
     mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
     mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
+    mSTR.SetValue("", "ghost", Conversions::DMToString(globalData.ghost).c_str());
     mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
     mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());
     mSTR.SetValue("", "input", Conversions::DMToString(globalData.input).c_str());
