@@ -168,6 +168,7 @@ bool UIEditBox::isLegalCharacter(MyGUI::KeyCode _key) const
     {
 #if defined(__ANDROID__)
         if(
+            _key == MyGUI::KeyCode::Enum(999)                   ||//unicode
             _key == MyGUI::KeyCode::Enum(AKEYCODE_DEL)          ||
             _key == MyGUI::KeyCode::Enum(AKEYCODE_COMMA)        ||
             _key == MyGUI::KeyCode::Enum(AKEYCODE_PERIOD)       ||

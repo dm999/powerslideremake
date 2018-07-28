@@ -31,6 +31,7 @@ package com.powerslide.remake;
 import com.powerslide.remake.OgreActivityJNI;
 
 import java.io.File;
+import android.util.Log;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -74,6 +75,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onPause() {
         
         super.onPause();
+        
+        hideKeyboard();
         
         Runnable pauser = new Runnable() {
             public void run() {
@@ -299,6 +302,63 @@ public class MainActivity extends Activity implements SensorEventListener {
             break;
         }
         return true;
+    }
+    
+    
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        
+        //https://stackoverflow.com/questions/21124051/receive-complete-android-unicode-input-in-c-c#43871301
+            
+        int metaState = event.getMetaState(); 
+        int unichar = event.getUnicodeChar(metaState);
+        boolean unicodeData = false;
+
+        // We are queuing the Unicode version of the characters for
+        // sending to the app during processEvents() call.
+
+        // We Queue the KeyDown and ActionMultiple Event UnicodeCharacters
+        if(event.getAction()==KeyEvent.ACTION_DOWN){
+            if(unichar != 0){
+                //queueLastInputCharacter.offer(Integer.valueOf(unichar));
+            }
+            else{
+                unichar = event.getUnicodeChar(); 
+
+                if(unichar != 0){
+                    //queueLastInputCharacter.offer(Integer.valueOf(unichar));
+                }
+                else if (event.getDisplayLabel() != 0){
+                    String aText = new String();
+                    aText = "";
+                    aText += event.getDisplayLabel();
+                    //queueLastInputCharacter.offer(Integer.valueOf(Character.codePointAt(aText, 0)));
+                    unichar = (Character.codePointAt(aText, 0));
+                }
+                //else
+                    //queueLastInputCharacter.offer(Integer.valueOf(0));
+            }
+        }
+        else if(event.getAction()==KeyEvent.ACTION_MULTIPLE){
+            unicodeData = true;
+            unichar = (Character.codePointAt(event.getCharacters(), 0));
+            //queueLastInputCharacter.offer(Integer.valueOf(unichar));
+        }
+        
+        //Log.d("OGRE", "Keycode" + unichar);
+        
+        final int unicode = unichar;
+        
+        if(unicodeData)
+        {
+            handler.post(new Runnable() {
+                public void run() {
+                    OgreActivityJNI.handleKeyUp(999, unicode);//999 - unicode indication
+                }
+            });
+        }
+        
+        return super.dispatchKeyEvent(event);
     }
     
     @Override
