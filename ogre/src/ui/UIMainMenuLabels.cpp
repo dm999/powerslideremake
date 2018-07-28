@@ -33,9 +33,9 @@ UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMod
 
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
 {
-    if(button == &mShadowVal)
+    if(button == mShadowVal)
     {
-        if(mShadowVal.getChecked())
+        if(mShadowVal->getChecked())
         {
             mModeContext.getGameState().setCastShadows(true);
         }
@@ -47,9 +47,9 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
-    if(button == &mVSyncVal)
+    if(button == mVSyncVal)
     {
-        if(mVSyncVal.getChecked())
+        if(mVSyncVal->getChecked())
         {
             mModeContext.getRenderWindow()->setVSyncEnabled(true);
             mModeContext.getRenderWindow()->setVSyncInterval(1);
@@ -284,6 +284,30 @@ void UIMainMenuLabels::onButtonOver(UIButton * button)
 #endif
 }
 
+void UIMainMenuLabels::onLabelPressed(UILabel * label)
+{
+}
+
+void UIMainMenuLabels::onLabelReleased(UILabel * label)
+{
+
+    if(label == mModeMulti)
+    {
+        switchState(State_Multi);
+    }
+
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIDown();
+#endif
+}
+
+void UIMainMenuLabels::onLabelOver(UILabel * label)
+{
+#ifndef NO_OPENAL
+    mModeContext.getSoundsProcesser().playUIOver();
+#endif
+}
+
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 {
     Ogre::Real viewportHeight = screenAdaptionRelative[1][1] * 480.0f; 
@@ -326,15 +350,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 135.0f, 0.0f, 0.0f);
-        mModeMulti = createTextArea("MainWindowMulti", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeMulti->setCaption("Multi Player");
-        mModeMulti->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mModeMulti->setSpaceWidth(9.0f);
-        mModeMulti->setHeight(46.0f * viewportHeight / 1024.0f);
-        mModeMulti->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeMulti->setFontName("SdkTrays/Caption");
-        mModeMulti->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeMulti);
+        mModeMulti = mUILabelsManager.add();
+        mModeMulti->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeMulti->getTextArea()->setCaption("Multi Player");
+        mModeMulti->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMulti->getTextArea()->setSpaceWidth(9.0f);
+        mModeMulti->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeMulti->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeMulti->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeMulti->getTextArea()->setColour(mInactiveLabel);
+        mModeMulti->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeMulti->getTextArea());
     }
 
     {
@@ -847,9 +873,10 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
     }
     {
-        mShadowVal.loadBackground("OriginalButtonTick");
-        mShadowVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 102.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().isCastShadows(), true);
-        mShadowVal.setButtonOnAction(this);
+        mShadowVal = mUIButtonTicksManager.add();
+        mShadowVal->loadBackground("OriginalButtonTick");
+        mShadowVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 102.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().isCastShadows(), true);
+        mShadowVal->setButtonOnAction(this);
     }
 
     //Options Graphics VSync
@@ -870,9 +897,10 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #if defined(__ANDROID__)
         isActive = false;
 #endif
-        mVSyncVal.loadBackground("OriginalButtonTick");
-        mVSyncVal.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
-        mVSyncVal.setButtonOnAction(this);
+        mVSyncVal = mUIButtonTicksManager.add();
+        mVSyncVal->loadBackground("OriginalButtonTick");
+        mVSyncVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
+        mVSyncVal->setButtonOnAction(this);
     }
 
     //Options Graphics Fullscreen
@@ -1701,8 +1729,10 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
 {
     UIBaseMenu::mousePressed(pos);
 
-    mShadowVal.mousePressed(pos);
-    mVSyncVal.mousePressed(pos);
+    mUIButtonsManager.mousePressed(pos);
+    mUIButtonTicksManager.mousePressed(pos);
+    mUILabelsManager.mousePressed(pos);
+
     mFulscreenVal.mousePressed(pos);
     mInputTypeValLeft.mousePressed(pos);
     mInputTypeValRight.mousePressed(pos);
@@ -1727,12 +1757,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     if(mModeSingle->isVisible() && OgreBites::Widget::isCursorOver(mModeSingle, pos, 0))
     {
         switchState(State_SingleType);
-        return;
-    }
-
-    if(mModeMulti->isVisible() && OgreBites::Widget::isCursorOver(mModeMulti, pos, 0))
-    {
-        switchState(State_Multi);
         return;
     }
 
@@ -2093,8 +2117,10 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
         return;
     }
 
-    mShadowVal.mouseReleased(pos);
-    mVSyncVal.mouseReleased(pos);
+    mUIButtonsManager.mouseReleased(pos);
+    mUIButtonTicksManager.mouseReleased(pos);
+    mUILabelsManager.mouseReleased(pos);
+
     mFulscreenVal.mouseReleased(pos);
     mInputTypeValLeft.mouseReleased(pos);
     mInputTypeValRight.mouseReleased(pos);
@@ -2115,7 +2141,6 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     UIMainMenuBackground::mouseMoved(pos);
 
     checkCursorOverLabel(pos, mModeSingle);
-    checkCursorOverLabel(pos, mModeMulti);
     checkCursorOverLabel(pos, mModeMultiListOfRooms);
     checkCursorOverLabel(pos, mModeMultiCreateRoom);
     checkCursorOverLabel(pos, mModeMultiJoinRoom);
@@ -2235,6 +2260,10 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
     checkCursorOverLabel(pos, mGameExitYesLabel);
     checkCursorOverLabel(pos, mGameExitNoLabel);
 
+    mUIButtonsManager.mouseMoved(pos);
+    mUIButtonTicksManager.mouseMoved(pos);
+    mUILabelsManager.mouseMoved(pos);
+
     mInputTypeValLeft.mouseMoved(pos);
     mInputTypeValRight.mouseMoved(pos);
 
@@ -2255,8 +2284,10 @@ void UIMainMenuLabels::destroy(CustomTrayManager* trayMgr)
 {
     UIBase::destroy(trayMgr);
 
-    mShadowVal.destroy(trayMgr);
-    mVSyncVal.destroy(trayMgr);
+    mUIButtonsManager.destroy(trayMgr);
+    mUIButtonTicksManager.destroy(trayMgr);
+    mUILabelsManager.destroy(trayMgr);
+
     mFulscreenVal.destroy(trayMgr);
     mInputTypeValLeft.destroy(trayMgr);
     mInputTypeValRight.destroy(trayMgr);
@@ -2466,8 +2497,8 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mOptionGraphicsLabel_Resolution_Val->show();
     mOptionGraphicsLabel_Resolution_Apply->show();
 
-    mShadowVal.show();
-    mVSyncVal.show();
+    mShadowVal->show();
+    mVSyncVal->show();
     mFulscreenVal.show();
 }
 
@@ -2806,8 +2837,8 @@ void UIMainMenuLabels::hideAllLabels()
         mLeaderboardTable4Label[q]->hide();
     }
 
-    mShadowVal.hide();
-    mVSyncVal.hide();
+    mShadowVal->hide();
+    mVSyncVal->hide();
     mFulscreenVal.hide();
     mInputTypeValLeft.hide();
     mInputTypeValRight.hide();

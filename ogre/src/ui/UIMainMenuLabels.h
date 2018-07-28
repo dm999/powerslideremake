@@ -3,10 +3,12 @@
 
 #include "UIMainMenuBackground.h"
 
+#include "elements/UIManager.h"
 #include "elements/UIButton.h"
 #include "elements/UITable.h"
+#include "elements/UILabel.h"
 
-class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction
+class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction, public UILabelOnAction
 {
 public:
     UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode);
@@ -16,6 +18,11 @@ public:
     void onButtonPressed(UIButton * button) override {}
     void onButtonReleased(UIButton * button) override;
     void onButtonOver(UIButton * button) override;
+
+    //UILabelOnAction
+    void onLabelPressed(UILabel * label);
+    void onLabelReleased(UILabel * label);
+    void onLabelOver(UILabel * label);
 
     static const Ogre::ColourValue mDisabledLabel;
     static const Ogre::ColourValue mInactiveLabel;
@@ -91,7 +98,7 @@ private:
     Ogre::TextAreaOverlayElement * mWindowTitleTrophies;
 
     Ogre::TextAreaOverlayElement * mModeSingle;
-    Ogre::TextAreaOverlayElement * mModeMulti;
+    UILabel* mModeMulti;
     Ogre::TextAreaOverlayElement * mModeSingleTypeRace;
     Ogre::TextAreaOverlayElement * mModeSingleTypeChampionship;
     Ogre::TextAreaOverlayElement * mModeSingleTypeTimetrial;
@@ -160,8 +167,8 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Ghost;
-    UIButtonTick mShadowVal;
-    UIButtonTick mVSyncVal;
+    UIButtonTick* mShadowVal;
+    UIButtonTick* mVSyncVal;
     UIButtonTick mFulscreenVal;
     UIButton mOpponentsValLeft;
     UIButton mOpponentsValRight;
@@ -232,6 +239,10 @@ private:
 
     std::map<std::string, std::string> mTrackDesc;
     std::map<std::string, std::string> mCharacterDesc;
+
+    UIManager<UIButton> mUIButtonsManager;
+    UIManager<UIButtonTick> mUIButtonTicksManager;
+    UIManager<UILabel> mUILabelsManager;
 };
 
 #endif
