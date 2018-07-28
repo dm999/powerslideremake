@@ -2547,7 +2547,7 @@ void UIMainMenuLabels::showOptionNameLabels()
 {
     //mOptionNameLabel->show();
 #if defined(__ANDROID__)
-    mOptionNameLabel_Save->show();
+    //mOptionNameLabel_Save->show();
 #endif
 }
 

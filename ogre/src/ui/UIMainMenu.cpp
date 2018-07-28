@@ -18,6 +18,10 @@
 
 #include "../multiplayer/MultiplayerRoomInfo.h"
 
+#if defined(__ANDROID__)
+    #include <android/keycodes.h>
+#endif
+
 namespace{
 #if !defined(__ANDROID__)
     const Ogre::Real buttonSize = 12.0f;
@@ -268,10 +272,18 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 
     if(mCurrentState == State_Options_Name)
     {
+#if !defined(__ANDROID__)
         if(_key == MyGUI::KeyCode::Return)
         {
             onNameChange();
         }
+#else
+        if(_key == MyGUI::KeyCode::Enum(AKEYCODE_ENTER))
+        {
+            mModeContext.getBaseApp()->androidHideKeyboard();
+            onNameChange();
+        }
+#endif
     }
 }
 
@@ -639,6 +651,9 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
         mEditBoxUserName.setActive(true);
         mEditBoxUserName.show();
+#if defined(__ANDROID__)
+        mModeContext.getBaseApp()->androidShowKeyboard();
+#endif
         break;
 
     case State_Options_Trophies:
