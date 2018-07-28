@@ -603,6 +603,17 @@ bool BaseApp::setShutdown(bool isOnEsc)
                     }
                 }
             }
+
+            if(mGameModeSwitcher->getSubmenuState() == State_Options_Trophies)
+            {
+                mGameModeSwitcher->setDefaultBackground(true);
+            }
+
+            if(isOnEsc && mGameModeSwitcher->getSubmenuState() == State_Options_Name)//enter for saving
+            {
+                mGameModeSwitcher->setDefaultBackground(true);
+            }
+
         }
 
         if(mGameModeSwitcher->getMode() == ModeMenuChampionship)
@@ -628,6 +639,12 @@ bool BaseApp::setShutdown(bool isOnEsc)
                         mGameModeSwitcher->setSubmenu("Retire from Championship?");
                     }
                 }
+            }
+            else
+            {
+                mGameModeSwitcher->setDefaultBackground(false);
+                mGameModeSwitcher->switchMode(ModeMenu);
+                mGameModeSwitcher->setTopmostSubmenu();
             }
         }
     }

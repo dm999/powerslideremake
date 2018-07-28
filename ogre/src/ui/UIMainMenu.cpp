@@ -272,11 +272,6 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         {
             onNameChange();
         }
-
-        if(_key == MyGUI::KeyCode::Escape)
-        {
-            setDefaultBackground(true);
-        }
     }
 }
 
@@ -311,22 +306,7 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
-    SinglePlayerMenuStates prevState = mCurrentState;
-
     UIMainMenuLabels::mouseReleased(pos);
-
-    if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
-    {
-        setDefaultBackground(true);
-    }
-
-    if(mCurrentState == State_FinishChampionship)
-    {
-        setDefaultBackground(false);
-
-        mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
-        setTopmostSubmenu();
-    }
 
     mMultiRoomsList.mouseReleased(pos);
     mRoomsMoveTop.mouseReleased(pos);

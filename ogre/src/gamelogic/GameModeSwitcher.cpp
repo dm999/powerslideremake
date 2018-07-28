@@ -572,6 +572,15 @@ void GameModeSwitcher::setTopmostSubmenu()
         mMenuMultiMode->setTopmostSubmenu();
 }
 
+void GameModeSwitcher::setDefaultBackground(bool isSwitchState)
+{
+    if(mMenuMode.get())
+        mMenuMode->setDefaultBackground(isSwitchState);
+
+    if(mMenuMultiMode.get())
+        mMenuMultiMode->setDefaultBackground(isSwitchState);
+}
+
 void GameModeSwitcher::setPodiumSubmenu()
 {
     if(mMenuMode.get())

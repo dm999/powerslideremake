@@ -39,6 +39,7 @@ public:
     bool isExitSubmenu()const;
     void setSubmenu(const std::string& title);
     void setTopmostSubmenu();
+    void setDefaultBackground(bool isSwitchState);
     void setPodiumSubmenu();
 
     void destroy(CustomTrayManager* trayMgr) override;
@@ -64,7 +65,6 @@ private:
     void joinRoom();
 
     void onNameChange() override;
-    void setDefaultBackground(bool isSwitchState);
 
     void redrawTable();
 

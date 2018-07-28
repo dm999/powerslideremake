@@ -30,6 +30,7 @@ public:
     bool isExitSubmenu()const override{return true;}
     void setSubmenu(const std::string& title)override {}
     void setTopmostSubmenu()override {}
+    void setDefaultBackground(bool isSwitchState)override {}
     void setPodiumSubmenu()override {}
 
     CommonIncludes::shared_ptr<MultiplayerController> getMultiplayerController(){return mMultiplayerController;}

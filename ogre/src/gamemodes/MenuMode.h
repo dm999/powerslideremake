@@ -37,6 +37,7 @@ public:
     bool isExitSubmenu()const override;
     void setSubmenu(const std::string& title)override;
     void setTopmostSubmenu()override;
+    void setDefaultBackground(bool isSwitchState)override;
     void setPodiumSubmenu()override;
 
 protected:

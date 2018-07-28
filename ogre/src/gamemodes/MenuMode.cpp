@@ -64,6 +64,11 @@ void MenuMode::setTopmostSubmenu()
     mUIMainMenu->setTopmostSubmenu();
 }
 
+void MenuMode::setDefaultBackground(bool isSwitchState)
+{
+    mUIMainMenu->setDefaultBackground(isSwitchState);
+}
+
 void MenuMode::setPodiumSubmenu()
 {
     mUIMainMenu->setPodiumSubmenu();

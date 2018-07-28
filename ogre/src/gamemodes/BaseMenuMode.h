@@ -27,6 +27,7 @@ public:
     virtual bool isExitSubmenu()const = 0;
     virtual void setSubmenu(const std::string& title) = 0;
     virtual void setTopmostSubmenu() = 0;
+    virtual void setDefaultBackground(bool isSwitchState) = 0;
     virtual void setPodiumSubmenu() = 0;
 
     void frameRenderingQueued(const Ogre::FrameEvent& evt)override;
