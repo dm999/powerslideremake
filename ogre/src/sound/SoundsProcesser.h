@@ -27,6 +27,7 @@ public:
 
     void setListenerPos(const Ogre::Vector3& pos, const Ogre::Vector3& up, const Ogre::Vector3& direction);
     void setListenerGain(float gain);
+    float getListenerGain()const;
 
     void setTerrainData(const std::vector<TerrainData>& terrainData);
 

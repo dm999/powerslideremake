@@ -38,6 +38,11 @@ void SoundsProcesser::setListenerGain(float gain)
     sf::Listener::setGlobalVolume(gain * 100.0f);
 }
 
+float SoundsProcesser::getListenerGain()const
+{
+    return sf::Listener::getGlobalVolume() / 100.0f;
+}
+
 void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
 {
     stopSounds();

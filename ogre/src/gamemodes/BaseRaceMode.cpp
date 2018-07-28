@@ -898,6 +898,10 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
         if(mModeContext.mMusicProcessor.isPaused())
         {
             mModeContext.mMusicProcessor.play();
+        }
+
+        if(mModeContext.mSoundsProcesser.getListenerGain() == 0.0f)
+        {
             mModeContext.mSoundsProcesser.setListenerGain(1.0f);
         }
     }
@@ -906,6 +910,10 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
         if(!mModeContext.mMusicProcessor.isPaused())
         {
             mModeContext.mMusicProcessor.pause();
+        }
+
+        if(mModeContext.mSoundsProcesser.getListenerGain() == 1.0f)
+        {
             mModeContext.mSoundsProcesser.setListenerGain(0.0f);
         }
     }
