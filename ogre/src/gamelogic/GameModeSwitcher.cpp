@@ -23,7 +23,7 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
 
     mContext.setGameModeSwitcher(this);
 
-    mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
+    mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Options_Name));
     mUIBackground.show();
     mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
     mUILoaderChampionship.reset(new UIBackgroundLoaderProgressTracksChampionship(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
