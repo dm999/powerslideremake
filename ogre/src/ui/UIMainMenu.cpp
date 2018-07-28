@@ -164,13 +164,14 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
     createLabels(screenAdaptionRelative);
     createControls(screenAdaptionRelative, getMainBackground());
 
-    //mEditBox.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
-    //mEditBox.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
-    mEditBoxUserName.loadBackground("OriginalEditBox");
-    mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 82.0f, 170.0f, 18.0f), 36.0f);
+    //mEditBoxUserName.loadBackground(gameState.getPFLoaderGameshell(), "session.bmp");
+    mEditBoxUserName.setBackgroundMaterial("Test/CustomBackgroundBlackTransparent");
+    //mEditBoxUserName.loadBackground("OriginalEditBox");
+    mEditBoxUserName.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(205.0f, 193.0f, 260.0f, 50.0f), 106.0f);
     mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
 
-    mEditBoxMultiIP.setBackgroundMaterial(mEditBoxUserName.getMaterialName());
+    //mEditBoxMultiIP.setBackgroundMaterial(mEditBoxUserName.getMaterialName());
+    mEditBoxMultiIP.loadBackground("OriginalEditBox");
     mEditBoxMultiIP.init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(20.0f, 215.0f, 170.0f, 18.0f), 36.0f);
     mEditBoxMultiIP.setCharType(UIEditBox::IP);
     mEditBoxMultiIP.setText("78.47.85.155");//d.polubotko: FIXME
@@ -264,6 +265,19 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 
     if(mEditBoxMultiRoomName.isActive())
         setColorMultiRoomName(mInactiveLabel);
+
+    if(mCurrentState == State_Options_Name)
+    {
+        if(_key == MyGUI::KeyCode::Return)
+        {
+            onNameChange();
+        }
+
+        if(_key == MyGUI::KeyCode::Escape)
+        {
+            setDefaultBackground(true);
+        }
+    }
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
@@ -303,24 +317,12 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 
     if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
     {
-        setMainBackgroundMaterial("Test/MainBackground");
-        
-        for(size_t q = 0; q < mControlsCount; ++q)
-        {
-            setControlShow(q, true);
-        }
-
-        switchState(State_Options);
+        setDefaultBackground(true);
     }
 
     if(mCurrentState == State_FinishChampionship)
     {
-        setMainBackgroundMaterial("Test/MainBackground");
-        
-        for(size_t q = 0; q < mControlsCount; ++q)
-        {
-            setControlShow(q, true);
-        }
+        setDefaultBackground(false);
 
         mModeContext.getGameModeSwitcher()->switchMode(ModeMenu);
         setTopmostSubmenu();
@@ -506,6 +508,8 @@ void UIMainMenu::startRace()
 
 void UIMainMenu::onNameChange()
 {
+    setDefaultBackground(false);
+
     std::string userName = mEditBoxUserName.getText().asUTF8();
     mModeContext.getGameState().setPlayerName(userName);
     mModeContext.getGameState().loadPlayerData();
@@ -517,6 +521,21 @@ void UIMainMenu::onNameChange()
     std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
     characterCar = strPowerslide.getBaseCarFromCar(characterCar);
     selectCar(characterCar);
+}
+
+void UIMainMenu::setDefaultBackground(bool isSwitchState)
+{
+    setMainBackgroundMaterial("Test/MainBackground");
+    
+    for(size_t q = 0; q < mControlsCount; ++q)
+    {
+        setControlShow(q, true);
+    }
+
+    if(isSwitchState)
+    {
+        switchState(State_Options);
+    }
 }
 
 void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
@@ -630,9 +649,15 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_Options_Name:
         mIsInStartingGrid = false;
-        showOptionLabels();
+        setMainBackgroundMaterial("Test/NameBackground");
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
         showOptionNameLabels();
         mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
+        mEditBoxUserName.setActive(true);
         mEditBoxUserName.show();
         break;
 

@@ -586,7 +586,7 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
         if(mGameModeSwitcher->getMode() == ModeMenu)
         {
-            if(mGameModeSwitcher->getSubmenuState() != State_Options_Trophies)
+            if(mGameModeSwitcher->getSubmenuState() != State_Options_Trophies && mGameModeSwitcher->getSubmenuState() != State_Options_Name)
             {
                 if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
                 {

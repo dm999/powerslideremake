@@ -1311,13 +1311,13 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
     //Options Name Save
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(208.0f, 85.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(325.0f, 260.0f, 0.0f, 0.0f);;
         mOptionNameLabel_Save = createTextArea("MainWindowOptionNameSaveLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionNameLabel_Save->setCaption("Save");
-        mOptionNameLabel_Save->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel_Save->setCharHeight(56.0f * viewportHeight / 1024.0f);
         mOptionNameLabel_Save->setSpaceWidth(9.0f);
-        mOptionNameLabel_Save->setHeight(26.0f * viewportHeight / 1024.0f);
-        mOptionNameLabel_Save->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionNameLabel_Save->setHeight(56.0f * viewportHeight / 1024.0f);
+        mOptionNameLabel_Save->setAlignment(Ogre::TextAreaOverlayElement::Center);
         mOptionNameLabel_Save->setFontName("SdkTrays/Caption");
         mOptionNameLabel_Save->setColour(mInactiveLabel);
         getMainBackground()->addChild(mOptionNameLabel_Save);
@@ -2545,8 +2545,10 @@ void UIMainMenuLabels::showOptionHiscoreLabels()
 
 void UIMainMenuLabels::showOptionNameLabels()
 {
-    mOptionNameLabel->show();
+    //mOptionNameLabel->show();
+#if defined(__ANDROID__)
     mOptionNameLabel_Save->show();
+#endif
 }
 
 void UIMainMenuLabels::showExitLabels(const std::string& title)

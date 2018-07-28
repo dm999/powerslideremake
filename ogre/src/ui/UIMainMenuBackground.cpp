@@ -133,6 +133,10 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", "fruit.bmp", 
                                 "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load( pfLoaderGameshell, 
+                                "data/gameshell", "name_bge.bmp", 
+                                "OriginalBackgroundName", TEMP_RESOURCE_GROUP_NAME);
+
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
 
@@ -360,6 +364,11 @@ void UIMainMenuBackground::createBackgroundMaterials()
     //trophies background
     {
         clone2DMaterial("OriginalBackgroundTrophies", "Test/TrophiesBackground");
+    }
+
+    //name background
+    {
+        clone2DMaterial("OriginalBackgroundName", "Test/NameBackground");
     }
 
     for(size_t q = 0; q < amountTracks; ++q)

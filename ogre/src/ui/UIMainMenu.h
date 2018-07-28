@@ -64,6 +64,7 @@ private:
     void joinRoom();
 
     void onNameChange() override;
+    void setDefaultBackground(bool isSwitchState);
 
     void redrawTable();
 
