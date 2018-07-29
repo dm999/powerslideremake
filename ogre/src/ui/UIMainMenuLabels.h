@@ -20,9 +20,9 @@ public:
     void onButtonOver(UIButton * button) override;
 
     //UILabelOnAction
-    void onLabelPressed(UILabel * label);
-    void onLabelReleased(UILabel * label);
-    void onLabelOver(UILabel * label);
+    void onLabelPressed(UILabel * label) override;
+    void onLabelReleased(UILabel * label) override;
+    void onLabelOver(UILabel * label) override;
 
     static const Ogre::ColourValue mDisabledLabel;
     static const Ogre::ColourValue mInactiveLabel;
@@ -146,18 +146,18 @@ private:
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Apply;
     
     Ogre::TextAreaOverlayElement * mOptionInputLabel_Type;
-    UIButton mInputTypeValLeft;
-    UIButton mInputTypeValRight;
+    UIButton* mInputTypeValLeft;
+    UIButton* mInputTypeValRight;
 
     Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX;
     Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX_Val;
-    UIButton mSoundVolumeFXValLeft;
-    UIButton mSoundVolumeFXValRight;
+    UIButton* mSoundVolumeFXValLeft;
+    UIButton* mSoundVolumeFXValRight;
 
     Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic;
     Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic_Val;
-    UIButton mSoundVolumeMusicValLeft;
-    UIButton mSoundVolumeMusicValRight;
+    UIButton* mSoundVolumeMusicValLeft;
+    UIButton* mSoundVolumeMusicValRight;
 
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
@@ -169,14 +169,14 @@ private:
     Ogre::TextAreaOverlayElement * mOptionRaceLabel_Ghost;
     UIButtonTick* mShadowVal;
     UIButtonTick* mVSyncVal;
-    UIButtonTick mFulscreenVal;
-    UIButton mOpponentsValLeft;
-    UIButton mOpponentsValRight;
-    UIButtonTick mMirrorVal;
-    UIButtonTick mGhostVal;
+    UIButtonTick* mFulscreenVal;
+    UIButton* mOpponentsValLeft;
+    UIButton* mOpponentsValRight;
+    UIButtonTick* mMirrorVal;
+    UIButtonTick* mGhostVal;
 
-    UIButton mHighScoresTrackLeft;
-    UIButton mHighScoresTrackRight;
+    UIButton* mHighScoresTrackLeft;
+    UIButton* mHighScoresTrackRight;
     Ogre::TextAreaOverlayElement * mOptionHighScoresButtonLabel;
     Ogre::TextAreaOverlayElement * mOptionHighScoresTrackLabel;
     Ogre::TextAreaOverlayElement * mOptionHighScoresReplayLabel;

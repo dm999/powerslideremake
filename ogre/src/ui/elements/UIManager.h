@@ -50,6 +50,14 @@ public:
         }
     }
 
+    void hide()
+    {
+        for(size_t q = 0; q < mUI.size(); ++q)
+        {
+            mUI[q]->hide();
+        }
+    }
+
 private:
 
     std::vector<CommonIncludes::shared_ptr<T>> mUI; //to process automatically
