@@ -31,7 +31,7 @@ public:
 
         if(!group.empty())
         {
-            std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
+            typename std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
             if(i != mGroupMapper.end())
             {
                 i->second.push_back(ret);
@@ -91,7 +91,7 @@ public:
     {
         if(!group.empty())
         {
-            std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
+            typename std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
             if(i != mGroupMapper.end())
             {
                 for(size_t q = 0; q < i->second.size(); ++q)
