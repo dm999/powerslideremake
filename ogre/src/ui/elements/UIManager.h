@@ -2,8 +2,15 @@
 #define UIMANAGER_H
 
 #include <vector>
+#include <map>
+#include <string>
 #include "../../includes/CommonIncludes.h"
 
+
+/**
+ * UIManager - collection of UI elements for automatization
+ * assumed no need to cleanup (deleted together with whole mode)
+*/
 template <typename T>
 class UIManager
 {
@@ -16,6 +23,28 @@ public:
     {
         mUI.push_back(CommonIncludes::shared_ptr<T>(new T()));
         return mUI[mUI.size() - 1].get();
+    }
+
+    T* add(const std::string& group)
+    {
+        T* ret = add();
+
+        if(!group.empty())
+        {
+            std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
+            if(i != mGroupMapper.end())
+            {
+                i->second.push_back(ret);
+            }
+            else
+            {
+                std::vector<T*> vec;
+                vec.push_back(ret);
+                mGroupMapper.insert(std::make_pair(group, vec));
+            }
+        }
+
+        return ret;
     }
 
     void mousePressed(const Ogre::Vector2& pos)
@@ -58,9 +87,25 @@ public:
         }
     }
 
+    void show(const std::string& group)
+    {
+        if(!group.empty())
+        {
+            std::map<std::string, std::vector<T*>>::iterator i = mGroupMapper.find(group);
+            if(i != mGroupMapper.end())
+            {
+                for(size_t q = 0; q < i->second.size(); ++q)
+                {
+                    i->second[q]->show();
+                }
+            }
+        }
+    }
+
 private:
 
-    std::vector<CommonIncludes::shared_ptr<T>> mUI; //to process automatically
+    std::vector<CommonIncludes::shared_ptr<T>> mUI;
+    std::map<std::string, std::vector<T*>> mGroupMapper;
 };
 
 #endif

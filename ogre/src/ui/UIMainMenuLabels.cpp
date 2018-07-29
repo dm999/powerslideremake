@@ -1028,7 +1028,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     for(size_t q = 0; q < 7; ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
-        mOptionLabels.push_back(mUILabelsManager.add());
+        mOptionLabels.push_back(mUILabelsManager.add("mOptionLabels"));
         mOptionLabels[q]->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mOptionLabels[q]->getTextArea()->setCaption("");
         mOptionLabels[q]->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
@@ -1128,7 +1128,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionGraphicsLabel_Shadow);
     }
     {
-        mShadowVal = mUIButtonTicksManager.add();
+        mShadowVal = mUIButtonTicksManager.add("mGraphics");
         mShadowVal->loadBackground("OriginalButtonTick");
         mShadowVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 102.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().isCastShadows(), true);
         mShadowVal->setButtonOnAction(this);
@@ -1152,7 +1152,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #if defined(__ANDROID__)
         isActive = false;
 #endif
-        mVSyncVal = mUIButtonTicksManager.add();
+        mVSyncVal = mUIButtonTicksManager.add("mGraphics");
         mVSyncVal->loadBackground("OriginalButtonTick");
         mVSyncVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isVSyncEnabled(), isActive);
         mVSyncVal->setButtonOnAction(this);
@@ -1176,7 +1176,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 #if defined(__ANDROID__)
         isActive = false;
 #endif
-        mFulscreenVal = mUIButtonTicksManager.add();
+        mFulscreenVal = mUIButtonTicksManager.add("mGraphics");
         mFulscreenVal->loadBackground("OriginalButtonTick");
         mFulscreenVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getRenderWindow()->isFullScreen(), isActive);
         mFulscreenVal->setButtonOnAction(this);
@@ -1246,12 +1246,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionInputLabel_Type);
     }
     {
-        mInputTypeValLeft = mUIButtonsManager.add();
+        mInputTypeValLeft = mUIButtonsManager.add("mInputType");
         mInputTypeValLeft->loadBackground("OriginalButtonDown");
         mInputTypeValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValLeft->setButtonOnAction(this);
 
-        mInputTypeValRight = mUIButtonsManager.add();
+        mInputTypeValRight = mUIButtonsManager.add("mInputType");
         mInputTypeValRight->loadBackground("OriginalButtonUp");
         mInputTypeValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValRight->setButtonOnAction(this);
@@ -1283,12 +1283,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionSoundLabel_VolumeFX_Val);
     }
     {
-        mSoundVolumeFXValLeft = mUIButtonsManager.add();
+        mSoundVolumeFXValLeft = mUIButtonsManager.add("mSoundVolume");
         mSoundVolumeFXValLeft->setBackgroundMaterial(mInputTypeValLeft->getMaterialName());
         mSoundVolumeFXValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeFXValLeft->setButtonOnAction(this);
 
-        mSoundVolumeFXValRight = mUIButtonsManager.add();
+        mSoundVolumeFXValRight = mUIButtonsManager.add("mSoundVolume");
         mSoundVolumeFXValRight->setBackgroundMaterial(mInputTypeValRight->getMaterialName());
         mSoundVolumeFXValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeFXValRight->setButtonOnAction(this);
@@ -1318,12 +1318,12 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionSoundLabel_VolumeMusic_Val);
     }
     {
-        mSoundVolumeMusicValLeft = mUIButtonsManager.add();
+        mSoundVolumeMusicValLeft = mUIButtonsManager.add("mSoundVolume");
         mSoundVolumeMusicValLeft->setBackgroundMaterial(mInputTypeValLeft->getMaterialName());
         mSoundVolumeMusicValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 82.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeMusicValLeft->setButtonOnAction(this);
 
-        mSoundVolumeMusicValRight = mUIButtonsManager.add();
+        mSoundVolumeMusicValRight = mUIButtonsManager.add("mSoundVolume");
         mSoundVolumeMusicValRight->setBackgroundMaterial(mInputTypeValRight->getMaterialName());
         mSoundVolumeMusicValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 82.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mSoundVolumeMusicValRight->setButtonOnAction(this);
@@ -1356,13 +1356,13 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Opponents_Val);
     }
     {
-        mOpponentsValLeft = mUIButtonsManager.add();
+        mOpponentsValLeft = mUIButtonsManager.add("mOpponents");
         //mOpponentsValLeft->loadBackground("OriginalButtonDown");
         mOpponentsValLeft->setBackgroundMaterial(mInputTypeValLeft->getMaterialName());
         mOpponentsValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mOpponentsValLeft->setButtonOnAction(this);
 
-        mOpponentsValRight = mUIButtonsManager.add();
+        mOpponentsValRight = mUIButtonsManager.add("mOpponents");
         //mOpponentsValRight->loadBackground("OriginalButtonUp");
         mOpponentsValRight->setBackgroundMaterial(mInputTypeValRight->getMaterialName());
         mOpponentsValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
@@ -1446,7 +1446,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Mirror);
     }
     {
-        mMirrorVal = mUIButtonTicksManager.add();
+        mMirrorVal = mUIButtonTicksManager.add("mRace");
         mMirrorVal->loadBackground("OriginalButtonTick");
         mMirrorVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 122.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getMirrorEnabled(), true);
         mMirrorVal->setButtonOnAction(this);
@@ -1466,7 +1466,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         getMainBackground()->addChild(mOptionRaceLabel_Ghost);
     }
     {
-        mGhostVal = mUIButtonTicksManager.add();
+        mGhostVal = mUIButtonTicksManager.add("mRace");
         mGhostVal->loadBackground("OriginalButtonTick");
         mGhostVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getGhostEnabled(), true);
         mGhostVal->setButtonOnAction(this);
@@ -1661,7 +1661,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(270.0f, 252.0f, 0.0f, 0.0f);
-        mGameExitYesLabel = mUILabelsManager.add();
+        mGameExitYesLabel = mUILabelsManager.add("mGameExit");
         mGameExitYesLabel->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mGameExitYesLabel->getTextArea()->setCaption("YES");
         mGameExitYesLabel->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
@@ -1676,7 +1676,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(334.0f, 252.0f, 0.0f, 0.0f);
-        mGameExitNoLabel = mUILabelsManager.add();
+        mGameExitNoLabel = mUILabelsManager.add("mGameExit");
         mGameExitNoLabel->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mGameExitNoLabel->getTextArea()->setCaption("NO");
         mGameExitNoLabel->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
@@ -2353,8 +2353,7 @@ void UIMainMenuLabels::showCharacterLabels()
 
 void UIMainMenuLabels::showOptionLabels()
 {
-    for(size_t q = 0; q < mOptionLabels.size(); ++q)
-        mOptionLabels[q]->show();
+    mUILabelsManager.show("mOptionLabels");
 
     mOptionVersionLabel->show();
 
@@ -2385,17 +2384,14 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     mOptionGraphicsLabel_Resolution_Val->show();
     mOptionGraphicsLabel_Resolution_Apply->show();
 
-    mShadowVal->show();
-    mVSyncVal->show();
-    mFulscreenVal->show();
+    mUIButtonTicksManager.show("mGraphics");
 }
 
 void UIMainMenuLabels::showOptionInputLabels()
 {
     mOptionInputLabel_Type->show();
 
-    mInputTypeValLeft->show();
-    mInputTypeValRight->show();
+    mUIButtonsManager.show("mInputType");
 }
 
 void UIMainMenuLabels::showOptionSoundLabels()
@@ -2405,17 +2401,12 @@ void UIMainMenuLabels::showOptionSoundLabels()
     mOptionSoundLabel_VolumeFX->show();
     mOptionSoundLabel_VolumeFX_Val->show();
 
-    mSoundVolumeFXValLeft->show();
-    mSoundVolumeFXValRight->show();
-
-
     mOptionSoundLabel_VolumeMusic_Val->setCaption(Conversions::DMToString(static_cast<size_t>(mModeContext.getGameState().getMusicGain() * 9.0f)));
 
     mOptionSoundLabel_VolumeMusic->show();
     mOptionSoundLabel_VolumeMusic_Val->show();
 
-    mSoundVolumeMusicValLeft->show();
-    mSoundVolumeMusicValRight->show();
+    mUIButtonsManager.show("mSoundVolume");
 }
 
 void UIMainMenuLabels::showOptionRaceLabels()
@@ -2429,10 +2420,8 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mOptionRaceLabel_Mirror->show();
     mOptionRaceLabel_Ghost->show();
 
-    mOpponentsValLeft->show();
-    mOpponentsValRight->show();
-    mMirrorVal->show();
-    mGhostVal->show();
+    mUIButtonsManager.show("mOpponents");
+    mUIButtonTicksManager.show("mRace");
 }
 
 void UIMainMenuLabels::showOptionHiscoreLabels()
@@ -2474,8 +2463,7 @@ void UIMainMenuLabels::showExitLabels(const std::string& title)
 {
     mExitLabel->setCaption(title);
     mExitLabel->show();
-    mGameExitYesLabel->show();
-    mGameExitNoLabel->show();
+    mUILabelsManager.show("mGameExit");
 }
 
 void UIMainMenuLabels::showRaceGridCharactersLabels()
