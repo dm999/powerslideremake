@@ -8,7 +8,7 @@ const Ogre::ColourValue UILabel::mDisabledLabel(0.25f, 0.25f, 0.25f);
 const Ogre::ColourValue UILabel::mInactiveLabel(0.50f, 0.50f, 0.50f);
 
 UILabel::UILabel() : 
-    mOnAction(NULL), mIsShown(true), mIsPressed(false), mIsOver(false), mIsActive(true)
+    mOnAction(NULL), mIsShown(true), mIsPressed(false), mIsOver(false), mIsActive(true), mIsFixed(false)
 {
     mLabelName = nameGenTextArea.generate();
 }
@@ -16,11 +16,13 @@ UILabel::UILabel() :
 void UILabel::init(Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top)
 {
     mTextArea = createTextArea(mLabelName, width, height, left, top); 
+
+    mTextArea->setFontName("SdkTrays/Caption");
 }
 
 void UILabel::mousePressed(const Ogre::Vector2& pos)
 {
-    if(mTextArea && mIsShown && mIsActive)
+    if(mTextArea && mIsShown && mIsActive && !mIsFixed)
     {
         if(OgreBites::Widget::isCursorOver(mTextArea, pos, 0))
         {
@@ -36,7 +38,7 @@ void UILabel::mousePressed(const Ogre::Vector2& pos)
 
 void UILabel::mouseReleased(const Ogre::Vector2& pos)
 {
-    if(mTextArea && mIsShown && mIsPressed && mIsActive)
+    if(mTextArea && mIsShown && mIsPressed && mIsActive && !mIsFixed)
     {
         mIsPressed = false;
 
@@ -51,7 +53,7 @@ void UILabel::mouseReleased(const Ogre::Vector2& pos)
 
 void UILabel::mouseMoved(const Ogre::Vector2& pos)
 {
-    if(mTextArea && mIsShown)
+    if(mTextArea && mIsShown && !mIsFixed)
     {
         if(mIsActive)
         {
@@ -89,6 +91,23 @@ void UILabel::setActive(bool isActive)
         else
         {
             mTextArea->setColour(mDisabledLabel);
+        }
+    }
+}
+
+void UILabel::setFixed(bool isFixed)
+{
+    mIsFixed = isFixed;
+
+    if(mTextArea)
+    {
+        if(isFixed)
+        {
+            mTextArea->setColour(Ogre::ColourValue::White);
+        }
+        else
+        {
+            mTextArea->setColour(mInactiveLabel);
         }
     }
 }

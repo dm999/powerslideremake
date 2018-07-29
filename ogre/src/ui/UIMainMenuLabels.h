@@ -57,7 +57,6 @@ protected:
     void showOptionSoundLabels();
     void showOptionRaceLabels();
     void showOptionHiscoreLabels();
-    void showOptionNameLabels();
     void showOptionTrophies(){mWindowTitleTrophies->show();}
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
@@ -119,51 +118,51 @@ private:
     std::vector<UILabel*> mTracksLabels;
 
     std::vector<UILabel*> mCarsLabels;
-    Ogre::TextAreaOverlayElement * mCarParam_Mass;
-    Ogre::TextAreaOverlayElement * mCarParam_Power;
-    Ogre::TextAreaOverlayElement * mCarParam_Acceleration;
-    Ogre::TextAreaOverlayElement * mCarParam_Traction;
-    Ogre::TextAreaOverlayElement * mCarParam_TopSpeed;
-    Ogre::TextAreaOverlayElement * mCarParam_AeroDynamics;
-    Ogre::TextAreaOverlayElement * mCarParam_Stability;
+    UILabel* mCarParam_Mass;
+    UILabel* mCarParam_Power;
+    UILabel* mCarParam_Acceleration;
+    UILabel* mCarParam_Traction;
+    UILabel* mCarParam_TopSpeed;
+    UILabel* mCarParam_AeroDynamics;
+    UILabel* mCarParam_Stability;
 
     std::vector<UILabel*> mCharactersLabels;
 
     std::vector<UILabel*> mOptionLabels;
 
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor_Val;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Renderer_Val;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Shadow;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_VSync;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Fulscreen;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Val;
-    Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Resolution_Apply;
+    UILabel* mOptionGraphicsLabel_Vendor;
+    UILabel* mOptionGraphicsLabel_Vendor_Val;
+    UILabel* mOptionGraphicsLabel_Renderer;
+    UILabel* mOptionGraphicsLabel_Renderer_Val;
+    UILabel* mOptionGraphicsLabel_Shadow;
+    UILabel* mOptionGraphicsLabel_VSync;
+    UILabel* mOptionGraphicsLabel_Fulscreen;
+    UILabel* mOptionGraphicsLabel_Resolution;
+    UILabel* mOptionGraphicsLabel_Resolution_Val;
+    UILabel* mOptionGraphicsLabel_Resolution_Apply;
     
-    Ogre::TextAreaOverlayElement * mOptionInputLabel_Type;
+    UILabel* mOptionInputLabel_Type;
     UIButton* mInputTypeValLeft;
     UIButton* mInputTypeValRight;
 
-    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX;
-    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeFX_Val;
+    UILabel* mOptionSoundLabel_VolumeFX;
+    UILabel* mOptionSoundLabel_VolumeFX_Val;
     UIButton* mSoundVolumeFXValLeft;
     UIButton* mSoundVolumeFXValRight;
 
-    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic;
-    Ogre::TextAreaOverlayElement * mOptionSoundLabel_VolumeMusic_Val;
+    UILabel* mOptionSoundLabel_VolumeMusic;
+    UILabel* mOptionSoundLabel_VolumeMusic_Val;
     UIButton* mSoundVolumeMusicValLeft;
     UIButton* mSoundVolumeMusicValRight;
 
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Opponents_Val;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Transmission_Val;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_KMPH_Val;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Mirror;
-    Ogre::TextAreaOverlayElement * mOptionRaceLabel_Ghost;
+    UILabel* mOptionRaceLabel_Opponents;
+    UILabel* mOptionRaceLabel_Opponents_Val;
+    UILabel* mOptionRaceLabel_Transmission;
+    UILabel* mOptionRaceLabel_Transmission_Val;
+    UILabel* mOptionRaceLabel_KMPH;
+    UILabel* mOptionRaceLabel_KMPH_Val;
+    UILabel* mOptionRaceLabel_Mirror;
+    UILabel* mOptionRaceLabel_Ghost;
     UIButtonTick* mShadowVal;
     UIButtonTick* mVSyncVal;
     UIButtonTick* mFulscreenVal;
@@ -186,9 +185,6 @@ private:
     size_t mHighScoreTrackIndex;
     void fillHighScoreTable();
     void fillReplayStat();
-
-    Ogre::TextAreaOverlayElement * mOptionNameLabel;
-    Ogre::TextAreaOverlayElement * mOptionNameLabel_Save;
 
     Ogre::TextAreaOverlayElement * mOptionVersionLabel;
 

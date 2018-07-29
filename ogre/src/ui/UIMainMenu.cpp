@@ -647,7 +647,6 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             setControlShow(q, false);
         }
         setWindowTitle("");
-        showOptionNameLabels();
         mEditBoxUserName.setText(mModeContext.getGameState().getPlayerName());
         mEditBoxUserName.setActive(true);
         mEditBoxUserName.show();

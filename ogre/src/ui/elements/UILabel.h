@@ -24,6 +24,7 @@ public:
     void init(Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
     void setActive(bool isActive);
+    void setFixed(bool isFixed);
 
     Ogre::TextAreaOverlayElement * getTextArea()const {return mTextArea;}
 
@@ -54,7 +55,8 @@ private:
     bool mIsShown;
     bool mIsPressed;
     bool mIsOver;
-    bool mIsActive;
+    bool mIsActive;//switch states if true, otherwise grey
+    bool mIsFixed;//always white if true
 };
 
 #endif
