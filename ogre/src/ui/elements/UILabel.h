@@ -23,6 +23,8 @@ public:
 
     void init(Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::Real top);
 
+    void setActive(bool isActive);
+
     Ogre::TextAreaOverlayElement * getTextArea()const {return mTextArea;}
 
     void setLabelOnAction(UILabelOnAction* onAction) {mOnAction = onAction;}
@@ -49,6 +51,7 @@ private:
     bool mIsShown;
     bool mIsPressed;
     bool mIsOver;
+    bool mIsActive;
 };
 
 #endif

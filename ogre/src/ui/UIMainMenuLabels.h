@@ -20,7 +20,7 @@ public:
     void onButtonOver(UIButton * button) override;
 
     //UILabelOnAction
-    void onLabelPressed(UILabel * label) override;
+    void onLabelPressed(UILabel * label) override {}
     void onLabelReleased(UILabel * label) override;
     void onLabelOver(UILabel * label) override;
 
@@ -97,15 +97,15 @@ private:
     Ogre::TextAreaOverlayElement * mWindowTitle;
     Ogre::TextAreaOverlayElement * mWindowTitleTrophies;
 
-    Ogre::TextAreaOverlayElement * mModeSingle;
+    UILabel* mModeSingle;
     UILabel* mModeMulti;
-    Ogre::TextAreaOverlayElement * mModeSingleTypeRace;
-    Ogre::TextAreaOverlayElement * mModeSingleTypeChampionship;
-    Ogre::TextAreaOverlayElement * mModeSingleTypeTimetrial;
-    Ogre::TextAreaOverlayElement * mModeSingleDifficultyNovice;
-    Ogre::TextAreaOverlayElement * mModeSingleDifficultyAdvanced;
-    Ogre::TextAreaOverlayElement * mModeSingleDifficultyExpert;
-    Ogre::TextAreaOverlayElement * mModeSingleDifficultyInsane;
+    UILabel* mModeSingleTypeRace;
+    UILabel* mModeSingleTypeChampionship;
+    UILabel* mModeSingleTypeTimetrial;
+    UILabel* mModeSingleDifficultyNovice;
+    UILabel* mModeSingleDifficultyAdvanced;
+    UILabel* mModeSingleDifficultyExpert;
+    UILabel* mModeSingleDifficultyInsane;
 
     Ogre::TextAreaOverlayElement * mSingleTrackDescription;
     Ogre::TextAreaOverlayElement * mSingleTrackBestTime;
@@ -119,9 +119,9 @@ private:
     bool mIsBioByDescription;
 
 
-    std::vector<Ogre::TextAreaOverlayElement *> mTracksLabels;
+    std::vector<UILabel*> mTracksLabels;
 
-    std::vector<Ogre::TextAreaOverlayElement *> mCarsLabels;
+    std::vector<UILabel*> mCarsLabels;
     Ogre::TextAreaOverlayElement * mCarParam_Mass;
     Ogre::TextAreaOverlayElement * mCarParam_Power;
     Ogre::TextAreaOverlayElement * mCarParam_Acceleration;
@@ -130,9 +130,9 @@ private:
     Ogre::TextAreaOverlayElement * mCarParam_AeroDynamics;
     Ogre::TextAreaOverlayElement * mCarParam_Stability;
 
-    std::vector<Ogre::TextAreaOverlayElement *> mCharactersLabels;
+    std::vector<UILabel*> mCharactersLabels;
 
-    std::vector<Ogre::TextAreaOverlayElement *> mOptionLabels;
+    std::vector<UILabel*> mOptionLabels;
 
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor;
     Ogre::TextAreaOverlayElement * mOptionGraphicsLabel_Vendor_Val;

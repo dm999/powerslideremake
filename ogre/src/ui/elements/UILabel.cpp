@@ -5,7 +5,7 @@
 Ogre::NameGenerator UILabel::nameGenTextArea("UILabel/TextArea");
 
 UILabel::UILabel() : 
-    mOnAction(NULL), mIsShown(true), mIsPressed(false), mIsOver(false)
+    mOnAction(NULL), mIsShown(true), mIsPressed(false), mIsOver(false), mIsActive(true)
 {
     mLabelName = nameGenTextArea.generate();
 }
@@ -17,7 +17,7 @@ void UILabel::init(Ogre::Real width, Ogre::Real height, Ogre::Real left, Ogre::R
 
 void UILabel::mousePressed(const Ogre::Vector2& pos)
 {
-    if(mTextArea && mIsShown)
+    if(mTextArea && mIsShown && mIsActive)
     {
         if(OgreBites::Widget::isCursorOver(mTextArea, pos, 0))
         {
@@ -33,9 +33,11 @@ void UILabel::mousePressed(const Ogre::Vector2& pos)
 
 void UILabel::mouseReleased(const Ogre::Vector2& pos)
 {
-    if(mTextArea && mIsShown && mIsPressed)
+    if(mTextArea && mIsShown && mIsPressed && mIsActive)
     {
         mIsPressed = false;
+
+        mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
 
         if(mOnAction)
         {
@@ -48,24 +50,44 @@ void UILabel::mouseMoved(const Ogre::Vector2& pos)
 {
     if(mTextArea && mIsShown)
     {
-        if(OgreBites::Widget::isCursorOver(mTextArea, pos, 0))
+        if(mIsActive)
         {
-            mTextArea->setColour(Ogre::ColourValue::White);
-
-            if(mOnAction && !mIsOver)
+            if(OgreBites::Widget::isCursorOver(mTextArea, pos, 0))
             {
-                mOnAction->onLabelOver(this);
-            }
+                mTextArea->setColour(Ogre::ColourValue::White);
 
-            mIsOver = true;
-        }
-        else
-        {
-            mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
-            mIsOver = false;
+                if(mOnAction && !mIsOver)
+                {
+                    mOnAction->onLabelOver(this);
+                }
+
+                mIsOver = true;
+            }
+            else
+            {
+                mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
+                mIsOver = false;
+            }
         }
     }
     
+}
+
+void UILabel::setActive(bool isActive)
+{
+    mIsActive = isActive;
+
+    if(mTextArea)
+    {
+        if(mIsActive)
+        {
+            mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
+        }
+        else
+        {
+            mTextArea->setColour(UIMainMenuLabels::mDisabledLabel);
+        }
+    }
 }
 
 void UILabel::show()

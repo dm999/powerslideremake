@@ -284,17 +284,176 @@ void UIMainMenuLabels::onButtonOver(UIButton * button)
 #endif
 }
 
-void UIMainMenuLabels::onLabelPressed(UILabel * label)
-{
-}
-
 void UIMainMenuLabels::onLabelReleased(UILabel * label)
 {
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+
+    if(label == mModeSingle)
+    {
+        switchState(State_SingleType);
+    }
 
     if(label == mModeMulti)
     {
         switchState(State_Multi);
     }
+
+    if(label == mModeSingleTypeRace)
+    {
+        mGameModeSelected = ModeMenu;
+        switchState(State_Difficulty);
+    }
+
+    if(label == mModeSingleTypeChampionship)
+    {
+        mGameModeSelected = ModeMenuChampionship;
+        switchState(State_Difficulty);
+        selectMode();
+    }
+
+    if(label == mModeSingleTypeTimetrial)
+    {
+        mGameModeSelected = ModeMenuTimetrial;
+        switchState(State_Track);
+        selectMode();
+    }
+
+    if(label == mModeSingleDifficultyNovice)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
+
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+    }
+
+    if(label == mModeSingleDifficultyAdvanced)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+    }
+
+    if(label == mModeSingleDifficultyExpert)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+    }
+
+    if(label == mModeSingleDifficultyInsane)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
+        
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+    }
+
+    for(size_t q = 0; q < mTracksLabels.size(); ++q)
+    {
+        if(label == mTracksLabels[q])
+        {
+            std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
+
+            mModeContext.getGameState().setRaceParameters(availTracks[q], mModeContext.getGameState().getAIStrength());
+
+            selectTrack(mModeContext.getGameState().getTrackNameAsOriginal());
+
+            mModeContext.getGameState().savePlayerData();
+
+            switchState(State_Car);
+        }
+    }
+
+    for(size_t q = 0; q < mCarsLabels.size(); ++q)
+    {
+        if(label == mCarsLabels[q])
+        {
+            std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+
+            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(availCars[q]);
+            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
+
+            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+            selectCar(characterCar);
+
+            for(size_t q = 0; q < 7; ++q)
+            {
+                if(q < availChars.size())
+                    mCharactersLabels[q]->getTextArea()->setCaption(STRPowerslide::getCharacterTitle(availChars[q]));
+                else
+                    mCharactersLabels[q]->getTextArea()->setCaption("");
+            }
+
+            switchState(State_Character);
+        }
+    }
+
+    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
+    {
+        if(label == mCharactersLabels[q])
+        {
+            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+
+            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
+
+            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
+
+            mModeContext.getGameState().savePlayerData();
+
+            if(mGameModeSelected == ModeMenuTimetrial)
+            {
+                mModeContext.getGameState().setAICountInRace(0);
+                startRace();
+            }
+            else
+            {
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+                switchState(State_StartingGrid);
+            }
+        }
+    }
+
+    for(size_t q = 0; q < mOptionLabels.size(); ++q)
+    {
+        if(label == mOptionLabels[q])
+        {
+            setWindowTitle("Options: " + mOptionLabels[q]->getTextArea()->getCaption());
+            switchState(static_cast<SinglePlayerMenuStates>(State_Options + q));
+        }
+    }
+
 
 #ifndef NO_OPENAL
     mModeContext.getSoundsProcesser().playUIDown();
@@ -303,6 +462,43 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
 void UIMainMenuLabels::onLabelOver(UILabel * label)
 {
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+
+    for(size_t q = 0; q < mTracksLabels.size(); ++q)
+    {
+        if(label == mTracksLabels[q])
+        {
+            setTrackLogo(q);
+            setTrackBestTime(q);
+            setTrackDescription(q);
+        }
+    }
+
+    for(size_t q = 0; q < mCarsLabels.size(); ++q)
+    {
+        if(label == mCarsLabels[q])
+        {
+            setCarLogo(q);
+        }
+    }
+
+    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
+    {
+        if(label == mCharactersLabels[q])
+        {
+            std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
+
+            for (size_t w = 0; w < availableCharacters.size(); ++w)
+            {
+                if(STRPowerslide::getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getTextArea()->getCaption().asUTF8())
+                {
+                    setCharacterLogo(w);
+                    setBioDescription(w);
+                }
+            }
+        }
+    }
+
 #ifndef NO_OPENAL
     mModeContext.getSoundsProcesser().playUIOver();
 #endif
@@ -337,15 +533,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 100.0f, 0.0f, 0.0f);
-        mModeSingle = createTextArea("MainWindowSingle", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingle->setCaption("Single Player");
-        mModeSingle->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mModeSingle->setSpaceWidth(9.0f);
-        mModeSingle->setHeight(46.0f * viewportHeight / 1024.0f);
-        mModeSingle->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingle->setFontName("SdkTrays/Caption");
-        mModeSingle->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingle);
+        mModeSingle = mUILabelsManager.add();
+        mModeSingle->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingle->getTextArea()->setCaption("Single Player");
+        mModeSingle->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mModeSingle->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingle->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mModeSingle->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingle->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingle->getTextArea()->setColour(mInactiveLabel);
+        mModeSingle->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingle->getTextArea());
     }
 
     {
@@ -443,93 +641,107 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 175.0f, 0.0f, 0.0f);
-        mModeSingleTypeRace = createTextArea("MainWindowSingleTypeRace", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleTypeRace->setCaption("Single Race");
-        mModeSingleTypeRace->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeRace->setSpaceWidth(9.0f);
-        mModeSingleTypeRace->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeRace->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleTypeRace->setFontName("SdkTrays/Caption");
-        mModeSingleTypeRace->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleTypeRace);
+        mModeSingleTypeRace = mUILabelsManager.add();
+        mModeSingleTypeRace->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeRace->getTextArea()->setCaption("Single Race");
+        mModeSingleTypeRace->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeRace->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleTypeRace->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeRace->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeRace->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleTypeRace->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleTypeRace->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleTypeRace->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 200.0f, 0.0f, 0.0f);
-        mModeSingleTypeChampionship = createTextArea("MainWindowSingleTypeChampionship", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleTypeChampionship->setCaption("Championship");
-        mModeSingleTypeChampionship->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeChampionship->setSpaceWidth(9.0f);
-        mModeSingleTypeChampionship->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeChampionship->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleTypeChampionship->setFontName("SdkTrays/Caption");
-        mModeSingleTypeChampionship->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleTypeChampionship);
+        mModeSingleTypeChampionship = mUILabelsManager.add();
+        mModeSingleTypeChampionship->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeChampionship->getTextArea()->setCaption("Championship");
+        mModeSingleTypeChampionship->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeChampionship->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleTypeChampionship->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeChampionship->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeChampionship->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleTypeChampionship->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleTypeChampionship->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleTypeChampionship->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 225.0f, 0.0f, 0.0f);
-        mModeSingleTypeTimetrial = createTextArea("MainWindowSingleTypeTimetrial", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleTypeTimetrial->setCaption("Time Trial");
-        mModeSingleTypeTimetrial->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeTimetrial->setSpaceWidth(9.0f);
-        mModeSingleTypeTimetrial->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleTypeTimetrial->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleTypeTimetrial->setFontName("SdkTrays/Caption");
-        mModeSingleTypeTimetrial->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleTypeTimetrial);
+        mModeSingleTypeTimetrial = mUILabelsManager.add();
+        mModeSingleTypeTimetrial->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleTypeTimetrial->getTextArea()->setCaption("Time Trial");
+        mModeSingleTypeTimetrial->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeTimetrial->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleTypeTimetrial->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeTimetrial->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeTimetrial->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleTypeTimetrial->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleTypeTimetrial->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleTypeTimetrial->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 193.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyNovice = createTextArea("MainWindowSingleDiffNovice", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyNovice->setCaption("Novice");
-        mModeSingleDifficultyNovice->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyNovice->setSpaceWidth(9.0f);
-        mModeSingleDifficultyNovice->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyNovice->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyNovice->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyNovice->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleDifficultyNovice);
+        mModeSingleDifficultyNovice = mUILabelsManager.add();
+        mModeSingleDifficultyNovice->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleDifficultyNovice->getTextArea()->setCaption("Novice");
+        mModeSingleDifficultyNovice->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyNovice->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleDifficultyNovice->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyNovice->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleDifficultyNovice->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleDifficultyNovice->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleDifficultyNovice->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleDifficultyNovice->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 213.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyAdvanced = createTextArea("MainWindowSingleDiffAdv", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyAdvanced->setCaption("Advanced");
-        mModeSingleDifficultyAdvanced->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyAdvanced->setSpaceWidth(9.0f);
-        mModeSingleDifficultyAdvanced->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyAdvanced->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyAdvanced->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyAdvanced->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleDifficultyAdvanced);
+        mModeSingleDifficultyAdvanced = mUILabelsManager.add();
+        mModeSingleDifficultyAdvanced->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleDifficultyAdvanced->getTextArea()->setCaption("Advanced");
+        mModeSingleDifficultyAdvanced->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyAdvanced->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleDifficultyAdvanced->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyAdvanced->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleDifficultyAdvanced->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleDifficultyAdvanced->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleDifficultyAdvanced->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleDifficultyAdvanced->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 233.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyExpert = createTextArea("MainWindowSingleDiffExpert", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyExpert->setCaption("Expert");
-        mModeSingleDifficultyExpert->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyExpert->setSpaceWidth(9.0f);
-        mModeSingleDifficultyExpert->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyExpert->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyExpert->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyExpert->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleDifficultyExpert);
+        mModeSingleDifficultyExpert = mUILabelsManager.add();
+        mModeSingleDifficultyExpert->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleDifficultyExpert->getTextArea()->setCaption("Expert");
+        mModeSingleDifficultyExpert->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyExpert->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleDifficultyExpert->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyExpert->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleDifficultyExpert->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleDifficultyExpert->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleDifficultyExpert->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleDifficultyExpert->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 253.0f, 0.0f, 0.0f);
-        mModeSingleDifficultyInsane = createTextArea("MainWindowSingleDiffInsane", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mModeSingleDifficultyInsane->setCaption("Insane");
-        mModeSingleDifficultyInsane->setCharHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyInsane->setSpaceWidth(9.0f);
-        mModeSingleDifficultyInsane->setHeight(36.0f * viewportHeight / 1024.0f);
-        mModeSingleDifficultyInsane->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mModeSingleDifficultyInsane->setFontName("SdkTrays/Caption");
-        mModeSingleDifficultyInsane->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mModeSingleDifficultyInsane);
+        mModeSingleDifficultyInsane = mUILabelsManager.add();
+        mModeSingleDifficultyInsane->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mModeSingleDifficultyInsane->getTextArea()->setCaption("Insane");
+        mModeSingleDifficultyInsane->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyInsane->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleDifficultyInsane->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyInsane->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleDifficultyInsane->getTextArea()->setFontName("SdkTrays/Caption");
+        mModeSingleDifficultyInsane->getTextArea()->setColour(mInactiveLabel);
+        mModeSingleDifficultyInsane->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleDifficultyInsane->getTextArea());
     }
 
     {
@@ -634,16 +846,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     for(size_t q = 0; q < availTracks.size(); ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 56.0f + q * 30.0f, 0.0f, 0.0f);
-        mTracksLabels.push_back(NULL);
-        mTracksLabels[q] = createTextArea("MainWindowTrackLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mTracksLabels[q]->setCaption(strPowerslide.getTrackTitle(availTracks[q]));
-        mTracksLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mTracksLabels[q]->setSpaceWidth(9.0f);
-        mTracksLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mTracksLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mTracksLabels[q]->setFontName("SdkTrays/Caption");
-        mTracksLabels[q]->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mTracksLabels[q]);
+        mTracksLabels.push_back(mUILabelsManager.add());
+        mTracksLabels[q]->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mTracksLabels[q]->getTextArea()->setCaption(strPowerslide.getTrackTitle(availTracks[q]));
+        mTracksLabels[q]->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mTracksLabels[q]->getTextArea()->setSpaceWidth(9.0f);
+        mTracksLabels[q]->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mTracksLabels[q]->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mTracksLabels[q]->getTextArea()->setFontName("SdkTrays/Caption");
+        mTracksLabels[q]->getTextArea()->setColour(mInactiveLabel);
+        mTracksLabels[q]->setLabelOnAction(this);
+        getMainBackground()->addChild(mTracksLabels[q]->getTextArea());
     }
 
     mCarsLabels.clear();
@@ -656,16 +869,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
             if(q > 5)
                 pos.y += 15;
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * pos;
-        mCarsLabels.push_back(NULL);
-        mCarsLabels[q] = createTextArea("MainWindowCarLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCarsLabels[q]->setCaption(STRPowerslide::getCarTitle(availCars[q]));
-        mCarsLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mCarsLabels[q]->setSpaceWidth(9.0f);
-        mCarsLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mCarsLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mCarsLabels[q]->setFontName("SdkTrays/Caption");
-        mCarsLabels[q]->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mCarsLabels[q]);
+        mCarsLabels.push_back(mUILabelsManager.add());
+        mCarsLabels[q]->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCarsLabels[q]->getTextArea()->setCaption(STRPowerslide::getCarTitle(availCars[q]));
+        mCarsLabels[q]->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mCarsLabels[q]->getTextArea()->setSpaceWidth(9.0f);
+        mCarsLabels[q]->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mCarsLabels[q]->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mCarsLabels[q]->getTextArea()->setFontName("SdkTrays/Caption");
+        mCarsLabels[q]->getTextArea()->setColour(mInactiveLabel);
+        mCarsLabels[q]->setLabelOnAction(this);
+        getMainBackground()->addChild(mCarsLabels[q]->getTextArea());
     }
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(169.0f, 223.0f, 0.0f, 0.0f);
@@ -757,16 +971,17 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     for(size_t q = 0; q < 7; ++q)//maximum available is 7
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
-        mCharactersLabels.push_back(NULL);
-        mCharactersLabels[q] = createTextArea("MainWindowCharacterLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mCharactersLabels[q]->setCaption("");
-        mCharactersLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mCharactersLabels[q]->setSpaceWidth(9.0f);
-        mCharactersLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mCharactersLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mCharactersLabels[q]->setFontName("SdkTrays/Caption");
-        mCharactersLabels[q]->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mCharactersLabels[q]);
+        mCharactersLabels.push_back(mUILabelsManager.add());
+        mCharactersLabels[q]->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mCharactersLabels[q]->getTextArea()->setCaption("");
+        mCharactersLabels[q]->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mCharactersLabels[q]->getTextArea()->setSpaceWidth(9.0f);
+        mCharactersLabels[q]->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mCharactersLabels[q]->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mCharactersLabels[q]->getTextArea()->setFontName("SdkTrays/Caption");
+        mCharactersLabels[q]->getTextArea()->setColour(mInactiveLabel);
+        mCharactersLabels[q]->setLabelOnAction(this);
+        getMainBackground()->addChild(mCharactersLabels[q]->getTextArea());
     }
 
     mOptionLabels.clear();
@@ -774,24 +989,25 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     for(size_t q = 0; q < 7; ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
-        mOptionLabels.push_back(NULL);
-        mOptionLabels[q] = createTextArea("MainWindowOptionLabel_" + Conversions::DMToString(q), 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mOptionLabels[q]->setCaption("");
-        mOptionLabels[q]->setCharHeight(46.0f * viewportHeight / 1024.0f);
-        mOptionLabels[q]->setSpaceWidth(9.0f);
-        mOptionLabels[q]->setHeight(46.0f * viewportHeight / 1024.0f);
-        mOptionLabels[q]->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mOptionLabels[q]->setFontName("SdkTrays/Caption");
-        mOptionLabels[q]->setColour(mInactiveLabel);
-        getMainBackground()->addChild(mOptionLabels[q]);
+        mOptionLabels.push_back(mUILabelsManager.add());
+        mOptionLabels[q]->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mOptionLabels[q]->getTextArea()->setCaption("");
+        mOptionLabels[q]->getTextArea()->setCharHeight(46.0f * viewportHeight / 1024.0f);
+        mOptionLabels[q]->getTextArea()->setSpaceWidth(9.0f);
+        mOptionLabels[q]->getTextArea()->setHeight(46.0f * viewportHeight / 1024.0f);
+        mOptionLabels[q]->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mOptionLabels[q]->getTextArea()->setFontName("SdkTrays/Caption");
+        mOptionLabels[q]->getTextArea()->setColour(mInactiveLabel);
+        mOptionLabels[q]->setLabelOnAction(this);
+        getMainBackground()->addChild(mOptionLabels[q]->getTextArea());
     }
-    mOptionLabels[0]->setCaption("Graphics");
-    mOptionLabels[1]->setCaption("Input Devices");
-    mOptionLabels[2]->setCaption("Sound");
-    mOptionLabels[3]->setCaption("Race Options");
-    mOptionLabels[4]->setCaption("High Scores");
-    mOptionLabels[5]->setCaption("Change Name");
-    mOptionLabels[6]->setCaption("Trophies");
+    mOptionLabels[0]->getTextArea()->setCaption("Graphics");
+    mOptionLabels[1]->getTextArea()->setCaption("Input Devices");
+    mOptionLabels[2]->getTextArea()->setCaption("Sound");
+    mOptionLabels[3]->getTextArea()->setCaption("Race Options");
+    mOptionLabels[4]->getTextArea()->setCaption("High Scores");
+    mOptionLabels[5]->getTextArea()->setCaption("Change Name");
+    mOptionLabels[6]->getTextArea()->setCaption("Trophies");
 
     const size_t maxValStr = 20;
 
@@ -1753,11 +1969,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
-    if(mModeSingle->isVisible() && OgreBites::Widget::isCursorOver(mModeSingle, pos, 0))
-    {
-        switchState(State_SingleType);
-        return;
-    }
+    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
 
     if(mModeMultiListOfRooms->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiListOfRooms, pos, 0))
     {
@@ -1774,99 +1986,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
     if(mModeMultiJoinRoom->isVisible() && OgreBites::Widget::isCursorOver(mModeMultiJoinRoom, pos, 0))
     {
         switchState(State_MultiJoinRoom);
-        return;
-    }
-
-    if(mModeSingleTypeRace->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeRace, pos, 0))
-    {
-        mGameModeSelected = ModeMenu;
-        switchState(State_Difficulty);
-        return;
-    }
-
-    if(mModeSingleTypeChampionship->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeChampionship, pos, 0))
-    {
-        mGameModeSelected = ModeMenuChampionship;
-        switchState(State_Difficulty);
-        selectMode();
-        return;
-    }
-
-    if(mModeSingleTypeTimetrial->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleTypeTimetrial, pos, 0))
-    {
-        mGameModeSelected = ModeMenuTimetrial;
-        switchState(State_Track);
-        selectMode();
-        return;
-    }
-
-    if(mModeSingleDifficultyNovice->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyNovice, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
-
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
-        {
-            switchState(State_Track);
-        }
-
-        if(mGameModeSelected == ModeMenuChampionship)
-        {
-            switchState(State_Car);
-        }
-        return;
-    }
-
-    if(gameLevel >= Medium)
-    if(mModeSingleDifficultyAdvanced->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyAdvanced, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
-        
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
-        {
-            switchState(State_Track);
-        }
-
-        if(mGameModeSelected == ModeMenuChampionship)
-        {
-            switchState(State_Car);
-        }
-
-        return;
-    }
-
-    if(gameLevel >= Hard)
-    if(mModeSingleDifficultyExpert->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyExpert, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
-        
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
-        {
-            switchState(State_Track);
-        }
-
-        if(mGameModeSelected == ModeMenuChampionship)
-        {
-            switchState(State_Car);
-        }
-
-        return;
-    }
-
-    if(gameLevel >= Insane)
-    if(mModeSingleDifficultyInsane->isVisible() && OgreBites::Widget::isCursorOver(mModeSingleDifficultyInsane, pos, 0))
-    {
-        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
-        
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
-        {
-            switchState(State_Track);
-        }
-
-        if(mGameModeSelected == ModeMenuChampionship)
-        {
-            switchState(State_Car);
-        }
-
         return;
     }
 
@@ -1910,95 +2029,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
 
         return;
-    }
-
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-    std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
-
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-    {
-        int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
-
-        if(difficultyAvailable <= gameLevel)
-        if(mTracksLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mTracksLabels[q], pos, 0))
-        {
-            mModeContext.getGameState().setRaceParameters(availTracks[q], mModeContext.getGameState().getAIStrength());
-
-            selectTrack(mModeContext.getGameState().getTrackNameAsOriginal());
-
-            mModeContext.getGameState().savePlayerData();
-
-            switchState(State_Car);
-            return;
-        }
-    }
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-    {
-        if(mCarsLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mCarsLabels[q], pos, 0))
-        {
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(availCars[q]);
-            mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[0]);
-
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-            selectCar(characterCar);
-
-            for(size_t q = 0; q < 7; ++q)
-            {
-                if(q < availChars.size())
-                    mCharactersLabels[q]->setCaption(STRPowerslide::getCharacterTitle(availChars[q]));
-                else
-                    mCharactersLabels[q]->setCaption("");
-            }
-
-            switchState(State_Character);
-            return;
-        }
-    }
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-    {
-        if(mCharactersLabels[q]->isVisible())
-        {
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-            int difficultyAvailable = strPowerslide.getIntValue(availChars[q] + " parameters", "difficulty available", 0);
-
-            if(difficultyAvailable <= gameLevel)
-            if(OgreBites::Widget::isCursorOver(mCharactersLabels[q], pos, 0))
-            {
-                mModeContext.getGameState().getPlayerCar().setCharacterName(availChars[q]);
-
-                mModeContext.getGameState().savePlayerData();
-
-                if(mGameModeSelected == ModeMenuTimetrial)
-                {
-                    mModeContext.getGameState().setAICountInRace(0);
-                    startRace();
-                }
-                else
-                {
-                    mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
-                    switchState(State_StartingGrid);
-                }
-                return;
-            }
-        }
-    }
-
-    for(size_t q = 0; q < mOptionLabels.size(); ++q)
-    {
-        if(mOptionLabels[q]->isVisible() && OgreBites::Widget::isCursorOver(mOptionLabels[q], pos, 0))
-        {
-            setWindowTitle("Options: " + mOptionLabels[q]->getCaption());
-            switchState(static_cast<SinglePlayerMenuStates>(State_Options + q));
-            return;
-        }
     }
 
     if(mOptionGraphicsLabel_Resolution_Val->isVisible() && OgreBites::Widget::isCursorOver(mOptionGraphicsLabel_Resolution_Val, pos, 0))
@@ -2125,115 +2155,14 @@ void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 {
     UIMainMenuBackground::mouseMoved(pos);
 
-    checkCursorOverLabel(pos, mModeSingle);
     checkCursorOverLabel(pos, mModeMultiListOfRooms);
     checkCursorOverLabel(pos, mModeMultiCreateRoom);
     checkCursorOverLabel(pos, mModeMultiJoinRoom);
-    checkCursorOverLabel(pos, mModeSingleTypeRace);
-    checkCursorOverLabel(pos, mModeSingleTypeChampionship);
-    checkCursorOverLabel(pos, mModeSingleTypeTimetrial);
-    
-    checkCursorOverLabel(pos, mModeSingleDifficultyNovice);
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
-    if(gameLevel >= Medium)
-    {
-        mModeSingleDifficultyAdvanced->setColour(mInactiveLabel);
-        checkCursorOverLabel(pos, mModeSingleDifficultyAdvanced);
-    }
-    else
-    {
-        mModeSingleDifficultyAdvanced->setColour(mDisabledLabel);
-    }
-
-    if(gameLevel >= Hard)
-    {
-        mModeSingleDifficultyExpert->setColour(mInactiveLabel);
-        checkCursorOverLabel(pos, mModeSingleDifficultyExpert);
-    }
-    else
-    {
-        mModeSingleDifficultyExpert->setColour(mDisabledLabel);
-    }
-
-    if(gameLevel >= Insane)
-    {
-        mModeSingleDifficultyInsane->setColour(mInactiveLabel);
-        checkCursorOverLabel(pos, mModeSingleDifficultyInsane);
-    }
-    else
-    {
-        mModeSingleDifficultyInsane->setColour(mDisabledLabel);
-    }
 
     checkCursorOverLabel(pos, mSingleTrackViewBySelection);
     checkCursorOverLabel(pos, mSingleBioViewBySelection);
-
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-    {
-        int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
-
-        if(difficultyAvailable <= gameLevel)
-        {
-            bool isOver = checkCursorOverLabel(pos, mTracksLabels[q]);
-            if(isOver)
-            {
-                setTrackLogo(q);
-                setTrackBestTime(q);
-                setTrackDescription(q);
-            }
-        }
-    }
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-    {
-        bool isOver = checkCursorOverLabel(pos, mCarsLabels[q]);
-        if(isOver)
-        {
-            setCarLogo(q);
-        }
-    }
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-    {
-        if(mCharactersLabels[q]->isVisible())
-        {
-            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-
-            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-
-            std::vector<std::string> availChars = strPowerslide.getCharactersByBaseCar(characterCar);
-
-            int difficultyAvailable = strPowerslide.getIntValue(availChars[q] + " parameters", "difficulty available", 0);
-
-            if(difficultyAvailable <= gameLevel)
-            {
-                bool isOver = checkCursorOverLabel(pos, mCharactersLabels[q]);
-                if(isOver)
-                {
-                    std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
-
-                    for (size_t w = 0; w < availableCharacters.size(); ++w)
-                    {
-                        if(STRPowerslide::getCharacterTitle(availableCharacters[w]) == mCharactersLabels[q]->getCaption().asUTF8())
-                        {
-                            setCharacterLogo(w);
-                            setBioDescription(w);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    for(size_t q = 0; q < mOptionLabels.size(); ++q)
-    {
-        bool isOver = checkCursorOverLabel(pos, mOptionLabels[q]);
-    }
 
     checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Val);
     checkCursorOverLabel(pos, mOptionGraphicsLabel_Resolution_Apply);
@@ -2281,6 +2210,14 @@ void UIMainMenuLabels::showModeDifficulty()
 {
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
+    mModeSingleDifficultyAdvanced->setActive(true);
+    mModeSingleDifficultyExpert->setActive(true);
+    mModeSingleDifficultyInsane->setActive(true);
+
+    if(gameLevel < Medium) mModeSingleDifficultyAdvanced->setActive(false);
+    if(gameLevel < Hard) mModeSingleDifficultyExpert->setActive(false);
+    if(gameLevel < Insane) mModeSingleDifficultyInsane->setActive(false);
+
     mModeSingleDifficultyNovice->show();
     mModeSingleDifficultyAdvanced->show();
     mModeSingleDifficultyExpert->show();
@@ -2300,13 +2237,13 @@ void UIMainMenuLabels::showTrackLabels()
 
         if(difficultyAvailable <= gameLevel)
         {
-            mTracksLabels[q]->setColour(mInactiveLabel);
+            mTracksLabels[q]->setActive(true);
             mTracksLabels[q]->show();
         }
 
         if(difficultyAvailable == (gameLevel + 1))
         {
-            mTracksLabels[q]->setColour(mDisabledLabel);
+            mTracksLabels[q]->setActive(false);
             mTracksLabels[q]->show();
         }
     }
@@ -2385,7 +2322,7 @@ void UIMainMenuLabels::showCharacterLabels()
 
     for(size_t q = 0; q < mCharactersLabels.size(); ++q)
     {
-        if(mCharactersLabels[q]->getCaption() != "")
+        if(mCharactersLabels[q]->getTextArea()->getCaption() != "")
         {
             if(availCharsForCar.size() > q)
             {
@@ -2393,13 +2330,13 @@ void UIMainMenuLabels::showCharacterLabels()
 
                 if(difficultyAvailable <= gameLevel)
                 {
-                    mCharactersLabels[q]->setColour(mInactiveLabel);
+                    mCharactersLabels[q]->setActive(true);
                     mCharactersLabels[q]->show();
                 }
 
                 if(difficultyAvailable == (gameLevel + 1))
                 {
-                    mCharactersLabels[q]->setColour(mDisabledLabel);
+                    mCharactersLabels[q]->setActive(false);
                     mCharactersLabels[q]->show();
                 }
             }
@@ -2407,7 +2344,7 @@ void UIMainMenuLabels::showCharacterLabels()
     }
     for (size_t q = 0; q < availableCharacters.size(); ++q)
     {
-        if(STRPowerslide::getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getCaption().asUTF8())
+        if(STRPowerslide::getCharacterTitle(availableCharacters[q]) == mCharactersLabels[0]->getTextArea()->getCaption().asUTF8())
             setCharacterLogo(q);
     }
 
@@ -2667,7 +2604,6 @@ void UIMainMenuLabels::hideMultiJoin()
 
 void UIMainMenuLabels::hideAllLabels()
 {
-    mModeSingle->hide();
     mWindowTitleTrophies->hide();
     mModeMultiIP->hide();
     mModeMultiListOfRooms->hide();
@@ -2675,13 +2611,6 @@ void UIMainMenuLabels::hideAllLabels()
     mModeMultiRoomName->hide();
     mModeMultiCreateRoom->hide();
     mModeMultiJoinRoom->hide();
-    mModeSingleTypeRace->hide();
-    mModeSingleTypeChampionship->hide();
-    mModeSingleTypeTimetrial->hide();
-    mModeSingleDifficultyNovice->hide();
-    mModeSingleDifficultyAdvanced->hide();
-    mModeSingleDifficultyExpert->hide();
-    mModeSingleDifficultyInsane->hide();
 
     mSingleTrackDescription->hide();
     mSingleTrackBestTime->hide();
@@ -2692,11 +2621,6 @@ void UIMainMenuLabels::hideAllLabels()
     mSingleBioViewBy->hide();
     mSingleBioViewBySelection->hide();
 
-    for(size_t q = 0; q < mTracksLabels.size(); ++q)
-        mTracksLabels[q]->hide();
-
-    for(size_t q = 0; q < mCarsLabels.size(); ++q)
-        mCarsLabels[q]->hide();
     mCarParam_Mass->hide();
     mCarParam_Power->hide();
     mCarParam_Acceleration->hide();
@@ -2704,12 +2628,6 @@ void UIMainMenuLabels::hideAllLabels()
     mCarParam_TopSpeed->hide();
     mCarParam_AeroDynamics->hide();
     mCarParam_Stability->hide();
-
-    for(size_t q = 0; q < mCharactersLabels.size(); ++q)
-        mCharactersLabels[q]->hide();
-
-    for(size_t q = 0; q < mOptionLabels.size(); ++q)
-        mOptionLabels[q]->hide();
 
     mOptionGraphicsLabel_Vendor->hide();
     mOptionGraphicsLabel_Vendor_Val->hide();
