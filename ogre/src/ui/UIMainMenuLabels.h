@@ -116,28 +116,10 @@ private:
 
 
     std::vector<UILabel*> mTracksLabels;
-
     std::vector<UILabel*> mCarsLabels;
-    UILabel* mCarParam_Mass;
-    UILabel* mCarParam_Power;
-    UILabel* mCarParam_Acceleration;
-    UILabel* mCarParam_Traction;
-    UILabel* mCarParam_TopSpeed;
-    UILabel* mCarParam_AeroDynamics;
-    UILabel* mCarParam_Stability;
-
     std::vector<UILabel*> mCharactersLabels;
-
     std::vector<UILabel*> mOptionLabels;
 
-    UILabel* mOptionGraphicsLabel_Vendor;
-    UILabel* mOptionGraphicsLabel_Vendor_Val;
-    UILabel* mOptionGraphicsLabel_Renderer;
-    UILabel* mOptionGraphicsLabel_Renderer_Val;
-    UILabel* mOptionGraphicsLabel_Shadow;
-    UILabel* mOptionGraphicsLabel_VSync;
-    UILabel* mOptionGraphicsLabel_Fulscreen;
-    UILabel* mOptionGraphicsLabel_Resolution;
     UILabel* mOptionGraphicsLabel_Resolution_Val;
     UILabel* mOptionGraphicsLabel_Resolution_Apply;
     
@@ -145,24 +127,17 @@ private:
     UIButton* mInputTypeValLeft;
     UIButton* mInputTypeValRight;
 
-    UILabel* mOptionSoundLabel_VolumeFX;
     UILabel* mOptionSoundLabel_VolumeFX_Val;
     UIButton* mSoundVolumeFXValLeft;
     UIButton* mSoundVolumeFXValRight;
 
-    UILabel* mOptionSoundLabel_VolumeMusic;
     UILabel* mOptionSoundLabel_VolumeMusic_Val;
     UIButton* mSoundVolumeMusicValLeft;
     UIButton* mSoundVolumeMusicValRight;
 
-    UILabel* mOptionRaceLabel_Opponents;
     UILabel* mOptionRaceLabel_Opponents_Val;
-    UILabel* mOptionRaceLabel_Transmission;
     UILabel* mOptionRaceLabel_Transmission_Val;
-    UILabel* mOptionRaceLabel_KMPH;
     UILabel* mOptionRaceLabel_KMPH_Val;
-    UILabel* mOptionRaceLabel_Mirror;
-    UILabel* mOptionRaceLabel_Ghost;
     UIButtonTick* mShadowVal;
     UIButtonTick* mVSyncVal;
     UIButtonTick* mFulscreenVal;
@@ -173,15 +148,13 @@ private:
 
     UIButton* mHighScoresTrackLeft;
     UIButton* mHighScoresTrackRight;
-    Ogre::TextAreaOverlayElement * mOptionHighScoresButtonLabel;
-    Ogre::TextAreaOverlayElement * mOptionHighScoresTrackLabel;
-    Ogre::TextAreaOverlayElement * mOptionHighScoresReplayLabel;
+    UILabel* mOptionHighScoresTrackLabel;
+    UILabel* mOptionHighScoresReplayLabel;
     Ogre::PanelOverlayElement* mOptionHighScoresReplayIcon;
-    Ogre::TextAreaOverlayElement * mOptionHighScoresTable1Label[GameState::mRaceGridCarsMax];
-    Ogre::TextAreaOverlayElement * mOptionHighScoresTable2Label[GameState::mRaceGridCarsMax];
-    Ogre::TextAreaOverlayElement * mOptionHighScoresTable3Label[GameState::mRaceGridCarsMax];
+    UILabel* mOptionHighScoresTable2Label[GameState::mRaceGridCarsMax];
+    UILabel* mOptionHighScoresTable3Label[GameState::mRaceGridCarsMax];
     Ogre::PanelOverlayElement* mOptionHighScoresTable4Icon[GameState::mRaceGridCarsMax];
-    Ogre::TextAreaOverlayElement * mOptionHighScoresEmergentGunLabel;
+    UILabel* mOptionHighScoresEmergentGunLabel;
     size_t mHighScoreTrackIndex;
     void fillHighScoreTable();
     void fillReplayStat();
@@ -191,7 +164,7 @@ private:
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 
-    Ogre::TextAreaOverlayElement * mExitLabel;
+    UILabel* mExitLabel;
     UILabel* mGameExitYesLabel;
     UILabel* mGameExitNoLabel;
 
