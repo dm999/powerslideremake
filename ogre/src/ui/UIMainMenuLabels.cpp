@@ -550,6 +550,43 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if(label == mSingleTrackViewBySelection)
+    {
+        mIsViewByDescription = !mIsViewByDescription;
+
+        if(mIsViewByDescription)
+        {
+            mSingleTrackViewBySelection->getTextArea()->setCaption("Description");
+            hideBackgroundTrack();
+            mSingleTrackDescription->show();
+        }
+        else
+        {
+            mSingleTrackViewBySelection->getTextArea()->setCaption("Image");
+            showBackgroundTrack();
+            mSingleTrackDescription->hide();
+        }
+    }
+
+
+    if(label == mSingleBioViewBySelection)
+    {
+        mIsBioByDescription = !mIsBioByDescription;
+
+        if(mIsBioByDescription)
+        {
+            mSingleBioViewBySelection->getTextArea()->setCaption("Description");
+            hideBackgroundCharacter();
+            mSingleBioDescription->show();
+        }
+        else
+        {
+            mSingleBioViewBySelection->getTextArea()->setCaption("Bio");
+            showBackgroundCharacter();
+            mSingleBioDescription->hide();
+        }
+    }
+
 
     if(label == mModeMultiCreateRoom)
     {
@@ -852,95 +889,99 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(25.0f, 20.0f, 0.0f, 0.0f);
-        mSingleTrackDescription = createTextArea("MainWindowSingleTrackDescription", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mSingleTrackDescription->setCaption("");
-        mSingleTrackDescription->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackDescription->setSpaceWidth(9.0f);
-        mSingleTrackDescription->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackDescription->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleTrackDescription->setFontName("SdkTrays/Caption");
-        mSingleTrackDescription->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mSingleTrackDescription);
+        mSingleTrackDescription = mUILabelsManager.add();
+        mSingleTrackDescription->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackDescription->setFixed(true);
+        mSingleTrackDescription->getTextArea()->setCaption("");
+        mSingleTrackDescription->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackDescription->getTextArea()->setSpaceWidth(9.0f);
+        mSingleTrackDescription->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackDescription->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mSingleTrackDescription->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 340.0f, 0.0f, 0.0f);
-        mSingleTrackBestTime = createTextArea("MainWindowSingleTrackBestTime", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mSingleTrackBestTime->setCaption("");
-        mSingleTrackBestTime->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackBestTime->setSpaceWidth(9.0f);
-        mSingleTrackBestTime->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackBestTime->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleTrackBestTime->setFontName("SdkTrays/Caption");
-        mSingleTrackBestTime->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mSingleTrackBestTime);
+        mSingleTrackBestTime = mUILabelsManager.add();
+        mSingleTrackBestTime->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackBestTime->setFixed(true);
+        mSingleTrackBestTime->getTextArea()->setCaption("");
+        mSingleTrackBestTime->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackBestTime->getTextArea()->setSpaceWidth(9.0f);
+        mSingleTrackBestTime->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackBestTime->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mSingleTrackBestTime->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 360.0f, 0.0f, 0.0f);
-        mSingleTrackViewBy = createTextArea("MainWindowSingleTrackViewBy", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mSingleTrackViewBy->setCaption("View By");
-        mSingleTrackViewBy->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackViewBy->setSpaceWidth(9.0f);
-        mSingleTrackViewBy->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackViewBy->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleTrackViewBy->setFontName("SdkTrays/Caption");
-        mSingleTrackViewBy->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mSingleTrackViewBy);
+        mSingleTrackViewBy = mUILabelsManager.add("mSingleTrackView");
+        mSingleTrackViewBy->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleTrackViewBy->setFixed(true);
+        mSingleTrackViewBy->getTextArea()->setCaption("View By");
+        mSingleTrackViewBy->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBy->getTextArea()->setSpaceWidth(9.0f);
+        mSingleTrackViewBy->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBy->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mSingleTrackViewBy->getTextArea());
     }
 
     {
-        Ogre::Real viewBySize = getTextWidth(mSingleTrackViewBy->getCaption(), mSingleTrackViewBy);
+        Ogre::Real viewBySize = getTextWidth(mSingleTrackViewBy->getTextArea()->getCaption(), mSingleTrackViewBy->getTextArea());
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 360.0f, 0.0f, 0.0f);
-        mSingleTrackViewBySelection = createTextArea("MainWindowSingleTrackViewBySelection", 0.0f, 0.0f, mSingleTrackViewBy->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
-        mSingleTrackViewBySelection->setCaption("Image");
-        mSingleTrackViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackViewBySelection->setSpaceWidth(9.0f);
-        mSingleTrackViewBySelection->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleTrackViewBySelection->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleTrackViewBySelection->setFontName("SdkTrays/Caption");
-        mSingleTrackViewBySelection->setColour(UILabel::mInactiveLabel);
-        getMainBackground()->addChild(mSingleTrackViewBySelection);
+        mSingleTrackViewBySelection = mUILabelsManager.add("mSingleTrackView");
+        mSingleTrackViewBySelection->init(0.0f, 0.0f, mSingleTrackViewBy->getTextArea()->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
+        mSingleTrackViewBySelection->getTextArea()->setCaption("Image");
+        mSingleTrackViewBySelection->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBySelection->getTextArea()->setSpaceWidth(9.0f);
+        mSingleTrackViewBySelection->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleTrackViewBySelection->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleTrackViewBySelection->getTextArea()->setFontName("SdkTrays/Caption");
+        mSingleTrackViewBySelection->getTextArea()->setColour(UILabel::mInactiveLabel);
+        mSingleTrackViewBySelection->setLabelOnAction(this);
+        getMainBackground()->addChild(mSingleTrackViewBySelection->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(25.0f, 20.0f, 0.0f, 0.0f);
-        mSingleBioDescription = createTextArea("MainWindowSingleBioDescription", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mSingleBioDescription->setCaption("");
-        mSingleBioDescription->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioDescription->setSpaceWidth(9.0f);
-        mSingleBioDescription->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioDescription->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleBioDescription->setFontName("SdkTrays/Caption");
-        mSingleBioDescription->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mSingleBioDescription);
+        mSingleBioDescription = mUILabelsManager.add();
+        mSingleBioDescription->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleBioDescription->setFixed(true);
+        mSingleBioDescription->getTextArea()->setCaption("");
+        mSingleBioDescription->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioDescription->getTextArea()->setSpaceWidth(9.0f);
+        mSingleBioDescription->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioDescription->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mSingleBioDescription->getTextArea());
     }
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 360.0f, 0.0f, 0.0f);
-        mSingleBioViewBy = createTextArea("MainWindowSingleBioViewBy", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
-        mSingleBioViewBy->setCaption("View By");
-        mSingleBioViewBy->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioViewBy->setSpaceWidth(9.0f);
-        mSingleBioViewBy->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioViewBy->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleBioViewBy->setFontName("SdkTrays/Caption");
-        mSingleBioViewBy->setColour(Ogre::ColourValue::White);
-        getMainBackground()->addChild(mSingleBioViewBy);
+        mSingleBioViewBy = mUILabelsManager.add("mSingleBio");
+        mSingleBioViewBy->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mSingleBioViewBy->setFixed(true);
+        mSingleBioViewBy->getTextArea()->setCaption("View By");
+        mSingleBioViewBy->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBy->getTextArea()->setSpaceWidth(9.0f);
+        mSingleBioViewBy->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBy->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mSingleBioViewBy->getTextArea());
     }
 
     {
-        Ogre::Real viewBySize = getTextWidth(mSingleBioViewBy->getCaption(), mSingleBioViewBy);
+        Ogre::Real viewBySize = getTextWidth(mSingleBioViewBy->getTextArea()->getCaption(), mSingleBioViewBy->getTextArea());
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(0.0f, 360.0f, 0.0f, 0.0f);
-        mSingleBioViewBySelection = createTextArea("MainWindowSingleBioViewBySelection", 0.0f, 0.0f, mSingleBioViewBy->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
-        mSingleBioViewBySelection->setCaption("Bio");
-        mSingleBioViewBySelection->setCharHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioViewBySelection->setSpaceWidth(9.0f);
-        mSingleBioViewBySelection->setHeight(26.0f * viewportHeight / 1024.0f);
-        mSingleBioViewBySelection->setAlignment(Ogre::TextAreaOverlayElement::Left);
-        mSingleBioViewBySelection->setFontName("SdkTrays/Caption");
-        mSingleBioViewBySelection->setColour(UILabel::mInactiveLabel);
-        getMainBackground()->addChild(mSingleBioViewBySelection);
+        mSingleBioViewBySelection = mUILabelsManager.add("mSingleBio");
+        mSingleBioViewBySelection->init(0.0f, 0.0f, mSingleBioViewBy->getTextArea()->getLeft() + viewBySize + 9.0f, textBoxPos.y); 
+        mSingleBioViewBySelection->getTextArea()->setCaption("Bio");
+        mSingleBioViewBySelection->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBySelection->getTextArea()->setSpaceWidth(9.0f);
+        mSingleBioViewBySelection->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mSingleBioViewBySelection->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mSingleBioViewBySelection->getTextArea()->setFontName("SdkTrays/Caption");
+        mSingleBioViewBySelection->getTextArea()->setColour(UILabel::mInactiveLabel);
+        mSingleBioViewBySelection->setLabelOnAction(this);
+        getMainBackground()->addChild(mSingleBioViewBySelection->getTextArea());
     }
 
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
@@ -2057,51 +2098,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-
-    if(mSingleTrackViewBySelection->isVisible() && OgreBites::Widget::isCursorOver(mSingleTrackViewBySelection, pos, 0))
-    {
-        mIsViewByDescription = !mIsViewByDescription;
-
-        if(mIsViewByDescription)
-        {
-            mSingleTrackViewBySelection->setCaption("Description");
-            hideBackgroundTrack();
-            mSingleTrackDescription->show();
-        }
-        else
-        {
-            mSingleTrackViewBySelection->setCaption("Image");
-            showBackgroundTrack();
-            mSingleTrackDescription->hide();
-        }
-
-
-        return;
-    }
-
-    if(mSingleBioViewBySelection->isVisible() && OgreBites::Widget::isCursorOver(mSingleBioViewBySelection, pos, 0))
-    {
-        mIsBioByDescription = !mIsBioByDescription;
-
-        if(mIsBioByDescription)
-        {
-            mSingleBioViewBySelection->setCaption("Description");
-            hideBackgroundCharacter();
-            mSingleBioDescription->show();
-        }
-        else
-        {
-            mSingleBioViewBySelection->setCaption("Bio");
-            showBackgroundCharacter();
-            mSingleBioDescription->hide();
-        }
-
-
-        return;
-    }
-
-
     mUIButtonsManager.mouseReleased(pos);
     mUIButtonTicksManager.mouseReleased(pos);
     mUILabelsManager.mouseReleased(pos);
@@ -2110,9 +2106,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
 {
     UIMainMenuBackground::mouseMoved(pos);
-
-    checkCursorOverLabel(pos, mSingleTrackViewBySelection);
-    checkCursorOverLabel(pos, mSingleBioViewBySelection);
 
     mUIButtonsManager.mouseMoved(pos);
     mUIButtonTicksManager.mouseMoved(pos);
@@ -2188,13 +2181,13 @@ void UIMainMenuLabels::showTrackLabels()
 
     if(mIsViewByDescription)
     {
-        mSingleTrackViewBySelection->setCaption("Description");
+        mSingleTrackViewBySelection->getTextArea()->setCaption("Description");
         hideBackgroundTrack();
         mSingleTrackDescription->show();
     }
     else
     {
-        mSingleTrackViewBySelection->setCaption("Image");
+        mSingleTrackViewBySelection->getTextArea()->setCaption("Image");
         showBackgroundTrack();
         mSingleTrackDescription->hide();
     }
@@ -2203,8 +2196,7 @@ void UIMainMenuLabels::showTrackLabels()
 
     if(mModeContext.getGameState().isPatchDataInited())
     {
-        mSingleTrackViewBy->show();
-        mSingleTrackViewBySelection->show();
+        mUILabelsManager.show("mSingleTrackView");
     }
 }
 
@@ -2241,13 +2233,13 @@ void UIMainMenuLabels::showCharacterLabels()
     {
         hideBackgroundCharacter();
         mSingleBioDescription->show();
-        mSingleBioViewBySelection->setCaption("Description");
+        mSingleBioViewBySelection->getTextArea()->setCaption("Description");
     }
     else
     {
         showBackgroundCharacter();
         mSingleBioDescription->hide();
-        mSingleBioViewBySelection->setCaption("Bio");
+        mSingleBioViewBySelection->getTextArea()->setCaption("Bio");
     }
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
@@ -2282,8 +2274,7 @@ void UIMainMenuLabels::showCharacterLabels()
 
     if(mModeContext.getGameState().isPatchDataInited())
     {
-        mSingleBioViewBy->show();
-        mSingleBioViewBySelection->show();
+        mUILabelsManager.show("mSingleBio");
     }
 
 }
@@ -2488,15 +2479,6 @@ void UIMainMenuLabels::hideAllLabels()
     mModeMultiUserName->hide();
     mModeMultiRoomName->hide();
 
-    mSingleTrackDescription->hide();
-    mSingleTrackBestTime->hide();
-    mSingleTrackViewBy->hide();
-    mSingleTrackViewBySelection->hide();
-
-    mSingleBioDescription->hide();
-    mSingleBioViewBy->hide();
-    mSingleBioViewBySelection->hide();
-
     mOptionHighScoresReplayIcon->hide();
     mOptionVersionLabel->hide();
 
@@ -2569,9 +2551,9 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
     Conversions::DMFromString(times[0], time);
 
     if(index == 8)//stunt
-        mSingleTrackBestTime->setCaption("");
+        mSingleTrackBestTime->getTextArea()->setCaption("");
     else
-        mSingleTrackBestTime->setCaption("Best Lap Time " + Tools::SecondsToString(time));
+        mSingleTrackBestTime->getTextArea()->setCaption("Best Lap Time " + Tools::SecondsToString(time));
 }
 
 Ogre::Real UIMainMenuLabels::getTextWidth(const std::string& text, Ogre::TextAreaOverlayElement * element) const
@@ -2631,19 +2613,19 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
 
         //word wrap
 
-        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleTrackDescription->getFontName()).getPointer();
+        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleTrackDescription->getTextArea()->getFontName()).getPointer();
 
         bool firstWord = true;
         unsigned int lastSpace = 0;
         Ogre::Real lineWidth = 0.0f;
-        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleTrackDescription->getLeft() - viewportWidth / 50.0f;
+        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleTrackDescription->getTextArea()->getLeft() - viewportWidth / 50.0f;
 
         for(size_t q = 0; q < desc.size(); ++q)
         {
             if (desc[q] == ' ')
             {
-                if (mSingleTrackDescription->getSpaceWidth() != 0) lineWidth += mSingleTrackDescription->getSpaceWidth();
-                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleTrackDescription->getCharHeight();
+                if (mSingleTrackDescription->getTextArea()->getSpaceWidth() != 0) lineWidth += mSingleTrackDescription->getTextArea()->getSpaceWidth();
+                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleTrackDescription->getTextArea()->getCharHeight();
 
                 firstWord = false;
                 lastSpace = q;
@@ -2656,7 +2638,7 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
             else
             {
                 // use glyph information to calculate line width
-                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleTrackDescription->getCharHeight();
+                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleTrackDescription->getTextArea()->getCharHeight();
                 if (lineWidth > rightBoundary)
                 {
                     if (firstWord)
@@ -2673,11 +2655,11 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
             }
         }
 
-        mSingleTrackDescription->setCaption(desc);
+        mSingleTrackDescription->getTextArea()->setCaption(desc);
     }
     else
     {
-        mSingleTrackDescription->setCaption("N/A");
+        mSingleTrackDescription->getTextArea()->setCaption("N/A");
     }
 
 }
@@ -2703,19 +2685,19 @@ void UIMainMenuLabels::setBioDescription(size_t index)
     {
         //word wrap
 
-        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleBioDescription->getFontName()).getPointer();
+        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleBioDescription->getTextArea()->getFontName()).getPointer();
 
         bool firstWord = true;
         unsigned int lastSpace = 0;
         Ogre::Real lineWidth = 0.0f;
-        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleBioDescription->getLeft() - viewportWidth / 50.0f;
+        Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleBioDescription->getTextArea()->getLeft() - viewportWidth / 50.0f;
 
         for(size_t q = 0; q < desc.size(); ++q)
         {
             if (desc[q] == ' ')
             {
-                if (mSingleBioDescription->getSpaceWidth() != 0) lineWidth += mSingleBioDescription->getSpaceWidth();
-                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleBioDescription->getCharHeight();
+                if (mSingleBioDescription->getTextArea()->getSpaceWidth() != 0) lineWidth += mSingleBioDescription->getTextArea()->getSpaceWidth();
+                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleBioDescription->getTextArea()->getCharHeight();
 
                 firstWord = false;
                 lastSpace = q;
@@ -2728,7 +2710,7 @@ void UIMainMenuLabels::setBioDescription(size_t index)
             else
             {
                 // use glyph information to calculate line width
-                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleBioDescription->getCharHeight();
+                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleBioDescription->getTextArea()->getCharHeight();
                 if (lineWidth > rightBoundary)
                 {
                     if (firstWord)
@@ -2746,11 +2728,11 @@ void UIMainMenuLabels::setBioDescription(size_t index)
         }
 
         std::replace( desc.begin(), desc.end(), (char)(0xe9), 'y');
-        mSingleBioDescription->setCaption(desc);
+        mSingleBioDescription->getTextArea()->setCaption(desc);
     }
     else
     {
-        mSingleBioDescription->setCaption("N/A");
+        mSingleBioDescription->getTextArea()->setCaption("N/A");
     }
 
 }

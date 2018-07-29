@@ -103,15 +103,15 @@ private:
     UILabel* mModeSingleDifficultyExpert;
     UILabel* mModeSingleDifficultyInsane;
 
-    Ogre::TextAreaOverlayElement * mSingleTrackDescription;
-    Ogre::TextAreaOverlayElement * mSingleTrackBestTime;
-    Ogre::TextAreaOverlayElement * mSingleTrackViewBy;
-    Ogre::TextAreaOverlayElement * mSingleTrackViewBySelection;
+    UILabel* mSingleTrackDescription;
+    UILabel* mSingleTrackBestTime;
+    UILabel* mSingleTrackViewBy;
+    UILabel* mSingleTrackViewBySelection;
     bool mIsViewByDescription;
 
-    Ogre::TextAreaOverlayElement * mSingleBioDescription;
-    Ogre::TextAreaOverlayElement * mSingleBioViewBy;
-    Ogre::TextAreaOverlayElement * mSingleBioViewBySelection;
+    UILabel* mSingleBioDescription;
+    UILabel* mSingleBioViewBy;
+    UILabel* mSingleBioViewBySelection;
     bool mIsBioByDescription;
 
 
