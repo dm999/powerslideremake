@@ -25,7 +25,8 @@ namespace{
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
     UIMainMenuBackground(modeContext, gameMode),
     mIsViewByDescription(false),
-    mIsBioByDescription(false)
+    mIsBioByDescription(false),
+    mHighScoreTrackIndex(0)
 {}
 
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
@@ -753,7 +754,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 175.0f, 0.0f, 0.0f);
-        mModeSingleTypeRace = mUILabelsManager.add();
+        mModeSingleTypeRace = mUILabelsManager.add("mModeSingle");
         mModeSingleTypeRace->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeRace->getTextArea()->setCaption("Single Race");
         mModeSingleTypeRace->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -767,7 +768,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 200.0f, 0.0f, 0.0f);
-        mModeSingleTypeChampionship = mUILabelsManager.add();
+        mModeSingleTypeChampionship = mUILabelsManager.add("mModeSingle");
         mModeSingleTypeChampionship->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeChampionship->getTextArea()->setCaption("Championship");
         mModeSingleTypeChampionship->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -781,7 +782,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 225.0f, 0.0f, 0.0f);
-        mModeSingleTypeTimetrial = mUILabelsManager.add();
+        mModeSingleTypeTimetrial = mUILabelsManager.add("mModeSingle");
         mModeSingleTypeTimetrial->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
         mModeSingleTypeTimetrial->getTextArea()->setCaption("Time Trial");
         mModeSingleTypeTimetrial->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
@@ -2137,9 +2138,7 @@ void UIMainMenuLabels::showModeSingleMulti()
 
 void UIMainMenuLabels::showModeSingleType()
 {
-    mModeSingleTypeRace->show();
-    mModeSingleTypeChampionship->show();
-    mModeSingleTypeTimetrial->show();
+    mUILabelsManager.show("mModeSingle");
 }
 
 void UIMainMenuLabels::showModeDifficulty()
@@ -2333,12 +2332,14 @@ void UIMainMenuLabels::showOptionRaceLabels()
 
 void UIMainMenuLabels::showOptionHiscoreLabels()
 {
-    mHighScoreTrackIndex = 0;
-
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
-    mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTracks[mHighScoreTrackIndex]));
+    size_t highScoreTrackIndex = mHighScoreTrackIndex;
+    if(highScoreTrackIndex == 8)//skip stunt
+        ++highScoreTrackIndex;
+    mOptionHighScoresTrackLabel->setCaption(strPowerslide.getTrackTitle(availTracks[highScoreTrackIndex]));
+
 
     fillHighScoreTable();
     fillReplayStat();
