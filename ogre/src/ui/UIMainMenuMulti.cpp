@@ -425,7 +425,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mModeVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mModeVal->setFontName("SdkTrays/Caption");
         if(mModeContext.mGameState.isMultiplayerMaster())
-            mModeVal->setColour(UIMainMenuLabels::mInactiveLabel);
+            mModeVal->setColour(UILabel::mInactiveLabel);
         else
             mModeVal->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mModeVal);
@@ -454,7 +454,7 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
         mAIStrengthVal->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mAIStrengthVal->setFontName("SdkTrays/Caption");
         if(mModeContext.mGameState.isMultiplayerMaster())
-            mAIStrengthVal->setColour(UIMainMenuLabels::mInactiveLabel);
+            mAIStrengthVal->setColour(UILabel::mInactiveLabel);
         else
             mAIStrengthVal->setColour(Ogre::ColourValue::White);
         mMainBackground->addChild(mAIStrengthVal);

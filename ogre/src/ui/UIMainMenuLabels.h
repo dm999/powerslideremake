@@ -24,9 +24,6 @@ public:
     void onLabelReleased(UILabel * label) override;
     void onLabelOver(UILabel * label) override;
 
-    static const Ogre::ColourValue mDisabledLabel;
-    static const Ogre::ColourValue mInactiveLabel;
-
     static bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
 
 protected:
@@ -199,8 +196,8 @@ private:
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;
 
     Ogre::TextAreaOverlayElement * mExitLabel;
-    Ogre::TextAreaOverlayElement * mGameExitYesLabel;
-    Ogre::TextAreaOverlayElement * mGameExitNoLabel;
+    UILabel* mGameExitYesLabel;
+    UILabel* mGameExitNoLabel;
 
     Ogre::TextAreaOverlayElement * mRaceGridCharactersLabel[GameState::mRaceGridCarsMax];
 
@@ -231,11 +228,11 @@ private:
     private:
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;
-    Ogre::TextAreaOverlayElement * mModeMultiListOfRooms;
+    UILabel* mModeMultiListOfRooms;
     Ogre::TextAreaOverlayElement * mModeMultiUserName;
     Ogre::TextAreaOverlayElement * mModeMultiRoomName;
-    Ogre::TextAreaOverlayElement * mModeMultiCreateRoom;
-    Ogre::TextAreaOverlayElement * mModeMultiJoinRoom;
+    UILabel* mModeMultiCreateRoom;
+    UILabel* mModeMultiJoinRoom;
 
     std::map<std::string, std::string> mTrackDesc;
     std::map<std::string, std::string> mCharacterDesc;

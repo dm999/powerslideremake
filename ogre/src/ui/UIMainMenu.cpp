@@ -261,14 +261,14 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
     if(mEditBoxMultiIP.isActive())
     {
         mEditBoxMultiIP.setColor(Ogre::ColourValue::White);
-        setColorMultiIP(mInactiveLabel);
+        setColorMultiIP(UILabel::mInactiveLabel);
     }
 
     if(mEditBoxMultiUserName.isActive())
-        setColorMultiUserName(mInactiveLabel);
+        setColorMultiUserName(UILabel::mInactiveLabel);
 
     if(mEditBoxMultiRoomName.isActive())
-        setColorMultiRoomName(mInactiveLabel);
+        setColorMultiRoomName(UILabel::mInactiveLabel);
 
     if(mCurrentState == State_Options_Name)
     {
@@ -844,8 +844,8 @@ void UIMainMenu::connectToServer()
     std::string serverIP = mEditBoxMultiIP.getText().asUTF8();
 
     hideMultiJoin();
-    setColorMultiUserName(mInactiveLabel);
-    setColorMultiRoomName(mInactiveLabel);
+    setColorMultiUserName(UILabel::mInactiveLabel);
+    setColorMultiRoomName(UILabel::mInactiveLabel);
 
     if(!serverIP.empty())
     {

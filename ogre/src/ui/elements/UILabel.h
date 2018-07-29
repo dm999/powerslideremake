@@ -38,6 +38,9 @@ public:
 
     bool isVisible() const {return mIsShown;}
 
+    static const Ogre::ColourValue mDisabledLabel;
+    static const Ogre::ColourValue mInactiveLabel;
+
 private:
 
     static Ogre::NameGenerator nameGenTextArea;

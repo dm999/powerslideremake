@@ -4,6 +4,9 @@
 
 Ogre::NameGenerator UILabel::nameGenTextArea("UILabel/TextArea");
 
+const Ogre::ColourValue UILabel::mDisabledLabel(0.25f, 0.25f, 0.25f);
+const Ogre::ColourValue UILabel::mInactiveLabel(0.50f, 0.50f, 0.50f);
+
 UILabel::UILabel() : 
     mOnAction(NULL), mIsShown(true), mIsPressed(false), mIsOver(false), mIsActive(true)
 {
@@ -37,7 +40,7 @@ void UILabel::mouseReleased(const Ogre::Vector2& pos)
     {
         mIsPressed = false;
 
-        mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
+        mTextArea->setColour(mInactiveLabel);
 
         if(mOnAction)
         {
@@ -65,7 +68,7 @@ void UILabel::mouseMoved(const Ogre::Vector2& pos)
             }
             else
             {
-                mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
+                mTextArea->setColour(mInactiveLabel);
                 mIsOver = false;
             }
         }
@@ -81,11 +84,11 @@ void UILabel::setActive(bool isActive)
     {
         if(mIsActive)
         {
-            mTextArea->setColour(UIMainMenuLabels::mInactiveLabel);
+            mTextArea->setColour(mInactiveLabel);
         }
         else
         {
-            mTextArea->setColour(UIMainMenuLabels::mDisabledLabel);
+            mTextArea->setColour(mDisabledLabel);
         }
     }
 }
