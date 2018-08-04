@@ -18,6 +18,8 @@
 
 #include "../multiplayer/MultiplayerRoomInfo.h"
 
+#include "../video/CinepackDecode.h"
+
 #if defined(__ANDROID__)
     #include <android/keycodes.h>
 #endif
@@ -658,6 +660,28 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Trophies:
         mIsInStartingGrid = false;
         setMainBackgroundMaterial("Test/TrophiesBackground");
+        {
+            const PFLoader& gameshell = mModeContext.getGameState().getPFLoaderGameshell();
+            Ogre::DataStreamPtr videoFile = gameshell.getFile("data/gameshell", "apple.avi");
+            if(videoFile.get() && videoFile->isReadable())
+            {
+                CinepackDecode decode;
+                if(decode.init(videoFile))
+                {
+                    if(decode.decodeFrame())
+                    {
+                        std::vector<Ogre::uint8>& frame = decode.getFrame();
+                        Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().getByName("OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
+                        if(texture.get())
+                        {
+                            Ogre::PixelBox pb(640, 480, 1, Ogre::PF_BYTE_RGB, &frame[0]);
+                            Ogre::HardwarePixelBufferSharedPtr buffer = texture->getBuffer();
+                            //buffer->blitFromMemory(pb);
+                        }
+                    }
+                }
+            }
+        }
         showBackgroundFruis(mModeContext.getGameState().getPlayerData());
         for(size_t q = 0; q < mControlsCount; ++q)
         {

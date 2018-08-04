@@ -26,6 +26,8 @@ To build project you need:
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
+- [OpenCV](https://opencv.org/) AVIReadContainer class source code used to parse AVI header and extract encoded frame  
+- [Cinepack codec](https://multimedia.cx/mirror/cinepak.txt) explanation of Cinepack decoding by Dr. Tim Ferguson used  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
