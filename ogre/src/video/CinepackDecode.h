@@ -7,6 +7,7 @@
 #include "AVIFrameDescription.h"
 
 class AVIReadContainer;
+struct PalletteBlock;
 struct CinepakContext;
 
 //https://web.archive.org/web/20070205155111/http://www.csse.monash.edu.au:80/~timf/videocodec/cinepak_decode.c
@@ -25,6 +26,14 @@ public:
     std::vector<Ogre::uint8>& getFrame() {return mFrame;}
 
 private:
+
+    static Ogre::uint16 RB16(const Ogre::uint8 * buf);
+    static Ogre::uint32 RB32(const Ogre::uint8 * buf);
+
+    void decode(size_t frameIndex, size_t amountOfFrames);
+    void decodeStrip(size_t stripSize, size_t stripIndex);
+    void decodeCodeBook(Ogre::uint16 chunkSize, Ogre::uint8 chunkID, PalletteBlock* codebook);
+    void decodeVectors(Ogre::uint16 chunkSize, Ogre::uint8 chunkID, size_t stripIndex);
 
     CommonIncludes::shared_ptr<AVIReadContainer> mAviContainer;
     FrameList mFrameList;
