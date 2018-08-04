@@ -133,6 +133,8 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", "fruit.bmp", 
                                 "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().generate("VideoTexture", 640, 480, Ogre::ColourValue::Black, TEMP_RESOURCE_GROUP_NAME);
+
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "name_bge.bmp", 
                                 "OriginalBackgroundName", TEMP_RESOURCE_GROUP_NAME);
@@ -364,6 +366,11 @@ void UIMainMenuBackground::createBackgroundMaterials()
     //trophies background
     {
         clone2DMaterial("OriginalBackgroundTrophies", "Test/TrophiesBackground");
+    }
+
+    //video background
+    {
+        clone2DMaterial("VideoTexture", "Test/VideoTexture");
     }
 
     //name background

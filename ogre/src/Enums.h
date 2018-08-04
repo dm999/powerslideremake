@@ -39,6 +39,7 @@ enum SinglePlayerMenuStates // multiplayer menus too but before connection happe
     State_Options_Scores,
     State_Options_Name,
     State_Options_Trophies,
+    State_Options_Trophies_Video,
     State_StartingGrid,
     State_Podium,
     State_Leaderboard,          //championship

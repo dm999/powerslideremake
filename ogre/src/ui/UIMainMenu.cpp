@@ -18,8 +18,6 @@
 
 #include "../multiplayer/MultiplayerRoomInfo.h"
 
-#include "../video/CinepackDecode.h"
-
 #if defined(__ANDROID__)
     #include <android/keycodes.h>
 #endif
@@ -251,6 +249,14 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
     mEditBoxMultiIP.frameStarted(evt);
     mEditBoxMultiUserName.frameStarted(evt);
     mEditBoxMultiRoomName.frameStarted(evt);
+
+    if(mCurrentState == State_Options_Trophies_Video)
+    {
+        if(!mVideoPlayer.isFinished())
+        {
+            mVideoPlayer.frameStarted(evt);
+        }
+    }
 }
 
 void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
@@ -320,11 +326,18 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 
 void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
 {
+    SinglePlayerMenuStates prevState = mCurrentState;
+
     UIMainMenuLabels::mouseReleased(pos);
 
     mMultiRoomsList.mouseReleased(pos);
     mRoomsMoveTop.mouseReleased(pos);
     mRoomsMoveBottom.mouseReleased(pos);
+
+    if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
+    {
+        switchState(State_Options_Trophies_Video);
+    }
 }
 
 void UIMainMenu::mouseMoved(const Ogre::Vector2& pos)
@@ -660,28 +673,6 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
     case State_Options_Trophies:
         mIsInStartingGrid = false;
         setMainBackgroundMaterial("Test/TrophiesBackground");
-        {
-            const PFLoader& gameshell = mModeContext.getGameState().getPFLoaderGameshell();
-            Ogre::DataStreamPtr videoFile = gameshell.getFile("data/gameshell", "apple.avi");
-            if(videoFile.get() && videoFile->isReadable())
-            {
-                CinepackDecode decode;
-                if(decode.init(videoFile))
-                {
-                    if(decode.decodeFrame())
-                    {
-                        std::vector<Ogre::uint8>& frame = decode.getFrame();
-                        Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().getByName("OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
-                        if(texture.get())
-                        {
-                            Ogre::PixelBox pb(640, 480, 1, Ogre::PF_BYTE_RGB, &frame[0]);
-                            Ogre::HardwarePixelBufferSharedPtr buffer = texture->getBuffer();
-                            //buffer->blitFromMemory(pb);
-                        }
-                    }
-                }
-            }
-        }
         showBackgroundFruis(mModeContext.getGameState().getPlayerData());
         for(size_t q = 0; q < mControlsCount; ++q)
         {
@@ -689,6 +680,21 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         }
         showOptionTrophies();
         setWindowTitle("");
+        break;
+
+    case State_Options_Trophies_Video:
+        mIsInStartingGrid = false;
+        setMainBackgroundMaterial("Test/VideoTexture");
+        for(size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
+        mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "orange.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
+        mVideoPlayer.start();
         break;
 
     case State_StartingGrid:

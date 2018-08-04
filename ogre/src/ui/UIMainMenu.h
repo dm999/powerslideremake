@@ -7,6 +7,8 @@
 
 #include "elements/UIEditBox.h"
 
+#include "../video/VideoPlayer.h"
+
 class MenuMode;
 class LoaderListener;
 
@@ -92,6 +94,8 @@ private:
     std::vector<std::vector<std::string>> mPlayersNamesInRooms;
 
     std::string mExitSubmenuTitle;
+
+    VideoPlayer mVideoPlayer;
 };
 
 #endif

@@ -361,12 +361,14 @@ void CinepackDecode::decode(size_t frameIndex, size_t amountOfFrames)
         mCinepakContext->offsetStrip += stripSize;
     }
 
+#if 0
     //if(frameIndex == amountOfFrames - 1)
     //if (frameIndex == amountOfFrames - 30)
-    //if (frameIndex == 0)
+    if (frameIndex == 0)
     {
-        //pgm_save(&frame[0], mCinepakContext->frameWidth * 3, mCinepakContext->frameWidth, mCinepakContext->frameHeight, "frame.pgm");
+        pgm_save(&mFrame[0], mCinepakContext->frameWidth * 3, mCinepakContext->frameWidth, mCinepakContext->frameHeight, "frame.pgm");
     }
+#endif
 }
 /*
 int main()
@@ -414,7 +416,7 @@ int main()
 
 bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 {
-    mIsInited = false;
+    clear();
 
     mAviContainer = CommonIncludes::shared_ptr<AVIReadContainer>(new AVIReadContainer());
 
@@ -422,12 +424,7 @@ bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 
     mIsInited = mAviContainer->parseRiff(mFrameList, mFrameDescription);
 
-    if(mIsInited)
-    {
-        mCinepakContext = CommonIncludes::shared_ptr<CinepakContext>(new CinepakContext());
-        mFrame.resize(mAviContainer->getWidth() * mAviContainer->getHeight() * 3);//rgb
-        mCurFrame = 0;
-    }
+    resetCurrentFrame();
 
     return mIsInited;
 }
@@ -435,7 +432,7 @@ bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 bool CinepackDecode::decodeFrame()
 {
     bool ret = false;
-    if(mIsInited)
+    if(mIsInited && mFrameList.size() > mCurFrame)
     {
         std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameList.begin() + mCurFrame);
         mCinepakContext->setData(&data[0]);
@@ -458,6 +455,18 @@ void CinepackDecode::clear()
     mFrame.clear();
 }
 
+void CinepackDecode::resetCurrentFrame()
+{
+    if(mIsInited)
+    {
+        mCinepakContext = CommonIncludes::shared_ptr<CinepakContext>(new CinepakContext());
+        const size_t bufSize = mAviContainer->getWidth() * mAviContainer->getHeight() * 3;//rgb
+        mFrame.resize(bufSize);
+        mFrame.assign(bufSize, 0);
+        mCurFrame = 0;
+    }
+}
+
 Ogre::Real CinepackDecode::getFPS() const
 {
     Ogre::Real ret = 0.0f;
@@ -467,5 +476,25 @@ Ogre::Real CinepackDecode::getFPS() const
         ret = static_cast<Ogre::Real>(mAviContainer->getFps());
     }
 
+    return ret;
+}
+
+Ogre::uint16 CinepackDecode::getWidth() const
+{
+    Ogre::uint16 ret = 0;
+    if(mIsInited)
+    {
+        ret = mAviContainer->getWidth();
+    }
+    return ret;
+}
+
+Ogre::uint16 CinepackDecode::getHeight() const
+{
+    Ogre::uint16 ret = 0;
+    if(mIsInited)
+    {
+        ret = mAviContainer->getHeight();
+    }
     return ret;
 }

@@ -22,7 +22,11 @@ public:
     bool decodeFrame();
     void clear();
 
+    void resetCurrentFrame();
+
     Ogre::Real getFPS() const;
+    Ogre::uint16 getWidth() const;
+    Ogre::uint16 getHeight() const;
     std::vector<Ogre::uint8>& getFrame() {return mFrame;}
 
 private:
