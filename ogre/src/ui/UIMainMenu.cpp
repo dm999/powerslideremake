@@ -293,6 +293,20 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         }
 #endif
     }
+
+    if(mCurrentState == State_Options_Trophies_Video)
+    {
+#if !defined(__ANDROID__)
+        if(_key == MyGUI::KeyCode::Return)
+        {
+            switchState(State_Options_Trophies);
+        }
+        if(_key == MyGUI::KeyCode::Space)
+        {
+            mVideoPlayer.restart();
+        }
+#endif
+    }
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
@@ -337,6 +351,11 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
     if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
     {
         switchState(State_Options_Trophies_Video);
+    }
+
+    if(mCurrentState == State_Options_Trophies_Video && mCurrentState == prevState)
+    {
+        switchState(State_Options_Trophies);
     }
 }
 
@@ -691,7 +710,18 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         }
         setWindowTitle("");
         //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "banana.avi", "VideoTexture");
         mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "orange.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "sberry.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "tangelo.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "peach.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "passion.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "cherry.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "papaya.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "mango.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "rberry.avi", "VideoTexture");
+        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "brussel.avi", "VideoTexture");
+
         //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
         //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
         mVideoPlayer.start();

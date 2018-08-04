@@ -28,7 +28,7 @@ void VideoPlayer::init(const PFLoader& gameshell, const std::string& filePath, c
 
 void VideoPlayer::start()
 {
-    mSecondsPassed = 1000.0f;
+    mSecondsPassed = std::numeric_limits<Ogre::Real>::max();
     mIsStarted = true; 
     mIsFinished = false;
 }
@@ -74,7 +74,6 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
                 Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
                 buffer->blitFromMemory(pbResized);
 #endif
-
             }
             else
             {
@@ -88,7 +87,6 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
 
 void VideoPlayer::clear()
 {
-    mSecondsPassed = 1000.0f;
     mIsInited = false;
     mIsStarted = false;
 
