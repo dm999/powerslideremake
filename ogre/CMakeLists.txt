@@ -259,7 +259,10 @@ if(ANDROID)
         target_link_libraries(PowerslideRemake openal)
     endif()
     
-    target_link_libraries(PowerslideRemake RenderSystem_GLES2Static OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
+    target_link_libraries(PowerslideRemake optimized RenderSystem_GLES2Static)
+    target_link_libraries(PowerslideRemake debug RenderSystem_GLES2Static_d)
+    
+    target_link_libraries(PowerslideRemake OgreMainStatic OgreOverlayStatic EGL GLESv2 log android c m dl)
     target_link_libraries(PowerslideRemake Plugin_ParticleFXStatic)
     target_link_libraries(PowerslideRemake freetype)
     target_link_libraries(PowerslideRemake FreeImage)

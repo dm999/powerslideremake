@@ -4,11 +4,11 @@
 #include "TextureLoader.h"
 #include "../tools/OgreTools.h"
 
-Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::uint width, Ogre::uint height, const Ogre::ColourValue& keyCol, const Ogre::String& group) const
+Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::uint width, Ogre::uint height, const Ogre::ColourValue& keyCol, const Ogre::String& group, Ogre::PixelFormat targetTextureFormat) const
 {
     Ogre::TexturePtr res;
 
-    const Ogre::PixelFormat targetTextureFormat = Ogre::PF_A8R8G8B8;
+    //const Ogre::PixelFormat targetTextureFormat = Ogre::PF_A8R8G8B8;
     Ogre::uchar* pixelData = OGRE_ALLOC_T (Ogre::uchar, Ogre::PixelUtil::getMemorySize (width, height, 1, targetTextureFormat), Ogre::MEMCATEGORY_GENERAL);
     Ogre::ulong pxDataIndex = 0, pxDataIndexStep = Ogre::PixelUtil::getNumElemBytes (targetTextureFormat); 
 
