@@ -7,7 +7,7 @@
 class VehicleSceneObjectListener : public Ogre::MovableObject::Listener
 {
 public:
-    VehicleSceneObjectListener(const Ogre::MovableObject *movableObj, Ogre::SceneManager *sceneManager);
+    VehicleSceneObjectListener(const Ogre::MovableObject *movableObj, Ogre::SceneManager *sceneManager, bool isAdvancedLighting);
 
     virtual const Ogre::LightList* objectQueryLights(const Ogre::MovableObject*);
 private:
@@ -16,6 +16,9 @@ private:
     Ogre::SceneManager *mSceneMgr;
     Ogre::SceneNode *mParentNode;
     Ogre::ulong mLightListUpdated;
+
+    bool mIsInited;
+    bool mIsAdvancedLighting;
 };
 
 #endif

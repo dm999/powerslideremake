@@ -2,11 +2,13 @@
 #include "VehicleSceneObjectListener.h"
 
 
-VehicleSceneObjectListener::VehicleSceneObjectListener(const Ogre::MovableObject *movableObj, Ogre::SceneManager *sceneManager)
+VehicleSceneObjectListener::VehicleSceneObjectListener(const Ogre::MovableObject *movableObj, Ogre::SceneManager *sceneManager, bool isAdvancedLighting)
     : mMovableObj(movableObj),
       mSceneMgr(sceneManager),
       mParentNode(movableObj->getParentSceneNode()),
-      mLightListUpdated(0)
+      mLightListUpdated(0),
+      mIsInited(false),
+      mIsAdvancedLighting(isAdvancedLighting)
 {
 }
 
@@ -16,12 +18,16 @@ const Ogre::LightList* VehicleSceneObjectListener::objectQueryLights(const Ogre:
     if(movableObj != mMovableObj)
         return NULL;
 
+    if(mIsInited && !mIsAdvancedLighting)
+        return &mLightsCache;
+
 
     // If object is attached to scene (it has a parent)
     if (mParentNode) {
         // Make sure we only update if needed
         Ogre::ulong frame = mSceneMgr->_getLightsDirtyCounter();
-        if (mLightListUpdated != frame) {
+        if (mLightListUpdated != frame)
+        {
             mLightListUpdated = frame;
 
             const Ogre::Vector3& scl = mParentNode->_getDerivedScale();
@@ -107,6 +113,8 @@ const Ogre::LightList* VehicleSceneObjectListener::objectQueryLights(const Ogre:
             {
                 (*li)->_notifyIndexInFrame(lightIndex);
             }
+
+            mIsInited = true;
         }
     } else {
         mLightsCache.clear();

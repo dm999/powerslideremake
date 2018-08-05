@@ -142,13 +142,13 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
         }
 
         if(!isAdvancedLighting)
-            mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
+            mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, false));
         else
         {
             if(isAttenuateExcludeBox)
                 mModelEntity[q]->setListener(new PlayerVehicleSceneObjectListener(mModelEntity[q], sceneMgr, gameState.getExclusions()));
             else
-                mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
+                mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, true));
         }
 
         mModelEntity[q]->setCastShadows(gameState.isCastShadows());
