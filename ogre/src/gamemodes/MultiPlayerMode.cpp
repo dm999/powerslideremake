@@ -197,42 +197,15 @@ void MultiPlayerMode::customClearScene()
 
 void MultiPlayerMode::customInitUI()
 {
-    /*
-    mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
-    mModeContext.mGUI->initialise();
-
-    MyGUI::PointerManager::getInstance().setVisible(false);
-*/
     mUIRaceMulti->load(mModeContext.mTrayMgr, mModeContext.mGameState);
 }
 
 void MultiPlayerMode::customClearUI()
 {
-    /*
-    mModeContext.mGUI->shutdown();
-    mModeContext.mPlatform->shutdown();
-    */
 }
 
 void MultiPlayerMode::customProcessCollision(int triIndex)
 {
-    if(mIsSessionStarted)
-    {
-#if 0
-        //AI
-        for(size_t q = 0; q < mModeContext.mGameState.getMultiplayerCountAI(); ++q)
-        {
-            mModeContext.mGameState.getMultiplayerCarAI(q).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
-        }
-
-        //human
-        std::vector<std::string> playerNames = mModeContext.mGameState.getMultiplayerCarHumanNames();
-        for(size_t q = 0; q < playerNames.size(); ++q)
-        {
-            mModeContext.mGameState.getMultiplayerCarHuman(playerNames[q]).processWheelsCollision(cp, colObj0Wrap, colObj1Wrap, mWorld.get(), mStaticMeshProcesser, triIndex);
-        }
-#endif
-    }
 }
 
 void MultiPlayerMode::customUnloadResources()

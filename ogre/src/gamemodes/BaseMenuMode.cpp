@@ -73,15 +73,8 @@ void BaseMenuMode::initCamera()
     mCamera->setPosition(0.0f, 0.0f, 100.0f);
     mCamera->lookAt(Ogre::Vector3::ZERO);
 
-    //mModeContext.mPlatform->initialise(mModeContext.mWindow, mSceneMgr);
-    //mModeContext.mGUI->initialise();
-
     //update mouse position
     const OIS::MouseState &ms = mModeContext.mInputHandler->getInputContext().mMouse->getMouseState();
-    //MyGUI::InputManager::getInstance().injectMouseMove(ms.X.abs, ms.Y.abs, ms.Z.abs);
-    //MyGUI::PointerManager::getInstance().setVisible(false);
-
-    
 
     //mModeContext.mTrayMgr->showCursor();
 #if !defined(__ANDROID__)

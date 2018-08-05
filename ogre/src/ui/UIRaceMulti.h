@@ -46,7 +46,6 @@ private:
 
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell);
 
-    //MyGUI::EditBox* mWidgetMessage;
 };
 
 #endif

@@ -507,45 +507,6 @@ void UIMainMenuMulti::load(CustomTrayManager* trayMgr, const GameState& gameStat
 
     hostTrackUpdate(mModeContext.getGameState().getAICountInRace());
 
-
-#if 0
-    {
-        {
-
-            //broadcast interval
-            Ogre::Vector4 posBroadcast = screenAdaptionRelative * Ogre::Vector4(540.0f, 80.0f, 60.0f, 12.0f);
-            mWidgetBroadcast = gui->createWidget<MyGUI::ComboBox>("ComboBox", posBroadcast.x, posBroadcast.y, posBroadcast.z, posBroadcast.w, MyGUI::Align::Default, "Middle");
-
-            itemToSelect = 0;
-            for(size_t q = 50, w = 0; q <= 500; q += 50, ++w)
-            {
-                mWidgetBroadcast->addItem(Conversions::DMToString(q));
-
-                if(q == mModeContext.getGameState().getMultiplayerBroadcastInterval())
-                    itemToSelect = w;
-            }
-            mWidgetBroadcast->setIndexSelected(itemToSelect);
-
-            mWidgetBroadcast->setEditReadOnly(true);
-            mWidgetBroadcast->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenuMulti::processChangeComboBox);
-        }
-
-        //labels
-        {
-            Ogre::Vector4 posLabelPing = screenAdaptionRelative * Ogre::Vector4(0.0f, 0.0f, 40.0f, 12.0f);
-            mWidgetPingLabel = gui->createWidget<MyGUI::TextBox>("TextBox", posLabelPing.x, posLabelPing.y, posLabelPing.z, posLabelPing.w, MyGUI::Align::Default, "Middle");
-            mWidgetPingLabel->setCaption("");
-            //mWidgetPingLabel->setVisible(false);
-        }
-
-        {
-            Ogre::Vector4 posEvents = screenAdaptionRelative * Ogre::Vector4(20.0f, 130.0f, 600.0f, 300.0f);
-            mWidgetEvents = gui->createWidget<MyGUI::ListBox>("ListBox", posEvents.x, posEvents.y, posEvents.z, posEvents.w, MyGUI::Align::Default, "Middle");
-            mWidgetEvents->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-        }
-    }
-#endif
-
 }
 
 #if defined(__ANDROID__)

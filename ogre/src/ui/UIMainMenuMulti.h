@@ -31,10 +31,6 @@ public:
 
     void frameStarted(const Ogre::FrameEvent &evt) override;
 
-    //void processButtonClick(MyGUI::Widget* sender);
-    //void processChangeComboBox(MyGUI::Widget* sender, size_t index);
-    //void processKeyPress(MyGUI::Widget* sender, MyGUI::KeyCode key, unsigned int _char);
-
     void keyUp(MyGUI::KeyCode _key, wchar_t _char);
 
     void mousePressed(const Ogre::Vector2& pos) override;
@@ -143,23 +139,5 @@ private:
     UIButton mCharacterValLeft;
     UIButton mCharacterValRight;
 
-    /*
-    MyGUI::Button* mWidgetJoin;
-    MyGUI::Button* mWidgetStart;
-    MyGUI::ComboBox* mWidgetTrack;
-    MyGUI::ComboBox* mWidgetCar;
-    MyGUI::ComboBox* mWidgetCharacter;
-    MyGUI::ComboBox* mWidgetAICount;
-    MyGUI::ComboBox* mWidgetAIStrength;
-    MyGUI::ComboBox* mWidgetLapsCount;
-    MyGUI::ComboBox* mWidgetBroadcast;
-
-    MyGUI::EditBox* mWidgetMessage;
-    MyGUI::Button* mWidgetSendMessage;
-
-    MyGUI::TextBox* mWidgetPingLabel;
-
-    MyGUI::ListBox* mWidgetEvents;
-    */
 };
 #endif

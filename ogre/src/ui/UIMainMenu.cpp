@@ -104,62 +104,6 @@ void UIMainMenu::load(CustomTrayManager* trayMgr, const GameState& gameState, Lo
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[UIMainMenu::load]: viewport [" + Conversions::DMToString(viewportWidth) + "x" + Conversions::DMToString(viewportHeight) + "]");
 
-#if 0
-
-    {
-        Ogre::Vector4 posAI = screenAdaptionRelative * Ogre::Vector4(540.0f, 50.0f, 30.0f, 12.0f);
-        mWidgetAICount = gui->createWidget<MyGUI::ComboBox>("ComboBox", posAI.x, posAI.y, posAI.z, posAI.w, MyGUI::Align::Default, "Middle");
-        for(size_t q = 3; q <= 11; ++q)
-            mWidgetAICount->addItem(Conversions::DMToString(q));
-
-        if(mModeContext.getGameState().getAICount() < 3)
-            mModeContext.getGameState().setAICount(3);
-        mWidgetAICount->setIndexSelected(mModeContext.getGameState().getAICount() - 3);
-        mWidgetAICount->setEditReadOnly(true);
-        mWidgetAICount->eventComboChangePosition += MyGUI::newDelegate(this, &UIMainMenu::processChangeComboBox);
-    }
-
-    {
-        Ogre::Vector4 posJoin = screenAdaptionRelative * Ogre::Vector4(320.0f, 80.0f, 40.0f, 12.0f);
-        MyGUI::ButtonPtr widgetJoin = gui->createWidget<MyGUI::Button>("Button", posJoin.x, posJoin.y, posJoin.z, posJoin.w, MyGUI::Align::Default, "Middle");
-        widgetJoin->setCaption("Multi Join");
-        widgetJoin->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
-
-        Ogre::Vector4 posHost = screenAdaptionRelative * Ogre::Vector4(380.0f, 80.0f, 40.0f, 12.0f);
-        MyGUI::ButtonPtr widgetHost = gui->createWidget<MyGUI::Button>("Button", posHost.x, posHost.y, posHost.z, posHost.w, MyGUI::Align::Default, "Middle");
-        widgetHost->setCaption("Multi Host");
-        widgetHost->eventMouseButtonClick += MyGUI::newDelegate(this, &UIMainMenu::processButtonClick);
-
-        Ogre::Vector4 posIP = screenAdaptionRelative * Ogre::Vector4(320.0f, 100.0f, 100.0f, 12.0f);
-        mWidgetIP = gui->createWidget<MyGUI::EditBox>("EditBox", posIP.x, posIP.y, posIP.z, posIP.w, MyGUI::Align::Default, "Middle");
-        mWidgetIP->setCaption("78.47.85.155");
-        mWidgetIP->eventKeyButtonPressed += MyGUI::newDelegate(this, &UIMainMenu::processKeyPress);
-        mWidgetIP->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-        mWidgetIP->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
-
-        Ogre::Vector4 posRoom = screenAdaptionRelative * Ogre::Vector4(320.0f, 120.0f, 100.0f, 12.0f);
-        mWidgetRoom = gui->createWidget<MyGUI::EditBox>("EditBox", posRoom.x, posRoom.y, posRoom.z, posRoom.w, MyGUI::Align::Default, "Middle");
-        mWidgetRoom->setCaption("Powerslide");
-        mWidgetRoom->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-        mWidgetRoom->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
-
-        Ogre::Vector4 posUserName = screenAdaptionRelative * Ogre::Vector4(320.0f, 140.0f, 100.0f, 12.0f);
-        mWidgetUserName = gui->createWidget<MyGUI::EditBox>("EditBox", posUserName.x, posUserName.y, posUserName.z, posUserName.w, MyGUI::Align::Default, "Middle");
-        mWidgetUserName->setCaption(mModeContext.getGameState().getMultiplayerUserName());
-        mWidgetUserName->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-        mWidgetUserName->setTextColour(MyGUI::Colour(1.0f, 1.0f, 1.0f));
-
-        Ogre::Vector4 posRooms = screenAdaptionRelative * Ogre::Vector4(320.0f, 160.0f, 90.0f, 50.0f);
-        mWidgetRooms = gui->createWidget<MyGUI::ListBox>("ListBox", posRooms.x, posRooms.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
-        mWidgetRooms->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-        mWidgetRooms->eventListSelectAccept += MyGUI::newDelegate(this, &UIMainMenu::processItemSelected);
-
-        Ogre::Vector4 posRoomPlayers = screenAdaptionRelative * Ogre::Vector4(420.0f, 160.0f, 90.0f, 50.0f);
-        mWidgetRoomPlayers = gui->createWidget<MyGUI::ListBox>("ListBox", posRoomPlayers.x, posRoomPlayers.y, posRooms.z, posRooms.w, MyGUI::Align::Default, "Middle");
-        mWidgetRoomPlayers->setColour(MyGUI::Colour(0.0f, 0.0f, 0.0f));
-    }
-#endif
-
     createCommonMaterials();
     createBackgroundMaterials();
 
