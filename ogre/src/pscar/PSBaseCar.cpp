@@ -332,7 +332,14 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     //splines END
 
 
-    initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, isAI);
+    if(isAI)
+    {
+        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingAI());
+    }
+    else
+    {
+        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingPlayer());
+    }
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup, gameState.getInputType());
 }
 

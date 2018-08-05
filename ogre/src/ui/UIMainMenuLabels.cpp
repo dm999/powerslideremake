@@ -227,6 +227,34 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if(button == mAdvLightingPlayerVal)
+    {
+        if(mAdvLightingPlayerVal->getChecked())
+        {
+            mModeContext.getGameState().setAdvancedLightingPlayer(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setAdvancedLightingPlayer(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mAdvLightingAIVal)
+    {
+        if(mAdvLightingAIVal->getChecked())
+        {
+            mModeContext.getGameState().setAdvancedLightingAI(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setAdvancedLightingAI(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
 
     if(button == mHighScoresTrackLeft)
     {
@@ -1582,6 +1610,46 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
         mGhostVal->loadBackground("OriginalButtonTick");
         mGhostVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 142.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getGhostEnabled(), true);
         mGhostVal->setButtonOnAction(this);
+    }
+
+    //Options Race Adv Lighting Player
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 162.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionRace");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Advanced Lighting Player");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        mAdvLightingPlayerVal = mUIButtonTicksManager.add("mOptionRace");
+        mAdvLightingPlayerVal->loadBackground("OriginalButtonTick");
+        mAdvLightingPlayerVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 162.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAdvancedLightingPlayer(), true);
+        mAdvLightingPlayerVal->setButtonOnAction(this);
+    }
+
+    //Options Race Adv Lighting AI
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 182.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionRace");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Advanced Lighting AI");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        mAdvLightingAIVal = mUIButtonTicksManager.add("mOptionRace");
+        mAdvLightingAIVal->loadBackground("OriginalButtonTick");
+        mAdvLightingAIVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 182.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAdvancedLightingAI(), true);
+        mAdvLightingAIVal->setButtonOnAction(this);
     }
 
     //Options Highscores

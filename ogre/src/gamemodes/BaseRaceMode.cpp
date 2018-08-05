@@ -535,10 +535,10 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
                     }
             }
 
-            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, false);
+            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer());
             mGhost.setVisibility(mTrialGhost.isVisible());
 
-            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], false);
+            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer());
             mGhostUser.setVisibility(false);
         }
     }

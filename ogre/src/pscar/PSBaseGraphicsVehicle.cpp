@@ -30,7 +30,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                             ModelsPool* modelsPool,
                             const std::string& characterName,
                             const InitialVehicleSetup& initialVehicleSetup,
-                            bool isAI)
+                            bool isAdvancedLighting)
 {
 
     mCharacterName = characterName;
@@ -64,7 +64,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                 texturesSubMat[0] = genTextureName;
 
                 Ogre::MaterialPtr newMat;
-                if(!isAI)
+                if(isAdvancedLighting)
                 {
                     std::string playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterial", pipeline);
 
@@ -141,7 +141,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
             modelNode->showBoundingBox(true);
         }
 
-        if(isAI)
+        if(!isAdvancedLighting)
             mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr));
         else
         {

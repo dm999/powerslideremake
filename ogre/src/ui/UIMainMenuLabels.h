@@ -147,6 +147,8 @@ private:
     UIButton* mOpponentsValRight;
     UIButtonTick* mMirrorVal;
     UIButtonTick* mGhostVal;
+    UIButtonTick* mAdvLightingPlayerVal;
+    UIButtonTick* mAdvLightingAIVal;
 
     UIButton* mHighScoresTrackLeft;
     UIButton* mHighScoresTrackRight;

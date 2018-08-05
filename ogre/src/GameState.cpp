@@ -40,6 +40,8 @@ GameState::GameState() :
     mBackgroundColor(0.91372550f, 0.78823531f, 0.52156866f),
     mIsMirrorEnabled(true),
     mIsGhostEnabled(true),
+    mAdvancedLightingPlayer(true),
+    mAdvancedLightingAI(false),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
     mIsGamePaused(false),
@@ -94,6 +96,8 @@ void GameState::initOriginalData()
                 mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
                 mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
                 mIsGhostEnabled = mPlayerSettings.getIntValue("", "ghost", static_cast<int>(mIsGhostEnabled));
+                mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
+                mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
@@ -172,6 +176,8 @@ void GameState::savePlayerData()
     globalData.shadows = mIsCastShadows;
     globalData.mirror = mIsMirrorEnabled;
     globalData.ghost = mIsGhostEnabled;
+    globalData.adv_lightinig_player = mAdvancedLightingPlayer;
+    globalData.adv_lightinig_ai = mAdvancedLightingAI;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;

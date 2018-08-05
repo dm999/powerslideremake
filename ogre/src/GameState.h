@@ -155,6 +155,12 @@ public:
     void setGhostEnabled(bool enabled){mIsGhostEnabled = enabled;}
     bool getGhostEnabled()const{return mIsGhostEnabled;}
 
+    void setAdvancedLightingPlayer(bool enabled){mAdvancedLightingPlayer = enabled;}
+    bool getAdvancedLightingPlayer()const{return mAdvancedLightingPlayer;}
+
+    void setAdvancedLightingAI(bool enabled){mAdvancedLightingAI = enabled;}
+    bool getAdvancedLightingAI()const{return mAdvancedLightingAI;}
+
     size_t getLapsCount()const{return mLapsCount;}
 
     void setSoundsGain(Ogre::Real gain){mSoundsGain = gain;}
@@ -279,6 +285,8 @@ private:
 
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;
+    bool mAdvancedLightingPlayer;
+    bool mAdvancedLightingAI;
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0

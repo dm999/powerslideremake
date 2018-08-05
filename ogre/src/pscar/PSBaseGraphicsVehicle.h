@@ -26,7 +26,7 @@ public:
                             ModelsPool* modelsPool,
                             const std::string& characterName,
                             const InitialVehicleSetup& initialVehicleSetup,
-                            bool isAI);
+                            bool isAdvancedLighting);
 
 #if defined(__ANDROID__)
     void reloadTextures(const GameState& gameState);
