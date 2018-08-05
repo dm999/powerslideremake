@@ -579,16 +579,24 @@ void UIMainMenu::onNameChange()
     setDefaultBackground(false);
 
     std::string userName = mEditBoxUserName.getText().asUTF8();
-    mModeContext.getGameState().setPlayerName(userName);
-    mModeContext.getGameState().loadPlayerData();
-    mModeContext.getGameState().savePlayerData();//save selected player
-    switchState(State_SingleMulti);
-    selectMode();
-    selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-    std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
-    characterCar = strPowerslide.getBaseCarFromCar(characterCar);
-    selectCar(characterCar);
+    if(userName != mModeContext.getGameState().getPlayerName())
+    {
+        mModeContext.getGameState().setPlayerName(userName);
+        mModeContext.getGameState().loadPlayerData();
+        mModeContext.getGameState().savePlayerData();//save selected player
+        switchState(State_SingleMulti);
+        selectMode();
+        selectTrack(mModeContext.mGameState.getTrackNameAsOriginal());
+        const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+        std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+        characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+        selectCar(characterCar);
+    }
+    else
+    {
+        switchState(State_SingleMulti);
+        selectMode();
+    }
 }
 
 void UIMainMenu::setDefaultBackground(bool isSwitchState)
