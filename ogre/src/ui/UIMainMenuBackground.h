@@ -16,6 +16,7 @@ public:
 protected:
 
     void mouseMoved(const Ogre::Vector2& pos) override;
+    void mouseReleased(const Ogre::Vector2& pos) override;
 
     void createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
     void createBackgroundMaterials();
@@ -52,6 +53,8 @@ protected:
 private:
 
     void clone2DMaterial(const std::string& textureName, const std::string& newMaterialName) const;
+
+    virtual void playVideo(size_t fruitIndex) = 0;
 
     Ogre::PanelOverlayElement* mMainBackground;
 

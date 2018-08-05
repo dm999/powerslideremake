@@ -61,6 +61,8 @@ private:
 
     void panelHit(Ogre::PanelOverlayElement* panel) override;
 
+    void playVideo(size_t fruitIndex) override;
+
     void loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
 
     void createRoom();
@@ -96,6 +98,7 @@ private:
     std::string mExitSubmenuTitle;
 
     VideoPlayer mVideoPlayer;
+    size_t mVideoIndex;
 };
 
 #endif

@@ -27,8 +27,8 @@ public:
     bool getIsShownLeaderboard() const{ return mIsShownLeaderboardAfterFinish;}
     void setShownLeaderboard(){mIsShownLeaderboardAfterFinish = true;}
 
-    std::string getAwardString(int index, const ModeContext& modeContext, size_t trackIndex = 0) const;
-    std::string getUnlockedString(int index) const;
+    static std::string getAwardString(int index, const ModeContext& modeContext, size_t carIndex, size_t trackIndex = 0);
+    static std::string getUnlockedString(int index);
 
     static bool checkEmergentGunBeaten(const ModeContext& modeContext, Ogre::Real bestLap, size_t& trackIndex);
 

@@ -256,6 +256,46 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
         {
             mVideoPlayer.frameStarted(evt);
         }
+        else
+        {
+            if(!mVideoTitleLabel->isVisible())
+            {
+                std::string award = "";
+
+                if(mVideoIndex < Championship::mEveryWinnerFruitOffset)
+                {
+                    award = Championship::getAwardString(mVideoIndex, mModeContext, 0);
+                }
+
+                if(mVideoIndex >= Championship::mEveryWinnerFruitOffset && mVideoIndex < Championship::mExpertCarFruitOffset)
+                {
+                    award = Championship::getAwardString(mVideoIndex, mModeContext, 0);
+                }
+
+                if(mVideoIndex >= Championship::mExpertCarFruitOffset && mVideoIndex < Championship::mInsaneCarFruitOffset)
+                {
+                    award = Championship::getAwardString(8, mModeContext, mVideoIndex - Championship::mExpertCarFruitOffset);
+                }
+
+                if(mVideoIndex >= Championship::mInsaneCarFruitOffset && mVideoIndex < Championship::mBeatEmergentGunFruitOffset)
+                {
+                    award = Championship::getAwardString(9, mModeContext, mVideoIndex - Championship::mInsaneCarFruitOffset);
+                }
+
+                if(mVideoIndex >= Championship::mBeatEmergentGunFruitOffset && mVideoIndex < Championship::mBrusselFruitOffset)
+                {
+                    award = Championship::getAwardString(10, mModeContext, 0, mVideoIndex - Championship::mBeatEmergentGunFruitOffset);
+                }
+
+                if(mVideoIndex == Championship::mBrusselFruitOffset)
+                {
+                    award = Championship::getAwardString(11, mModeContext, 0);
+                }
+
+                mVideoTitleLabel->getTextArea()->setCaption(award);
+                mVideoTitleLabel->show();
+            }
+        }
     }
 }
 
@@ -303,6 +343,7 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         }
         if(_key == MyGUI::KeyCode::Space)
         {
+            mVideoTitleLabel->hide();
             mVideoPlayer.restart();
         }
 #endif
@@ -347,11 +388,6 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
     mMultiRoomsList.mouseReleased(pos);
     mRoomsMoveTop.mouseReleased(pos);
     mRoomsMoveBottom.mouseReleased(pos);
-
-    if(mCurrentState == State_Options_Trophies && mCurrentState == prevState)
-    {
-        switchState(State_Options_Trophies_Video);
-    }
 
     if(mCurrentState == State_Options_Trophies_Video && mCurrentState == prevState)
     {
@@ -514,6 +550,12 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
     {
         mModeContext.mBaseApp->setShutdown(true);
     }
+}
+
+void UIMainMenu::playVideo(size_t fruitIndex)
+{
+    mVideoIndex = fruitIndex;
+    switchState(State_Options_Trophies_Video);
 }
 
 void UIMainMenu::startRace()
@@ -709,21 +751,82 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             setControlShow(q, false);
         }
         setWindowTitle("");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "banana.avi", "VideoTexture");
-        mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "orange.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "sberry.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "tangelo.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "peach.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "passion.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "cherry.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "papaya.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "mango.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "rberry.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "brussel.avi", "VideoTexture");
+        switch(mVideoIndex)
+        {
+            case Championship::mWinnerFruitOffset + 0:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
+            break;
+
+            case Championship::mWinnerFruitOffset + 1:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "banana.avi", "VideoTexture");
+            break;
+
+            case Championship::mWinnerFruitOffset + 2:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "orange.avi", "VideoTexture");
+            break;
+
+            case Championship::mWinnerFruitOffset + 3:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "sberry.avi", "VideoTexture");
+            break;
+
+            case Championship::mEveryWinnerFruitOffset + 0:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "tangelo.avi", "VideoTexture");
+            break;
+
+            case Championship::mEveryWinnerFruitOffset + 1:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "peach.avi", "VideoTexture");
+            break;
+
+            case Championship::mEveryWinnerFruitOffset + 2:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "passion.avi", "VideoTexture");
+            break;
+
+            case Championship::mEveryWinnerFruitOffset + 3:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "cherry.avi", "VideoTexture");
+            break;
+
+            case Championship::mExpertCarFruitOffset + 0:
+            case Championship::mExpertCarFruitOffset + 1:
+            case Championship::mExpertCarFruitOffset + 2:
+            case Championship::mExpertCarFruitOffset + 3:
+            case Championship::mExpertCarFruitOffset + 4:
+            case Championship::mExpertCarFruitOffset + 5:
+            case Championship::mExpertCarFruitOffset + 6:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "papaya.avi", "VideoTexture");
+            break;
+
+            case Championship::mInsaneCarFruitOffset + 0:
+            case Championship::mInsaneCarFruitOffset + 1:
+            case Championship::mInsaneCarFruitOffset + 2:
+            case Championship::mInsaneCarFruitOffset + 3:
+            case Championship::mInsaneCarFruitOffset + 4:
+            case Championship::mInsaneCarFruitOffset + 5:
+            case Championship::mInsaneCarFruitOffset + 6:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "mango.avi", "VideoTexture");
+            break;
+
+            case Championship::mBeatEmergentGunFruitOffset + 0:
+            case Championship::mBeatEmergentGunFruitOffset + 1:
+            case Championship::mBeatEmergentGunFruitOffset + 2:
+            case Championship::mBeatEmergentGunFruitOffset + 3:
+            case Championship::mBeatEmergentGunFruitOffset + 4:
+            case Championship::mBeatEmergentGunFruitOffset + 5:
+            case Championship::mBeatEmergentGunFruitOffset + 6:
+            case Championship::mBeatEmergentGunFruitOffset + 7:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "rberry.avi", "VideoTexture");
+            break;
+
+            case Championship::mBrusselFruitOffset + 0:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "brussel.avi", "VideoTexture");
+            break;
+
+            default:
+                mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
+
 
         //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
         //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
+        }
         mVideoPlayer.start();
         break;
 
@@ -784,9 +887,15 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             std::vector<size_t> fruitsIndexes = champ.getAvailableFruits();
             size_t labelsOccupied = 0;
 
+            const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
+            std::string characterCar = strPowerslide.getCarFromCharacter(mModeContext.getGameState().getPlayerCar().getCharacterName());
+            characterCar = strPowerslide.getBaseCarFromCar(characterCar);
+            std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+            size_t carIndex = std::find(availCars.begin(), availCars.end(), characterCar) - availCars.begin();
+
             if(fruitsIndexes[0] < Championship::mEveryWinnerFruitOffset)//unlock happened
             {
-                mChampionshipResultsLabel[0]->setCaption(champ.getAwardString(fruitsIndexes[0], mModeContext));
+                mChampionshipResultsLabel[0]->setCaption(champ.getAwardString(fruitsIndexes[0], mModeContext, carIndex));
                 mChampionshipResultsLabel[1]->setCaption(champ.getUnlockedString(fruitsIndexes[0]));
                 labelsOccupied += 2;
             }
@@ -795,27 +904,27 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             {
                 if(fruitsIndexes[q] >= Championship::mEveryWinnerFruitOffset && fruitsIndexes[q] < Championship::mExpertCarFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(fruitsIndexes[q], mModeContext));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(fruitsIndexes[q], mModeContext, carIndex));
                 }
 
                 if(fruitsIndexes[q] >= Championship::mExpertCarFruitOffset && fruitsIndexes[q] < Championship::mInsaneCarFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(8, mModeContext));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(8, mModeContext, carIndex));
                 }
 
                 if(fruitsIndexes[q] >= Championship::mInsaneCarFruitOffset && fruitsIndexes[q] < Championship::mBeatEmergentGunFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(9, mModeContext));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(9, mModeContext, carIndex));
                 }
 
                 if(fruitsIndexes[q] >= Championship::mBeatEmergentGunFruitOffset && fruitsIndexes[q] < Championship::mBrusselFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(10, mModeContext, fruitsIndexes[q] - Championship::mBeatEmergentGunFruitOffset));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(10, mModeContext, carIndex, fruitsIndexes[q] - Championship::mBeatEmergentGunFruitOffset));
                 }
 
                 if(fruitsIndexes[q] == Championship::mBrusselFruitOffset)
                 {
-                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(11, mModeContext));
+                    mChampionshipResultsLabel[labelsOccupied++]->setCaption(champ.getAwardString(11, mModeContext, carIndex));
                 }
             }
         }

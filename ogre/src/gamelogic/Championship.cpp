@@ -203,7 +203,7 @@ finishBoardVec Championship::getLeaderboard() const
     return ret;
 }
 
-std::string Championship::getAwardString(int index, const ModeContext& modeContext, size_t trackIndex) const
+std::string Championship::getAwardString(int index, const ModeContext& modeContext, size_t carIndex, size_t trackIndex)
 {
     std::string res = "";
 
@@ -244,14 +244,15 @@ std::string Championship::getAwardString(int index, const ModeContext& modeConte
 
         const STRPowerslide& strPowerslide = modeContext.getGameState().getSTRPowerslide();
         std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
-        Tools::replace(res, "%carname%", STRPowerslide::getCarTitle(strPowerslide.getCarFromCharacter(modeContext.getGameState().getPlayerCar().getCharacterName())));
+        std::vector<std::string> availCars = strPowerslide.getArrayValue("", "available cars");
+        Tools::replace(res, "%carname%", STRPowerslide::getCarTitle(availCars[carIndex]));
         Tools::replace(res, "%trackname%", strPowerslide.getTrackTitle(availTracks[trackIndex]));
     }
 
     return res;
 }
 
-std::string Championship::getUnlockedString(int index) const
+std::string Championship::getUnlockedString(int index)
 {
     std::string res = "";
 

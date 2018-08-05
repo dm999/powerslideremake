@@ -111,6 +111,92 @@ void UIMainMenuBackground::mouseMoved(const Ogre::Vector2& pos)
     }
 }
 
+void UIMainMenuBackground::mouseReleased(const Ogre::Vector2& pos)
+{
+    UIBaseMenu::mouseReleased(pos);
+
+    if(mBackgroundFruitApple->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitApple, pos, 0))
+    {
+        playVideo(Championship::mWinnerFruitOffset + 0);
+        return;
+    }
+
+    if(mBackgroundFruitBanana->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitBanana, pos, 0))
+    {
+        playVideo(Championship::mWinnerFruitOffset + 1);
+        return;
+    }
+
+    if(mBackgroundFruitOrange->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitOrange, pos, 0))
+    {
+        playVideo(Championship::mWinnerFruitOffset + 2);
+        return;
+    }
+
+    if(mBackgroundFruitSberry->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitSberry, pos, 0))
+    {
+        playVideo(Championship::mWinnerFruitOffset + 3);
+        return;
+    }
+
+    if(mBackgroundFruitTangelo->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitTangelo, pos, 0))
+    {
+        playVideo(Championship::mEveryWinnerFruitOffset + 0);
+        return;
+    }
+
+    if(mBackgroundFruitPeach->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPeach, pos, 0))
+    {
+        playVideo(Championship::mEveryWinnerFruitOffset + 1);
+        return;
+    }
+
+    if(mBackgroundFruitPassion->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPassion, pos, 0))
+    {
+        playVideo(Championship::mEveryWinnerFruitOffset + 2);
+        return;
+    }
+
+    if(mBackgroundFruitCherries->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitCherries, pos, 0))
+    {
+        playVideo(Championship::mEveryWinnerFruitOffset + 3);
+        return;
+    }
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        if(mBackgroundFruitPapaya[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitPapaya[q], pos, 0))
+        {
+            playVideo(Championship::mExpertCarFruitOffset + q);
+            return;
+        }
+    }
+
+    for(size_t q = 0; q < amountCars; ++q)
+    {
+        if(mBackgroundFruitMango[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitMango[q], pos, 0))
+        {
+            playVideo(Championship::mInsaneCarFruitOffset + q);
+            return;
+        }
+    }
+
+    for(size_t q = 0; q < mAmountTracksWithFruits; ++q)
+    {
+        if(mBackgroundFruitRberry[q]->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitRberry[q], pos, 0))
+        {
+            playVideo(Championship::mBeatEmergentGunFruitOffset + q);
+            return;
+        }
+    }
+
+    if(mBackgroundFruitBrussel->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitBrussel, pos, 0))
+    {
+        playVideo(Championship::mBrusselFruitOffset + 0);
+        return;
+    }
+}
+
 void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
     TextureLoader().load( pfLoaderGameshell, 

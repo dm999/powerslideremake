@@ -1734,6 +1734,20 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     }
 
     {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 20.0f, 0.0f, 0.0f);
+        mVideoTitleLabel = mUILabelsManager.add();
+        mVideoTitleLabel->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
+        mVideoTitleLabel->setFixed(true);
+        mVideoTitleLabel->getTextArea()->setCaption("");
+        mVideoTitleLabel->getTextArea()->setCharHeight(30.0f * viewportHeight / 1024.0f);
+        mVideoTitleLabel->getTextArea()->setSpaceWidth(9.0f);
+        mVideoTitleLabel->getTextArea()->setHeight(30.0f * viewportHeight / 1024.0f);
+        mVideoTitleLabel->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Center);
+        //mVideoTitleLabel->getTextArea()->setColour(UILabel::mInactiveLabel);
+        getMainBackground()->addChild(mVideoTitleLabel->getTextArea());
+    }
+
+    {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(320.0f, 198.0f, 0.0f, 0.0f);
         mExitLabel = mUILabelsManager.add("mGameExit");
         mExitLabel->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y); 
@@ -2094,7 +2108,7 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
 
 void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
 {
-    UIBaseMenu::mouseReleased(pos);
+    UIMainMenuBackground::mouseReleased(pos);
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
