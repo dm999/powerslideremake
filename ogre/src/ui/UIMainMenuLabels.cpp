@@ -2600,6 +2600,50 @@ void UIMainMenuLabels::setCurrentTrackDescription()
     setTrackDescription(mRemapTrack[mModeContext.getGameState().getTrackNameAsOriginal()]);
 }
 
+void UIMainMenuLabels::wrapText(std::string& text, Ogre::Real rightBoundary, const Ogre::Font* font, Ogre::Real spaceWidth, Ogre::Real characterHeight)
+{
+    //word wrap
+
+    bool firstWord = true;
+    unsigned int lastSpace = 0;
+    Ogre::Real lineWidth = 0.0f;
+
+    for(size_t q = 0; q < text.size(); ++q)
+    {
+        if (text[q] == ' ')
+        {
+            if (spaceWidth != 0) lineWidth += spaceWidth;
+            else lineWidth += font->getGlyphAspectRatio(' ') * characterHeight;
+
+            firstWord = false;
+            lastSpace = q;
+        }
+        else if (text[q] == '\n')
+        {
+            firstWord = true;
+            lineWidth = 0;
+        }
+        else
+        {
+            // use glyph information to calculate line width
+            lineWidth += font->getGlyphAspectRatio(text[q]) * characterHeight;
+            if (lineWidth > rightBoundary)
+            {
+                if (firstWord)
+                {
+                    text.insert(q, "\n");
+                    q = q - 1;
+                }
+                else
+                {
+                    text[lastSpace] = '\n';
+                    q = lastSpace - 1;
+                }
+            }
+        }
+    }
+}
+
 void UIMainMenuLabels::setTrackDescription(size_t index)
 {
 
@@ -2625,49 +2669,13 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
             desc.insert(surfPos, "\n");
         }
 
-        //word wrap
-
-        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleTrackDescription->getTextArea()->getFontName()).getPointer();
-
-        bool firstWord = true;
-        unsigned int lastSpace = 0;
-        Ogre::Real lineWidth = 0.0f;
         Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleTrackDescription->getTextArea()->getLeft() - viewportWidth / 50.0f;
-
-        for(size_t q = 0; q < desc.size(); ++q)
-        {
-            if (desc[q] == ' ')
-            {
-                if (mSingleTrackDescription->getTextArea()->getSpaceWidth() != 0) lineWidth += mSingleTrackDescription->getTextArea()->getSpaceWidth();
-                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleTrackDescription->getTextArea()->getCharHeight();
-
-                firstWord = false;
-                lastSpace = q;
-            }
-            else if (desc[q] == '\n')
-            {
-                firstWord = true;
-                lineWidth = 0;
-            }
-            else
-            {
-                // use glyph information to calculate line width
-                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleTrackDescription->getTextArea()->getCharHeight();
-                if (lineWidth > rightBoundary)
-                {
-                    if (firstWord)
-                    {
-                        desc.insert(q, "\n");
-                        q = q - 1;
-                    }
-                    else
-                    {
-                        desc[lastSpace] = '\n';
-                        q = lastSpace - 1;
-                    }
-                }
-            }
-        }
+        wrapText(
+            desc,
+            rightBoundary,
+            (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleTrackDescription->getTextArea()->getFontName()).getPointer(),
+            mSingleTrackDescription->getTextArea()->getSpaceWidth(),
+            mSingleTrackDescription->getTextArea()->getCharHeight());
 
         mSingleTrackDescription->getTextArea()->setCaption(desc);
     }
@@ -2697,49 +2705,13 @@ void UIMainMenuLabels::setBioDescription(size_t index)
     std::string desc = mCharacterDesc[availableCharacters[index]];
     if(!desc.empty())
     {
-        //word wrap
-
-        Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleBioDescription->getTextArea()->getFontName()).getPointer();
-
-        bool firstWord = true;
-        unsigned int lastSpace = 0;
-        Ogre::Real lineWidth = 0.0f;
         Ogre::Real rightBoundary = viewportWidth / 2.0f - mSingleBioDescription->getTextArea()->getLeft() - viewportWidth / 50.0f;
-
-        for(size_t q = 0; q < desc.size(); ++q)
-        {
-            if (desc[q] == ' ')
-            {
-                if (mSingleBioDescription->getTextArea()->getSpaceWidth() != 0) lineWidth += mSingleBioDescription->getTextArea()->getSpaceWidth();
-                else lineWidth += font->getGlyphAspectRatio(' ') * mSingleBioDescription->getTextArea()->getCharHeight();
-
-                firstWord = false;
-                lastSpace = q;
-            }
-            else if (desc[q] == '\n')
-            {
-                firstWord = true;
-                lineWidth = 0;
-            }
-            else
-            {
-                // use glyph information to calculate line width
-                lineWidth += font->getGlyphAspectRatio(desc[q]) * mSingleBioDescription->getTextArea()->getCharHeight();
-                if (lineWidth > rightBoundary)
-                {
-                    if (firstWord)
-                    {
-                        desc.insert(q, "\n");
-                        q = q - 1;
-                    }
-                    else
-                    {
-                        desc[lastSpace] = '\n';
-                        q = lastSpace - 1;
-                    }
-                }
-            }
-        }
+        wrapText(
+            desc,
+            rightBoundary,
+            (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mSingleBioDescription->getTextArea()->getFontName()).getPointer(),
+            mSingleBioDescription->getTextArea()->getSpaceWidth(),
+            mSingleBioDescription->getTextArea()->getCharHeight());
 
         std::replace( desc.begin(), desc.end(), (char)(0xe9), 'y');
         mSingleBioDescription->getTextArea()->setCaption(desc);

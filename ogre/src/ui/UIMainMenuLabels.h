@@ -26,6 +26,8 @@ public:
 
     static bool checkCursorOverLabel(const Ogre::Vector2& pos, Ogre::TextAreaOverlayElement * label);
 
+    static void wrapText(std::string& text, Ogre::Real rightBoundary, const Ogre::Font* font, Ogre::Real spaceWidth, Ogre::Real characterHeight);
+
 protected:
 
     void createLabels(const Ogre::Matrix4& screenAdaptionRelative);
