@@ -23,7 +23,7 @@ if(NOT PowerslideRemake_OPENALDIR STREQUAL "")
     STRING(REGEX REPLACE "\\\\" "/" PowerslideRemake_OPENALDIR ${PowerslideRemake_OPENALDIR})
 endif()
 
-
+SET(ENV{OGRE_HOME} ${PowerslideRemake_OGREHOME})
 set(OGRE_STATIC true)
 find_package(OGRE REQUIRED)
 find_package(OIS REQUIRED)
