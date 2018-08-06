@@ -200,61 +200,62 @@ void CinepackDecode::decodeVectors(Ogre::uint16 chunkSize, Ogre::uint8 chunkID, 
                 RgbTriplet::copyTwoPairsToFour(&row1[0], &codebook.macroblock[0]);
                 RgbTriplet::copyTwoPairsToFour(&row2[0], &codebook.macroblock[2]);
                 RgbTriplet::copyTwoPairsToFour(&row3[0], &codebook.macroblock[2]);
-                continue;
             }
-
-            if (!isKeyFrame)//need to select 3 subcases: 0 = the block is skipped, 10 = V1 coded block, 11 = V4 coded block
+            else
             {
-                mask >>= 1;
-                if (!mask)
+                if (!isKeyFrame)//need to select 3 subcases: 0 = the block is skipped, 10 = V1 coded block, 11 = V4 coded block
                 {
-                    if ((offset + 4) > chunkSize) return;
+                    mask >>= 1;
+                    if (!mask)
+                    {
+                        if ((offset + 4) > chunkSize) return;
 
-                    flag = RB32(&mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset]);
-                    offset += 4;
-                    mask = 0x80000000;
-                }
-            }
-
-            bool doUpdate = flag & mask;
-            if (isKeyFrame || doUpdate)
-            {
-                mask >>= 1;
-                if (!mask)
-                {
-                    if ((offset + 4) > chunkSize) return;
-
-                    flag = RB32(&mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset]);
-                    offset += 4;
-                    mask = 0x80000000;
+                        flag = RB32(&mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset]);
+                        offset += 4;
+                        mask = 0x80000000;
+                    }
                 }
 
-                doUpdate = flag & mask;
-
-                if (doUpdate)//V4 - 4 palettes used
+                bool doUpdate = flag & mask;
+                if (isKeyFrame || doUpdate)
                 {
-                    if ((offset + 4) > chunkSize) return;
+                    mask >>= 1;
+                    if (!mask)
+                    {
+                        if ((offset + 4) > chunkSize) return;
 
-                    const PalletteBlock& codebook0(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
-                    const PalletteBlock& codebook1(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
-                    const PalletteBlock& codebook2(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
-                    const PalletteBlock& codebook3(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+                        flag = RB32(&mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset]);
+                        offset += 4;
+                        mask = 0x80000000;
+                    }
 
-                    RgbTriplet::copyTwoSeparateToFour(&row0[0], &codebook0.macroblock[0], &codebook1.macroblock[0]);
-                    RgbTriplet::copyTwoSeparateToFour(&row1[0], &codebook0.macroblock[2], &codebook1.macroblock[2]);
-                    RgbTriplet::copyTwoSeparateToFour(&row2[0], &codebook2.macroblock[0], &codebook3.macroblock[0]);
-                    RgbTriplet::copyTwoSeparateToFour(&row3[0], &codebook2.macroblock[2], &codebook3.macroblock[2]);
-                }
-                else//V1 - 1 palette used
-                {
-                    if (offset > chunkSize) return;
+                    doUpdate = flag & mask;
 
-                    const PalletteBlock& codebook(strip.v1_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+                    if (doUpdate)//V4 - 4 palettes used
+                    {
+                        if ((offset + 4) > chunkSize) return;
 
-                    RgbTriplet::copyTwoPairsToFour(&row0[0], &codebook.macroblock[0]);
-                    RgbTriplet::copyTwoPairsToFour(&row1[0], &codebook.macroblock[0]);
-                    RgbTriplet::copyTwoPairsToFour(&row2[0], &codebook.macroblock[2]);
-                    RgbTriplet::copyTwoPairsToFour(&row3[0], &codebook.macroblock[2]);
+                        const PalletteBlock& codebook0(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+                        const PalletteBlock& codebook1(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+                        const PalletteBlock& codebook2(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+                        const PalletteBlock& codebook3(strip.v4_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+
+                        RgbTriplet::copyTwoSeparateToFour(&row0[0], &codebook0.macroblock[0], &codebook1.macroblock[0]);
+                        RgbTriplet::copyTwoSeparateToFour(&row1[0], &codebook0.macroblock[2], &codebook1.macroblock[2]);
+                        RgbTriplet::copyTwoSeparateToFour(&row2[0], &codebook2.macroblock[0], &codebook3.macroblock[0]);
+                        RgbTriplet::copyTwoSeparateToFour(&row3[0], &codebook2.macroblock[2], &codebook3.macroblock[2]);
+                    }
+                    else//V1 - 1 palette used
+                    {
+                        if (offset > chunkSize) return;
+
+                        const PalletteBlock& codebook(strip.v1_codebook[mCinepakContext->data[mCinepakContext->offsetStrip + mCinepakContext->offsetChunk + offset++]]);
+
+                        RgbTriplet::copyTwoPairsToFour(&row0[0], &codebook.macroblock[0]);
+                        RgbTriplet::copyTwoPairsToFour(&row1[0], &codebook.macroblock[0]);
+                        RgbTriplet::copyTwoPairsToFour(&row2[0], &codebook.macroblock[2]);
+                        RgbTriplet::copyTwoPairsToFour(&row3[0], &codebook.macroblock[2]);
+                    }
                 }
             }
 
