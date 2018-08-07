@@ -62,18 +62,22 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
                 std::vector<Ogre::uint8>& frame = mCinepakDecode->getFrame();
                 Ogre::PixelBox pb(mCinepakDecode->getWidth(), mCinepakDecode->getHeight(), 1, Ogre::PF_BYTE_RGB, &frame[0]);
 
-#if !defined(__ANDROID__)
-                Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
-                buffer->blitFromMemory(pb);
-#else
-                std::vector<Ogre::uint8> frameResized(512 * 512 * 3);
-                Ogre::PixelBox pbResized(512, 512, 1, Ogre::PF_BYTE_RGB, &frameResized[0]);
+                if (!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_NON_POWER_OF_2_TEXTURES))
+                {
+                    //same sizes as for VideoTexture UIMainMenuBackground::createBackgroundTextures
+                    std::vector<Ogre::uint8> frameResized(512 * 512 * 3);
+                    Ogre::PixelBox pbResized(512, 512, 1, Ogre::PF_BYTE_RGB, &frameResized[0]);
 
-                Ogre::Image::scale(pb, pbResized);
+                    Ogre::Image::scale(pb, pbResized);
 
-                Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
-                buffer->blitFromMemory(pbResized);
-#endif
+                    Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
+                    buffer->blitFromMemory(pbResized);
+                }
+                else
+                {
+                    Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
+                    buffer->blitFromMemory(pb);
+                }
             }
             else
             {

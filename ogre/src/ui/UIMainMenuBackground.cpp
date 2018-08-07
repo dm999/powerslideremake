@@ -219,11 +219,15 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "data/gameshell", "fruit.bmp", 
                                 "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
 
-#if !defined(__ANDROID__)
-    TextureLoader().generate("VideoTexture", 640, 480, Ogre::ColourValue::Black, TEMP_RESOURCE_GROUP_NAME, Ogre::PF_R8G8B8);
-#else
-    TextureLoader().generate("VideoTexture", 512, 512, Ogre::ColourValue::Black, TEMP_RESOURCE_GROUP_NAME, Ogre::PF_R8G8B8);
-#endif
+    if (!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_NON_POWER_OF_2_TEXTURES))
+    {
+        TextureLoader().generate("VideoTexture", 512, 512, Ogre::ColourValue::Black, TEMP_RESOURCE_GROUP_NAME, Ogre::PF_R8G8B8);
+    }
+    else
+    {
+        TextureLoader().generate("VideoTexture", 640, 480, Ogre::ColourValue::Black, TEMP_RESOURCE_GROUP_NAME, Ogre::PF_R8G8B8);
+    }
+
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "name_bge.bmp", 
