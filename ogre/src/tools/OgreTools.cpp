@@ -14,7 +14,7 @@ Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre:
     Ogre::MaterialPtr materialNew = material->clone(newMaterialName, true, groupName);
 
     for(size_t q = 0; q < texturesNames.size(); ++q){
-        Ogre::TextureUnitState * state = materialNew->getTechnique(0)->getPass(0)->getTextureUnitState(q);
+        Ogre::TextureUnitState * state = materialNew->getTechnique(0)->getPass(0)->getTextureUnitState(static_cast<Ogre::ushort>(q));
         state->setTextureName(texturesNames[q]);
         state->setTextureScale(scale, scale);
 
@@ -58,7 +58,7 @@ void TranslateMesh(const Ogre::Entity *ent, const Ogre::Vector3 &translate)
     // Run through the submeshes, modifying the data
     for(size_t i = 0; i < mesh->getNumSubMeshes(); i++)
     {
-        Ogre::SubMesh * submesh = mesh->getSubMesh(i);
+        Ogre::SubMesh * submesh = mesh->getSubMesh(static_cast<Ogre::ushort>(i));
         Ogre::VertexData * vertex_data = submesh->useSharedVertices ? mesh->sharedVertexData : submesh->vertexData;
         if((!submesh->useSharedVertices)||(submesh->useSharedVertices && !added_shared))
         {
@@ -107,7 +107,7 @@ Ogre::Vector3 FindCentroid(const Ogre::Entity *ent)
     // Run through the submeshes, modifying the data
     for(size_t i = 0; i < mesh->getNumSubMeshes(); i++)
     {
-        Ogre::SubMesh * submesh = mesh->getSubMesh(i);
+        Ogre::SubMesh * submesh = mesh->getSubMesh(static_cast<Ogre::ushort>(i));
         Ogre::VertexData * vertex_data = submesh->useSharedVertices ? mesh->sharedVertexData : submesh->vertexData;
 
         const Ogre::VertexElement* posElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
@@ -597,7 +597,7 @@ Ogre::TexturePtr loadChromaKeyedTexture(const Ogre::String& filename,
      Image chromaKeyedImg;
      chromaKeyedImg.loadDynamicImage (pixelData, width, height, 1, targetTextureFormat, true); 
      if(resize)
-        chromaKeyedImg.resize(newSize, newSize);
+        chromaKeyedImg.resize(static_cast<Ogre::ushort>(newSize), static_cast<Ogre::ushort>(newSize));
      String resName = prefix + filename;
      // You could save the chroma keyed image at this point for caching:
      // chromaKeyedImg.save(resName); 

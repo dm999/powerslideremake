@@ -61,11 +61,11 @@ void MenuMultiMode::doInitData(LoaderListener* loaderListener)
         bool success;
         if(mModeContext.mGameState.isMultiplayerMaster())
         {
-            success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount(), mModeContext.mGameState.getVersion());
+            success = mMultiplayerController->startLobbyMaster(mModeContext.mGameState.getMultiplayerServerIP(), static_cast<uint16_t>(mModeContext.mGameState.getMultiplayerServerPort()), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName(), 12 - mModeContext.mGameState.getAICount(), mModeContext.mGameState.getAICount(), mModeContext.mGameState.getVersion());
         }
         else
         {
-            success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), mModeContext.mGameState.getMultiplayerServerPort(), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
+            success = mMultiplayerController->startLobbySlave(mModeContext.mGameState.getMultiplayerServerIP(), static_cast<uint16_t>(mModeContext.mGameState.getMultiplayerServerPort()), mModeContext.mGameState.getMultiplayerUserName(), mModeContext.mGameState.getMultiplayerRoomName());
         }
 
         mIsLobbyEntered = success;

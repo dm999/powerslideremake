@@ -128,7 +128,7 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
 
             Ogre::Image chromaKeyedImg;
             chromaKeyedImg.loadDynamicImage (pixelData, width, height, 1, targetTextureFormat, true); 
-            if(resize) chromaKeyedImg.resize(newSize, newSize);
+            if(resize) chromaKeyedImg.resize(static_cast<Ogre::ushort>(newSize), static_cast<Ogre::ushort>(newSize));
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, chromaKeyedImg, Ogre::TEX_TYPE_2D);
 
@@ -148,6 +148,6 @@ void TextureLoader::adjustTextureSizeIfNecessary(Ogre::Image& image)const
         size_t wPow2 = getPowerOf2(image.getWidth());
         size_t hPow2 = getPowerOf2(image.getHeight());
         if(wPow2 != image.getWidth() || hPow2 != image.getHeight())
-            image.resize(wPow2, hPow2);
+            image.resize(static_cast<Ogre::ushort>(wPow2), static_cast<Ogre::ushort>(hPow2));
     }
 }

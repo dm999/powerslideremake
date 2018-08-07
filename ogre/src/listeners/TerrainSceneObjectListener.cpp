@@ -777,7 +777,7 @@ bool TerrainSceneObjectListener::checkSphereAndTriangleIntersection(const Ogre::
         Ogre::Mesh* mesh = ent->getMesh().get();
         for(size_t i = 0; i < mesh->getNumSubMeshes(); i++)
         {
-            Ogre::SubMesh* submesh = mesh->getSubMesh(i);
+            Ogre::SubMesh* submesh = mesh->getSubMesh(static_cast<Ogre::ushort>(i));
 
             Ogre::VertexData* vertex_data = submesh->useSharedVertices ? mesh->sharedVertexData : submesh->vertexData;
             const Ogre::VertexElement* posElem = vertex_data->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);

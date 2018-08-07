@@ -750,9 +750,9 @@ std::vector<std::string> StaticMeshProcesser::loadWithVertexArray(bool isOverrid
         for(size_t w = 0; w < mshData.triCount; ++w)
         {
             {
-                triPlainIndixes.push_back(w * 3 + 0);
-                triPlainIndixes.push_back(w * 3 + 1);
-                triPlainIndixes.push_back(w * 3 + 2);
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 0));
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 1));
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 2));
             }
         }
 
@@ -854,9 +854,9 @@ std::vector<std::string> StaticMeshProcesser::loadWithoutVertexArray(bool isOver
         {
             if(mshData.textureForTriangleIndex[w] == q)
             {
-                triPlainIndixes.push_back(w * 3 + 0);
-                triPlainIndixes.push_back(w * 3 + 1);
-                triPlainIndixes.push_back(w * 3 + 2);
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 0));
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 1));
+                triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 2));
             }
         }
 

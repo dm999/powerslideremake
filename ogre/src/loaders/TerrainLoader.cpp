@@ -15,7 +15,7 @@ void TerrainLoader::load(GameState& gameState)
 
         for(size_t q = 0; q < TerrainData::mTerrainsAmount; ++q)
         {
-            mTerrainData[q].mVelocityIndex = q;
+            mTerrainData[q].mVelocityIndex = static_cast<char>(q);
             mTerrainData[q].mUnknownIndex = -1;
         }
 
@@ -28,7 +28,7 @@ void TerrainLoader::load(GameState& gameState)
                 int tmpVal;
                 bufStream >> tmpVal;
                 assert(mTerrainData[tmpVal].mUnknownIndex == -1);
-                mTerrainData[tmpVal].mUnknownIndex = 15 - q;
+                mTerrainData[tmpVal].mUnknownIndex = static_cast<char>(15 - q);
             }
         }
 

@@ -24,7 +24,7 @@ bool MultiplayerRoomInfo::getRoomsList(const std::string& ip, size_t port, std::
 
     try{
         typedef std::vector<multislider::RoomInfo> roomV;
-        const roomV& roomsGet = multislider::Lobby::getRooms(ip, port);
+        const roomV& roomsGet = multislider::Lobby::getRooms(ip, static_cast<uint16_t>(port));
         for(size_t q = 0; q < roomsGet.size(); ++q)
         {
             rooms.push_back(roomsGet[q].getName());

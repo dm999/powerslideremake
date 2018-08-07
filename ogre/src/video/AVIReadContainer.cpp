@@ -217,7 +217,7 @@ VideoInputStream& VideoInputStream::read(Ogre::uint8* buf, Ogre::uint64 count)
 {
     //if (isOpened())
     {
-        input->read(buf, static_cast<std::streamsize>(count));
+        input->read(buf, static_cast<size_t>(count));
         //m_is_valid = (input->gcount() == (std::streamsize)count);
     }
 
@@ -227,7 +227,7 @@ VideoInputStream& VideoInputStream::read(Ogre::uint8* buf, Ogre::uint64 count)
 VideoInputStream& VideoInputStream::seekg(Ogre::uint64 pos)
 {
     //input.clear();
-    input->seek(static_cast<std::streamoff>(pos));
+    input->seek(static_cast<size_t>(pos));
     //m_is_valid = !input.eof();
     return *this;
 }
