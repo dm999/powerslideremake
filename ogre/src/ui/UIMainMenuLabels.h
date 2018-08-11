@@ -128,6 +128,10 @@ private:
     UILabel* mOptionInputLabel_Type;
     UIButton* mInputTypeValLeft;
     UIButton* mInputTypeValRight;
+#if !defined(__ANDROID__)
+    std::vector<UILabel*> mOptionInputLabels_Keys;
+    UILabel* mOptionInputLabel_ResetDefaults;
+#endif
 
     UILabel* mOptionSoundLabel_VolumeFX_Val;
     UIButton* mSoundVolumeFXValLeft;
@@ -201,6 +205,14 @@ private:
     UILabel* mVideoTitleLabel;
 
     private:
+
+    void createLabelsOptionsMain(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsGraphics(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsInput(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsSound(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsRace(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsHiscores(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsOther(const Ogre::Matrix4& screenAdaptionRelative);
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;
     UILabel* mModeMultiListOfRooms;
