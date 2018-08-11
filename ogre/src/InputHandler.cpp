@@ -121,7 +121,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->restartRace();
     }
-    else if (arg.key == OIS::KC_SPACE)
+    else if (arg.key == OIS::KC_GRAVE)//tilda
     {
         if(mCameraMan)
         {

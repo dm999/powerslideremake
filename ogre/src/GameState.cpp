@@ -439,6 +439,11 @@ void GameState::setDefaultKeyCodeMappers()
         mInputKeysKeyboard2[q] = mInputKeysKeyboard[q];
         mInputKeysMouse[q] = static_cast<OIS::MouseButtonID>(-1);
     }
+
+    mInputKeysKeyboard2[InputKeyMapping::kmUp] = OIS::KC_UNASSIGNED;
+    mInputKeysKeyboard2[InputKeyMapping::kmDown] = OIS::KC_UNASSIGNED;
+    mInputKeysMouse[InputKeyMapping::kmUp] = OIS::MB_Left;
+    mInputKeysMouse[InputKeyMapping::kmDown] = OIS::MB_Right;
 }
 
 bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const

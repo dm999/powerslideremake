@@ -798,6 +798,10 @@ std::string keyCodeToString(OIS::KeyCode code)
             ret = "Right Alt";
             break;
 
+        case OIS::KC_SPACE:
+            ret = "Space";
+            break;
+
         case OIS::KC_F1:
         case OIS::KC_F2:
         case OIS::KC_F3:
