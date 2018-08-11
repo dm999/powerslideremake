@@ -60,7 +60,10 @@ source_group("codecs" FILES ${CODECS_SRC})
 add_library(sfml-audio STATIC ${SRC} ${CODECS_SRC})
 
 # setup dependencies
-#target_link_libraries(sfml-audio PRIVATE OpenAL)
+if(ANDROID)
+else()
+    target_link_libraries(sfml-audio PRIVATE OpenAL32)
+endif()
 
 if(SFML_OS_ANDROID)
     target_link_libraries(sfml-audio PRIVATE android OpenSLES)
