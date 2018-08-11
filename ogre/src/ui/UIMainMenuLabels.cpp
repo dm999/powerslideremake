@@ -806,7 +806,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonI
     mUILabelsManager.mouseReleased(pos);
 
 #if !defined(__ANDROID__)
-    if (mIsInKeyInsertMode && prevIsInKeyInsertMode == true)
+    if (mIsInKeyInsertMode && prevIsInKeyInsertMode == true && mModeContext.getGameState().getInputType() == itMouse)
     {
         mSelectedKeyLabel->setFixed(false);
         mIsInKeyInsertMode = false;

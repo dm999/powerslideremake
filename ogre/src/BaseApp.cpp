@@ -751,7 +751,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
         }
 
-        //if(mGameState.getInputType() == itMouse)
+        if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
@@ -778,7 +778,7 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs), id);
         }
 
-        //if(mGameState.getInputType() == itMouse)
+        if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
