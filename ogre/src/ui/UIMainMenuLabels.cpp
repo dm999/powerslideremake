@@ -506,8 +506,14 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
             mIsInKeyInsertMode = true;
             mSelectedKeyLabel = label;
             mSelectedKeyLabel->setFixed(true);
-            //mModeContext.getTrayManager()->hideCursor();
         }
+    }
+
+    if (label == mOptionInputLabel_ResetDefaults)
+    {
+        mModeContext.getGameState().setDefaultKeyCodeMappers();
+        setKeyText();
+        mModeContext.getGameState().savePlayerData();
     }
 #endif
 
@@ -771,6 +777,7 @@ void UIMainMenuLabels::keyUp(MyGUI::KeyCode _key, wchar_t _char)
             mSelectedKeyLabel->getTextArea()->setCaption(code);
             mModeContext.getGameState().setKeyCode(static_cast<OIS::KeyCode>(_key.getValue()), mSelectedKey);
             mModeContext.getGameState().setKeyCode(static_cast<OIS::MouseButtonID>(-1), mSelectedKey);
+            mModeContext.getGameState().savePlayerData();
         }
     }
 #endif
@@ -810,6 +817,7 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonI
             mSelectedKeyLabel->getTextArea()->setCaption(code);
             mModeContext.getGameState().setKeyCode(OIS::KC_UNASSIGNED, mSelectedKey);
             mModeContext.getGameState().setKeyCode(id, mSelectedKey);
+            mModeContext.getGameState().savePlayerData();
         }
     }
 #endif
@@ -1544,9 +1552,9 @@ void UIMainMenuLabels::setKeyText()
     if (mModeContext.getGameState().getInputType() == itMouse)
     {
         mOptionInputLabels_Keys[0]->setActive(false);
-        mOptionInputLabels_Keys[0]->getTextArea()->setCaption("Mouse Move Left");
+        mOptionInputLabels_Keys[0]->getTextArea()->setCaption("Move Mouse Left");
         mOptionInputLabels_Keys[1]->setActive(false);
-        mOptionInputLabels_Keys[1]->getTextArea()->setCaption("Mouse Move Right");
+        mOptionInputLabels_Keys[1]->getTextArea()->setCaption("Move Mouse Right");
     }
     else
     {

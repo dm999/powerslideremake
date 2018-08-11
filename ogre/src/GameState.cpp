@@ -103,6 +103,42 @@ void GameState::initOriginalData()
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
                 mCameraPos = static_cast<CameraPositions>(mPlayerSettings.getIntValue("", "camera setting", static_cast<int>(mCameraPos)));
+                {
+                    std::vector<std::string> keyMapperStr = mPlayerSettings.getArrayValue("", "key mappers");
+                    std::vector<std::string> keyMapperStr2 = mPlayerSettings.getArrayValue("", "key mappers 2");
+                    std::vector<std::string> mouseMapperStr = mPlayerSettings.getArrayValue("", "mouse mappers");
+
+                    for (size_t q = 0; q < keyMapperStr.size(); ++q)
+                    {
+                        size_t val;
+                        Conversions::DMFromString(keyMapperStr[q], val);
+                        if (q < InputKeyMapping::kmEmpty)
+                        {
+                            mInputKeysKeyboard[q] = OIS::KeyCode(val);
+                        }
+                    }
+
+                    for (size_t q = 0; q < keyMapperStr2.size(); ++q)
+                    {
+                        size_t val;
+                        Conversions::DMFromString(keyMapperStr2[q], val);
+                        if (q < InputKeyMapping::kmEmpty)
+                        {
+                            mInputKeysKeyboard2[q] = OIS::KeyCode(val);
+                        }
+                    }
+
+
+                    for (size_t q = 0; q < mouseMapperStr.size(); ++q)
+                    {
+                        size_t val;
+                        Conversions::DMFromString(mouseMapperStr[q], val);
+                        if (q < InputKeyMapping::kmEmpty)
+                        {
+                            mInputKeysMouse[q] = OIS::MouseButtonID(val);
+                        }
+                    }
+                }
                 loadPlayerData();
                 setRaceParameters(mPlayerSettings.getValue("", "track choice", mTrackName.c_str()), mPlayerData.level);
                 if(!isAITrack())
@@ -185,6 +221,14 @@ void GameState::savePlayerData()
     globalData.cameraPos = mCameraPos;
     globalData.fxVolume = mSoundsGain;
     globalData.musicVolume = mMusicGain;
+    {
+        for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+        {
+            globalData.keyMappers.push_back(Conversions::DMToString(mInputKeysKeyboard[q]));
+            globalData.keyMappers2.push_back(Conversions::DMToString(mInputKeysKeyboard2[q]));
+            globalData.mouseMappers.push_back(Conversions::DMToString(mInputKeysMouse[q]));
+        }
+    }
 
     globalData.track = mTrackName;
     globalData.character = mPSPlayerCar.getCharacterName();
@@ -392,6 +436,7 @@ void GameState::setDefaultKeyCodeMappers()
 
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
     {
+        mInputKeysKeyboard2[q] = mInputKeysKeyboard[q];
         mInputKeysMouse[q] = static_cast<OIS::MouseButtonID>(-1);
     }
 }
@@ -402,7 +447,20 @@ bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        ret = mInputKeysKeyboard[index] == code;
+        const OIS::KeyCode * mapper = nullptr;
+        if (mInputType == itKeyboard)
+        {
+            mapper = mInputKeysKeyboard;
+        }
+        if (mInputType == itMouse)
+        {
+            mapper = mInputKeysKeyboard2;
+        }
+
+        if (mapper)
+        {
+            ret = mapper[index] == code;
+        }
     }
 
     return ret;
@@ -426,7 +484,20 @@ OIS::KeyCode GameState::getKeyCode(InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        ret = mInputKeysKeyboard[index];
+        const OIS::KeyCode * mapper = nullptr;
+        if (mInputType == itKeyboard)
+        {
+            mapper = mInputKeysKeyboard;
+        }
+        if (mInputType == itMouse)
+        {
+            mapper = mInputKeysKeyboard2;
+        }
+
+        if (mapper)
+        {
+            ret = mapper[index];
+        }
     }
 
     return ret;
@@ -448,7 +519,20 @@ void GameState::setKeyCode(OIS::KeyCode code, InputKeyMapping index)
 {
     if (index < InputKeyMapping::kmEmpty)
     {
-        mInputKeysKeyboard[index] = code;
+        OIS::KeyCode * mapper = nullptr;
+        if (mInputType == itKeyboard)
+        {
+            mapper = mInputKeysKeyboard;
+        }
+        if (mInputType == itMouse)
+        {
+            mapper = mInputKeysKeyboard2;
+        }
+
+        if (mapper)
+        {
+            mapper[index] = code;
+        }
     }
 }
 

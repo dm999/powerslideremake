@@ -1,6 +1,7 @@
 #ifndef ORIGINALSETTINGS_H
 #define ORIGINALSETTINGS_H
 
+#include <vector>
 #include <string>
 #include <map>
 
@@ -56,7 +57,7 @@ public:
     int getIntValue(const std::string& section, const std::string& key) const;
     int getIntValue(const std::string& section, const std::string& key, int defaultVal) const;
 
-    std::string arrayToString(std::vector<std::string>& data)const;
+    std::string arrayToString(const std::vector<std::string>& data)const;
 
     template <typename T>
     std::string arrayToString(std::vector<T>& data)const
@@ -213,6 +214,9 @@ public:
         Ogre::uint32 cameraPos;
         Ogre::Real fxVolume;
         Ogre::Real musicVolume;
+        std::vector<std::string> keyMappers;
+        std::vector<std::string> keyMappers2;
+        std::vector<std::string> mouseMappers;
     };
 
     struct PlayerData

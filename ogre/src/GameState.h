@@ -304,6 +304,7 @@ private:
     InputType mInputType;
 
     OIS::KeyCode mInputKeysKeyboard[InputKeyMapping::kmEmpty];//0-3 arrows, 4-5 gears, 6 view, 7, hand brake, 8-11 F
+    OIS::KeyCode mInputKeysKeyboard2[InputKeyMapping::kmEmpty];
     OIS::MouseButtonID mInputKeysMouse[InputKeyMapping::kmEmpty];
 
     bool mIsSpeedCheatUsed;
