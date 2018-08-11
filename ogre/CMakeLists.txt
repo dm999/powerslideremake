@@ -84,6 +84,7 @@ file(GLOB PowerslideRemake_sources_cheats_main_h src/cheats/*.h)
 
 file(GLOB PowerslideRemake_sources_ui_main src/ui/*.cpp)
 file(GLOB PowerslideRemake_sources_ui_main_h src/ui/*.h)
+file(GLOB PowerslideRemake_sources_ui_routines_h src/ui/routines/*.h)
 
 file(GLOB PowerslideRemake_sources_ui_elements src/ui/elements/*.cpp)
 file(GLOB PowerslideRemake_sources_ui_elements_h src/ui/elements/*.h)
@@ -151,6 +152,7 @@ list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_mesh_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_modes_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_cheats_main_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_main_h})
+list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_routines_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_ui_elements_h})
 list(APPEND PowerslideRemake_sources ${PowerslideRemake_sources_includes_main_h})
 

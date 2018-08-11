@@ -25,13 +25,13 @@ namespace{
 #endif
 }
 
-#include "UIMainMenuCreateLabelsMain.h"
-#include "UIMainMenuCreateLabelsOptionsGraphics.h"
-#include "UIMainMenuCreateLabelsOptionsInput.h"
-#include "UIMainMenuCreateLabelsOptionsSound.h"
-#include "UIMainMenuCreateLabelsOptionsRace.h"
-#include "UIMainMenuCreateLabelsOptionsHiscores.h"
-#include "UIMainMenuCreateLabelsOther.h"
+#include "routines/UIMainMenuCreateLabelsMain.h"
+#include "routines/UIMainMenuCreateLabelsOptionsGraphics.h"
+#include "routines/UIMainMenuCreateLabelsOptionsInput.h"
+#include "routines/UIMainMenuCreateLabelsOptionsSound.h"
+#include "routines/UIMainMenuCreateLabelsOptionsRace.h"
+#include "routines/UIMainMenuCreateLabelsOptionsHiscores.h"
+#include "routines/UIMainMenuCreateLabelsOther.h"
 
 
 UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) :
