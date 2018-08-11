@@ -1,6 +1,7 @@
 
 #include "OgreTools.h"
 #include "Tools.h"
+#include "Conversions.h"
 
 #include "../loaders/PFLoader.h"
 
@@ -749,4 +750,170 @@ Ogre::DataStreamPtr getWritibleFile(const std::string& dataDir, const std::strin
     }
 
     return stream;
+}
+
+std::string keyCodeToString(OIS::KeyCode code)
+{
+    std::string ret = "";
+
+    switch (code)
+    {
+        case OIS::KC_LEFT:
+            ret = "Left";
+            break;
+
+        case OIS::KC_RIGHT:
+            ret = "Right";
+            break;
+
+        case OIS::KC_UP:
+            ret = "Up";
+            break;
+
+        case OIS::KC_DOWN:
+            ret = "Down";
+            break;
+
+        case OIS::KC_LCONTROL:
+            ret = "Left Control";
+            break;
+
+        case OIS::KC_RCONTROL:
+            ret = "Right Control";
+            break;
+
+        case OIS::KC_LSHIFT:
+            ret = "Left Shift";
+            break;
+
+        case OIS::KC_RSHIFT:
+            ret = "Right Shift";
+            break;
+
+        case OIS::KC_LMENU:
+            ret = "Left Alt";
+            break;
+
+        case OIS::KC_RMENU:
+            ret = "Right Alt";
+            break;
+
+        case OIS::KC_F1:
+        case OIS::KC_F2:
+        case OIS::KC_F3:
+        case OIS::KC_F4:
+        case OIS::KC_F5:
+        case OIS::KC_F6:
+        case OIS::KC_F7:
+        case OIS::KC_F8:
+        case OIS::KC_F9:
+            ret = "F" + Conversions::DMToString(static_cast<char>('1' + code - OIS::KC_F1));
+            break;
+
+        case OIS::KC_F10:
+            ret = "F10";
+            break;
+
+        case OIS::KC_F11:
+        case OIS::KC_F12:
+            ret = "F1" + Conversions::DMToString(static_cast<char>('1' + code - OIS::KC_F11));
+            break;
+
+        case OIS::KC_1:
+        case OIS::KC_2:
+        case OIS::KC_3:
+        case OIS::KC_4:
+        case OIS::KC_5:
+        case OIS::KC_6:
+        case OIS::KC_7:
+        case OIS::KC_8:
+        case OIS::KC_9:
+            ret = Conversions::DMToString(static_cast<char>('1' + code - OIS::KC_1));
+            break;
+
+        case OIS::KC_0:
+            ret = "0";
+            break;
+
+        case OIS::KC_Q:
+            ret = "Q";
+            break;
+        case OIS::KC_W:
+            ret = "W";
+            break;
+        case OIS::KC_E:
+            ret = "E";
+            break;
+        case OIS::KC_R:
+            ret = "R";
+            break;
+        case OIS::KC_T:
+            ret = "T";
+            break;
+        case OIS::KC_Y:
+            ret = "Y";
+            break;
+        case OIS::KC_U:
+            ret = "U";
+            break;
+        case OIS::KC_I:
+            ret = "I";
+            break;
+        case OIS::KC_O:
+            ret = "O";
+            break;
+        case OIS::KC_P:
+            ret = "P";
+            break;
+        case OIS::KC_A:
+            ret = "A";
+            break;
+        case OIS::KC_S:
+            ret = "S";
+            break;
+        case OIS::KC_D:
+            ret = "D";
+            break;
+        case OIS::KC_F:
+            ret = "F";
+            break;
+        case OIS::KC_G:
+            ret = "G";
+            break;
+        case OIS::KC_H:
+            ret = "H";
+            break;
+        case OIS::KC_J:
+            ret = "J";
+            break;
+        case OIS::KC_K:
+            ret = "K";
+            break;
+        case OIS::KC_L:
+            ret = "L";
+            break;
+        case OIS::KC_Z:
+            ret = "Z";
+            break;
+        case OIS::KC_X:
+            ret = "X";
+            break;
+        case OIS::KC_C:
+            ret = "C";
+            break;
+        case OIS::KC_V:
+            ret = "V";
+            break;
+        case OIS::KC_B:
+            ret = "B";
+            break;
+        case OIS::KC_N:
+            ret = "N";
+            break;
+        case OIS::KC_M:
+            ret = "M";
+            break;
+    }
+
+    return ret;
 }

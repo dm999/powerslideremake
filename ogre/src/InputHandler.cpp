@@ -98,21 +98,21 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         if(noSpecialKey())
             baseApp->setShutdown(false);
     }
-    else if (arg.key == OIS::KC_F1)
+    else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmBurn))
     {
         if(noSpecialKey())
             baseApp->createBurnByPlayer();
     }
-    else if (arg.key == OIS::KC_F2)
+    else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmBomb))
     {
         if(noSpecialKey())
             baseApp->createBombByPlayer();
     }
-    else if (arg.key == OIS::KC_F3)
+    else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmNitro))
     {
         baseApp->enableNitro();
     }
-    else if (arg.key == OIS::KC_F4)
+    else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmDropCam))
     {
         if(noSpecialKey())
             baseApp->dropCamera();
@@ -128,7 +128,7 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
             baseApp->switchRenderType();
         }
     }
-    else if (arg.key == OIS::KC_V)
+    else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmView))
     {
         if(mCameraMan)
         {

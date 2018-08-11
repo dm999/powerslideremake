@@ -38,76 +38,88 @@ void PSPlayerCar::initModel(    lua_State * pipeline,
     }
 }
 
-void PSPlayerCar::keyDown(OIS::KeyCode key)
+void PSPlayerCar::keyDown(OIS::KeyCode key, const GameState& gameState)
 {
-    switch(key)
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmLeft))
     {
-    case OIS::KC_LEFT: 
         mWorld->getVehicle(this)->setSteeringLeft(true);
-        break;
-    case OIS::KC_RIGHT: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmRight))
+    {
         mWorld->getVehicle(this)->setSteeringRight(true);
-        break;
-    case OIS::KC_DOWN: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmUp))
+    {
+        setAcceleration(true);
+        mWorld->getVehicle(this)->setThrottle(1.0f);
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmDown))
+    {
         mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
 #if defined(__ANDROID__)
         mWorld->getVehicle(this)->setThrottle(0.0f);
         setAcceleration(false);
 #endif
-        break;
-    case OIS::KC_LCONTROL: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmHandBreak))
+    {
         mWorld->getVehicle(this)->setHandBrakes(1.0f);
         setBrake(true);
-        break;
-    case OIS::KC_UP: 
-        setAcceleration(true);
-        mWorld->getVehicle(this)->setThrottle(1.0f);
-        break;
-    case OIS::KC_A: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmGearUp))
+    {
         mWorld->getVehicle(this)->gearUp();
-        break;
-    case OIS::KC_Z: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmGearDown))
+    {
         mWorld->getVehicle(this)->gearDown();
-        break;
-    default:
-        break;
     }
 }
 
-void PSPlayerCar::keyUp(OIS::KeyCode key)
+void PSPlayerCar::keyUp(OIS::KeyCode key, const GameState& gameState)
 {
-    switch(key)
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmLeft))
     {
-    case OIS::KC_LEFT: 
         mWorld->getVehicle(this)->setSteeringLeft(false);
-        break;
-    case OIS::KC_RIGHT: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmRight))
+    {
         mWorld->getVehicle(this)->setSteeringRight(false);
-        break;
-    case OIS::KC_DOWN: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmUp))
+    {
+        mWorld->getVehicle(this)->setThrottle(0.0f);
+        setAcceleration(false);
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmDown))
+    {
         mWorld->getVehicle(this)->setBrakes(0.0f);
         setBrake(false);
 #if defined(__ANDROID__)
         setAcceleration(true);
         mWorld->getVehicle(this)->setThrottle(1.0f);
 #endif
-        break;
-    case OIS::KC_LCONTROL: 
+    }
+
+    if (gameState.checkKeyCode(key, InputKeyMapping::kmHandBreak))
+    {
         mWorld->getVehicle(this)->setHandBrakes(0.0f);
         setBrake(false);
-        break;
-    case OIS::KC_UP: 
-        mWorld->getVehicle(this)->setThrottle(0.0f);
-        setAcceleration(false);
-        break;
-    default:
-        break;
-
     }
+
 }
 
-void PSPlayerCar::mousePressed(OIS::MouseButtonID id)
+void PSPlayerCar::mousePressed(OIS::MouseButtonID id, const GameState& gameState)
 {
     if(id == OIS::MB_Left)
     {
@@ -122,7 +134,7 @@ void PSPlayerCar::mousePressed(OIS::MouseButtonID id)
     }
 }
 
-void PSPlayerCar::mouseReleased(OIS::MouseButtonID id)
+void PSPlayerCar::mouseReleased(OIS::MouseButtonID id, const GameState& gameState)
 {
     if(id == OIS::MB_Left)
     {

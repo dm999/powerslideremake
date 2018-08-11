@@ -104,6 +104,10 @@ public:
     static const int mAIMin = 3;
     static const int mAIMax = 11;
 
+    bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
+    OIS::KeyCode getKeyCode(InputKeyMapping index) const;
+    void setDefaultKeyCodeMappers();
+
     void setAICount(size_t opponentsAmount);
     size_t getAICount()const{return mAiOpponentsAmount;}
 
@@ -294,6 +298,9 @@ private:
     bool mIsGamePaused;
 
     InputType mInputType;
+
+    OIS::KeyCode mInputKeysKeyboard[InputKeyMapping::kmEmpty];//0-3 arrows, 4-5 gears, 6 view, 7, hand brake, 8-11 F
+    OIS::KeyCode mInputKeysMouse[InputKeyMapping::kmEmpty];
 
     bool mIsSpeedCheatUsed;
 

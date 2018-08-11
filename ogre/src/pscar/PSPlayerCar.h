@@ -26,11 +26,11 @@ public:
                             InitialVehicleSetup& initialVehicleSetup,
                             bool isPossesCamera);
 
-    void keyDown(OIS::KeyCode key);
-    void keyUp(OIS::KeyCode key);
+    void keyDown(OIS::KeyCode key, const GameState& gameState);
+    void keyUp(OIS::KeyCode key, const GameState& gameState);
 
-    void mousePressed(OIS::MouseButtonID id);
-    void mouseReleased(OIS::MouseButtonID id);
+    void mousePressed(OIS::MouseButtonID id, const GameState& gameState);
+    void mouseReleased(OIS::MouseButtonID id, const GameState& gameState);
     void mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth);
 
     void raceStarted();

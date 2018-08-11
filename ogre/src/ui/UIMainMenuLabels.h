@@ -8,6 +8,8 @@
 #include "elements/UITable.h"
 #include "elements/UILabel.h"
 
+#include "../includes/MyGUI_KeyCode.h"
+
 class UIMainMenuLabels : public UIMainMenuBackground, public UIButtonOnAction, public UILabelOnAction
 {
 public:
@@ -31,6 +33,8 @@ public:
 protected:
 
     void createLabels(const Ogre::Matrix4& screenAdaptionRelative);
+
+    void keyUp(MyGUI::KeyCode _key, wchar_t _char);
 
     void mousePressed(const Ogre::Vector2& pos) override;
     void mouseReleased(const Ogre::Vector2& pos) override;
@@ -92,6 +96,10 @@ private:
 
     virtual void onNameChange() = 0;
 
+#if !defined(__ANDROID__)
+    void setKeyText();
+#endif
+
     Ogre::TextAreaOverlayElement * mWindowTitle;
     Ogre::TextAreaOverlayElement * mWindowTitleTrophies;
 
@@ -131,6 +139,7 @@ private:
 #if !defined(__ANDROID__)
     std::vector<UILabel*> mOptionInputLabels_Keys;
     UILabel* mOptionInputLabel_ResetDefaults;
+    bool mIsInKeyInsertMode;
 #endif
 
     UILabel* mOptionSoundLabel_VolumeFX_Val;

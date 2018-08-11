@@ -2,6 +2,7 @@
 #define OGRETOOLS_H
 
 #include "../includes/OgreInclude.h"
+#include "../includes/OISInclude.h"
 
 Ogre::MaterialPtr CloneMaterial(const Ogre::String& newMaterialName, const Ogre::String& oldMaterialName, 
                                 const std::vector<Ogre::String> texturesNames, 
@@ -78,5 +79,7 @@ size_t getPowerOf2(size_t val);
 
 Ogre::DataStreamPtr getReadableFile(const std::string& dataDir, const std::string& fileName);
 Ogre::DataStreamPtr getWritibleFile(const std::string& dataDir, const std::string& fileName);
+
+std::string keyCodeToString(OIS::KeyCode code);
 
 #endif

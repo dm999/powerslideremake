@@ -245,6 +245,8 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
 
 void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 {
+    UIMainMenuLabels::keyUp(_key, _char);
+
     mEditBoxUserName.keyUp(_key, _char);
     mEditBoxMultiIP.keyUp(_key, _char);
     mEditBoxMultiUserName.keyUp(_key, _char);

@@ -56,6 +56,7 @@ GameState::GameState() :
     mMultiplayerBroadcastInterval(350),
     mDataDir("")
 {
+    setDefaultKeyCodeMappers();
 }
 
 GameState::~GameState()
@@ -363,6 +364,104 @@ const PSPlayerCar& GameState::getPlayerCar()const
 PSPlayerCar& GameState::getPlayerCar()
 {
     return mPSPlayerCar;
+}
+
+void GameState::setDefaultKeyCodeMappers()
+{
+    //arrows
+    mInputKeysKeyboard[InputKeyMapping::kmLeft] = OIS::KC_LEFT;
+    mInputKeysKeyboard[InputKeyMapping::kmRight] = OIS::KC_RIGHT;
+    mInputKeysKeyboard[InputKeyMapping::kmUp] = OIS::KC_UP;
+    mInputKeysKeyboard[InputKeyMapping::kmDown] = OIS::KC_DOWN;
+
+    //gears
+    mInputKeysKeyboard[InputKeyMapping::kmGearUp] = OIS::KC_A;
+    mInputKeysKeyboard[InputKeyMapping::kmGearDown] = OIS::KC_Z;
+
+    //view
+    mInputKeysKeyboard[InputKeyMapping::kmView] = OIS::KC_V;
+
+    //handbreak
+    mInputKeysKeyboard[InputKeyMapping::kmHandBreak] = OIS::KC_LCONTROL;
+
+    //F
+    mInputKeysKeyboard[InputKeyMapping::kmBurn] = OIS::KC_F1;
+    mInputKeysKeyboard[InputKeyMapping::kmBomb] = OIS::KC_F2;
+    mInputKeysKeyboard[InputKeyMapping::kmNitro] = OIS::KC_F3;
+    mInputKeysKeyboard[InputKeyMapping::kmDropCam] = OIS::KC_F4;
+
+
+    //arrows
+    mInputKeysMouse[InputKeyMapping::kmLeft] = OIS::KC_LEFT;
+    mInputKeysMouse[InputKeyMapping::kmRight] = OIS::KC_RIGHT;
+    mInputKeysMouse[InputKeyMapping::kmUp] = OIS::KC_UP;
+    mInputKeysMouse[InputKeyMapping::kmDown] = OIS::KC_DOWN;
+
+    //gears
+    mInputKeysMouse[InputKeyMapping::kmGearUp] = OIS::KC_A;
+    mInputKeysMouse[InputKeyMapping::kmGearDown] = OIS::KC_Z;
+
+    //view
+    mInputKeysMouse[InputKeyMapping::kmView] = OIS::KC_V;
+
+    //handbreak
+    mInputKeysMouse[InputKeyMapping::kmHandBreak] = OIS::KC_LCONTROL;
+
+    //F
+    mInputKeysMouse[InputKeyMapping::kmBurn] = OIS::KC_F1;
+    mInputKeysMouse[InputKeyMapping::kmBomb] = OIS::KC_F2;
+    mInputKeysMouse[InputKeyMapping::kmNitro] = OIS::KC_F3;
+    mInputKeysMouse[InputKeyMapping::kmDropCam] = OIS::KC_F4;
+}
+
+bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const
+{
+    bool ret = false;
+
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        const OIS::KeyCode * mapper = nullptr;
+        if (mInputType == itKeyboard)
+        {
+            mapper = mInputKeysKeyboard;
+        }
+        if (mInputType == itMouse)
+        {
+            mapper = mInputKeysMouse;
+        }
+
+        if (mapper)
+        {
+            ret = mapper[index] == code;
+        }
+    }
+
+    return ret;
+}
+
+OIS::KeyCode GameState::getKeyCode(InputKeyMapping index) const
+{
+    OIS::KeyCode ret = OIS::KC_UNASSIGNED;
+
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        const OIS::KeyCode * mapper = nullptr;
+        if (mInputType == itKeyboard)
+        {
+            mapper = mInputKeysKeyboard;
+        }
+        if (mInputType == itMouse)
+        {
+            mapper = mInputKeysMouse;
+        }
+
+        if (mapper)
+        {
+            ret = mapper[index];
+        }
+    }
+
+    return ret;
 }
 
 void GameState::setAICount(size_t opponentsAmount)

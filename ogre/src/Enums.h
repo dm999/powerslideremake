@@ -73,4 +73,26 @@ enum InputType
     itMouse     = 1
 };
 
+enum InputKeyMapping
+{
+    kmLeft = 0,
+    kmRight = 1,
+    kmUp = 2,
+    kmDown = 3,
+
+    kmGearUp = 4,
+    kmGearDown = 5,
+
+    kmView = 6,
+
+    kmHandBreak = 7,
+
+    kmBurn = 8,
+    kmBomb = 9,
+    kmNitro = 10,
+    kmDropCam = 11,
+
+    kmEmpty = 12
+};
+
 #endif

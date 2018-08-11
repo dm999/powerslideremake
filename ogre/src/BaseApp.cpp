@@ -669,7 +669,7 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
         )
     {
         if(!mGameState.isGamePaused())
-            mGameState.getPlayerCar().keyDown(arg.key);
+            mGameState.getPlayerCar().keyDown(arg.key, mGameState);
     }
     
 }
@@ -685,7 +685,7 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
             )
         )
     {
-        mGameState.getPlayerCar().keyUp(arg.key);
+        mGameState.getPlayerCar().keyUp(arg.key, mGameState);
     }
 
     if(
@@ -763,7 +763,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
                 )
             {
                 if(!mGameState.isGamePaused())
-                    mGameState.getPlayerCar().mousePressed(id);
+                    mGameState.getPlayerCar().mousePressed(id, mGameState);
             }
         }
     }
@@ -790,7 +790,7 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
                 )
             {
                 if(!mGameState.isGamePaused())
-                    mGameState.getPlayerCar().mouseReleased(id);
+                    mGameState.getPlayerCar().mouseReleased(id, mGameState);
             }
         }
 

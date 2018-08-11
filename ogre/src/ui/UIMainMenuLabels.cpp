@@ -7,6 +7,9 @@
 
 #include "../gamelogic/TrialGhost.h"
 #include "../tools/SectionsFile.h"
+#include "../tools/OgreTools.h"
+
+#include "../customs/CustomTrayManager.h"
 
 #include "../BaseApp.h"
 
@@ -22,11 +25,23 @@ namespace{
 #endif
 }
 
-UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) : 
+#include "UIMainMenuCreateLabelsMain.h"
+#include "UIMainMenuCreateLabelsOptionsGraphics.h"
+#include "UIMainMenuCreateLabelsOptionsInput.h"
+#include "UIMainMenuCreateLabelsOptionsSound.h"
+#include "UIMainMenuCreateLabelsOptionsRace.h"
+#include "UIMainMenuCreateLabelsOptionsHiscores.h"
+#include "UIMainMenuCreateLabelsOther.h"
+
+
+UIMainMenuLabels::UIMainMenuLabels(const ModeContext& modeContext, const GameMode gameMode) :
     UIMainMenuBackground(modeContext, gameMode),
     mIsViewByDescription(false),
     mIsBioByDescription(false),
     mHighScoreTrackIndex(0)
+#if !defined(__ANDROID__)
+    ,mIsInKeyInsertMode(false)
+#endif
 {}
 
 void UIMainMenuLabels::onButtonReleased(UIButton * button)
@@ -107,6 +122,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
             mOptionInputLabel_Type->getTextArea()->setCaption("Keyboard");
         }
 
+        setKeyText();
         mModeContext.getGameState().savePlayerData();
 #endif
     }
@@ -480,6 +496,18 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
         }
     }
 
+#if !defined(__ANDROID__)
+    if(!mIsInKeyInsertMode)
+    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    {
+        if (label == mOptionInputLabels_Keys[q])
+        {
+            mIsInKeyInsertMode = true;
+            //mModeContext.getTrayManager()->hideCursor();
+        }
+    }
+#endif
+
 
     if(label == mGameExitYesLabel)
     {
@@ -681,14 +709,6 @@ void UIMainMenuLabels::onLabelOver(UILabel * label)
 #endif
 }
 
-#include "UIMainMenuCreateLabelsMain.h"
-#include "UIMainMenuCreateLabelsOptionsGraphics.h"
-#include "UIMainMenuCreateLabelsOptionsInput.h"
-#include "UIMainMenuCreateLabelsOptionsSound.h"
-#include "UIMainMenuCreateLabelsOptionsRace.h"
-#include "UIMainMenuCreateLabelsOptionsHiscores.h"
-#include "UIMainMenuCreateLabelsOther.h"
-
 void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
 {
     createLabelsOptionsMain(screenAdaptionRelative);
@@ -732,6 +752,15 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
             }
         }
     }
+}
+
+void UIMainMenuLabels::keyUp(MyGUI::KeyCode _key, wchar_t _char)
+{
+#if !defined(__ANDROID__)
+    if (mIsInKeyInsertMode)
+    {
+    }
+#endif
 }
 
 void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
@@ -1462,3 +1491,13 @@ std::string UIMainMenuLabels::getTextFileContent(const std::string& dir, const s
 
     return ret;
 }
+
+#if !defined(__ANDROID__)
+void UIMainMenuLabels::setKeyText()
+{
+    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    {
+        mOptionInputLabels_Keys[q]->getTextArea()->setCaption(keyCodeToString(mModeContext.getGameState().getKeyCode(static_cast<InputKeyMapping>(q))));
+    }
+}
+#endif
