@@ -37,7 +37,7 @@ protected:
     void keyUp(MyGUI::KeyCode _key, wchar_t _char);
 
     void mousePressed(const Ogre::Vector2& pos) override;
-    void mouseReleased(const Ogre::Vector2& pos) override;
+    void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id) override;
     void mouseMoved(const Ogre::Vector2& pos) override;
 
     void destroy(CustomTrayManager* trayMgr)override;
@@ -140,6 +140,8 @@ private:
     std::vector<UILabel*> mOptionInputLabels_Keys;
     UILabel* mOptionInputLabel_ResetDefaults;
     bool mIsInKeyInsertMode;
+    UILabel* mSelectedKeyLabel;
+    InputKeyMapping mSelectedKey;
 #endif
 
     UILabel* mOptionSoundLabel_VolumeFX_Val;

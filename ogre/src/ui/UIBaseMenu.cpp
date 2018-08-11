@@ -549,7 +549,7 @@ void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
     }
 }
 
-void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos)
+void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
     for(int q = 0; q < mControlsCount; ++q)
     {

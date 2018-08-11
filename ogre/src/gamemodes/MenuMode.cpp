@@ -34,9 +34,9 @@ void MenuMode::mousePressed(const Ogre::Vector2& pos)
     mUIMainMenu->mousePressed(pos);
 }
 
-void MenuMode::mouseReleased(const Ogre::Vector2& pos)
+void MenuMode::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
-    mUIMainMenu->mouseReleased(pos);
+    mUIMainMenu->mouseReleased(pos, id);
 }
 
 void MenuMode::mouseMoved(const Ogre::Vector2& pos)

@@ -30,7 +30,7 @@ public:
     void keyUp(MyGUI::KeyCode _key, wchar_t _char )override;
 
     void mousePressed(const Ogre::Vector2& pos)override;
-    void mouseReleased(const Ogre::Vector2& pos)override;
+    void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)override;
     void mouseMoved(const Ogre::Vector2& pos)override;
 
     SinglePlayerMenuStates getSubmenuState() const;

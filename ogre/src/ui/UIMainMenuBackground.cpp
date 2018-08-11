@@ -111,9 +111,9 @@ void UIMainMenuBackground::mouseMoved(const Ogre::Vector2& pos)
     }
 }
 
-void UIMainMenuBackground::mouseReleased(const Ogre::Vector2& pos)
+void UIMainMenuBackground::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
-    UIBaseMenu::mouseReleased(pos);
+    UIBaseMenu::mouseReleased(pos, id);
 
     if(mBackgroundFruitApple->isVisible() && OgreBites::Widget::isCursorOver(mBackgroundFruitApple, pos, 0))
     {

@@ -917,3 +917,33 @@ std::string keyCodeToString(OIS::KeyCode code)
 
     return ret;
 }
+
+std::string keyCodeToString(OIS::MouseButtonID id)
+{
+    std::string ret = "";
+
+    switch (id)
+    {
+        case OIS::MB_Left:
+            ret = "Left Mouse Button";
+            break;
+
+        case OIS::MB_Right:
+            ret = "Right Mouse Button";
+            break;
+
+        case OIS::MB_Middle:
+            ret = "Middle Mouse Button";
+            break;
+
+        case OIS::MB_Button3:
+        case OIS::MB_Button4:
+        case OIS::MB_Button5:
+        case OIS::MB_Button6:
+        case OIS::MB_Button7:
+            ret = "Mouse Button " + Conversions::DMToString(static_cast<char>('3' + id - OIS::MB_Button3));
+            break;
+    }
+
+    return ret;
+}

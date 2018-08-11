@@ -21,7 +21,7 @@ public:
     virtual void keyUp(MyGUI::KeyCode _key, wchar_t _char ) = 0;
 
     virtual void mousePressed(const Ogre::Vector2& pos) = 0;
-    virtual void mouseReleased(const Ogre::Vector2& pos) = 0;
+    virtual void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id) = 0;
     virtual void mouseMoved(const Ogre::Vector2& pos) = 0;
 
     virtual bool isExitSubmenu()const = 0;

@@ -36,12 +36,12 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
 
 #if !defined(__ANDROID__)
 
-    const char labels[][InputKeyMapping::kmEmpty] = {
+    const char labels[InputKeyMapping::kmEmpty][100] = {
         "Turn Left", "Turn Right", "Accelerate", "Brake", 
         "Gear Up", "Gear Down",
         "Change View",
         "Hand Brake",
-        "Weapon Burn", "Weapon Bomb", "Nitro", "Drop Camera"
+        "Weapon Burn*", "Weapon Bomb*", "Nitro*", "Drop Camera*"
     };
 
     //input values
@@ -55,6 +55,18 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
         label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setSpaceWidth(9.0f);
         label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 322.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mInputType");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("* Not Available in Championship and Time Trial");
+        label->getTextArea()->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(16.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
         getMainBackground()->addChild(label->getTextArea());
     }
@@ -77,7 +89,7 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
     setKeyText();
     
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(120.0f, 322.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(120.0f, 342.0f, 0.0f, 0.0f);;
         mOptionInputLabel_ResetDefaults = mUILabelsManager.add("mInputType");
         mOptionInputLabel_ResetDefaults->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         mOptionInputLabel_ResetDefaults->getTextArea()->setCaption("Reset Defaults");

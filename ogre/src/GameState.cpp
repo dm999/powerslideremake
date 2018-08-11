@@ -390,28 +390,10 @@ void GameState::setDefaultKeyCodeMappers()
     mInputKeysKeyboard[InputKeyMapping::kmNitro] = OIS::KC_F3;
     mInputKeysKeyboard[InputKeyMapping::kmDropCam] = OIS::KC_F4;
 
-
-    //arrows
-    mInputKeysMouse[InputKeyMapping::kmLeft] = OIS::KC_LEFT;
-    mInputKeysMouse[InputKeyMapping::kmRight] = OIS::KC_RIGHT;
-    mInputKeysMouse[InputKeyMapping::kmUp] = OIS::KC_UP;
-    mInputKeysMouse[InputKeyMapping::kmDown] = OIS::KC_DOWN;
-
-    //gears
-    mInputKeysMouse[InputKeyMapping::kmGearUp] = OIS::KC_A;
-    mInputKeysMouse[InputKeyMapping::kmGearDown] = OIS::KC_Z;
-
-    //view
-    mInputKeysMouse[InputKeyMapping::kmView] = OIS::KC_V;
-
-    //handbreak
-    mInputKeysMouse[InputKeyMapping::kmHandBreak] = OIS::KC_LCONTROL;
-
-    //F
-    mInputKeysMouse[InputKeyMapping::kmBurn] = OIS::KC_F1;
-    mInputKeysMouse[InputKeyMapping::kmBomb] = OIS::KC_F2;
-    mInputKeysMouse[InputKeyMapping::kmNitro] = OIS::KC_F3;
-    mInputKeysMouse[InputKeyMapping::kmDropCam] = OIS::KC_F4;
+    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    {
+        mInputKeysMouse[q] = static_cast<OIS::MouseButtonID>(-1);
+    }
 }
 
 bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const
@@ -420,20 +402,19 @@ bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        const OIS::KeyCode * mapper = nullptr;
-        if (mInputType == itKeyboard)
-        {
-            mapper = mInputKeysKeyboard;
-        }
-        if (mInputType == itMouse)
-        {
-            mapper = mInputKeysMouse;
-        }
+        ret = mInputKeysKeyboard[index] == code;
+    }
 
-        if (mapper)
-        {
-            ret = mapper[index] == code;
-        }
+    return ret;
+}
+
+bool GameState::checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const
+{
+    bool ret = false;
+
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        ret = mInputKeysMouse[index] == id;
     }
 
     return ret;
@@ -445,23 +426,38 @@ OIS::KeyCode GameState::getKeyCode(InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        const OIS::KeyCode * mapper = nullptr;
-        if (mInputType == itKeyboard)
-        {
-            mapper = mInputKeysKeyboard;
-        }
-        if (mInputType == itMouse)
-        {
-            mapper = mInputKeysMouse;
-        }
-
-        if (mapper)
-        {
-            ret = mapper[index];
-        }
+        ret = mInputKeysKeyboard[index];
     }
 
     return ret;
+}
+
+OIS::MouseButtonID GameState::getMouseID(InputKeyMapping index) const
+{
+    OIS::MouseButtonID ret = OIS::MB_Left;
+
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        ret = mInputKeysMouse[index];
+    }
+
+    return ret;
+}
+
+void GameState::setKeyCode(OIS::KeyCode code, InputKeyMapping index)
+{
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        mInputKeysKeyboard[index] = code;
+    }
+}
+
+void GameState::setKeyCode(OIS::MouseButtonID id, InputKeyMapping index)
+{
+    if (index < InputKeyMapping::kmEmpty)
+    {
+        mInputKeysMouse[index] = id;
+    }
 }
 
 void GameState::setAICount(size_t opponentsAmount)

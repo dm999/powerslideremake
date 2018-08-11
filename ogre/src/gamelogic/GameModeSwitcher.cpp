@@ -489,13 +489,13 @@ void GameModeSwitcher::mousePressed(const Ogre::Vector2& pos)
         mPlayerMode->mousePressed(pos);
 }
 
-void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos)
+void GameModeSwitcher::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
     if(mMenuMode.get())
-        mMenuMode->mouseReleased(pos);
+        mMenuMode->mouseReleased(pos, id);
 
     if(mMenuMultiMode.get())
-        mMenuMultiMode->mouseReleased(pos);
+        mMenuMultiMode->mouseReleased(pos, id);
 
     if(mPlayerMode.get())
         mPlayerMode->mouseReleased(pos);

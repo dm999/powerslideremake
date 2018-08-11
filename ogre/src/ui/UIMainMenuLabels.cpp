@@ -502,7 +502,10 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         if (label == mOptionInputLabels_Keys[q])
         {
+            mSelectedKey = static_cast<InputKeyMapping>(q);
             mIsInKeyInsertMode = true;
+            mSelectedKeyLabel = label;
+            mSelectedKeyLabel->setFixed(true);
             //mModeContext.getTrayManager()->hideCursor();
         }
     }
@@ -759,6 +762,16 @@ void UIMainMenuLabels::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 #if !defined(__ANDROID__)
     if (mIsInKeyInsertMode)
     {
+        mSelectedKeyLabel->setFixed(false);
+        mIsInKeyInsertMode = false;
+
+        std::string code = keyCodeToString(static_cast<OIS::KeyCode>(_key.getValue()));
+        if (!code.empty())
+        {
+            mSelectedKeyLabel->getTextArea()->setCaption(code);
+            mModeContext.getGameState().setKeyCode(static_cast<OIS::KeyCode>(_key.getValue()), mSelectedKey);
+            mModeContext.getGameState().setKeyCode(static_cast<OIS::MouseButtonID>(-1), mSelectedKey);
+        }
     }
 #endif
 }
@@ -772,15 +785,34 @@ void UIMainMenuLabels::mousePressed(const Ogre::Vector2& pos)
     mUILabelsManager.mousePressed(pos);
 }
 
-void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos)
+void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
-    UIMainMenuBackground::mouseReleased(pos);
+#if !defined(__ANDROID__)
+    bool prevIsInKeyInsertMode = mIsInKeyInsertMode;
+#endif
+    UIMainMenuBackground::mouseReleased(pos, id);
 
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     mUIButtonsManager.mouseReleased(pos);
     mUIButtonTicksManager.mouseReleased(pos);
     mUILabelsManager.mouseReleased(pos);
+
+#if !defined(__ANDROID__)
+    if (mIsInKeyInsertMode && prevIsInKeyInsertMode == true)
+    {
+        mSelectedKeyLabel->setFixed(false);
+        mIsInKeyInsertMode = false;
+
+        std::string code = keyCodeToString(id);
+        if (!code.empty())
+        {
+            mSelectedKeyLabel->getTextArea()->setCaption(code);
+            mModeContext.getGameState().setKeyCode(OIS::KC_UNASSIGNED, mSelectedKey);
+            mModeContext.getGameState().setKeyCode(id, mSelectedKey);
+        }
+    }
+#endif
 }
 
 void UIMainMenuLabels::mouseMoved(const Ogre::Vector2& pos)
@@ -1497,7 +1529,29 @@ void UIMainMenuLabels::setKeyText()
 {
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
     {
-        mOptionInputLabels_Keys[q]->getTextArea()->setCaption(keyCodeToString(mModeContext.getGameState().getKeyCode(static_cast<InputKeyMapping>(q))));
+        OIS::KeyCode code = mModeContext.getGameState().getKeyCode(static_cast<InputKeyMapping>(q));
+        if (code != OIS::KC_UNASSIGNED)
+        {
+            mOptionInputLabels_Keys[q]->getTextArea()->setCaption(keyCodeToString(code));
+        }
+        else
+        {
+            OIS::MouseButtonID id = mModeContext.getGameState().getMouseID(static_cast<InputKeyMapping>(q));
+            mOptionInputLabels_Keys[q]->getTextArea()->setCaption(keyCodeToString(id));
+        }
+    }
+
+    if (mModeContext.getGameState().getInputType() == itMouse)
+    {
+        mOptionInputLabels_Keys[0]->setActive(false);
+        mOptionInputLabels_Keys[0]->getTextArea()->setCaption("Mouse Move Left");
+        mOptionInputLabels_Keys[1]->setActive(false);
+        mOptionInputLabels_Keys[1]->getTextArea()->setCaption("Mouse Move Right");
+    }
+    else
+    {
+        mOptionInputLabels_Keys[0]->setActive(true);
+        mOptionInputLabels_Keys[1]->setActive(true);
     }
 }
 #endif

@@ -48,7 +48,7 @@ public:
     void keyUp(MyGUI::KeyCode _key, wchar_t _char );
 
     void mousePressed(const Ogre::Vector2& pos);
-    void mouseReleased(const Ogre::Vector2& pos);
+    void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id);
     void mouseMoved(const Ogre::Vector2& pos);
 
 #if defined(__ANDROID__)

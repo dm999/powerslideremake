@@ -105,7 +105,11 @@ public:
     static const int mAIMax = 11;
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
+    bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
     OIS::KeyCode getKeyCode(InputKeyMapping index) const;
+    OIS::MouseButtonID getMouseID(InputKeyMapping index) const;
+    void setKeyCode(OIS::KeyCode code, InputKeyMapping index);
+    void setKeyCode(OIS::MouseButtonID id, InputKeyMapping index);
     void setDefaultKeyCodeMappers();
 
     void setAICount(size_t opponentsAmount);
@@ -300,7 +304,7 @@ private:
     InputType mInputType;
 
     OIS::KeyCode mInputKeysKeyboard[InputKeyMapping::kmEmpty];//0-3 arrows, 4-5 gears, 6 view, 7, hand brake, 8-11 F
-    OIS::KeyCode mInputKeysMouse[InputKeyMapping::kmEmpty];
+    OIS::MouseButtonID mInputKeysMouse[InputKeyMapping::kmEmpty];
 
     bool mIsSpeedCheatUsed;
 

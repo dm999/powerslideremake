@@ -81,5 +81,6 @@ Ogre::DataStreamPtr getReadableFile(const std::string& dataDir, const std::strin
 Ogre::DataStreamPtr getWritibleFile(const std::string& dataDir, const std::string& fileName);
 
 std::string keyCodeToString(OIS::KeyCode code);
+std::string keyCodeToString(OIS::MouseButtonID id);
 
 #endif

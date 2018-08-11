@@ -16,7 +16,7 @@ public:
 protected:
 
     void mouseMoved(const Ogre::Vector2& pos) override;
-    void mouseReleased(const Ogre::Vector2& pos) override;
+    void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id) override;
 
     void createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener);
     void createBackgroundMaterials();

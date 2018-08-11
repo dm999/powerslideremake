@@ -751,7 +751,7 @@ void BaseApp::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
             mGameModeSwitcher->mousePressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
         }
 
-        if(mGameState.getInputType() == itMouse)
+        //if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
@@ -775,10 +775,10 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
         //if(mGameModeSwitcher->getMode() == ModeMenu || mGameModeSwitcher->getMode() == ModeMenuMulti)
         {
             mTrayMgr->injectMouseUp(arg, id);
-            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs), id);
         }
 
-        if(mGameState.getInputType() == itMouse)
+        //if(mGameState.getInputType() == itMouse)
         {
             if(mGameModeSwitcher->isLoadPassed() && 
                     (
@@ -849,7 +849,7 @@ void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
             LOGI("BaseApp[touchReleased]: before injectMouseUp");
             LOGI("BaseApp[touchPressed]: %d %d", arg.state.X.abs, arg.state.Y.abs); 
             mTrayMgr->injectMouseUp(arg);
-            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+            mGameModeSwitcher->mouseReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs), OIS::MB_Left);
         }
 
         if(

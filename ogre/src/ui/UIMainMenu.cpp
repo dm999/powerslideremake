@@ -325,11 +325,11 @@ void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
 #endif
 }
 
-void UIMainMenu::mouseReleased(const Ogre::Vector2& pos)
+void UIMainMenu::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
     SinglePlayerMenuStates prevState = mCurrentState;
 
-    UIMainMenuLabels::mouseReleased(pos);
+    UIMainMenuLabels::mouseReleased(pos, id);
 
     mMultiRoomsList.mouseReleased(pos);
     mRoomsMoveTop.mouseReleased(pos);

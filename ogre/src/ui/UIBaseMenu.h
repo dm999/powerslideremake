@@ -33,7 +33,7 @@ protected:
     void createControls(const Ogre::Matrix4& screenAdaptionRelative, Ogre::PanelOverlayElement* base);
 
     virtual void mousePressed(const Ogre::Vector2& pos);
-    virtual void mouseReleased(const Ogre::Vector2& pos);
+    virtual void mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id);
     virtual void mouseMoved(const Ogre::Vector2& pos);
 
     virtual void panelHit(Ogre::PanelOverlayElement* panel) = 0;

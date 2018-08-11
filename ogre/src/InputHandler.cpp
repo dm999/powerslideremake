@@ -186,6 +186,42 @@ bool InputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID 
     //if(mCameraMan)
         //mCameraMan->injectMouseDown(arg, id);
 
+
+    if (baseApp->getGameState().checkKeyCode(id, InputKeyMapping::kmBurn))
+    {
+        if (noSpecialKey())
+            baseApp->createBurnByPlayer();
+    }
+    else if (baseApp->getGameState().checkKeyCode(id, InputKeyMapping::kmBomb))
+    {
+        if (noSpecialKey())
+            baseApp->createBombByPlayer();
+    }
+    else if (baseApp->getGameState().checkKeyCode(id, InputKeyMapping::kmNitro))
+    {
+        baseApp->enableNitro();
+    }
+    else if (baseApp->getGameState().checkKeyCode(id, InputKeyMapping::kmDropCam))
+    {
+        if (noSpecialKey())
+            baseApp->dropCamera();
+    }
+    else if (baseApp->getGameState().checkKeyCode(id, InputKeyMapping::kmView))
+    {
+        if (mCameraMan)
+        {
+            int camPos = static_cast<int>(mCameraMan->getCameraPositionType());
+            ++camPos;
+            if (camPos > CameraPosition_ChassisC)
+            {
+                camPos = CameraPosition_Bumper;
+            }
+            mCameraMan->setCameraPositionType(static_cast<CameraPositions>(camPos));
+            baseApp->getGameState().setCameraPositionType(static_cast<CameraPositions>(camPos));
+            baseApp->getGameState().savePlayerData();
+        }
+    }
+
     return true;
 }
 

@@ -658,9 +658,9 @@ void UIMainMenuMulti::mousePressed(const Ogre::Vector2& pos)
     mCharacterValRight.mousePressed(pos);
 }
 
-void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos)
+void UIMainMenuMulti::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 {
-    UIBaseMenu::mouseReleased(pos);
+    UIBaseMenu::mouseReleased(pos, id);
 
     if(mMainChatButtons[0] && OgreBites::Widget::isCursorOver(mMainChatButtons[0], pos, 0))
     {

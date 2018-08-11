@@ -121,6 +121,7 @@ void PSPlayerCar::keyUp(OIS::KeyCode key, const GameState& gameState)
 
 void PSPlayerCar::mousePressed(OIS::MouseButtonID id, const GameState& gameState)
 {
+    /*
     if(id == OIS::MB_Left)
     {
         mWorld->getVehicle(this)->setThrottle(1.0f);
@@ -131,11 +132,52 @@ void PSPlayerCar::mousePressed(OIS::MouseButtonID id, const GameState& gameState
     {
         mWorld->getVehicle(this)->setBrakes(1.0f);
         setBrake(true);
+    }*/
+
+#if !defined(__ANDROID__)
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmLeft))
+    {
+        mWorld->getVehicle(this)->setSteeringLeft(true);
     }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmRight))
+    {
+        mWorld->getVehicle(this)->setSteeringRight(true);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmUp))
+    {
+        setAcceleration(true);
+        mWorld->getVehicle(this)->setThrottle(1.0f);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmDown))
+    {
+        mWorld->getVehicle(this)->setBrakes(1.0f);
+        setBrake(true);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmHandBreak))
+    {
+        mWorld->getVehicle(this)->setHandBrakes(1.0f);
+        setBrake(true);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmGearUp))
+    {
+        mWorld->getVehicle(this)->gearUp();
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmGearDown))
+    {
+        mWorld->getVehicle(this)->gearDown();
+    }
+#endif
 }
 
 void PSPlayerCar::mouseReleased(OIS::MouseButtonID id, const GameState& gameState)
 {
+    /*
     if(id == OIS::MB_Left)
     {
         mWorld->getVehicle(this)->setThrottle(0.0f);
@@ -146,7 +188,37 @@ void PSPlayerCar::mouseReleased(OIS::MouseButtonID id, const GameState& gameStat
     {
         mWorld->getVehicle(this)->setBrakes(0.0f);
         setBrake(false);
+    }*/
+
+#if !defined(__ANDROID__)
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmLeft))
+    {
+        mWorld->getVehicle(this)->setSteeringLeft(false);
     }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmRight))
+    {
+        mWorld->getVehicle(this)->setSteeringRight(false);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmUp))
+    {
+        mWorld->getVehicle(this)->setThrottle(0.0f);
+        setAcceleration(false);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmDown))
+    {
+        mWorld->getVehicle(this)->setBrakes(0.0f);
+        setBrake(false);
+    }
+
+    if (gameState.checkKeyCode(id, InputKeyMapping::kmHandBreak))
+    {
+        mWorld->getVehicle(this)->setHandBrakes(0.0f);
+        setBrake(false);
+    }
+#endif
 }
 
 void PSPlayerCar::mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth)
