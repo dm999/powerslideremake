@@ -452,7 +452,7 @@ bool GameState::checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        const OIS::KeyCode * mapper = nullptr;
+        const OIS::KeyCode * mapper = NULL;
         if (mInputType == itKeyboard)
         {
             mapper = mInputKeysKeyboard;
@@ -489,7 +489,7 @@ OIS::KeyCode GameState::getKeyCode(InputKeyMapping index) const
 
     if (index < InputKeyMapping::kmEmpty)
     {
-        const OIS::KeyCode * mapper = nullptr;
+        const OIS::KeyCode * mapper = NULL;
         if (mInputType == itKeyboard)
         {
             mapper = mInputKeysKeyboard;
@@ -524,7 +524,7 @@ void GameState::setKeyCode(OIS::KeyCode code, InputKeyMapping index)
 {
     if (index < InputKeyMapping::kmEmpty)
     {
-        OIS::KeyCode * mapper = nullptr;
+        OIS::KeyCode * mapper = NULL;
         if (mInputType == itKeyboard)
         {
             mapper = mInputKeysKeyboard;

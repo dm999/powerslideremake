@@ -132,9 +132,9 @@ Ogre::Entity * ModelsPool::createEntityFromMSH(MSHData& source, const std::strin
 
     for(size_t w = 0; w < source.triCount; ++w)
     {
-        triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 0));
-        triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 1));
-        triPlainIndixes.push_back(static_cast<uint16_t>(w * 3 + 2));
+        triPlainIndixes.push_back(static_cast<Ogre::uint16>(w * 3 + 0));
+        triPlainIndixes.push_back(static_cast<Ogre::uint16>(w * 3 + 1));
+        triPlainIndixes.push_back(static_cast<Ogre::uint16>(w * 3 + 2));
     }
 
     Ogre::HardwareIndexBufferSharedPtr ibuf = Ogre::HardwareBufferManager::getSingleton().
