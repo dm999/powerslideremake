@@ -64,6 +64,8 @@ protected:
     void showOptionRaceLabels();
     void showOptionHiscoreLabels();
     void showOptionTrophies(){mWindowTitleTrophies->show();}
+    void showOptionCreditsLabels();
+    void showOptionAboutLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
@@ -223,6 +225,7 @@ private:
     void createLabelsOptionsSound(const Ogre::Matrix4& screenAdaptionRelative);
     void createLabelsOptionsRace(const Ogre::Matrix4& screenAdaptionRelative);
     void createLabelsOptionsHiscores(const Ogre::Matrix4& screenAdaptionRelative);
+    void createLabelsOptionsCreditsAbout(const Ogre::Matrix4& screenAdaptionRelative);
     void createLabelsOptionsOther(const Ogre::Matrix4& screenAdaptionRelative);
 
     Ogre::TextAreaOverlayElement * mModeMultiIP;

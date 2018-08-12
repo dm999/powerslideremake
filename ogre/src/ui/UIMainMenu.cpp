@@ -784,6 +784,18 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mVideoPlayer.start();
         break;
 
+    case State_Options_Credits:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        showOptionCreditsLabels();
+        break;
+
+    case State_Options_About:
+        mIsInStartingGrid = false;
+        showOptionLabels();
+        showOptionAboutLabels();
+        break;
+
     case State_StartingGrid:
         if(mIsInStartingGrid)
         {

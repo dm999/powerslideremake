@@ -31,6 +31,7 @@ namespace{
 #include "routines/UIMainMenuCreateLabelsOptionsSound.h"
 #include "routines/UIMainMenuCreateLabelsOptionsRace.h"
 #include "routines/UIMainMenuCreateLabelsOptionsHiscores.h"
+#include "routines/UIMainMenuCreateLabelsOptionsCreditsAbout.h"
 #include "routines/UIMainMenuCreateLabelsOther.h"
 
 
@@ -726,6 +727,7 @@ void UIMainMenuLabels::createLabels(const Ogre::Matrix4& screenAdaptionRelative)
     createLabelsOptionsSound(screenAdaptionRelative);
     createLabelsOptionsRace(screenAdaptionRelative);
     createLabelsOptionsHiscores(screenAdaptionRelative);
+    createLabelsOptionsCreditsAbout(screenAdaptionRelative);
     createLabelsOptionsOther(screenAdaptionRelative);
 
     //Track description, bio`s
@@ -1064,6 +1066,16 @@ void UIMainMenuLabels::showOptionHiscoreLabels()
     {
         mOptionHighScoresTable4Icon[q]->show();
     }
+}
+
+void UIMainMenuLabels::showOptionCreditsLabels()
+{
+    mUILabelsManager.show("mCredits");
+}
+
+void UIMainMenuLabels::showOptionAboutLabels()
+{
+    mUILabelsManager.show("mAbout");
 }
 
 void UIMainMenuLabels::showExitLabels(const std::string& title)

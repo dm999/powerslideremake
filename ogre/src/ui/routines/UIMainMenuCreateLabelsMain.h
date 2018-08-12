@@ -475,7 +475,7 @@ void UIMainMenuLabels::createLabelsOptionsMain(const Ogre::Matrix4& screenAdapti
 
     mOptionLabels.clear();
 
-    for (size_t q = 0; q < 7; ++q)
+    for (size_t q = 0; q < 9; ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(333.0f, 64.0f + q * 25.0f, 0.0f, 0.0f);;
         mOptionLabels.push_back(mUILabelsManager.add("mOptionLabels"));
@@ -496,5 +496,7 @@ void UIMainMenuLabels::createLabelsOptionsMain(const Ogre::Matrix4& screenAdapti
     mOptionLabels[4]->getTextArea()->setCaption("High Scores");
     mOptionLabels[5]->getTextArea()->setCaption("Change Name");
     mOptionLabels[6]->getTextArea()->setCaption("Trophies");
+    mOptionLabels[7]->getTextArea()->setCaption("Credits");
+    mOptionLabels[8]->getTextArea()->setCaption("About");
 
 }
