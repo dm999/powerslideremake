@@ -11,15 +11,15 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
             label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
             label->setFixed(true);
             label->getTextArea()->setCaption("");
-            label->getTextArea()->setCharHeight(16.0f * viewportHeight / 1024.0f);
+            label->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
             label->getTextArea()->setSpaceWidth(9.0f);
-            label->getTextArea()->setHeight(16.0f * viewportHeight / 1024.0f);
+            label->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
             label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
             getMainBackground()->addChild(label->getTextArea());
 
             const Ogre::Real rightBoundary = viewportWidth / 2.0f - label->getTextArea()->getLeft() - viewportWidth / 50.0f;
 
-            std::string desc = "This game is dedicated to Nada & Michael Harrison, Colleen & Trevor Siegele, without whose support Powerslide would never have been made. Jim Perkins, Mike Bartholemew, Todd Colletti and Dave Adams whose confidence in Ratbag and Powerslide inspired many.\n\n"\
+            const std::string desc = "This game is dedicated to Nada & Michael Harrison, Colleen & Trevor Siegele, without whose support Powerslide would never have been made. Jim Perkins, Mike Bartholemew, Todd Colletti and Dave Adams whose confidence in Ratbag and Powerslide inspired many.\n\n"\
                 "Project Manager: Greg Siegele\n\n"\
                 "Technical Manager: Richard Harrison\n\n"\
                 "Programmers: Richard Harrison, James Grieve, Jeffrey Lim, Saxon Druce, Garth Denley, Aaron Foo, Jim Rehn, Sam Yates, Adam Batters, Chris Carthew\n\n"\
@@ -33,14 +33,28 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
                 "Extra special thanks to our partners who supported the project: Kate Soininen, Natasha Siemelink, Annette Plant, Daniela Catalano, Francesca Pinneri, Lani Davidson.\n\n"\
                 "And thanks to everyone else who helped in our quest over the last four years.";
 
-            wrapText(
-                desc,
-                rightBoundary,
-                (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
-                label->getTextArea()->getSpaceWidth(),
-                label->getTextArea()->getCharHeight());
+            //fit to height
+            std::string descAdj;
+            Ogre::Real charHeight = 5.0f;
+            do
+            {
+                charHeight += 0.1f;
 
-            label->getTextArea()->setCaption(desc);
+                descAdj = desc;
+
+                label->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
+                label->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
+
+                wrapText(
+                    descAdj,
+                    rightBoundary,
+                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
+                    label->getTextArea()->getSpaceWidth(),
+                    label->getTextArea()->getCharHeight());
+
+            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * label->getTextArea()->getCharHeight()) < (viewportHeight * 0.65f));
+
+            label->getTextArea()->setCaption(descAdj);
         }
     }
 
@@ -52,9 +66,9 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
             label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
             label->setFixed(true);
             label->getTextArea()->setCaption("");
-            label->getTextArea()->setCharHeight(17.0f * viewportHeight / 1024.0f);
+            label->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
             label->getTextArea()->setSpaceWidth(9.0f);
-            label->getTextArea()->setHeight(17.0f * viewportHeight / 1024.0f);
+            label->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
             label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
             getMainBackground()->addChild(label->getTextArea());
 
@@ -70,14 +84,28 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
                 "In a bitter irony, one of the only forms of vegetation to thrive in the ultraviolet ray - ravaged and hopelessly polluted landscape is the brussel sprout. Fruit has become a prize so rare that dozens have fought and died for the sake of a single bunch of bananas.\n\n"\
                 "The glittering prize, the tantalizing impetus that inspires the drivers to feats of suicidal danger, is the obscenely rich trophy that Powersliding offers: Fresh Fruit.";
 
-            wrapText(
-                desc,
-                rightBoundary,
-                (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
-                label->getTextArea()->getSpaceWidth(),
-                label->getTextArea()->getCharHeight());
+            //fit to height
+            std::string descAdj;
+            Ogre::Real charHeight = 5.0f;
+            do
+            {
+                charHeight += 0.1f;
 
-            label->getTextArea()->setCaption(desc);
+                descAdj = desc;
+
+                label->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
+                label->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
+
+                wrapText(
+                    descAdj,
+                    rightBoundary,
+                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
+                    label->getTextArea()->getSpaceWidth(),
+                    label->getTextArea()->getCharHeight());
+
+            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * label->getTextArea()->getCharHeight()) < (viewportHeight * 0.65f));
+
+            label->getTextArea()->setCaption(descAdj);
         }
     }
 }
