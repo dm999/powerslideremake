@@ -279,7 +279,8 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            TEXLoader().load(fileToLoad, (*i));
+            const Ogre::Real gamma = 1.0f;//if not 1.0 issues with skyes
+            TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
             fileToLoad->close();
         }
 

@@ -17,7 +17,7 @@ namespace
     };
 }
 
-Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma) const
 {
     Ogre::TexturePtr res;
 
@@ -45,6 +45,25 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
         Ogre::Image img;
         img.loadDynamicImage (pixelData, head.width, head.height, 1, targetFormat, true); 
 
+        if (gamma != 1.0f)
+        {
+            if (img.getBPP() == 16)
+            {
+                size_t bufSize2 = Ogre::PixelUtil::getMemorySize(head.width, head.height, 1, Ogre::PF_BYTE_BGRA);
+                Ogre::uchar* pixelData2 = OGRE_ALLOC_T(Ogre::uchar, bufSize2, Ogre::MEMCATEGORY_GENERAL);
+                Ogre::PixelBox pbConverted(head.width, head.height, 1, Ogre::PF_BYTE_BGRA, pixelData2);
+
+                Ogre::PixelBox pb(head.width, head.height, 1, targetFormat, img.getData());
+
+                Ogre::PixelUtil::bulkPixelConversion(pb, pbConverted);
+                Ogre::Image img2;
+                img2.loadDynamicImage(pixelData2, head.width, head.height, 1, Ogre::PF_BYTE_BGRA, true);
+                std::swap(img,img2);
+            }
+
+            img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
+        }
+
         res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
 
         Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "]");
@@ -53,13 +72,13 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
     return res;
 }
 
-Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma) const
 {
     Ogre::TexturePtr res;
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        res = load(fileToLoad, texturename, group);
+        res = load(fileToLoad, texturename, group, gamma);
         fileToLoad->close();
     }
     return res;

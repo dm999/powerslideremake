@@ -200,8 +200,12 @@ void UIMainMenuBackground::mouseReleased(const Ogre::Vector2& pos, OIS::MouseBut
 void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGameshell, LoaderListener* loaderListener)
 {
     TextureLoader().load(pfLoaderGameshell,
+                                "data/gameshell", "gt.bmp",
+                                "OriginalMainBackgroundGT", TEMP_RESOURCE_GROUP_NAME, 0.5f);
+
+    TextureLoader().load(pfLoaderGameshell,
                                 "data/gameshell", "em.bmp",
-                                "OriginalMainBackgroundInit", TEMP_RESOURCE_GROUP_NAME);
+                                "OriginalMainBackgroundInitGamma", TEMP_RESOURCE_GROUP_NAME, 0.5f);
 
     TextureLoader().load( pfLoaderGameshell, 
                                 "data/gameshell", "bg.bmp", 
@@ -446,7 +450,8 @@ void UIMainMenuBackground::createBackgroundMaterials()
 {
     //main background load
     {
-        clone2DMaterial("OriginalMainBackgroundInit", "Test/MainBackgroundInit");
+        clone2DMaterial("OriginalMainBackgroundGT", "Test/MainBackgroundGT");
+        clone2DMaterial("OriginalMainBackgroundInitGamma", "Test/MainBackgroundInitGamma");
     }
 
     //main background

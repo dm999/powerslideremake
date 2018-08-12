@@ -253,7 +253,7 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
             if (!mLabelCredits->isVisible())
             {
                 mLabelCredits->show();
-                setMainBackgroundMaterial("Test/CustomBackgroundBlack");
+                setMainBackgroundMaterial("Test/MainBackgroundGT");
             }
         }
     }
@@ -269,7 +269,7 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
             if (!mLabelAbout->isVisible())
             {
                 mLabelAbout->show();
-                setMainBackgroundMaterial("Test/MainBackgroundInit");
+                setMainBackgroundMaterial("Test/MainBackgroundInitGamma");
             }
         }
     }

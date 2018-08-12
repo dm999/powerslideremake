@@ -31,7 +31,7 @@ Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::u
     return res;
 }
 
-Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group) const
+Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma) const
 {
     Ogre::TexturePtr res;
 
@@ -56,6 +56,11 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
             img.load(memoryStream, tex_ext);
 
             adjustTextureSizeIfNecessary(img);
+
+            if (gamma != 1.0f)
+            {
+                img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
+            }
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
 
