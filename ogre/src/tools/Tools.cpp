@@ -95,14 +95,14 @@ std::vector<std::string> Tools::splitpath(const std::string& str, const std::set
         {
             if (start != pch)
             {
-                std::string str(start, pch);
+                std::string str2(start, pch);
 
-                if(str.empty())
+                if(str2.empty())
                 {
                     if(insertEmpty)
-                        result.push_back(str);
+                        result.push_back(str2);
                 }
-                else result.push_back(str);
+                else result.push_back(str2);
 
             }
             else

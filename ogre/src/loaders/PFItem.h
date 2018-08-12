@@ -35,7 +35,7 @@ namespace PF
         {
             Name = N;
             Next = Num;
-            FileFolder = -1;
+            FileFolder = static_cast<DWORD>(-1);
             Offset = O;
             Length = L;
         }

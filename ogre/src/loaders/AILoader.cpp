@@ -29,18 +29,16 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
     {
         aiWhole.push_back(AIWhole());
 
-        typedef unsigned int DWORD;
-
         //read SLOT
         {
             Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/ai/" + folderWithData, "slot" + Conversions::DMToString(w));
             if(fileToLoad.get() && fileToLoad->isReadable())
             {
 
-                DWORD someBuf[8];
+                Ogre::uint32 someBuf[8];
                 fileToLoad->read(someBuf, 4 * 8);
 
-                DWORD slotMatrixSize = someBuf[2];
+                Ogre::uint32 slotMatrixSize = someBuf[2];
 
 
                 aiWhole[w].slotMatrix.resize(slotMatrixSize);
@@ -119,12 +117,12 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                 aiWhole[w].hack2 = someBuf[7];
                 aiWhole[w].hackMultiplier = someBuf[8];
 
-                DWORD someData;
+                Ogre::uint32 someData;
                 fileToLoad->read(&someData, 4);
 
                 while(someData)
                 {
-                    DWORD someData2;
+                    Ogre::uint32 someData2;
                     fileToLoad->read(&someData2, 4);
 
                     for(size_t q = 0; q < someData2; ++q)

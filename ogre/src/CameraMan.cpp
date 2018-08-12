@@ -512,8 +512,8 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     mCamRot[1] = Ogre::Vector3::ZERO;
     mCamRot[2] = Ogre::Vector3::ZERO;
 
-    Ogre::Real someVal;
-    Ogre::Real someVal2;
+    Ogre::Real someVal = 0.0f;
+    Ogre::Real someVal2 = 0.0f;
 
     if(mCamPositonType == CameraPosition_ChassisA)
     {

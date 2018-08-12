@@ -44,11 +44,10 @@ namespace DE2
     void Find_xV4(const Ogre::DataStreamPtr& stream, int count)
     {
         typedef unsigned char BYTE;
-        typedef unsigned int DWORD;
 
-        DWORD ch=0;
-        DWORD temp;
-        DWORD xV4=0x12345678;//305419896
+        Ogre::uint32 ch=0;
+        Ogre::uint32 temp;
+        Ogre::uint32 xV4=0x12345678;//305419896
         while(ch!=count)
         {
             stream->read(&temp,4);
@@ -61,7 +60,6 @@ namespace DE2
     {
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
-        typedef unsigned int DWORD;
 
 
         float ss_1;
@@ -143,12 +141,11 @@ namespace DE2
     {
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
-        typedef unsigned int DWORD;
 
         if(stream.get() && stream->isReadable())
         {
             BYTE ch=1;
-            DWORD temp;
+            Ogre::uint32 temp;
 
             while(ch!=0)
             stream->read(&ch,1);
@@ -158,7 +155,7 @@ namespace DE2
             DataDE2.Data_Vertexes.clear();
             DataDE2.Data_Vertexes.resize(DataDE2.Vertexes);
 
-            for(DWORD q=0;q<DataDE2.Vertexes;q++)
+            for(Ogre::uint32 q=0;q<DataDE2.Vertexes;q++)
             {
                 stream->read(&DataDE2.Data_Vertexes[q], 4 * 3);
             }
@@ -170,7 +167,7 @@ namespace DE2
             {
                 DataDE2.Data_Texture_Coord_Decal.clear();
                 DataDE2.Data_Texture_Coord_Decal.resize(DataDE2.TexCoordsDecal);
-                for(DWORD q=0;q<DataDE2.TexCoordsDecal;q++)
+                for(Ogre::uint32 q=0;q<DataDE2.TexCoordsDecal;q++)
                 {
                     stream->read(&DataDE2.Data_Texture_Coord_Decal[q].uv, 4 * 2);
                     DataDE2.Data_Texture_Coord_Decal[q].uz = 0.0f;
@@ -193,10 +190,10 @@ namespace DE2
                 DataDE2.Data_Texture_Coord.clear();
                 DataDE2.Data_Texture_Coord.resize(DataDE2.TexCoords);
 
-                for(DWORD q=0;q<DataDE2.TexCoords;q++)
+                for(Ogre::uint32 q=0;q<DataDE2.TexCoords;q++)
                 {
                     stream->read(&DataDE2.Data_Texture_Coord[q].uv, 4 * 3);
-                    DWORD colorMask = *reinterpret_cast<DWORD*>(&DataDE2.Data_Texture_Coord[q].uz);
+                    Ogre::uint32 colorMask = *reinterpret_cast<Ogre::uint32*>(&DataDE2.Data_Texture_Coord[q].uz);
                     DataDE2.Data_Texture_Coord[q].r = colorMask & 0xFF;
                     DataDE2.Data_Texture_Coord[q].g = (colorMask >> 8) & 0xFF;
                     DataDE2.Data_Texture_Coord[q].b = (colorMask >> 16 ) & 0xFF;
@@ -212,7 +209,7 @@ namespace DE2
                 DataDE2.Data_Texture_Coord.clear();
                 DataDE2.Data_Texture_Coord.resize(DataDE2.TexCoords);
 
-                for(DWORD q=0;q<DataDE2.TexCoords;q++)
+                for(Ogre::uint32 q=0;q<DataDE2.TexCoords;q++)
                 {
                     stream->read(&DataDE2.Data_Texture_Coord[q].uv, 4 * 3 + 3);
                 }
@@ -220,17 +217,17 @@ namespace DE2
 
             //Lights
             Find_xV4(stream,1);
-            DWORD ligthsCount;
+            Ogre::uint32 ligthsCount;
             stream->read(&ligthsCount,4);
             struct LightsHeader
             {
                 float x,y,z;
                 float r,g,b;
                 float radius_in,radius_out;
-                DWORD someCount;
+                Ogre::uint32 someCount;
             }lightsHeader;
 
-            for(DWORD q = 0; q < ligthsCount; ++q)
+            for(Ogre::uint32 q = 0; q < ligthsCount; ++q)
             {
                 stream->read(&lightsHeader,sizeof(LightsHeader));
                 DE2_Light light;
@@ -253,7 +250,7 @@ namespace DE2
             DataDE2.CollisionInfo_Parts.clear();
             DataDE2.CollisionInfo_Parts.resize(DataDE2.Parts);
 
-            for(DWORD q=0;q<DataDE2.Parts;q++)
+            for(Ogre::uint32 q=0;q<DataDE2.Parts;q++)
             {
                 if(q!=0)Find_xV4(stream,1);
 
@@ -262,7 +259,7 @@ namespace DE2
                 DataDE2.Data_Parts[q].Data_Triangles.clear();
                 DataDE2.Data_Parts[q].Data_Triangles.resize(DataDE2.Data_Parts[q].Triangles);
 
-                for(DWORD w=0;w<DataDE2.Data_Parts[q].Triangles;w++)
+                for(Ogre::uint32 w=0;w<DataDE2.Data_Parts[q].Triangles;w++)
                 {
                     stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].v0,2);
                     stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].v1,2);
@@ -276,7 +273,7 @@ namespace DE2
                     stream->read(&DataDE2.Data_Parts[q].Data_Triangles[w].hz1,2);
                 }
 
-                DWORD switcher;
+                Ogre::uint32 switcher;
                 stream->read(&switcher,4);
 
                 if(switcher)
@@ -318,7 +315,7 @@ namespace DE2
             {
                 DataDE2.Data_TexturePath.clear();
                 DataDE2.Data_TexturePath.resize(DataDE2.TexturePathCount);
-                for(DWORD q=0;q<DataDE2.TexturePathCount;q++)
+                for(Ogre::uint32 q=0;q<DataDE2.TexturePathCount;q++)
                 {
                     stream->read(&temp,4);
                     char buf[4096];
@@ -335,7 +332,7 @@ namespace DE2
             {
                 DataDE2.Data_TerranName.clear();
                 DataDE2.Data_TerranName.resize(DataDE2.TerranPathCount);
-                for(DWORD q=0;q<DataDE2.TerranPathCount;q++)
+                for(Ogre::uint32 q=0;q<DataDE2.TerranPathCount;q++)
                 {
                     stream->read(&temp,4);
                     char buf[4096];
@@ -356,15 +353,15 @@ namespace DE2
             stream->read(&DataDE2.RealPartsCount,4);
             DataDE2.indexesForHighestLODS.clear();
             DataDE2.indexesForHighestLODS.resize(DataDE2.RealPartsCount);
-            for(DWORD q=0;q<DataDE2.RealPartsCount;q++)
+            for(Ogre::uint32 q=0;q<DataDE2.RealPartsCount;q++)
             {
-                DWORD subLODSCount;
+                Ogre::uint32 subLODSCount;
                 stream->read(&subLODSCount,4);
-                for(DWORD w = 0; w < subLODSCount; ++w)
+                for(Ogre::uint32 w = 0; w < subLODSCount; ++w)
                 {
-                    DWORD partIndex;
+                    Ogre::uint32 partIndex;
                     float something3,something4;
-                    DWORD lodTriCount;
+                    Ogre::uint32 lodTriCount;
                     stream->read(&partIndex,4);
                     stream->read(&something3,4);
                     stream->read(&something4,4);
@@ -423,7 +420,6 @@ namespace DE2
 
         typedef unsigned char BYTE;
         typedef unsigned short WORD;
-        typedef unsigned int DWORD;
 
         if(PartIndex >= 0 && PartIndex < DataDE2.Parts)
         {
@@ -436,13 +432,13 @@ namespace DE2
                 WORD hz_0 = DataDE2.Data_Parts[PartIndex].Data_Triangles[q].hz0;
                 bool isdecal = !(hz_0 & 3);
 
-                DWORD v0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v0;
-                DWORD v1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v1;
-                DWORD v2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v2;
+                Ogre::uint32 v0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v0;
+                Ogre::uint32 v1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v1;
+                Ogre::uint32 v2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v2;
 
-                DWORD t0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t0;
-                DWORD t1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t1;
-                DWORD t2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t2;
+                Ogre::uint32 t0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t0;
+                Ogre::uint32 t1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t1;
+                Ogre::uint32 t2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].t2;
 
 
                 int It_0=FindTexCoor(TexC, DataDE2.Data_Texture_Coord[t0],0);
@@ -559,9 +555,9 @@ namespace DE2
 
             for(size_t q=0;q<DataDE2.Data_Parts[PartIndex].Triangles;q++)
             {
-                DWORD v0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v0;
-                DWORD v1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v1;
-                DWORD v2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v2;
+                Ogre::uint32 v0=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v0;
+                Ogre::uint32 v1=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v1;
+                Ogre::uint32 v2=DataDE2.Data_Parts[PartIndex].Data_Triangles[q].v2;
 
                 v0=FindVertex(Vertexes, DataDE2.Data_Vertexes[v0],0);
                 v1=FindVertex(Vertexes, DataDE2.Data_Vertexes[v1],0);
@@ -677,38 +673,38 @@ bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fil
             processPart(mDE2, partIndex, mshData);
 
             mshData.preallocatePlainData();
-            for(size_t q = 0; q < mshData.triCount; ++q)
+            for(size_t qq = 0; qq < mshData.triCount; ++qq)
             {
-                Ogre::Vector3 A = mshData.vertexes[mshData.triIndexes[q].a];
-                Ogre::Vector3 B = mshData.vertexes[mshData.triIndexes[q].b];
-                Ogre::Vector3 C = mshData.vertexes[mshData.triIndexes[q].c];
+                Ogre::Vector3 A = mshData.vertexes[mshData.triIndexes[qq].a];
+                Ogre::Vector3 B = mshData.vertexes[mshData.triIndexes[qq].b];
+                Ogre::Vector3 C = mshData.vertexes[mshData.triIndexes[qq].c];
 
-                Ogre::Vector3 texA = mshData.texcoords[mshData.texCoordsIndexes[q].a];
-                Ogre::Vector3 texB = mshData.texcoords[mshData.texCoordsIndexes[q].b];
-                Ogre::Vector3 texC = mshData.texcoords[mshData.texCoordsIndexes[q].c];
+                Ogre::Vector3 texA = mshData.texcoords[mshData.texCoordsIndexes[qq].a];
+                Ogre::Vector3 texB = mshData.texcoords[mshData.texCoordsIndexes[qq].b];
+                Ogre::Vector3 texC = mshData.texcoords[mshData.texCoordsIndexes[qq].c];
 
-                Ogre::ColourValue colA = mshData.colors[mshData.texCoordsIndexes[q].a];
-                Ogre::ColourValue colB = mshData.colors[mshData.texCoordsIndexes[q].b];
-                Ogre::ColourValue colC = mshData.colors[mshData.texCoordsIndexes[q].c];
+                Ogre::ColourValue colA = mshData.colors[mshData.texCoordsIndexes[qq].a];
+                Ogre::ColourValue colB = mshData.colors[mshData.texCoordsIndexes[qq].b];
+                Ogre::ColourValue colC = mshData.colors[mshData.texCoordsIndexes[qq].c];
 
                 Ogre::Vector3 normal = (B - A).crossProduct(C - A);
                 normal.normalise();
 
-                mshData.plainVertices[q * 3 + 0] = A;
-                mshData.plainVertices[q * 3 + 1] = B;
-                mshData.plainVertices[q * 3 + 2] = C;
+                mshData.plainVertices[qq * 3 + 0] = A;
+                mshData.plainVertices[qq * 3 + 1] = B;
+                mshData.plainVertices[qq * 3 + 2] = C;
 
-                mshData.plainNormals[q * 3 + 0] = normal;
-                mshData.plainNormals[q * 3 + 1] = normal;
-                mshData.plainNormals[q * 3 + 2] = normal;
+                mshData.plainNormals[qq * 3 + 0] = normal;
+                mshData.plainNormals[qq * 3 + 1] = normal;
+                mshData.plainNormals[qq * 3 + 2] = normal;
 
-                mshData.plainTexCoords[q * 3 + 0] = texA;
-                mshData.plainTexCoords[q * 3 + 1] = texB;
-                mshData.plainTexCoords[q * 3 + 2] = texC;
+                mshData.plainTexCoords[qq * 3 + 0] = texA;
+                mshData.plainTexCoords[qq * 3 + 1] = texB;
+                mshData.plainTexCoords[qq * 3 + 2] = texC;
 
-                mshData.plainColors[q * 3 + 0] = colA;
-                mshData.plainColors[q * 3 + 1] = colB;
-                mshData.plainColors[q * 3 + 2] = colC;
+                mshData.plainColors[qq * 3 + 0] = colA;
+                mshData.plainColors[qq * 3 + 1] = colB;
+                mshData.plainColors[qq * 3 + 2] = colC;
             }
 
             parts.push_back(mshData);

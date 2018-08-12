@@ -8,12 +8,11 @@ namespace
     struct header
     {
         typedef unsigned char BYTE;
-        typedef unsigned int DWORD;
 
         BYTE unknown[20];
-        DWORD width;
-        DWORD height;
-        DWORD depth;
+        Ogre::uint32 width;
+        Ogre::uint32 height;
+        Ogre::uint32 depth;
     };
 }
 
@@ -23,7 +22,6 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
 
     typedef unsigned char BYTE;
     typedef unsigned short WORD;
-    typedef unsigned int DWORD;
 
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
@@ -96,7 +94,6 @@ Ogre::TexturePtr TEXLoader::loadChroma( const PFLoader& pfLoader,
 
     typedef unsigned char BYTE;
     typedef unsigned short WORD;
-    typedef unsigned int DWORD;
 
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad.get() && fileToLoad->isReadable())

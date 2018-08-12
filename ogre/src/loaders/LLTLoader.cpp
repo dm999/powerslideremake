@@ -7,9 +7,8 @@ namespace
 {
     struct TrackPoint
     {
-        typedef unsigned int DWORD;
         Ogre::Vector3 vert; 
-        DWORD index; 
+        Ogre::uint32 index; 
         float weight; 
         bool isCheckpoint; 
         Ogre::Vector3 dir;
@@ -21,14 +20,13 @@ LLTLoader::LLTLoader() : mNameGenNodes("Scene/Node/LLT/Name")
 
 void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isDebugLLT) const
 {
-    typedef unsigned int DWORD;
     Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/graphst", "laptrack.lpf");
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
         bool endendFound = false;
         std::vector<TrackPoint> track;
 
-        DWORD flag;
+        Ogre::uint32 flag;
         fileToLoad->read(&flag, 4);
         if(flag <= 1)
         {
@@ -36,16 +34,16 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
             fileToLoad->read(LLTINFO, 8);
             if(std::string(LLTINFO) == "LLTINFO")
             {
-                DWORD someCount;    // checkpoints count
+                Ogre::uint32 someCount;    // checkpoints count
                 fileToLoad->read(&someCount, 4);
 
-                DWORD something = 0;
+                Ogre::uint32 something = 0;
                 if(flag >= 1)
                 {
                     fileToLoad->read(&something, 4);
                 }
 
-                DWORD someCount3, someCount2;
+                Ogre::uint32 someCount3, someCount2;
                 fileToLoad->read(&someCount3, 4);
                 fileToLoad->read(&someCount2, 4); // track points count
 
@@ -54,10 +52,10 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                 {
                     struct LLT_INFO_1
                     {
-                        DWORD some_flag; // is checkpoint
+                        Ogre::uint32 some_flag; // is checkpoint
                         float x, y, z;
                         float weight;
-                        DWORD nextIndex, prevIndex;
+                        Ogre::uint32 nextIndex, prevIndex;
                         float n1, n2, n3;   // rotation normals for direction arrow???
                     }lltinfo1;
 
@@ -79,7 +77,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
 
                 for(size_t q = 0; q < someCount; ++q)
                 {
-                    DWORD some_index, some_index2;
+                    Ogre::uint32 some_index, some_index2;
                     fileToLoad->read(&some_index, 4);
                     fileToLoad->read(&some_index2, 4);
                 }
@@ -102,7 +100,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                     for(size_t q = 0; q < someCount3; ++q)
                     {
                         float someA;
-                        DWORD someCountA, someCountB;
+                        Ogre::uint32 someCountA, someCountB;
                         fileToLoad->read(&someA, 4);
                         fileToLoad->read(&someCountA, 4);
                         fileToLoad->read(&someCountB, 4);
@@ -111,7 +109,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                         {
                             for(size_t w = 0; w < someCountA; ++w)
                             {
-                                DWORD someIndex;
+                                Ogre::uint32 someIndex;
                                 fileToLoad->read(&someIndex, 4);
                             }
                         }
@@ -120,7 +118,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                         {
                             for(size_t w = 0; w < someCountA; ++w)
                             {
-                                DWORD someIndex;
+                                Ogre::uint32 someIndex;
                                 fileToLoad->read(&someIndex, 4);
                             }
                         }
@@ -131,10 +129,10 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                 fileToLoad->read(LLTGRID, 8);
                 if(std::string(LLTGRID) == "LLTGRID")
                 {
-                    DWORD LLTGRID_someCount, LLTGRID_someCount2;
+                    Ogre::uint32 LLTGRID_someCount, LLTGRID_someCount2;
                     float LLTGRID_unknown, LLTGRID_unknown2;
-                    DWORD LLTGRID_unknown3, LLTGRID_unknown4;
-                    DWORD LLTGRID_unknown5, LLTGRID_unknown6;
+                    Ogre::uint32 LLTGRID_unknown3, LLTGRID_unknown4;
+                    Ogre::uint32 LLTGRID_unknown5, LLTGRID_unknown6;
                     float LLTGRID_unknown7, LLTGRID_unknown8;
                     float LLTGRID_unknown9, LLTGRID_unknown10;
 
@@ -153,14 +151,14 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
 
                     for(size_t q = 0; q < LLTGRID_someCount2; ++q)
                     {
-                        DWORD someIndex, someIndex2;
+                        Ogre::uint32 someIndex, someIndex2;
                         fileToLoad->read(&someIndex, 4);
                         fileToLoad->read(&someIndex2, 4);
                     }
 
                     for(size_t q = 0; q < someCount2; ++q)
                     {
-                        DWORD someIndex;
+                        Ogre::uint32 someIndex;
                         fileToLoad->read(&someIndex, 4);
                     }
 

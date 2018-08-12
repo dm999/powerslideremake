@@ -11,9 +11,8 @@ bool TRALoader::load(const Ogre::DataStreamPtr& fileToLoad, CommonIncludes::shar
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
         typedef unsigned char BYTE;
-        typedef unsigned int DWORD;
 
-        DWORD ver, height, width;
+        Ogre::uint32 ver, height, width;
         fileToLoad->read(&ver, 4);
         fileToLoad->read(&height, 4);
         fileToLoad->read(&width, 4);
@@ -22,11 +21,11 @@ bool TRALoader::load(const Ogre::DataStreamPtr& fileToLoad, CommonIncludes::shar
         {
             if(height <= 512 && width <= 512)//Terrain map appears to be dodgy
             {
-                DWORD readSize = height * width / 2;
+                Ogre::uint32 readSize = height * width / 2;
                 std::vector<BYTE> buffer(readSize);
                 fileToLoad->read(&buffer[0], readSize);
 
-                DWORD imageSize = height * width;
+                Ogre::uint32 imageSize = height * width;
                 BYTE * image = OGRE_ALLOC_T(BYTE, imageSize, Ogre::MEMCATEGORY_GENERAL);
 
 

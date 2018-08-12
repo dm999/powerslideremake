@@ -450,12 +450,12 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
             characterCar = strPowerslide.getBaseCarFromCar(characterCar);
             selectCar(characterCar);
 
-            for(size_t q = 0; q < 7; ++q)
+            for(size_t qq = 0; qq < 7; ++qq)
             {
-                if(q < availChars.size())
-                    mCharactersLabels[q]->getTextArea()->setCaption(STRPowerslide::getCharacterTitle(availChars[q]));
+                if(qq < availChars.size())
+                    mCharactersLabels[qq]->getTextArea()->setCaption(STRPowerslide::getCharacterTitle(availChars[qq]));
                 else
-                    mCharactersLabels[q]->getTextArea()->setCaption("");
+                    mCharactersLabels[qq]->getTextArea()->setCaption("");
             }
 
             switchState(State_Character);
@@ -677,8 +677,6 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
 void UIMainMenuLabels::onLabelOver(UILabel * label)
 {
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
-
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
         if(label == mTracksLabels[q])
@@ -800,8 +798,6 @@ void UIMainMenuLabels::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonI
     bool prevIsInKeyInsertMode = mIsInKeyInsertMode;
 #endif
     UIMainMenuBackground::mouseReleased(pos, id);
-
-    AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     mUIButtonsManager.mouseReleased(pos);
     mUIButtonTicksManager.mouseReleased(pos);
@@ -1280,7 +1276,6 @@ void UIMainMenuLabels::setTrackBestTime(size_t index)
 Ogre::Real UIMainMenuLabels::getTextWidth(const std::string& text, Ogre::TextAreaOverlayElement * element) const
 {
 
-    unsigned int lastSpace = 0;
     Ogre::Real lineWidth = 0.0f;
 
     Ogre::Font* font = (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(element->getFontName()).getPointer();
@@ -1395,7 +1390,6 @@ void UIMainMenuLabels::setTrackDescription(size_t index)
 
 void UIMainMenuLabels::setCurrentBioDescription()
 {
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
     std::vector<std::string>::iterator i = std::find(availableCharacters.begin(), availableCharacters.end(), mModeContext.getGameState().getPlayerCar().getCharacterName());
     setBioDescription(i - availableCharacters.begin());
@@ -1407,7 +1401,6 @@ void UIMainMenuLabels::setBioDescription(size_t index)
     Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
     Ogre::Real viewportWidth = om.getViewportWidth(); 
 
-    const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
     std::string desc = mCharacterDesc[availableCharacters[index]];
     if(!desc.empty())

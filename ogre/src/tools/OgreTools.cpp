@@ -122,14 +122,14 @@ Ogre::Vector3 FindCentroid(const Ogre::Entity *ent)
         {
             posElem->baseVertexPointerToElement(vertex, &pReal);
 
-            Ogre::Vector3 vertex;
-            vertex.x = (*pReal);
+            Ogre::Vector3 vertex2;
+            vertex2.x = (*pReal);
             ++pReal;
-            vertex.y = (*pReal);
+            vertex2.y = (*pReal);
             ++pReal;
-            vertex.z = (*pReal);
+            vertex2.z = (*pReal);
 
-            res += vertex;
+            res += vertex2;
         }
         vbuf->unlock();
     }
@@ -343,11 +343,11 @@ std::string extractFilePath(const std::string& fullName)
 
     //http://stackoverflow.com/questions/8518743/get-directory-from-file-path-c
 
-    const size_t last_slash_idx = fullName.rfind('\\');
+    size_t last_slash_idx = fullName.rfind('\\');
     if (std::string::npos != last_slash_idx){
         res = fullName.substr(0, last_slash_idx);
     }else{
-        size_t last_slash_idx = fullName.rfind('/');
+        last_slash_idx = fullName.rfind('/');
 
         if (std::string::npos != last_slash_idx){
             res = fullName.substr(0, last_slash_idx);

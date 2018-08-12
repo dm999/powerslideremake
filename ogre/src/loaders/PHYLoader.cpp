@@ -14,9 +14,7 @@ void PHYLoader::load(GameState& gameState) const
         {
             InitialVehicleSetup initialVehicleSetup;
 
-            typedef unsigned int DWORD;
-
-            DWORD something;
+            Ogre::uint32 something;
             fileToLoad->read(&something, 4);
 
             Ogre::Vector3 rotX;
@@ -44,10 +42,10 @@ void PHYLoader::load(GameState& gameState) const
             fileToLoad->read(&gear, 4);
             ++gear;
 
-            for(size_t q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+            for(size_t qq = 0; qq < InitialVehicleSetup::mWheelsAmount; ++qq)
             {
                 Ogre::Vector3 wheelData;
-                fileToLoad->read(&initialVehicleSetup.mSuspensionDataWheel[InitialVehicleSetup::mWheelsAmount - q - 1], 4 * 3);//FL, FR, RL, RR
+                fileToLoad->read(&initialVehicleSetup.mSuspensionDataWheel[InitialVehicleSetup::mWheelsAmount - qq - 1], 4 * 3);//FL, FR, RL, RR
                 Ogre::Vector2 wheelDataTmp;
                 fileToLoad->read(&wheelDataTmp, 4 * 2);
             }
