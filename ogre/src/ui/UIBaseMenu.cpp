@@ -100,6 +100,10 @@ void UIBaseMenu::loadUITextures(const PFLoader& pfLoaderGameshell)
                                 "data/gameshell", "stickbox.bmp", 
                                 "OriginalButtonTick", TEMP_RESOURCE_GROUP_NAME);
 
+    TextureLoader().load(pfLoaderGameshell,
+                                "data/gameshell", "test.bmp",
+                                "OriginalButtonSound", TEMP_RESOURCE_GROUP_NAME);
+
     //table left
     for(size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
     {

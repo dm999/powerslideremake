@@ -7,17 +7,17 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
     {
         {
             Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(10.0f, 10.0f, 0.0f, 0.0f);;
-            UILabel* label = mUILabelsManager.add("mCredits");
-            label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
-            label->setFixed(true);
-            label->getTextArea()->setCaption("");
-            label->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
-            label->getTextArea()->setSpaceWidth(9.0f);
-            label->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
-            label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
-            getMainBackground()->addChild(label->getTextArea());
+            mLabelCredits = mUILabelsManager.add();
+            mLabelCredits->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+            mLabelCredits->setFixed(true);
+            mLabelCredits->getTextArea()->setCaption("");
+            mLabelCredits->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
+            mLabelCredits->getTextArea()->setSpaceWidth(9.0f);
+            mLabelCredits->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
+            mLabelCredits->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            getMainBackground()->addChild(mLabelCredits->getTextArea());
 
-            const Ogre::Real rightBoundary = viewportWidth / 2.0f - label->getTextArea()->getLeft() - viewportWidth / 50.0f;
+            const Ogre::Real rightBoundary = viewportWidth - mLabelCredits->getTextArea()->getLeft() - viewportWidth / 50.0f;
 
             const std::string desc = "This game is dedicated to Nada & Michael Harrison, Colleen & Trevor Siegele, without whose support Powerslide would never have been made. Jim Perkins, Mike Bartholemew, Todd Colletti and Dave Adams whose confidence in Ratbag and Powerslide inspired many.\n\n"\
                 "Project Manager: Greg Siegele\n\n"\
@@ -42,37 +42,44 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
 
                 descAdj = desc;
 
-                label->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
-                label->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
+                mLabelCredits->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
+                mLabelCredits->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
 
                 wrapText(
                     descAdj,
                     rightBoundary,
-                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
-                    label->getTextArea()->getSpaceWidth(),
-                    label->getTextArea()->getCharHeight());
+                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mLabelCredits->getTextArea()->getFontName()).getPointer(),
+                    mLabelCredits->getTextArea()->getSpaceWidth(),
+                    mLabelCredits->getTextArea()->getCharHeight());
 
-            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * label->getTextArea()->getCharHeight()) < (viewportHeight * 0.65f));
+            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * mLabelCredits->getTextArea()->getCharHeight()) < (viewportHeight * 0.85f));
 
-            label->getTextArea()->setCaption(descAdj);
+            mLabelCredits->getTextArea()->setCaption(descAdj);
         }
+        /*
+        {
+            mCredits = mUIButtonsManager.add("mCredits");
+            mCredits->loadBackground("OriginalButtonSound");
+            mCredits->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(10.0f + buttonLeftAdj, 375.0f + buttonTopAdj, buttonSize * 2.0f, buttonSize), true);
+            mCredits->setButtonOnAction(this);
+        }*/
     }
 
     //about
     {
         {
             Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(10.0f, 10.0f, 0.0f, 0.0f);;
-            UILabel* label = mUILabelsManager.add("mAbout");
-            label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
-            label->setFixed(true);
-            label->getTextArea()->setCaption("");
-            label->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
-            label->getTextArea()->setSpaceWidth(9.0f);
-            label->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
-            label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
-            getMainBackground()->addChild(label->getTextArea());
+            mLabelAbout = mUILabelsManager.add();
+            mLabelAbout->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+            mLabelAbout->setFixed(true);
+            mLabelAbout->getTextArea()->setCaption("");
+            mLabelAbout->getTextArea()->setCharHeight(1.0f * viewportHeight / 1024.0f);
+            mLabelAbout->getTextArea()->setSpaceWidth(9.0f);
+            mLabelAbout->getTextArea()->setHeight(1.0f * viewportHeight / 1024.0f);
+            mLabelAbout->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+            getMainBackground()->addChild(mLabelAbout->getTextArea());
 
-            const Ogre::Real rightBoundary = viewportWidth / 2.0f - label->getTextArea()->getLeft() - viewportWidth / 50.0f;
+            const Ogre::Real rightBoundary = viewportWidth - mLabelAbout->getTextArea()->getLeft() - viewportWidth / 50.0f;
 
             std::string desc = "The story\n\n"\
                 "Early in the 21st century, the ozone layer disintegrated. Surprise! As the price of sunscreen skyrocketed, any species not turning a profit in the global marketplace soon found themselves unable to pay for UV protection. Bees, flies, and all the other creepy - crawlies got their sensitive eyes fried. No bees, no pollination. No pollination, no crops. No crops, starving humans. Starving humans, global war. It would have made a great movie, but the entertainment market is in recession, owing to the 99% decrease in consumers.\n\n"\
@@ -93,19 +100,26 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
 
                 descAdj = desc;
 
-                label->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
-                label->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
+                mLabelAbout->getTextArea()->setCharHeight(charHeight * viewportHeight / 1024.0f);
+                mLabelAbout->getTextArea()->setHeight(charHeight * viewportHeight / 1024.0f);
 
                 wrapText(
                     descAdj,
                     rightBoundary,
-                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(label->getTextArea()->getFontName()).getPointer(),
-                    label->getTextArea()->getSpaceWidth(),
-                    label->getTextArea()->getCharHeight());
+                    (Ogre::Font*)Ogre::FontManager::getSingleton().getByName(mLabelAbout->getTextArea()->getFontName()).getPointer(),
+                    mLabelAbout->getTextArea()->getSpaceWidth(),
+                    mLabelAbout->getTextArea()->getCharHeight());
 
-            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * label->getTextArea()->getCharHeight()) < (viewportHeight * 0.65f));
+            } while ((std::count(descAdj.begin(), descAdj.end(), '\n') * mLabelAbout->getTextArea()->getCharHeight()) < (viewportHeight * 0.85f));
 
-            label->getTextArea()->setCaption(descAdj);
+            mLabelAbout->getTextArea()->setCaption(descAdj);
         }
+        /*
+        {
+            mAbout = mUIButtonsManager.add("mAbout");
+            mAbout->setBackgroundMaterial(mCredits->getMaterialName());
+            mAbout->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(10.0f + buttonLeftAdj, 375.0f + buttonTopAdj, buttonSize * 2.0f, buttonSize), true);
+            mAbout->setButtonOnAction(this);
+        }*/
     }
 }

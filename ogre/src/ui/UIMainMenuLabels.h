@@ -64,8 +64,6 @@ protected:
     void showOptionRaceLabels();
     void showOptionHiscoreLabels();
     void showOptionTrophies(){mWindowTitleTrophies->show();}
-    void showOptionCreditsLabels();
-    void showOptionAboutLabels();
     void showStartingGridTimer(){mStartingGridTimeLabel->show();}
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
@@ -216,6 +214,9 @@ private:
     Ogre::TextAreaOverlayElement * mChampionshipResultsLabel[mChampionshipResultsLabelsAmountMax];
 
     UILabel* mVideoTitleLabel;
+
+    UILabel* mLabelCredits;
+    UILabel* mLabelAbout;
 
     private:
 

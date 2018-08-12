@@ -241,6 +241,35 @@ void UIMainMenu::frameStarted(const Ogre::FrameEvent &evt)
             }
         }
     }
+
+    if (mCurrentState == State_Options_Credits_Video)
+    {
+        if (!mVideoPlayer.isFinished())
+        {
+            mVideoPlayer.frameStarted(evt);
+        }
+        else
+        {
+            if (!mLabelAbout->isVisible())
+            {
+                mLabelCredits->show();
+                setMainBackgroundMaterial("Test/CustomBackgroundBlack");
+            }
+        }
+    }
+
+    if (mCurrentState == State_Options_About_Video)
+    {
+        if (!mVideoPlayer.isFinished())
+        {
+            mVideoPlayer.frameStarted(evt);
+        }
+        else
+        {
+            mLabelAbout->show();
+            setMainBackgroundMaterial("Test/CustomBackgroundBlack");
+        }
+    }
 }
 
 void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
@@ -294,6 +323,23 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         }
 #endif
     }
+
+    if (mCurrentState == State_Options_Credits_Video|| mCurrentState == State_Options_About_Video)
+    {
+#if !defined(__ANDROID__)
+        if (_key == MyGUI::KeyCode::Return)
+        {
+            switchState(State_Options);
+        }
+        if (_key == MyGUI::KeyCode::Space)
+        {
+            setMainBackgroundMaterial("Test/VideoTexture");
+            mLabelCredits->hide();
+            mLabelAbout->hide();
+            mVideoPlayer.restart();
+        }
+#endif
+    }
 }
 
 void UIMainMenu::mousePressed(const Ogre::Vector2& pos)
@@ -338,6 +384,16 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
     if(mCurrentState == State_Options_Trophies_Video && mCurrentState == prevState)
     {
         switchState(State_Options_Trophies);
+    }
+
+    if (mCurrentState == State_Options_Credits_Video && mCurrentState == prevState)
+    {
+        switchState(State_Options);
+    }
+
+    if (mCurrentState == State_Options_About_Video && mCurrentState == prevState)
+    {
+        switchState(State_Options);
     }
 }
 
@@ -640,6 +696,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
     case State_Options:
         mIsInStartingGrid = false;
+        setDefaultBackground(false);
         setWindowTitle("Options: Graphics");
         showOptionLabels();
         showOptionGraphicsLabels();
@@ -776,25 +833,34 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
 
             default:
                 mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
-
-
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
-        //mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
         }
         mVideoPlayer.start();
         break;
 
-    case State_Options_Credits:
+    case State_Options_Credits_Video:
         mIsInStartingGrid = false;
-        showOptionLabels();
-        showOptionCreditsLabels();
+        setMainBackgroundMaterial("Test/VideoTexture");
+        for (size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
+        mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
+        mVideoPlayer.start();
         break;
 
-    case State_Options_About:
+    case State_Options_About_Video:
         mIsInStartingGrid = false;
-        showOptionLabels();
-        showOptionAboutLabels();
+        setMainBackgroundMaterial("Test/VideoTexture");
+        for (size_t q = 0; q < mControlsCount; ++q)
+        {
+            setControlShow(q, false);
+        }
+        setWindowTitle("");
+        mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
+        mVideoPlayer.start();
         break;
+
 
     case State_StartingGrid:
         if(mIsInStartingGrid)

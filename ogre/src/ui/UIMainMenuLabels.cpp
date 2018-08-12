@@ -1068,16 +1068,6 @@ void UIMainMenuLabels::showOptionHiscoreLabels()
     }
 }
 
-void UIMainMenuLabels::showOptionCreditsLabels()
-{
-    mUILabelsManager.show("mCredits");
-}
-
-void UIMainMenuLabels::showOptionAboutLabels()
-{
-    mUILabelsManager.show("mAbout");
-}
-
 void UIMainMenuLabels::showExitLabels(const std::string& title)
 {
     mExitLabel->getTextArea()->setCaption(title);

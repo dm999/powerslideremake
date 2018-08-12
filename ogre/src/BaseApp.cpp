@@ -586,7 +586,13 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
         if(mGameModeSwitcher->getMode() == ModeMenu)
         {
-            if(mGameModeSwitcher->getSubmenuState() != State_Options_Trophies && mGameModeSwitcher->getSubmenuState() != State_Options_Trophies_Video && mGameModeSwitcher->getSubmenuState() != State_Options_Name)
+            if(
+                mGameModeSwitcher->getSubmenuState() != State_Options_Trophies && 
+                mGameModeSwitcher->getSubmenuState() != State_Options_Trophies_Video && 
+                mGameModeSwitcher->getSubmenuState() != State_Options_Credits_Video &&
+                mGameModeSwitcher->getSubmenuState() != State_Options_About_Video &&
+                mGameModeSwitcher->getSubmenuState() != State_Options_Name
+                )
             {
                 if(mGameModeSwitcher->isExitSubmenu())//if final dialog displayed
                 {
@@ -609,7 +615,14 @@ bool BaseApp::setShutdown(bool isOnEsc)
                 mGameModeSwitcher->setDefaultBackground(true);
             }
 
-            if(isOnEsc && mGameModeSwitcher->getSubmenuState() == State_Options_Trophies_Video)
+            if(
+                isOnEsc && 
+                    (
+                        mGameModeSwitcher->getSubmenuState() == State_Options_Trophies_Video    ||
+                        mGameModeSwitcher->getSubmenuState() == State_Options_Credits_Video ||
+                        mGameModeSwitcher->getSubmenuState() == State_Options_About_Video
+                    )
+                )
             {
                 mGameModeSwitcher->setDefaultBackground(true);
             }
