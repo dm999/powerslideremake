@@ -36,6 +36,41 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
     loadMisc(gameState, gameState.getPFLoaderData(), gameState.getPFLoaderGameshell());
 
+#if defined(__ANDROID__)
+    //controls
+    {
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatICBM");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatICBM",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatBlast");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatBlast",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatLight");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatLight",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+    }
+#endif
+
     //startlight
     {
         {
@@ -785,12 +820,12 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     //android buttons
 #if defined(__ANDROID__)
     {
-        Ogre::Real cheatButtonWidth = viewportWidth / 10.0f;
+        Ogre::Real cheatButtonWidth = viewportWidth / 16.0f;
         Ogre::Real cheatButtonHeight = viewportHeight / 16.0f;
         Ogre::Real cheatButtonLeft = cheatButtonWidth;
         Ogre::Real cheatButtonTop = 0.0f;;
 
-        mPanelBurn = createPanel("CheatBurn", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelBurn = createPanel("CheatBurn", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft, cheatButtonTop, "Test/CheatICBM");
         mPanelBurn->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBurn);
         if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
@@ -802,7 +837,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             mPanelBurn->hide();
         }
 
-        mPanelBomb = createPanel("CheatBomb", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft + cheatButtonWidth + cheatButtonWidth / 2.0f, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelBomb = createPanel("CheatBomb", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft + cheatButtonWidth + cheatButtonWidth / 2.0f, cheatButtonTop, "Test/CheatBlast");
         mPanelBomb->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBomb);
         if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
@@ -814,7 +849,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             mPanelBomb->hide();
         }
 
-        mPanelNitro = createPanel("CheatNitro", cheatButtonWidth, cheatButtonHeight, viewportWidth - cheatButtonLeft * 2.0f, cheatButtonTop, "Test/CustomBackgroundRed");
+        mPanelNitro = createPanel("CheatNitro", cheatButtonWidth, cheatButtonHeight, viewportWidth - cheatButtonLeft * 2.0f, cheatButtonTop, "Test/CheatLight");
         mPanelNitro->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelNitro);
         if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
@@ -1049,6 +1084,12 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 {
 #if defined(__ANDROID__)
         LOGI("UIRace[loadMisc]: Begin"); 
+#endif
+
+#if defined(__ANDROID__)
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "icbm_m_4.tex", "OriginalCheatICBM", TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "blast_m_4.tex", "OriginalCheatBlast", TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "light_m_4.tex", "OriginalCheatLight", TEMP_RESOURCE_GROUP_NAME);
 #endif
 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
