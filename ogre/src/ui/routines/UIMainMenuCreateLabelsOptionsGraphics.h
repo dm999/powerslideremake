@@ -200,9 +200,29 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
         mAdvLightingPlayerVal->setButtonOnAction(this);
     }
 
-    //Options Adv Lighting AI
+    //Options Attenuation Player
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 202.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionGraphicsLabel");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Attenuation Player");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        mAttenuationPlayerVal = mUIButtonTicksManager.add("mGraphics");
+        mAttenuationPlayerVal->loadBackground("OriginalButtonTick");
+        mAttenuationPlayerVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAttenuationPlayer(), true);
+        mAttenuationPlayerVal->setButtonOnAction(this);
+    }
+
+    //Options Adv Lighting AI
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 222.0f, 0.0f, 0.0f);;
         UILabel* label = mUILabelsManager.add("mOptionGraphicsLabel");
         label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         label->setFixed(true);
@@ -216,7 +236,7 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
     {
         mAdvLightingAIVal = mUIButtonTicksManager.add("mGraphics");
         mAdvLightingAIVal->loadBackground("OriginalButtonTick");
-        mAdvLightingAIVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAdvancedLightingAI(), true);
+        mAdvLightingAIVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 222.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAdvancedLightingAI(), true);
         mAdvLightingAIVal->setButtonOnAction(this);
     }
 }

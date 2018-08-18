@@ -6,9 +6,6 @@ function createVehicle()
     Model.ShadowLightOuterAngle = 90.0;
     Model.ShadowLightInnerAngle = 80.0;
     
-    Model.IsAttenuateExcludeBox = false;
-    
-    
     Model.Sfx = {}
     Model.Sfx.ReferenceDist = 30.0;
     

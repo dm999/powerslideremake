@@ -791,6 +791,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
     mSTR.SetValue("", "ghost", Conversions::DMToString(globalData.ghost).c_str());
     mSTR.SetValue("", "adv lighting player", Conversions::DMToString(globalData.adv_lightinig_player).c_str());
+    mSTR.SetValue("", "attenuation player", Conversions::DMToString(globalData.attenuation_player).c_str());
     mSTR.SetValue("", "adv lighting ai", Conversions::DMToString(globalData.adv_lightinig_ai).c_str());
     mSTR.SetValue("", "speedo", Conversions::DMToString(globalData.kmph).c_str());
     mSTR.SetValue("", "transmission", Conversions::DMToString(globalData.transmission).c_str());

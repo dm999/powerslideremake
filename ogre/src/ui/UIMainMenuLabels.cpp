@@ -258,6 +258,20 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if (button == mAttenuationPlayerVal)
+    {
+        if (mAttenuationPlayerVal->getChecked())
+        {
+            mModeContext.getGameState().setAttenuationPlayer(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setAttenuationPlayer(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
     if(button == mAdvLightingAIVal)
     {
         if(mAdvLightingAIVal->getChecked())

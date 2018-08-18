@@ -14,6 +14,7 @@ GameState::GameState() :
     mVersion(GAMEVERSION),
     mPlayerName("Rasputin"),
     mTrackName("desert track"),
+    mIsSandblasterTrack(true),
     mIsSpeedwayTrack(false),
     mIsMineshaftedTrack(false),
     mIsStuntTrack(false),
@@ -41,6 +42,7 @@ GameState::GameState() :
     mIsMirrorEnabled(true),
     mIsGhostEnabled(true),
     mAdvancedLightingPlayer(true),
+    mAttenuationPlayer(false),
     mAdvancedLightingAI(false),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
@@ -98,6 +100,7 @@ void GameState::initOriginalData()
                 mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
                 mIsGhostEnabled = mPlayerSettings.getIntValue("", "ghost", static_cast<int>(mIsGhostEnabled));
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
+                mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
@@ -214,6 +217,7 @@ void GameState::savePlayerData()
     globalData.mirror = mIsMirrorEnabled;
     globalData.ghost = mIsGhostEnabled;
     globalData.adv_lightinig_player = mAdvancedLightingPlayer;
+    globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
@@ -265,11 +269,15 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
         mTrackName = "speedway track";
     }
 
+    mIsSandblasterTrack = false;
     mIsSpeedwayTrack = false;
     mIsMineshaftedTrack = false;
     mIsStuntTrack = false;
     mIsFoxnhound1Track = false;
     mIsFoxnhound2Track = false;
+
+    if (mTrackName == "desert track")
+        mIsSandblasterTrack = true;
 
     if(mTrackName == "speedway night track" || mTrackName == "speedway track")
         mIsSpeedwayTrack = true;

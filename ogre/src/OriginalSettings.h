@@ -207,6 +207,7 @@ public:
         bool mirror;
         bool ghost;
         bool adv_lightinig_player;
+        bool attenuation_player;
         bool adv_lightinig_ai;
         bool kmph;
         Ogre::uint32 transmission;

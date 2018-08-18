@@ -49,6 +49,7 @@ public:
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength);
     void setRaceParameters(const std::string& trackName, AIStrength aiStrength, size_t lapsCount);
 
+    bool isSandblasterTrack() const { return mIsSandblasterTrack; }
     bool isSpeedwayTrack() const {return mIsSpeedwayTrack;}
     bool isMineshaftedTrack() const {return mIsMineshaftedTrack;}
     bool isStuntTrack() const {return mIsStuntTrack;}
@@ -166,6 +167,9 @@ public:
     void setAdvancedLightingPlayer(bool enabled){mAdvancedLightingPlayer = enabled;}
     bool getAdvancedLightingPlayer()const{return mAdvancedLightingPlayer;}
 
+    void setAttenuationPlayer(bool enabled) { mAttenuationPlayer = enabled; }
+    bool getAttenuationPlayer()const { return mAttenuationPlayer; }
+
     void setAdvancedLightingAI(bool enabled){mAdvancedLightingAI = enabled;}
     bool getAdvancedLightingAI()const{return mAdvancedLightingAI;}
 
@@ -234,6 +238,7 @@ private:
     STRPlayerSettings::PlayerData mPlayerData;
 
     std::string mTrackName;
+    bool mIsSandblasterTrack;
     bool mIsSpeedwayTrack;
     bool mIsMineshaftedTrack;
     bool mIsStuntTrack;
@@ -294,6 +299,7 @@ private:
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;
     bool mAdvancedLightingPlayer;
+    bool mAttenuationPlayer;
     bool mAdvancedLightingAI;
 
     Ogre::Real mSoundsGain; //0.0 - 1.0

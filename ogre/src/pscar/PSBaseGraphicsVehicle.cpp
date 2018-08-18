@@ -41,12 +41,12 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
     std::string carName = loadTexture(gameState, genTextureName);
     modelsPool->getCopyOfVehicle(gameState, carName, mModelEntity);
 
-    bool isAttenuateExcludeBox = luaManager.ReadScalarBool("Model.IsAttenuateExcludeBox", pipeline);
+    bool isAttenuateExcludeBox = gameState.getAttenuationPlayer();
 
     const Ogre::Vector2& fogStartEnd = gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName());
     bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
 
-    bool isSandBlaster = gameState.getTrackName() == "desert track";
+    bool isSandBlaster = gameState.isSandblasterTrack();
 
     if(luaManager.ReadScalarBool("Model.Material.IsOverrideSubMaterials", pipeline))
     {
