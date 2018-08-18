@@ -1,0 +1,58 @@
+fragment_program Test/Multi_2/FPPointDiffuseLRExclude glsles
+{
+    preprocessor_defines lightCount=5
+    source PointFragDiffuseLR2Exclude.glsl
+}
+
+vertex_program Test/Multi_2/VPPointLRExclude glsles
+{
+    preprocessor_defines lightCount=5
+    source PointVertLR2Exclude.glsl
+}
+
+material Test/Multi_2/PointDiffuseLRExclude
+{
+    receive_shadows off
+    
+    technique
+    {
+        pass
+        {
+            
+            ambient 0.4 0.4 0.4 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 10.0
+
+            fragment_program_ref Test/Multi_2/FPPointDiffuseLRExclude
+            {
+                param_named diffuseMap int 0
+                param_named_auto lightAmbient AMBIENT_LIGHT_COLOUR 0
+                param_named_auto lightDiffuse light_diffuse_colour_array 5
+                param_named_auto lightSpecular light_specular_colour_array 5
+                
+                param_named_auto matAmbient surface_ambient_colour
+                param_named_auto matDiffuse surface_diffuse_colour
+                param_named_auto matSpecular surface_specular_colour
+                param_named_auto matSpecPower surface_shininess
+            }
+            vertex_program_ref Test/Multi_2/VPPointLRExclude
+            {
+                param_named_auto lightAttenuation light_attenuation_array 5
+                param_named_auto modelviewproj worldviewproj_matrix
+                param_named_auto modelview worldview_matrix
+                param_named_auto normalmatrix inverse_transpose_worldview_matrix
+                param_named_auto texturematrix texture_matrix 0
+                param_named_auto lightPosition light_position_view_space_array 5
+
+            }
+            
+            texture_unit
+            {
+                //tex_address_mode clamp
+                tex_coord_set 0
+                filtering anisotropic
+                max_anisotropy 8
+            }
+        }
+    }
+}
