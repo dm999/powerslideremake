@@ -201,3 +201,33 @@ void UIButtonTick::mouseReleased(const Ogre::Vector2& pos)
         }
     }
 }
+
+void UIButtonTick::setActive(bool isActive)
+{
+    if (isActive && !mIsActive)
+    {
+        mBackground->setUV(0.0f, 0.0f, 1.0f, 15.0f / 60.0f);
+
+        if (!mIsChecked)
+        {
+            mBackground->setUV(0.0f, 15.0f / 60.0f, 1.0f, 30.0f / 60.0f);
+        }
+    }
+
+    if (!isActive && mIsActive)
+    {
+        mBackground->setUV(0.0f, 45.0f / 60.0f, 1.0f, 60.0f / 60.0f);
+
+        if (mIsChecked)
+        {
+            mBackground->setUV(0.0f, 30.0f / 60.0f, 1.0f, 45.0f / 60.0f);
+        }
+
+        if (!mIsChecked)
+        {
+            mBackground->setUV(0.0f, 45.0f / 60.0f, 1.0f, 60.0f / 60.0f);
+        }
+    }
+
+    mIsActive = isActive;
+}

@@ -76,6 +76,8 @@ public:
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos) {}
 
+    void setActive(bool isActive);
+
     bool getChecked() const {return mIsChecked;}
 
 private:

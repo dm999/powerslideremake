@@ -249,10 +249,12 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         if(mAdvLightingPlayerVal->getChecked())
         {
             mModeContext.getGameState().setAdvancedLightingPlayer(true);
+            mAttenuationPlayerVal->setActive(true);
         }
         else
         {
             mModeContext.getGameState().setAdvancedLightingPlayer(false);
+            mAttenuationPlayerVal->setActive(false);
         }
 
         mModeContext.getGameState().savePlayerData();

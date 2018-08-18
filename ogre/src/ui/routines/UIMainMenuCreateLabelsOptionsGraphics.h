@@ -216,7 +216,7 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
     {
         mAttenuationPlayerVal = mUIButtonTicksManager.add("mGraphics");
         mAttenuationPlayerVal->loadBackground("OriginalButtonTick");
-        mAttenuationPlayerVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAttenuationPlayer(), true);
+        mAttenuationPlayerVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAttenuationPlayer(), mModeContext.getGameState().getAdvancedLightingPlayer());
         mAttenuationPlayerVal->setButtonOnAction(this);
     }
 
