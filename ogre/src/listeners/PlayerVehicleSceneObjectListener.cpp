@@ -24,7 +24,10 @@ const Ogre::LightList* PlayerVehicleSceneObjectListener::objectQueryLights(const
     if (mParentNode) {
         // Make sure we only update if needed
         Ogre::ulong frame = mSceneMgr->_getLightsDirtyCounter();
-        if (mLightListUpdated != frame) {
+        //d.polubotko: need to update always
+        //if (mLightListUpdated != frame)
+        if(true)
+        {
             mLightListUpdated = frame;
 
             const Ogre::Vector3& scl = mParentNode->_getDerivedScale();

@@ -73,7 +73,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                         playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterialNoAtt", pipeline);
                     }
 
-                    if(isAttenuateExcludeBox)
+                    if(isAttenuateExcludeBox && !isSandBlaster)
                     {
                         playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterialExclude", pipeline);
                     }
@@ -145,7 +145,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
             mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, false));
         else
         {
-            if(isAttenuateExcludeBox)
+            if(isAttenuateExcludeBox && !isSandBlaster)
                 mModelEntity[q]->setListener(new PlayerVehicleSceneObjectListener(mModelEntity[q], sceneMgr, gameState.getExclusions()));
             else
                 mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, true));
