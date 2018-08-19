@@ -81,7 +81,7 @@ public :
     char getTerrainType(const Ogre::Image * terrainMap, Ogre::Vector2 texCoord) const;
 
 #if defined(__ANDROID__)
-    void loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
+    void loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
 #endif
 
     const DE2::AABB& getBoundingBoxAABB() const {return mBoundingBoxAABB;}//to restore if falloff

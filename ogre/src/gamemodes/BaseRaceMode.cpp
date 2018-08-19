@@ -988,7 +988,7 @@ void BaseRaceMode::reloadTextures()
     }
 
     std::string pfFolderName = mModeContext.mGameState.getSTRPowerslide().getBaseDir(mModeContext.mGameState.getTrackName());
-    mStaticMeshProcesser.loadTextures( mModeContext.mGameState.getPFLoaderData(), pfFolderName, NULL);
+    mStaticMeshProcesser.loadTextures( mModeContext.mGameState.getPFLoaderData(), pfFolderName, mModeContext.mGameState.getGamma(), NULL);
 
     mUIRace->reloadTextures(mModeContext.mGameState);
 }

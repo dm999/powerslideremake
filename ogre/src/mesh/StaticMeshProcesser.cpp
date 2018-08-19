@@ -289,9 +289,9 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 }
 
 #if defined(__ANDROID__)
-void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
 {
-    loadTextures(mTexturesNames, pfloader, trackName, loaderListener);
+    loadTextures(mTexturesNames, pfloader, trackName, gamma, loaderListener);
 }
 #endif
 
