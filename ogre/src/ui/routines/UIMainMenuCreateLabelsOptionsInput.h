@@ -24,12 +24,12 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
     }
     {
         mInputTypeValLeft = mUIButtonsManager.add("mInputType");
-        mInputTypeValLeft->loadBackground("OriginalButtonDown");
+        mInputTypeValLeft->setBackgroundMaterial(mGammaValLeft->getMaterialName());
         mInputTypeValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValLeft->setButtonOnAction(this);
 
         mInputTypeValRight = mUIButtonsManager.add("mInputType");
-        mInputTypeValRight->loadBackground("OriginalButtonUp");
+        mInputTypeValRight->setBackgroundMaterial(mGammaValRight->getMaterialName());
         mInputTypeValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 62.0f + buttonTopAdj, buttonSize, buttonSize), true);
         mInputTypeValRight->setButtonOnAction(this);
     }

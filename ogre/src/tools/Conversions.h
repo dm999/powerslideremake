@@ -61,9 +61,10 @@ return o.str();
 template<class T>
 static std::string DMToString(const T& t,int width,int precision){
 std::ostringstream o;
-o<<std::setw(width);
-o<<std::setprecision(precision);
-o<<t;
+o << std::setw(width);
+o << std::setprecision(precision);
+o << std::fixed;
+o << t;
 return o.str();
 }
 

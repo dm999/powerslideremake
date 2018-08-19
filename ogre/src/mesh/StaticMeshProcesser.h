@@ -88,8 +88,8 @@ public :
 
 private:
 
-    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
-    void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener);
+    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
+    void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
 
 #if defined(__ANDROID__)
     std::set<std::string> mTexturesNames;

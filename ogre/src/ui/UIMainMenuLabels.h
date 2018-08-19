@@ -158,6 +158,9 @@ private:
     UIButtonTick* mShadowVal;
     UIButtonTick* mVSyncVal;
     UIButtonTick* mFulscreenVal;
+    UILabel* mOptionGraphicsLabel_Gamma_Val;
+    UIButton* mGammaValLeft;
+    UIButton* mGammaValRight;
     UIButton* mOpponentsValLeft;
     UIButton* mOpponentsValRight;
     UIButtonTick* mMirrorVal;

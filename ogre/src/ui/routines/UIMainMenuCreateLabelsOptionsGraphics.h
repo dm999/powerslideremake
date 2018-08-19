@@ -239,4 +239,41 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
         mAdvLightingAIVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 222.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getAdvancedLightingAI(), true);
         mAdvLightingAIVal->setButtonOnAction(this);
     }
+
+    //Options Gamma
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 242.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionGraphicsLabel");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Gamma");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 242.0f, 0.0f, 0.0f);;
+        mOptionGraphicsLabel_Gamma_Val = mUILabelsManager.add("mOptionGraphicsLabel");
+        mOptionGraphicsLabel_Gamma_Val->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mOptionGraphicsLabel_Gamma_Val->setFixed(true);
+        mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getGamma(), 3, 1));
+        mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Gamma_Val->getTextArea()->setSpaceWidth(9.0f);
+        mOptionGraphicsLabel_Gamma_Val->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionGraphicsLabel_Gamma_Val->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mOptionGraphicsLabel_Gamma_Val->getTextArea());
+    }
+    {
+        mGammaValLeft = mUIButtonsManager.add("mGraphics");
+        mGammaValLeft->loadBackground("OriginalButtonDown");
+        mGammaValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 242.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mGammaValLeft->setButtonOnAction(this);
+
+        mGammaValRight = mUIButtonsManager.add("mGraphics");
+        mGammaValRight->loadBackground("OriginalButtonUp");
+        mGammaValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 242.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mGammaValRight->setButtonOnAction(this);
+    }
 }

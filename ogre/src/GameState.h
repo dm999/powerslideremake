@@ -158,6 +158,9 @@ public:
 
     Ogre::ColourValue getBackgroundColor()const{return mBackgroundColor;}
 
+    Ogre::Real getGamma() const { return mGamma; }
+    void setGamma(Ogre::Real gamma) { mGamma = gamma; }
+
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
@@ -295,6 +298,7 @@ private:
     Ogre::SceneNode* mArrowNode;
 
     Ogre::ColourValue mBackgroundColor;
+    Ogre::Real mGamma;
 
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;

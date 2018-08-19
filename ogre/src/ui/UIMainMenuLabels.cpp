@@ -107,6 +107,30 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameModeSwitcher()->recreateMenu();
     }
 
+    if (button == mGammaValLeft)
+    {
+        Ogre::Real gamma = mModeContext.getGameState().getGamma();
+        if (gamma > 1.0f)
+        {
+            gamma -= 0.1f;
+            mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCaption(Conversions::DMToString(gamma, 3, 1));
+            mModeContext.getGameState().setGamma(gamma);
+            mModeContext.getGameState().savePlayerData();
+        }
+    }
+
+    if (button == mGammaValRight)
+    {
+        Ogre::Real gamma = mModeContext.getGameState().getGamma();
+        if (gamma < 2.0f)
+        {
+            gamma += 0.1f;
+            mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCaption(Conversions::DMToString(gamma, 3, 1));
+            mModeContext.getGameState().setGamma(gamma);
+            mModeContext.getGameState().savePlayerData();
+        }
+    }
+
     if(button == mInputTypeValLeft || button == mInputTypeValRight)
     {
 #if !defined(__ANDROID__)
@@ -1031,7 +1055,7 @@ void UIMainMenuLabels::showOptionGraphicsLabels()
     Ogre::ConfigOption videoMode = configOpts["Video Mode"];
     mOptionGraphicsLabel_Resolution_Val->getTextArea()->setCaption(videoMode.currentValue);
     mUILabelsManager.show("mOptionGraphicsLabel");
-
+    mUIButtonsManager.show("mGraphics");
     mUIButtonTicksManager.show("mGraphics");
 }
 

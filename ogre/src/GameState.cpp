@@ -39,6 +39,7 @@ GameState::GameState() :
     mIsRaceStarted(false),
     mIsRaceFinished(false),
     mBackgroundColor(0.91372550f, 0.78823531f, 0.52156866f),
+    mGamma(1.0f),
     mIsMirrorEnabled(true),
     mIsGhostEnabled(true),
     mAdvancedLightingPlayer(true),
@@ -102,6 +103,7 @@ void GameState::initOriginalData()
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
+                mGamma = mPlayerSettings.getFloatValue("", "gamma", mGamma);
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
@@ -219,6 +221,7 @@ void GameState::savePlayerData()
     globalData.adv_lightinig_player = mAdvancedLightingPlayer;
     globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
+    globalData.gamma = mGamma;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;
@@ -295,6 +298,10 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
         mIsFoxnhound2Track = true;
 
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
+    mBackgroundColor.r = Ogre::Math::Pow(mBackgroundColor.r, 1.0f / getGamma());
+    mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / getGamma());
+    mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / getGamma());
+
     mLapsCount = lapsCount;
 }
 

@@ -52,6 +52,7 @@ public:
 
     float getFloatValue(const std::string& section, const std::string& key, bool& isFound) const;
     float getFloatValue(const std::string& section, const std::string& key) const;
+    float getFloatValue(const std::string& section, const std::string& key, float defaultVal) const;
 
     int getIntValue(const std::string& section, const std::string& key, bool& isFound) const;
     int getIntValue(const std::string& section, const std::string& key) const;
@@ -209,6 +210,7 @@ public:
         bool adv_lightinig_player;
         bool attenuation_player;
         bool adv_lightinig_ai;
+        Ogre::Real gamma;
         bool kmph;
         Ogre::uint32 transmission;
         Ogre::uint32 input;

@@ -96,7 +96,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         }
 
         //create textures
-        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, loaderListener);
+        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, gameState.getGamma(), loaderListener);
 
         if(loaderListener)
             loaderListener->loadState(0.7f, "Textures loaded");
@@ -228,7 +228,7 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         gameState.getLLTObject()->setVisible(true);
 }
 
-void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
 {
     std::set<std::string> texturesNames;
 
@@ -245,10 +245,10 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
     mTexturesNames = texturesNames;
 #endif
 
-    loadTextures(texturesNames, pfloader, trackName, loaderListener);
+    loadTextures(texturesNames, pfloader, trackName, gamma, loaderListener);
 }
 
-void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
 {
     //ranges from BaseRaceMode::initData
     const float loaderMin = 0.5f;
@@ -279,7 +279,6 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            const Ogre::Real gamma = 1.0f;//if not 1.0 issues with skyes
             TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
             fileToLoad->close();
         }
