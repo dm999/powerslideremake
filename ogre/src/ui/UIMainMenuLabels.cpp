@@ -110,7 +110,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
     if (button == mGammaValLeft)
     {
         Ogre::Real gamma = mModeContext.getGameState().getGamma();
-        if (gamma > 1.0f)
+        if (gamma > 0.5f)
         {
             gamma -= 0.1f;
             mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCaption(Conversions::DMToString(gamma, 3, 1));
@@ -122,7 +122,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
     if (button == mGammaValRight)
     {
         Ogre::Real gamma = mModeContext.getGameState().getGamma();
-        if (gamma < 2.0f)
+        if (gamma < 2.95f)
         {
             gamma += 0.1f;
             mOptionGraphicsLabel_Gamma_Val->getTextArea()->setCaption(Conversions::DMToString(gamma, 3, 1));

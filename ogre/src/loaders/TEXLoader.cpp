@@ -45,6 +45,7 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
 
         if (gamma != 1.0f)
         {
+#if 0
             if (img.getBPP() == 16)
             {
                 size_t bufSize2 = Ogre::PixelUtil::getMemorySize(head.width, head.height, 1, Ogre::PF_BYTE_BGRA);
@@ -58,8 +59,26 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
                 img2.loadDynamicImage(pixelData2, head.width, head.height, 1, Ogre::PF_BYTE_BGRA, true);
                 std::swap(img,img2);
             }
-
             img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
+#else
+            const Ogre::Real exp = 1.0f / gamma;
+            Ogre::Real gammaBuf[256];
+            for (size_t q = 0; q < 256; ++q)
+            {
+                gammaBuf[q] = Ogre::Math::Pow(q / 255.0f, exp);
+            }
+            for (size_t x = 0; x < head.width; ++x)
+            {
+                for (size_t y = 0; y < head.height; ++y)
+                {
+                    Ogre::ColourValue color = img.getColourAt(x, y, 0);
+                    color.r = gammaBuf[static_cast<size_t>(color.r * 255.0f)];
+                    color.g = gammaBuf[static_cast<size_t>(color.g * 255.0f)];
+                    color.b = gammaBuf[static_cast<size_t>(color.b * 255.0f)];
+                    img.setColourAt(color, x, y, 0);
+                }
+            }
+#endif
         }
 
         res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
