@@ -564,6 +564,13 @@ void GameState::setKeyCode(OIS::MouseButtonID id, InputKeyMapping index)
     }
 }
 
+Ogre::Real GameState::getGamma() const
+{ 
+    Ogre::Real gamma;
+    Conversions::DMFromString(Conversions::DMToString(mGamma, 3, 1), gamma);
+    return gamma;
+}
+
 void GameState::setGamma(Ogre::Real gamma)
 { 
     mGamma = gamma;
