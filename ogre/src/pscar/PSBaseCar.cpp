@@ -145,9 +145,9 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     initialVehicleSetup.mAirDensityTranslation = getCarParameter("", "air density translation");
     initialVehicleSetup.mAirDensityRot = getCarParameter("", "air density rotation");
 
-    initialVehicleSetup.mChassisMass = getCarParameter("", "mass");
+    initialVehicleSetup.mChassisMass = getCarParameter("", "mass");// *1.5f; - simulate truck mode
     initialVehicleSetup.mChassisInvMass = 1.0f / initialVehicleSetup.mChassisMass;
-    initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");
+    initialVehicleSetup.mMomentOfInertia = getCarArray3Parameter("", "moment of inertia");// * 1.5f; - simulate truck mode
 
     initialVehicleSetup.mGravityVelocity = misSettings.getFloatValue("", "gravity force");
 
@@ -264,6 +264,8 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
         std::vector<std::string> splinePointsStr = getCarArrayValueParameter("", "rev power");
         std::vector<Ogre::Real> splinePoints = convertSplinePoints(splinePointsStr);
+        //simulate truck mode
+        //std::transform(splinePoints.begin(), splinePoints.end(), splinePoints.begin(), std::bind1st(std::multiplies<Ogre::Real>(), 0.5f));
 
         initialVehicleSetup.mPower.init(splinePoints, hscale, vscale);
     }
