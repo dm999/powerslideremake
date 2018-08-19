@@ -159,7 +159,7 @@ public:
     Ogre::ColourValue getBackgroundColor()const{return mBackgroundColor;}
 
     Ogre::Real getGamma() const { return mGamma; }
-    void setGamma(Ogre::Real gamma) { mGamma = gamma; }
+    void setGamma(Ogre::Real gamma);
 
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}

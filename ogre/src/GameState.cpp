@@ -298,9 +298,9 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
         mIsFoxnhound2Track = true;
 
     mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
-    mBackgroundColor.r = Ogre::Math::Pow(mBackgroundColor.r, 1.0f / getGamma());
-    mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / getGamma());
-    mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / getGamma());
+    mBackgroundColor.r = Ogre::Math::Pow(mBackgroundColor.r, 1.0f / mGamma);
+    mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / mGamma);
+    mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / mGamma);
 
     mLapsCount = lapsCount;
 }
@@ -562,6 +562,15 @@ void GameState::setKeyCode(OIS::MouseButtonID id, InputKeyMapping index)
     {
         mInputKeysMouse[index] = id;
     }
+}
+
+void GameState::setGamma(Ogre::Real gamma)
+{ 
+    mGamma = gamma;
+    mBackgroundColor = mSTRPowerslide.getTrackSkyColor(mTrackName);
+    mBackgroundColor.r = Ogre::Math::Pow(mBackgroundColor.r, 1.0f / mGamma);
+    mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / mGamma);
+    mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / mGamma);
 }
 
 void GameState::setAICount(size_t opponentsAmount)
