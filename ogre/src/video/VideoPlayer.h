@@ -61,8 +61,6 @@ private:
 
     Ogre::Real mVideoSPF;
     Ogre::Real mSecondsPassedVideo;
-    Ogre::Real mSecondsPassedAudio;
-    Ogre::Real mLastAudioBufferSeconds;
 
     Ogre::Real mGain;
     CommonIncludes::shared_ptr<SoundSource> mSound;

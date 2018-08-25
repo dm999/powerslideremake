@@ -32,8 +32,6 @@ void VideoPlayer::start(Ogre::Real gain)
 {
     mGain = gain;
     mSecondsPassedVideo = std::numeric_limits<Ogre::Real>::max();
-    mSecondsPassedAudio = std::numeric_limits<Ogre::Real>::max();
-    mLastAudioBufferSeconds = 0.0f;
     mIsStarted = true; 
     mIsFinished = false;
 }
@@ -68,18 +66,11 @@ void VideoPlayer::restart(Ogre::Real gain)
 void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
 {
     bool doUpdateVideo = false;
-    bool doUpdateAudio = false;
 
     if(mSecondsPassedVideo > mVideoSPF)
     {
         doUpdateVideo = true;
         mSecondsPassedVideo = 0.0f;
-    }
-
-    if (mSecondsPassedAudio > mLastAudioBufferSeconds)
-    {
-        doUpdateAudio = true;
-        mSecondsPassedAudio = 0.0f;
     }
 
     if(mIsInited)
@@ -115,7 +106,7 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
         }
 
 #ifndef NO_OPENAL
-        doUpdateAudio = true;
+        bool doUpdateAudio = true;
         if (mSound.get())
         {
             doUpdateAudio = mSound->getSourceState() == SoundSource::Stopped;
@@ -123,7 +114,7 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
 
         if (mIsStarted && doUpdateAudio && mGain > 0.0f)
         {
-            if (mCinepakDecode->decodeAudioFrame(mLastAudioBufferSeconds))
+            if (mCinepakDecode->decodeAudioFrame())
             {
                 const std::vector<Ogre::int16>& samples = mCinepakDecode->getSamples();
 
@@ -141,7 +132,6 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
     }
 
     mSecondsPassedVideo += evt.timeSinceLastFrame;
-    mSecondsPassedAudio += evt.timeSinceLastFrame;
 }
 
 void VideoPlayer::clear()

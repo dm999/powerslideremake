@@ -24,9 +24,9 @@ namespace {
     struct ADPCMChannelStatus
     {
         int predictor;
-        Ogre::int16 step_index;
+        Ogre::int16 stepIndex;
         int step;
-        int prev_sample;
+        int prevSample;
 
         int sample1;
         int sample2;
@@ -51,11 +51,9 @@ namespace {
     }
 }//anonymous namespace
 
-bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::int16>& mSamples, Ogre::Real &secondsDecoded)
+bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::int16>& mSamples)
 {
     bool ret = false;
-
-    secondsDecoded = std::numeric_limits<Ogre::Real>::max();
 
     size_t framesChunk = data.size() / mPacketSize;
 
@@ -63,13 +61,11 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
 
     if (mIsMSADPCM)
     {
-        int nb_samples = (mPacketSize - 6 * mChannels) * 2 / mChannels;
+        size_t nbSamples = (mPacketSize - 6 * mChannels) * 2 / mChannels;
 
         bool isStereo = mChannels == 2 ? true : false;
 
-        secondsDecoded = framesChunk * nb_samples / static_cast<Ogre::Real>(mSamplesPerSec);
-
-        mSamples.resize(mChannels * nb_samples * framesChunk);
+        mSamples.resize(mChannels * nbSamples * framesChunk);
 
         for (size_t w = 0; w < framesChunk; ++w)
         {
@@ -77,7 +73,7 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
             size_t frameEnd = frameStart + mPacketSize;
 
             size_t offset = 0;
-            int block_predictor = static_cast<Ogre::uint8>(data[frameStart + offset++]);
+            int block_predictor = data[frameStart + offset++];
             if (block_predictor > 6)
             {
                 break;
@@ -88,7 +84,7 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
 
             if (isStereo)
             {
-                block_predictor = static_cast<Ogre::uint8>(data[frameStart + offset++]);
+                block_predictor = data[frameStart + offset++];
                 if (block_predictor > 6)
                 {
                     break;
@@ -97,33 +93,31 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
                 status[1].coeff2 = AdaptCoeff2[block_predictor];
             }
 
-            status[0].idelta = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+            status[0].idelta = extendSign(RB16Simple(&data[frameStart + offset]));
             offset += 2;
             if (isStereo)
             {
-                status[1].idelta = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+                status[1].idelta = extendSign(RB16Simple(&data[frameStart + offset]));
                 offset += 2;
             }
 
-            status[0].sample1 = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+            status[0].sample1 = extendSign(RB16Simple(&data[frameStart + offset]));
             offset += 2;
             if (isStereo)
             {
-                status[1].sample1 = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+                status[1].sample1 = extendSign(RB16Simple(&data[frameStart + offset]));
                 offset += 2;
             }
 
-            status[0].sample2 = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+            status[0].sample2 = extendSign(RB16Simple(&data[frameStart + offset]));
             offset += 2;
             if (isStereo)
             {
-                status[1].sample2 = extendSign(RB16Simple((Ogre::uint8*)&data[frameStart + offset]));
+                status[1].sample2 = extendSign(RB16Simple(&data[frameStart + offset]));
                 offset += 2;
             }
 
-            size_t bufferSize = mChannels * nb_samples;
-
-            Ogre::int16 * samples = &mSamples[bufferSize * w];
+            Ogre::int16 * samples = &mSamples[mChannels * nbSamples * w];
             *samples++ = status[0].sample2;
             if (isStereo)
             {
@@ -135,14 +129,14 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
                 *samples++ = status[1].sample1;
             }
 
-            size_t samplesToProcess = nb_samples - 2;
+            size_t samplesToProcess = nbSamples - 2;
             if (!isStereo) samplesToProcess /= 2;
 
             for (size_t q = 0; q < samplesToProcess; ++q)
             {
-                int byte = static_cast<Ogre::uint8>(data[frameStart + offset++]);
-                *samples++ = msGetNibble(status[0], byte >> 4);//upper nibble
-                *samples++ = msGetNibble(status[isStereo], byte & 0x0F);//lower nibble
+                Ogre::uint8 dataByte = data[frameStart + offset++];
+                *samples++ = msGetNibble(status[0], dataByte >> 4);//upper nibble
+                *samples++ = msGetNibble(status[isStereo], dataByte & 0x0F);//lower nibble
             }
 
             //playAudio(&outputBuffer[0], bufferSize, channels, sampleRate, audioFrames);

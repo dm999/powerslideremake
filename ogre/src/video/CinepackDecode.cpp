@@ -405,7 +405,7 @@ bool CinepackDecode::decodeVideoFrame()
     return ret;
 }
 
-bool CinepackDecode::decodeAudioFrame(Ogre::Real &secondsDecoded)
+bool CinepackDecode::decodeAudioFrame()
 {
     bool ret = false;
 
@@ -414,7 +414,7 @@ bool CinepackDecode::decodeAudioFrame(Ogre::Real &secondsDecoded)
         std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameListAudio.begin() + mCurAudioFrame);
 
         ADPCMDecode adpcmDecode(mAviContainer->getIsMSPCM(), mAviContainer->getAudioPacketSize(), mAviContainer->getWaveFormat().nChannels, mAviContainer->getWaveFormat().nSamplesPerSec);
-        ret = adpcmDecode.decode(data, mSamples, secondsDecoded);
+        ret = adpcmDecode.decode(data, mSamples);
 
         ++mCurAudioFrame;
     }

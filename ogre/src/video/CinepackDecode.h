@@ -20,7 +20,7 @@ public:
 
     bool init(Ogre::DataStreamPtr stream);
     bool decodeVideoFrame();
-    bool decodeAudioFrame(Ogre::Real &secondsDecoded);
+    bool decodeAudioFrame();
     void clear();
 
     void resetCurrentFrame();
