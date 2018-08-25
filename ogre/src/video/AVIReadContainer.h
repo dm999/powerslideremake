@@ -19,13 +19,13 @@ inline int CV_FOURCC(char c1, char c2, char c3, char c4)
 
 struct WAVEFORMATEX
 {
-    Ogre::uint16  wFormatTag;
-    Ogre::uint16  nChannels;
+    Ogre::uint16 wFormatTag;
+    Ogre::uint16 nChannels;
     Ogre::uint32 nSamplesPerSec;
     Ogre::uint32 nAvgBytesPerSec;
-    Ogre::uint16  nBlockAlign;
-    Ogre::uint16  wBitsPerSample;
-    Ogre::uint16  cbSize;
+    Ogre::uint16 nBlockAlign;
+    Ogre::uint16 wBitsPerSample;
+    Ogre::uint16 cbSize;
 };
 
 struct RiffChunk;

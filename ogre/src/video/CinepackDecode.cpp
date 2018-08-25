@@ -11,6 +11,8 @@
 
 #include "AVIReadContainer.h"
 
+#include "ADPCMDecode.h"
+
 #define MAX_STRIPS      32
 #define PALETTE         256
 #define MACROBLOCK      4
@@ -390,14 +392,31 @@ bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 bool CinepackDecode::decodeVideoFrame()
 {
     bool ret = false;
-    if(mIsInited && mFrameListVideo.size() > mCurFrame)
+    if(mIsInited && mFrameListVideo.size() > mCurVideoFrame)
     {
-        std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameListVideo.begin() + mCurFrame);
+        std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameListVideo.begin() + mCurVideoFrame);
         mCinepakContext->setData(&data[0]);
-        decode(mCurFrame, mFrameListVideo.size());
+        decode(mCurVideoFrame, mFrameListVideo.size());
 
-        ++mCurFrame;
+        ++mCurVideoFrame;
         ret = true;
+    }
+
+    return ret;
+}
+
+bool CinepackDecode::decodeAudioFrame(Ogre::Real &secondsDecoded)
+{
+    bool ret = false;
+
+    if (mIsInited && mFrameListAudio.size() > mCurAudioFrame)
+    {
+        std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameListAudio.begin() + mCurAudioFrame);
+
+        ADPCMDecode adpcmDecode(mAviContainer->getIsMSPCM(), mAviContainer->getAudioPacketSize(), mAviContainer->getWaveFormat().nChannels, mAviContainer->getWaveFormat().nSamplesPerSec);
+        ret = adpcmDecode.decode(data, mSamples, secondsDecoded);
+
+        ++mCurAudioFrame;
     }
 
     return ret;
@@ -411,6 +430,7 @@ void CinepackDecode::clear()
     mFrameListAudio.clear();
     mCinepakContext.reset();
     mFrame.clear();
+    mSamples.clear();
 }
 
 void CinepackDecode::resetCurrentFrame()
@@ -421,7 +441,8 @@ void CinepackDecode::resetCurrentFrame()
         const size_t bufSize = mAviContainer->getWidth() * mAviContainer->getHeight() * 3;//rgb
         mFrame.resize(bufSize);
         mFrame.assign(bufSize, 0);
-        mCurFrame = 0;
+        mCurVideoFrame = 0;
+        mCurAudioFrame = 0;
     }
 }
 
@@ -454,5 +475,29 @@ Ogre::uint16 CinepackDecode::getHeight() const
     {
         ret = mAviContainer->getHeight();
     }
+    return ret;
+}
+
+Ogre::uint16 CinepackDecode::getAudioChannels() const
+{
+    Ogre::uint16 ret = 0;
+
+    if (mIsInited)
+    {
+        ret = mAviContainer->getWaveFormat().nChannels;
+    }
+
+    return ret;
+}
+
+Ogre::uint32 CinepackDecode::getAudioSamplesPerSec() const
+{
+    Ogre::uint32 ret = 0;
+
+    if (mIsInited)
+    {
+        ret = mAviContainer->getWaveFormat().nSamplesPerSec;
+    }
+
     return ret;
 }

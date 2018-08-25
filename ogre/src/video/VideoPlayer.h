@@ -9,6 +9,7 @@
 
 class CinepackDecode;
 class PFLoader;
+class SoundSource;
 
 class VideoPlayer
 {
@@ -25,6 +26,11 @@ public:
      * set internal flags to start (cheap)
      */
     void start();
+
+    /**
+     * set flag to stop (cheap), stop audio
+     */
+    void stop();
 
     /**
      * set internal flags to start, recreate decoder context and empty frame (expensive)
@@ -54,7 +60,11 @@ private:
     bool mIsFinished;
 
     Ogre::Real mVideoSPF;
-    Ogre::Real mSecondsPassed;
+    Ogre::Real mSecondsPassedVideo;
+    Ogre::Real mSecondsPassedAudio;
+    Ogre::Real mLastAudioBufferSeconds;
+
+    CommonIncludes::shared_ptr<SoundSource> mSound;
 };
 
 #endif

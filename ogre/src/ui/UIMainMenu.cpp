@@ -317,6 +317,7 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 #if !defined(__ANDROID__)
         if(_key == MyGUI::KeyCode::Return)
         {
+            mVideoPlayer.stop();
             switchState(State_Options_Trophies);
         }
         if(_key == MyGUI::KeyCode::Space)
@@ -332,6 +333,7 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
 #if !defined(__ANDROID__)
         if (_key == MyGUI::KeyCode::Return)
         {
+            mVideoPlayer.stop();
             switchState(State_Options);
         }
         if (_key == MyGUI::KeyCode::Space)
@@ -386,16 +388,19 @@ void UIMainMenu::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
 
     if(mCurrentState == State_Options_Trophies_Video && mCurrentState == prevState)
     {
+        mVideoPlayer.stop();
         switchState(State_Options_Trophies);
     }
 
     if (mCurrentState == State_Options_Credits_Video && mCurrentState == prevState)
     {
+        mVideoPlayer.stop();
         switchState(State_Options);
     }
 
     if (mCurrentState == State_Options_About_Video && mCurrentState == prevState)
     {
+        mVideoPlayer.stop();
         switchState(State_Options);
     }
 }
@@ -606,6 +611,8 @@ void UIMainMenu::onNameChange()
 
 void UIMainMenu::setDefaultBackground(bool isSwitchState)
 {
+    mVideoPlayer.stop();
+
     setMainBackgroundMaterial("Test/MainBackground");
     
     for(size_t q = 0; q < mControlsCount; ++q)

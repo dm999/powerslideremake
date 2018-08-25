@@ -20,12 +20,24 @@
     #pragma warning(disable:4996)
 #endif
 
+SoundSource::SoundSource(const std::vector<Ogre::uint8> &samples, size_t sampleCount, size_t channels, size_t sampleRate) :
+    mSoundBuffer(new sf::SoundBuffer()),
+    mSound(new sf::Sound(*mSoundBuffer.get()))
+{
+    updateSamples(samples, sampleCount, channels, sampleRate);
+}
+
 SoundSource::SoundSource(const std::string& subFolder, const std::string& fileName, const PFLoader& mPFLoaderData) :
     mSoundBuffer(new sf::SoundBuffer()),
     mSound(new sf::Sound(*mSoundBuffer.get()))
 {
     readITS(subFolder, fileName, mPFLoaderData);
     mSoundBuffer->loadFromSamples(&mRawData[0], mRawData.size(), mHeader.channels, mHeader.samplesPerSec);
+}
+
+void SoundSource::updateSamples(const std::vector<Ogre::uint8> &samples, size_t sampleCount, size_t channels, size_t sampleRate)
+{
+    mSoundBuffer->loadFromSamples(reinterpret_cast<const sf::Int16*>(&samples[0]), sampleCount, channels, sampleRate);
 }
 
 void SoundSource::readITS(const std::string& subFolder, const std::string& fileName, const PFLoader& mPFLoaderData)

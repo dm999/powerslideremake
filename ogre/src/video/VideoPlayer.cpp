@@ -4,6 +4,8 @@
 #include "CinepackDecode.h"
 #include "../loaders/PFLoader.h"
 
+#include "../sound/SoundSource.h"
+
 void VideoPlayer::init(const PFLoader& gameshell, const std::string& filePath, const std::string& fileName, const Ogre::String& textureName)
 {
     clear();
@@ -28,9 +30,22 @@ void VideoPlayer::init(const PFLoader& gameshell, const std::string& filePath, c
 
 void VideoPlayer::start()
 {
-    mSecondsPassed = std::numeric_limits<Ogre::Real>::max();
+    mSecondsPassedVideo = std::numeric_limits<Ogre::Real>::max();
+    mSecondsPassedAudio = std::numeric_limits<Ogre::Real>::max();
+    mLastAudioBufferSeconds = 0.0f;
     mIsStarted = true; 
     mIsFinished = false;
+}
+
+void VideoPlayer::stop()
+{
+    mIsStarted = false;
+#ifndef NO_OPENAL
+    if (mSound.get())
+    {
+        mSound->stopPlaying();
+    }
+#endif
 }
 
 void VideoPlayer::restart()
@@ -45,17 +60,24 @@ void VideoPlayer::restart()
 
 void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
 {
-    bool doUpdate = false;
+    bool doUpdateVideo = false;
+    bool doUpdateAudio = false;
 
-    if(mSecondsPassed > mVideoSPF)
+    if(mSecondsPassedVideo > mVideoSPF)
     {
-        doUpdate = true;
-        mSecondsPassed = 0.0f;
+        doUpdateVideo = true;
+        mSecondsPassedVideo = 0.0f;
+    }
+
+    if (mSecondsPassedAudio > mLastAudioBufferSeconds)
+    {
+        doUpdateAudio = true;
+        mSecondsPassedAudio = 0.0f;
     }
 
     if(mIsInited)
     {
-        if(mIsStarted && doUpdate)
+        if(mIsStarted && doUpdateVideo)
         {
             if(mCinepakDecode->decodeVideoFrame())
             {
@@ -84,9 +106,32 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
                 mIsFinished = true;
             }
         }
+
+#ifndef NO_OPENAL
+        if (mIsStarted && doUpdateAudio)
+        {
+            if (mCinepakDecode->decodeAudioFrame(mLastAudioBufferSeconds))
+            {
+                const std::vector<Ogre::uint8>& samples = mCinepakDecode->getSamples();
+                size_t samplesCount = samples.size() / sizeof(Ogre::uint16) / mCinepakDecode->getAudioChannels();
+
+                if (!mSound.get())
+                {
+                    mSound.reset(new SoundSource(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec()));
+                    mSound->startPlaying();
+                }
+                else
+                {
+                    mSound->updateSamples(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
+                    mSound->startPlaying();
+                }
+            }
+        }
+#endif
     }
 
-    mSecondsPassed += evt.timeSinceLastFrame;
+    mSecondsPassedVideo += evt.timeSinceLastFrame;
+    mSecondsPassedAudio += evt.timeSinceLastFrame;
 }
 
 void VideoPlayer::clear()
