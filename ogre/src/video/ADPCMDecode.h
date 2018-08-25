@@ -10,7 +10,7 @@ public:
 
     ADPCMDecode(bool isMSADPCM, Ogre::uint32 packetSize, Ogre::uint16 channels, Ogre::uint32 samplesPerSec) : mIsMSADPCM(isMSADPCM), mPacketSize(packetSize), mChannels(channels), mSamplesPerSec(samplesPerSec){}
 
-    bool decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::uint8>& mSamples, Ogre::Real &secondsDecoded);
+    bool decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::int16>& mSamples, Ogre::Real &secondsDecoded);
 
 private:
 

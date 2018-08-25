@@ -37,7 +37,7 @@ public:
     SoundSource();
     SoundSource(const std::string& fileName, const std::string& subFolder, const PFLoader& mPFLoaderData);
 
-    void updateSamples(const std::vector<Ogre::uint8> &samples, size_t sampleCount, size_t channels, size_t sampleRate);
+    void updateSamples(const std::vector<Ogre::int16> &samples, size_t sampleCount, size_t channels, size_t sampleRate);
 
     void startPlaying();
     void pausePlaying();

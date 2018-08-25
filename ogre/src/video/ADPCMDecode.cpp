@@ -49,9 +49,9 @@ namespace {
 
         return channelStatus.sample1;
     }
-}//anonymous
+}//anonymous namespace
 
-bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::uint8>& mSamples, Ogre::Real &secondsDecoded)
+bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre::int16>& mSamples, Ogre::Real &secondsDecoded)
 {
     bool ret = false;
 
@@ -69,7 +69,7 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
 
         secondsDecoded = framesChunk * nb_samples / static_cast<Ogre::Real>(mSamplesPerSec);
 
-        mSamples.resize(sizeof(Ogre::uint16) * mChannels * nb_samples * framesChunk);
+        mSamples.resize(mChannels * nb_samples * framesChunk);
 
         for (size_t w = 0; w < framesChunk; ++w)
         {
@@ -121,9 +121,9 @@ bool ADPCMDecode::decode(const std::vector<Ogre::uint8>& data, std::vector<Ogre:
                 offset += 2;
             }
 
-            size_t bufferSize = sizeof(Ogre::uint16) * mChannels * nb_samples;
+            size_t bufferSize = mChannels * nb_samples;
 
-            Ogre::int16 * samples = reinterpret_cast<Ogre::int16 *>(&mSamples[bufferSize * w]);
+            Ogre::int16 * samples = &mSamples[bufferSize * w];
             *samples++ = status[0].sample2;
             if (isStereo)
             {

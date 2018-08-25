@@ -32,7 +32,7 @@ public:
 
     Ogre::uint16 getAudioChannels() const;
     Ogre::uint32 getAudioSamplesPerSec() const;
-    const std::vector<Ogre::uint8>& getSamples() const { return mSamples; }
+    const std::vector<Ogre::int16>& getSamples() const { return mSamples; }
 
 private:
 
@@ -49,7 +49,7 @@ private:
     FrameList mFrameListAudio;
 
     std::vector<Ogre::uint8> mFrame;
-    std::vector<Ogre::uint8> mSamples;
+    std::vector<Ogre::int16> mSamples;
 
     CommonIncludes::shared_ptr<CinepakContext> mCinepakContext;
 

@@ -125,15 +125,14 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
         {
             if (mCinepakDecode->decodeAudioFrame(mLastAudioBufferSeconds))
             {
-                const std::vector<Ogre::uint8>& samples = mCinepakDecode->getSamples();
-                size_t samplesCount = samples.size() / sizeof(Ogre::uint16);
+                const std::vector<Ogre::int16>& samples = mCinepakDecode->getSamples();
 
                 if (!mSound.get())
                 {
                     mSound.reset(new SoundSource());
                 }
 
-                mSound->updateSamples(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
+                mSound->updateSamples(samples, samples.size(), mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
                 mSound->setGain(mGain);
                 mSound->startPlaying();
             }
