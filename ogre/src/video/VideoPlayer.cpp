@@ -28,8 +28,9 @@ void VideoPlayer::init(const PFLoader& gameshell, const std::string& filePath, c
     }
 }
 
-void VideoPlayer::start()
+void VideoPlayer::start(Ogre::Real gain)
 {
+    mGain = gain;
     mSecondsPassedVideo = std::numeric_limits<Ogre::Real>::max();
     mSecondsPassedAudio = std::numeric_limits<Ogre::Real>::max();
     mLastAudioBufferSeconds = 0.0f;
@@ -48,13 +49,19 @@ void VideoPlayer::stop()
 #endif
 }
 
-void VideoPlayer::restart()
+void VideoPlayer::restart(Ogre::Real gain)
 {
-    start();
+    start(gain);
 
     if(mIsInited)
     {
         mCinepakDecode->resetCurrentFrame();
+#ifndef NO_OPENAL
+        if (mSound.get())
+        {
+            mSound->stopPlaying();
+        }
+#endif
     }
 }
 
@@ -114,7 +121,7 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
             doUpdateAudio = mSound->getSourceState() == SoundSource::Stopped;
         }
 
-        if (mIsStarted && doUpdateAudio)
+        if (mIsStarted && doUpdateAudio && mGain > 0.0f)
         {
             if (mCinepakDecode->decodeAudioFrame(mLastAudioBufferSeconds))
             {
@@ -123,14 +130,12 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
 
                 if (!mSound.get())
                 {
-                    mSound.reset(new SoundSource(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec()));
-                    mSound->startPlaying();
+                    mSound.reset(new SoundSource());
                 }
-                else
-                {
-                    mSound->updateSamples(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
-                    mSound->startPlaying();
-                }
+
+                mSound->updateSamples(samples, samplesCount, mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
+                mSound->setGain(mGain);
+                mSound->startPlaying();
             }
         }
 #endif

@@ -20,12 +20,10 @@
     #pragma warning(disable:4996)
 #endif
 
-SoundSource::SoundSource(const std::vector<Ogre::uint8> &samples, size_t sampleCount, size_t channels, size_t sampleRate) :
+SoundSource::SoundSource() :
     mSoundBuffer(new sf::SoundBuffer()),
     mSound(new sf::Sound(*mSoundBuffer.get()))
-{
-    updateSamples(samples, sampleCount, channels, sampleRate);
-}
+{}
 
 SoundSource::SoundSource(const std::string& subFolder, const std::string& fileName, const PFLoader& mPFLoaderData) :
     mSoundBuffer(new sf::SoundBuffer()),

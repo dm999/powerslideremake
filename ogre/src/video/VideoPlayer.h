@@ -15,7 +15,7 @@ class VideoPlayer
 {
 public:
 
-    VideoPlayer() : mIsInited(false), mIsStarted(false), mIsFinished(false){}
+    VideoPlayer() : mIsInited(false), mIsStarted(false), mIsFinished(false), mGain(1.0f){}
 
     /**
      * prepare everything to process, use start() to run player
@@ -25,7 +25,7 @@ public:
     /**
      * set internal flags to start (cheap)
      */
-    void start();
+    void start(Ogre::Real gain);
 
     /**
      * set flag to stop (cheap), stop audio
@@ -35,7 +35,7 @@ public:
     /**
      * set internal flags to start, recreate decoder context and empty frame (expensive)
      */
-    void restart();
+    void restart(Ogre::Real gain);
 
     bool isFinished() const {return mIsFinished;}
 
@@ -64,6 +64,7 @@ private:
     Ogre::Real mSecondsPassedAudio;
     Ogre::Real mLastAudioBufferSeconds;
 
+    Ogre::Real mGain;
     CommonIncludes::shared_ptr<SoundSource> mSound;
 };
 

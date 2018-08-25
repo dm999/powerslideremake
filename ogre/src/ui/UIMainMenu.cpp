@@ -323,7 +323,7 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
         if(_key == MyGUI::KeyCode::Space)
         {
             mVideoTitleLabel->hide();
-            mVideoPlayer.restart();
+            mVideoPlayer.restart(mModeContext.getGameState().getSoundsGain());
         }
 #endif
     }
@@ -341,7 +341,7 @@ void UIMainMenu::keyUp(MyGUI::KeyCode _key, wchar_t _char)
             setMainBackgroundMaterial("Test/VideoTexture");
             mLabelCredits->hide();
             mLabelAbout->hide();
-            mVideoPlayer.restart();
+            mVideoPlayer.restart(mModeContext.getGameState().getSoundsGain());
         }
 #endif
     }
@@ -844,7 +844,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             default:
                 mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "apple.avi", "VideoTexture");
         }
-        mVideoPlayer.start();
+        mVideoPlayer.start(mModeContext.getGameState().getSoundsGain());
         break;
 
     case State_Options_Credits_Video:
@@ -856,7 +856,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         }
         setWindowTitle("");
         mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "ratbag.avi", "VideoTexture");
-        mVideoPlayer.start();
+        mVideoPlayer.start(mModeContext.getGameState().getSoundsGain());
         break;
 
     case State_Options_About_Video:
@@ -868,7 +868,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         }
         setWindowTitle("");
         mVideoPlayer.init(mModeContext.getGameState().getPFLoaderGameshell(), "data/gameshell", "intro.avi", "VideoTexture");
-        mVideoPlayer.start();
+        mVideoPlayer.start(mModeContext.getGameState().getSoundsGain());
         break;
 
 
