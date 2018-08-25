@@ -162,6 +162,12 @@ inline VideoInputStream& operator >> (VideoInputStream& is, RiffChunk& riff_chun
     return is;
 }
 
+inline VideoInputStream& operator >> (VideoInputStream& is, WAVEFORMATEX& waveformat)
+{
+    is.read((Ogre::uint8*)(&waveformat), sizeof(WAVEFORMATEX));
+    return is;
+}
+
 inline VideoInputStream& operator >> (VideoInputStream& is, RiffList& riff_list)
 {
     is.read((Ogre::uint8*)(&riff_list), sizeof(riff_list));
@@ -270,7 +276,7 @@ void AVIReadContainer::close()
     m_file_stream->close();
 }
 
-bool AVIReadContainer::parseIndex(Ogre::uint32 index_size, FrameList& in_frame_list, FrameDescription& frame_description)
+bool AVIReadContainer::parseIndex(Ogre::uint32 index_size, FrameList& frameListVideo, FrameList& frameListAudio)
 {
     Ogre::uint64 index_end = m_file_stream->tellg();
     index_end += index_size;
@@ -289,14 +295,21 @@ bool AVIReadContainer::parseIndex(Ogre::uint32 index_size, FrameList& in_frame_l
 
             if (absolute_pos < m_movi_end)
             {
-                frame_description.push_back(idx1.ckid);
-                in_frame_list.push_back(std::make_pair(absolute_pos, idx1.dwChunkLength));
+                //frame_description.push_back(idx1.ckid);
+                frameListVideo.push_back(std::make_pair(absolute_pos, idx1.dwChunkLength));
             }
             else
             {
                 //unsupported case
                 fprintf(stderr, "Frame offset points outside movi section.\n");
             }
+        }
+        else if (idx1.ckid == AUDIOFRAME_CC)
+        {
+            Ogre::uint64 absolute_pos = m_movi_start + idx1.dwChunkOffset;
+
+            //frame_description.push_back(idx1.ckid);
+            frameListAudio.push_back(std::make_pair(absolute_pos, idx1.dwChunkLength));
         }
 
         result = true;
@@ -341,6 +354,25 @@ bool AVIReadContainer::parseStrl(char stream_id, Codecs codec_)
 
             if (strm_hdr.fccType == AUDS_CC && strm_hdr.fccHandler == ADAPCM_CC)//audio stream
             {
+                //m_stream_id = CV_FOURCC(0, 1, 'w', 'b');
+                m_audioPacketSize = strm_hdr.dwSampleSize;
+
+                //parse strf
+                RiffChunk strf;
+                *m_file_stream >> strf;
+                *m_file_stream >> strf;
+
+                //std::string fcc = fourccToString(strf.m_four_cc);
+
+                *m_file_stream >> mWaveFormat;
+                mIsMSPCM = false;
+                if (mWaveFormat.wFormatTag == 17)//AV_CODEC_ID_ADPCM_IMA_WAV
+                {
+                }
+                if (mWaveFormat.wFormatTag == 2)//AV_CODEC_ID_ADPCM_MS
+                {
+                    mIsMSPCM = true;
+                }
                 return true;
             }
         }
@@ -421,7 +453,7 @@ bool AVIReadContainer::parseHdrlList(Codecs codec_)
     return result;
 }
 
-bool AVIReadContainer::parseAviWithFrameList(FrameList& in_frame_list, FrameDescription& frame_description, Codecs codec_)
+bool AVIReadContainer::parseAviWithFrameList(FrameList& frameListVideo, FrameList& frameListAudio, Codecs codec_)
 {
     RiffList hdrl_list;
     *m_file_stream >> hdrl_list;
@@ -477,7 +509,7 @@ bool AVIReadContainer::parseAviWithFrameList(FrameList& in_frame_list, FrameDesc
 
                     if (m_file_stream && index_chunk.m_four_cc == IDX1_CC)
                     {
-                        is_index_found = parseIndex(index_chunk.m_size, in_frame_list, frame_description);
+                        is_index_found = parseIndex(index_chunk.m_size, frameListVideo, frameListAudio);
                         //we are not going anywhere else
                     }
                     else
@@ -507,7 +539,7 @@ bool AVIReadContainer::parseAviWithFrameList(FrameList& in_frame_list, FrameDesc
         printError(hdrl_list, HDRL_CC);
     }
 
-    return in_frame_list.size() > 0;
+    return frameListVideo.size() > 0 && frameListAudio.size() > 0;
 }
 
 std::vector<Ogre::uint8> AVIReadContainer::readFrame(FrameIterator it)
@@ -533,7 +565,7 @@ std::vector<Ogre::uint8> AVIReadContainer::readFrame(FrameIterator it)
     return result;
 }
 
-bool AVIReadContainer::parseRiff(FrameList &m_mjpeg_frames_, FrameDescription& frame_description)
+bool AVIReadContainer::parseRiff(FrameList &frameListVideo, FrameList& frameListAudio)
 {
     bool result = false;
     while (*m_file_stream)
@@ -549,7 +581,7 @@ bool AVIReadContainer::parseRiff(FrameList &m_mjpeg_frames_, FrameDescription& f
             //RiffList::m_size includes fourCC field which we have already read
             next_riff += (riff_list.m_size - 4);
 
-            bool is_parsed = parseAvi(m_mjpeg_frames_, frame_description, CINEPAK);
+            bool is_parsed = parseAviWithFrameList(frameListVideo, frameListAudio, CINEPAK);
             result = result || is_parsed;
             m_file_stream->seekg(next_riff);
         }

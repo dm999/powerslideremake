@@ -57,7 +57,7 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
     {
         if(mIsStarted && doUpdate)
         {
-            if(mCinepakDecode->decodeFrame())
+            if(mCinepakDecode->decodeVideoFrame())
             {
                 std::vector<Ogre::uint8>& frame = mCinepakDecode->getFrame();
                 Ogre::PixelBox pb(mCinepakDecode->getWidth(), mCinepakDecode->getHeight(), 1, Ogre::PF_BYTE_RGB, &frame[0]);

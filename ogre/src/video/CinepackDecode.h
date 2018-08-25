@@ -19,7 +19,7 @@ public:
     CinepackDecode() : mIsInited(false), mCurFrame(0){}
 
     bool init(Ogre::DataStreamPtr stream);
-    bool decodeFrame();
+    bool decodeVideoFrame();
     void clear();
 
     void resetCurrentFrame();
@@ -40,8 +40,8 @@ private:
     void decodeVectors(Ogre::uint16 chunkSize, Ogre::uint8 chunkID, size_t stripIndex);
 
     CommonIncludes::shared_ptr<AVIReadContainer> mAviContainer;
-    FrameList mFrameList;
-    FrameDescription mFrameDescription;
+    FrameList mFrameListVideo;
+    FrameList mFrameListAudio;
 
     std::vector<Ogre::uint8> mFrame;
 

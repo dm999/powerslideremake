@@ -17,6 +17,17 @@ inline int CV_FOURCC(char c1, char c2, char c3, char c4)
     return CV_FOURCC_MACRO(c1, c2, c3, c4);
 }
 
+struct WAVEFORMATEX
+{
+    Ogre::uint16  wFormatTag;
+    Ogre::uint16  nChannels;
+    Ogre::uint32 nSamplesPerSec;
+    Ogre::uint32 nAvgBytesPerSec;
+    Ogre::uint16  nBlockAlign;
+    Ogre::uint16  wBitsPerSample;
+    Ogre::uint16  cbSize;
+};
+
 struct RiffChunk;
 struct RiffList;
 class VideoInputStream;
@@ -32,17 +43,17 @@ public:
     void initStream(Ogre::DataStreamPtr m_file_stream_);
 
     void close();
-    //stores founded frames in m_frame_list which can be accessed via getFrames
-    bool parseAvi(Codecs codec_) { return parseAviWithFrameList(m_frame_list, m_frame_description, codec_); }
     //stores founded frames in in_frame_list. getFrames() would return empty list
-    bool parseAvi(FrameList& in_frame_list, FrameDescription& frame_description, Codecs codec_) { return parseAviWithFrameList(in_frame_list, frame_description, codec_); }
-    size_t getFramesCount() { return m_frame_list.size(); }
-    FrameList& getFrames() { return m_frame_list; }
     unsigned int getWidth() { return m_width; }
     unsigned int getHeight() { return m_height; }
     double getFps() { return m_fps; }
+
+    Ogre::uint32 getAudioPacketSize() const { return m_audioPacketSize; }
+    bool getIsMSPCM() const { return mIsMSPCM; }
+    WAVEFORMATEX getWaveFormat() const { return mWaveFormat; }
+
     std::vector<Ogre::uint8> readFrame(FrameIterator it);
-    bool parseRiff(FrameList &m_mjpeg_frames, FrameDescription& frame_description);
+    bool parseRiff(FrameList &frameListVideo, FrameList& frameListAudio);
 
     static const Ogre::uint32 VIDEOFRAME_CC;
     static const Ogre::uint32 AUDIOFRAME_CC;
@@ -50,11 +61,11 @@ public:
 
 protected:
 
-    bool parseAviWithFrameList(FrameList& in_frame_list, FrameDescription& frame_description, Codecs codec_);
+    bool parseAviWithFrameList(FrameList& frameListVideo, FrameList& frameListAudio, Codecs codec_);
     void skipJunk(RiffChunk& chunk);
     void skipJunk(RiffList& list);
     bool parseHdrlList(Codecs codec_);
-    bool parseIndex(unsigned int index_size, FrameList& in_frame_list, FrameDescription& frame_description);
+    bool parseIndex(unsigned int index_size, FrameList& frameListVideo, FrameList& frameListAudio);
     bool parseStrl(char stream_id, Codecs codec_);
 
     void printError(RiffList& list, unsigned int expected_fourcc);
@@ -65,11 +76,14 @@ protected:
     unsigned int   m_stream_id;
     unsigned long long int   m_movi_start;
     unsigned long long int    m_movi_end;
-    FrameList m_frame_list;
-    FrameDescription m_frame_description;
     unsigned int   m_width;
     unsigned int   m_height;
     double     m_fps;
+
+    Ogre::uint32 m_audioPacketSize;
+    WAVEFORMATEX mWaveFormat;
+    bool mIsMSPCM;
+
     bool       m_is_indx_present;
 };
 

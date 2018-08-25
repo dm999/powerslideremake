@@ -371,49 +371,6 @@ void CinepackDecode::decode(size_t frameIndex, size_t amountOfFrames)
     }
 #endif
 }
-/*
-int main()
-{
-
-    AVIReadContainer container;
-    container.initStream("d:/All_Files/Games/Back_Powerslide/Gameshell/data/gameshell/apple.avi");
-    //container.initStream("d:/All_Files/Games/Back_Powerslide/Gameshell/data/gameshell/intro.avi");
-    //container.initStream("d:/All_Files/Games/Back_Powerslide/Gameshell/data/gameshell/ratbag.avi");
-    FrameList list;
-    FrameDescription frame_description;
-    bool parsed = container.parseRiff(list, frame_description);
-
-    //FILE *fA = fopen("audio.dat", "wb");
-
-    CinepakContext cinepakContext;
-    std::vector<char> frame(container.getWidth() * container.getHeight() * 3, 0);//rgb
-
-    for (size_t qq = 0; qq < frame_description.size(); ++qq)
-    {
-
-        if (frame_description[qq] == AVIReadContainer::AUDIOFRAME_CC)
-        {
-            std::vector<char> data = container.readFrame(list.begin() + qq);
-            //fwrite(&data[0], 1, data.size(), fA);
-            printf("audio %d\n", data.size());
-        }
-        if (frame_description[qq] == AVIReadContainer::VIDEOFRAME_CC)
-        {
-            std::vector<char> data = container.readFrame(list.begin() + qq);
-            cinepakContext.setData(reinterpret_cast<unsigned char *>(&data[0]));
-            printf("video %d\n", data.size());
-
-            //https://web.archive.org/web/20070205155111/http://www.csse.monash.edu.au:80/~timf/videocodec/cinepak_decode.c
-            //https://multimedia.cx/mirror/cinepak.txt
-
-            decode(cinepakContext, qq, frame_description.size(), frame);
-        }
-    }
-
-    //fclose(fA);
-
-    return 0;
-}*/
 
 bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 {
@@ -423,21 +380,21 @@ bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 
     mAviContainer->initStream(stream);
 
-    mIsInited = mAviContainer->parseRiff(mFrameList, mFrameDescription);
+    mIsInited = mAviContainer->parseRiff(mFrameListVideo, mFrameListAudio);
 
     resetCurrentFrame();
 
     return mIsInited;
 }
 
-bool CinepackDecode::decodeFrame()
+bool CinepackDecode::decodeVideoFrame()
 {
     bool ret = false;
-    if(mIsInited && mFrameList.size() > mCurFrame)
+    if(mIsInited && mFrameListVideo.size() > mCurFrame)
     {
-        std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameList.begin() + mCurFrame);
+        std::vector<Ogre::uint8> data = mAviContainer->readFrame(mFrameListVideo.begin() + mCurFrame);
         mCinepakContext->setData(&data[0]);
-        decode(mCurFrame, mFrameDescription.size());
+        decode(mCurFrame, mFrameListVideo.size());
 
         ++mCurFrame;
         ret = true;
@@ -450,8 +407,8 @@ void CinepackDecode::clear()
 {
     mIsInited = false;
     mAviContainer.reset();
-    mFrameList.clear();
-    mFrameDescription.clear();
+    mFrameListVideo.clear();
+    mFrameListAudio.clear();
     mCinepakContext.reset();
     mFrame.clear();
 }
