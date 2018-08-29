@@ -123,7 +123,20 @@ void VideoPlayer::frameStarted(const Ogre::FrameEvent &evt)
                     mSound.reset(new SoundSource());
                 }
 
-                mSound->updateSamples(samples, samples.size(), mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
+                if (mCinepakDecode->getAudioChannels() == 2)
+                {
+                    mSound->updateSamples(samples, samples.size(), mCinepakDecode->getAudioChannels(), mCinepakDecode->getAudioSamplesPerSec());
+                }
+                else
+                {
+                    std::vector<Ogre::int16> samplesStereo(samples.size() * 2);
+                    for (size_t q = 0; q < samples.size(); ++q)
+                    {
+                        samplesStereo[q * 2 + 0] = samples[q];
+                        samplesStereo[q * 2 + 1] = samples[q];
+                    }
+                    mSound->updateSamples(samplesStereo, samplesStereo.size(), 2, mCinepakDecode->getAudioSamplesPerSec());
+                }
                 mSound->setGain(mGain);
                 mSound->startPlaying();
             }
