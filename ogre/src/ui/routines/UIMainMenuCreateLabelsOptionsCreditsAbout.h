@@ -31,7 +31,8 @@ void UIMainMenuLabels::createLabelsOptionsCreditsAbout(const Ogre::Matrix4& scre
                 "More thanks to: Mark Minarelli; Mark Standen; Mark Robertson, Mark Altschwager; Mike Burfield; Milt Barlow; Ngapartji; Paul Wyk; Peter Stobart; Rising Sun Pictures: Wayne Lewis, Gail Fuller, Tony Clark, Steve Roberts; SGI: Dave Savage, John Cranwell, Jon Noonan; Simon Cox; The Business Centre: Susan Andrews, Kevin O'Callaghan; The Digital Precinct, John Hunt; Xenotech, Bob Baker, Phil Harman.\n\n"\
                 "Thanks to all the people at GT who helped make this project a reality: Aaron Younger; Alan Lewis; Cecile Borzakian; Chris Mollo; Doug Dyer; Edward Fong; Eric Pouzet; Gavin Rundle; Graeme Boxall; Harry Rubin; Ilja Doert; Julian White; Martin Good; Mary Gerardi; Matt Broughton; Matt Woodley; Max Taylor; Mike Calleja; Mike Ryder; Paul Fox; Reinhard Nuernberg; Shari Bernstein; Sharon Simmons, Tony Kee; Jesse Smith and Absolute Quality for their rigorous QA.\n\n"\
                 "Extra special thanks to our partners who supported the project: Kate Soininen, Natasha Siemelink, Annette Plant, Daniela Catalano, Francesca Pinneri, Lani Davidson.\n\n"\
-                "And thanks to everyone else who helped in our quest over the last four years.";
+                "And thanks to everyone else who helped in our quest over the last four years.\n\n"\
+                "Remake: Dmitry Polubotko, Alexey Gruzdev";
 
             //fit to height
             std::string descAdj;
