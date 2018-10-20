@@ -20,6 +20,9 @@ SoundsProcesser::SoundsProcesser() :
 {
     mSurfaceSoundGain.addPoint(0.0f, 0.0f);
     mSurfaceSoundGain.addPoint(100.0f, 1.0f);
+
+    mSurfaceSoundPitch.addPoint(0.0f, 0.0f);
+    mSurfaceSoundPitch.addPoint(200.0f, 0.5f);
 }
 
 SoundsProcesser::~SoundsProcesser()
@@ -69,6 +72,7 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
         std::string fileName = "8bsurf" + Conversions::DMToString(q) + ".its";
         mSurface[q].reset(new SoundSource("data/sfx/surfaces", fileName, mPFLoaderData));
         mSurface[q]->setLooping(true);
+        //mSurface[q]->setPitch(0.5f);
         mSurface[q]->setRelativeToListener(true);
 
         if(q < (mSurfacesCount - 1))
@@ -80,6 +84,11 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
 
         }
     }
+
+    mRoll.reset(new SoundSource("data/sfx/surfaces", "8broll0.its", mPFLoaderData));
+    mRoll->setLooping(true);
+    mRoll->setPitch(0.5f);
+    mRoll->setRelativeToListener(true);
 
     mBurn.reset(new SoundSource("data/sfx/misc", "gun.its", mPFLoaderData));
     mBurn->setRelativeToListener(true);
@@ -113,6 +122,8 @@ void SoundsProcesser::deinitSounds()
         mSurface[q].reset();
         mSurfaceCrash[q].reset();
     }
+
+    mRoll.reset();
 
     mBurn.reset();
     mBomb.reset();
@@ -178,6 +189,11 @@ void SoundsProcesser::stopSoundSurfaces()
         {
             mSurfaceCrash[q]->stopPlaying();
         }
+    }
+
+    if (mRoll.get() && mRoll->getSourceState() == SoundSource::Playing)
+    {
+        mRoll->stopPlaying();
     }
 }
 
@@ -287,26 +303,56 @@ void SoundsProcesser::playBeforeStart3()
     }
 }
 
-void SoundsProcesser::playSurface(size_t surfaceNumber, Ogre::Real lateralVel)
+void SoundsProcesser::playSurface(size_t surfaceNumber, Ogre::Real lateralVel, Ogre::Real speedometerVelocity)
 {
     size_t remappedSurfaceNumber = mTerrainData[surfaceNumber].mSoundIndex;
 
-    if(remappedSurfaceNumber < mSurfacesCount)
+    bool isRoll = mTerrainData[surfaceNumber].mSoundIndex3 == 0;
+
+    if (mRoll.get() && mRoll->getSourceState() == SoundSource::Playing)
     {
-        if(mPrevSurface != remappedSurfaceNumber && mSurface[mPrevSurface].get() && mSurface[mPrevSurface]->getSourceState() == SoundSource::Playing)
-        {
-            mSurface[mPrevSurface]->stopPlaying();
-        }
-
-        mPrevSurface = remappedSurfaceNumber;
-
-        if(mSurface[remappedSurfaceNumber].get() && mSurface[remappedSurfaceNumber]->getSourceState() != SoundSource::Playing)
-        {
-            mSurface[remappedSurfaceNumber]->startPlaying();
-        }
-
-        mSurface[remappedSurfaceNumber]->setGain(mSurfaceSoundGain.getVal(lateralVel) * mMasterGain);
+        mRoll->stopPlaying();
     }
+
+    if (isRoll)
+    {
+        playRoll(lateralVel, speedometerVelocity);
+    }
+    else
+    {
+        if (remappedSurfaceNumber < mSurfacesCount)
+        {
+            if (mPrevSurface != remappedSurfaceNumber && mSurface[mPrevSurface].get() && mSurface[mPrevSurface]->getSourceState() == SoundSource::Playing)
+            {
+                mSurface[mPrevSurface]->stopPlaying();
+            }
+
+            mPrevSurface = remappedSurfaceNumber;
+
+            if (mSurface[remappedSurfaceNumber].get() && mSurface[remappedSurfaceNumber]->getSourceState() != SoundSource::Playing)
+            {
+                mSurface[remappedSurfaceNumber]->startPlaying();
+            }
+
+            mSurface[remappedSurfaceNumber]->setGain(mSurfaceSoundGain.getVal(lateralVel) * mMasterGain);
+        }
+    }
+}
+
+void SoundsProcesser::playRoll(Ogre::Real lateralVel, Ogre::Real speedometerVelocity)
+{
+    if (mSurface[mPrevSurface].get() && mSurface[mPrevSurface]->getSourceState() == SoundSource::Playing)
+    {
+        mSurface[mPrevSurface]->stopPlaying();
+    }
+
+    if (mRoll.get() && mRoll->getSourceState() != SoundSource::Playing)
+    {
+        mRoll->startPlaying();
+    }
+
+    mRoll->setPitch(mSurfaceSoundPitch.getVal(speedometerVelocity));
+    mRoll->setGain(mSurfaceSoundGain.getVal(lateralVel) * mMasterGain);
 }
 
 void SoundsProcesser::playSurfaceCrash(size_t surfaceNumber)
@@ -408,6 +454,9 @@ void SoundsProcesser::setVolume(float gain)
             mSurfaceCrash[q]->setGain(mMasterGain);
         }
     }
+
+    if (mRoll.get())
+        mRoll->setGain(mMasterGain);
 
     if(mBurn.get())
         mBurn->setGain(mMasterGain);

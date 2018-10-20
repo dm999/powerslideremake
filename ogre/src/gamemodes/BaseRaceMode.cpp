@@ -1014,7 +1014,7 @@ void BaseRaceMode::processSounds()
                     Ogre::Math::Abs(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getAlignedVelocitySpeedometer())
                     );
                 
-                mModeContext.mSoundsProcesser.playSurface(backLWheel, velDiff);
+                mModeContext.mSoundsProcesser.playSurface(backLWheel, velDiff, Ogre::Math::Abs(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getAlignedVelocitySpeedometer()));
             }
         }
     }

@@ -49,7 +49,7 @@ public:
     void playBeforeStart2();
     void playBeforeStart3();
 
-    void playSurface(size_t surfaceNumber, Ogre::Real lateralVel);
+    void playSurface(size_t surfaceNumber, Ogre::Real lateralVel, Ogre::Real speedometerVelocity);
     void playSurfaceCrash(size_t surfaceNumber);
 
     void playCheatBurn();
@@ -66,6 +66,8 @@ private:
 
     void resetInternalStatus();
 
+    void playRoll(Ogre::Real lateralVel, Ogre::Real speedometerVelocity);
+
     //OpenALState mState;
 
     CommonIncludes::shared_ptr<SoundSource> mCrash1;
@@ -74,12 +76,14 @@ private:
     static const int mSurfacesCount = 7;
     CommonIncludes::shared_ptr<SoundSource> mSurface[mSurfacesCount];
     CommonIncludes::shared_ptr<SoundSource> mSurfaceCrash[mSurfacesCount];
+    CommonIncludes::shared_ptr<SoundSource> mRoll;
 
     std::vector<TerrainData> mTerrainData;
 
     size_t mPrevSurface;
 
     LinearController<float> mSurfaceSoundGain;
+    LinearController<float> mSurfaceSoundPitch;
 
 
     CommonIncludes::shared_ptr<SoundSource> mBeforeStart1;
