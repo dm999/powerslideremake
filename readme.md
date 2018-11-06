@@ -2,7 +2,7 @@
 
 ### Goal ###
 
-"Powerslide remake" project remakes main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non limited 3D environment, advanced AI based on neural network, multiplayer gaming. It has been implemented using programmable rendering pipeline and crossplatform (windows, linux, android) ready.
+"Powerslide remake" project remakes main features of video game [Powerslide](https://en.wikipedia.org/wiki/Powerslide_(video_game)) - arcade racing in non-limited 3D environment, with advanced AI based on neural network and multiplayer gaming. It has been implemented using programmable rendering pipeline and is cross-platform (windows, linux, android).
 
 ### Build ###
 To build the project you need:  
@@ -27,18 +27,18 @@ To build project you need:
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
 - [OpenCV](https://opencv.org/) AVIReadContainer class source code used to parse AVI header and extract encoded frame  
-- [Cinepack codec](https://multimedia.cx/mirror/cinepak.txt) explanation of Cinepack decoding by Dr. Tim Ferguson used  
+- [Cinepack codec](https://multimedia.cx/mirror/cinepak.txt) explanation of Cinepack decoding by Dr. Tim Ferguson  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
 ### Run ###
-To run builded project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
-You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put them in the folder with builded application.  
+To run the built project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
+You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put them in the folder with the built application.  
 **Important**: integrated graphics are not supported, please use discrete video card on PC.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
 
 ### Music ###
-There are sounds/music support available in project. To enable sounds/music project should be built with PowerslideRemake_OPENAL.
+There is sounds/music support available in project. To enable sounds/music the project should be built with PowerslideRemake_OPENAL.
 Put original CD tracks compressed as .ogg (vorbis) files into the same directory as .pf files. Name convention for files:  
 track_0.ogg - main theme  
 track_2-8.ogg - other tracks {dam track, sand blaster, speedway, devil`s elbow, mineshafted, freezer, urban brawl}  
@@ -46,15 +46,15 @@ File track_1.ogg is not used as well as track_9.ogg (extra track on original CD)
 
 ### Multiplayer ###
 "Powerslide remake" supports multiplayer game through web server. 
-To run multiplayer game web server should be deployed on mostly powerfull PC of a local network or on a global virtual/physical server with public IP adress.
+To run multiplayer game web server should be deployed on most powerful PC of a local network or on a global virtual/physical server with public IP address.
 Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)).  
 To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted.  
-Ports are being used by multiplayer client: TCP:8800(outbound) - lobby, UDP:8800 (outbound) - list of rooms, 8700 (outbound) - race data.
+The following ports are used by multiplayer client: TCP:8800(outbound) - lobby, UDP:8800 (outbound) - list of rooms, 8700 (outbound) - race data.
 Both TCP & UDP inbound ports are randomly set.  
-Before start multiplayer game make sure there are no limitations in firewall for executable (PowerslideRemake.exe) to create network connections and there are no ports being blacklisted in router/proxy.  
-In case of issues there are several actions could be performed:  
+Before starting a multiplayer game make sure there are no limitations in firewall for executable files (PowerslideRemake.exe) to create network connections and there are no ports being blacklisted in router/proxy.  
+In case of issues there are several actions that could be performed:  
 1. Ping server and make sure respond is correct.  
-2. Run client and try to create room. Make sure Lobby UI has been appeared. After UI has been drawn open command line and list opened ports for application (windows: run cmd as administrator and execute: netstat -bna | find "PowerslideRemake") - there should be 1 connection listed (TCP).  
+2. Run client and try to create room. Make sure Lobby UI has appeared. After UI has been drawn, open command line and list opened ports for application (windows: run cmd as administrator and execute: netstat -bna | find "PowerslideRemake") - there should be 1 connection listed (TCP).  
 3. Invite your friend into created room and start race. After race has been started list opened ports again - there should be 2 connections opened (TCP, UDP).  
 
 ### License ###
