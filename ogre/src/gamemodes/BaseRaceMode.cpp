@@ -608,19 +608,83 @@ void BaseRaceMode::initMisc()
     mModeContext.mGameState.resetBeforeStartTimer();
 
     //arrow
-    Ogre::Entity * arrowEntity = mModelsPool.getArrow();
-    mModeContext.mGameState.setArrowNode(mSceneMgr->createSceneNode(arrowEntity->getName()));
-    mModeContext.mGameState.getArrowNode()->attachObject(arrowEntity);
-    mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNode());
-    mModeContext.mGameState.getArrowNode()->setPosition(-0.75f, 0.55f, -1.0f);
-    mModeContext.mGameState.getArrowNode()->setScale(0.20f, 0.20f, 0.20f);
-    if( !mModeContext.mGameState.isStuntTrack()         &&
-        !mModeContext.mGameState.isFoxnhound1Track()    &&
-        !mModeContext.mGameState.isFoxnhound2Track()
-        )
-        mModeContext.mGameState.getArrowNode()->setVisible(true);
-    else
-        mModeContext.mGameState.getArrowNode()->setVisible(false);
+    {
+        Ogre::Entity * arrowEntity = mModelsPool.getArrow();
+        mModeContext.mGameState.setArrowNode(mSceneMgr->createSceneNode(arrowEntity->getName()));
+        mModeContext.mGameState.getArrowNode()->attachObject(arrowEntity);
+        mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNode());
+        mModeContext.mGameState.getArrowNode()->setPosition(-0.75f, 0.55f, -1.0f);
+        mModeContext.mGameState.getArrowNode()->setScale(0.20f, 0.20f, 0.20f);
+        if (!mModeContext.mGameState.isStuntTrack() &&
+            !mModeContext.mGameState.isFoxnhound1Track() &&
+            !mModeContext.mGameState.isFoxnhound2Track()
+            )
+            mModeContext.mGameState.getArrowNode()->setVisible(true);
+        else
+            mModeContext.mGameState.getArrowNode()->setVisible(false);
+    }
+
+
+#if defined(__ANDROID__)
+    //arrow helpers
+    {
+        {
+            Ogre::Entity * arrowEntity = mModelsPool.getArrow();
+            Ogre::MeshPtr msh = arrowEntity->getMesh();
+            Ogre::MeshPtr cloned = msh->clone(msh->getName() + "_helperLeft", TEMP_RESOURCE_GROUP_NAME);
+            Ogre::Entity * clonedArrow = mSceneMgr->createEntity(msh->getName() + "_helperLeft", msh->getName() + "_helperLeft", TEMP_RESOURCE_GROUP_NAME);
+            clonedArrow->setCastShadows(false);
+            mModeContext.mGameState.setArrowNodeHelperLeft(mSceneMgr->createSceneNode(clonedArrow->getName()));
+            mModeContext.mGameState.getArrowNodeHelperLeft()->attachObject(clonedArrow);
+            mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNodeHelperLeft());
+            Ogre::Quaternion rot;
+            Ogre::Quaternion rotA;
+            rotA.FromAngleAxis(Ogre::Degree(-90.0f), Ogre::Vector3::UNIT_Z);
+            rot.FromAngleAxis(Ogre::Degree(90.0f), Ogre::Vector3::UNIT_Y);
+            rot = rot * rotA;
+            mModeContext.mGameState.getArrowNodeHelperLeft()->setOrientation(rot);
+            mModeContext.mGameState.getArrowNodeHelperLeft()->setPosition(-0.75f, -0.2f, -1.0f);
+            mModeContext.mGameState.getArrowNodeHelperLeft()->setScale(0.20f, 0.20f, 0.20f);
+            mModeContext.mGameState.getArrowNodeHelperLeft()->setVisible(true);
+        }
+        {
+            Ogre::Entity * arrowEntity = mModelsPool.getArrow();
+            Ogre::MeshPtr msh = arrowEntity->getMesh();
+            Ogre::MeshPtr cloned = msh->clone(msh->getName() + "_helperRight", TEMP_RESOURCE_GROUP_NAME);
+            Ogre::Entity * clonedArrow = mSceneMgr->createEntity(msh->getName() + "_helperRight", msh->getName() + "_helperLeft", TEMP_RESOURCE_GROUP_NAME);
+            clonedArrow->setCastShadows(false);
+            mModeContext.mGameState.setArrowNodeHelperRight(mSceneMgr->createSceneNode(clonedArrow->getName()));
+            mModeContext.mGameState.getArrowNodeHelperRight()->attachObject(clonedArrow);
+            mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNodeHelperRight());
+            Ogre::Quaternion rot;
+            Ogre::Quaternion rotA;
+            rotA.FromAngleAxis(Ogre::Degree(-90.0f), Ogre::Vector3::UNIT_Z);
+            rot.FromAngleAxis(Ogre::Degree(-90.0f), Ogre::Vector3::UNIT_Y);
+            rot = rot * rotA;
+            mModeContext.mGameState.getArrowNodeHelperRight()->setOrientation(rot);
+            mModeContext.mGameState.getArrowNodeHelperRight()->setPosition(0.75f, -0.2f, -1.0f);
+            mModeContext.mGameState.getArrowNodeHelperRight()->setScale(0.20f, 0.20f, 0.20f);
+            mModeContext.mGameState.getArrowNodeHelperRight()->setVisible(true);
+        }
+        {
+            Ogre::Entity * arrowEntity = mModelsPool.getArrow();
+            Ogre::MeshPtr msh = arrowEntity->getMesh();
+            Ogre::MeshPtr cloned = msh->clone(msh->getName() + "_helperBottom", TEMP_RESOURCE_GROUP_NAME);
+            Ogre::Entity * clonedArrow = mSceneMgr->createEntity(msh->getName() + "_helperBottom", msh->getName() + "_helperLeft", TEMP_RESOURCE_GROUP_NAME);
+            clonedArrow->setCastShadows(false);
+            mModeContext.mGameState.setArrowNodeHelperBottom(mSceneMgr->createSceneNode(clonedArrow->getName()));
+            mModeContext.mGameState.getArrowNodeHelperBottom()->attachObject(clonedArrow);
+            mModeContext.mTrayMgr->getTraysLayer()->add3D(mModeContext.mGameState.getArrowNodeHelperBottom());
+            Ogre::Quaternion rot;
+            rot.FromAngleAxis(Ogre::Degree(-90.0f), Ogre::Vector3::UNIT_X);
+            rot = rot;
+            mModeContext.mGameState.getArrowNodeHelperBottom()->setOrientation(rot);
+            mModeContext.mGameState.getArrowNodeHelperBottom()->setPosition(0.0f, -0.75f, -1.0f);
+            mModeContext.mGameState.getArrowNodeHelperBottom()->setScale(0.20f, 0.20f, 0.20f);
+            mModeContext.mGameState.getArrowNodeHelperBottom()->setVisible(true);
+        }
+    }
+#endif
 
     mIsGlobalReset = false;
 
@@ -701,6 +765,17 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mModeContext.mGameState.setRaceStarted(true);
         }
     }
+
+#if defined(__ANDROID__)
+    //arrow helpers
+    if (mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f)
+    {
+        mUIRace->hideAllHelpers();
+        mModeContext.mGameState.getArrowNodeHelperLeft()->setVisible(false);
+        mModeContext.mGameState.getArrowNodeHelperRight()->setVisible(false);
+        mModeContext.mGameState.getArrowNodeHelperBottom()->setVisible(false);
+    }
+#endif
 
     mModeContext.mInputHandler->capture();
 

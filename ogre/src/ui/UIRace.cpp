@@ -815,6 +815,48 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
 
             trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mMiscTextArray[q]);
         }
+        
+#if defined(__ANDROID__)
+        //arrow helpers text
+        {/*
+            {
+                mArrowHelperLeft = createTextArea("MiscTextBoxHelperLeft", miscTextWidth, miscTextHeight, viewportWidth * 0.1f, viewportHeight * 0.42f);
+                mArrowHelperLeft->setCaption("TURN\n\n\nLEFT");
+                mArrowHelperLeft->setCharHeight(30.0f * viewportHeight / 1024.0f);
+                mArrowHelperLeft->setSpaceWidth(9.0f);
+                mArrowHelperLeft->setAlignment(Ogre::TextAreaOverlayElement::Center);
+                mArrowHelperLeft->setFontName("SdkTrays/Caption");
+                mArrowHelperLeft->setColour(Ogre::ColourValue(1.0f, 0.0f, 0.0f));
+                mArrowHelperLeft->show();
+
+                trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mArrowHelperLeft);
+            }
+            {
+                mArrowHelperRight = createTextArea("MiscTextBoxHelperRight", miscTextWidth, miscTextHeight, viewportWidth * 0.9f, viewportHeight * 0.42f);
+                mArrowHelperRight->setCaption("TURN\n\n\nRIGHT");
+                mArrowHelperRight->setCharHeight(30.0f * viewportHeight / 1024.0f);
+                mArrowHelperRight->setSpaceWidth(9.0f);
+                mArrowHelperRight->setAlignment(Ogre::TextAreaOverlayElement::Center);
+                mArrowHelperRight->setFontName("SdkTrays/Caption");
+                mArrowHelperRight->setColour(Ogre::ColourValue(1.0f, 0.0f, 0.0f));
+                mArrowHelperRight->show();
+
+                trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mArrowHelperRight);
+            }*/
+            {
+                mArrowHelperBottom = createTextArea("MiscTextBoxHelperBottom", miscTextWidth, miscTextHeight, viewportWidth * 0.5f, viewportHeight * 0.73f);
+                mArrowHelperBottom->setCaption("B\nR\nE\nA\nK\nS");
+                mArrowHelperBottom->setCharHeight(20.0f * viewportHeight / 1024.0f);
+                mArrowHelperBottom->setSpaceWidth(9.0f);
+                mArrowHelperBottom->setAlignment(Ogre::TextAreaOverlayElement::Center);
+                mArrowHelperBottom->setFontName("SdkTrays/Caption");
+                mArrowHelperBottom->setColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
+                mArrowHelperBottom->show();
+
+                trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mArrowHelperBottom);
+            }
+        }
+#endif
     }
 
     //android buttons
@@ -1217,6 +1259,15 @@ void UIRace::hideAllStart()
     mBeforeStartPanelGoC->hide();
     mBeforeStartPanelGoR->hide();
 }
+
+#if defined(__ANDROID__)
+void UIRace::hideAllHelpers()
+{
+    //mArrowHelperLeft->hide();
+    //mArrowHelperRight->hide();
+    mArrowHelperBottom->hide();
+}
+#endif
 
 void UIRace::mousePressed(const Ogre::Vector2& pos)
 {

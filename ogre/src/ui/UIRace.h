@@ -28,6 +28,9 @@ public:
     void showBeforeStart2();
     void showBeforeStart3();
     void hideAllStart();
+#if defined(__ANDROID__)
+    void hideAllHelpers();
+#endif
 
     void mousePressed(const Ogre::Vector2& pos);
     void mouseReleased(const Ogre::Vector2& pos);
@@ -164,6 +167,12 @@ private:
     Ogre::TextAreaOverlayElement * mMiscTextRight;
     static const int mMiscTextArraySize = 5;
     Ogre::TextAreaOverlayElement * mMiscTextArray[mMiscTextArraySize];
+
+#if defined(__ANDROID__)
+    //Ogre::TextAreaOverlayElement * mArrowHelperLeft;
+    //Ogre::TextAreaOverlayElement * mArrowHelperRight;
+    Ogre::TextAreaOverlayElement * mArrowHelperBottom;
+#endif
 
     Ogre::PanelOverlayElement* mFinishSignPanel;
 

@@ -156,6 +156,15 @@ public:
     Ogre::SceneNode* getArrowNode(){return mArrowNode;}
     void setArrowNode(Ogre::SceneNode* node){mArrowNode = node;}
 
+#if defined(__ANDROID__)
+    Ogre::SceneNode* getArrowNodeHelperLeft() { return mArrowNodeLeft; }
+    void setArrowNodeHelperLeft(Ogre::SceneNode* node) { mArrowNodeLeft = node; }
+    Ogre::SceneNode* getArrowNodeHelperRight() { return mArrowNodeRight; }
+    void setArrowNodeHelperRight(Ogre::SceneNode* node) { mArrowNodeRight = node; }
+    Ogre::SceneNode* getArrowNodeHelperBottom() { return mArrowNodeBottom; }
+    void setArrowNodeHelperBottom(Ogre::SceneNode* node) { mArrowNodeBottom = node; }
+#endif
+
     Ogre::ColourValue getBackgroundColor()const{return mBackgroundColor;}
 
     Ogre::Real getGamma() const;
@@ -296,6 +305,12 @@ private:
     Ogre::Timer mTimerAfterFinish;
 
     Ogre::SceneNode* mArrowNode;
+
+#if defined(__ANDROID__)
+    Ogre::SceneNode* mArrowNodeLeft;
+    Ogre::SceneNode* mArrowNodeRight;
+    Ogre::SceneNode* mArrowNodeBottom;
+#endif
 
     Ogre::ColourValue mBackgroundColor;
     Ogre::Real mGamma;
