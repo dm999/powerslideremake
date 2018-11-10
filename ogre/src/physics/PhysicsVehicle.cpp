@@ -538,6 +538,29 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
         --mTurnOverValue;
 }
 
+void PhysicsVehicle::repositionToStart()
+{
+    mVehicleSetup = mInitialVehicleSetup;
+
+    mCOGShift = Ogre::Vector3::ZERO;
+    for (int q = 0; q < mShiftValuesAmount; ++q)
+        mCOGShiftValues[q] = Ogre::Vector3::ZERO;
+    mCOGShiftIndex = 0;
+
+    mImpulseLinear = Ogre::Vector3::ZERO;
+    mImpulseLinearInc = Ogre::Vector3::ZERO;
+    mImpulseRot = Ogre::Vector3::ZERO;
+    mImpulseRotPrev = Ogre::Vector3::ZERO;
+    mImpulseRotInc = Ogre::Vector3::ZERO;
+
+    mPhysicsWheels.init(mInitialVehicleSetup);
+    mPhysicsRoofs.init();
+    mPhysicsBody.init();
+
+    mNitroCounter = 0;
+    mIsNitro = false;
+}
+
 bool PhysicsVehicle::fallOffRestore()
 {
     bool ret = false;
@@ -552,26 +575,7 @@ bool PhysicsVehicle::fallOffRestore()
         boundingBox.min.z - margin > -mVehicleSetup.mCarGlobalPos.z     //original data is left hand
         )
     {
-        mVehicleSetup = mInitialVehicleSetup;
-
-        mCOGShift = Ogre::Vector3::ZERO;
-        for(int q = 0; q < mShiftValuesAmount; ++q)
-            mCOGShiftValues[q] = Ogre::Vector3::ZERO;
-        mCOGShiftIndex = 0;
-
-        mImpulseLinear = Ogre::Vector3::ZERO;
-        mImpulseLinearInc = Ogre::Vector3::ZERO;
-        mImpulseRot = Ogre::Vector3::ZERO;
-        mImpulseRotPrev = Ogre::Vector3::ZERO;
-        mImpulseRotInc = Ogre::Vector3::ZERO;
-
-        mPhysicsWheels.init(mInitialVehicleSetup);
-        mPhysicsRoofs.init();
-        mPhysicsBody.init();
-
-        mNitroCounter = 0;
-        mIsNitro = false;
-
+        repositionToStart();
         ret = true;
     }
 

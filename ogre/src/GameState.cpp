@@ -18,6 +18,7 @@ GameState::GameState() :
     mIsSpeedwayTrack(false),
     mIsMineshaftedTrack(false),
     mIsStuntTrack(false),
+    mIsLugeTrack(false),
     mIsFoxnhound1Track(false),
     mIsFoxnhound2Track(false),
     mLapsCount(3),
@@ -276,6 +277,7 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     mIsSpeedwayTrack = false;
     mIsMineshaftedTrack = false;
     mIsStuntTrack = false;
+    mIsLugeTrack = false;
     mIsFoxnhound1Track = false;
     mIsFoxnhound2Track = false;
 
@@ -290,6 +292,9 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
 
     if(mTrackName == "stunt track")
         mIsStuntTrack = true;
+
+    if (mTrackName == "luge track")
+        mIsLugeTrack = true;
 
     if(mTrackName == "Foxnhound1 track")
         mIsFoxnhound1Track = true;

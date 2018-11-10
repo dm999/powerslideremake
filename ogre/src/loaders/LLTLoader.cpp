@@ -190,6 +190,12 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                 isCheckpoints[q] = track[nextIndex].isCheckpoint;
             }
 
+            if (gameState.isLugeTrack())
+            {
+                std::fill(isCheckpoints.begin(), isCheckpoints.end(), false);
+                isCheckpoints[133] = true;
+            }
+
 
             gameState.setLLTObject(NULL);
 
@@ -295,19 +301,19 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
 
             for(int w = 0; w < GameState::mAIMax; ++w)
             {
-                gameState.getAICar(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
+                gameState.getAICar(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, gameState.isLugeTrack(), isDebugLLT);
             }
             
             for(int w = 0; w < gameState.getMaxMultiplayerAI(); ++w)
             {
-                gameState.getMultiplayerCarAI(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
+                gameState.getMultiplayerCarAI(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, gameState.isLugeTrack(), isDebugLLT);
             }
 
             for(int w = 0; w < gameState.getMaxMultiplayerHumans(); ++w)
             {
-                gameState.getMultiplayerCarHuman(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
+                gameState.getMultiplayerCarHuman(w).getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, gameState.isLugeTrack(), isDebugLLT);
             }
-            gameState.getPlayerCar().getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, isDebugLLT);
+            gameState.getPlayerCar().getLapUtils().setData(positions, dirs, weights, isCheckpoints, sceneMgr, gameState.isLugeTrack(), isDebugLLT);
         }
 
         fileToLoad->close();

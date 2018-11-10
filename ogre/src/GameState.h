@@ -53,6 +53,7 @@ public:
     bool isSpeedwayTrack() const {return mIsSpeedwayTrack;}
     bool isMineshaftedTrack() const {return mIsMineshaftedTrack;}
     bool isStuntTrack() const {return mIsStuntTrack;}
+    bool isLugeTrack() const { return mIsLugeTrack; }
     bool isFoxnhound1Track() const {return mIsFoxnhound1Track;}
     bool isFoxnhound2Track() const {return mIsFoxnhound2Track;}
 
@@ -254,6 +255,7 @@ private:
     bool mIsSpeedwayTrack;
     bool mIsMineshaftedTrack;
     bool mIsStuntTrack;
+    bool mIsLugeTrack;
     bool mIsFoxnhound1Track;
     bool mIsFoxnhound2Track;
     size_t mLapsCount;

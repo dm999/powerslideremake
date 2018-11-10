@@ -85,6 +85,8 @@ public:
 
     const InitialVehicleSetup& getVehicleSetup()const{ return mVehicleSetup;}
 
+    void repositionToStart();
+
     static Ogre::Vector3 findTangent(const Ogre::Vector3& normal, const Ogre::Vector3& input);
     static Ogre::Vector2 findTexCoordinates(const Ogre::Vector3& normal, 
         const Ogre::Vector3& point,

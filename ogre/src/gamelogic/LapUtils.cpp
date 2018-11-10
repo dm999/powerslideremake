@@ -10,6 +10,7 @@ LapUtils::LapUtils() :
     mIsLapPosInited(false),
     mLapPosition(0.0f),
     mCurrentLap(0),
+    mIsLuge(false),
     mEvents(NULL)
 {
 }
@@ -19,6 +20,7 @@ void LapUtils::setData( const std::vector<Ogre::Vector3>& pos,
                         const std::vector<Ogre::Real>& weights, 
                         const std::vector<bool>& ischecks,
                         Ogre::SceneManager* sceneMgr,
+                        bool isLuge,
                         bool isDebug)
 {
     mIsDebugLLT = isDebug;
@@ -27,6 +29,7 @@ void LapUtils::setData( const std::vector<Ogre::Vector3>& pos,
     mDirs = dirs;
     mWeights = weights;
     mIsCheckpoints = ischecks;
+    mIsLuge = isLuge;
 
     mSpline.clear();
 
@@ -179,6 +182,15 @@ size_t LapUtils::findLapPosition(const Ogre::Vector3& carPos)
 
 void LapUtils::calcLapTime(size_t minIndex, bool isSpeedCheatsUsed)
 {
+    size_t referenceIndex = 0;
+    size_t referenceIndexNewLap = 0;
+
+    if (mIsLuge)
+    {
+        referenceIndex = 133;
+        referenceIndexNewLap = 1;
+    }
+
     mLapTime = mLapTimer.getMilliseconds() / 1000.0f;
 
     bool previousPassed = true;
@@ -215,7 +227,7 @@ void LapUtils::calcLapTime(size_t minIndex, bool isSpeedCheatsUsed)
         }
     }
 
-    if(isAllPassed && minIndex == 0)
+    if(isAllPassed && minIndex == referenceIndex)
     {
         std::fill(mIsPassed.begin(), mIsPassed.end(), false);
 
@@ -239,7 +251,7 @@ void LapUtils::calcLapTime(size_t minIndex, bool isSpeedCheatsUsed)
         }
     }
 
-    if(mCurrentLap == 0 && minIndex == 0)
+    if(mCurrentLap == 0 && minIndex == referenceIndexNewLap)
     {
         ++mCurrentLap;
     }

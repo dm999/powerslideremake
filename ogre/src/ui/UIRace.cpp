@@ -845,7 +845,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             }*/
             {
                 mArrowHelperBottom = createTextArea("MiscTextBoxHelperBottom", miscTextWidth, miscTextHeight, viewportWidth * 0.5f, viewportHeight * 0.73f);
-                mArrowHelperBottom->setCaption("B\nR\nE\nA\nK\nS");
+                mArrowHelperBottom->setCaption("B\nR\nA\nK\nE");
                 mArrowHelperBottom->setCharHeight(20.0f * viewportHeight / 1024.0f);
                 mArrowHelperBottom->setSpaceWidth(9.0f);
                 mArrowHelperBottom->setAlignment(Ogre::TextAreaOverlayElement::Center);

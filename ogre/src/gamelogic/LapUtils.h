@@ -39,6 +39,7 @@ public:
                     const std::vector<Ogre::Real>& weights, 
                     const std::vector<bool>& ischecks,
                     Ogre::SceneManager* sceneMgr,
+                    bool isLuge,
                     bool isDebug);
 
     void resetLapTimer(){mLapTimer.reset(); mAfterFinishLinePassTimer.reset();}
@@ -88,6 +89,8 @@ private:
     Ogre::SimpleSpline mSpline;
     Ogre::Vector3 mAheadPointForArrow;
     Ogre::SceneNode * mDebugSphereArrowNode;
+
+    bool mIsLuge;
 
     Events* mEvents;
 

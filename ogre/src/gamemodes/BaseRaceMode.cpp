@@ -1267,6 +1267,11 @@ void BaseRaceMode::onLapFinished()
                     }
                 }
             }
+
+            if (gameState.isLugeTrack())
+            {
+                gameState.getPlayerCar().getPhysicsVehicle()->repositionToStart();
+            }
         }
     }
 
