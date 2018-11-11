@@ -90,6 +90,9 @@ void GameState::initOriginalData()
                 mSTRRacetimes.parse(mPFLoaderStore);
                 mSTRHiscores.parse(mPFLoaderStore, mDataDir);
 
+                //mSTRHiscores.remove("desert track", 0);
+                //mSTRHiscores.save(mDataDir);
+
                 mPlayerSettings.parse(mDataDir);
                 mSoundsGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound fx volume", 9)) / 9.0f;
                 mMusicGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound cd volume", 9)) / 9.0f;

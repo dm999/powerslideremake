@@ -186,6 +186,8 @@ public:
      * return - is best time beaten
      */
     bool updateTrackTime(const std::string& trackName, const std::string& character, const std::string& playerName, Ogre::Real timeNew);
+
+    void remove(const std::string& trackName, size_t removeIndex);
 };
 
 /**

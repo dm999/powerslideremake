@@ -771,6 +771,44 @@ bool STRHiscores::updateTrackTime(const std::string& trackName, const std::strin
     return isBestBeaten;
 }
 
+void STRHiscores::remove(const std::string& trackName, size_t removeIndex)
+{
+    if (mIsSTRLoaded)
+    {
+        const std::string sectionName = trackName + " parameters";
+
+        size_t entries = getIntValue(sectionName, "Number of Entries");
+
+        std::vector<std::string> names = getArrayValue(sectionName, "names");
+        std::vector<std::string> times = getArrayValue(sectionName, "lap times");
+        std::vector<std::string> characters = getArrayValue(sectionName, "characters");
+        std::vector<std::string> dimCoeff = getArrayValue(sectionName, "4th dimension coefficient");
+
+        if (removeIndex < names.size())
+        {
+            names.erase(names.begin() + removeIndex);
+            times.erase(times.begin() + removeIndex);
+            characters.erase(characters.begin() + removeIndex);
+            dimCoeff.erase(dimCoeff.begin() + removeIndex);
+
+            names.push_back(names[names.size() - 1]);
+            times.push_back(times[times.size() - 1]);
+            characters.push_back(characters[characters.size() - 1]);
+            dimCoeff.push_back(dimCoeff[dimCoeff.size() - 1]);
+
+            std::string plainNames = arrayToString(names);
+            std::string plainTimes = arrayToString(times);
+            std::string plainChars = arrayToString(characters);
+            std::string plainDimCoeffs = arrayToString(dimCoeff);
+
+            mSTR.SetValue(sectionName.c_str(), "names", plainNames.c_str());
+            mSTR.SetValue(sectionName.c_str(), "lap times", plainTimes.c_str());
+            mSTR.SetValue(sectionName.c_str(), "characters", plainChars.c_str());
+            mSTR.SetValue(sectionName.c_str(), "4th dimension coefficient", plainDimCoeffs.c_str());
+        }
+    }
+}
+
 void STRPlayerSettings::parse(const std::string& dataDir)
 {
     mIsSTRLoaded = false;
