@@ -12,7 +12,7 @@
 #include "../mesh/ModelsPool.h"
 
 #ifndef NO_OPENAL
-    #include "../Sound/SoundSource.h"
+    #include "../sound/SoundSource.h"
 #endif
 
 #include "../loaders/TEXLoader.h"

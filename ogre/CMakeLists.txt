@@ -319,7 +319,7 @@ else() # Not Android
         target_link_libraries(PowerslideRemake Jsonxx)
         
         if(PowerslideRemake_OPENAL)
-            target_link_libraries(PowerslideRemake openal32)
+            target_link_libraries(PowerslideRemake openal)
         endif()
 
 

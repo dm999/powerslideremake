@@ -11,7 +11,7 @@
 #include "../tools/Conversions.h"
 
 #ifndef NO_OPENAL
-    #include "../Sound/SoundSource.h"
+    #include "../sound/SoundSource.h"
 #endif
 
 #include "../tools/OgreTools.h"

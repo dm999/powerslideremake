@@ -62,7 +62,11 @@ add_library(sfml-audio STATIC ${SRC} ${CODECS_SRC})
 # setup dependencies
 if(ANDROID)
 else()
-    target_link_libraries(sfml-audio PRIVATE OpenAL32)
+    if(WIN32)
+        target_link_libraries(sfml-audio PRIVATE OpenAL32)
+    else()
+        target_link_libraries(sfml-audio PRIVATE openal)
+    endif()
 endif()
 
 if(SFML_OS_ANDROID)
