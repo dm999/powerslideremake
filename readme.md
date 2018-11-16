@@ -32,10 +32,11 @@ To build project you need:
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
 ### Run ###
-To run the built project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide). 
+To run the built project you need to support original game assets (packed files - pf). Game assets can be taken from original CD or bought at [GOG](https://www.gog.com/game/powerslide).  
 You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put them in the folder with the built application.  
 **Important**: integrated graphics are not supported, please use discrete video card on PC.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
+Prebuilt archives for windows / linux / android available in /Downloads section ([windows](https://bitbucket.org/dm_999/powerslideremake/downloads/win.7z), [linux](https://bitbucket.org/dm_999/powerslideremake/downloads/linux_64.7z), [android](https://bitbucket.org/dm_999/powerslideremake/downloads/PowerslideRemake.apk)). To run on linux make sure openal installed.  
 
 ### Music ###
 There is sounds/music support available in project. To enable sounds/music the project should be built with PowerslideRemake_OPENAL.
