@@ -262,7 +262,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
     {
         std::string noExtFileName = (*i).substr(0, (*i).length() - 4);
         Ogre::DataStreamPtr fileToLoad;
-
+#if 0
         fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_1.tex");
         if(!fileToLoad.get() || !fileToLoad->isReadable())
         {
@@ -282,6 +282,37 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
             TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
             fileToLoad->close();
         }
+#else
+        {
+            fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(noExtFileName + ".tex.bmp", "PF");
+            if (fileToLoad.get() && fileToLoad->isReadable())
+            {
+                Ogre::Image img;
+                img.load(fileToLoad, "bmp");
+                if (gamma != 1.0f)
+                {
+                    const Ogre::Real exp = 1.0f / gamma;
+                    Ogre::Real gammaBuf[256];
+                    for (size_t q = 0; q < 256; ++q)
+                    {
+                        gammaBuf[q] = Ogre::Math::Pow(q / 255.0f, exp);
+                    }
+                    for (size_t x = 0; x < img.getWidth(); ++x)
+                    {
+                        for (size_t y = 0; y < img.getHeight(); ++y)
+                        {
+                            Ogre::ColourValue color = img.getColourAt(x, y, 0);
+                            color.r = gammaBuf[static_cast<size_t>(color.r * 255.0f)];
+                            color.g = gammaBuf[static_cast<size_t>(color.g * 255.0f)];
+                            color.b = gammaBuf[static_cast<size_t>(color.b * 255.0f)];
+                            img.setColourAt(color, x, y, 0);
+                        }
+                    }
+                }
+                Ogre::TextureManager::getSingleton().loadImage((*i), TEMP_RESOURCE_GROUP_NAME, img, Ogre::TEX_TYPE_2D);
+            }
+        }
+#endif
 
         if(loaderListener && loadedAmount % 2)
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
