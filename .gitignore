@@ -17,3 +17,7 @@
 /multislider/server/project/target
 /multislider/server/target
 /*.ogg
+/player.str
+/hiscores.str
+/hiscores.dat
+/dis
