@@ -46,6 +46,7 @@ GameState::GameState() :
     mAdvancedLightingPlayer(true),
     mAttenuationPlayer(false),
     mAdvancedLightingAI(false),
+    mHighResTextures(false),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
     mIsGamePaused(false),
@@ -107,6 +108,7 @@ void GameState::initOriginalData()
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
+                mHighResTextures = mPlayerSettings.getIntValue("", "highres textures", static_cast<int>(mHighResTextures));
                 mGamma = mPlayerSettings.getFloatValue("", "gamma", mGamma);
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
@@ -225,6 +227,7 @@ void GameState::savePlayerData()
     globalData.adv_lightinig_player = mAdvancedLightingPlayer;
     globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
+    globalData.highres_textres = mHighResTextures;
     globalData.gamma = mGamma;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;

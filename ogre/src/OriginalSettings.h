@@ -212,6 +212,7 @@ public:
         bool adv_lightinig_player;
         bool attenuation_player;
         bool adv_lightinig_ai;
+        bool highres_textres;
         Ogre::Real gamma;
         bool kmph;
         Ogre::uint32 transmission;

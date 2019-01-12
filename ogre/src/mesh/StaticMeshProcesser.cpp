@@ -96,7 +96,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         }
 
         //create textures
-        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, gameState.getGamma(), loaderListener);
+        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, gameState.getGamma(), loaderListener, gameState);
 
         if(loaderListener)
             loaderListener->loadState(0.7f, "Textures loaded");
@@ -228,7 +228,7 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         gameState.getLLTObject()->setVisible(true);
 }
 
-void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener, GameState& gameState)
 {
     std::set<std::string> texturesNames;
 
@@ -245,10 +245,10 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
     mTexturesNames = texturesNames;
 #endif
 
-    loadTextures(texturesNames, pfloader, trackName, gamma, loaderListener);
+    loadTextures(texturesNames, pfloader, trackName, gamma, loaderListener, gameState);
 }
 
-void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener, GameState& gameState)
 {
     //ranges from BaseRaceMode::initData
     const float loaderMin = 0.5f;
@@ -262,27 +262,30 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
     {
         std::string noExtFileName = (*i).substr(0, (*i).length() - 4);
         Ogre::DataStreamPtr fileToLoad;
-#if 0
-        fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_1.tex");
-        if(!fileToLoad.get() || !fileToLoad->isReadable())
-        {
-            fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_2.tex");
-        }
-        if(!fileToLoad.get() || !fileToLoad->isReadable())
-        {
-            fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_3.tex");
-        }
-        if(!fileToLoad.get() || !fileToLoad->isReadable())
-        {
-            fileToLoad = pfloader.getFile("data/tracks/" + trackName +"/textures", noExtFileName + "_m_4.tex");
-        }
 
-        if(fileToLoad.get() && fileToLoad->isReadable())
+        if (!gameState.getHighResTextures())
         {
-            TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
-            fileToLoad->close();
+            fileToLoad = pfloader.getFile("data/tracks/" + trackName + "/textures", noExtFileName + "_m_1.tex");
+            if (!fileToLoad.get() || !fileToLoad->isReadable())
+            {
+                fileToLoad = pfloader.getFile("data/tracks/" + trackName + "/textures", noExtFileName + "_m_2.tex");
+            }
+            if (!fileToLoad.get() || !fileToLoad->isReadable())
+            {
+                fileToLoad = pfloader.getFile("data/tracks/" + trackName + "/textures", noExtFileName + "_m_3.tex");
+            }
+            if (!fileToLoad.get() || !fileToLoad->isReadable())
+            {
+                fileToLoad = pfloader.getFile("data/tracks/" + trackName + "/textures", noExtFileName + "_m_4.tex");
+            }
+
+            if (fileToLoad.get() && fileToLoad->isReadable())
+            {
+                TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
+                fileToLoad->close();
+            }
         }
-#else
+        else
         {
             fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(noExtFileName + ".tex.bmp", "PF");
             if (fileToLoad.get() && fileToLoad->isReadable())
@@ -312,7 +315,6 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
                 Ogre::TextureManager::getSingleton().loadImage((*i), TEMP_RESOURCE_GROUP_NAME, img, Ogre::TEX_TYPE_2D);
             }
         }
-#endif
 
         if(loaderListener && loadedAmount % 2)
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
@@ -320,9 +322,9 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 }
 
 #if defined(__ANDROID__)
-void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener, GameState& gameState)
 {
-    loadTextures(mTexturesNames, pfloader, trackName, gamma, loaderListener);
+    loadTextures(mTexturesNames, pfloader, trackName, gamma, loaderListener, gameState);
 }
 #endif
 

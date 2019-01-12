@@ -312,6 +312,20 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if (button == mHighResTexturesVal)
+    {
+        if (mHighResTexturesVal->getChecked())
+        {
+            mModeContext.getGameState().setHighResTextures(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setHighResTextures(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
 
     if(button == mHighScoresTrackLeft)
     {

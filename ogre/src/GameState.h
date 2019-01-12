@@ -186,6 +186,9 @@ public:
     void setAdvancedLightingAI(bool enabled){mAdvancedLightingAI = enabled;}
     bool getAdvancedLightingAI()const{return mAdvancedLightingAI;}
 
+    void setHighResTextures(bool enabled) { mHighResTextures = enabled; }
+    bool getHighResTextures()const { return mHighResTextures; }
+
     size_t getLapsCount()const{return mLapsCount;}
 
     void setSoundsGain(Ogre::Real gain){mSoundsGain = gain;}
@@ -322,6 +325,8 @@ private:
     bool mAdvancedLightingPlayer;
     bool mAttenuationPlayer;
     bool mAdvancedLightingAI;
+
+    bool mHighResTextures;
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0
