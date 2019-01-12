@@ -151,7 +151,8 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                 mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, true));
         }
 
-        mModelEntity[q]->setCastShadows(gameState.isCastShadows());
+        //mModelEntity[q]->setCastShadows(gameState.isCastShadows());
+        mModelEntity[q]->setCastShadows(false);
 
         if(q > 0)
         {
