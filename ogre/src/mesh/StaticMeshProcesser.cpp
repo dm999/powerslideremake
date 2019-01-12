@@ -297,23 +297,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
                 img.load(fileToLoad, "bmp");
                 if (gamma != 1.0f)
                 {
-                    const Ogre::Real exp = 1.0f / gamma;
-                    Ogre::Real gammaBuf[256];
-                    for (size_t q = 0; q < 256; ++q)
-                    {
-                        gammaBuf[q] = Ogre::Math::Pow(q / 255.0f, exp);
-                    }
-                    for (size_t x = 0; x < img.getWidth(); ++x)
-                    {
-                        for (size_t y = 0; y < img.getHeight(); ++y)
-                        {
-                            Ogre::ColourValue color = img.getColourAt(x, y, 0);
-                            color.r = gammaBuf[static_cast<size_t>(color.r * 255.0f)];
-                            color.g = gammaBuf[static_cast<size_t>(color.g * 255.0f)];
-                            color.b = gammaBuf[static_cast<size_t>(color.b * 255.0f)];
-                            img.setColourAt(color, x, y, 0);
-                        }
-                    }
+                    img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
                 }
                 Ogre::TextureManager::getSingleton().loadImage((*i), TEMP_RESOURCE_GROUP_NAME, img, Ogre::TEX_TYPE_2D);
             }

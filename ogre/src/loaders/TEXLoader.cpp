@@ -61,6 +61,7 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
             }
             img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
 #else
+            //Image::applyGamma supports only 24/32 bpp
             const Ogre::Real exp = 1.0f / gamma;
             Ogre::Real gammaBuf[256];
             for (size_t q = 0; q < 256; ++q)
