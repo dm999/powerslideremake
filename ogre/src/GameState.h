@@ -189,6 +189,9 @@ public:
     void setHighResTextures(bool enabled) { mHighResTextures = enabled; }
     bool getHighResTextures()const { return mHighResTextures; }
 
+    void setHighResTexturesUI(bool enabled) { mHighResTexturesUI = enabled; }
+    bool getHighResTexturesUI()const { return mHighResTexturesUI; }
+
     size_t getLapsCount()const{return mLapsCount;}
 
     void setSoundsGain(Ogre::Real gain){mSoundsGain = gain;}
@@ -327,6 +330,7 @@ private:
     bool mAdvancedLightingAI;
 
     bool mHighResTextures;
+    bool mHighResTexturesUI;
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0

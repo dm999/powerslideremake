@@ -312,6 +312,21 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if (button == mHighResTexturesUIVal)
+    {
+        if (mHighResTexturesUIVal->getChecked())
+        {
+            mModeContext.getGameState().setHighResTexturesUI(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setHighResTexturesUI(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+        mModeContext.getGameModeSwitcher()->recreateMenu();
+    }
+
     if (button == mHighResTexturesVal)
     {
         if (mHighResTexturesVal->getChecked())

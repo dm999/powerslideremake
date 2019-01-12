@@ -208,24 +208,29 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
                                 "OriginalMainBackgroundInitGamma", TEMP_RESOURCE_GROUP_NAME, 0.5f);
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "bg.bmp", 
-                                "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "bg.bmp", 
+        "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "tmga.bmp", 
-                                "OriginalBackgroundA", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "tmga.bmp", 
+        "OriginalBackgroundA", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "tmgb.bmp", 
-                                "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "tmgb.bmp", 
+        "OriginalBackgroundB", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "endchamp.bmp", 
-                                "OriginalBackgroundEndChampionship", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "endchamp.bmp", 
+        "OriginalBackgroundEndChampionship", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "fruit.bmp", 
-                                "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "fruit.bmp", 
+        "OriginalBackgroundTrophies", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     if (!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_NON_POWER_OF_2_TEXTURES))
     {
@@ -238,8 +243,9 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "name_bge.bmp", 
-                                "OriginalBackgroundName", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "name_bge.bmp", 
+        "OriginalBackgroundName", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     if(loaderListener)
         loaderListener->loadState(0.2f, "backgrounds loaded");
@@ -250,8 +256,9 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
         for(size_t q = 0; q < amountTracks; ++q)
         {
             TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", trackNames[q], 
-                                "OriginalTrack" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+                "data/gameshell", trackNames[q], 
+                "OriginalTrack" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME,
+                1.0f, mModeContext.getGameState().getHighResTexturesUI());
         }
     }
 
@@ -266,12 +273,14 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
         for(size_t q = 0; q < amountCars; ++q)
         {
             TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", carNames[q], 
-                                "OriginalCar" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+                "data/gameshell", carNames[q], 
+                "OriginalCar" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME,
+                1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
             TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", carSNames[q], 
-                                "OriginalCarS" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME);
+                "data/gameshell", carSNames[q], 
+                "OriginalCarS" + Conversions::DMToString(q), TEMP_RESOURCE_GROUP_NAME,
+                1.0f, mModeContext.getGameState().getHighResTexturesUI());
         }
 
         std::vector<std::string> availableCharacters = mModeContext.getGameState().getSTRPowerslide().getArrayValue("", "available characters");
@@ -290,20 +299,23 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
             if(carIndex < 6)
             {
                 TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", charName, 
-                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
+                    "data/gameshell", charName, 
+                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME,
+                    1.0f, mModeContext.getGameState().getHighResTexturesUI());
             }
             else
             {
                 TextureLoader().load( pfLoaderGameshell, 
-                                    "data/gameshell", carName, 
-                                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
+                    "data/gameshell", carName, 
+                    "OriginalChar" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME,
+                    1.0f, mModeContext.getGameState().getHighResTexturesUI());
             }
 
             //supercar not different for small characters
             TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", charSmallName, 
-                                "OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME);
+                "data/gameshell", charSmallName, 
+                "OriginalCharS" + Conversions::DMToString(carIndex) + "_" + Conversions::DMToString(charIndex), TEMP_RESOURCE_GROUP_NAME,
+                1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
             if(loaderListener && q % 2)
                 loaderListener->loadState(0.4f + 0.6f * (static_cast<float>(q + 1) / availableCharacters.size()), availableCharacters[q] + " loaded");
@@ -430,19 +442,23 @@ void UIMainMenuBackground::createBackgroundTextures(const PFLoader& pfLoaderGame
 
     TextureLoader().load( pfLoaderGameshell, 
         "data/gameshell", "exitsign.bmp", 
-        "OriginalExitSign", TEMP_RESOURCE_GROUP_NAME);
+        "OriginalExitSign", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
         "data/gameshell", "1st.bmp", 
-        "Original1st", TEMP_RESOURCE_GROUP_NAME);
+        "Original1st", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
         "data/gameshell", "2nd.bmp", 
-        "Original2nd", TEMP_RESOURCE_GROUP_NAME);
+        "Original2nd", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     TextureLoader().load( pfLoaderGameshell, 
         "data/gameshell", "3rd.bmp", 
-        "Original3rd", TEMP_RESOURCE_GROUP_NAME);
+        "Original3rd", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
 }
 

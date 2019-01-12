@@ -31,44 +31,71 @@ Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::u
     return res;
 }
 
-Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma) const
+Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma, bool isHighRes) const
 {
     Ogre::TexturePtr res;
 
-    Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
-    if(fileToLoad.get() && fileToLoad->isReadable())
+    if (!isHighRes)
+    {
+        Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
+        if (fileToLoad.get() && fileToLoad->isReadable())
+        {
+            Ogre::String tex_ext;
+            Ogre::String texture_path = filename.c_str();
+            Ogre::String::size_type index_of_extension = texture_path.find_last_of('.');
+            if (index_of_extension != Ogre::String::npos)
+            {
+                tex_ext = texture_path.substr(index_of_extension + 1);
+
+                size_t fileSize = pfLoader.getFileSize(subfolder, filename);
+                std::vector<unsigned char> fileBuffer(fileSize);
+                fileToLoad->read(&fileBuffer[0], fileSize);
+                fileToLoad->close();
+
+                Ogre::DataStreamPtr memoryStream(new Ogre::MemoryDataStream(&fileBuffer[0], fileSize, false, true));
+
+                Ogre::Image img;
+                img.load(memoryStream, tex_ext);
+
+                adjustTextureSizeIfNecessary(img);
+
+                if (gamma != 1.0f)
+                {
+                    img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
+                }
+
+                res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
+
+                Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TextureLoader::load]: [" + filename + "]");
+            }
+
+        }
+        else { assert(false && "No texture file"); }
+    }
+    else
     {
         Ogre::String tex_ext;
         Ogre::String texture_path = filename.c_str();
         Ogre::String::size_type index_of_extension = texture_path.find_last_of('.');
         if (index_of_extension != Ogre::String::npos)
         {
-            tex_ext = texture_path.substr(index_of_extension+1);
-
-            size_t fileSize = pfLoader.getFileSize(subfolder, filename);
-            std::vector<unsigned char> fileBuffer(fileSize);
-            fileToLoad->read(&fileBuffer[0], fileSize);
-            fileToLoad->close();
-
-            Ogre::DataStreamPtr memoryStream(new Ogre::MemoryDataStream(&fileBuffer[0], fileSize, false, true));
-
+            tex_ext = texture_path.substr(index_of_extension + 1);
+            
+            Ogre::DataStreamPtr fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(filename, "UI");
+            
             Ogre::Image img;
-            img.load(memoryStream, tex_ext);
-
+            img.load(fileToLoad, tex_ext);
+            
             adjustTextureSizeIfNecessary(img);
-
+            
             if (gamma != 1.0f)
             {
                 img.applyGamma(img.getData(), gamma, img.getSize(), img.getBPP());
             }
 
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
-
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TextureLoader::load]: [" + filename + "]");
         }
-
     }
-    else {assert(false && "No texture file");}
 
     return res;
 }
@@ -146,7 +173,7 @@ Ogre::TexturePtr TextureLoader::loadChroma( const PFLoader& pfLoader,
     return res;
 }
 
-void TextureLoader::adjustTextureSizeIfNecessary(Ogre::Image& image)const
+void TextureLoader::adjustTextureSizeIfNecessary(Ogre::Image& image)
 {
     if(!Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_NON_POWER_OF_2_TEXTURES))
     {

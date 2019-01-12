@@ -277,13 +277,33 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
         mGammaValRight->setButtonOnAction(this);
     }
 
-    //Options HighRes
+    //Options HighRes UI
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 262.0f, 0.0f, 0.0f);;
         UILabel* label = mUILabelsManager.add("mOptionGraphicsLabel");
         label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         label->setFixed(true);
-        label->getTextArea()->setCaption("HighRes Textures");
+        label->getTextArea()->setCaption("High Res Textures UI");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        mHighResTexturesUIVal = mUIButtonTicksManager.add("mGraphics");
+        mHighResTexturesUIVal->loadBackground("OriginalButtonTick");
+        mHighResTexturesUIVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 262.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getHighResTexturesUI(), true);
+        mHighResTexturesUIVal->setButtonOnAction(this);
+    }
+
+    //Options HighRes
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 282.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionGraphicsLabel");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("High Res Textures Terrain");
         label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setSpaceWidth(9.0f);
         label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
@@ -293,7 +313,7 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
     {
         mHighResTexturesVal = mUIButtonTicksManager.add("mGraphics");
         mHighResTexturesVal->loadBackground("OriginalButtonTick");
-        mHighResTexturesVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 262.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getHighResTextures(), true);
+        mHighResTexturesVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 282.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getHighResTextures(), true);
         mHighResTexturesVal->setButtonOnAction(this);
     }
 }
