@@ -83,6 +83,7 @@ void GameModeSwitcher::frameEnded()
             mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
             mMenuMode->initData(this);
             mMenuMode->initCamera();
+            mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, mContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
             mIsInitialLoadPassed = true;
             mIsRecreate = false;
             return;

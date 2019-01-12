@@ -31,7 +31,7 @@ Ogre::TexturePtr TextureLoader::generate(const std::string& texturename, Ogre::u
     return res;
 }
 
-Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma, bool isHighRes) const
+Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma, bool isHighRes, const std::string& highResName) const
 {
     Ogre::TexturePtr res;
 
@@ -84,7 +84,18 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
         {
             tex_ext = texture_path.substr(index_of_extension + 1);
             
-            Ogre::DataStreamPtr fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(filename, "UI");
+            Ogre::DataStreamPtr fileToLoad;
+            if (highResName.empty())
+            {
+                fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(filename, "UI");
+            }
+            else
+            {
+                fileToLoad = Ogre::ResourceGroupManager::getSingleton().openResource(highResName, "UI");
+                texture_path = highResName.c_str();
+                index_of_extension = texture_path.find_last_of('.');
+                tex_ext = texture_path.substr(index_of_extension + 1);
+            }
             
             Ogre::Image img;
             img.load(fileToLoad, tex_ext);

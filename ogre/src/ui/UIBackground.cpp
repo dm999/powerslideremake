@@ -429,8 +429,10 @@ UIBackgroundLoaderProgressTracks::UIBackgroundLoaderProgressTracks(const ModeCon
         mMaterialTrackTitlesNames.insert(std::make_pair(availTracks[q], materialNameTitle));
 
         TextureLoader().load(   loader, 
-                                loadingFilePath, "loading.tga", 
-                                textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            loadingFilePath, "loading.tga", 
+            textureName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+            1.0f, modeContext.getGameState().getHighResTexturesUI(),
+            strPowerslide.getBaseDir(availTracks[q]) + "_loading.bmp");
 
         TextureLoader().load(   loader, 
                                 loadingFilePath, "text-english.tga", 
