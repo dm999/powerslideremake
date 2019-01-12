@@ -47,7 +47,7 @@ material Test/DiffuseSimpleShadowSoftFog
                 //tex_address_mode clamp
                 tex_coord_set 0
                 filtering anisotropic
-                max_anisotropy 8
+                max_anisotropy 16
             }
             
             texture_unit
