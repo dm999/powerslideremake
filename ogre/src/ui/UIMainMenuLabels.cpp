@@ -312,6 +312,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+#ifndef NO_HIGHRES
     if (button == mHighResTexturesUIVal)
     {
         if (mHighResTexturesUIVal->getChecked())
@@ -340,7 +341,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
 
         mModeContext.getGameState().savePlayerData();
     }
-
+#endif
 
     if(button == mHighScoresTrackLeft)
     {

@@ -109,8 +109,10 @@ void GameState::initOriginalData()
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
+#ifndef NO_HIGHRES
                 mHighResTextures = mPlayerSettings.getIntValue("", "highres textures", static_cast<int>(mHighResTextures));
                 mHighResTexturesUI = mPlayerSettings.getIntValue("", "highres textures ui", static_cast<int>(mHighResTexturesUI));
+#endif
                 mGamma = mPlayerSettings.getFloatValue("", "gamma", mGamma);
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));

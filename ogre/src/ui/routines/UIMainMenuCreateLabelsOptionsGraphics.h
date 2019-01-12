@@ -277,6 +277,7 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
         mGammaValRight->setButtonOnAction(this);
     }
 
+#ifndef NO_HIGHRES
     //Options HighRes UI
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 262.0f, 0.0f, 0.0f);;
@@ -316,4 +317,5 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
         mHighResTexturesVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 282.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getHighResTextures(), true);
         mHighResTexturesVal->setButtonOnAction(this);
     }
+#endif
 }

@@ -263,8 +263,10 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
         std::string noExtFileName = (*i).substr(0, (*i).length() - 4);
         Ogre::DataStreamPtr fileToLoad;
 
+#ifndef NO_HIGHRES
         if (!gameState.getHighResTextures())
         {
+#endif
             fileToLoad = pfloader.getFile("data/tracks/" + trackName + "/textures", noExtFileName + "_m_1.tex");
             if (!fileToLoad.get() || !fileToLoad->isReadable())
             {
@@ -284,6 +286,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
                 TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma);
                 fileToLoad->close();
             }
+#ifndef NO_HIGHRES
         }
         else
         {
@@ -315,6 +318,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
                 Ogre::TextureManager::getSingleton().loadImage((*i), TEMP_RESOURCE_GROUP_NAME, img, Ogre::TEX_TYPE_2D);
             }
         }
+#endif
 
         if(loaderListener && loadedAmount % 2)
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);

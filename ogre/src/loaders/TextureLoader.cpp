@@ -35,8 +35,10 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
 {
     Ogre::TexturePtr res;
 
+#ifndef NO_HIGHRES
     if (!isHighRes)
     {
+#endif
         Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
         if (fileToLoad.get() && fileToLoad->isReadable())
         {
@@ -71,6 +73,7 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
 
         }
         else { assert(false && "No texture file"); }
+#ifndef NO_HIGHRES
     }
     else
     {
@@ -96,6 +99,7 @@ Ogre::TexturePtr TextureLoader::load(const PFLoader& pfLoader, const std::string
             res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
         }
     }
+#endif
 
     return res;
 }

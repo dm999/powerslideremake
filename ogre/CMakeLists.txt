@@ -46,6 +46,12 @@ else()
     add_definitions(-DNO_OPENAL)
 endif()
 
+if(NOT PowerslideRemake_HighRes)
+    add_definitions(-DNO_HIGHRES)
+else()
+    message(STATUS "HighRes enabled")
+endif()
+
 file(GLOB PowerslideRemake_sources_video_main src/video/*.cpp)
 file(GLOB PowerslideRemake_sources_video_main_h src/video/*.h)
 

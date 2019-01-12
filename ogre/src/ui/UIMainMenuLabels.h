@@ -168,8 +168,10 @@ private:
     UIButtonTick* mAdvLightingPlayerVal;
     UIButtonTick* mAttenuationPlayerVal;
     UIButtonTick* mAdvLightingAIVal;
+#ifndef NO_HIGHRES
     UIButtonTick* mHighResTexturesUIVal;
     UIButtonTick* mHighResTexturesVal;
+#endif
 
     UIButton* mHighScoresTrackLeft;
     UIButton* mHighScoresTrackRight;

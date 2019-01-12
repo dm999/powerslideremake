@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 project(PowerslideRemake)
 
 option(PowerslideRemake_OPENAL "OpenAL build" ON)
+option(PowerslideRemake_HighRes "High Resolution textures (ui/terrain)" ON)
 set(PowerslideRemake_OGREHOME "" CACHE PATH "")
 set(PowerslideRemake_OPENALDIR "" CACHE PATH "")
 
