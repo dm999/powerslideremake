@@ -35,6 +35,9 @@ public:
     const STRPlayerSettings::PlayerData& getPlayerData()const{return mPlayerData;}
     STRPlayerSettings::PlayerData& getPlayerData(){return mPlayerData;}
 
+    void setIsSafeRun(bool enabled) { mIsSafeRun = enabled; }
+    bool getIsSafeRun()const { return mIsSafeRun; }
+
 
     /**
      * init data to read from *.pf and *.str files
@@ -255,6 +258,8 @@ private:
     std::string mPlayerName;
 
     STRPlayerSettings::PlayerData mPlayerData;
+
+    bool mIsSafeRun;
 
     std::string mTrackName;
     bool mIsSandblasterTrack;

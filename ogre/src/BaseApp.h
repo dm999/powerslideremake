@@ -40,7 +40,7 @@ public:
     BaseApp();
     virtual ~BaseApp();
 
-    void go();
+    void go(bool isSafeRun);
 
     void restartRace();
     void tabPressed();
