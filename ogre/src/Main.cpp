@@ -156,12 +156,24 @@
     int main(int argc, char *argv[])
 #endif
 {
-    
+    bool isSafeRun = false;
+
+#if _MSC_VER
+    if (strcmp(strCmdLine, "saferun") == 0)
+        isSafeRun = true;
+#else
+    if (argc > 1)
+    {
+        if (strcmp(argv[1], "saferun") == 0)
+            isSafeRun = true;
+    }
+#endif
+
     BaseApp base;
 
     try
     {
-        base.go();
+        base.go(isSafeRun);
     }catch( Ogre::Exception& e )
     {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

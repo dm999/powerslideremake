@@ -14,6 +14,7 @@ GameState::GameState() :
     mVersion(GAMEVERSION),
     mPlayerName("Rasputin"),
     mTrackName("desert track"),
+    mIsSafeRun(false),
     mIsSandblasterTrack(true),
     mIsSpeedwayTrack(false),
     mIsMineshaftedTrack(false),
@@ -27,7 +28,7 @@ GameState::GameState() :
     mIsCastShadows(true),
     mResolution("800 x 600"),
     mIsVsync(false),
-    mIsFullscreen(true),
+    mIsFullscreen(false),
     mCameraPos(CameraPosition_ChassisB),
     mOriginalDataInited(false),
     mPatchDataInited(false),
@@ -98,9 +99,12 @@ void GameState::initOriginalData()
                 mMusicGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound cd volume", 9)) / 9.0f;
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
                 setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
-                mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
-                mIsVsync = mPlayerSettings.getIntValue("", "vsync", static_cast<int>(mIsVsync));
-                mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
+                if (!mIsSafeRun)
+                {
+                    mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
+                    mIsVsync = mPlayerSettings.getIntValue("", "vsync", static_cast<int>(mIsVsync));
+                    mIsFullscreen = mPlayerSettings.getIntValue("", "fullscreen", static_cast<int>(mIsFullscreen));
+                }
                 mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
                 mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
                 mIsGhostEnabled = mPlayerSettings.getIntValue("", "ghost", static_cast<int>(mIsGhostEnabled));

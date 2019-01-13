@@ -302,8 +302,10 @@ void BaseApp::setupResources()
     doLuaMainFile();
 }
 
-void BaseApp::go()
+void BaseApp::go(bool isSafeRun)
 {
+    mGameState.setIsSafeRun(isSafeRun);
+
     if (!setup())
         return;
 
