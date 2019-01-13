@@ -51,8 +51,9 @@ void UIMainMenuMulti::loadMisc(const PFLoader& pfLoaderData, const PFLoader& pfL
     loadCommonTextures(pfLoaderGameshell);
 
     TextureLoader().load( pfLoaderGameshell, 
-                                "data/gameshell", "m_chat.bmp", 
-                                "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME);
+        "data/gameshell", "m_chat.bmp", 
+        "OriginalMainBackground", TEMP_RESOURCE_GROUP_NAME,
+        1.0f, mModeContext.getGameState().getHighResTexturesUI());
 
     //ChatBut0 - empty
     //ChatBut1 - green
