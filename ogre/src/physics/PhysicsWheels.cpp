@@ -345,7 +345,7 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle, bool& processShift)
 
             Ogre::Real projUp = carRotV[1].dotProduct(worldNormal);
             Ogre::Real suspHeight;
-            if(projUp <= 0.0f)
+            if(projUp <= 0.0f)//rolled over
             {
                 suspHeight = mSuspensionHeightPrev[q];
                 shiftParam = 0.0f;

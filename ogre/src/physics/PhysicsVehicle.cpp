@@ -183,6 +183,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     }
     mCOGShift += (shiftValue - mCOGShiftValues[mCOGShiftIndex]);
     mVehicleSetup.mCOGShift = mCOGShift;
+    mVehicleSetup.mCOGShift.z = -mVehicleSetup.mCOGShift.z;//original data is left hand
     mCOGShiftValues[mCOGShiftIndex] = shiftValue;
     mCOGShiftIndex = (mCOGShiftIndex + 1) % mShiftValuesAmount;
 
