@@ -501,13 +501,13 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
         {
             if(diff1m <= diff3m)//diff1m is minimum
             {
-                dot = C_sub_B.dotProduct(C_sub_B);
+                dot = C_sub_B.squaredLength();
                 valA = diff2 * diff2 / dot;
                 valB = B_sub_A;
             }
             else//diff3m is minimum
             {
-                dot = B_sub_A.dotProduct(B_sub_A);
+                dot = B_sub_A.squaredLength();
                 valA = diff1 * diff1 / dot;
                 valB = A_sub_C;
             }
@@ -516,13 +516,13 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
         {
             if(diff3m <= diff2m)//diff3m is minimum
             {
-                dot = B_sub_A.dotProduct(B_sub_A);
+                dot = B_sub_A.squaredLength();
                 valA = diff1 * diff1 / dot;
                 valB = A_sub_C;
             }
             else//diff2m is minimum
             {
-                dot = A_sub_C.dotProduct(A_sub_C);
+                dot = A_sub_C.squaredLength();
                 valA = diff3 * diff3 / dot;
                 valB = C_sub_B;
             }

@@ -362,7 +362,7 @@ Ogre::Real CollisionDetection::diffDotP(const Ogre::Vector3& diffProjNorm, const
 {
     Ogre::Vector3 diff = diffProjNorm - point;
 
-    return diff.dotProduct(diff);
+    return diff.squaredLength();
 }
 
 Ogre::Real CollisionDetection::diffDotP(const Ogre::Vector3& diffProjNorm, const Ogre::Vector3& point, const Ogre::Vector3& point2) const
@@ -372,7 +372,7 @@ Ogre::Real CollisionDetection::diffDotP(const Ogre::Vector3& diffProjNorm, const
 
     Ogre::Real dotPoints = diff.dotProduct(diffP);
 
-    return diff.dotProduct(diff) - dotPoints * dotPoints / diffP.dotProduct(diffP);
+    return diff.squaredLength() - dotPoints * dotPoints / diffP.squaredLength();
 }
 
 Ogre::Vector3 CollisionDetection::convert(const DE2::DE2_Vertex& val) const
