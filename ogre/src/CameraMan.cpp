@@ -41,6 +41,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
     Ogre::Vector3 cogGlobal(initialVehicleSetup.mCOGGlobal);
     cogGlobal.z = -cogGlobal.z;//original data is left hand
 
+    const Ogre::Real camStep = 7.0f;
+
     if(mCamPositonType != CameraPosition_Bumper)
     {
         if(mCamTypeSwitched)
@@ -94,56 +96,44 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
         Ogre::Vector3 camDiff = diff + Ogre::Vector3(0.0f, mCamParam2D.x , 0.0f) - camVal;
         camDiff.normalise();
 
-        Ogre::Vector3 camValue;
-
         bool isCollisionFound = false;
         short collisionApproach = 0;
         Ogre::Vector3 collisionPoint;
-        std::vector<std::pair<short, short> > averaging;
-        averaging.reserve(15);
+        std::vector<std::pair<short, short> > filtration;
+        filtration.reserve(15);
         do
         {
             short partIndex;
             short triangleIndex;
-            Ogre::Vector3 rayDir = camDiff * (mCamParam + 7.0f);
-            bool isCollided = mStaticMeshProcesser.performPointCollisionDetection(Ogre::Ray(camVal, rayDir), collisionPoint, partIndex, triangleIndex);
-            if(!isCollided)
-            {
-                isCollisionFound = false;
-                break;
-            }
+            Ogre::Vector3 rayDir = camDiff * (mCamParam + camStep);
+            isCollisionFound = mStaticMeshProcesser.performPointCollisionDetection(Ogre::Ray(camVal, rayDir), collisionPoint, partIndex, triangleIndex);
+            if(!isCollisionFound) break;
 
-            if(!averaging.empty())
+            if(!filtration.empty())
             {
-                short prevPartIndex = averaging[averaging.size() - 1].first;
-                short prevTriangleIndex = averaging[averaging.size() - 1].second;
+                short prevPartIndex = filtration[filtration.size() - 1].first;
+                short prevTriangleIndex = filtration[filtration.size() - 1].second;
                 if(partIndex != prevPartIndex && triangleIndex != prevTriangleIndex)
                 {
-                    Ogre::int32 averageIndex = averaging.size() - 2;
+                    Ogre::int32 averageIndex = filtration.size() - 2;
                     if(averageIndex >= 0)
                     {
                         do
                         {
-                            if(partIndex == averaging[averageIndex].first && triangleIndex == averaging[averageIndex].second)
+                            if(partIndex == filtration[averageIndex].first && triangleIndex == filtration[averageIndex].second)
                                 break;
                             --averageIndex;
                         }while(averageIndex >= 0);
 
-                        if(averageIndex >= 0)
-                        {
-                            isCollisionFound = true;
-                            break;
-                        }
+                        if(averageIndex >= 0) break;
                     }
-                    averaging.push_back(std::make_pair(partIndex, triangleIndex));
+                    filtration.push_back(std::make_pair(partIndex, triangleIndex));
                 }
             }
             else
             {
-                averaging.push_back(std::make_pair(partIndex, triangleIndex));
+                filtration.push_back(std::make_pair(partIndex, triangleIndex));
             }
-
-            isCollisionFound = true;
 
             Ogre::Vector3 pointOnStaticA, pointOnStaticB, pointOnStaticC;
             mStaticMeshProcesser.getGeoverts(partIndex, triangleIndex, pointOnStaticA, pointOnStaticC, pointOnStaticB);
@@ -155,7 +145,7 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
 
             Ogre::Vector3 camProj = camVal - dotP * normal;
             Ogre::Vector3 camValDiff = camVal - camProj;
-            Ogre::Real camValSqrt = Ogre::Math::Sqrt(((mCamParam + 7.0f) * (mCamParam + 7.0f)) - camValDiff.dotProduct(camValDiff));
+            Ogre::Real camValSqrt = Ogre::Math::Sqrt(((mCamParam + camStep) * (mCamParam + camStep)) - camValDiff.dotProduct(camValDiff));
 
             Ogre::Vector3 camCollisionPointDiff = collisionPoint - camProj;
             Ogre::Real camCollsisionPointDiffDotP = camCollisionPointDiff.dotProduct(camCollisionPointDiff);
@@ -270,8 +260,7 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
                 Ogre::Vector2 diffResI = paramI - compareRes;
                 Ogre::Vector2 diffResIG = paramI - paramG;
 
-                Ogre::Real diffSqrt = Ogre::Math::Sqrt((diffResI.x * diffResI.x + diffResI.y * diffResI.y) /
-                    (diffResIG.x * diffResIG.x + diffResIG.y * diffResIG.y) * diffResIG.y);
+                Ogre::Real diffSqrt = Ogre::Math::Sqrt(diffResI.dotProduct(diffResI) / diffResIG.dotProduct(diffResIG));
 
                 Ogre::Vector3 newSomeAxis = (camSomeAxis - collisionPoint) * diffSqrt + collisionPoint - camCollisionPointDiff * -0.5f;
                 Ogre::Vector3 newSomeAxisDiff = collisionPoint - newSomeAxis;
@@ -291,11 +280,13 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
 
         }while(collisionApproach < 15);
 
+        Ogre::Vector3 camValue;
+
         if(isCollisionFound)
         {
             Ogre::Vector3 camCollisionPointDiff = collisionPoint - camVal;
             camCollisionPointDiff.normalise();
-            camValue = collisionPoint - camCollisionPointDiff * 7.0f;
+            camValue = collisionPoint - camCollisionPointDiff * camStep;
         }
         else
         {
@@ -512,41 +503,40 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
     mCamRot[1] = Ogre::Vector3::ZERO;
     mCamRot[2] = Ogre::Vector3::ZERO;
 
-    Ogre::Real someVal = 0.0f;
-    Ogre::Real someVal2 = 0.0f;
-
+    Ogre::Vector2 basePoint = Ogre::Vector2::ZERO;
+    
     if(mCamPositonType == CameraPosition_ChassisA)
     {
-        someVal = 18.5f;
-        someVal2 = 10.0f;
+        basePoint.x = 18.5f;
+        basePoint.y = 10.0f;
         mCamParam2D = Ogre::Vector2(6.0f, 26.5f);
         mCamParam3D = Ogre::Vector3(0.6f, 0.8f, 0.714286f);
     }
     
     if(mCamPositonType == CameraPosition_ChassisB)
     {
-        someVal = 15.5f;
-        someVal2 = 10.0f;
+        basePoint.x = 15.5f;
+        basePoint.y = 10.0f;
         mCamParam2D = Ogre::Vector2(10.0f, 26.5f);
         mCamParam3D = Ogre::Vector3(0.6f, 0.8f, 0.714286f);
     }
 
     if(mCamPositonType == CameraPosition_ChassisC)
     {
-        someVal = 10.6f;
-        someVal2 = 0.0f;
+        basePoint.x = 10.6f;
+        basePoint.y = 0.0f;
         mCamParam2D = Ogre::Vector2(10.5f, 19.0f);
         mCamParam3D = Ogre::Vector3(0.6f, 0.9f, 0.909091f);
     }
 
     //for software renderer
 #if 0
-    someVal -= 5.0f;
+    basePoint.x -= 5.0f;
     mCamParam2D.x -= 3.0f;
 
     if(mCamPositonType == CameraPosition_ChassisA)
     {
-        someVal -= 2.0f;
+        basePoint.x -= 2.0f;
         mCamParam2D.x += 1.0f;
     }
 #endif
@@ -558,6 +548,6 @@ void CameraMan::recalcCamParams(const InitialVehicleSetup& initialVehicleSetup)
 
     mCameraOffset = coreBase - COG;
     mCamParam = Ogre::Vector3(mCameraOffset.x, mCamParam2D.x - mCameraOffset.y, -mCamParam2D.y - mCameraOffset.z).length();
-    mCamAngle = atan2(someVal - mCamParam2D.x, someVal2 + mCamParam2D.y) +
+    mCamAngle = atan2(basePoint.x - mCamParam2D.x, basePoint.y + mCamParam2D.y) +
                 atan2(mCamParam2D.x, mCamParam2D.y);
 }
