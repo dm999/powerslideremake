@@ -145,10 +145,10 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
 
             Ogre::Vector3 camProj = camVal - dotP * normal;
             Ogre::Vector3 camValDiff = camVal - camProj;
-            Ogre::Real camValSqrt = Ogre::Math::Sqrt(((mCamParam + camStep) * (mCamParam + camStep)) - camValDiff.dotProduct(camValDiff));
+            Ogre::Real camValSqrt = Ogre::Math::Sqrt(((mCamParam + camStep) * (mCamParam + camStep)) - camValDiff.squaredLength());
 
             Ogre::Vector3 camCollisionPointDiff = collisionPoint - camProj;
-            Ogre::Real camCollsisionPointDiffDotP = camCollisionPointDiff.dotProduct(camCollisionPointDiff);
+            Ogre::Real camCollsisionPointDiffDotP = camCollisionPointDiff.squaredLength();
             if(camCollsisionPointDiffDotP < 0.01f)break;
 
             camCollisionPointDiff /= Ogre::Math::Sqrt(camCollsisionPointDiffDotP);
@@ -260,13 +260,13 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
                 Ogre::Vector2 diffResI = paramI - compareRes;
                 Ogre::Vector2 diffResIG = paramI - paramG;
 
-                Ogre::Real diffSqrt = Ogre::Math::Sqrt(diffResI.dotProduct(diffResI) / diffResIG.dotProduct(diffResIG));
+                Ogre::Real diffSqrt = Ogre::Math::Sqrt(diffResI.squaredLength() / diffResIG.squaredLength());
 
                 Ogre::Vector3 newSomeAxis = (camSomeAxis - collisionPoint) * diffSqrt + collisionPoint - camCollisionPointDiff * -0.5f;
                 Ogre::Vector3 newSomeAxisDiff = collisionPoint - newSomeAxis;
                 Ogre::Vector3 someAxisDiff = collisionPoint - camSomeAxis;
 
-                if(someAxisDiff.dotProduct(someAxisDiff) > newSomeAxisDiff.dotProduct(newSomeAxisDiff))
+                if(someAxisDiff.squaredLength() > newSomeAxisDiff.squaredLength())
                 {
                     camSomeAxis = newSomeAxis;
                 }
