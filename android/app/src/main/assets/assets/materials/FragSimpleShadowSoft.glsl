@@ -13,6 +13,7 @@ varying vec2 T;
 varying vec3 C;
 
 varying vec4 VPosInLightSpace;
+varying float shadowFade;
 
 vec2 dxdy(sampler2D tex, vec2 coords, float xOffset, float yOffset)
 {
@@ -65,7 +66,7 @@ void main()
 
     }
     
-    shadowColor = 1.0 - shadowDarkness * shadow;
+    shadowColor = 1.0 - shadowDarkness * shadow * (1.0 - shadowFade);
 
     vec3 ambient = matAmbient.xyz * lightAmbient.xyz;
 

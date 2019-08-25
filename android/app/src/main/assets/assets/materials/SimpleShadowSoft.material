@@ -37,6 +37,7 @@ material Test/DiffuseSimpleShadowSoft
                 param_named_auto model world_matrix
                 param_named_auto texturematrix texture_matrix 0
                 param_named_auto texviewproj texture_viewproj_matrix 0
+                param_named shadowFadeRange float 0.01
             }
             
             texture_unit
