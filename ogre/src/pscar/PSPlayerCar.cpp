@@ -225,7 +225,14 @@ void PSPlayerCar::mouseMoved(const Ogre::Vector2& pos, Ogre::Real windowWidth)
 {
     Ogre::Real steering = windowWidth / 2.0f - pos.x;
     steering /= windowWidth / 2.0f;
-    mWorld->getVehicle(this)->setSteering(steering);
+    Ogre::Real originalSteering = mWorld->getVehicle(this)->getOriginalSteering();
+    Ogre::Real diffSteering = originalSteering - steering;
+    Ogre::Real snappedSteering = originalSteering - diffSteering;
+    if (Ogre::Math::Abs(originalSteering) < 0.02f && Ogre::Math::Abs(diffSteering) < 0.05f)
+    {
+        snappedSteering = 0.0f;
+    }
+    mWorld->getVehicle(this)->setSteering(snappedSteering);
 }
 
 void PSPlayerCar::raceStarted()
