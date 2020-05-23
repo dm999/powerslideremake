@@ -27,7 +27,8 @@ function createScene()
     Scene.Mirror.RTTSize = {}
     Scene.Mirror.RTTSize.w = 256;
     Scene.Mirror.RTTSize.h = 128;
-    Scene.Mirror.FOV = 90.0;
+    Scene.Mirror.Aspect = 10.0 / 3.0;
+    Scene.Mirror.FOV = 30.0;
 
     return Scene;
 end

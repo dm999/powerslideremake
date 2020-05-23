@@ -29,14 +29,8 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
     Ogre::Matrix3 carRotPS;
     carRotPS.FromAxes(carRotV[0], carRotV[1], carRotV[2]);
 
-    Ogre::Vector3 carPos (initialVehicleSetup.mCarGlobalPos);
-    carPos.z = -carPos.z;//original data is left hand
-
     Ogre::Vector3 camPos (mCamera->getPosition());
     camPos.z = -camPos.z;//original data is left hand
-
-    Ogre::Vector3 cog(initialVehicleSetup.mCOG);
-    cog.z = -cog.z;//original data is left hand
 
     Ogre::Vector3 cogGlobal(initialVehicleSetup.mCOGGlobal);
     cogGlobal.z = -cogGlobal.z;//original data is left hand
@@ -372,7 +366,7 @@ void CameraMan::setYawPitchDist(const InitialVehicleSetup& initialVehicleSetup,
         Ogre::Quaternion rotationRear(Ogre::Quaternion::IDENTITY);
         rotationRear.FromAngleAxis(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
         mRearCamera->setOrientation(initialVehicleSetup.mCarRot * rotationRear);
-        mRearCamera->setPosition(camPos + initialVehicleSetup.mCarRot * Ogre::Vector3(0.0f, 5.0f, -10.0f));
+        mRearCamera->setPosition(initialVehicleSetup.mCarGlobalPos + initialVehicleSetup.mCarRot * Ogre::Vector3(0.0f, 5.0f, 0.0f));
     }
 
     //shadow cam

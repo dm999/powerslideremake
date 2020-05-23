@@ -55,6 +55,8 @@ public:
     bool getDisableMouse() const {return mIsDisableMouse;}
     void setDisableMouse(bool disableMouse) {mIsDisableMouse = disableMouse ;}
 
+    void setParticlesVisibility(bool isVisible);
+
     void processSounds();
 
 protected:

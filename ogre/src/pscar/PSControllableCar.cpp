@@ -348,6 +348,12 @@ void PSControllableCar::adjustWheelsParticles(const Ogre::Quaternion& rot)
 
 }
 
+void PSControllableCar::setParticlesVisibility(bool isVisible)
+{
+    if (mWheelBackLParticle) mWheelBackLParticle->setVisible(isVisible);
+    if (mWheelBackRParticle) mWheelBackRParticle->setVisible(isVisible);
+}
+
 void PSControllableCar::processSounds()
 {
 

@@ -207,7 +207,7 @@ void BaseRaceMode::initCamera()
         v->setOverlaysEnabled(false);
         v->setClearEveryFrame(true);
         v->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
-        mRearCamera->setAspectRatio(1.0f);
+        mRearCamera->setAspectRatio(mLuaManager.ReadScalarFloat("Scene.Mirror.Aspect", mModeContext.mPipeline));
         mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
     }
 
@@ -1326,6 +1326,8 @@ void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(false);
 
+        mModeContext.mGameState.getPlayerCar().setParticlesVisibility(false);
+
         mUIRace->setVisibleTachoNeedleAndPointer(false);
     }
 }
@@ -1339,6 +1341,8 @@ void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
     {
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(true);
+
+        mModeContext.mGameState.getPlayerCar().setParticlesVisibility(true);
 
         mUIRace->setVisibleTachoNeedleAndPointer(true);
     }
