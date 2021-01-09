@@ -23,7 +23,7 @@ finishBoardVec FinishBoard::prepareFinishBoard(const ModeContext& modeContext)
         isPlayerFinishRace = true;
     }
 
-    for(size_t q = 0; q < modeContext.getGameState().getAICountInRace(); ++q)
+    for(size_t q = 0; q < std::min(modeContext.getGameState().getAICountInRace(), GameState::mRaceGridCarsMax); ++q)
     {
         ret.push_back(finishBoardElement(
             isPlayerFinishRace ? lapController.getTotalPosition(q + 1) : q, 

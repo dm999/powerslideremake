@@ -1057,7 +1057,7 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
         aiNames.push_back(mModeContext.getGameState().getAICar(q).getCharacterName());
     }
 
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    for(size_t q = 0; q < std::min(mModeContext.getGameState().getAICountInRace() + 1, GameState::mRaceGridCarsMax); ++q)
     {
         if(q < aiNames.size())
         {

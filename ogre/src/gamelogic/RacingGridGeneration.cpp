@@ -39,15 +39,15 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]]);
+        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]] % 32]);
     }
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        if(gameState.getAIStrength() == Insane)
+        //if(gameState.getAIStrength() == Insane)
             resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
-        else
-            resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
+        //else
+            //resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
     }
 
     //solve collision
@@ -61,7 +61,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
             size_t newCharIndex = 0;
             while(newCharIndex < GameState::mRaceGridCarsMax)
             {
-                std::string newCharName = availableCharacters[aiIndexes[newCharIndex]];
+                std::string newCharName = availableCharacters[aiIndexes[newCharIndex] % availableCharacters.size()];
                 if(newCharName != playerCharacter)
                 {
                     std::vector<std::string>::const_iterator foundMore = std::find(res.begin(), res.end(), newCharName);
@@ -70,10 +70,10 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
                         (*found) = newCharName;
 
                         size_t foundIndex = found - res.begin();
-                        if(gameState.getAIStrength() == Insane)
+                        //if(gameState.getAIStrength() == Insane)
                             resAISlot[foundIndex] = getSlotInsaneIndex(aiIndexes[newCharIndex]);
-                        else
-                            resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
+                        //else
+                            //resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
 
                         break;
                     }
@@ -93,6 +93,7 @@ std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
 
     //from original 'random' generator
     //sub_48C4A0
+    /*
     aiIndexes.push_back(8);
     aiIndexes.push_back(20);
     aiIndexes.push_back(10);
@@ -104,7 +105,11 @@ std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
     aiIndexes.push_back(22);
     aiIndexes.push_back(1);
     aiIndexes.push_back(0);
-    aiIndexes.push_back(7);
+    aiIndexes.push_back(7);*/
+    for (size_t q = 0; q < GameState::mAIMax; ++q)
+    {
+        aiIndexes.push_back(q);
+    }
 
     return aiIndexes;
 }
@@ -115,6 +120,7 @@ std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
 
     //from original 'random' generator
     //sub_48C530
+    /*
     aiIndexes.push_back(16);
     aiIndexes.push_back(5);
     aiIndexes.push_back(3);
@@ -127,6 +133,11 @@ std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
     aiIndexes.push_back(12);
     aiIndexes.push_back(8);
     aiIndexes.push_back(20);
+    */
+    for (size_t q = 0; q < GameState::mAIMax; ++q)
+    {
+        aiIndexes.push_back(q);
+    }
 
     return aiIndexes;
 }
@@ -138,18 +149,27 @@ std::vector<size_t> RacingGridGeneration::getHardIndexes() const
     //from original 'random' generator
     //sub_48C5C0                - hard
     //sub_48C650 -> sub_48C5C0  - insane
-    aiIndexes.push_back(29);
-    aiIndexes.push_back(26);
-    aiIndexes.push_back(6);
-    aiIndexes.push_back(13);
-    aiIndexes.push_back(27);
-    aiIndexes.push_back(25);
-    aiIndexes.push_back(28);
-    aiIndexes.push_back(19);
-    aiIndexes.push_back(30);
-    aiIndexes.push_back(31);
-    aiIndexes.push_back(16);
-    aiIndexes.push_back(5);
+    /*
+    for (size_t q = 0; q < 10; ++q)
+    {
+        aiIndexes.push_back(29);
+        aiIndexes.push_back(26);
+        aiIndexes.push_back(6);
+        aiIndexes.push_back(13);
+        aiIndexes.push_back(27);
+        aiIndexes.push_back(25);
+        aiIndexes.push_back(28);
+        aiIndexes.push_back(19);
+        aiIndexes.push_back(30);
+        aiIndexes.push_back(31);
+        aiIndexes.push_back(16);
+        aiIndexes.push_back(5);
+    }*/
+
+    for (size_t q = 0; q < GameState::mAIMax; ++q)
+    {
+        aiIndexes.push_back(q);
+    }
 
     return aiIndexes;
 }
@@ -271,18 +291,7 @@ std::vector<size_t> RacingGridGeneration::getLinearIndexes(size_t aiAmount) cons
         aiLinearIndexes.push_back(10);
         break;
     default:
-        aiLinearIndexes.push_back(0);
-        aiLinearIndexes.push_back(1);
-        aiLinearIndexes.push_back(2);
-        aiLinearIndexes.push_back(3);
-        aiLinearIndexes.push_back(4);
-        aiLinearIndexes.push_back(5);
-        aiLinearIndexes.push_back(6);
-        aiLinearIndexes.push_back(7);
-        aiLinearIndexes.push_back(8);
-        aiLinearIndexes.push_back(9);
-        aiLinearIndexes.push_back(10);
-        aiLinearIndexes.push_back(11);
+        for(size_t q = 0; q < aiAmount; ++q) aiLinearIndexes.push_back(q);
     }
 
     return aiLinearIndexes;
@@ -376,18 +385,7 @@ std::vector<size_t> RacingGridGeneration::getLinearInsaneIndexes(size_t aiAmount
         aiLinearIndexes.push_back(10);
         break;
     default:
-        aiLinearIndexes.push_back(0);
-        aiLinearIndexes.push_back(1);
-        aiLinearIndexes.push_back(2);
-        aiLinearIndexes.push_back(3);
-        aiLinearIndexes.push_back(4);
-        aiLinearIndexes.push_back(5);
-        aiLinearIndexes.push_back(6);
-        aiLinearIndexes.push_back(7);
-        aiLinearIndexes.push_back(8);
-        aiLinearIndexes.push_back(9);
-        aiLinearIndexes.push_back(10);
-        aiLinearIndexes.push_back(11);
+        for (size_t q = 0; q < aiAmount; ++q) aiLinearIndexes.push_back(q);
     }
 
     return aiLinearIndexes;

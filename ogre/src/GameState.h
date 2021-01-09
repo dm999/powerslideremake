@@ -107,7 +107,7 @@ public:
 
     static const size_t mRaceGridCarsMax = 12;
     static const int mAIMin = 3;
-    static const int mAIMax = 11;
+    static const int mAIMax = 198;
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
@@ -290,7 +290,7 @@ private:
     size_t mAiOpponentsAmountInRace;
     std::vector<std::string> mAICharacters;
     AIStrength mAIStrength;
-    PSAICar mPSCar[mAIMax];
+    std::vector<PSAICar> mPSCar;
     Ogre::Vector3 mPlayerCarPrevVel;
 
     Ogre::ManualObject* mLLTObject;

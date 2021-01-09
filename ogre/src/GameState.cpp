@@ -35,6 +35,7 @@ GameState::GameState() :
     mAiOpponentsAmount(3),
     mAiOpponentsAmountInRace(3),
     mAIStrength(Easy),
+    mPSCar(mAIMax),
     mLLTObject(NULL),
     mGlobalLight(NULL),
     mShadowLight(NULL),
@@ -314,7 +315,7 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / mGamma);
     mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / mGamma);
 
-    mLapsCount = lapsCount;
+    mLapsCount = 99;// lapsCount;
 }
 
 bool GameState::isSupercar() const
@@ -594,12 +595,12 @@ void GameState::setGamma(Ogre::Real gamma)
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
+    mAiOpponentsAmount = mAIMax;// Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
 }
 
 void GameState::setAICountInRace(size_t opponentsAmount)
 {
-    mAiOpponentsAmountInRace = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
+    mAiOpponentsAmountInRace = mAIMax;// Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

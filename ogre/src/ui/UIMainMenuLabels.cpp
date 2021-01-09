@@ -1112,7 +1112,7 @@ void UIMainMenuLabels::showExitLabels(const std::string& title)
 
 void UIMainMenuLabels::showRaceGridCharactersLabels()
 {
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    for(size_t q = 0; q < std::min(mModeContext.getGameState().getAICountInRace() + 1, GameState::mRaceGridCarsMax); ++q)
     {
         mRaceGridCharactersLabel[q]->show();
     }
@@ -1139,7 +1139,7 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
     mPodiumTableTitle3Label->show();
     mPodiumTableTitle4Label->show();
 
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    for(size_t q = 0; q < std::min(mModeContext.getGameState().getAICountInRace() + 1, GameState::mRaceGridCarsMax); ++q)
     {
         if(finishBoard[q].mIsPlayer)
             mPodiumTable2Label[q]->setCaption(playerName);
