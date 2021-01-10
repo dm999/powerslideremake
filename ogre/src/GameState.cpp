@@ -595,12 +595,12 @@ void GameState::setGamma(Ogre::Real gamma)
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = mAIMax;// Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
+    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
 }
 
 void GameState::setAICountInRace(size_t opponentsAmount)
 {
-    mAiOpponentsAmountInRace = mAIMax;// Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
+    mAiOpponentsAmountInRace = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

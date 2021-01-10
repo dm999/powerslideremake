@@ -94,6 +94,8 @@ public:
         const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC);
     static void createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle);
 
+    void setLife(Ogre::Real life) { mLife = life; }
+
 protected:
 
     virtual void doAIStep(const GameState& gameState) {(void)gameState;}
@@ -127,6 +129,8 @@ protected:
 
     Physics* mPhysics;
     PSCarEngine mCarEngine;
+
+    Ogre::Real mLife;
 
 private:
 

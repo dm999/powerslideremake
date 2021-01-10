@@ -21,8 +21,18 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 {
-    if(mAICar)
-        mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+    if (mAICar)
+    {
+        if (mLife > 0.0f)
+        {
+            mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+        }
+        else
+        {
+            mThrottle = 0.0f;
+            mBreaks = 0.0f;
+        }
+    }
 }
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)
