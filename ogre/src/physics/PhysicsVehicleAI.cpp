@@ -31,7 +31,7 @@ void PhysicsVehicleAI::doAIStep(const GameState& gameState)
         else
         {
             mThrottle = 0.0f;
-            mBreaks = 0.0f;
+            mBreaks = 1.0f;
         }
     }
 }

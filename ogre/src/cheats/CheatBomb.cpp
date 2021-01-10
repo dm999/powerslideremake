@@ -164,7 +164,8 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         Ogre::Vector3 posDiff = carPos - mBombPosition;
                         if (posDiff.length() < (*i).second->getVehicleSetup().mCollisionRadius)
                         {
-                            mBlowCounter = 210;
+                            //mBlowCounter = 210;
+                            mBlowCounter = 20010;
                             break;
                         }
                     }
@@ -182,7 +183,10 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
 
                 ++mBlowCounter;
 
-                if(mBlowCounter > 200)
+                //const Ogre::uint16 blowMax = 200;
+                const Ogre::uint16 blowMax = 20000;
+
+                if(mBlowCounter > blowMax)
                 {
                     for (vehicles::const_iterator i = vehiclesMap.begin(), j = vehiclesMap.end(); i != j; ++i)
                     {
@@ -200,7 +204,7 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                             (*i).second->adjustImpulseInc(rotImpulse, linearImpulse);
                             if ((*i).second.get() != mPlayerVehicle)//don`t reduce your life
                             {
-                                (*i).second->setLife((*i).second->getLife() - 0.2f);
+                                (*i).second->setLife((*i).second->getLife() - 0.2f * (diffLenDiff / 75.0f));
                             }
                         }
                     }
