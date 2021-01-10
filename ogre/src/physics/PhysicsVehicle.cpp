@@ -207,6 +207,11 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     reposition();
     rerotation();
+
+    if (mLife <= 0.0f)
+    {
+        ++mDeadTicks;
+    }
 }
 
 Ogre::Real PhysicsVehicle::adjustSteering()
@@ -682,6 +687,7 @@ void PhysicsVehicle::setLife(Ogre::Real life)
     {
         mPhysics->onCarDead(this);
         mPhysicsWheels.hideGraphicalWheels();
+        mDeadTicks = 0;
     }
     mLife = life;
 }

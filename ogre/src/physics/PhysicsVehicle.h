@@ -97,6 +97,8 @@ public:
     void setLife(Ogre::Real life);
     Ogre::Real getLife() const { return mLife; }
 
+    Ogre::uint32 getDeadTicks() const { return mDeadTicks;  }
+
 protected:
 
     virtual void doAIStep(const GameState& gameState) {(void)gameState;}
@@ -132,6 +134,7 @@ protected:
     PSCarEngine mCarEngine;
 
     Ogre::Real mLife;
+    Ogre::uint32 mDeadTicks;
 
 private:
 

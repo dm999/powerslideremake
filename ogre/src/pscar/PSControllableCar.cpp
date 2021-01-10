@@ -267,25 +267,33 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
 
     if (mPhysicsVehicle->getLife() < 1.0f)
     {
-        mParticleDead->setPosition(mModelNode->getPosition());
-        mParticleDead2->setPosition(mModelNode->getPosition());
-        mDeadParticle->setEmitting(true);
-        const Ogre::Real emissionRateMax = 200.0f;
-        const Ogre::Real emissionRateMax2 = 100.0f;
-        Ogre::Real life = mPhysicsVehicle->getLife();
-        Ogre::Real emissionRate = emissionRateMax * (1.0f - std::max(life, 0.0f));
-        Ogre::Real emissionRate2 = emissionRateMax2 * (1.0f - std::max(life, 0.0f));
-        if (life < 0.5f)
+        if (mPhysicsVehicle->getDeadTicks() > 60 * 60)
         {
-            mDeadParticle2->setEmitting(true);
-            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
-
-            if (life <= 0.0f)
-            {
-                mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
-            }
+            mDeadParticle->setEmitting(false);
+            mDeadParticle2->setEmitting(false);
         }
-        mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);
+        else
+        {
+            mParticleDead->setPosition(mModelNode->getPosition());
+            mParticleDead2->setPosition(mModelNode->getPosition());
+            mDeadParticle->setEmitting(true);
+            const Ogre::Real emissionRateMax = 200.0f;
+            const Ogre::Real emissionRateMax2 = 100.0f;
+            Ogre::Real life = mPhysicsVehicle->getLife();
+            Ogre::Real emissionRate = emissionRateMax * (1.0f - std::max(life, 0.0f));
+            Ogre::Real emissionRate2 = emissionRateMax2 * (1.0f - std::max(life, 0.0f));
+            if (life < 0.5f)
+            {
+                mDeadParticle2->setEmitting(true);
+                mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
+
+                if (life <= 0.0f)
+                {
+                    mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
+                }
+            }
+            mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);
+        }
     }
     else
     {
