@@ -145,7 +145,10 @@ void CheatBurn::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         {
                             mFlyPath = mFlyPathLength + 1.0f;
                             (*i).second->adjustImpulseInc(posDiff * 0.2f, mBurnVelocity * 10.0f);
-                            (*i).second->setLife((*i).second->getLife() - 0.2f);
+                            if ((*i).second.get() != mPlayerVehicle)//don`t reduce your life
+                            {
+                                (*i).second->setLife((*i).second->getLife() - 0.2f);
+                            }
                             break;
                         }
                     }

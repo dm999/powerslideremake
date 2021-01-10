@@ -26,6 +26,7 @@ void PhysicsVehicleAI::doAIStep(const GameState& gameState)
         if (mLife > 0.0f)
         {
             mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+            mThrottle = std::max(mLife, 0.0f);
         }
         else
         {

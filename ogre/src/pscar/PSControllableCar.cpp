@@ -274,7 +274,7 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
 
             if (life <= 0.0f)
             {
-                mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.8f, 0.1f, 0.0f));
+                mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
             }
         }
         mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);

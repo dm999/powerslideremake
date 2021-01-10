@@ -198,7 +198,10 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                             Ogre::Vector3 rotImpulse(forceAmount * posDiff);
                             Ogre::Vector3 linearImpulse(0.0f, diffLenDiff * 0.013333334f * 150.0f, 0.0f);
                             (*i).second->adjustImpulseInc(rotImpulse, linearImpulse);
-                            (*i).second->setLife((*i).second->getLife() - 0.2f);
+                            if ((*i).second.get() != mPlayerVehicle)//don`t reduce your life
+                            {
+                                (*i).second->setLife((*i).second->getLife() - 0.2f);
+                            }
                         }
                     }
 
