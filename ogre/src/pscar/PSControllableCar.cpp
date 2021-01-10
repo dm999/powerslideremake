@@ -135,12 +135,14 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mWheelBackLParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
     mWheelBackRParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
     mDeadParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
+    mDeadParticle2 = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
 
     const Ogre::Vector2& fogStartEnd = gameState.getSTRPowerslide().getFogStartEnd(gameState.getTrackName());
     bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
 
     mParticleMaterialName = nameGenMaterialsParticles.generate();
     mParticleMaterialNameDead = nameGenMaterialsParticles.generate();
+    mParticleMaterialNameDead2 = nameGenMaterialsParticles.generate();
 
     if(!isFogEnabled)
     {
@@ -152,6 +154,12 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
         CloneMaterial(mParticleMaterialNameDead,
             "Test/Particle",
+            std::vector<Ogre::String>(),
+            1.0f,
+            TEMP_RESOURCE_GROUP_NAME);
+
+        CloneMaterial(mParticleMaterialNameDead2,
+            "Test/ParticleAlpha",
             std::vector<Ogre::String>(),
             1.0f,
             TEMP_RESOURCE_GROUP_NAME);
@@ -170,6 +178,12 @@ void PSControllableCar::initModel(  lua_State * pipeline,
             1.0f,
             TEMP_RESOURCE_GROUP_NAME);
 
+        CloneMaterial(mParticleMaterialNameDead2,
+            "Test/ParticleFogAlpha",
+            std::vector<Ogre::String>(),
+            1.0f,
+            TEMP_RESOURCE_GROUP_NAME);
+
         const Ogre::ColourValue& skyColor = gameState.getSTRPowerslide().getTrackSkyColor(gameState.getTrackName());
 
         //newMatParticle->setFog(true, Ogre::FOG_LINEAR, skyColor, 0.0f, fogStartEnd.x, fogStartEnd.y);
@@ -178,6 +192,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     mWheelBackLParticle->setMaterialName(mParticleMaterialName);
     mWheelBackRParticle->setMaterialName(mParticleMaterialName);
     mDeadParticle->setMaterialName(mParticleMaterialNameDead);
+    mDeadParticle2->setMaterialName(mParticleMaterialNameDead2);
 
     {
         mDeadParticle->getEmitter(0)->setColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
@@ -187,9 +202,20 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         stateParticle->setTextureScale(8.0f, 8.0f);
 
-        mDeadParticle->getEmitter(0)->setEmissionRate(200.0f);
         mDeadParticle->getEmitter(0)->setMaxParticleVelocity(40.0f);
         mDeadParticle->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
+    }
+
+    {
+        mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.3f, 0.0f));
+        mDeadParticle2->getEmitter(0)->setDirection(Ogre::Vector3::UNIT_Y);
+
+        Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialNameDead2);
+        Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        stateParticle->setTextureScale(8.0f, 8.0f);
+
+        mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(40.0f);
+        mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
     }
 
     mParticleNodeWheelBackL = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
@@ -200,6 +226,9 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mParticleDead = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
     mParticleDead->attachObject(mDeadParticle);
+
+    mParticleDead2 = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
+    mParticleDead2->attachObject(mDeadParticle2);
 }
 
 
@@ -230,14 +259,30 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
         mWheelBackRParticle->setEmitting(false);
     }
 
-    if (mPhysicsVehicle->getLife() == 0.0f)
+    if (mPhysicsVehicle->getLife() < 1.0f)
     {
         mParticleDead->setPosition(mModelNode->getPosition());
+        mParticleDead2->setPosition(mModelNode->getPosition());
         mDeadParticle->setEmitting(true);
+        const Ogre::Real emissionRateMax = 200.0f;
+        Ogre::Real life = mPhysicsVehicle->getLife();
+        Ogre::Real emissionRate = emissionRateMax * (1.0f - std::max(life, 0.0f));
+        if (life < 0.5f)
+        {
+            mDeadParticle2->setEmitting(true);
+            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate);
+
+            if (life <= 0.0f)
+            {
+                mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.8f, 0.1f, 0.0f));
+            }
+        }
+        mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);
     }
     else
     {
         mDeadParticle->setEmitting(false);
+        mDeadParticle2->setEmitting(false);
     }
 
 }
