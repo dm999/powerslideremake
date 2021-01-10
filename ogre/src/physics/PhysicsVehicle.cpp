@@ -681,6 +681,7 @@ void PhysicsVehicle::setLife(Ogre::Real life)
     if (mLife > 0.0f && life <= 0.0f)
     {
         mPhysics->onCarDead(this);
+        mPhysicsWheels.hideGraphicalWheels();
     }
     mLife = life;
 }

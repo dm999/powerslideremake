@@ -112,6 +112,10 @@ bool PhysicsBody::process(PhysicsVehicle& vehicle)
             {
                 velocityTangent.normalise();
                 Ogre::Real velocityMultiplier = mInitialVehicleSetup.mVelocitySpline[terrain.mVelocityIndex].getPoint(velocityMod);
+                if (vehicle.getLife() <= 0.0f)
+                {
+                    velocityMultiplier = 1.0f;
+                }
                 velocityTangent *= velocityMultiplier;
             }
 
