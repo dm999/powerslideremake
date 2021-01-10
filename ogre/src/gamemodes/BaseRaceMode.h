@@ -88,6 +88,7 @@ public:
     //PhysicsListener
     void timeStepBefore(Physics * physics)override;
     void timeStepAfter(Physics * physics)override;
+    void carDead(PhysicsVehicle* vehicle)override;
 
     LapController getLapController() const {return mLapController;}
 
@@ -97,6 +98,7 @@ protected:
     ModelsPool mModelsPool;
 
     LapController mLapController;
+    size_t mTotalCars;
 
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 

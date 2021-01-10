@@ -565,6 +565,8 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
             loaderListener->loadState(0.81f + 0.09f * static_cast<float>(q) / static_cast<float>(mModeContext.mGameState.getAICountInRace()), "ai model loaded");
     }
 
+    mTotalCars = mLapController.getTotalCars();
+
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initModel]: Exit");
 
 }
@@ -797,7 +799,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         {
             mUIRace->setCarGear(1);
         }
-        mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
+        mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mTotalCars));
 
         mUIRace->hideAIDashboardCars();
         size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();
@@ -1046,6 +1048,11 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
     }
 
     customFrameStartedDoProcessFrameAfterPhysics();
+}
+
+void BaseRaceMode::carDead(PhysicsVehicle* vehicle)
+{
+    --mTotalCars;
 }
 
 

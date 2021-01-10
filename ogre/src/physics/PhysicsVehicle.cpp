@@ -675,3 +675,12 @@ void PhysicsVehicle::zeroImpulses()
     mImpulseRot = Ogre::Vector3::ZERO;
     mImpulseRotInc = Ogre::Vector3::ZERO;
 }
+
+void PhysicsVehicle::setLife(Ogre::Real life)
+{
+    if (mLife > 0.0f && life <= 0.0f)
+    {
+        mPhysics->onCarDead(this);
+    }
+    mLife = life;
+}

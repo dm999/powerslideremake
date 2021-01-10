@@ -59,7 +59,7 @@ void Physics::internalTimeStep(GameState& gameState)
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
                if(gameState.getRaceStarted())
-                    processCarsCollisions((*i).second.get());
+                    processCarsCollisions((*i).second.get(), gameState);
         }
 
         //process impulse weighter
@@ -160,7 +160,15 @@ void Physics::removeListener(PhysicsListener* listener)
         mListeners.erase(found);
 }
 
-void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
+void Physics::onCarDead(PhysicsVehicle* vehicle)
+{
+    for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)
+    {
+        (*i)->carDead(vehicle);
+    }
+}
+
+void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameState)
 {
     for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
@@ -275,6 +283,17 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                     Ogre::Vector3 impulseLinear = cogDiffAdd * finalImpulse;
                     vehicle->adjustImpulseInc(cogDiffSub, impulseLinear);
                     vehicle->setCollisionSteeringAdditionalParam(carARotX.dotProduct(impulseLinear) * 0.02f);
+                    if (vehicle != getVehicle(&gameState.getPlayerCar()))//not harm player
+                    {
+                        if ((*i).second.get() == getVehicle(&gameState.getPlayerCar()))//harm by player
+                        {
+                            vehicle->setLife(vehicle->getLife() - 0.2f * (finalImpulse / 100.0f));
+                        }
+                        else
+                        {
+                            vehicle->setLife(vehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
+                        }
+                    }
                 }
             }
 

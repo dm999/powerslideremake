@@ -19,6 +19,8 @@ public:
     virtual void timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& vehiclesMap){}
     virtual void timeStepBefore(Physics * physics){}
     virtual void timeStepAfter(Physics * physics){}
+
+    virtual void carDead(PhysicsVehicle* vehicle) {}
 };
 
 #endif

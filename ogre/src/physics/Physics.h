@@ -51,11 +51,13 @@ public:
 
     Ogre::int32 getAfterStartCounter () const {return mAfterStartCounter;}
 
+    void onCarDead(PhysicsVehicle* vehicle);
+
 private:
 
     void internalTimeStep(GameState& gameState);
 
-    void processCarsCollisions(PhysicsVehicle* vehicle);
+    void processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameState);
     void processCollisionsImpulseWeighter(PhysicsVehicle* vehicle);
 
     Ogre::Timer mTimer;

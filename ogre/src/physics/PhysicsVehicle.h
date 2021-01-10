@@ -94,7 +94,7 @@ public:
         const Ogre::Vector2& tA, const Ogre::Vector2& tB, const Ogre::Vector2& tC);
     static void createRotMatrix(Ogre::Vector3& matAxis, const Ogre::Vector3& normalisedImpulse, Ogre::Real angle);
 
-    void setLife(Ogre::Real life) { mLife = life; }
+    void setLife(Ogre::Real life);
     Ogre::Real getLife() const { return mLife; }
 
 protected:
