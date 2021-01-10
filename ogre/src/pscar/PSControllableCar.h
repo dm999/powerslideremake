@@ -82,15 +82,18 @@ protected:
 
     Ogre::ParticleSystem* mWheelBackLParticle;
     Ogre::ParticleSystem* mWheelBackRParticle;
+    Ogre::ParticleSystem* mDeadParticle;
 
     Ogre::SceneNode* mParticleNodeWheelBackL;
     Ogre::SceneNode* mParticleNodeWheelBackR;
+    Ogre::SceneNode* mParticleDead;
 
 private:
 
     std::vector<Particle> mParticles;
 
     Ogre::String mParticleMaterialName;
+    Ogre::String mParticleMaterialNameDead;
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
