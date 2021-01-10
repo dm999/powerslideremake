@@ -290,8 +290,8 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
                             vehicle->setLife(vehicle->getLife() - 0.2f * (finalImpulse / 100.0f));
                         }
                         else
-                        {
-                            vehicle->setLife(vehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
+                        {//self destruction
+                            //vehicle->setLife(vehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
                         }
                     }
                 }

@@ -197,10 +197,15 @@ void PSControllableCar::initModel(  lua_State * pipeline,
     {
         mDeadParticle->getEmitter(0)->setColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
         mDeadParticle->getEmitter(0)->setDirection(Ogre::Vector3::UNIT_Y);
+        mDeadParticle->setDefaultHeight(8.0f);
+        mDeadParticle->setDefaultWidth(8.0f);
 
         Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialNameDead);
         Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         stateParticle->setTextureScale(8.0f, 8.0f);
+        //stateParticle->setTextureScroll(-7.0f / 16.0f, -7.0f / 16.0f);
+        stateParticle->setTextureScroll(-7.0f / 16.0f, -5.0f / 16.0f);
+        //stateParticle->setTextureScroll(-7.0f / 16.0f, -1.0f / 16.0f);
 
         mDeadParticle->getEmitter(0)->setMaxParticleVelocity(40.0f);
         mDeadParticle->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
@@ -213,6 +218,7 @@ void PSControllableCar::initModel(  lua_State * pipeline,
         Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialNameDead2);
         Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
         stateParticle->setTextureScale(8.0f, 8.0f);
+        stateParticle->setTextureScroll(-7.0f / 16.0f, -7.0f / 16.0f);
 
         mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(40.0f);
         mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
@@ -265,12 +271,14 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
         mParticleDead2->setPosition(mModelNode->getPosition());
         mDeadParticle->setEmitting(true);
         const Ogre::Real emissionRateMax = 200.0f;
+        const Ogre::Real emissionRateMax2 = 100.0f;
         Ogre::Real life = mPhysicsVehicle->getLife();
         Ogre::Real emissionRate = emissionRateMax * (1.0f - std::max(life, 0.0f));
+        Ogre::Real emissionRate2 = emissionRateMax2 * (1.0f - std::max(life, 0.0f));
         if (life < 0.5f)
         {
             mDeadParticle2->setEmitting(true);
-            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate);
+            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
 
             if (life <= 0.0f)
             {
