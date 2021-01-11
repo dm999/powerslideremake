@@ -53,6 +53,11 @@ void Physics::internalTimeStep(GameState& gameState)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
+
+            if ((*i).second->getLife() <= 0.5f)//self destruction
+            {
+                (*i).second->setLife((*i).second->getLife() - 0.0001f);
+            }
         }
 
         //process collisions
@@ -290,8 +295,11 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
                             vehicle->setLife(vehicle->getLife() - 0.2f * (finalImpulse / 100.0f));
                         }
                         else
-                        {//self destruction
-                            //vehicle->setLife(vehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
+                        {//mutual destruction
+                            if (vehicle->getLife() <= 0.8f)
+                            {
+                                vehicle->setLife(vehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
+                            }
                         }
                     }
                 }
