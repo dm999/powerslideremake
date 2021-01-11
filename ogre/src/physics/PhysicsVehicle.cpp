@@ -23,6 +23,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsBody(initialVehicleSetup, physics, meshProesser),
     mCarEngine(initialVehicleSetup),
     mLife(1.0f),
+    mDeadTicks(0),
     mVehicleType(HumanVehicle),
     mThrottle(0.0f),
     mBreaks(0.0f),
@@ -39,7 +40,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsRaceStarted(false),
     mInputType(type),
     mIsNitro(false),
-    mNitroCounter(0)
+    mNitroCounter(0),
+    mExplosionHappened(false)
 {
     mCarEngine.setTransmissionType(trAuto);
 
@@ -211,6 +213,13 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     if (mLife <= 0.0f)
     {
         ++mDeadTicks;
+
+        if (!mExplosionHappened)
+        {
+            Ogre::Vector3 linearImpulse(0.0f, 75.0f * 0.013333334f * 150.0f, 0.0f);
+            adjustImpulseInc(Ogre::Vector3::ZERO, linearImpulse);
+            mExplosionHappened = true;
+        }
     }
 }
 

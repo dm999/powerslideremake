@@ -191,6 +191,8 @@ private:
     bool mIsNitro;
     size_t mNitroCounter;
 
+    bool mExplosionHappened;
+
 };
 
 #endif

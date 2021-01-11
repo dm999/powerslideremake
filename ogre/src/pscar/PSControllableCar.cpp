@@ -289,7 +289,21 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
 
                 if (life <= 0.0f)
                 {
-                    mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
+
+                    if (mPhysicsVehicle->getDeadTicks() < 30)
+                    {
+                        mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(1.0f, 0.1f, 0.0f));
+                        mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2 * 10.0f);
+                        mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(60.0f);
+                        mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(45.0f));
+                    }
+                    else
+                    {
+                        mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
+                        mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
+                        mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(40.0f);
+                        mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
+                    }
                 }
             }
             mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);
