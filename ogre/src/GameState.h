@@ -107,7 +107,11 @@ public:
 
     static const size_t mRaceGridCarsMax = 12;
     static const int mAIMin = 3;
+#ifdef ANDROID
+    static const int mAIMax = 99;
+#else
     static const int mAIMax = 299;
+#endif
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
