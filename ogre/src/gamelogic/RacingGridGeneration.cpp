@@ -207,7 +207,7 @@ size_t RacingGridGeneration::getSlotInsaneIndex(size_t index) const
     case 30: ret = 5; break;
     case 16: ret = 10; break;
     case 5: ret = 11; break;
-    default : ret = 0;
+    default : ret = index % GameState::mRaceGridCarsMax ;
     }
 
     return ret;
