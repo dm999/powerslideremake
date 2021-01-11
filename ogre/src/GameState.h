@@ -107,7 +107,7 @@ public:
 
     static const size_t mRaceGridCarsMax = 12;
     static const int mAIMin = 3;
-    static const int mAIMax = 500;
+    static const int mAIMax = 299;
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
