@@ -895,8 +895,12 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 void BaseRaceMode::beforeStartSequence()
 {
+    const Ogre::Real readyTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f;
+    const Ogre::Real setTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f;
+    const Ogre::Real goTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f;
+
     if( !mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > readyTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->setRearViewMirrorPanelShow(false);
@@ -908,7 +912,7 @@ void BaseRaceMode::beforeStartSequence()
     }
 
     if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > setTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
@@ -919,7 +923,7 @@ void BaseRaceMode::beforeStartSequence()
     }
 
     if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
+        mModeContext.mGameState.getBeforeStartTimerTime() > goTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
@@ -928,10 +932,21 @@ void BaseRaceMode::beforeStartSequence()
         mModeContext.mSoundsProcesser.playBeforeStart3();
 #endif
 
-        mModeContext.mGameState.getPlayerCar().raceStarted();
-        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+        if (mModeContext.mGameState.getAICountInRace() < GameState::mRaceGridCarsMax)
         {
-            mModeContext.mGameState.getAICar(q).raceStarted();
+            mModeContext.mGameState.getPlayerCar().raceStarted();
+
+            for (size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+            {
+                mModeContext.mGameState.getAICar(q).raceStarted();
+            }
+        }
+        else
+        {
+            for (size_t q = 0; q < GameState::mRaceGridCarsMax; ++q)
+            {
+                mModeContext.mGameState.getAICar(q).raceStarted();
+            }
         }
 
         customFrameRenderingQueuedDoRaceStarted();
@@ -950,7 +965,90 @@ void BaseRaceMode::beforeStartSequence()
         mModeContext.mGameState.setRaceStarted(true);
     }
 
-    if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
+    size_t batchAmount = mModeContext.mGameState.getAICountInRace() / GameState::mRaceGridCarsMax;
+    const Ogre::Real posDiff = 16.0f;
+    Ogre::Real batchTime = goTime;
+
+    if (mModeContext.mGameState.getAICountInRace() > 100)
+    {
+        batchTime /= 1.5f;
+
+        if (mModeContext.mGameState.getAICountInRace() > 200)
+        {
+            batchTime /= 1.5f;
+        }
+    }
+
+    for (size_t q = 1; q < batchAmount; ++q)
+    {
+        if (mModeContext.mGameState.getRaceStarted() &&
+            mModeContext.mGameState.getBeforeStartTimerTime() > (1.0f + q) * batchTime &&
+            mModeContext.mGameState.getBeforeStartTimerTime() < (2.0f + q) * batchTime &&
+            !mModeContext.mGameState.isGamePaused())
+        {
+            for (size_t w = GameState::mRaceGridCarsMax * q; w < (q + 1) * GameState::mRaceGridCarsMax; ++w)
+            {
+                if (!mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->getRaceStarted())
+                {
+                    mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->zeroImpulses();
+                    mModeContext.mGameState.getAICar(w).raceStarted();
+                    Ogre::Vector3 pos = mModeContext.mGameState.getAICar(w).getModelNode()->getPosition();
+                    pos.y -= posDiff * q;
+                    mModeContext.mGameState.getAICar(w).repositionVehicle(pos, mModeContext.mGameState.getAICar(w).getModelNode()->getOrientation());
+                }
+            }
+        }
+    }
+
+    if (batchAmount * GameState::mRaceGridCarsMax != mModeContext.mGameState.getAICountInRace())
+    {
+        if (mModeContext.mGameState.getRaceStarted() &&
+            mModeContext.mGameState.getBeforeStartTimerTime() > (1.0f + batchAmount) * batchTime &&
+            mModeContext.mGameState.getBeforeStartTimerTime() < (2.0f + batchAmount) * batchTime &&
+            !mModeContext.mGameState.isGamePaused())
+        {
+            for (size_t w = GameState::mRaceGridCarsMax * batchAmount; w < mModeContext.mGameState.getAICountInRace(); ++w)
+            {
+                if (!mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->getRaceStarted())
+                {
+                    mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->zeroImpulses();
+                    mModeContext.mGameState.getAICar(w).raceStarted();
+                    Ogre::Vector3 pos = mModeContext.mGameState.getAICar(w).getModelNode()->getPosition();
+                    pos.y -= posDiff * batchAmount;
+                    mModeContext.mGameState.getAICar(w).repositionVehicle(pos, mModeContext.mGameState.getAICar(w).getModelNode()->getOrientation());
+                }
+            }
+            {
+                if (!mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getRaceStarted())
+                {
+                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->zeroImpulses();
+                    mModeContext.mGameState.getPlayerCar().raceStarted();
+                    Ogre::Vector3 pos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+                    pos.y -= posDiff * batchAmount;
+                    mModeContext.mGameState.getPlayerCar().repositionVehicle(pos, mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation());
+                }
+            }
+        }
+    }
+    else
+    {
+        if (mModeContext.mGameState.getRaceStarted() &&
+            mModeContext.mGameState.getBeforeStartTimerTime() >(1.0f + batchAmount) * batchTime &&
+            mModeContext.mGameState.getBeforeStartTimerTime() < (2.0f + batchAmount) * batchTime &&
+            !mModeContext.mGameState.isGamePaused())
+        {
+            if (!mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getRaceStarted())
+            {
+                mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->zeroImpulses();
+                mModeContext.mGameState.getPlayerCar().raceStarted();
+                Ogre::Vector3 pos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+                pos.y -= posDiff * batchAmount;
+                mModeContext.mGameState.getPlayerCar().repositionVehicle(pos, mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation());
+            }
+        }
+    }
+
+    if(mModeContext.mGameState.getBeforeStartTimerTime() > (goTime + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
 

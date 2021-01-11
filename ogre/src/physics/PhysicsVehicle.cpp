@@ -95,7 +95,10 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     doAIStep(gameState);
     mPhysicsWheels.setSteering(adjustSteering());
 
-    integrate();
+    if (mIsRaceStarted)
+    {
+        integrate();
+    }
 
     Ogre::Real velScale = mVehicleSetup.mVelocityScale * doGetVelocityScale();
 
@@ -149,7 +152,10 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     mImpulseLinearInc.y += mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
 
-    integrate();
+    if (mIsRaceStarted)
+    {
+        integrate();
+    }
 
     calcWheelRoofImpulses();
 

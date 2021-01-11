@@ -55,6 +55,7 @@ public:
     VehicleType getVehicleType() const {return mVehicleType;}
 
     void setRaceStarted(){mIsRaceStarted = true;}
+    bool getRaceStarted() const { return mIsRaceStarted; }
 
     bool getFrontCollision() const;
     bool getBackCollision() const;
