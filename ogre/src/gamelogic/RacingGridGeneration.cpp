@@ -21,30 +21,30 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
     {
     case Medium :
         aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
-        aiIndexes = getMediumIndexes();
+        aiIndexes = getMediumIndexes(gameState);
         break;
     case Hard :
         aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
-        aiIndexes = getHardIndexes();
+        aiIndexes = getHardIndexes(gameState);
         break;
     case Insane :
         aiLinearIndexes = getLinearInsaneIndexes(gameState.getAICountInRace());
-        aiIndexes = getHardIndexes();
+        aiIndexes = getHardIndexes(gameState);
         break;
     default:
         aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
-        aiIndexes = getEasyIndexes();
+        aiIndexes = getEasyIndexes(gameState);
     }
     std::vector<std::string> availableCharacters = gameState.getSTRPowerslide().getArrayValue("", "available characters");
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]] % 32]);
+        res.push_back(availableCharacters[aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]] % 32]);//not include supercar
     }
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        if(gameState.getAIStrength() == Insane || GameState::mAIMax >= GameState::mRaceGridCarsMax)
+        if(gameState.getAIStrength() == Insane || gameState.getAICountInRace() >= GameState::mRaceGridCarsMax)
             resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
         else
             resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
@@ -70,7 +70,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
                         (*found) = newCharName;
 
                         size_t foundIndex = found - res.begin();
-                        if(gameState.getAIStrength() == Insane || GameState::mAIMax >= GameState::mRaceGridCarsMax)
+                        if(gameState.getAIStrength() == Insane || gameState.getAICountInRace() >= GameState::mRaceGridCarsMax)
                             resAISlot[foundIndex] = getSlotInsaneIndex(aiIndexes[newCharIndex]);
                         else
                             resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
@@ -87,13 +87,13 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
     return res;
 }
 
-std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
+std::vector<size_t> RacingGridGeneration::getEasyIndexes(const GameState& gameState) const
 {
     std::vector<size_t> aiIndexes;
 
     //from original 'random' generator
     //sub_48C4A0
-    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
+    if (gameState.getAICountInRace() < GameState::mRaceGridCarsMax)
     {
         aiIndexes.push_back(8);
         aiIndexes.push_back(20);
@@ -110,7 +110,7 @@ std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
     }
     else
     {
-        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        for (size_t q = 0; q < gameState.getAICountInRace(); ++q)
         {
             aiIndexes.push_back(q);
         }
@@ -119,13 +119,13 @@ std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
     return aiIndexes;
 }
 
-std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
+std::vector<size_t> RacingGridGeneration::getMediumIndexes(const GameState& gameState) const
 {
     std::vector<size_t> aiIndexes;
 
     //from original 'random' generator
     //sub_48C530
-    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
+    if (gameState.getAICountInRace() < GameState::mRaceGridCarsMax)
     {
         aiIndexes.push_back(16);
         aiIndexes.push_back(5);
@@ -142,7 +142,7 @@ std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
     }
     else
     {
-        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        for (size_t q = 0; q < gameState.getAICountInRace(); ++q)
         {
             aiIndexes.push_back(q);
         }
@@ -151,34 +151,31 @@ std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
     return aiIndexes;
 }
 
-std::vector<size_t> RacingGridGeneration::getHardIndexes() const
+std::vector<size_t> RacingGridGeneration::getHardIndexes(const GameState& gameState) const
 {
     std::vector<size_t> aiIndexes;
 
     //from original 'random' generator
     //sub_48C5C0                - hard
     //sub_48C650 -> sub_48C5C0  - insane
-    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
+    if (gameState.getAICountInRace() < GameState::mRaceGridCarsMax)
     {
-        for (size_t q = 0; q < 10; ++q)
-        {
-            aiIndexes.push_back(29);
-            aiIndexes.push_back(26);
-            aiIndexes.push_back(6);
-            aiIndexes.push_back(13);
-            aiIndexes.push_back(27);
-            aiIndexes.push_back(25);
-            aiIndexes.push_back(28);
-            aiIndexes.push_back(19);
-            aiIndexes.push_back(30);
-            aiIndexes.push_back(31);
-            aiIndexes.push_back(16);
-            aiIndexes.push_back(5);
-        }
+        aiIndexes.push_back(29);
+        aiIndexes.push_back(26);
+        aiIndexes.push_back(6);
+        aiIndexes.push_back(13);
+        aiIndexes.push_back(27);
+        aiIndexes.push_back(25);
+        aiIndexes.push_back(28);
+        aiIndexes.push_back(19);
+        aiIndexes.push_back(30);
+        aiIndexes.push_back(31);
+        aiIndexes.push_back(16);
+        aiIndexes.push_back(5);
     }
     else
     {
-        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        for (size_t q = 0; q < gameState.getAICountInRace(); ++q)
         {
             aiIndexes.push_back(q);
         }

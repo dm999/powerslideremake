@@ -9,9 +9,9 @@ void PHYLoader::load(GameState& gameState) const
 
     std::vector<InitialVehicleSetup> initialVehicleSetupVec;
 
-    for(int q = 0; q < (GameState::mAIMax + 1); ++q)
+    for(int q = 0; q < (GameState::mAIMax + 1); ++q)//+ player
     {
-        if (q < 12)
+        if (q < GameState::mRaceGridCarsMax)
         {
             Ogre::DataStreamPtr fileToLoad = gameState.getPFLoaderData().getFile("data/tracks/" + gameState.getSTRPowerslide().getBaseDir(gameState.getTrackName()) + "/record", "car" + Conversions::DMToString(q) + ".phy");
             if (fileToLoad.get() && fileToLoad->isReadable())
@@ -75,7 +75,7 @@ void PHYLoader::load(GameState& gameState) const
         }
         else
         {
-            InitialVehicleSetup& initialVehicleSetup = initialVehicleSetupVec[q % 12];
+            InitialVehicleSetup& initialVehicleSetup = initialVehicleSetupVec[q % GameState::mRaceGridCarsMax];
             //initialVehicleSetupLast.mTrackPosition[0][3] += 3.0f;
             initialVehicleSetup.mTrackPosition[0][7] += 16.0f;
             //initialVehicleSetupLast.mTrackPosition[0][11] -= 10.0f;
