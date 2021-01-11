@@ -36,12 +36,15 @@ void PSBaseCar::timeStepAfter(Physics * physics)
 {
     (void)physics;
 
-    AdjustSuspension(   mModelEntity[0]->getMesh().get(),
-                        mSuspensionIndices, mSuspensionPointOriginalPos,
-                        -mPhysicsVehicle->getSuspensionHeight(3),
-                        -mPhysicsVehicle->getSuspensionHeight(2),
-                        -mPhysicsVehicle->getSuspensionHeight(1),
-                        -mPhysicsVehicle->getSuspensionHeight(0));
+    if (mPhysicsVehicle->getLife() > 0.0f)
+    {
+        AdjustSuspension(mModelEntity[0]->getMesh().get(),
+            mSuspensionIndices, mSuspensionPointOriginalPos,
+            -mPhysicsVehicle->getSuspensionHeight(3),
+            -mPhysicsVehicle->getSuspensionHeight(2),
+            -mPhysicsVehicle->getSuspensionHeight(1),
+            -mPhysicsVehicle->getSuspensionHeight(0));
+    }
 }
 
 void PSBaseCar::initModel(  lua_State * pipeline, 
