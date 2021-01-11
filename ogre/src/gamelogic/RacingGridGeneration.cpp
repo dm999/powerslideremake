@@ -44,10 +44,10 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        //if(gameState.getAIStrength() == Insane)
+        if(gameState.getAIStrength() == Insane || GameState::mAIMax >= GameState::mRaceGridCarsMax)
             resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
-        //else
-            //resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
+        else
+            resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
     }
 
     //solve collision
@@ -70,10 +70,10 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
                         (*found) = newCharName;
 
                         size_t foundIndex = found - res.begin();
-                        //if(gameState.getAIStrength() == Insane)
+                        if(gameState.getAIStrength() == Insane || GameState::mAIMax >= GameState::mRaceGridCarsMax)
                             resAISlot[foundIndex] = getSlotInsaneIndex(aiIndexes[newCharIndex]);
-                        //else
-                            //resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
+                        else
+                            resAISlot[foundIndex] = getSlotIndex(aiIndexes[newCharIndex]);
 
                         break;
                     }
@@ -93,22 +93,27 @@ std::vector<size_t> RacingGridGeneration::getEasyIndexes() const
 
     //from original 'random' generator
     //sub_48C4A0
-    /*
-    aiIndexes.push_back(8);
-    aiIndexes.push_back(20);
-    aiIndexes.push_back(10);
-    aiIndexes.push_back(9);
-    aiIndexes.push_back(14);
-    aiIndexes.push_back(15);
-    aiIndexes.push_back(2);
-    aiIndexes.push_back(21);
-    aiIndexes.push_back(22);
-    aiIndexes.push_back(1);
-    aiIndexes.push_back(0);
-    aiIndexes.push_back(7);*/
-    for (size_t q = 0; q < GameState::mAIMax; ++q)
+    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
     {
-        aiIndexes.push_back(q);
+        aiIndexes.push_back(8);
+        aiIndexes.push_back(20);
+        aiIndexes.push_back(10);
+        aiIndexes.push_back(9);
+        aiIndexes.push_back(14);
+        aiIndexes.push_back(15);
+        aiIndexes.push_back(2);
+        aiIndexes.push_back(21);
+        aiIndexes.push_back(22);
+        aiIndexes.push_back(1);
+        aiIndexes.push_back(0);
+        aiIndexes.push_back(7);
+    }
+    else
+    {
+        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        {
+            aiIndexes.push_back(q);
+        }
     }
 
     return aiIndexes;
@@ -120,23 +125,27 @@ std::vector<size_t> RacingGridGeneration::getMediumIndexes() const
 
     //from original 'random' generator
     //sub_48C530
-    /*
-    aiIndexes.push_back(16);
-    aiIndexes.push_back(5);
-    aiIndexes.push_back(3);
-    aiIndexes.push_back(11);
-    aiIndexes.push_back(24);
-    aiIndexes.push_back(18);
-    aiIndexes.push_back(4);
-    aiIndexes.push_back(17);
-    aiIndexes.push_back(23);
-    aiIndexes.push_back(12);
-    aiIndexes.push_back(8);
-    aiIndexes.push_back(20);
-    */
-    for (size_t q = 0; q < GameState::mAIMax; ++q)
+    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
     {
-        aiIndexes.push_back(q);
+        aiIndexes.push_back(16);
+        aiIndexes.push_back(5);
+        aiIndexes.push_back(3);
+        aiIndexes.push_back(11);
+        aiIndexes.push_back(24);
+        aiIndexes.push_back(18);
+        aiIndexes.push_back(4);
+        aiIndexes.push_back(17);
+        aiIndexes.push_back(23);
+        aiIndexes.push_back(12);
+        aiIndexes.push_back(8);
+        aiIndexes.push_back(20);
+    }
+    else
+    {
+        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        {
+            aiIndexes.push_back(q);
+        }
     }
 
     return aiIndexes;
@@ -149,26 +158,30 @@ std::vector<size_t> RacingGridGeneration::getHardIndexes() const
     //from original 'random' generator
     //sub_48C5C0                - hard
     //sub_48C650 -> sub_48C5C0  - insane
-    /*
-    for (size_t q = 0; q < 10; ++q)
+    if (GameState::mAIMax < GameState::mRaceGridCarsMax)
     {
-        aiIndexes.push_back(29);
-        aiIndexes.push_back(26);
-        aiIndexes.push_back(6);
-        aiIndexes.push_back(13);
-        aiIndexes.push_back(27);
-        aiIndexes.push_back(25);
-        aiIndexes.push_back(28);
-        aiIndexes.push_back(19);
-        aiIndexes.push_back(30);
-        aiIndexes.push_back(31);
-        aiIndexes.push_back(16);
-        aiIndexes.push_back(5);
-    }*/
-
-    for (size_t q = 0; q < GameState::mAIMax; ++q)
+        for (size_t q = 0; q < 10; ++q)
+        {
+            aiIndexes.push_back(29);
+            aiIndexes.push_back(26);
+            aiIndexes.push_back(6);
+            aiIndexes.push_back(13);
+            aiIndexes.push_back(27);
+            aiIndexes.push_back(25);
+            aiIndexes.push_back(28);
+            aiIndexes.push_back(19);
+            aiIndexes.push_back(30);
+            aiIndexes.push_back(31);
+            aiIndexes.push_back(16);
+            aiIndexes.push_back(5);
+        }
+    }
+    else
     {
-        aiIndexes.push_back(q);
+        for (size_t q = 0; q < GameState::mAIMax; ++q)
+        {
+            aiIndexes.push_back(q);
+        }
     }
 
     return aiIndexes;
