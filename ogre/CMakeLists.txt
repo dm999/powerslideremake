@@ -11,7 +11,7 @@ project(PowerslideRemake)
 
 #version
 set (PowerslideRemake_VERSION_MAJOR 1)
-set (PowerslideRemake_VERSION_MINOR 18)
+set (PowerslideRemake_VERSION_MINOR 21)
 set (PowerslideRemake_VERSION_BUILD 0)
 find_package(Git)
 if(GIT_FOUND)

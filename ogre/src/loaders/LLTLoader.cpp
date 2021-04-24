@@ -74,7 +74,7 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
 
                     track.push_back(tp);
                 }
-
+                /*
                 for(size_t q = 0; q < someCount; ++q)
                 {
                     Ogre::uint32 some_index, some_index2;
@@ -168,13 +168,16 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                     {
                         endendFound = true;
                     }
-                }
+                }*/
             }
 
         }
 
-        if(endendFound)
+        //if(endendFound)
         {
+            //EU assets error
+            std::sort(track.begin() + 1, track.end(), [](const TrackPoint& tp1, const TrackPoint& tp2) { return tp1.weight < tp2.weight; });
+
             std::vector<Ogre::Vector3> positions(track.size());
             std::vector<Ogre::Vector3> dirs(track.size());
             std::vector<Ogre::Real> weights(track.size());
@@ -183,7 +186,8 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
             size_t nextIndex = 0;
             for(size_t q = 0; q < track.size(); ++q)
             {
-                if(q != 0) nextIndex = track[nextIndex].index;
+                //if(q != 0) nextIndex = track[nextIndex].index;
+                nextIndex = q;
                 positions[q] = track[nextIndex].vert;
                 dirs[q] = track[nextIndex].dir;
                 weights[q] = track[nextIndex].weight;
