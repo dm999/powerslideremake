@@ -9,6 +9,23 @@ void CollisionDetection::init(const DE2::DE2_File& de2File)
     mDataVertexes = de2File.Data_Vertexes;
     mDataTextureCoord = de2File.Data_Texture_Coord;
     mDataTerrans = de2File.Data_TerranName;
+
+    for(size_t q = 0; q < mDataParts.size(); ++q)
+    {
+        mDataParts[q].Data_NormalsPerTri.resize(mDataParts[q].Data_Triangles.size());
+
+        for(size_t w = 0; w < mDataParts[q].Data_Triangles.size(); ++w)
+        {
+            Ogre::Vector3 pointA = convert(mDataVertexes[mDataParts[q].Data_Triangles[w].v0]);
+            Ogre::Vector3 pointB = convert(mDataVertexes[mDataParts[q].Data_Triangles[w].v1]);
+            Ogre::Vector3 pointC = convert(mDataVertexes[mDataParts[q].Data_Triangles[w].v2]);
+            Ogre::Vector3 normal = Ogre::Vector3(pointC - pointA).crossProduct(Ogre::Vector3(pointB - pointA));
+            normal.normalise();
+            mDataParts[q].Data_NormalsPerTri[w].x = normal.x;
+            mDataParts[q].Data_NormalsPerTri[w].y = normal.y;
+            mDataParts[q].Data_NormalsPerTri[w].z = normal.z;
+        }
+    }
 }
 
 void CollisionDetection::performCollisionDetection(const Ogre::Vector3& pos, const Ogre::Vector3& coreBaseGlobal, Ogre::Real collisionDistance)
@@ -451,11 +468,13 @@ void CollisionDetection::narrowSearch(const DE2::DE2_CollisionInfo& leaf, const 
             foundCollision.mTriangleIndex = leaf.triIndex;
 
             short triangleIndex = leaf.triIndex;
+            /*
             Ogre::Vector3 pointA = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v0]);
             Ogre::Vector3 pointB = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v1]);
             Ogre::Vector3 pointC = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v2]);
             foundCollision.mNormal = Ogre::Vector3(pointC - pointA).crossProduct(Ogre::Vector3(pointB - pointA));
-            foundCollision.mNormal.normalise();
+            foundCollision.mNormal.normalise();*/
+            foundCollision.mNormal = convert(mDataParts[partIndex].Data_NormalsPerTri[triangleIndex]);
 
             mFoundCollisions.push_back(foundCollision);
         }
@@ -558,8 +577,9 @@ void CollisionDetection::pointCollisionFinal(const Ogre::Ray& ray,
     Ogre::Vector3 pointA = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v0]);
     Ogre::Vector3 pointC = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v1]);
     Ogre::Vector3 pointB = convert(mDataVertexes[mDataParts[partIndex].Data_Triangles[triangleIndex].v2]);
-    Ogre::Vector3 normal = Ogre::Vector3(pointB - pointA).crossProduct(Ogre::Vector3(pointC - pointA));
-    normal.normalise();
+    //Ogre::Vector3 normal = Ogre::Vector3(pointB - pointA).crossProduct(Ogre::Vector3(pointC - pointA));
+    //normal.normalise();
+    Ogre::Vector3 normal = convert(mDataParts[partIndex].Data_NormalsPerTri[triangleIndex]);
 
     Ogre::Real dotP = -(ray.getOrigin().dotProduct(normal) - pointA.dotProduct(normal)) / ray.getDirection().dotProduct(normal);
 

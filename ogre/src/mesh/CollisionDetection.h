@@ -64,6 +64,7 @@ private:
     std::vector<DE2::DE2_CollisionInfo> mCollisionGobal;
     std::vector<DE2::DE2_Part> mDataParts;//amount = parts
     std::vector<DE2::DE2_Vertex> mDataVertexes;
+    std::vector<Ogre::Vector3> mNormalsPerTri;
     std::vector<DE2::DE2_TextureCoord> mDataTextureCoord;
     std::vector<std::string> mDataTerrans;
 

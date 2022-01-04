@@ -132,6 +132,7 @@ namespace DE2
 
 
         std::vector<DE2_Triangle> Data_Triangles;
+        std::vector<DE2_Vertex> Data_NormalsPerTri;//to speed up collision detection (see CollisionDetection.cpp)
 
         DE2_Part()
         {
