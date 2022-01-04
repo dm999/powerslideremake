@@ -59,7 +59,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         if(loaderListener)
             loaderListener->loadState(0.3f, "DE2 reading");//0.3 from BaseRaceMode::initData
 
-        loadResult = de2Loader.load(originalParts, fileToLoad);
+        loadResult = de2Loader.load(originalParts, fileToLoad, true);
 
         if(loaderListener)
             loaderListener->loadState(0.31f, "DE2 loaded");//0.3 from BaseRaceMode::initData
@@ -116,7 +116,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
             //create graphics entitys
             if(isGlobalReset)
             {
-                mergedMSH[q].preallocatePlainBuffer();
+                mergedMSH[q].preallocatePlainBuffer(true);
                 terrain = createMesh(   pipeline, 
                                         sceneMgr, nodeName, 
                                         centroid, min, max, 
@@ -373,9 +373,9 @@ void StaticMeshProcesser::mergeMSH(const MSHData& mshData, std::map<std::string,
                 mergedData.plainVertices.push_back(mshData.plainVertices[w * 3 + 1]);
                 mergedData.plainVertices.push_back(mshData.plainVertices[w * 3 + 2]);
 
-                mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 0]);
-                mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 1]);
-                mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 2]);
+                //mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 0]);
+                //mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 1]);
+                //mergedData.plainNormals.push_back(mshData.plainNormals[w * 3 + 2]);
 
                 mergedData.plainTexCoords.push_back(mshData.plainTexCoords[w * 3 + 0]);
                 mergedData.plainTexCoords.push_back(mshData.plainTexCoords[w * 3 + 1]);
@@ -562,7 +562,7 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
 
 
         //create interleaved buffer
-        mshData.makePlain(centroid);
+        mshData.makePlain(centroid, true);
 
         //http://www.ogre3d.org/tikiwiki/Generating+A+Mesh
         Ogre::MeshPtr pMesh = Ogre::MeshManager::getSingleton().createManual(entityName, TEMP_RESOURCE_GROUP_NAME);
@@ -575,8 +575,8 @@ Ogre::Entity* StaticMeshProcesser::createMesh(  lua_State * pipeline,
         decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
         offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
-        decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_NORMAL);
-        offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+        //decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_NORMAL);
+        //offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
         decl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_TEXTURE_COORDINATES);
         offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);

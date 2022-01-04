@@ -57,44 +57,58 @@ struct MSHData
     std::vector<std::vector<unsigned short> > submeshesTriangleIndixesDiffuse;
     std::vector<std::vector<unsigned int> > submeshesTriangleIndixesTerrainMaps;
 
-    void preallocatePlainBuffer()
+    void preallocatePlainBuffer(bool isTerrain)
     {
-        plainBuffer.resize(triCount * 3 * (3 + 3 + 3 + 1));//pos+norm+tex+color
+        if(isTerrain)
+            plainBuffer.resize(triCount * 3 * (3 + 3 + 1));//pos+tex+color
+        else
+            plainBuffer.resize(triCount * 3 * (3 + 3 + 3 + 1));//pos+norm+tex+color
     }
 
-    void preallocatePlainData()
+    void preallocatePlainData(bool isTerrain)
     {
-        preallocatePlainBuffer();
+        preallocatePlainBuffer(isTerrain);
 
         plainVertices.resize(triCount * 3);
-        plainNormals.resize(triCount * 3);
+        if(!isTerrain) plainNormals.resize(triCount * 3);
         plainTexCoords.resize(triCount * 3);
         plainColors.resize(triCount * 3);
     }
 
 
 
-    void makePlain(const Ogre::Vector3& centroid)
+    void makePlain(const Ogre::Vector3& centroid, bool isTerrain)
     {
+        size_t offset = 10;
+        if(isTerrain) offset = 7;
+
         //create interleaved buffer
         for(size_t q = 0; q < triCount * 3; ++q)
         {
-            plainBuffer[q * 10 + 0] = plainVertices[q].x - centroid.x;
-            plainBuffer[q * 10 + 1] = plainVertices[q].y - centroid.y;
-            plainBuffer[q * 10 + 2] = plainVertices[q].z - centroid.z;
+            size_t localOffset = 0;
 
-            plainBuffer[q * 10 + 3] = plainNormals[q].x;
-            plainBuffer[q * 10 + 4] = plainNormals[q].y;
-            plainBuffer[q * 10 + 5] = plainNormals[q].z;
+            plainBuffer[q * offset + localOffset + 0] = plainVertices[q].x - centroid.x;
+            plainBuffer[q * offset + localOffset + 1] = plainVertices[q].y - centroid.y;
+            plainBuffer[q * offset + localOffset + 2] = plainVertices[q].z - centroid.z;
+            localOffset += 3;
 
-            plainBuffer[q * 10 + 6] = plainTexCoords[q].x;
-            plainBuffer[q * 10 + 7] = plainTexCoords[q].y;
-            plainBuffer[q * 10 + 8] = plainTexCoords[q].z;
+            if(!isTerrain)
+            {
+                plainBuffer[q * offset + localOffset + 0] = plainNormals[q].x;
+                plainBuffer[q * offset + localOffset + 1] = plainNormals[q].y;
+                plainBuffer[q * offset + localOffset + 2] = plainNormals[q].z;
+                localOffset += 3;
+            }
+
+            plainBuffer[q * offset + localOffset + 0] = plainTexCoords[q].x;
+            plainBuffer[q * offset + localOffset + 1] = plainTexCoords[q].y;
+            plainBuffer[q * offset + localOffset + 2] = plainTexCoords[q].z;
+            localOffset += 3;
 
             Ogre::RGBA colour;
             Ogre::Root::getSingleton().convertColourValue(plainColors[q], &colour);
 
-            *reinterpret_cast<Ogre::RGBA *>(&plainBuffer[q * 10 + 9]) = colour;
+            *reinterpret_cast<Ogre::RGBA *>(&plainBuffer[q * offset + localOffset + 0]) = colour;
         }
     }
 

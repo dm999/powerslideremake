@@ -11,7 +11,7 @@ class DE2Loader
 public:
     DE2Loader(){}
 
-    bool load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fileToLoad);
+    bool load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fileToLoad, bool isTerrain);
 
     const DE2::DE2_File& getDE2() const {return mDE2;}
 

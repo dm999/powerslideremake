@@ -35,7 +35,7 @@ void ModelsPool::loadArrow(const PFLoader& pfloader)
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
         std::vector<MSHData> arrowParts;
-        bool loadResult = DE2Loader().load(arrowParts, fileToLoad);
+        bool loadResult = DE2Loader().load(arrowParts, fileToLoad, false);
         if(loadResult)
         {
 
@@ -67,7 +67,7 @@ void ModelsPool::loadVehicle(const PFLoader& pfloader, vehicleModel& vehicle, co
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
         std::vector<MSHData> vehicleParts;
-        bool loadResult = DE2Loader().load(vehicleParts, fileToLoad);
+        bool loadResult = DE2Loader().load(vehicleParts, fileToLoad, false);
         if(loadResult)
         {
             assert(vehicleParts.size() == 5);
@@ -97,7 +97,7 @@ Ogre::Entity * ModelsPool::createEntityFromMSH(MSHData& source, const std::strin
     aabb.merge(min);
     aabb.merge(max);
 
-    source.makePlain(Ogre::Vector3::ZERO);
+    source.makePlain(Ogre::Vector3::ZERO, false);
 
     pMesh->sharedVertexData = new Ogre::VertexData();
     pMesh->sharedVertexData->vertexCount = source.triCount * 3;

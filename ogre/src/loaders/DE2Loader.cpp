@@ -655,7 +655,7 @@ namespace DE2
 
 }//DE2 namespace
 
-bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fileToLoad)
+bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fileToLoad, bool isTerrain)
 {
     bool res = false;
 
@@ -672,7 +672,7 @@ bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fil
             int partIndex = mDE2.indexesForHighestLODS[q];
             processPart(mDE2, partIndex, mshData);
 
-            mshData.preallocatePlainData();
+            mshData.preallocatePlainData(isTerrain);
             for(size_t qq = 0; qq < mshData.triCount; ++qq)
             {
                 Ogre::Vector3 A = mshData.vertexes[mshData.triIndexes[qq].a];
@@ -687,16 +687,19 @@ bool DE2Loader::load(std::vector<MSHData>& parts, const Ogre::DataStreamPtr& fil
                 Ogre::ColourValue colB = mshData.colors[mshData.texCoordsIndexes[qq].b];
                 Ogre::ColourValue colC = mshData.colors[mshData.texCoordsIndexes[qq].c];
 
-                Ogre::Vector3 normal = (B - A).crossProduct(C - A);
-                normal.normalise();
-
                 mshData.plainVertices[qq * 3 + 0] = A;
                 mshData.plainVertices[qq * 3 + 1] = B;
                 mshData.plainVertices[qq * 3 + 2] = C;
 
-                mshData.plainNormals[qq * 3 + 0] = normal;
-                mshData.plainNormals[qq * 3 + 1] = normal;
-                mshData.plainNormals[qq * 3 + 2] = normal;
+                if(!isTerrain)
+                {
+                    Ogre::Vector3 normal = (B - A).crossProduct(C - A);
+                    normal.normalise();
+
+                    mshData.plainNormals[qq * 3 + 0] = normal;
+                    mshData.plainNormals[qq * 3 + 1] = normal;
+                    mshData.plainNormals[qq * 3 + 2] = normal;
+                }
 
                 mshData.plainTexCoords[qq * 3 + 0] = texA;
                 mshData.plainTexCoords[qq * 3 + 1] = texB;
