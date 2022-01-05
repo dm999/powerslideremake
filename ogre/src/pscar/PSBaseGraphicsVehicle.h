@@ -83,6 +83,8 @@ private:
     Ogre::Vector3 mBackROriginalPos;
     Ogre::Vector3 mCOG;
 
+    CommonIncludes::shared_ptr<Ogre::MovableObject::Listener> mVehicleListeners[InitialVehicleSetup::mWheelsAmount + 1];
+
     static Ogre::NameGenerator nameGenMaterials;
     static Ogre::NameGenerator nameGenTextures;
 };

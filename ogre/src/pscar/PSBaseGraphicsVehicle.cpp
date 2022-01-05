@@ -142,14 +142,15 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
         }
 
         if(!isAdvancedLighting)
-            mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, false));
+            mVehicleListeners[q] = std::make_shared<VehicleSceneObjectListener>(mModelEntity[q], sceneMgr, false);
         else
         {
             if(isAttenuateExcludeBox && !isSandBlaster)
-                mModelEntity[q]->setListener(new PlayerVehicleSceneObjectListener(mModelEntity[q], sceneMgr, gameState.getExclusions()));
+                mVehicleListeners[q] = std::make_shared<PlayerVehicleSceneObjectListener>(mModelEntity[q], sceneMgr, gameState.getExclusions());
             else
-                mModelEntity[q]->setListener(new VehicleSceneObjectListener(mModelEntity[q], sceneMgr, true));
+                mVehicleListeners[q] = std::make_shared<VehicleSceneObjectListener>(mModelEntity[q], sceneMgr, true);
         }
+        mModelEntity[q]->setListener(mVehicleListeners[q].get());
 
         //mModelEntity[q]->setCastShadows(gameState.isCastShadows());
         mModelEntity[q]->setCastShadows(false);
