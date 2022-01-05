@@ -14,7 +14,7 @@ void VideoPlayer::init(const PFLoader& gameshell, const std::string& filePath, c
 
     if(videoFile.get() && videoFile->isReadable())
     {
-        mCinepakDecode = CommonIncludes::shared_ptr<CinepackDecode>(new CinepackDecode());
+        mCinepakDecode = std::make_shared<CinepackDecode>();
 
         if(mCinepakDecode->init(videoFile))
         {

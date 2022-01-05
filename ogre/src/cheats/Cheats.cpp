@@ -13,16 +13,16 @@ Cheats::Cheats(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sceneMana
     )
     : mWorld(world)
 {
-    mCheatBurns.reset(new CheatBurns(meshProesser, sceneManager, isFog
+    mCheatBurns = std::make_shared<CheatBurns>(meshProesser, sceneManager, isFog
 #ifndef NO_OPENAL
         , soundProcesser
 #endif
-        ));
-    mCheatBombs.reset(new CheatBombs(meshProesser, sceneManager
+        );
+    mCheatBombs = std::make_shared<CheatBombs>(meshProesser, sceneManager
 #ifndef NO_OPENAL
         , soundProcesser
 #endif
-        ));
+        );
     mWorld->addListener(mCheatBurns.get());
     mWorld->addListener(mCheatBombs.get());
 }

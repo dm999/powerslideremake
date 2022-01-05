@@ -268,7 +268,7 @@ void AVIReadContainer::initStream(const std::string &filename)
 */
 void AVIReadContainer::initStream(Ogre::DataStreamPtr m_file_stream_)
 {
-    m_file_stream = CommonIncludes::shared_ptr<VideoInputStream>(new VideoInputStream(m_file_stream_));;
+    m_file_stream = std::make_shared<VideoInputStream>(m_file_stream_);
 }
 
 void AVIReadContainer::close()

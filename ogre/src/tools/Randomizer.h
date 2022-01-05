@@ -22,28 +22,14 @@ public:
         {
             assert(min <= max);
             UNIFORM_INT<unsigned int> rndShift(min, max);
-#if defined(_MSC_VER) && _MSC_VER < 1600 || ((defined(__GNUC__) && __GNUC__ == 4) && (defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 7))
-            UNIFORM_INT<unsigned int> rndInit(0, 0xFFFFFF);
-            RANDOM_ENGINE rng(rndInit(m_rng));
-            CommonIncludes::variate_generator<RANDOM_ENGINE, UNIFORM_INT<unsigned int> > genShift(rng, rndShift);
-            return genShift();
-#else
             return rndShift(m_rng);
-#endif
         }
 
         int GetRandomIntGeometric(double successProbability)
         {
             assert(0 < successProbability && successProbability <= 1);
             GEOMETRIC_DIST<int> rndShift(successProbability);
-#if defined(_MSC_VER) && _MSC_VER < 1600 || ((defined(__GNUC__) && __GNUC__ == 4) && (defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 7))
-            UNIFORM_INT<unsigned int> rndInit(0, 0xFFFFFF);
-            RANDOM_ENGINE rng(rndInit(m_rng));
-            CommonIncludes::variate_generator<RANDOM_ENGINE, GEOMETRIC_DIST<int> > genShift(rng, rndShift);
-            return genShift();
-#else
             return rndShift(m_rng);
-#endif
         }
 
         int GetRandomSign()
@@ -55,14 +41,7 @@ public:
         {
             assert(min <= max);
             UNIFORM_REAL<float> rndShift(min, max);
-#if defined(_MSC_VER) && _MSC_VER < 1600 || ((defined(__GNUC__) && __GNUC__ == 4) && (defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 7))
-            UNIFORM_INT<unsigned int> rndInit(0, 0xFFFFFF);
-            RANDOM_ENGINE rng(rndInit(m_rng));
-            CommonIncludes::variate_generator<RANDOM_ENGINE, UNIFORM_REAL<float> > genShift(rng, rndShift);
-            return genShift();
-#else
             return rndShift(m_rng);
-#endif
         }
 
 private:

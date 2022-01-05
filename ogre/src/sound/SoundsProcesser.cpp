@@ -50,16 +50,16 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
 {
     stopSounds();
 
-    mCrash1.reset(new SoundSource("data/sfx/crashes", "8bcrash1.its", mPFLoaderData));
-    mCrash2.reset(new SoundSource("data/sfx/crashes", "8bcrash2.its", mPFLoaderData));
+    mCrash1 = std::make_shared<SoundSource>("data/sfx/crashes", "8bcrash1.its", mPFLoaderData);
+    mCrash2 = std::make_shared<SoundSource>("data/sfx/crashes", "8bcrash2.its", mPFLoaderData);
     mCrash1->setPitch(0.5f);
     mCrash2->setPitch(0.5f);
     mCrash1->setRelativeToListener(true);
     mCrash2->setRelativeToListener(true);
 
-    mBeforeStart1.reset(new SoundSource("data/sfx/beeps", "8bst1.its", mPFLoaderData));
-    mBeforeStart2.reset(new SoundSource("data/sfx/beeps", "8bst2.its", mPFLoaderData));
-    mBeforeStart3.reset(new SoundSource("data/sfx/beeps", "8bst3.its", mPFLoaderData));
+    mBeforeStart1 = std::make_shared<SoundSource>("data/sfx/beeps", "8bst1.its", mPFLoaderData);
+    mBeforeStart2 = std::make_shared<SoundSource>("data/sfx/beeps", "8bst2.its", mPFLoaderData);
+    mBeforeStart3 = std::make_shared<SoundSource>("data/sfx/beeps", "8bst3.its", mPFLoaderData);
     mBeforeStart1->setRelativeToListener(true);
     mBeforeStart2->setRelativeToListener(true);
     mBeforeStart3->setRelativeToListener(true);
@@ -78,27 +78,27 @@ void SoundsProcesser::initSounds(const PFLoader& mPFLoaderData)
         if(q < (mSurfacesCount - 1))
         {
             std::string fileNameCrash = "8bsurfcrash" + Conversions::DMToString(q) + ".its";
-            mSurfaceCrash[q].reset(new SoundSource("data/sfx/surfaces", fileNameCrash, mPFLoaderData));
+            mSurfaceCrash[q] = std::make_shared<SoundSource>("data/sfx/surfaces", fileNameCrash, mPFLoaderData);
             mSurfaceCrash[q]->setPitch(0.5f);
             mSurfaceCrash[q]->setRelativeToListener(true);
 
         }
     }
 
-    mRoll.reset(new SoundSource("data/sfx/surfaces", "8broll0.its", mPFLoaderData));
+    mRoll = std::make_shared<SoundSource>("data/sfx/surfaces", "8broll0.its", mPFLoaderData);
     mRoll->setLooping(true);
     mRoll->setPitch(0.5f);
     mRoll->setRelativeToListener(true);
 
-    mBurn.reset(new SoundSource("data/sfx/misc", "gun.its", mPFLoaderData));
+    mBurn = std::make_shared<SoundSource>("data/sfx/misc", "gun.its", mPFLoaderData);
     mBurn->setRelativeToListener(true);
     mBurn->setPitch(0.5f);
 
-    mBomb.reset(new SoundSource("data/sfx/misc", "grenade.its", mPFLoaderData));
+    mBomb = std::make_shared<SoundSource>("data/sfx/misc", "grenade.its", mPFLoaderData);
     mBomb->setRelativeToListener(true);
     mBomb->setPitch(0.5f);
 
-    mExplosion.reset(new SoundSource("data/sfx/misc", "esh.its", mPFLoaderData));
+    mExplosion = std::make_shared<SoundSource>("data/sfx/misc", "esh.its", mPFLoaderData);
     mExplosion->setPitch(0.5f);
     mExplosion->setAttenuation(0.05f);
     mExplosion->setReferenceDistance(30.0f);
@@ -201,11 +201,11 @@ void SoundsProcesser::initSoundsUI(const PFLoader& mPFLoaderShell)
 {
     stopSoundsUI();
 
-    mUIOver.reset(new SoundSource("data/gameshell", "over.its", mPFLoaderShell));
+    mUIOver = std::make_shared<SoundSource>("data/gameshell", "over.its", mPFLoaderShell);
     mUIOver->setPitch(2.0f);
     mUIOver->setRelativeToListener(true);
 
-    mUIDown.reset(new SoundSource("data/gameshell", "down.its", mPFLoaderShell));
+    mUIDown = std::make_shared<SoundSource>("data/gameshell", "down.its", mPFLoaderShell);
     mUIDown->setPitch(2.0f);
     mUIDown->setRelativeToListener(true);
 }

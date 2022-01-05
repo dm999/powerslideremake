@@ -41,7 +41,7 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mShadowLightDistanceFromCar(40.0f),
     mIsGlobalReset(true),
     mRearCamera(0),
-    mUIRace(new UIRace(modeContext)),
+    mUIRace(std::make_shared<UIRace>(modeContext)),
     mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
@@ -166,7 +166,7 @@ void BaseRaceMode::initCamera()
     mCamera->setAspectRatio(1.0f * Ogre::Real(actualWidth) / Ogre::Real(actualHeight) / (640.0f / 480.0f));
     mCamera->setFOVy(Ogre::Degree(90.0f));
 
-    mCameraMan.reset(new CameraMan(mCamera, mStaticMeshProcesser, mModeContext.getGameState().getCameraPositionType()));
+    mCameraMan = std::make_shared<CameraMan>(mCamera, mStaticMeshProcesser, mModeContext.getGameState().getCameraPositionType());
     mModeContext.mInputHandler->resetCameraMenPointer(mCameraMan.get());
 
     Ogre::int32 aiCamIndex = mLuaManager.ReadScalarInt("Scene.AICamIndex", mModeContext.mPipeline);
@@ -700,14 +700,14 @@ void BaseRaceMode::initWorld()
     const Ogre::Vector2& fogStartEnd = mModeContext.mGameState.getSTRPowerslide().getFogStartEnd(mModeContext.mGameState.getTrackName());
     bool isFogEnabled = fogStartEnd.x >= 1000000.0f ? false : true;
 
-    mWorld.reset(new Physics(&mStaticMeshProcesser));
+    mWorld = std::make_shared<Physics>(&mStaticMeshProcesser);
     mWorld->addListener(this);
 
-    mCheats.reset(new Cheats(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled
+    mCheats = std::make_shared<Cheats>(&mStaticMeshProcesser, mSceneMgr, mWorld.get(), isFogEnabled
 #ifndef NO_OPENAL
         , &mModeContext.getSoundsProcesser()
 #endif
-        ));
+        );
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[BaseRaceMode::initWorld]: Exit");
 }

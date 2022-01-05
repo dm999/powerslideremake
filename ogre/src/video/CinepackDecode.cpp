@@ -378,7 +378,7 @@ bool CinepackDecode::init(Ogre::DataStreamPtr stream)
 {
     clear();
 
-    mAviContainer = CommonIncludes::shared_ptr<AVIReadContainer>(new AVIReadContainer());
+    mAviContainer = std::make_shared<AVIReadContainer>();
 
     mAviContainer->initStream(stream);
 
@@ -437,7 +437,7 @@ void CinepackDecode::resetCurrentFrame()
 {
     if(mIsInited)
     {
-        mCinepakContext = CommonIncludes::shared_ptr<CinepakContext>(new CinepakContext());
+        mCinepakContext = std::make_shared<CinepakContext>();
         const size_t bufSize = mAviContainer->getWidth() * mAviContainer->getHeight() * 3;//rgb
         mFrame.resize(bufSize);
         mFrame.assign(bufSize, 0);

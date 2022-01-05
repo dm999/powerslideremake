@@ -18,16 +18,16 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext) :
     mIsEnterFromBaseMenu(true),
     mIsLobbyEntered(true)
 {
-    mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
+    mUIMainMenuMulti = std::make_shared<UIMainMenuMulti>(modeContext, this);
 
     //start multiplayer controller
     if(mModeContext.mGameState.isMultiplayerMaster())
     {
-        mMultiplayerController.reset(new MultiplayerControllerMaster(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
+        mMultiplayerController = std::make_shared<MultiplayerControllerMaster>(this, mModeContext.mGameState.getMultiplayerBroadcastInterval());
     }
     else
     {
-        mMultiplayerController.reset(new MultiplayerControllerSlave(this, mModeContext.mGameState.getMultiplayerBroadcastInterval()));
+        mMultiplayerController = std::make_shared<MultiplayerControllerSlave>(this, mModeContext.mGameState.getMultiplayerBroadcastInterval());
     }
 }
 
@@ -39,7 +39,7 @@ MenuMultiMode::MenuMultiMode(const ModeContext& modeContext, const CommonInclude
     mIsEnterFromBaseMenu(false),
     mIsLobbyEntered(true)
 {
-    mUIMainMenuMulti.reset(new UIMainMenuMulti(modeContext, this));
+    mUIMainMenuMulti = std::make_shared<UIMainMenuMulti>(modeContext, this);
 
     //get multiplayer controller from previous (racing) mode
     assert(controller.get());

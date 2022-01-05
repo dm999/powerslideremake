@@ -21,7 +21,7 @@ public:
 
     T* add()
     {
-        mUI.push_back(CommonIncludes::shared_ptr<T>(new T()));
+        mUI.push_back(std::make_shared<T>());
         return mUI[mUI.size() - 1].get();
     }
 

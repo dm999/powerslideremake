@@ -15,7 +15,7 @@ bool MultiplayerControllerSlave::startLobbySlave(std::string ip, uint16_t port, 
     bool res = true;
 
     try{
-        mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
+        mLobby = std::make_shared<multislider::Lobby>(ip, port);
 
         typedef std::vector<multislider::RoomInfo> roomV;
         const roomV& rooms = multislider::Lobby::getRooms(ip, port);

@@ -6,7 +6,7 @@
 MenuMode::MenuMode(const ModeContext& modeContext, const GameMode gameMode, SinglePlayerMenuStates state) :
     BaseMenuMode(modeContext, true)
 {
-    mUIMainMenu.reset(new UIMainMenu(modeContext, gameMode, this, state));
+    mUIMainMenu = std::make_shared<UIMainMenu>(modeContext, gameMode, this, state);
 }
 
 void MenuMode::doInitData(LoaderListener* loaderListener)

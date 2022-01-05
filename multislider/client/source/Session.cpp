@@ -150,7 +150,7 @@ namespace multislider
             throw RuntimeError("Session[Startup]: callback can't be null!");
         }
 
-        mUdpInterface.reset(new UdpInterface());
+        mUdpInterface = std::make_shared<UdpInterface>();
         if (!mUdpInterface->open(mServerIp, mServerPort)) {
             throw RuntimeError("Session[Session]: Failed to setup socket");
         }

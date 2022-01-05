@@ -471,9 +471,9 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
 
     if(!mIsAI)
     {
-        mEngLow.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData()));
-        mEngMid.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_mid.its", gameState.getPFLoaderData()));
-        mEngHigh.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
+        mEngLow = std::make_shared<SoundSource>("data/cars/" + carPath + "/sfx/enggears", "eng_low.its", gameState.getPFLoaderData());
+        mEngMid = std::make_shared<SoundSource>("data/cars/" + carPath + "/sfx/enggears", "eng_mid.its", gameState.getPFLoaderData());
+        mEngHigh = std::make_shared<SoundSource>("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData());
 
         mEngLow->setReferenceDistance(referenceDist);
         mEngMid->setReferenceDistance(referenceDist);
@@ -489,7 +489,7 @@ void PSBaseCar::initSounds(lua_State * pipeline, const GameState& gameState)
     }
     else
     {
-        mEngHigh.reset(new SoundSource("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData()));
+        mEngHigh = std::make_shared<SoundSource>("data/cars/" + carPath + "/sfx/enggears", "eng_high.its", gameState.getPFLoaderData());
 
         mEngHigh->setReferenceDistance(referenceDist);
 

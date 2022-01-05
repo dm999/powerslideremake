@@ -21,13 +21,13 @@
 #endif
 
 SoundSource::SoundSource() :
-    mSoundBuffer(new sf::SoundBuffer()),
-    mSound(new sf::Sound(*mSoundBuffer.get()))
+    mSoundBuffer(std::make_shared<sf::SoundBuffer>()),
+    mSound(std::make_shared<sf::Sound>(*mSoundBuffer.get()))
 {}
 
 SoundSource::SoundSource(const std::string& subFolder, const std::string& fileName, const PFLoader& mPFLoaderData) :
-    mSoundBuffer(new sf::SoundBuffer()),
-    mSound(new sf::Sound(*mSoundBuffer.get()))
+    mSoundBuffer(std::make_shared<sf::SoundBuffer>()),
+    mSound(std::make_shared<sf::Sound>(*mSoundBuffer.get()))
 {
     readITS(subFolder, fileName, mPFLoaderData);
     mSoundBuffer->loadFromSamples(&mRawData[0], mRawData.size(), mHeader.channels, mHeader.samplesPerSec);

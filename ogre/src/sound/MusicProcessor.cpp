@@ -12,7 +12,7 @@ void MusicProcessor::initTrack(const std::string& track, bool isLooped)
 
     float vol = getVolume();
 
-    mMusic = CommonIncludes::shared_ptr<sf::Music>(new sf::Music());
+    mMusic = std::make_shared<sf::Music>();
 
     setVolume(vol);
 

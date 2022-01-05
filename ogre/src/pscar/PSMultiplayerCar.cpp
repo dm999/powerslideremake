@@ -29,7 +29,7 @@ void PSMultiplayerCar::initModel(    lua_State * pipeline,
 
     if(isHuman)
     {
-        mPlayerTitle.reset(new Ogre::MovableText("Title", humanName, "SdkTrays/Caption", 5.0f));
+        mPlayerTitle = std::make_shared<Ogre::MovableText>("Title", humanName, "SdkTrays/Caption", 5.0f);
         mPlayerTitle->setTextAlignment(Ogre::MovableText::H_CENTER, Ogre::MovableText::V_ABOVE);
         mPlayerTitle->setLocalTranslation(Ogre::Vector3(0.0f, 10.0f, 0.0f));
         mModelNode->attachObject(mPlayerTitle.get());

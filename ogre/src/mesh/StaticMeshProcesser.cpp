@@ -887,7 +887,7 @@ void StaticMeshProcesser::loadTerrainMaps(GameState& gameState)
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            CommonIncludes::shared_ptr<Ogre::Image> img = CommonIncludes::shared_ptr<Ogre::Image>(new Ogre::Image());
+            CommonIncludes::shared_ptr<Ogre::Image> img = std::make_shared<Ogre::Image>();
             bool isLoaded = TRALoader().load(fileToLoad, img);
             if(isLoaded)
             {

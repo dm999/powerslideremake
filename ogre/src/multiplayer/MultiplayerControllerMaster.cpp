@@ -19,7 +19,7 @@ bool MultiplayerControllerMaster::startLobbyMaster(std::string ip, uint16_t port
 
     try{
 
-        mLobby = multislider::shared_ptr<multislider::Lobby>(new multislider::Lobby(ip, port));
+        mLobby = std::make_shared<multislider::Lobby>(ip, port);
 
         multislider::Lobby::Status status = mLobby->createRoom(userName, roomName, version, playersLimits + aiAmount, aiAmount, this);
         if(status == multislider::Lobby::SUCCESS)

@@ -1,6 +1,8 @@
 
 #include "GameModeSwitcher.h"
 
+#include <memory>
+
 #include "../gamemodes/MenuMode.h"
 #include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
@@ -23,11 +25,11 @@ GameModeSwitcher::GameModeSwitcher(const ModeContext& modeContext)
 
     mContext.setGameModeSwitcher(this);
 
-    mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Options_Name));
+    mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Options_Name);
     mUIBackground.show();
-    mUILoader.reset(new UIBackgroundLoaderProgressTracks(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
-    mUILoaderChampionship.reset(new UIBackgroundLoaderProgressTracksChampionship(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f));
-    mUIUnloader.reset(new UIBackgroundLoaderProgress(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f));
+    mUILoader = std::make_shared<UIBackgroundLoaderProgressTracks>(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f);
+    mUILoaderChampionship = std::make_shared<UIBackgroundLoaderProgressTracksChampionship>(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading", "background.tga", 381.0f, 399.0f, 85.0f, 555.0f);
+    mUIUnloader = std::make_shared<UIBackgroundLoaderProgress>(mContext, modeContext.getGameState().getPFLoaderData(), "data/misc/loading/interface", "background.tga", 414.0f, 430.0f, 65.0f, 570.0f);
     mMenuMode->initData(this);
     mUIBackground.hide();
     mMenuMode->initCamera();
@@ -80,7 +82,7 @@ void GameModeSwitcher::frameEnded()
             mIsInitialLoadPassed = false;//to disable unloader progress
             clear();
             mGameMode = ModeMenu;
-            mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
+            mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_SingleMulti);
             mMenuMode->initData(this);
             mMenuMode->initCamera();
             mIsInitialLoadPassed = true;
@@ -217,7 +219,7 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Podium));
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Podium);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -245,7 +247,7 @@ void GameModeSwitcher::frameEnded()
                     }
                 }
 
-                mMenuMode.reset(new MenuMode(mContext, mGameMode, state));
+                mMenuMode = std::make_shared<MenuMode>(mContext, mGameMode, state);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -259,7 +261,7 @@ void GameModeSwitcher::frameEnded()
             {
                 mGameMode = ModeMenu;
 
-                mMenuMode.reset(new MenuMode(mContext, ModeMenuTimetrial, State_Track));
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenuTimetrial, State_Track);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -275,7 +277,7 @@ void GameModeSwitcher::frameEnded()
 
                 //mContext.mTrayMgr->showCursor();
 
-                mMenuMultiMode.reset(new MenuMultiMode(mContext, controller, multiplayerSessionStartInfo));
+                mMenuMultiMode = std::make_shared<MenuMultiMode>(mContext, controller, multiplayerSessionStartInfo);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMultiMode->initData(this);
@@ -294,7 +296,7 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
-            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mPlayerMode = std::make_shared<SinglePlayerMode>(mContext);
             mIsLoadPassed = false;
             mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
@@ -316,7 +318,7 @@ void GameModeSwitcher::frameEnded()
             std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
             mContext.getGameState().setRaceParameters(availTracks[championshipTrack], mContext.getGameState().getAIStrength());
 
-            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mPlayerMode = std::make_shared<SinglePlayerMode>(mContext);
             mIsLoadPassed = false;
             mUILoaderChampionship->show(championshipTrack, mContext, true);
             mPlayerMode->initData(this);
@@ -334,7 +336,7 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
-            mPlayerMode.reset(new SinglePlayerMode(mContext));
+            mPlayerMode = std::make_shared<SinglePlayerMode>(mContext);
             mIsLoadPassed = false;
             mUILoader->show(mContext, false);
             mPlayerMode->initData(this);
@@ -363,7 +365,7 @@ void GameModeSwitcher::frameEnded()
 
             //mContext.mTrayMgr->hideCursor();
 
-            mPlayerMode.reset(new MultiPlayerMode(mContext, controller));
+            mPlayerMode = std::make_shared<MultiPlayerMode>(mContext, controller);
             mIsLoadPassed = false;
             mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
@@ -386,7 +388,7 @@ void GameModeSwitcher::frameEnded()
             mContext.getGameState().setAICountInRace(mContext.getGameState().getAICount());
 
             mIsInitialLoadPassed = false;//to disable unloader progress
-            mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_SingleMulti));
+            mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_SingleMulti);
             mMenuMode->initData(this);
             mMenuMode->initCamera();
             mIsInitialLoadPassed = true;
@@ -400,7 +402,7 @@ void GameModeSwitcher::frameEnded()
             mGameMode = mGameModeNext;
 
             mIsInitialLoadPassed = false;//to disable unloader progress
-            mMenuMultiMode.reset(new MenuMultiMode(mContext));
+            mMenuMultiMode = std::make_shared<MenuMultiMode>(mContext);
             mMenuMultiMode->initData(this);
             mMenuMultiMode->initCamera();
 
@@ -410,7 +412,7 @@ void GameModeSwitcher::frameEnded()
             {
                 clear();
                 mGameMode = ModeMenu;
-                mMenuMode.reset(new MenuMode(mContext, ModeMenu, State_Multi));
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Multi);
                 mMenuMode->initData(this);
                 mMenuMode->initCamera();
             }

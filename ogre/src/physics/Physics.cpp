@@ -114,9 +114,9 @@ PhysicsVehicle* Physics::addVehicle(InitialVehicleSetup& initialVehicleSetup, PS
     {
         CommonIncludes::shared_ptr<PhysicsVehicle> vehicle;
         if(isAI)
-            vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicleAI(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis, itKeyboard, static_cast<PSAICar*>(vehiclePtr)));
+            vehicle = std::make_shared<PhysicsVehicleAI>(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis, itKeyboard, static_cast<PSAICar*>(vehiclePtr));
         else
-            vehicle = CommonIncludes::shared_ptr<PhysicsVehicle>(new PhysicsVehicle(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis, type));
+            vehicle = std::make_shared<PhysicsVehicle>(this, mMeshProesser, initialVehicleSetup, wheelNodes, chassis, type);
         ret = vehicle.get();
         mVehicles.insert(std::make_pair(vehiclePtr, vehicle));
     }

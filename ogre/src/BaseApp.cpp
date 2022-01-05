@@ -142,7 +142,7 @@ BaseApp::BaseApp() :
     mResourcesCfg(Ogre::StringUtil::BLANK),
     mShutDown(false),
     mLuaError(0),
-    mSMFactory(new CustomSceneManagerFactory())
+    mSMFactory(std::make_shared<CustomSceneManagerFactory>())
 {
 #if defined(__ANDROID__)
     LOGI("BaseApp[BaseApp]: Begin"); 
@@ -234,7 +234,7 @@ bool BaseApp::configure()
       SetClassLong( hwnd, GCL_HICON, iconID );
 #endif
 
-        mInputHandler.reset(new InputHandler(mWindow, this));
+        mInputHandler = std::make_shared<InputHandler>(mWindow, this);
 
         mRoot->addSceneManagerFactory(mSMFactory.get());
 
@@ -314,8 +314,8 @@ void BaseApp::go(bool isSafeRun)
 
 bool BaseApp::setup()
 {
-    mRoot.reset(new Ogre::Root());
-    mOverlaySystem.reset(new CustomOverlaySystem());
+    mRoot = std::make_shared<Ogre::Root>();
+    mOverlaySystem = std::make_shared<CustomOverlaySystem>();
 
     //read config, parse main lua
     setupResources();
@@ -349,13 +349,13 @@ bool BaseApp::setup()
 
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
 
-    mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
+    mTrayMgr = std::make_shared<CustomTrayManager>("InterfaceName", mWindow, mInputHandler->getInputContext());
     //mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
     //mTrayMgr->toggleAdvancedFrameStats();
 
-    mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
+    mGameModeSwitcher = std::make_shared<GameModeSwitcher>(createModeContext());
 
     createFrameListener();
 
@@ -1129,8 +1129,8 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
 
     mGameState.setDataDir(dataDir);
 
-    mRoot.reset(new Ogre::Root());
-    mOverlaySystem.reset(new CustomOverlaySystem());
+    mRoot = std::make_shared<Ogre::Root>();
+    mOverlaySystem = std::make_shared<CustomOverlaySystem>();
 
     AAssetManager* assetMgr = AAssetManager_fromJava(env, assetManager);
     mAssetMgr = assetMgr;
@@ -1154,14 +1154,14 @@ void BaseApp::androidCreate(JNIEnv * env, jobject obj, jobject assetManager, con
     mMusicProcessor.init(dataDir);
 #endif
 
-    LOGI(std::string("Lua error: " + Conversions::DMToString(mLuaError)).c_str());
+    LOGI("Lua error: %d", mLuaError);
 
 
     mRoot->installPlugin(new Ogre::GLES2Plugin());
     mRoot->installPlugin(new Ogre::ParticleFXPlugin());
 
     const Ogre::RenderSystemList& rsList = mRoot->getAvailableRenderers();
-    LOGI(std::string("Renderers amount: " + Conversions::DMToString(rsList.size())).c_str());
+    LOGI("Renderers amount: %d", rsList.size());
     Ogre::RenderSystem *selectedRenderSystem = rsList.at(0);
 
     mRoot->setRenderSystem(selectedRenderSystem);
@@ -1203,7 +1203,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             opt["androidConfig"] = Ogre::StringConverter::toString((int)config); 
             mWindow = Ogre::Root::getSingleton().createRenderWindow("Powerslide Remake", 0, 0, false, &opt);
 
-            mInputHandler.reset(new InputHandler(mWindow, this));
+            mInputHandler = std::make_shared<InputHandler>(mWindow, this);
 
             mRoot->addSceneManagerFactory(mSMFactory.get());
 
@@ -1213,7 +1213,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
 
             LOGI("BaseApp[androidInitWindow]: Before CustomTrayManager"); 
 
-            mTrayMgr.reset(new CustomTrayManager("InterfaceName", mWindow, mInputHandler->getInputContext()));
+            mTrayMgr = std::make_shared<CustomTrayManager>("InterfaceName", mWindow, mInputHandler->getInputContext());
             //mTrayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
             //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
             mTrayMgr->hideCursor();
@@ -1232,7 +1232,7 @@ void BaseApp::androidInitWindow(JNIEnv * env, jobject obj,  jobject surface)
             mMusicProcessor.setVolume(mGameState.getMusicGain());
 #endif
 
-            mGameModeSwitcher.reset(new GameModeSwitcher(createModeContext()));
+            mGameModeSwitcher = std::make_shared<GameModeSwitcher>(createModeContext());
 
             LOGI("BaseApp[androidInitWindow]: Before createFrameListener"); 
             createFrameListener();

@@ -54,7 +54,7 @@ MultiPlayerMode::MultiPlayerMode(const ModeContext& modeContext, const CommonInc
     mIsBomb(false)
 {
 
-    mUIRaceMulti.reset(new UIRaceMulti(modeContext, this));
+    mUIRaceMulti = std::make_shared<UIRaceMulti>(modeContext, this);
 
     assert(controller.get());
 
@@ -564,7 +564,7 @@ void MultiPlayerMode::prepareDataForSession(const MultiplayerSessionStartInfo& s
         for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
             PSAICar& aiCar = mModeContext.mGameState.getAICar(q);
-            CommonIncludes::shared_ptr<MultiplayerAILapFinishController> humanLapsController(new MultiplayerAILapFinishController(mModeContext.mGameState, this, aiCar));
+            CommonIncludes::shared_ptr<MultiplayerAILapFinishController> humanLapsController(std::make_shared<MultiplayerAILapFinishController>(mModeContext.mGameState, this, aiCar));
             mAILapsController.push_back(humanLapsController);
             aiCar.getLapUtils().setEvents(humanLapsController.get());
         }
