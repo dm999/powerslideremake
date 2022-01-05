@@ -20,7 +20,7 @@ if(GIT_FOUND)
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             OUTPUT_VARIABLE DESCRIBE_BUILD
             OUTPUT_STRIP_TRAILING_WHITESPACE)
-    string(SUBSTRING ${DESCRIBE_BUILD} 0 6 PowerslideRemake_VERSION_BUILD_SHA)
+    string(SUBSTRING ${DESCRIBE_BUILD} 0 7 PowerslideRemake_VERSION_BUILD_SHA)
     message(STATUS "Git found, build " ${PowerslideRemake_VERSION_BUILD_SHA})
 else()
     set (PowerslideRemake_VERSION_BUILD_SHA "N/A")
