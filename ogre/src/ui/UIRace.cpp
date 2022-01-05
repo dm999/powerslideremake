@@ -1786,12 +1786,13 @@ void UIRace::createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelE
     Ogre::Real viewportWidth = om.getViewportWidth();
     Ogre::Real viewportHeight = om.getViewportHeight();
 
-    Ogre::Real panelWidth = viewportWidth / 3.0f;
-    Ogre::Real panelHeight = viewportHeight / 8.0f;
+    Ogre::Real panelWidth = viewportWidth / 4.0f;
+    Ogre::Real panelHeight = viewportHeight / 10.0f;
 
     Ogre::Real panelLeft = viewportWidth / 2.0f - panelWidth / 2.0f;
+    Ogre::Real panelTop = viewportHeight / 40.0f;
 
-    mRearViewMirrorPanel = createPanel("MirrorPanel", panelWidth, panelHeight, panelLeft, 0.0f, "BaseWhite");
+    mRearViewMirrorPanel = createPanel("MirrorPanel", panelWidth, panelHeight, panelLeft, panelTop, "BaseWhite");
 
     mRearViewMirrorPanel->setUV(0.0f, 0.0f, 1.0f, 1.0f);
 
