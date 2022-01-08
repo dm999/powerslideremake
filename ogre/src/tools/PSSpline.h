@@ -13,6 +13,8 @@ public:
 
     float getPoint(float val) const;
 
+    void setVScale(float val) { mVScale = val; }
+
 private:
 
     std::vector<float> mValues;
