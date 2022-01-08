@@ -38,6 +38,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsRaceStarted(false),
     mInputType(type),
     mIsNitro(false),
+    mIsSticky(false),
     mNitroCounter(0)
 {
     mCarEngine.setTransmissionType(trAuto);

@@ -48,6 +48,10 @@ public:
     bool isNitro() const{return mIsNitro;}
     size_t getNitroFrames() const {return mNitroCounter;}
 
+    void enableSticky(){ mIsSticky = true; }
+    void disableSticky(){ mIsSticky = false; }
+    bool isSticky() const{ return mIsSticky; }
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -182,6 +186,8 @@ private:
 
     bool mIsNitro;
     size_t mNitroCounter;
+
+    bool mIsSticky;
 
 };
 

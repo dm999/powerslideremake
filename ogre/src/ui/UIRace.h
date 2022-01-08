@@ -80,6 +80,8 @@ public:
 
     void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
 
+    void setVisibleCheat(bool isVisible);
+
     static void loadDashboardCars(const GameState& gameState);
 
 private:
@@ -97,6 +99,8 @@ private:
     Ogre::PanelOverlayElement* mPanelBomb;
     Ogre::PanelOverlayElement* mPanelNitro;
 #endif
+
+    Ogre::PanelOverlayElement* mPanelSticky;
 
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyL;
     Ogre::PanelOverlayElement* mBeforeStartPanelReadyC;

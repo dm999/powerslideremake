@@ -275,6 +275,11 @@ void BaseRaceMode::createBombByPlayer()
 #endif
 }
 
+void BaseRaceMode::cheatByPlayer(bool isEnabled)
+{
+    mUIRace->setVisibleCheat(isEnabled);
+}
+
 void BaseRaceMode::mousePressed(const Ogre::Vector2& pos)
 {
     mUIRace->mousePressed(pos);
@@ -364,6 +369,7 @@ void BaseRaceMode::clearScene()
 {
     mUIRace->clearMiscPanelText();
     mUIRace->setVisibleFinishSign(false);
+    mUIRace->setVisibleCheat(false);
 
     mModeContext.mGameState.resetGamePaused();
     mModeContext.mGameState.setRaceStarted(false);
@@ -995,7 +1001,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
 #endif
 
     if(!mModeContext.mGameState.getRaceFinished())
-        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos, mModeContext.mGameState.getSpeedCheatUsed());
+        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos, mModeContext.mGameState.getSpeedCheatUsed() || mModeContext.mGameState.getStickyCheatUsed());
 
     mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
 

@@ -539,6 +539,29 @@ void BaseApp::enableNitro()
     }
 }
 
+void BaseApp::enableSticky()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
+            {
+                mGameState.setStickyCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
+                mGameModeSwitcher->cheatByPlayer(true);//enable icon
+            }
+            else
+            {
+                mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
+                mGameModeSwitcher->cheatByPlayer(false);//disable icon
+            }
+        }
+    }
+}
+
 bool BaseApp::setShutdown(bool isOnEsc)
 {
     if(mGameModeSwitcher->isLoadPassed())

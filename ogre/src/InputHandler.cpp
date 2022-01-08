@@ -117,6 +117,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         if(noSpecialKey())
             baseApp->dropCamera();
     }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmSticky))
+    {
+        baseApp->enableSticky();
+    }
     else if (arg.key == OIS::KC_F5)
     {
         baseApp->restartRace();

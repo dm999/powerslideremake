@@ -649,7 +649,9 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
             Ogre::Real suspensionTraction = mWheelsImpulseResulted[q] * 4.0f /
                                             (mInitialVehicleSetup.mChassisMass * mInitialVehicleSetup.mGravityVelocity);
 
-            Ogre::Real suspensionTractionSpline = mInitialVehicleSetup.mSuspensionTraction.getPoint(suspensionTraction);
+            Ogre::Real stickyMul = 1.0f;
+            if(vehicle.isSticky()) stickyMul = 1.5f;
+            Ogre::Real suspensionTractionSpline = mInitialVehicleSetup.mSuspensionTraction.getPoint(suspensionTraction) * stickyMul;
 
             Ogre::Vector3 velocityWithSteering = impulseProj.crossProduct(mWheelsAveragedNormal[q]);
             velocityWithSteering *= sinSteer;

@@ -49,6 +49,7 @@ public:
     void createBombByPlayer();
     void dropCamera();
     void enableNitro();
+    void enableSticky();
 
     // scripting functions
     void parseFile(const std::string& fileName);
