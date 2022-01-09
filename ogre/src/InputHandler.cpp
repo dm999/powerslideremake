@@ -133,6 +133,22 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->enableApollo();
     }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmLunar))
+    {
+        baseApp->enableLunar();
+    }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmJump))
+    {
+        baseApp->enableJump();
+    }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmBlast))
+    {
+        baseApp->enableBlast();
+    }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmGlider))
+    {
+        baseApp->enableGlider();
+    }
     else if (arg.key == OIS::KC_F5)
     {
         baseApp->restartRace();

@@ -41,16 +41,6 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
     {
         {
             std::vector<Ogre::String> texName;
-            texName.push_back("OriginalCheatBlast");
-            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatBlast",
-                "Test/Diffuse",
-                texName,
-                1.0f,
-                TEMP_RESOURCE_GROUP_NAME);
-        }
-
-        {
-            std::vector<Ogre::String> texName;
             texName.push_back("OriginalCheatLight");
             Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatLight",
                 "Test/Diffuse",
@@ -97,6 +87,46 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             std::vector<Ogre::String> texName;
             texName.push_back("OriginalCheatApollo");
             Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatApollo",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatLunar");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatLunar",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatJump");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatJump",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatBlast");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatBlast",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatGlider");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatGlider",
                 "Test/Diffuse",
                 texName,
                 1.0f,
@@ -1146,6 +1176,10 @@ void UIRace::setVisibleCheat(bool isVisible, InputKeyMapping cheat)
         if(cheat == InputKeyMapping::kmSpider) mPanelSticky->setMaterialName("Test/CheatSpider");
         if(cheat == InputKeyMapping::kmICBM) mPanelSticky->setMaterialName("Test/CheatICBM");
         if(cheat == InputKeyMapping::kmApollo) mPanelSticky->setMaterialName("Test/CheatApollo");
+        if(cheat == InputKeyMapping::kmLunar) mPanelSticky->setMaterialName("Test/CheatLunar");
+        if(cheat == InputKeyMapping::kmJump) mPanelSticky->setMaterialName("Test/CheatJump");
+        if(cheat == InputKeyMapping::kmBlast) mPanelSticky->setMaterialName("Test/CheatBlast");
+        if(cheat == InputKeyMapping::kmGlider) mPanelSticky->setMaterialName("Test/CheatGlider");
         mPanelSticky->show();
     }
     else mPanelSticky->hide();
@@ -1188,7 +1222,6 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 #endif
 
 #if defined(__ANDROID__)
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "blast_m_4.tex", "OriginalCheatBlast", TEMP_RESOURCE_GROUP_NAME);
         TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "light_m_4.tex", "OriginalCheatLight", TEMP_RESOURCE_GROUP_NAME);
 #endif
 
@@ -1196,6 +1229,10 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "spider_m_4.tex", "OriginalCheatSpider", TEMP_RESOURCE_GROUP_NAME);
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "icbm_m_4.tex", "OriginalCheatICBM", TEMP_RESOURCE_GROUP_NAME);
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "apollo_m_4.tex", "OriginalCheatApollo", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "lunar_m_4.tex", "OriginalCheatLunar", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "jump_m_4.tex", "OriginalCheatJump", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "blast_m_4.tex", "OriginalCheatBlast", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "glider_m_4.tex", "OriginalCheatGlider", TEMP_RESOURCE_GROUP_NAME);
 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", TEMP_RESOURCE_GROUP_NAME);

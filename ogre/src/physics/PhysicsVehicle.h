@@ -64,6 +64,22 @@ public:
     void disableApollo() { mIsApollo = false; }
     bool isApollo() const{ return mIsApollo; }
 
+    void enableLunar() { mIsLunar = true; }
+    void disableLunar() { mIsLunar = false; }
+    bool isLunar() const{ return mIsLunar; }
+
+    void enableJump(std::function<void(void)>& f) { mIsJump = true; mDisableJump = f; }
+    void disableJump() { mIsJump = false; }
+    bool isJump() const{ return mIsJump; }
+
+    void enableBlast() { mIsBlast = true; }
+    void disableBlast() { mIsBlast = false; }
+    bool isBlast() const{ return mIsBlast; }
+
+    void enableGlider() { mIsGlider = true; }
+    void disableGlider() { mIsGlider = false; }
+    bool isGlider() const{ return mIsGlider; }
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -206,6 +222,11 @@ private:
     bool mIsICBM;
     bool mIsApollo;
     size_t mApolloAmount;
+    bool mIsLunar;
+    bool mIsJump;
+    std::function<void(void)> mDisableJump;
+    bool mIsBlast;
+    bool mIsGlider;
 
 };
 

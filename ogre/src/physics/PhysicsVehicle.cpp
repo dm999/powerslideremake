@@ -38,11 +38,15 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsRaceStarted(false),
     mInputType(type),
     mIsNitro(false),
+    mNitroCounter(0),
     mIsSticky(false),
     mIsSpider(false),
     mIsICBM(false),
     mIsApollo(false),
-    mNitroCounter(0)
+    mIsLunar(false),
+    mIsJump(false),
+    mIsBlast(false),
+    mIsGlider(false)
 {
     mCarEngine.setTransmissionType(trAuto);
 

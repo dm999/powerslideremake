@@ -616,12 +616,96 @@ void BaseApp::enableApollo()
     }
 }
 
+void BaseApp::enableLunar()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isLunar())
+            {
+                disableAllCheats();
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableLunar();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmLunar);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
+void BaseApp::enableJump()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isJump())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                std::function<void(void)> f = [&]() { disableAllCheats(); };
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableJump(f);
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmJump);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
+void BaseApp::enableBlast()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isBlast())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableBlast();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmBlast);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
+void BaseApp::enableGlider()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isGlider())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableGlider();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmGlider);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
 void BaseApp::disableAllCheats()
 {
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSpider();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableICBM();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableApollo();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableLunar();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableJump();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableBlast();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableGlider();
 
     mGameModeSwitcher->cheatByPlayer(false, InputKeyMapping::kmEmpty);//disable icon
 }

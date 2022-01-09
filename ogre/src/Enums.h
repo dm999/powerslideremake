@@ -98,8 +98,12 @@ enum InputKeyMapping
     kmSpider = 13,
     kmICBM = 14,
     kmApollo = 15,
+    kmLunar = 16,
+    kmJump = 17,
+    kmBlast = 18,
+    kmGlider = 19,
 
-    kmEmpty = 16
+    kmEmpty = 20
 };
 
 #endif

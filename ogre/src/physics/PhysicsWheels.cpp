@@ -634,10 +634,14 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     rearTraction += rearTractionDiff - breaks;
     frontTraction += frontTractionDiff + breaks;
 
+    size_t wheelsOnRoad = 0;
+
     for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
     {
         if(mIsCollided[q])
         {
+            ++wheelsOnRoad;
+
             const TerrainData& terrain = mMeshProcesser->getTerrainData(mTerrainIndex[q]);
 
             if(mWheelsAveragedNormal[q].y > maxWheelNormal.y)maxWheelNormal = mWheelsAveragedNormal[q];
@@ -790,6 +794,21 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
 
         vehicle.mImpulseRot.y += vehicle.mSteeringOriginal;
         vehicle.mImpulseRot *= mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot;
+    }
+
+    if(vehicle.isLunar())
+    {
+        gravityVelocity *= 0.33f;
+    }
+
+    if(vehicle.isJump() && wheelsOnRoad)
+    {
+        vehicle.mImpulseLinearInc -= carRotV[1] * -20.0f;
+    }
+    if(vehicle.isJump() && !wheelsOnRoad)
+    {
+        vehicle.disableJump();
+        vehicle.mDisableJump();
     }
 
     if(throttleAdjusterCounter > 0)

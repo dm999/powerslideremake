@@ -48,11 +48,17 @@ public:
     void createBurnByPlayer();
     void createBombByPlayer();
     void dropCamera();
+
+    //cheats
     void enableNitro();
     void enableSticky();
     void enableSpider();
     void enableICBM();
     void enableApollo();
+    void enableLunar();
+    void enableJump();
+    void enableBlast();
+    void enableGlider();
     void disableAllCheats();
 
     // scripting functions
