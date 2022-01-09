@@ -600,6 +600,8 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     carRotV[1] = Ogre::Vector3(carRot[0][1], carRot[1][1], -carRot[2][1]);
     carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
+    Ogre::Real breaksOrig = breaks;
+
     Ogre::Vector3 maxWheelNormal = Ogre::Vector3::ZERO;
     maxWheelNormal.y = -2.0f;
 
@@ -738,15 +740,9 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         }
     }
 
-    if(/*check noRoll*/ false && maxWheelNormal.y > -1.0f)
+    if(/*check noRoll*/ false && maxWheelNormal.y > -1.0f)//no roll for easy mode only
     {
-        Ogre::Vector3 diffN = maxWheelNormal - carRotV[1];
-        diffN.normalise();
-        diffN *= 4.0f;
-        if(diffN.squaredLength() > 0.0f)
-        {
-            vehicle.mImpulseRotInc += diffN.crossProduct(carRotV[1]);
-        }
+        vehicle.adjustRot(maxWheelNormal, carRotV[1], 4.0f);
     }
 
     if(vehicle.isSpider())
@@ -769,6 +765,31 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     if(vehicle.isICBM())
     {
         vehicle.mImpulseLinearInc -= carRotV[2] * -3.0f;
+    }
+
+    if(vehicle.isApollo())
+    {
+        Ogre::Real amount = static_cast<float>(vehicle.mApolloAmount) * 0.03f;
+
+        if(vehicle.mApolloAmount < 60) ++vehicle.mApolloAmount;
+
+        vehicle.mImpulseLinearInc += carRotV[1] * amount - vehicle.mSteeringOriginal * 0.1f * carRotV[0] + (throttle - breaksOrig) * 0.12f * carRotV[2];
+
+        {
+            Ogre::Vector3 diffRot = carRotV[1] - vehicle.mSteeringOriginal * 0.1f * carRotV[0] + (throttle - breaksOrig) * 0.12f * carRotV[2];
+
+            vehicle.adjustRot(diffRot, carRotV[1], vehicle.mVehicleVelocityMod * 40.0f);
+        }
+
+        {
+            Ogre::Vector3 diffRot(carRotV[0].x, 0.0f, carRotV[0].z);
+            diffRot.normalise();
+
+            vehicle.adjustRot(diffRot, carRotV[0], 2.0f);
+        }
+
+        vehicle.mImpulseRot.y += vehicle.mSteeringOriginal;
+        vehicle.mImpulseRot *= mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot;
     }
 
     if(throttleAdjusterCounter > 0)

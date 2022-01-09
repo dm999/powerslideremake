@@ -52,6 +52,7 @@ public:
     void enableSticky();
     void enableSpider();
     void enableICBM();
+    void enableApollo();
     void disableAllCheats();
 
     // scripting functions

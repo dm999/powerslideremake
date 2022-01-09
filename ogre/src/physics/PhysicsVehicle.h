@@ -60,6 +60,10 @@ public:
     void disableICBM() { mIsICBM = false; }
     bool isICBM() const{ return mIsICBM; }
 
+    void enableApollo() { mIsApollo = true; mApolloAmount = 1; }
+    void disableApollo() { mIsApollo = false; }
+    bool isApollo() const{ return mIsApollo; }
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -156,6 +160,8 @@ private:
     void turnOverRestore(bool isTurnOver);
     bool fallOffRestore();
 
+    void adjustRot(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val);
+
     Ogre::Real adjustSteering();
 
     StaticMeshProcesser* mMeshProcesser;
@@ -198,6 +204,8 @@ private:
     bool mIsSticky;
     bool mIsSpider;
     bool mIsICBM;
+    bool mIsApollo;
+    size_t mApolloAmount;
 
 };
 

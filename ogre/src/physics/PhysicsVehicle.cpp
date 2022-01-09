@@ -41,6 +41,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsSticky(false),
     mIsSpider(false),
     mIsICBM(false),
+    mIsApollo(false),
     mNitroCounter(0)
 {
     mCarEngine.setTransmissionType(trAuto);
@@ -525,13 +526,7 @@ void PhysicsVehicle::turnOverRestore(bool isTurnOver)
         carRotV[2] = Ogre::Vector3(-carRot[0][2], -carRot[1][2], carRot[2][2]);
 
         Ogre::Real turnOverRestoreVal = 500.0f / (mImpulseRot.length() + 2.0f);
-        Ogre::Vector3 upDiff = Ogre::Vector3::UNIT_Y - carRotV[1];
-        turnOverRestoreVal *= upDiff.length();
-        if(turnOverRestoreVal != 0.0f)
-        {
-            upDiff *= turnOverRestoreVal;
-            mImpulseRotInc += upDiff.crossProduct(carRotV[1]);
-        }
+        adjustRot(Ogre::Vector3::UNIT_Y, carRotV[1], turnOverRestoreVal);
 
         --mTurnOverValue;
 
@@ -591,6 +586,19 @@ bool PhysicsVehicle::fallOffRestore()
     }
 
     return ret;
+}
+
+void PhysicsVehicle::adjustRot(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val)
+{
+    Ogre::Vector3 ret;
+
+    Ogre::Vector3 upDiff = A - B;
+    val *= upDiff.length();
+    if(val != 0.0f)
+    {
+        upDiff *= val;
+        mImpulseRotInc += upDiff.crossProduct(B);
+    }
 }
 
 void PhysicsVehicle::gearUp()

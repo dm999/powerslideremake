@@ -463,6 +463,7 @@ void GameState::setDefaultKeyCodeMappers()
     mInputKeysKeyboard[InputKeyMapping::kmSticky] = OIS::KC_F5;
     mInputKeysKeyboard[InputKeyMapping::kmSpider] = OIS::KC_F6;
     mInputKeysKeyboard[InputKeyMapping::kmICBM] = OIS::KC_F7;
+    mInputKeysKeyboard[InputKeyMapping::kmApollo] = OIS::KC_F8;
 
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
     {

@@ -596,11 +596,32 @@ void BaseApp::enableICBM()
     }
 }
 
+void BaseApp::enableApollo()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isApollo())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableApollo();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmApollo);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
 void BaseApp::disableAllCheats()
 {
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSpider();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableICBM();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableApollo();
 
     mGameModeSwitcher->cheatByPlayer(false, InputKeyMapping::kmEmpty);//disable icon
 }

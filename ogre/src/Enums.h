@@ -89,6 +89,7 @@ enum InputKeyMapping
 
     kmHandBreak = 7,
 
+    //cheats
     kmBurn = 8,
     kmBomb = 9,
     kmNitro = 10,
@@ -96,8 +97,9 @@ enum InputKeyMapping
     kmSticky = 12,
     kmSpider = 13,
     kmICBM = 14,
+    kmApollo = 15,
 
-    kmEmpty = 15
+    kmEmpty = 16
 };
 
 #endif

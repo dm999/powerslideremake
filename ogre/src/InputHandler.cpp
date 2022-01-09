@@ -129,6 +129,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->enableICBM();
     }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmApollo))
+    {
+        baseApp->enableApollo();
+    }
     else if (arg.key == OIS::KC_F5)
     {
         baseApp->restartRace();
