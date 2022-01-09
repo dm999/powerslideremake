@@ -57,7 +57,7 @@ public:
     void enableApollo();
     void enableLunar();
     void enableJump();
-    void enableBlast();
+    void enableHover();
     void enableGlider();
     void disableAllCheats();
 

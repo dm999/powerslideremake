@@ -72,9 +72,9 @@ public:
     void disableJump() { mIsJump = false; }
     bool isJump() const{ return mIsJump; }
 
-    void enableBlast() { mIsBlast = true; }
-    void disableBlast() { mIsBlast = false; }
-    bool isBlast() const{ return mIsBlast; }
+    void enableHover() { mPrevMaxTravel = mVehicleSetup.mMaxTravel; mVehicleSetup.mMaxTravel = 6.0f;  mIsHover = true; }
+    void disableHover() { mIsHover = false; mVehicleSetup.mMaxTravel = mPrevMaxTravel; }
+    bool isHover() const{ return mIsHover; }
 
     void enableGlider() { mIsGlider = true; }
     void disableGlider() { mIsGlider = false; }
@@ -177,6 +177,7 @@ private:
     bool fallOffRestore();
 
     void adjustRot(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val);
+    void adjustRot2(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val);
 
     Ogre::Real adjustSteering();
 
@@ -225,7 +226,8 @@ private:
     bool mIsLunar;
     bool mIsJump;
     std::function<void(void)> mDisableJump;
-    bool mIsBlast;
+    bool mIsHover;
+    Ogre::Real mPrevMaxTravel;
     bool mIsGlider;
 
 };

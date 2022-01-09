@@ -141,9 +141,9 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->enableJump();
     }
-    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmBlast))
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmHover))
     {
-        baseApp->enableBlast();
+        baseApp->enableHover();
     }
     else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmGlider))
     {

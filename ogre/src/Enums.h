@@ -100,7 +100,7 @@ enum InputKeyMapping
     kmApollo = 15,
     kmLunar = 16,
     kmJump = 17,
-    kmBlast = 18,
+    kmHover = 18,
     kmGlider = 19,
 
     kmEmpty = 20

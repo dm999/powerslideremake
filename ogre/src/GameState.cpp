@@ -466,7 +466,7 @@ void GameState::setDefaultKeyCodeMappers()
     mInputKeysKeyboard[InputKeyMapping::kmApollo] = OIS::KC_F8;
     mInputKeysKeyboard[InputKeyMapping::kmLunar] = OIS::KC_F9;
     mInputKeysKeyboard[InputKeyMapping::kmJump] = OIS::KC_F10;
-    mInputKeysKeyboard[InputKeyMapping::kmBlast] = OIS::KC_F11;
+    mInputKeysKeyboard[InputKeyMapping::kmHover] = OIS::KC_F11;
     mInputKeysKeyboard[InputKeyMapping::kmGlider] = OIS::KC_F12;
 
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)

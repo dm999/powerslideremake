@@ -367,7 +367,7 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle, bool& processShift)
                     mWorldNormalWeighted[q] = worldNormal * shiftParam;
             }
 
-            suspHeight = calcSuspensionLength(suspHeight, q);
+            suspHeight = calcSuspensionLength(vehicle, suspHeight, q);
 
             mSuspensionHeight[q] = suspHeight;
 
@@ -445,7 +445,7 @@ void PhysicsWheels::process(PhysicsVehicle& vehicle, bool& processShift)
         }
         else
         {
-            mSuspensionHeight[q] = calcSuspensionLength(mInitialVehicleSetup.mMaxTravel * 2.0f, q);
+            mSuspensionHeight[q] = calcSuspensionLength(vehicle, mInitialVehicleSetup.mMaxTravel * 2.0f, q);
         }
     }
 }
@@ -561,7 +561,7 @@ Ogre::Real PhysicsWheels::averageCollisionNormal(const Ogre::Vector3& matrixYCol
     return finalDistance;
 }
 
-float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
+float PhysicsWheels::calcSuspensionLength(const PhysicsVehicle& vehicle, float len, size_t wheelIndex)
 {
     float res = 0.0f;
 
@@ -587,6 +587,8 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
             if(mSpringVal[wheelIndex] > 2.0f)
                 mSpringVal[wheelIndex] = 2.0f;
     }
+
+    if(vehicle.isHover()) res = 0.0f;
 
     return res;
 }
@@ -809,6 +811,35 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
     {
         vehicle.disableJump();
         vehicle.mDisableJump();
+    }
+
+    if(vehicle.isHover())
+    {
+        Ogre::Vector3 maxNormal(0.0f, -1.0f, 0.0f);
+
+        for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
+        {
+            if(mIsCollided[q])
+            {
+                if(mWheelsAveragedNormal[q].y > maxNormal.y)
+                {
+                    maxNormal = mWheelsAveragedNormal[q];
+                }
+            }
+        }
+
+        if(wheelsOnRoad)
+        {
+            Ogre::Vector3 adjRot = maxNormal - vehicle.mSteeringOriginal * 0.9f * carRotV[0] + (throttle - breaksOrig) * 0.3f * carRotV[2];
+            vehicle.adjustRot2(adjRot, carRotV[1], 2.5f);
+        }
+
+        vehicle.mImpulseLinearInc += (throttle * 0.8f - breaksOrig * 0.4f) * carRotV[2] - carRotV[1] * -0.5f;
+
+        vehicle.mImpulseRot *= mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot;
+
+        Ogre::Vector3 adjRotMore = vehicle.mSteeringOriginal * -2.0f * carRotV[0];
+        vehicle.mImpulseRotInc += adjRotMore.crossProduct(carRotV[2]);
     }
 
     if(vehicle.isGlider() && (!wheelsOnRoad || breaksOrig > 0.0f))

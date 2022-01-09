@@ -45,7 +45,8 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsApollo(false),
     mIsLunar(false),
     mIsJump(false),
-    mIsBlast(false),
+    mIsHover(false),
+    mPrevMaxTravel(mVehicleSetup.mMaxTravel),
     mIsGlider(false)
 {
     mCarEngine.setTransmissionType(trAuto);
@@ -594,8 +595,6 @@ bool PhysicsVehicle::fallOffRestore()
 
 void PhysicsVehicle::adjustRot(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val)
 {
-    Ogre::Vector3 ret;
-
     Ogre::Vector3 upDiff = A - B;
     val *= upDiff.length();
     if(val != 0.0f)
@@ -603,6 +602,13 @@ void PhysicsVehicle::adjustRot(const Ogre::Vector3& A, const Ogre::Vector3& B, O
         upDiff *= val;
         mImpulseRotInc += upDiff.crossProduct(B);
     }
+}
+
+void PhysicsVehicle::adjustRot2(const Ogre::Vector3& A, const Ogre::Vector3& B, Ogre::Real val)
+{
+    Ogre::Vector3 upDiff = A - B;
+    upDiff *= val;
+    mImpulseRotInc += upDiff.crossProduct(B);
 }
 
 void PhysicsVehicle::gearUp()

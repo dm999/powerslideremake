@@ -656,7 +656,7 @@ void BaseApp::enableJump()
     }
 }
 
-void BaseApp::enableBlast()
+void BaseApp::enableHover()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle
@@ -664,12 +664,12 @@ void BaseApp::enableBlast()
     {
         if(mGameState.getRaceStarted())
         {
-            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isBlast())
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isHover())
             {
                 disableAllCheats();
                 mGameState.setSpeedCheatUsed(true);
-                mGameState.getPlayerCar().getPhysicsVehicle()->enableBlast();
-                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmBlast);//enable icon
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableHover();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmHover);//enable icon
             }
             else disableAllCheats();
         }
@@ -704,7 +704,7 @@ void BaseApp::disableAllCheats()
     mGameState.getPlayerCar().getPhysicsVehicle()->disableApollo();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableLunar();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableJump();
-    mGameState.getPlayerCar().getPhysicsVehicle()->disableBlast();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableHover();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableGlider();
 
     mGameModeSwitcher->cheatByPlayer(false, InputKeyMapping::kmEmpty);//disable icon
