@@ -549,7 +549,7 @@ void BaseApp::enableSticky()
         if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
         {
             disableAllCheats();
-            mGameState.setStickyCheatUsed(true);
+            mGameState.setSpeedCheatUsed(true);
             mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
             mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmSticky);//enable icon
         }
@@ -576,10 +576,31 @@ void BaseApp::enableSpider()
     }
 }
 
+void BaseApp::enableICBM()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
+        if(mGameState.getRaceStarted())
+        {
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isICBM())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableICBM();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmICBM);//enable icon
+            }
+            else disableAllCheats();
+        }
+    }
+}
+
 void BaseApp::disableAllCheats()
 {
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
     mGameState.getPlayerCar().getPhysicsVehicle()->disableSpider();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableICBM();
 
     mGameModeSwitcher->cheatByPlayer(false, InputKeyMapping::kmEmpty);//disable icon
 }

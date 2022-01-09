@@ -125,6 +125,10 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
     {
         baseApp->enableSpider();
     }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmICBM))
+    {
+        baseApp->enableICBM();
+    }
     else if (arg.key == OIS::KC_F5)
     {
         baseApp->restartRace();

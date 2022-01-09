@@ -766,6 +766,11 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         if(amount > 0.0f) gravityVelocity = (-mInitialVehicleSetup.mGravityVelocity / amount) * normal;
     }
 
+    if(vehicle.isICBM())
+    {
+        vehicle.mImpulseLinearInc -= carRotV[2] * -3.0f;
+    }
+
     if(throttleAdjusterCounter > 0)
         --throttleAdjusterCounter;
 

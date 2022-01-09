@@ -56,6 +56,10 @@ public:
     void disableSpider() { mIsSpider = false; }
     bool isSpider() const{ return mIsSpider; }
 
+    void enableICBM() { mIsICBM = true; }
+    void disableICBM() { mIsICBM = false; }
+    bool isICBM() const{ return mIsICBM; }
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -193,6 +197,7 @@ private:
 
     bool mIsSticky;
     bool mIsSpider;
+    bool mIsICBM;
 
 };
 

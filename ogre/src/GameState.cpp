@@ -52,7 +52,6 @@ GameState::GameState() :
     mIsGamePaused(false),
     mInputType(itKeyboard),
     mIsSpeedCheatUsed(false),
-    mIsStickyCheatUsed(false),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
     mMultiplayerUserName(mPlayerName),
@@ -463,6 +462,7 @@ void GameState::setDefaultKeyCodeMappers()
     mInputKeysKeyboard[InputKeyMapping::kmDropCam] = OIS::KC_F4;
     mInputKeysKeyboard[InputKeyMapping::kmSticky] = OIS::KC_F5;
     mInputKeysKeyboard[InputKeyMapping::kmSpider] = OIS::KC_F6;
+    mInputKeysKeyboard[InputKeyMapping::kmICBM] = OIS::KC_F7;
 
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
     {

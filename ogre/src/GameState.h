@@ -209,9 +209,6 @@ public:
     void setSpeedCheatUsed(bool isUsed) {mIsSpeedCheatUsed = isUsed;}
     bool getSpeedCheatUsed() const{return mIsSpeedCheatUsed;}
 
-    void setStickyCheatUsed(bool isUsed) { mIsStickyCheatUsed = isUsed; }
-    bool getStickyCheatUsed() const{ return mIsStickyCheatUsed; }
-
     void setMultiplayerMaster(bool option){mIsMultiplayerMaster = option;}
     bool isMultiplayerMaster()const{return mIsMultiplayerMaster;}
 
@@ -343,7 +340,6 @@ private:
     OIS::MouseButtonID mInputKeysMouse[InputKeyMapping::kmEmpty];
 
     bool mIsSpeedCheatUsed;
-    bool mIsStickyCheatUsed;
 
     Championship mChampionship;
 

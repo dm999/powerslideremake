@@ -1001,7 +1001,7 @@ void BaseRaceMode::timeStepBefore(Physics * physics)
 #endif
 
     if(!mModeContext.mGameState.getRaceFinished())
-        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos, mModeContext.mGameState.getSpeedCheatUsed() || mModeContext.mGameState.getStickyCheatUsed());
+        mModeContext.mGameState.getPlayerCar().getLapUtils().checkCheckPoints(playerPos, mModeContext.mGameState.getSpeedCheatUsed());
 
     mModeContext.mGameState.getArrowNode()->setOrientation(mModeContext.mGameState.getPlayerCar().getLapUtils().getArrowOrientation(playerPos, playerDir));
 

@@ -92,6 +92,16 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
                 1.0f,
                 TEMP_RESOURCE_GROUP_NAME);
         }
+
+        {
+            std::vector<Ogre::String> texName;
+            texName.push_back("OriginalCheatICBM");
+            Ogre::MaterialPtr newMat = CloneMaterial("Test/CheatICBM",
+                "Test/Diffuse",
+                texName,
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
     }
 
     //startlight
@@ -1134,6 +1144,7 @@ void UIRace::setVisibleCheat(bool isVisible, InputKeyMapping cheat)
     {
         if(cheat == InputKeyMapping::kmSticky) mPanelSticky->setMaterialName("Test/CheatSticky");
         if(cheat == InputKeyMapping::kmSpider) mPanelSticky->setMaterialName("Test/CheatSpider");
+        if(cheat == InputKeyMapping::kmICBM) mPanelSticky->setMaterialName("Test/CheatICBM");
         mPanelSticky->show();
     }
     else mPanelSticky->hide();
@@ -1183,6 +1194,7 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "sticky_m_4.tex", "OriginalCheatSticky", TEMP_RESOURCE_GROUP_NAME);
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "spider_m_4.tex", "OriginalCheatSpider", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "icbm_m_4.tex", "OriginalCheatICBM", TEMP_RESOURCE_GROUP_NAME);
 
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
     TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", TEMP_RESOURCE_GROUP_NAME);

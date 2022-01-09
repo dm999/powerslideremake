@@ -51,6 +51,7 @@ public:
     void enableNitro();
     void enableSticky();
     void enableSpider();
+    void enableICBM();
     void disableAllCheats();
 
     // scripting functions

@@ -40,6 +40,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mIsNitro(false),
     mIsSticky(false),
     mIsSpider(false),
+    mIsICBM(false),
     mNitroCounter(0)
 {
     mCarEngine.setTransmissionType(trAuto);
