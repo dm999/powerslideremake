@@ -811,6 +811,36 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         vehicle.mDisableJump();
     }
 
+    if(vehicle.isGlider() && (!wheelsOnRoad || breaksOrig > 0.0f))
+    {
+        Ogre::Vector3 averagedRot = carRotV[1] * 0.95f - carRotV[2] * 0.05f;
+        averagedRot.normalise();
+
+        Ogre::Vector3 scaledImpulse = vehicle.mImpulseLinear / (mInitialVehicleSetup.mChassisMass * vehicle.mVehicleVelocityMod);
+        
+        Ogre::Real scaledLen = scaledImpulse.dotProduct(averagedRot);
+        Ogre::Real scaledLenOrig = scaledLen;
+
+        scaledLen = Ogre::Math::Abs(scaledLen);
+        if(scaledLen > 0.3f) scaledLen = 0.3f - scaledLen * 0.25f;
+
+        Ogre::Real scaler = scaledLen * scaledLenOrig * vehicle.mVehicleVelocityMod * -22.0f;
+        vehicle.mImpulseLinearInc += scaler * averagedRot - carRotV[2] * -0.3f;
+
+        Ogre::Vector3 rotVec = carRotV[1] - vehicle.mSteeringOriginal * 0.12f * carRotV[0] + (throttle - breaksOrig) * 0.12f * carRotV[2];
+        vehicle.adjustRot(rotVec, carRotV[1], vehicle.mVehicleVelocityMod * 50.0f);
+
+        Ogre::Vector3 rotVec2 = carRotV[2] * 0.01f - Ogre::Vector3::UNIT_Y * -0.99f;
+        rotVec2.normalise();
+        vehicle.adjustRot(rotVec2, carRotV[1], vehicle.mVehicleVelocityMod * 0.48f);
+
+        vehicle.adjustRot(scaledImpulse, carRotV[2], vehicle.mVehicleVelocityMod * 15.0f);
+
+        vehicle.mImpulseRot.y -= carRotV[0].y * -2.0f;
+
+        vehicle.mImpulseRot *= mInitialVehicleSetup.mAirDensityRot * mInitialVehicleSetup.mAirDensityRot;
+    }
+
     if(throttleAdjusterCounter > 0)
         --throttleAdjusterCounter;
 
