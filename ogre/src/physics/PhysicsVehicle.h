@@ -52,6 +52,10 @@ public:
     void disableSticky() { mIsSticky = false; mVehicleSetup.mSuspensionTraction.setVScale(1.0f); }
     bool isSticky() const{ return mIsSticky; }
 
+    void enableSpider() { mIsSpider = true; }
+    void disableSpider() { mIsSpider = false; }
+    bool isSpider() const{ return mIsSpider; }
+
     const PSCarEngine& getCarEngine()const{return mCarEngine;}
     PSCarEngine& getCarEngine(){return mCarEngine;}
 
@@ -188,6 +192,7 @@ private:
     size_t mNitroCounter;
 
     bool mIsSticky;
+    bool mIsSpider;
 
 };
 

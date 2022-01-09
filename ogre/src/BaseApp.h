@@ -50,6 +50,8 @@ public:
     void dropCamera();
     void enableNitro();
     void enableSticky();
+    void enableSpider();
+    void disableAllCheats();
 
     // scripting functions
     void parseFile(const std::string& fileName);

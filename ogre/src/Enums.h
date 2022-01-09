@@ -94,8 +94,9 @@ enum InputKeyMapping
     kmNitro = 10,
     kmDropCam = 11,
     kmSticky = 12,
+    kmSpider = 13,
 
-    kmEmpty = 13
+    kmEmpty = 14
 };
 
 #endif

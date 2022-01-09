@@ -275,9 +275,9 @@ void BaseRaceMode::createBombByPlayer()
 #endif
 }
 
-void BaseRaceMode::cheatByPlayer(bool isEnabled)
+void BaseRaceMode::cheatByPlayer(bool isEnabled, InputKeyMapping cheat)
 {
-    mUIRace->setVisibleCheat(isEnabled);
+    mUIRace->setVisibleCheat(isEnabled, cheat);
 }
 
 void BaseRaceMode::mousePressed(const Ogre::Vector2& pos)
@@ -369,7 +369,7 @@ void BaseRaceMode::clearScene()
 {
     mUIRace->clearMiscPanelText();
     mUIRace->setVisibleFinishSign(false);
-    mUIRace->setVisibleCheat(false);
+    mUIRace->setVisibleCheat(false, kmEmpty);
 
     mModeContext.mGameState.resetGamePaused();
     mModeContext.mGameState.setRaceStarted(false);

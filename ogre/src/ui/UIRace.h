@@ -80,7 +80,7 @@ public:
 
     void setVisibleFinishSign(bool isVisible, size_t finishPos = 0);
 
-    void setVisibleCheat(bool isVisible);
+    void setVisibleCheat(bool isVisible, InputKeyMapping cheat);
 
     static void loadDashboardCars(const GameState& gameState);
 

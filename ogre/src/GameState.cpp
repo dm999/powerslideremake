@@ -462,6 +462,7 @@ void GameState::setDefaultKeyCodeMappers()
     mInputKeysKeyboard[InputKeyMapping::kmNitro] = OIS::KC_F3;
     mInputKeysKeyboard[InputKeyMapping::kmDropCam] = OIS::KC_F4;
     mInputKeysKeyboard[InputKeyMapping::kmSticky] = OIS::KC_F5;
+    mInputKeysKeyboard[InputKeyMapping::kmSpider] = OIS::KC_F6;
 
     for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
     {

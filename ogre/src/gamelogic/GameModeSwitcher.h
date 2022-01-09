@@ -42,7 +42,7 @@ public:
     void createBurnByPlayer();
     void createBombByPlayer();
     void nitroByPlayer();
-    void cheatByPlayer(bool isEnabled);
+    void cheatByPlayer(bool isEnabled, InputKeyMapping cheat);
 
     void tabPressed();
 

@@ -39,6 +39,7 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mInputType(type),
     mIsNitro(false),
     mIsSticky(false),
+    mIsSpider(false),
     mNitroCounter(0)
 {
     mCarEngine.setTransmissionType(trAuto);
@@ -145,6 +146,9 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     mCoreBaseGlobal = mVehicleSetup.mCarGlobalPos + mVehicleSetup.mCarRot * mVehicleSetup.mCoreBase;
     mMeshProcesser->performCollisionDetection(mVehicleSetup.mCarGlobalPos, mCoreBaseGlobalPrev, mMaxCollisionDistance);
 
+    Ogre::Vector3 gravityVelocity(Ogre::Vector3::ZERO);
+    gravityVelocity.y = -mVehicleSetup.mGravityVelocity;
+
     mImpulseLinearInc.y += mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
 
     integrate();
@@ -196,12 +200,10 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     }
     turnOverRestore(isTurnOver);
     calcTransmission();
-    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, mHandBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster);
+    mPhysicsWheels.calcPhysics(*this, mThrottle, mBreaks, mHandBreaks, doGetTractionScale(), mThrottleAdjusterCounter, mThrottleAdjuster, gravityVelocity);
 
-    //mImpulseLinearInc.y -= mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
-    //mImpulseLinearInc.x += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
-    //mImpulseLinearInc.y += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
-    //mImpulseLinearInc.z += mVehicleSetup.mChassisMass * mVehicleSetup.mGravityVelocity;
+    mImpulseLinearInc.y -= mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
+    mImpulseLinearInc += mVehicleSetup.mChassisMass * gravityVelocity;
 
     mVehicleSetup.mCOGGlobal = mVehicleSetup.mCarGlobalPos + mVehicleSetup.mCOGShift + mVehicleSetup.mCarRot * mVehicleSetup.mCOG;
 

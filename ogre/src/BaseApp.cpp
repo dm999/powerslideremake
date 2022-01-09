@@ -529,6 +529,7 @@ void BaseApp::enableNitro()
     {
         if(mGameState.getRaceStarted())
         {
+            disableAllCheats();
             if(!mGameState.getPlayerCar().getPhysicsVehicle()->isNitro())
             {
                 mGameState.setSpeedCheatUsed(true);
@@ -545,21 +546,42 @@ void BaseApp::enableSticky()
         mGameModeSwitcher->getMode() == ModeRaceSingle
         )
     {
+        if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
+        {
+            disableAllCheats();
+            mGameState.setStickyCheatUsed(true);
+            mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
+            mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmSticky);//enable icon
+        }
+        else disableAllCheats();
+    }
+}
+
+void BaseApp::enableSpider()
+{
+    if(
+        mGameModeSwitcher->getMode() == ModeRaceSingle
+        )
+    {
         if(mGameState.getRaceStarted())
         {
-            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSpider())
             {
-                mGameState.setStickyCheatUsed(true);
-                mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
-                mGameModeSwitcher->cheatByPlayer(true);//enable icon
+                disableAllCheats();
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableSpider();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmSpider);//enable icon
             }
-            else
-            {
-                mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
-                mGameModeSwitcher->cheatByPlayer(false);//disable icon
-            }
+            else disableAllCheats();
         }
     }
+}
+
+void BaseApp::disableAllCheats()
+{
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableSticky();
+    mGameState.getPlayerCar().getPhysicsVehicle()->disableSpider();
+
+    mGameModeSwitcher->cheatByPlayer(false, InputKeyMapping::kmEmpty);//disable icon
 }
 
 bool BaseApp::setShutdown(bool isOnEsc)

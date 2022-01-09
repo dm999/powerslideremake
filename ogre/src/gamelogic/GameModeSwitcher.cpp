@@ -458,10 +458,10 @@ void GameModeSwitcher::nitroByPlayer()
         mPlayerMode->nitroByPlayer();
 }
 
-void GameModeSwitcher::cheatByPlayer(bool isEnabled)
+void GameModeSwitcher::cheatByPlayer(bool isEnabled, InputKeyMapping cheat)
 {
     if(mPlayerMode.get())
-        mPlayerMode->cheatByPlayer(isEnabled);
+        mPlayerMode->cheatByPlayer(isEnabled, cheat);
 }
 
 void GameModeSwitcher::tabPressed()

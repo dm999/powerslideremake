@@ -591,7 +591,7 @@ float PhysicsWheels::calcSuspensionLength(float len, size_t wheelIndex)
     return res;
 }
 
-void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster)
+void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Ogre::Real breaks, Ogre::Real handBreaks, Ogre::Real tractionScale, Ogre::uint8& throttleAdjusterCounter, Ogre::Real throttleAdjuster, Ogre::Vector3& gravityVelocity)
 {
     Ogre::Matrix3 carRot;
     mInitialVehicleSetup.mCarRot.ToRotationMatrix(carRot);
@@ -747,6 +747,23 @@ void PhysicsWheels::calcPhysics(PhysicsVehicle& vehicle, Ogre::Real throttle, Og
         {
             vehicle.mImpulseRotInc += diffN.crossProduct(carRotV[1]);
         }
+    }
+
+    if(vehicle.isSpider())
+    {
+        Ogre::Vector3 normal(Ogre::Vector3::ZERO);
+        float amount = 0.0f;
+
+        for(int q = InitialVehicleSetup::mWheelsAmount - 1; q >= 0; --q)
+        {
+            if(mIsCollided[q])
+            {
+                normal += mWheelsAveragedNormal[q];
+                ++amount;
+            }
+        }
+
+        if(amount > 0.0f) gravityVelocity = (-mInitialVehicleSetup.mGravityVelocity / amount) * normal;
     }
 
     if(throttleAdjusterCounter > 0)
