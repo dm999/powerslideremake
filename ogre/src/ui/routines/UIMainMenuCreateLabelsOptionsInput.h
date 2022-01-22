@@ -36,7 +36,7 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
 
 #if !defined(__ANDROID__)
 
-    const char labels[InputKeyMapping::kmEmpty][100] = {
+    const char labels[InputKeyMapping::kmSticky][100] = {
         "Turn Left", "Turn Right", "Accelerate", "Brake", 
         "Gear Up", "Gear Down",
         "Change View",
@@ -45,7 +45,7 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
     };
 
     //input values
-    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    for (size_t q = 0; q < InputKeyMapping::kmSticky; ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 82.0f + q * 20.0f, 0.0f, 0.0f);;
         UILabel* label = mUILabelsManager.add("mInputType");
@@ -84,7 +84,7 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
     }
 
     mOptionInputLabels_Keys.clear();
-    for(size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    for(size_t q = 0; q < InputKeyMapping::kmSticky; ++q)
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(200.0f, 82.0f + q * 20.0f, 0.0f, 0.0f);;
         UILabel* label = mUILabelsManager.add("mInputType");

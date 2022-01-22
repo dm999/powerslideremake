@@ -539,7 +539,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
 #if !defined(__ANDROID__)
     if(!mIsInKeyInsertMode)
-    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    for (size_t q = 0; q < InputKeyMapping::kmSticky; ++q)
     {
         if (label == mOptionInputLabels_Keys[q])
         {
@@ -1570,7 +1570,7 @@ std::string UIMainMenuLabels::getTextFileContent(const std::string& dir, const s
 #if !defined(__ANDROID__)
 void UIMainMenuLabels::setKeyText()
 {
-    for (size_t q = 0; q < InputKeyMapping::kmEmpty; ++q)
+    for (size_t q = 0; q < InputKeyMapping::kmSticky; ++q)
     {
         OIS::KeyCode code = mModeContext.getGameState().getKeyCode(static_cast<InputKeyMapping>(q));
         if (code != OIS::KC_UNASSIGNED)
