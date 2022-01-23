@@ -510,6 +510,7 @@ void BaseApp::dropCamera()
     )
     {
         if(
+            mGameState.getRaceStarted() &&
             mInputHandler->mCameraMan->getCameraPositionType() != CameraPosition_Bumper && 
             !mGameState.getRaceFinished()
         )
@@ -546,14 +547,17 @@ void BaseApp::enableSticky()
         mGameModeSwitcher->getMode() == ModeRaceSingle
         )
     {
-        if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
+        if(mGameState.getRaceStarted())
         {
-            disableAllCheats();
-            mGameState.setSpeedCheatUsed(true);
-            mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
-            mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmSticky);//enable icon
+            if(!mGameState.getPlayerCar().getPhysicsVehicle()->isSticky())
+            {
+                disableAllCheats();
+                mGameState.setSpeedCheatUsed(true);
+                mGameState.getPlayerCar().getPhysicsVehicle()->enableSticky();
+                mGameModeSwitcher->cheatByPlayer(true, InputKeyMapping::kmSticky);//enable icon
+            }
+            else disableAllCheats();
         }
-        else disableAllCheats();
     }
 }
 
