@@ -56,6 +56,8 @@ void PHYLoader::load(GameState& gameState) const
                 rotX.z, rotY.z, rotZ.z, -pos.z,
                 0.0f, 0.0f, 0.0f, 1.0f);
 
+            transform = transform * Ogre::Quaternion(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y);
+
             initialVehicleSetup.mTrackPosition = transform;
             initialVehicleSetup.mInitialImpulseLinear = Ogre::Vector3(impulseLinear.x, impulseLinear.y, impulseLinear.z);
             initialVehicleSetup.mInitialImpulseLinearInc = Ogre::Vector3(impulseLinearInc.x, impulseLinearInc.y, impulseLinearInc.z);

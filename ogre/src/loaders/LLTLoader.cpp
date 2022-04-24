@@ -212,6 +212,12 @@ void LLTLoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool is
                 isCheckpoints[q] = track[nextIndex].isCheckpoint;
             }
 
+            std::reverse(positions.begin() + 1, positions.end());
+            std::reverse(dirs.begin() + 1, dirs.end());
+            std::reverse(weights.begin() + 1, weights.end());
+            std::transform(weights.begin() + 1, weights.end(), weights.begin() + 1, [](const Ogre::Real& val){ return 1.0f - val;});
+            std::reverse(isCheckpoints.begin() + 1, isCheckpoints.end());
+
             if (gameState.isLugeTrack())
             {
                 std::fill(isCheckpoints.begin(), isCheckpoints.end(), false);
