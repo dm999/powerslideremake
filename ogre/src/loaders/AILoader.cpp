@@ -147,6 +147,13 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
                         aiWhole[w].aiData.push_back(aiData);
                     }
 
+                    std::reverse(aiWhole[w].aiData.begin() + 1, aiWhole[w].aiData.end());
+                    for(size_t q = 0; q < someData2; ++q)
+                    {
+                        aiWhole[w].aiData[q].tangent = Ogre::Quaternion(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y) * aiWhole[w].aiData[q].tangent;
+                        //aiWhole[w].aiData[q].magic = Ogre::Quaternion(Ogre::Degree(180.0f), Ogre::Vector3::UNIT_Y) * aiWhole[w].aiData[q].magic;
+                    }
+
                     fileToLoad->read(&someData, 4);
                 }
 
