@@ -58,9 +58,6 @@ void UIMainMenuLabels::createLabelsOptionsRace(const Ogre::Matrix4& screenAdapti
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 82.0f, 0.0f, 0.0f);;
         mOptionRaceLabel_Transmission_Val = mUILabelsManager.add("mOptionRace");
         mOptionRaceLabel_Transmission_Val->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
-#if defined(__ANDROID__)
-        mOptionRaceLabel_Transmission_Val->setFixed(true);
-#endif
         if (mModeContext.getGameState().getTransmissionType() == trAuto)
             mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Auto");
         else if(mModeContext.getGameState().getTransmissionType() == trManual)
@@ -72,10 +69,8 @@ void UIMainMenuLabels::createLabelsOptionsRace(const Ogre::Matrix4& screenAdapti
         mOptionRaceLabel_Transmission_Val->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
         mOptionRaceLabel_Transmission_Val->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
         mOptionRaceLabel_Transmission_Val->getTextArea()->setFontName("SdkTrays/Caption");
-#if !defined(__ANDROID__)
         mOptionRaceLabel_Transmission_Val->getTextArea()->setColour(UILabel::mInactiveLabel);
         mOptionRaceLabel_Transmission_Val->setLabelOnAction(this);
-#endif
         getMainBackground()->addChild(mOptionRaceLabel_Transmission_Val->getTextArea());
     }
     {

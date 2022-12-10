@@ -641,7 +641,18 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
     if(label == mOptionRaceLabel_Transmission_Val)
     {
-
+#if defined(__ANDROID__)
+        if(mModeContext.getGameState().getTransmissionType() == trAuto)
+        {
+            mModeContext.getGameState().setTransmissionType(trAutoAdvanced);
+            mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Auto 9");
+        }
+        else if(mModeContext.getGameState().getTransmissionType() == trAutoAdvanced)
+        {
+            mModeContext.getGameState().setTransmissionType(trAuto);
+            mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Auto");
+        }
+#else
         if(mModeContext.getGameState().getTransmissionType() == trManual)
         {
             mModeContext.getGameState().setTransmissionType(trAuto);
@@ -657,6 +668,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
             mModeContext.getGameState().setTransmissionType(trManual);
             mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Manual");
         }
+#endif
 
         mModeContext.getGameState().savePlayerData();
     }
