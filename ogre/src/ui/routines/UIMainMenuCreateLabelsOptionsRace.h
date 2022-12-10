@@ -63,8 +63,10 @@ void UIMainMenuLabels::createLabelsOptionsRace(const Ogre::Matrix4& screenAdapti
 #endif
         if (mModeContext.getGameState().getTransmissionType() == trAuto)
             mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Auto");
-        else
+        else if(mModeContext.getGameState().getTransmissionType() == trManual)
             mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Manual");
+        else if(mModeContext.getGameState().getTransmissionType() == trAutoAdvanced)
+            mOptionRaceLabel_Transmission_Val->getTextArea()->setCaption("Auto 9");
         mOptionRaceLabel_Transmission_Val->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
         mOptionRaceLabel_Transmission_Val->getTextArea()->setSpaceWidth(9.0f);
         mOptionRaceLabel_Transmission_Val->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);

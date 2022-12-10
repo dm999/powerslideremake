@@ -65,8 +65,9 @@ enum VehicleType
 
 enum TransmissionType
 {
-    trManual    = 0,
-    trAuto      = 1
+    trManual        = 0,
+    trAuto          = 1,
+    trAutoAdvanced  = 2 // 9 gears gear box
 };
 
 enum InputType

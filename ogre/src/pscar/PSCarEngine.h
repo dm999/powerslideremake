@@ -27,7 +27,7 @@ public:
     void gearUp();
     void gearDown();
 
-    void setTransmissionType(TransmissionType type) { mTransmissionType = type;}
+    void setTransmissionType(TransmissionType type);
 
 private:
 
@@ -37,6 +37,13 @@ private:
     Ogre::Real mEngineRPM;
 
     const InitialVehicleSetup& mInitialVehicleSetup;
+    std::vector<Ogre::Real> mChangeDown;
+    std::vector<Ogre::Real> mChangeUp;
+    std::vector<Ogre::Real> mGearRatio;
+    int mGearCount;
+
+    void initDefaultGearBox();
+    void initAdvancedAutoGearBox();
 };
 
 #endif
