@@ -40,8 +40,9 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
         "Turn Left", "Turn Right", "Accelerate", "Brake", 
         "Gear Up", "Gear Down",
         "Change View",
+        "Change Ghost Visibility*",
         "Hand Brake",
-        "Weapon Burn*", "Weapon Bomb*", "Nitro*", "Drop Camera*"
+        "Weapon Burn**", "Weapon Bomb**", "Nitro**", "Drop Camera***"
     };
 
     //input values
@@ -59,11 +60,11 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
         getMainBackground()->addChild(label->getTextArea());
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 322.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 352.0f, 0.0f, 0.0f);
         UILabel* label = mUILabelsManager.add("mInputType");
         label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         label->setFixed(true);
-        label->getTextArea()->setCaption("* Not Available in Championship and Time Trial");
+        label->getTextArea()->setCaption("* Time Trial Only");
         label->getTextArea()->setCharHeight(16.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setSpaceWidth(9.0f);
         label->getTextArea()->setHeight(16.0f * viewportHeight / 1024.0f);
@@ -71,17 +72,30 @@ void UIMainMenuLabels::createLabelsOptionsInput(const Ogre::Matrix4& screenAdapt
         getMainBackground()->addChild(label->getTextArea());
     }
     {
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 332.0f, 0.0f, 0.0f);;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 362.0f, 0.0f, 0.0f);
         UILabel* label = mUILabelsManager.add("mInputType");
         label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         label->setFixed(true);
-        label->getTextArea()->setCaption("** Use Tab in Multiplayer to Display Chat Input");
+        label->getTextArea()->setCaption("** Not Available in Championship and Time Trial");
         label->getTextArea()->setCharHeight(16.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setSpaceWidth(9.0f);
         label->getTextArea()->setHeight(16.0f * viewportHeight / 1024.0f);
         label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
         getMainBackground()->addChild(label->getTextArea());
     }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(20.0f, 372.0f, 0.0f, 0.0f);
+        UILabel* label = mUILabelsManager.add("mInputType");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("*** Use Tab in Multiplayer to Display Chat Input");
+        label->getTextArea()->setCharHeight(16.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(16.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+
 
     mOptionInputLabels_Keys.clear();
     for(size_t q = 0; q < InputKeyMapping::kmSticky; ++q)

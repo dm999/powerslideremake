@@ -521,6 +521,14 @@ void BaseApp::dropCamera()
     }
 }
 
+void BaseApp::alterGhostVisibility()
+{
+    if(mGameModeSwitcher->getMode() == ModeRaceTimetrial)
+    {
+        mGameState.setGhostVisibility(!mGameState.getGhostVisibility());
+    }
+}
+
 void BaseApp::enableNitro()
 {
     if(

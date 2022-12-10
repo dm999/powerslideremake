@@ -98,6 +98,11 @@ bool InputHandler::keyPressed( const OIS::KeyEvent &arg )
         if(noSpecialKey())
             baseApp->setShutdown(false);
     }
+    else if(baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmGhost))
+    {
+        if(noSpecialKey())
+            baseApp->alterGhostVisibility();
+    }
     else if (baseApp->getGameState().checkKeyCode(arg.key, InputKeyMapping::kmBurn))
     {
         if(noSpecialKey())

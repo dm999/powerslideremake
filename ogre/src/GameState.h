@@ -206,6 +206,9 @@ public:
 
     Championship& getChampionship() {return mChampionship;}
 
+    void setGhostVisibility(bool isVisible) { mIsGhostVisible = isVisible; }
+    bool getGhostVisibility() const{ return mIsGhostVisible; }
+
     void setSpeedCheatUsed(bool isUsed) {mIsSpeedCheatUsed = isUsed;}
     bool getSpeedCheatUsed() const{return mIsSpeedCheatUsed;}
 
@@ -338,6 +341,8 @@ private:
     OIS::KeyCode mInputKeysKeyboard[InputKeyMapping::kmEmpty];//0-3 arrows, 4-5 gears, 6 view, 7, hand brake, 8-11 F
     OIS::KeyCode mInputKeysKeyboard2[InputKeyMapping::kmEmpty];
     OIS::MouseButtonID mInputKeysMouse[InputKeyMapping::kmEmpty];
+
+    bool mIsGhostVisible;
 
     bool mIsSpeedCheatUsed;
 

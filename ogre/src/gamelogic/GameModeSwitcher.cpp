@@ -185,6 +185,8 @@ void GameModeSwitcher::frameEnded()
         //update hiscores after time trial
         if(mGameMode == ModeRaceTimetrial && mGameModeNext == ModeMenuTimetrial)
         {
+            mContext.getGameState().setGhostVisibility(true);// reset ghost setting
+
             mContext.getGameState().updateHiscores(
                 mContext.getGameState().getPlayerCar().getCharacterName(),
                 mContext.getGameState().getPlayerName(),

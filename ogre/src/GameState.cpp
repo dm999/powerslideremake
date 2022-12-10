@@ -51,6 +51,7 @@ GameState::GameState() :
     mMusicGain(1.0f),
     mIsGamePaused(false),
     mInputType(itKeyboard),
+    mIsGhostVisible(true),
     mIsSpeedCheatUsed(false),
     mIsMultiplayerMaster(false),
     mMultiplayerRoomName("Powerslide"),
@@ -451,6 +452,9 @@ void GameState::setDefaultKeyCodeMappers()
 
     //view
     mInputKeysKeyboard[InputKeyMapping::kmView] = OIS::KC_V;
+
+    //ghost visibility in game
+    mInputKeysKeyboard[InputKeyMapping::kmGhost] = OIS::KC_G;
 
     //handbreak
     mInputKeysKeyboard[InputKeyMapping::kmHandBreak] = OIS::KC_LCONTROL;

@@ -164,6 +164,8 @@ private:
     PSBaseGraphicsVehicle mGhost;//time trial
     PSBaseGraphicsVehicle mGhostUser;//time trial
     TrialGhost mTrialGhost;
+    bool mGhostVisible;
+    bool mGhostUserVisible;
 };
 
 

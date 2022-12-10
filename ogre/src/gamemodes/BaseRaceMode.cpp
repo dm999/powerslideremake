@@ -543,9 +543,11 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
 
             mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer());
             mGhost.setVisibility(mTrialGhost.isVisible());
+            mGhostVisible = mTrialGhost.isVisible();
 
             mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer());
             mGhostUser.setVisibility(false);
+            mGhostUserVisible = false;
         }
     }
 
@@ -1043,10 +1045,28 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
             if(mTrialGhost.isVisible() && mModeContext.mGameState.getGhostEnabled())
             {
                 GhostPos ghostPoint = mTrialGhost.getInterpolatedPoint(lapTime);
-                if(mGhost.getVisibility())
+                if(mGhostVisible)
+                {
                     mGhost.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot, ghostPoint.wheelPos, ghostPoint.wheelRot);
-                if(mGhostUser.getVisibility())
+                    if(mModeContext.mGameState.getGhostVisibility())
+                    {
+                        mGhost.setVisibility(true);
+                    }
+                }
+                if(mGhostUserVisible)
+                {
                     mGhostUser.repositionVehicle(ghostPoint.chassisPos, ghostPoint.chassisRot, ghostPoint.wheelPos, ghostPoint.wheelRot);
+                    if(mModeContext.mGameState.getGhostVisibility())
+                    {
+                        mGhostUser.setVisibility(true);
+                    }
+                }
+
+                if(!mModeContext.mGameState.getGhostVisibility())
+                {
+                    mGhost.setVisibility(false);
+                    mGhostUser.setVisibility(false);
+                }
             }
         }
     }
@@ -1261,13 +1281,16 @@ void BaseRaceMode::onLapFinished()
                 {
                     if(isBestBeaten)
                     {
+                        mGhostVisible = false;
+                        mGhostUserVisible = true;
                         mGhost.setVisibility(false);
                         mGhostUser.setVisibility(true);
                     }
                     else
                     {
-                        if(!mGhostUser.getVisibility())
+                        if(!mGhostUserVisible)
                         {
+                            mGhostVisible = true;
                             mGhost.setVisibility(true);
                         }
                     }

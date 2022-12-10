@@ -48,6 +48,7 @@ public:
     void createBurnByPlayer();
     void createBombByPlayer();
     void dropCamera();
+    void alterGhostVisibility();
 
     //cheats
     void enableNitro();
