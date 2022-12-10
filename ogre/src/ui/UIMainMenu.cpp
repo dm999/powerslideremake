@@ -674,7 +674,7 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         mIsInStartingGrid = false;
         setWindowTitle("Game Mode");
         showModeSingle();
-        showModeDifficulty();
+        showModeDifficulty(mGameModeSelected == ModeMenuChampionship);
         showBackgrounds();
         break;
 

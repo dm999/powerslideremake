@@ -35,7 +35,8 @@ public:
     PhysicsVehicle* addVehicle(InitialVehicleSetup& initialVehicleSetup, PSBaseVehicle * vehiclePtr, 
         Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount], Ogre::SceneNode *chassis,
         InputType type,
-        bool isAI
+        bool isAI,
+        bool isUltraInsane
         );
     void removeVehicle(PSBaseVehicle * vehiclePtr);
     const PhysicsVehicle * getVehicle(PSBaseVehicle * vehiclePtr) const;

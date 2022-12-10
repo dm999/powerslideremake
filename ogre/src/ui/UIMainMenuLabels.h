@@ -53,7 +53,7 @@ protected:
     void showModeSingle(){mModeSingle->show();}
     void showModeMulti(){mModeMulti->show();}
     void showModeSingleType();
-    void showModeDifficulty();
+    void showModeDifficulty(bool isChampionship);
     void showTrackLabels();
     void showCarLabels();
     void showCharacterLabels();
@@ -112,6 +112,7 @@ private:
     UILabel* mModeSingleDifficultyAdvanced;
     UILabel* mModeSingleDifficultyExpert;
     UILabel* mModeSingleDifficultyInsane;
+    UILabel* mModeSingleDifficultyUltraInsane;
 
     UILabel* mSingleTrackDescription;
     UILabel* mSingleTrackBestTime;

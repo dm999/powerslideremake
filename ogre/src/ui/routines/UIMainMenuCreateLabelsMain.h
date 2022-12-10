@@ -233,6 +233,20 @@ void UIMainMenuLabels::createLabelsOptionsMain(const Ogre::Matrix4& screenAdapti
     }
 
     {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 273.0f, 0.0f, 0.0f);
+        mModeSingleDifficultyUltraInsane = mUILabelsManager.add();
+        mModeSingleDifficultyUltraInsane->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mModeSingleDifficultyUltraInsane->getTextArea()->setCaption("9x Insane");
+        mModeSingleDifficultyUltraInsane->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyUltraInsane->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleDifficultyUltraInsane->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleDifficultyUltraInsane->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleDifficultyUltraInsane->getTextArea()->setColour(UILabel::mInactiveLabel);
+        mModeSingleDifficultyUltraInsane->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleDifficultyUltraInsane->getTextArea());
+    }
+
+    {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(25.0f, 20.0f, 0.0f, 0.0f);
         mSingleTrackDescription = mUILabelsManager.add();
         mSingleTrackDescription->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);

@@ -19,7 +19,7 @@ void AILoader::load(GameState& gameState, Ogre::SceneManager* sceneMgr, bool isD
     case Hard :
         folderWithData = "charhard";
         break;
-    case Insane :
+    case Insane : case UltraInsane:
         folderWithData = "charinsane";
         break;
     }

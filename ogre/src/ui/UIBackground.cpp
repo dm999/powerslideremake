@@ -635,7 +635,7 @@ void UIBackgroundLoaderProgressTracks::show(const ModeContext& modeContext, bool
             case Hard:
                 uiStrengthName = mMaterialAIHardName;
                 break;
-            case Insane:
+            case Insane: case UltraInsane:
                 uiStrengthName = mMaterialAIInsaneName;
                 break;
         }
@@ -1211,7 +1211,7 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
         }
     }
 
-    if(mStrength == Hard || mStrength == Insane)
+    if(mStrength == Hard || mStrength == Insane || mStrength == UltraInsane)
     {
         const size_t div = 8;
         Ogre::Vector4 trackPosAdj = trackPos;
@@ -1255,7 +1255,7 @@ void UIBackgroundLoaderProgressTracksChampionship::show(size_t trackIndex, const
             case Hard:
                 uiStrengthName = mMaterialAIHardName;
                 break;
-            case Insane:
+            case Insane: case UltraInsane:
                 uiStrengthName = mMaterialAIInsaneName;
                 break;
         }
@@ -1309,7 +1309,7 @@ void UIBackgroundLoaderProgressTracksChampionship::hide()
         }
     }
 
-    if(mStrength == Hard || mStrength == Insane)
+    if(mStrength == Hard || mStrength == Insane || mStrength == UltraInsane)
     {
         for(size_t q = 0; q < 8; ++q)
         {

@@ -10,13 +10,14 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                                Ogre::SceneNode *chassis,
                                InputType type,
-                               PSAICar * aiCar) :
+                               PSAICar * aiCar,
+                               bool isUltraInsane) :
     PhysicsVehicle(physics, meshProesser, initialVehicleSetup, wheelNodes, chassis, type)
 {
     mVehicleType = AIVehicle;
     mAICar = aiCar;
 
-    mCarEngine.setTransmissionType(trAuto);
+    mCarEngine.setTransmissionType(isUltraInsane ? trAutoAdvanced : trAuto);
 }
 
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)

@@ -1228,6 +1228,9 @@ std::string UIMainMenuMulti::getAIStrengthString() const
     case Insane:
         ret = "Insane";
         break;
+    case UltraInsane:
+        ret = "UltraInsane";
+        break;
     }
 
     return ret;

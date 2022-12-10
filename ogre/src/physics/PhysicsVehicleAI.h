@@ -13,7 +13,8 @@ public:
                                Ogre::SceneNode *wheelNodes[InitialVehicleSetup::mWheelsAmount],
                                Ogre::SceneNode *chassis,
                                InputType type,
-                               PSAICar * aiCar);
+                               PSAICar * aiCar,
+                               bool isUltraInsane);
 
     virtual ~PhysicsVehicleAI(){}
 

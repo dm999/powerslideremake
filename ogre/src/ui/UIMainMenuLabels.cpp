@@ -461,6 +461,21 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
         }
     }
 
+    if(label == mModeSingleDifficultyUltraInsane)
+    {
+        mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), UltraInsane, mModeContext.getGameState().getLapsCount());
+
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        {
+            switchState(State_Track);
+        }
+
+        if(mGameModeSelected == ModeMenuChampionship)
+        {
+            switchState(State_Car);
+        }
+    }
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
         if(label == mTracksLabels[q])
@@ -901,22 +916,26 @@ void UIMainMenuLabels::showModeSingleType()
     mUILabelsManager.show("mModeSingle");
 }
 
-void UIMainMenuLabels::showModeDifficulty()
+void UIMainMenuLabels::showModeDifficulty(bool isChampionship)
 {
     AIStrength gameLevel = mModeContext.getGameState().getPlayerData().level;
 
     mModeSingleDifficultyAdvanced->setActive(true);
     mModeSingleDifficultyExpert->setActive(true);
     mModeSingleDifficultyInsane->setActive(true);
+    mModeSingleDifficultyUltraInsane->setActive(true);
 
     if(gameLevel < Medium) mModeSingleDifficultyAdvanced->setActive(false);
     if(gameLevel < Hard) mModeSingleDifficultyExpert->setActive(false);
     if(gameLevel < Insane) mModeSingleDifficultyInsane->setActive(false);
+    if(gameLevel < Insane) mModeSingleDifficultyUltraInsane->setActive(false);
 
     mModeSingleDifficultyNovice->show();
     mModeSingleDifficultyAdvanced->show();
     mModeSingleDifficultyExpert->show();
     mModeSingleDifficultyInsane->show();
+
+    if(!isChampionship) mModeSingleDifficultyUltraInsane->show();
 }
 
 void UIMainMenuLabels::showTrackLabels()

@@ -54,7 +54,8 @@ enum AIStrength
     Easy    = 0,
     Medium  = 1,
     Hard    = 2,
-    Insane  = 3
+    Insane  = 3,
+    UltraInsane = 4 // insane with 9 gears auto gearbox
 };
 
 enum VehicleType

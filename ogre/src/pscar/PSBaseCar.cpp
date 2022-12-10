@@ -342,7 +342,7 @@ void PSBaseCar::initModel(  lua_State * pipeline,
     {
         initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingPlayer());
     }
-    initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup, gameState.getInputType());
+    initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup, gameState.getInputType(), gameState.getAIStrength() == UltraInsane);
 }
 
 void PSBaseCar::repositionVehicle(const Ogre::Matrix4& transform)

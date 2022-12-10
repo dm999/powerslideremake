@@ -27,7 +27,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
         aiLinearIndexes = getLinearIndexes(gameState.getAICountInRace());
         aiIndexes = getHardIndexes();
         break;
-    case Insane :
+    case Insane : case UltraInsane:
         aiLinearIndexes = getLinearInsaneIndexes(gameState.getAICountInRace());
         aiIndexes = getHardIndexes();
         break;
@@ -44,7 +44,7 @@ std::vector<std::string> RacingGridGeneration::generate(GameState& gameState, co
 
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)
     {
-        if(gameState.getAIStrength() == Insane)
+        if(gameState.getAIStrength() == Insane || gameState.getAIStrength() == UltraInsane)
             resAISlot.push_back(getSlotInsaneIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
         else
             resAISlot.push_back(getSlotIndex(aiIndexes[aiLinearIndexes[gameState.getAICountInRace() - q - 1]]));
