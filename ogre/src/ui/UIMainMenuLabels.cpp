@@ -1079,6 +1079,7 @@ void UIMainMenuLabels::showOptionLabels()
     mUILabelsManager.show("mOptionLabels");
 
     mOptionVersionLabel->show();
+    mOptionBuildDateLabel->show();
 
 #ifdef NO_OPENAL
     mOptionLabels[2]->hide();
@@ -1275,6 +1276,7 @@ void UIMainMenuLabels::hideAllLabels()
 
     mOptionHighScoresReplayIcon->hide();
     mOptionVersionLabel->hide();
+    mOptionBuildDateLabel->hide();
 
     mStartingGridTimeLabel->hide();
 

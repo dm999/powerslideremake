@@ -184,6 +184,7 @@ private:
     void fillReplayStat();
 
     Ogre::TextAreaOverlayElement * mOptionVersionLabel;
+    Ogre::TextAreaOverlayElement * mOptionBuildDateLabel;
 
 
     Ogre::TextAreaOverlayElement * mStartingGridTimeLabel;

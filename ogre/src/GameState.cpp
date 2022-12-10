@@ -12,6 +12,7 @@
 
 GameState::GameState() :
     mVersion(GAMEVERSION),
+    mBuildDate(GAMEBUILDDATE),
     mPlayerName("Rasputin"),
     mTrackName("desert track"),
     mIsSafeRun(false),

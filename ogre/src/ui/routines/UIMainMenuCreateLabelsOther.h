@@ -17,6 +17,20 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
         getMainBackground()->addChild(mOptionVersionLabel);
     }
 
+    //build date
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(630.0f, 380.0f, 0.0f, 0.0f);
+        mOptionBuildDateLabel = createTextArea("MainWindowOptionBuildDateLabel", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mOptionBuildDateLabel->setCaption(mModeContext.getGameState().getBuildDate());
+        mOptionBuildDateLabel->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionBuildDateLabel->setSpaceWidth(9.0f);
+        mOptionBuildDateLabel->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionBuildDateLabel->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        mOptionBuildDateLabel->setFontName("SdkTrays/Caption");
+        mOptionBuildDateLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mOptionBuildDateLabel);
+    }
+
     {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(310.0f, 361.0f, 0.0f, 0.0f);
         mStartingGridTimeLabel = createTextArea("MainWindowTimer", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);

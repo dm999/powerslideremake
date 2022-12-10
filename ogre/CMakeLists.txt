@@ -20,10 +20,17 @@ if(GIT_FOUND)
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
             OUTPUT_VARIABLE DESCRIBE_BUILD
             OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(
+            COMMAND "${GIT_EXECUTABLE}" show -s --format=%ci HEAD
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE DESCRIBE_BUILD_DATE
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
     string(SUBSTRING ${DESCRIBE_BUILD} 0 7 PowerslideRemake_VERSION_BUILD_SHA)
-    message(STATUS "Git found, build " ${PowerslideRemake_VERSION_BUILD_SHA})
+    string(SUBSTRING ${DESCRIBE_BUILD_DATE} 0 10 PowerslideRemake_VERSION_BUILD_DATE)
+    message(STATUS "Git found, build " ${PowerslideRemake_VERSION_BUILD_SHA} " date:" ${PowerslideRemake_VERSION_BUILD_DATE})
 else()
     set (PowerslideRemake_VERSION_BUILD_SHA "N/A")
+    set (PowerslideRemake_VERSION_BUILD_DATE "N/A")
 endif()
 configure_file ("${PROJECT_SOURCE_DIR}/src/PowerslideRemakeConfig.h.in" "${PROJECT_BINARY_DIR}/PowerslideRemakeConfig.h")
 configure_file ("${PROJECT_SOURCE_DIR}/src/res/PowerslideHD_Engine.rc.in" "${PROJECT_BINARY_DIR}/PowerslideHD_Engine.rc")

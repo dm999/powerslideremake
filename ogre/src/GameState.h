@@ -28,6 +28,7 @@ public:
     ~GameState();
 
     std::string getVersion()const{return mVersion;}
+    std::string getBuildDate()const{ return mBuildDate; }
 
     void setPlayerName(std::string option){mPlayerName = option;}
     std::string getPlayerName()const{return mPlayerName;}
@@ -251,6 +252,7 @@ public:
 private:
 
     std::string mVersion;
+    std::string mBuildDate;
 
     std::string mPlayerName;
 
