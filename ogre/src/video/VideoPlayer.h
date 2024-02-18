@@ -51,6 +51,9 @@ public:
 
 private:
 
+    void processVideoFrame();
+    void drawVideoFrame();
+
     Ogre::TexturePtr mTexture;
 
     CommonIncludes::shared_ptr<CinepackDecode> mCinepakDecode;
@@ -59,8 +62,10 @@ private:
     bool mIsStarted;
     bool mIsFinished;
 
-    Ogre::Real mVideoSPF;
-    Ogre::Real mSecondsPassedVideo;
+    Ogre::Real mVideoFPS;
+
+    int mCurrentFrame;
+    Ogre::Timer mTimer;
 
     Ogre::Real mGain;
     CommonIncludes::shared_ptr<SoundSource> mSound;
