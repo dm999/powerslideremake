@@ -175,6 +175,9 @@ public:
     Ogre::Real getGamma() const;
     void setGamma(Ogre::Real gamma);
 
+    void setDoUpscale(bool doUpscale){ mDoUpscale = doUpscale; }
+    bool getDoUpscale() const{ return mDoUpscale; }
+
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
@@ -326,6 +329,8 @@ private:
 
     Ogre::ColourValue mBackgroundColor;
     Ogre::Real mGamma;
+
+    bool mDoUpscale;
 
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;

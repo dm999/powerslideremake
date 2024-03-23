@@ -169,6 +169,7 @@ private:
     UIButtonTick* mAdvLightingPlayerVal;
     UIButtonTick* mAttenuationPlayerVal;
     UIButtonTick* mAdvLightingAIVal;
+    UIButtonTick* mUpscale;
 
     UIButton* mHighScoresTrackLeft;
     UIButton* mHighScoresTrackRight;

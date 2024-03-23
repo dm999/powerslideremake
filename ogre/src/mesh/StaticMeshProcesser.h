@@ -81,15 +81,15 @@ public :
     char getTerrainType(const Ogre::Image * terrainMap, Ogre::Vector2 texCoord) const;
 
 #if defined(__ANDROID__)
-    void loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
+    void loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener);
 #endif
 
     const DE2::AABB& getBoundingBoxAABB() const {return mBoundingBoxAABB;}//to restore if falloff
 
 private:
 
-    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
-    void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, LoaderListener* loaderListener);
+    void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener);
+    void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener);
 
 #if defined(__ANDROID__)
     std::set<std::string> mTexturesNames;

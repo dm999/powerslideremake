@@ -43,6 +43,7 @@ GameState::GameState() :
     mIsRaceFinished(false),
     mBackgroundColor(0.91372550f, 0.78823531f, 0.52156866f),
     mGamma(1.0f),
+    mDoUpscale(false),
     mIsMirrorEnabled(true),
     mIsGhostEnabled(true),
     mAdvancedLightingPlayer(true),
@@ -114,6 +115,7 @@ void GameState::initOriginalData()
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
                 mGamma = mPlayerSettings.getFloatValue("", "gamma", mGamma);
+                mDoUpscale = mPlayerSettings.getIntValue("", "bicubic upscale", static_cast<int>(mDoUpscale));
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
                 mTransmissionType = static_cast<TransmissionType>(mPlayerSettings.getIntValue("", "transmission", static_cast<int>(mTransmissionType)));
                 mInputType = static_cast<InputType>(mPlayerSettings.getIntValue("", "input", static_cast<int>(mInputType)));
@@ -232,6 +234,7 @@ void GameState::savePlayerData()
     globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
     globalData.gamma = mGamma;
+    globalData.bicubic_upscale = mDoUpscale;
     globalData.kmph = mIsKMPh;
     globalData.transmission = mTransmissionType;
     globalData.input = mInputType;

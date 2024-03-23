@@ -312,6 +312,20 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+    if(button == mUpscale)
+    {
+        if(mUpscale->getChecked())
+        {
+            mModeContext.getGameState().setDoUpscale(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setDoUpscale(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
 
     if(button == mHighScoresTrackLeft)
     {
