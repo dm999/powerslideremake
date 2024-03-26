@@ -28,16 +28,36 @@ namespace
     {
         return clamp(v, lo, hi, std::less<T>());
     }
+
+    float bicubicW(float x)
+    {
+
+        float res = 0.0f;
+
+        float a = -0.5f;
+
+        float abs = std::abs(x);
+
+        if(abs <= 1.0f)
+        {
+            res = ((a + 2.0f) * (abs * abs * abs)) - ((a + 3.0f) * (abs * abs)) + 1.0f;
+        }
+        else if(1.0f < abs && abs < 2.0f)
+        {
+            res = ((a * (abs * abs * abs)) - (5.0f * a * (abs * abs)) + (8.0f * a * abs) - 4.0f * a);
+        }
+
+        return res;
+    }
 }//anonymous
 
 void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
 {
-    //https://stackoverflow.com/questions/17640173/implementation-of-bi-cubic-resize
-
     size_t width = img.getWidth();
     size_t height = img.getHeight();
-    
+
     size_t scaleFactor = 2;
+    float scale = 1.0f / scaleFactor;
 
     size_t dest_height = height * scaleFactor;
     size_t dest_width = width * scaleFactor;
@@ -48,59 +68,74 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
     Ogre::Image img2;
     img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, img.getFormat(), true);
 
-    float tx = 1.0f / static_cast<float>(scaleFactor);
-    float ty = tx;
-
-    const size_t channels = 3;
-    const size_t row_stride = dest_width * channels;
-
-    Ogre::ColourValue C[4] = { Ogre::ColourValue::ZERO, Ogre::ColourValue::ZERO, Ogre::ColourValue::ZERO, Ogre::ColourValue::ZERO };
-
-    for(size_t i = 0; i < dest_height; ++i)
+    for(size_t y = 0; y < dest_height; ++y)
     {
-        for(size_t j = 0; j < dest_width; ++j)
+        for(size_t x = 0; x < dest_width; ++x)
         {
-            const float x = static_cast<float>(tx * j);
-            const float y = static_cast<float>(ty * i);
+            float xx = ((static_cast<float>(x) + 0.5f) * scale) - 0.5f;
+            float yy = ((static_cast<float>(y) + 0.5f) * scale) - 0.5f;
 
-            const float dx = tx * j - x;
-            const float dx2 = dx * dx;
-            const float dx3 = dx2 * dx;
+            int xxi = static_cast<int>(xx);
+            int yyi = static_cast<int>(yy);
 
-            const float dy = ty * i - y;
-            const float dy2 = dy * dy;
-            const float dy3 = dy2 * dy;
+            float u = xx - xxi;
+            float v = yy - yyi;
 
-            for(int jj = 0; jj < 4; ++jj)
-            {
-                int idx = static_cast<int>(y - 1 + jj);
+            Ogre::ColourValue pixel = Ogre::ColourValue::ZERO;
 
-                idx = clamp(idx, 0, static_cast<int>(height));
+            for(int m = -1; m < 3; ++m){
+                for(int n = -1; n < 3; ++n){
+                    /*
+                    if(
+                        (xxi + n < 0) ||
+                        (xxi + n >= static_cast<int>(width)) ||
+                        (yyi + m < 0) ||
+                        (yyi + m >= static_cast<int>(height))
+                        ) continue;*/
+                    if(
+                        (xxi + n < 0) &&
+                        (yyi + m < 0)
+                        ) continue;
+                    if(
+                        (xxi + n < 0) &&
+                        (yyi + m >= static_cast<int>(height))
+                        ) continue;
+                    if(
+                        (yyi + m < 0) &&
+                        (xxi + n >= static_cast<int>(width))
+                        ) continue;
+                    if(
+                        (xxi + n >= static_cast<int>(width)) &&
+                        (yyi + m >= static_cast<int>(height))
+                        ) continue;
+                    if(xxi + n < 0 && yyi + m >= 0)
+                    {
+                        pixel += img.getColourAt(xxi - n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                        continue;
+                    }
+                    if(xxi + n >= 0 && yyi + m < 0)
+                    {
+                        pixel += img.getColourAt(xxi + n, yyi - m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                        continue;
+                    }
+                    if(xxi + n >= static_cast<int>(width) && yyi + m < static_cast<int>(height))
+                    {
+                        pixel += img.getColourAt(xxi - n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                        continue;
+                    }
+                    if(xxi + n < static_cast<int>(width) && yyi + m >= static_cast<int>(height))
+                    {
+                        pixel += img.getColourAt(xxi + n, yyi - m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                        continue;
+                    }
 
-                Ogre::ColourValue a0 = img.getColourAt(static_cast<size_t>(x), idx, 0);
-                Ogre::ColourValue d0 = img.getColourAt(clamp(static_cast<int>(x - 1), 0, static_cast<int>(width)), idx, 0) - a0;
-                Ogre::ColourValue d2 = img.getColourAt(clamp(static_cast<int>(x + 1), 0, static_cast<int>(width)), idx, 0) - a0;
-                Ogre::ColourValue d3 = img.getColourAt(clamp(static_cast<int>(x + 2), 0, static_cast<int>(width)), idx, 0) - a0;
-
-                Ogre::ColourValue a1 = -(1.0f / 3.0f) * d0 + d2 - (1.0f / 6.0f) * d3;
-                Ogre::ColourValue a2 = 0.5f  * d0 + 0.5f *  d2;
-                Ogre::ColourValue a3 = -(1.0f / 6.0f) * d0 - 0.5f * d2 + (1.0f / 6.0f) * d3;
-
-                C[jj] = a0 + a1 * dx + a2 * dx2 + a3 * dx3;
-
-                d0 = C[0] - C[1];
-                d2 = C[2] - C[1];
-                d3 = C[3] - C[1];
-                a0 = C[1];
-
-                a1 = -(1.0f / 3.0f) * d0 + d2 - (1.0f / 6.0f) * d3;
-                a2 = 0.5f  * d0 + 0.5f  * d2;
-                a3 = -(1.0f / 6.0f) * d0 - 0.5f * d2 + (1.0f / 6.0f) * d3;
-
-                Ogre::ColourValue colorRes = a0 + a1 * dy + a2 * dy2 + a3 * dy3;
-                colorRes.saturate();
-                img2.setColourAt(colorRes, j, i, 0);
+                    pixel += img.getColourAt(xxi + n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                }
             }
+
+            pixel.saturate();
+
+            img2.setColourAt(pixel, x, y, 0);
         }
     }
 
