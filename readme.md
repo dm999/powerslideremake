@@ -23,6 +23,7 @@ To build project you need:
 - [Lua](https://www.lua.org/)  
 - [SimpleINI](https://github.com/brofield/simpleini)  
 - [JSON++](https://github.com/hjiang/jsonxx)  
+- [Yato](https://github.com/agruzdev/Yato/)  
 - [Multislider](https://bitbucket.org/alexey_gruzdev/multislider)  
 - [ogg/vorbis](https://www.xiph.org/) (only if PowerslideRemake_OPENAL ON)  
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  

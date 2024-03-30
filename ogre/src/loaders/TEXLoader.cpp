@@ -51,6 +51,87 @@ namespace
     }
 }//anonymous
 
+#include <mutex>
+#include <thread>
+#include <vector>
+#include <condition_variable>
+
+//https://github.com/agruzdev/Yato/blob/master/modules/actors/yato/actors/private/thread_pool.h
+class thread_pool
+{
+    std::vector<std::thread> m_threads;
+    std::queue<std::function<void()>> m_tasks;
+
+    std::mutex m_mutex;
+    std::condition_variable m_cvar;
+
+    bool m_stop = false;
+
+public:
+    thread_pool(size_t threads_num) {
+        auto thread_function = [this] {
+            for(;;) {
+                std::function<void()> task;
+                {
+                    std::unique_lock<std::mutex> lock(m_mutex);
+                    m_cvar.wait(lock, [this] { return m_stop || !m_tasks.empty(); });
+                    if(m_stop && m_tasks.empty()) {
+                        break;
+                    }
+                    if(!m_tasks.empty()) {
+                        task = std::move(m_tasks.front());
+                        m_tasks.pop();
+                    }
+                }
+                // Execute
+                if(task) {
+                    try {
+                        task();
+                    }
+                    catch(std::exception & e) {
+                        (void) e;
+                        //TODO
+                    }
+                    catch(...) {
+                        //TODO
+                    }
+                }
+            }
+        };
+
+        for(size_t i = 0; i < threads_num; ++i) {
+            m_threads.emplace_back(thread_function);
+        }
+    }
+
+    ~thread_pool() {
+        {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            m_stop = true;
+            m_cvar.notify_all();
+        }
+        for(auto & thread : m_threads) {
+            thread.join();
+        }
+    }
+
+    thread_pool(const thread_pool&) = delete;
+    thread_pool& operator=(const thread_pool&) = delete;
+
+    // Add task
+    template <typename FunTy_, typename ... Args_>
+    void enqueue(FunTy_ && function, Args_ && ... args) {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if(!m_stop) {
+            m_tasks.emplace(std::bind(std::forward<FunTy_>(function), std::forward<Args_>(args)...));
+        }
+        else {
+            //TODO
+        }
+        m_cvar.notify_one();
+    }
+};
+
 void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
 {
     size_t width = img.getWidth();
@@ -68,7 +149,100 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
     Ogre::Image img2;
     img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, img.getFormat(), true);
 
-    for(size_t y = 0; y < dest_height; ++y)
+    {
+#if defined(__ANDROID__)
+        size_t threadsAmount = 4;
+#else
+        size_t threadsAmount = 8;
+#endif
+        thread_pool tPool(threadsAmount);
+
+        auto bicubicLambda = [&](size_t y_start, size_t y_end){
+            for(size_t y = y_start; y < y_end; ++y)
+            {
+                for(size_t x = 0; x < dest_width; ++x)
+                {
+                    float xx = ((static_cast<float>(x) + 0.5f) * scale) - 0.5f;
+                    float yy = ((static_cast<float>(y) + 0.5f) * scale) - 0.5f;
+
+                    int xxi = static_cast<int>(xx);
+                    int yyi = static_cast<int>(yy);
+
+                    float u = xx - xxi;
+                    float v = yy - yyi;
+
+                    Ogre::ColourValue pixel = Ogre::ColourValue::ZERO;
+
+                    for(int m = -1; m < 3; ++m){
+                        for(int n = -1; n < 3; ++n){
+                            /*
+                            if(
+                            (xxi + n < 0) ||
+                            (xxi + n >= static_cast<int>(width)) ||
+                            (yyi + m < 0) ||
+                            (yyi + m >= static_cast<int>(height))
+                            ) continue;*/
+                            if(
+                                (xxi + n < 0) &&
+                                (yyi + m < 0)
+                                ) continue;
+                            if(
+                                (xxi + n < 0) &&
+                                (yyi + m >= static_cast<int>(height))
+                                ) continue;
+                            if(
+                                (yyi + m < 0) &&
+                                (xxi + n >= static_cast<int>(width))
+                                ) continue;
+                            if(
+                                (xxi + n >= static_cast<int>(width)) &&
+                                (yyi + m >= static_cast<int>(height))
+                                ) continue;
+                            if(xxi + n < 0 && yyi + m >= 0)
+                            {
+                                pixel += img.getColourAt(xxi - n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                                continue;
+                            }
+                            if(xxi + n >= 0 && yyi + m < 0)
+                            {
+                                pixel += img.getColourAt(xxi + n, yyi - m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                                continue;
+                            }
+                            if(xxi + n >= static_cast<int>(width) && yyi + m < static_cast<int>(height))
+                            {
+                                pixel += img.getColourAt(xxi - n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                                continue;
+                            }
+                            if(xxi + n < static_cast<int>(width) && yyi + m >= static_cast<int>(height))
+                            {
+                                pixel += img.getColourAt(xxi + n, yyi - m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                                continue;
+                            }
+
+                            pixel += img.getColourAt(xxi + n, yyi + m, 0) * (bicubicW(u - n) * bicubicW(v - m));
+                        }
+                    }
+
+                    pixel.saturate();
+
+                    img2.setColourAt(pixel, x, y, 0);
+                }
+            }
+        };
+
+        size_t batch = dest_height / threadsAmount;
+
+        for(size_t q = 0; q < threadsAmount; ++q)
+        {
+            size_t start = q * batch;
+            size_t end = (q + 1) * batch;
+            tPool.enqueue(bicubicLambda, start, end);
+        }
+    }
+
+#if 0
+#pragma omp parallel for
+    for(int y = 0; y < static_cast<int>(dest_height); ++y)
     {
         for(size_t x = 0; x < dest_width; ++x)
         {
@@ -138,6 +312,7 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
             img2.setColourAt(pixel, x, y, 0);
         }
     }
+#endif
 
     std::swap(img, img2);
 }
