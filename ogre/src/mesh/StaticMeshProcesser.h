@@ -11,6 +11,7 @@
 #include "../GameState.h"
 #include "../loaders/DE2.h"
 #include "../loaders/PFLoader.h"
+#include "../loaders/LUTs.h"
 
 #include "../physics/TerrainData.h"
 
@@ -90,6 +91,10 @@ private:
 
     void loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener);
     void loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener);
+
+    //LUTs
+    bool loadLUTs();
+    LUTs LutsX2;
 
 #if defined(__ANDROID__)
     std::set<std::string> mTexturesNames;

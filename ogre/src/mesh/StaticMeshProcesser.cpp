@@ -255,6 +255,11 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
     const float loaderMax = 0.7f;
     const float loaderDistance = loaderMax - loaderMin;
 
+    if(doUpscale)
+    {
+        doUpscale = loadLUTs();
+    }
+
     size_t loadedAmount = 0;
 
     for(std::set<std::string>::const_iterator i = texturesNames.begin(), j = texturesNames.end();
@@ -279,13 +284,90 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            TEXLoader().load(fileToLoad, (*i), TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
+            TEXLoader().load(fileToLoad, (*i), LutsX2, TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
             fileToLoad->close();
         }
 
         if(loaderListener && loadedAmount % 2)
             loaderListener->loadState(loaderMin + loaderDistance * static_cast<float>(loadedAmount) / static_cast<float>(texturesNames.size()), noExtFileName);
     }
+}
+
+bool StaticMeshProcesser::loadLUTs()
+{
+    bool success = true;
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            LutsX2.LSB_HD_D.resize(amount);
+            pStream->read(LutsX2.LSB_HD_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            LutsX2.LSB_HD_H.resize(amount);
+            pStream->read(LutsX2.LSB_HD_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_B_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            LutsX2.MSB_HDB_B.resize(amount);
+            pStream->read(LutsX2.MSB_HDB_B.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            LutsX2.MSB_HDB_D.resize(amount);
+            pStream->read(LutsX2.MSB_HDB_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            LutsX2.MSB_HDB_H.resize(amount);
+            pStream->read(LutsX2.MSB_HDB_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    return success;
 }
 
 #if defined(__ANDROID__)

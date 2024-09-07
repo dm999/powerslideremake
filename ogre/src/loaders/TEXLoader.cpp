@@ -317,7 +317,7 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
     std::swap(img, img2);
 }
 
-Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
+Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const LUTs& luts, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
 {
     Ogre::TexturePtr res;
 
@@ -398,7 +398,7 @@ Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& su
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        res = load(fileToLoad, texturename, group, gamma, doUpscale);
+        res = load(fileToLoad, texturename, LUTs(), group, gamma, doUpscale);
         fileToLoad->close();
     }
     return res;
