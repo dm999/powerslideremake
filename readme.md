@@ -29,6 +29,7 @@ To build project you need:
 - [ogg/vorbis cmake](https://github.com/Iunusov/OGG-Vorbis-CMAKE) (only if PowerslideRemake_OPENAL ON)  
 - [OpenCV](https://opencv.org/) AVIReadContainer class source code used to parse AVI header and extract encoded frame  
 - [Cinepack codec](https://multimedia.cx/mirror/cinepak.txt) explanation of Cinepack decoding by Dr. Tim Ferguson  
+- [HKLUT](https://github.com/jasonli0707/hklut) HKLUT: Hundred-Kilobyte Lookup Tables  
 
 Class diagram of source code presented in docs/ClassDiagram.graphml (use [yED](http://www.yworks.com/products/yed) to open)  
 
