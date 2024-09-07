@@ -49,6 +49,8 @@ namespace
 
         return res;
     }
+
+    const uint16_t L = 1 << 4;
 }//anonymous
 
 #include <mutex>
@@ -317,6 +319,276 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
     std::swap(img, img2);
 }
 
+Ogre::ColourValue TEXLoader::getPixel(int x, int y, const Ogre::Image& src) const
+{
+    if(x < 0) x = 0;
+    if(y < 0) y = 0;
+    if(x >= static_cast<int>(src.getWidth())) x = src.getWidth() - 1;
+    if(y >= static_cast<int>(src.getHeight())) x = src.getHeight() - 1;
+
+    return src.getColourAt(x, y, 0);
+}
+
+std::vector<int16_t> TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Ogre::ColourValue& valA, const Ogre::ColourValue& valB) const
+{
+    uint16_t valA_r = static_cast<uint16_t>(valA.r * 255.0f) & 0xF;
+    uint16_t valA_g = static_cast<uint16_t>(valA.g * 255.0f) & 0xF;
+    uint16_t valA_b = static_cast<uint16_t>(valA.b * 255.0f) & 0xF;
+
+    uint16_t valB_r = static_cast<uint16_t>(valB.r * 255.0f) & 0xF;
+    uint16_t valB_g = static_cast<uint16_t>(valB.g * 255.0f) & 0xF;
+    uint16_t valB_b = static_cast<uint16_t>(valB.b * 255.0f) & 0xF;
+
+    size_t indexR = (valA_r * L + valB_r) * 4;
+    size_t indexG = (valA_g * L + valB_g) * 4;
+    size_t indexB = (valA_b * L + valB_b) * 4;
+
+    std::vector<int16_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
+    std::vector<int16_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
+    std::vector<int16_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
+
+    std::vector<int16_t> ret;
+    ret.insert(ret.end(), lutValR.begin(), lutValR.end());
+    ret.insert(ret.end(), lutValG.begin(), lutValG.end());
+    ret.insert(ret.end(), lutValB.begin(), lutValB.end());
+
+    return ret;
+}
+
+void TEXLoader::rotateBack(std::vector<int16_t>& res) const
+{
+    for(size_t q = 0; q < 3; ++q)
+    {
+        int16_t tmp = res[0 + q * 4];
+        res[0 + q * 4] = res[1 + q * 4];
+        res[1 + q * 4] = res[3 + q * 4];
+        res[3 + q * 4] = res[2 + q * 4];
+        res[2 + q * 4] = tmp;
+    }
+}
+
+void TEXLoader::doLSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<Ogre::ColourValue>& res) const
+{
+    Ogre::ColourValue rot_0 = getPixel(x, y, src);
+
+    Ogre::ColourValue rot_0_h = getPixel(x + 1, y, src);
+    Ogre::ColourValue rot_0_d = getPixel(x + 1, y - 1, src);
+
+    Ogre::ColourValue rot_90_h = getPixel(x, y - 1, src);
+    Ogre::ColourValue rot_90_d = getPixel(x - 1, y - 1, src);
+
+    Ogre::ColourValue rot_180_h = getPixel(x - 1, y, src);
+    Ogre::ColourValue rot_180_d = getPixel(x - 1, y + 1, src);
+
+    Ogre::ColourValue rot_270_h = getPixel(x, y + 1, src);
+    Ogre::ColourValue rot_270_d = getPixel(x + 1, y + 1, src);
+
+
+    std::vector<int16_t> vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
+    std::vector<int16_t> vals_0_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_0_d);
+
+    std::vector<int16_t> vals_90_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_90_h);
+    std::vector<int16_t> vals_90_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_90_d);
+
+    std::vector<int16_t> vals_180_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_180_h);
+    std::vector<int16_t> vals_180_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_180_d);
+
+    std::vector<int16_t> vals_270_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_270_h);
+    std::vector<int16_t> vals_270_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_270_d);
+
+
+    std::vector<int16_t> vals_0(vals_0_h);
+    std::transform(vals_0.begin(), vals_0.end(), vals_0_d.begin(), vals_0.begin(), std::plus<int16_t>());
+
+    std::vector<int16_t> vals_90(vals_90_h);
+    std::transform(vals_90.begin(), vals_90.end(), vals_90_d.begin(), vals_90.begin(), std::plus<int16_t>());
+    rotateBack(vals_90);
+
+    std::vector<int16_t> vals_180(vals_180_h);
+    std::transform(vals_180.begin(), vals_180.end(), vals_180_d.begin(), vals_180.begin(), std::plus<int16_t>());
+    rotateBack(vals_180);
+    rotateBack(vals_180);
+
+    std::vector<int16_t> vals_270(vals_270_h);
+    std::transform(vals_270.begin(), vals_270.end(), vals_270_d.begin(), vals_270.begin(), std::plus<int16_t>());
+    rotateBack(vals_270);
+    rotateBack(vals_270);
+    rotateBack(vals_270);
+
+    std::transform(vals_0.begin(), vals_0.end(), vals_90.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_180.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_270.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_0.begin(), [](int16_t val){return val / 2;});
+
+    for(size_t q = 0; q < 4; ++q)
+    {
+        res[q].r = vals_0[q] / 255.0f;
+        res[q].g = vals_0[q + 4] / 255.0f;
+        res[q].b = vals_0[q + 8] / 255.0f;
+    }
+
+}
+
+std::vector<int16_t> TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, const Ogre::ColourValue& valA, const Ogre::ColourValue& valB, const Ogre::ColourValue& valC) const
+{
+    uint16_t valA_r = static_cast<uint16_t>(valA.r * 255.0f) >> 4;
+    uint16_t valA_g = static_cast<uint16_t>(valA.g * 255.0f) >> 4;
+    uint16_t valA_b = static_cast<uint16_t>(valA.b * 255.0f) >> 4;
+
+    uint16_t valB_r = static_cast<uint16_t>(valB.r * 255.0f) >> 4;
+    uint16_t valB_g = static_cast<uint16_t>(valB.g * 255.0f) >> 4;
+    uint16_t valB_b = static_cast<uint16_t>(valB.b * 255.0f) >> 4;
+
+    uint16_t valC_r = static_cast<uint16_t>(valC.r * 255.0f) >> 4;
+    uint16_t valC_g = static_cast<uint16_t>(valC.g * 255.0f) >> 4;
+    uint16_t valC_b = static_cast<uint16_t>(valC.b * 255.0f) >> 4;
+
+    size_t indexR = (valA_r * L * L + valB_r * L + valC_r) * 4;
+    size_t indexG = (valA_g * L * L + valB_g * L + valC_g) * 4;
+    size_t indexB = (valA_b * L * L + valB_b * L + valC_b) * 4;
+
+    std::vector<int16_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
+    std::vector<int16_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
+    std::vector<int16_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
+
+    std::vector<int16_t> ret;
+    ret.insert(ret.end(), lutValR.begin(), lutValR.end());
+    ret.insert(ret.end(), lutValG.begin(), lutValG.end());
+    ret.insert(ret.end(), lutValB.begin(), lutValB.end());
+
+    return ret;
+}
+
+void TEXLoader::doMSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<Ogre::ColourValue>& res) const
+{
+    Ogre::ColourValue rot_0 = getPixel(x, y, src);
+
+    Ogre::ColourValue rot_0_h = getPixel(x + 1, y, src);
+    Ogre::ColourValue rot_0_h2 = getPixel(x + 2, y, src);
+    Ogre::ColourValue rot_0_d = getPixel(x + 1, y - 1, src);
+    Ogre::ColourValue rot_0_d2 = getPixel(x + 2, y - 2, src);
+    Ogre::ColourValue rot_0_b = getPixel(x + 1, y - 2, src);
+    Ogre::ColourValue rot_0_b2 = getPixel(x + 2, y - 1, src);
+
+    Ogre::ColourValue rot_90_h = getPixel(x, y - 1, src);
+    Ogre::ColourValue rot_90_h2 = getPixel(x, y - 2, src);
+    Ogre::ColourValue rot_90_d = getPixel(x - 1, y - 1, src);
+    Ogre::ColourValue rot_90_d2 = getPixel(x - 2, y - 2, src);
+    Ogre::ColourValue rot_90_b = getPixel(x - 2, y - 1, src);
+    Ogre::ColourValue rot_90_b2 = getPixel(x - 1, y - 2, src);
+
+    Ogre::ColourValue rot_180_h = getPixel(x - 1, y, src);
+    Ogre::ColourValue rot_180_h2 = getPixel(x - 2, y, src);
+    Ogre::ColourValue rot_180_d = getPixel(x - 1, y + 1, src);
+    Ogre::ColourValue rot_180_d2 = getPixel(x - 2, y + 2, src);
+    Ogre::ColourValue rot_180_b = getPixel(x - 1, y + 2, src);
+    Ogre::ColourValue rot_180_b2 = getPixel(x - 2, y + 1, src);
+
+    Ogre::ColourValue rot_270_h = getPixel(x, y + 1, src);
+    Ogre::ColourValue rot_270_h2 = getPixel(x, y + 2, src);
+    Ogre::ColourValue rot_270_d = getPixel(x + 1, y + 1, src);
+    Ogre::ColourValue rot_270_d2 = getPixel(x + 2, y + 2, src);
+    Ogre::ColourValue rot_270_b = getPixel(x + 1, y + 2, src);
+    Ogre::ColourValue rot_270_b2 = getPixel(x + 2, y + 1, src);
+
+
+    std::vector<int16_t> vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
+    std::vector<int16_t> vals_0_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_0_d, rot_0_d2);
+    std::vector<int16_t> vals_0_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_0_b, rot_0_b2);
+
+    std::vector<int16_t> vals_90_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_90_h, rot_90_h2);
+    std::vector<int16_t> vals_90_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_90_d, rot_90_d2);
+    std::vector<int16_t> vals_90_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_90_b, rot_90_b2);
+
+    std::vector<int16_t> vals_180_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_180_h, rot_180_h2);
+    std::vector<int16_t> vals_180_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_180_d, rot_180_d2);
+    std::vector<int16_t> vals_180_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_180_b, rot_180_b2);
+
+    std::vector<int16_t> vals_270_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_270_h, rot_270_h2);
+    std::vector<int16_t> vals_270_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_270_d, rot_270_d2);
+    std::vector<int16_t> vals_270_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_270_b, rot_270_b2);
+
+
+    std::vector<int16_t> vals_0(vals_0_h);
+    std::transform(vals_0.begin(), vals_0.end(), vals_0_d.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_0_b.begin(), vals_0.begin(), std::plus<int16_t>());
+
+    std::vector<int16_t> vals_90(vals_90_h);
+    std::transform(vals_90.begin(), vals_90.end(), vals_90_d.begin(), vals_90.begin(), std::plus<int16_t>());
+    std::transform(vals_90.begin(), vals_90.end(), vals_90_b.begin(), vals_90.begin(), std::plus<int16_t>());
+    rotateBack(vals_90);
+
+    std::vector<int16_t> vals_180(vals_180_h);
+    std::transform(vals_180.begin(), vals_180.end(), vals_180_d.begin(), vals_180.begin(), std::plus<int16_t>());
+    std::transform(vals_180.begin(), vals_180.end(), vals_180_b.begin(), vals_180.begin(), std::plus<int16_t>());
+    rotateBack(vals_180);
+    rotateBack(vals_180);
+
+    std::vector<int16_t> vals_270(vals_270_h);
+    std::transform(vals_270.begin(), vals_270.end(), vals_270_d.begin(), vals_270.begin(), std::plus<int16_t>());
+    std::transform(vals_270.begin(), vals_270.end(), vals_270_b.begin(), vals_270.begin(), std::plus<int16_t>());
+    rotateBack(vals_270);
+    rotateBack(vals_270);
+    rotateBack(vals_270);
+
+    std::transform(vals_0.begin(), vals_0.end(), vals_90.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_180.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_270.begin(), vals_0.begin(), std::plus<int16_t>());
+    std::transform(vals_0.begin(), vals_0.end(), vals_0.begin(), [](int16_t val){return val / 3; });
+
+    for(size_t q = 0; q < 4; ++q)
+    {
+        res[q].r = vals_0[q] / 255.0f;
+        res[q].g = vals_0[q + 4] / 255.0f;
+        res[q].b = vals_0[q + 8] / 255.0f;
+    }
+}
+
+void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
+{
+    size_t width = img.getWidth();
+    size_t height = img.getHeight();
+
+    size_t scaleFactor = 2;
+
+    size_t dest_height = height * scaleFactor;
+    size_t dest_width = width * scaleFactor;
+
+    size_t bufSize = Ogre::PixelUtil::getMemorySize(dest_width, dest_height, 1, img.getFormat());
+    Ogre::uchar* pixelData = OGRE_ALLOC_T(Ogre::uchar, bufSize, Ogre::MEMCATEGORY_GENERAL);
+
+    Ogre::Image img2;
+    img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, img.getFormat(), true);
+
+    for(size_t y = 0; y < height; ++y)
+    {
+        for(size_t x = 0; x < width; ++x)
+        {
+            Ogre::ColourValue orig = img.getColourAt(x, y, 0);
+
+            std::vector<Ogre::ColourValue> resLSB(4, Ogre::ColourValue::ZERO);
+            std::vector<Ogre::ColourValue> resMSB(4, Ogre::ColourValue::ZERO);
+            doLSB(x, y, img, luts, resLSB);
+            doMSB(x, y, img, luts, resMSB);
+
+            std::vector<Ogre::ColourValue> pixel(4, orig);
+            for(size_t q = 0; q < 4; ++q)
+            {
+                pixel[q] += resLSB[q];
+                pixel[q] += resMSB[q];
+                pixel[q].saturate();
+            }
+
+            img2.setColourAt(pixel[0], x * 2, y * 2, 0);
+            img2.setColourAt(pixel[1], x * 2 + 1, y * 2, 0);
+            img2.setColourAt(pixel[2], x * 2, y * 2 + 1, 0);
+            img2.setColourAt(pixel[3], x * 2 + 1, y * 2 + 1, 0);
+        }
+    }
+
+    std::swap(img, img2);
+}
+
 Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const LUTs& luts, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
 {
     Ogre::TexturePtr res;
@@ -382,7 +654,8 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
 #endif
         }
 
-        if(doUpscale) doBicubicUpscale(img);
+        //if(doUpscale) doBicubicUpscale(img);
+        if(doUpscale) doLUTUpscale(img, luts);
 
         res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
 
