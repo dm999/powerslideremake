@@ -324,7 +324,7 @@ Ogre::ColourValue TEXLoader::getPixel(int x, int y, const Ogre::Image& src) cons
     if(x < 0) x = 0;
     if(y < 0) y = 0;
     if(x >= static_cast<int>(src.getWidth())) x = src.getWidth() - 1;
-    if(y >= static_cast<int>(src.getHeight())) x = src.getHeight() - 1;
+    if(y >= static_cast<int>(src.getHeight())) y = src.getHeight() - 1;
 
     return src.getColourAt(x, y, 0);
 }
