@@ -1232,30 +1232,30 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 #endif
 
 #if defined(__ANDROID__)
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "blast_m_4.tex", "OriginalCheatBlast", TEMP_RESOURCE_GROUP_NAME);
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "light_m_4.tex", "OriginalCheatLight", TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "blast_m_4.tex", "OriginalCheatBlast", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "light_m_4.tex", "OriginalCheatLight", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 #endif
 
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "sticky_m_4.tex", "OriginalCheatSticky", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "spider_m_4.tex", "OriginalCheatSpider", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "icbm_m_4.tex", "OriginalCheatICBM", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "apollo_m_4.tex", "OriginalCheatApollo", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "lunar_m_4.tex", "OriginalCheatLunar", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "jump_m_4.tex", "OriginalCheatJump", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "hover_m_4.tex", "OriginalCheatHover", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "glider_m_4.tex", "OriginalCheatGlider", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "sticky_m_4.tex", "OriginalCheatSticky", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "spider_m_4.tex", "OriginalCheatSpider", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "icbm_m_4.tex", "OriginalCheatICBM", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "apollo_m_4.tex", "OriginalCheatApollo", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "lunar_m_4.tex", "OriginalCheatLunar", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "jump_m_4.tex", "OriginalCheatJump", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "hover_m_4.tex", "OriginalCheatHover", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/cheats", "glider_m_4.tex", "OriginalCheatGlider", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_left_m_2.tex", "OriginalStartReadyL", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartReadyC", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_right_m_2.tex", "OriginalStartReadyR", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_left_m_2.tex", "OriginalStartSetL", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "ready_centre_m_2.tex", "OriginalStartSetC", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "set_right_m_2.tex", "OriginalStartSetR", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", TEMP_RESOURCE_GROUP_NAME);
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_left_m_2.tex", "OriginalStartGoL", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_centre_m_2.tex", "OriginalStartGoC", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc/startlights", "go_right_m_2.tex", "OriginalStartGoR", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     //dashboard
     {
@@ -1269,7 +1269,7 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
         std::string dashPositionTexture = gameState.getSTRPowerslide().getValue(gameState.getPlayerCar().getCharacterName() + " parameters", "dash texture", "max_m_3.tex");
         std::transform(dashPositionTexture .begin(), dashPositionTexture .end(), dashPositionTexture .begin(), ::tolower);
         dashPositionTexture = dashPositionTexture.substr(0, dashPositionTexture.length() - 4) + "_m_3.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/dashes", dashPositionTexture, "OriginalDashPosition", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
     }
 
     //tacho
@@ -1277,11 +1277,11 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
         std::string tachoTexture = gameState.getSTRRacecrud().getValue(gameState.getPlayerCar().getCharacterName() + " dash parameters", "tacho file 1", "frantic_1024x768.tex");
         std::transform(tachoTexture.begin(), tachoTexture.end(), tachoTexture.begin(), ::tolower);
         tachoTexture = tachoTexture.substr(0, tachoTexture.length() - 4) + "_m_1.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME);
+        TEXLoader().load(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
         //TEXLoader().loadChroma(gameState.getPFLoaderData(), "data/misc/tachos", tachoTexture, "OriginalTacho", TEMP_RESOURCE_GROUP_NAME, Ogre::ColourValue::White);
     }
 
-    TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", TEMP_RESOURCE_GROUP_NAME);
+    TEXLoader().load(gameState.getPFLoaderData(), "data/misc", "font_set_1_m_1.tex", "OriginalFont", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     Ogre::TexturePtr chromaTexture = TextureLoader().load( pfLoaderData, 
                                 "data/misc", "paused_bg.tga", 
@@ -1296,19 +1296,19 @@ void UIRace::loadMisc(const GameState& gameState, const PFLoader& pfLoaderData, 
 
     TEXLoader().load( pfLoaderData, 
                                 "data/misc", "1_m_1.tex", 
-                                "OriginalFinished1", TEMP_RESOURCE_GROUP_NAME);
+                                "OriginalFinished1", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     TEXLoader().load( pfLoaderData, 
                                 "data/misc", "2_m_1.tex", 
-                                "OriginalFinished2", TEMP_RESOURCE_GROUP_NAME);
+                                "OriginalFinished2", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     TEXLoader().load( pfLoaderData, 
                                 "data/misc", "3_m_1.tex", 
-                                "OriginalFinished3", TEMP_RESOURCE_GROUP_NAME);
+                                "OriginalFinished3", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     TEXLoader().load( pfLoaderData, 
                                 "data/misc", "4_m_1.tex", 
-                                "OriginalFinished4", TEMP_RESOURCE_GROUP_NAME);
+                                "OriginalFinished4", gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME);
 
     TextureLoader().generate("CustomBackgroundRed", 64, 64, Ogre::ColourValue(1.0f, 0.0f, 0.0f, 1.0f));
 

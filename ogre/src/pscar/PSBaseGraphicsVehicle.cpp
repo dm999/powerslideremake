@@ -277,7 +277,7 @@ std::string PSBaseGraphicsVehicle::loadTexture(const GameState& gameState, const
     {
         std::string carSkinName = gameState.getSTRPowerslide().getValue(carName + " parameters", "texture name", "feral max texture");
         carSkinName += "_m_1.tex";
-        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, textureName, TEMP_RESOURCE_GROUP_NAME, gameState.getGamma(), gameState.getDoUpscale());
+        TEXLoader().load(gameState.getPFLoaderData(), "data/cars/" + carPath + "/textures/default/" + mCharacterName, carSkinName, textureName, gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME, gameState.getGamma(), gameState.getDoUpscale());
     }
 
     return carName;

@@ -392,13 +392,13 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
     return res;
 }
 
-Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
+Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const LUTs& luts, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
 {
     Ogre::TexturePtr res;
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        res = load(fileToLoad, texturename, LUTs(), group, gamma, doUpscale);
+        res = load(fileToLoad, texturename, luts, group, gamma, doUpscale);
         fileToLoad->close();
     }
     return res;

@@ -608,6 +608,83 @@ void GameState::setGamma(Ogre::Real gamma)
     mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / mGamma);
 }
 
+bool GameState::loadLUTs()
+{
+    bool success = true;
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX2.LSB_HD_D.resize(amount);
+            pStream->read(mLutsX2.LSB_HD_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX2.LSB_HD_H.resize(amount);
+            pStream->read(mLutsX2.LSB_HD_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_B_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX2.MSB_HDB_B.resize(amount);
+            pStream->read(mLutsX2.MSB_HDB_B.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX2.MSB_HDB_D.resize(amount);
+            pStream->read(mLutsX2.MSB_HDB_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX2.MSB_HDB_H.resize(amount);
+            pStream->read(mLutsX2.MSB_HDB_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    return success;
+}
+
 void GameState::setAICount(size_t opponentsAmount)
 {
     mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);

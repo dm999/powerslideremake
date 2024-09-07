@@ -18,6 +18,8 @@
 
 #include "gamelogic/Championship.h"
 
+#include "loaders/LUTs.h"
+
 #include "Enums.h"
 
 class GameState
@@ -178,6 +180,9 @@ public:
     void setDoUpscale(bool doUpscale){ mDoUpscale = doUpscale; }
     bool getDoUpscale() const{ return mDoUpscale; }
 
+    bool loadLUTs();
+    const LUTs& getX2LUTs() const { return mLutsX2; }
+
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
 
@@ -331,6 +336,9 @@ private:
     Ogre::Real mGamma;
 
     bool mDoUpscale;
+
+    //LUTs
+    LUTs mLutsX2;
 
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;

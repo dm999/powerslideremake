@@ -66,6 +66,13 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
 
     mLoaderListener = loaderListener;
 
+    //LUTs
+    if(mModeContext.mGameState.getDoUpscale())
+    {
+        bool lutsLoadSuccess = mModeContext.mGameState.loadLUTs();
+        mModeContext.mGameState.setDoUpscale(lutsLoadSuccess);
+    }
+
     if(loaderListener)
         loaderListener->loadState(0.2f, "scene inited");
 
@@ -450,7 +457,7 @@ void BaseRaceMode::initTerrain(LoaderListener* loaderListener)
     //particle (before loading cars)
     {
         //Ogre::TexturePtr particle = TextureLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "particle.tga", "OriginalParticle");
-        Ogre::TexturePtr particle = TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
+        Ogre::TexturePtr particle = TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle", mModeContext.mGameState.getX2LUTs());
         
         Ogre::MaterialPtr particleMat = Ogre::MaterialManager::getSingleton().getByName("Test/Particle");
         particleMat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTexture(particle);
@@ -475,7 +482,7 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
 
     //arrow (before loading models)
     {
-        TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow");
+        TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow", mModeContext.mGameState.getX2LUTs());
     }
 
     mModeContext.mGameState.setPLayerCarPrevVel(Ogre::Vector3::ZERO);
@@ -1078,8 +1085,8 @@ void BaseRaceMode::timeStepAfter(Physics * physics)
 #if defined(__ANDROID__)
 void BaseRaceMode::reloadTextures()
 {
-    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle");
-    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow");
+    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/deii", "d3d2display1_m_1.tex", "OriginalParticle", mModeContext.mGameState.getX2LUTs());
+    TEXLoader().load(mModeContext.mGameState.getPFLoaderData(), "data/misc", "arrow_m_3.tex", "OriginalArrow", mModeContext.mGameState.getX2LUTs());
 
     mModeContext.mGameState.getPlayerCar().reloadTextures(mModeContext.mGameState);
 
@@ -1089,7 +1096,7 @@ void BaseRaceMode::reloadTextures()
     }
 
     std::string pfFolderName = mModeContext.mGameState.getSTRPowerslide().getBaseDir(mModeContext.mGameState.getTrackName());
-    mStaticMeshProcesser.loadTextures( mModeContext.mGameState.getPFLoaderData(), pfFolderName, mModeContext.mGameState.getGamma(), mModeContext.mGameState.getDoUpscale(), NULL);
+    mStaticMeshProcesser.loadTextures(mModeContext.mGameState, mModeContext.mGameState.getPFLoaderData(), pfFolderName, mModeContext.mGameState.getGamma(), mModeContext.mGameState.getDoUpscale(), NULL);
 
     mUIRace->reloadTextures(mModeContext.mGameState);
 }

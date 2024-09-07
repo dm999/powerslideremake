@@ -96,7 +96,7 @@ void StaticMeshProcesser::initParts(lua_State * pipeline,
         }
 
         //create textures
-        loadTextures(mergedMSH, gameState.getPFLoaderData(), pfFolderName, gameState.getGamma(), gameState.getDoUpscale(), loaderListener);
+        loadTextures(gameState, mergedMSH, gameState.getPFLoaderData(), pfFolderName, gameState.getGamma(), gameState.getDoUpscale(), loaderListener);
 
         if(loaderListener)
             loaderListener->loadState(0.7f, "Textures loaded");
@@ -228,7 +228,7 @@ void StaticMeshProcesser::createLights(lua_State * pipeline, Ogre::SceneManager*
         gameState.getLLTObject()->setVisible(true);
 }
 
-void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(GameState& gameState, const std::vector<MSHData>& mergedMSH, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
 {
     std::set<std::string> texturesNames;
 
@@ -245,20 +245,15 @@ void StaticMeshProcesser::loadTextures(const std::vector<MSHData>& mergedMSH, co
     mTexturesNames = texturesNames;
 #endif
 
-    loadTextures(texturesNames, pfloader, trackName, gamma, doUpscale, loaderListener);
+    loadTextures(gameState, texturesNames, pfloader, trackName, gamma, doUpscale, loaderListener);
 }
 
-void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(GameState& gameState, const std::set<std::string>& texturesNames, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
 {
     //ranges from BaseRaceMode::initData
     const float loaderMin = 0.5f;
     const float loaderMax = 0.7f;
     const float loaderDistance = loaderMax - loaderMin;
-
-    if(doUpscale)
-    {
-        doUpscale = loadLUTs();
-    }
 
     size_t loadedAmount = 0;
 
@@ -284,7 +279,7 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            TEXLoader().load(fileToLoad, (*i), LutsX2, TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
+            TEXLoader().load(fileToLoad, (*i), gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
             fileToLoad->close();
         }
 
@@ -293,87 +288,10 @@ void StaticMeshProcesser::loadTextures(const std::set<std::string>& texturesName
     }
 }
 
-bool StaticMeshProcesser::loadLUTs()
-{
-    bool success = true;
-    {
-        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_D_x2_4bit_int8.bin", "LUTs");
-        if(pStream.get() && pStream->isReadable())
-        {
-            uint16_t amount;
-            pStream->read(&amount, sizeof(uint16_t));
-            LutsX2.LSB_HD_D.resize(amount);
-            pStream->read(LutsX2.LSB_HD_D.data(), amount);
-        }
-        else success = false;
-
-        pStream->close();
-    }
-
-    {
-        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_H_x2_4bit_int8.bin", "LUTs");
-        if(pStream.get() && pStream->isReadable())
-        {
-            uint16_t amount;
-            pStream->read(&amount, sizeof(uint16_t));
-            LutsX2.LSB_HD_H.resize(amount);
-            pStream->read(LutsX2.LSB_HD_H.data(), amount);
-        }
-        else success = false;
-
-        pStream->close();
-    }
-
-    {
-        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_B_x2_4bit_int8.bin", "LUTs");
-        if(pStream.get() && pStream->isReadable())
-        {
-            uint16_t amount;
-            pStream->read(&amount, sizeof(uint16_t));
-            LutsX2.MSB_HDB_B.resize(amount);
-            pStream->read(LutsX2.MSB_HDB_B.data(), amount);
-        }
-        else success = false;
-
-        pStream->close();
-    }
-
-    {
-        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_D_x2_4bit_int8.bin", "LUTs");
-        if(pStream.get() && pStream->isReadable())
-        {
-            uint16_t amount;
-            pStream->read(&amount, sizeof(uint16_t));
-            LutsX2.MSB_HDB_D.resize(amount);
-            pStream->read(LutsX2.MSB_HDB_D.data(), amount);
-        }
-        else success = false;
-
-        pStream->close();
-    }
-
-
-    {
-        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_MSB_HDB_LUT_H_x2_4bit_int8.bin", "LUTs");
-        if(pStream.get() && pStream->isReadable())
-        {
-            uint16_t amount;
-            pStream->read(&amount, sizeof(uint16_t));
-            LutsX2.MSB_HDB_H.resize(amount);
-            pStream->read(LutsX2.MSB_HDB_H.data(), amount);
-        }
-        else success = false;
-
-        pStream->close();
-    }
-
-    return success;
-}
-
 #if defined(__ANDROID__)
-void StaticMeshProcesser::loadTextures(const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
+void StaticMeshProcesser::loadTextures(GameState& gameState, const PFLoader& pfloader, const std::string& trackName, Ogre::Real gamma, bool doUpscale, LoaderListener* loaderListener)
 {
-    loadTextures(mTexturesNames, pfloader, trackName, gamma, doUpscale, loaderListener);
+    loadTextures(gameState, mTexturesNames, pfloader, trackName, gamma, doUpscale, loaderListener);
 }
 #endif
 
