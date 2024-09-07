@@ -279,7 +279,7 @@ void StaticMeshProcesser::loadTextures(GameState& gameState, const std::set<std:
 
         if(fileToLoad.get() && fileToLoad->isReadable())
         {
-            TEXLoader().load(fileToLoad, (*i), gameState.getX2LUTs(), TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
+            TEXLoader().load(fileToLoad, (*i), gameState.getX2LUTs(), gameState.getX4LUTs(), TEMP_RESOURCE_GROUP_NAME, gamma, doUpscale);
             fileToLoad->close();
         }
 

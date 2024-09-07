@@ -611,6 +611,8 @@ void GameState::setGamma(Ogre::Real gamma)
 bool GameState::loadLUTs()
 {
     bool success = true;
+
+    //x2
     {
         Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x2/S0_LSB_HD_LUT_D_x2_4bit_int8.bin", "LUTs");
         if(pStream.get() && pStream->isReadable())
@@ -676,6 +678,79 @@ bool GameState::loadLUTs()
             pStream->read(&amount, sizeof(uint16_t));
             mLutsX2.MSB_HDB_H.resize(amount);
             pStream->read(mLutsX2.MSB_HDB_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+
+    //X4
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x4/S1_LSB_HD_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX4.LSB_HD_D.resize(amount);
+            pStream->read(mLutsX4.LSB_HD_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x4/S1_LSB_HD_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX4.LSB_HD_H.resize(amount);
+            pStream->read(mLutsX4.LSB_HD_H.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x4/S1_MSB_HDB_LUT_B_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX4.MSB_HDB_B.resize(amount);
+            pStream->read(mLutsX4.MSB_HDB_B.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x4/S1_MSB_HDB_LUT_D_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX4.MSB_HDB_D.resize(amount);
+            pStream->read(mLutsX4.MSB_HDB_D.data(), amount);
+        }
+        else success = false;
+
+        pStream->close();
+    }
+
+
+    {
+        Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource("x4/S1_MSB_HDB_LUT_H_x2_4bit_int8.bin", "LUTs");
+        if(pStream.get() && pStream->isReadable())
+        {
+            uint16_t amount;
+            pStream->read(&amount, sizeof(uint16_t));
+            mLutsX4.MSB_HDB_H.resize(amount);
+            pStream->read(mLutsX4.MSB_HDB_H.data(), amount);
         }
         else success = false;
 

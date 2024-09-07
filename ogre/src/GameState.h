@@ -182,6 +182,7 @@ public:
 
     bool loadLUTs();
     const LUTs& getX2LUTs() const { return mLutsX2; }
+    const LUTs& getX4LUTs() const { return mLutsX4; }
 
     void setMirrorEnabled(bool enabled){mIsMirrorEnabled = enabled;}
     bool getMirrorEnabled()const{return mIsMirrorEnabled;}
@@ -339,6 +340,7 @@ private:
 
     //LUTs
     LUTs mLutsX2;
+    LUTs mLutsX4;
 
     bool mIsMirrorEnabled;
     bool mIsGhostEnabled;

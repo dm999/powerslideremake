@@ -589,7 +589,7 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
     std::swap(img, img2);
 }
 
-Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const LUTs& luts, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
+Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const std::string& texturename, const LUTs& lutsX2, const LUTs& lutsX4, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
 {
     Ogre::TexturePtr res;
 
@@ -655,7 +655,11 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
         }
 
         //if(doUpscale) doBicubicUpscale(img);
-        if(doUpscale) doLUTUpscale(img, luts);
+        if(doUpscale)
+        {
+            doLUTUpscale(img, lutsX2);
+            //doLUTUpscale(img, lutsX4);
+        }
 
         res = Ogre::TextureManager::getSingleton().loadImage(texturename, group, img, Ogre::TEX_TYPE_2D);
 
@@ -665,13 +669,13 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
     return res;
 }
 
-Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const LUTs& luts, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
+Ogre::TexturePtr TEXLoader::load(const PFLoader& pfLoader, const std::string& subfolder, const std::string& filename, const std::string& texturename, const LUTs& lutsX2, const LUTs& lutsX4, const Ogre::String& group, Ogre::Real gamma, bool doUpscale) const
 {
     Ogre::TexturePtr res;
     Ogre::DataStreamPtr fileToLoad = pfLoader.getFile(subfolder, filename);
     if(fileToLoad.get() && fileToLoad->isReadable())
     {
-        res = load(fileToLoad, texturename, luts, group, gamma, doUpscale);
+        res = load(fileToLoad, texturename, lutsX2, lutsX4, group, gamma, doUpscale);
         fileToLoad->close();
     }
     return res;
