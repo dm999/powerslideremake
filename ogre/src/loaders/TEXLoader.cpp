@@ -635,7 +635,7 @@ std::vector<uint8_t> TEXLoader::AddPadding(const uint8_t * inBuf, size_t width, 
     return srcPadded;
 }
 
-void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
+void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRGB, bool swapRGB) const
 {
     size_t width = img.getWidth();
     size_t height = img.getHeight();
@@ -651,7 +651,9 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
     Ogre::Image img2;
     img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, Ogre::PF_R8G8B8, true);
 
-    std::vector<uint8_t> rgbImgPadded = AddPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
+    std::vector<uint8_t> rgbImgPadded;
+    if(convertoRGB) rgbImgPadded = AddPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
+    else rgbImgPadded = AddPadding(img.getData(), width, height, 2, 2, 2, 2);
     size_t paddedWidth = width + 4;
 
 #if defined(__ANDROID__)
@@ -688,18 +690,36 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
 
                     }
 
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][2];
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][0];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][2];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][0];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][2];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][0];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][2];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][0];
+                    if(swapRGB)
+                    {
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][2];
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][0];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][2];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][0];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][2];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][0];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][2];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][0];
+                    }
+                    else
+                    {
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][0];
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
+                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][2];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][0];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
+                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][2];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][0];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][2];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][0];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
+                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][2];
+                    }
                 }
             }
         };
@@ -787,8 +807,8 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
         {
             std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
 
-            doLUTUpscale(img, lutsX2);
-            //doLUTUpscale(img, lutsX4);
+            doLUTUpscale(img, lutsX2, true, true);
+            //doLUTUpscale(img, lutsX4, false, false);
 
             long long timeTaken = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timeStart).count();
             float ms = static_cast<float>(timeTaken) / 1000.0f;
