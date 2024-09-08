@@ -324,7 +324,7 @@ TEXLoader::Pixel TEXLoader::getPixel(int x, int y, const uint8_t* src, size_t st
     return {src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]};
 }
 
-std::vector<int16_t> TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const
+std::vector<int8_t> TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const
 {
     uint16_t valA_r = static_cast<uint16_t>(std::get<0>(valA)) & 0xF;
     uint16_t valA_g = static_cast<uint16_t>(std::get<1>(valA)) & 0xF;
@@ -338,11 +338,11 @@ std::vector<int16_t> TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, co
     size_t indexG = (valA_g * L + valB_g) * 4;
     size_t indexB = (valA_b * L + valB_b) * 4;
 
-    std::vector<int16_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
-    std::vector<int16_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
-    std::vector<int16_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
+    std::vector<int8_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
+    std::vector<int8_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
+    std::vector<int8_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
 
-    std::vector<int16_t> ret;
+    std::vector<int8_t> ret;
     ret.insert(ret.end(), lutValR.begin(), lutValR.end());
     ret.insert(ret.end(), lutValG.begin(), lutValG.end());
     ret.insert(ret.end(), lutValB.begin(), lutValB.end());
@@ -379,32 +379,36 @@ void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
     Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
 
 
-    std::vector<int16_t> vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
-    std::vector<int16_t> vals_0_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_0_d);
+    std::vector<int8_t> vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
+    std::vector<int8_t> vals_0_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_0_d);
 
-    std::vector<int16_t> vals_90_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_90_h);
-    std::vector<int16_t> vals_90_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_90_d);
+    std::vector<int8_t> vals_90_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_90_h);
+    std::vector<int8_t> vals_90_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_90_d);
 
-    std::vector<int16_t> vals_180_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_180_h);
-    std::vector<int16_t> vals_180_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_180_d);
+    std::vector<int8_t> vals_180_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_180_h);
+    std::vector<int8_t> vals_180_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_180_d);
 
-    std::vector<int16_t> vals_270_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_270_h);
-    std::vector<int16_t> vals_270_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_270_d);
+    std::vector<int8_t> vals_270_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_270_h);
+    std::vector<int8_t> vals_270_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_270_d);
 
 
-    std::vector<int16_t> vals_0(vals_0_h);
+    std::vector<int16_t> vals_0(12);
+    std::transform(vals_0.begin(), vals_0.end(), vals_0_h.begin(), vals_0.begin(), std::plus<int16_t>());
     std::transform(vals_0.begin(), vals_0.end(), vals_0_d.begin(), vals_0.begin(), std::plus<int16_t>());
 
-    std::vector<int16_t> vals_90(vals_90_h);
+    std::vector<int16_t> vals_90(12);
+    std::transform(vals_90.begin(), vals_90.end(), vals_90_h.begin(), vals_90.begin(), std::plus<int16_t>());
     std::transform(vals_90.begin(), vals_90.end(), vals_90_d.begin(), vals_90.begin(), std::plus<int16_t>());
     rotateBack(vals_90);
 
-    std::vector<int16_t> vals_180(vals_180_h);
+    std::vector<int16_t> vals_180(12);
+    std::transform(vals_180.begin(), vals_180.end(), vals_180_h.begin(), vals_180.begin(), std::plus<int16_t>());
     std::transform(vals_180.begin(), vals_180.end(), vals_180_d.begin(), vals_180.begin(), std::plus<int16_t>());
     rotateBack(vals_180);
     rotateBack(vals_180);
 
-    std::vector<int16_t> vals_270(vals_270_h);
+    std::vector<int16_t> vals_270(12);
+    std::transform(vals_270.begin(), vals_270.end(), vals_270_h.begin(), vals_270.begin(), std::plus<int16_t>());
     std::transform(vals_270.begin(), vals_270.end(), vals_270_d.begin(), vals_270.begin(), std::plus<int16_t>());
     rotateBack(vals_270);
     rotateBack(vals_270);
@@ -422,7 +426,7 @@ void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
 
 }
 
-std::vector<int16_t> TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB, const Pixel& valC) const
+std::vector<int8_t> TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB, const Pixel& valC) const
 {
     uint16_t valA_r = static_cast<uint16_t>(std::get<0>(valA)) >> 4;
     uint16_t valA_g = static_cast<uint16_t>(std::get<1>(valA)) >> 4;
@@ -440,11 +444,11 @@ std::vector<int16_t> TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, co
     size_t indexG = (valA_g * L * L + valB_g * L + valC_g) * 4;
     size_t indexB = (valA_b * L * L + valB_b * L + valC_b) * 4;
 
-    std::vector<int16_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
-    std::vector<int16_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
-    std::vector<int16_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
+    std::vector<int8_t> lutValR(lut.begin() + indexR, lut.begin() + indexR + 4);
+    std::vector<int8_t> lutValG(lut.begin() + indexG, lut.begin() + indexG + 4);
+    std::vector<int8_t> lutValB(lut.begin() + indexB, lut.begin() + indexB + 4);
 
-    std::vector<int16_t> ret;
+    std::vector<int8_t> ret;
     ret.insert(ret.end(), lutValR.begin(), lutValR.end());
     ret.insert(ret.end(), lutValG.begin(), lutValG.end());
     ret.insert(ret.end(), lutValB.begin(), lutValB.end());
@@ -485,39 +489,43 @@ void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
     Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
 
 
-    std::vector<int16_t> vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
-    std::vector<int16_t> vals_0_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_0_d, rot_0_d2);
-    std::vector<int16_t> vals_0_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_0_b, rot_0_b2);
+    std::vector<int8_t> vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
+    std::vector<int8_t> vals_0_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_0_d, rot_0_d2);
+    std::vector<int8_t> vals_0_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_0_b, rot_0_b2);
 
-    std::vector<int16_t> vals_90_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_90_h, rot_90_h2);
-    std::vector<int16_t> vals_90_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_90_d, rot_90_d2);
-    std::vector<int16_t> vals_90_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_90_b, rot_90_b2);
+    std::vector<int8_t> vals_90_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_90_h, rot_90_h2);
+    std::vector<int8_t> vals_90_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_90_d, rot_90_d2);
+    std::vector<int8_t> vals_90_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_90_b, rot_90_b2);
 
-    std::vector<int16_t> vals_180_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_180_h, rot_180_h2);
-    std::vector<int16_t> vals_180_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_180_d, rot_180_d2);
-    std::vector<int16_t> vals_180_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_180_b, rot_180_b2);
+    std::vector<int8_t> vals_180_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_180_h, rot_180_h2);
+    std::vector<int8_t> vals_180_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_180_d, rot_180_d2);
+    std::vector<int8_t> vals_180_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_180_b, rot_180_b2);
 
-    std::vector<int16_t> vals_270_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_270_h, rot_270_h2);
-    std::vector<int16_t> vals_270_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_270_d, rot_270_d2);
-    std::vector<int16_t> vals_270_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_270_b, rot_270_b2);
+    std::vector<int8_t> vals_270_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_270_h, rot_270_h2);
+    std::vector<int8_t> vals_270_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_270_d, rot_270_d2);
+    std::vector<int8_t> vals_270_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_270_b, rot_270_b2);
 
 
-    std::vector<int16_t> vals_0(vals_0_h);
+    std::vector<int16_t> vals_0(12);
+    std::transform(vals_0.begin(), vals_0.end(), vals_0_h.begin(), vals_0.begin(), std::plus<int16_t>());
     std::transform(vals_0.begin(), vals_0.end(), vals_0_d.begin(), vals_0.begin(), std::plus<int16_t>());
     std::transform(vals_0.begin(), vals_0.end(), vals_0_b.begin(), vals_0.begin(), std::plus<int16_t>());
 
-    std::vector<int16_t> vals_90(vals_90_h);
+    std::vector<int16_t> vals_90(12);
+    std::transform(vals_90.begin(), vals_90.end(), vals_90_h.begin(), vals_90.begin(), std::plus<int16_t>());
     std::transform(vals_90.begin(), vals_90.end(), vals_90_d.begin(), vals_90.begin(), std::plus<int16_t>());
     std::transform(vals_90.begin(), vals_90.end(), vals_90_b.begin(), vals_90.begin(), std::plus<int16_t>());
     rotateBack(vals_90);
 
-    std::vector<int16_t> vals_180(vals_180_h);
+    std::vector<int16_t> vals_180(12);
+    std::transform(vals_180.begin(), vals_180.end(), vals_180_h.begin(), vals_180.begin(), std::plus<int16_t>());
     std::transform(vals_180.begin(), vals_180.end(), vals_180_d.begin(), vals_180.begin(), std::plus<int16_t>());
     std::transform(vals_180.begin(), vals_180.end(), vals_180_b.begin(), vals_180.begin(), std::plus<int16_t>());
     rotateBack(vals_180);
     rotateBack(vals_180);
 
-    std::vector<int16_t> vals_270(vals_270_h);
+    std::vector<int16_t> vals_270(12);
+    std::transform(vals_270.begin(), vals_270.end(), vals_270_h.begin(), vals_270.begin(), std::plus<int16_t>());
     std::transform(vals_270.begin(), vals_270.end(), vals_270_d.begin(), vals_270.begin(), std::plus<int16_t>());
     std::transform(vals_270.begin(), vals_270.end(), vals_270_b.begin(), vals_270.begin(), std::plus<int16_t>());
     rotateBack(vals_270);
@@ -629,7 +637,7 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
         for(size_t x = 0; x < width; ++x)
         {
             Pixel orig = getPixel(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth);
-
+            
             std::vector<PixelSigned> resLSB(4);
             std::vector<PixelSigned> resMSB(4);
             doLSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resLSB);
@@ -732,8 +740,15 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
         //if(doUpscale) doBicubicUpscale(img);
         if(doUpscale)
         {
+            std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
+
             doLUTUpscale(img, lutsX2);
             //doLUTUpscale(img, lutsX4);
+
+            long long timeTaken = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timeStart).count();
+            float ms = static_cast<float>(timeTaken) / 1000.0f;
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "] upscale time " + std::to_string(ms) + "ms");
+
 
             //img.save("1/x2/" + texturename + ".jpg");
         }
