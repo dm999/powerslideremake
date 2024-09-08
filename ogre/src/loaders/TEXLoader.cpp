@@ -319,14 +319,9 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
     std::swap(img, img2);
 }
 
-TEXLoader::Pixel TEXLoader::getPixel(int x, int y, const uint8_t* src, size_t width, size_t height) const
+TEXLoader::Pixel TEXLoader::getPixel(int x, int y, const uint8_t* src, size_t stride) const
 {
-    if(x < 0) x = 0;
-    if(y < 0) y = 0;
-    if(x >= static_cast<int>(width)) x = width - 1;
-    if(y >= static_cast<int>(height)) y = height - 1;
-
-    return {src[y * width * 3 + x * 3 + 0], src[y * width * 3 + x * 3 + 1], src[y * width * 3 + x * 3 + 2]};
+    return {src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]};
 }
 
 std::vector<int16_t> TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const
@@ -367,21 +362,21 @@ void TEXLoader::rotateBack(std::vector<int16_t>& res) const
     }
 }
 
-void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t width, size_t height, const LUTs& luts, std::vector<PixelSigned>& res) const
+void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, std::vector<PixelSigned>& res) const
 {
-    Pixel rot_0 = getPixel(x, y, src, width , height);
+    Pixel rot_0 = getPixel(x, y, src, stride);
 
-    Pixel rot_0_h = getPixel(x + 1, y, src, width, height);
-    Pixel rot_0_d = getPixel(x + 1, y - 1, src, width, height);
+    Pixel rot_0_h = getPixel(x + 1, y, src, stride);
+    Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
 
-    Pixel rot_90_h = getPixel(x, y - 1, src, width, height);
-    Pixel rot_90_d = getPixel(x - 1, y - 1, src, width, height);
+    Pixel rot_90_h = getPixel(x, y - 1, src, stride);
+    Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
 
-    Pixel rot_180_h = getPixel(x - 1, y, src, width, height);
-    Pixel rot_180_d = getPixel(x - 1, y + 1, src, width, height);
+    Pixel rot_180_h = getPixel(x - 1, y, src, stride);
+    Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
 
-    Pixel rot_270_h = getPixel(x, y + 1, src, width, height);
-    Pixel rot_270_d = getPixel(x + 1, y + 1, src, width, height);
+    Pixel rot_270_h = getPixel(x, y + 1, src, stride);
+    Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
 
 
     std::vector<int16_t> vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
@@ -457,37 +452,37 @@ std::vector<int16_t> TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, co
     return ret;
 }
 
-void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t width, size_t height, const LUTs& luts, std::vector<PixelSigned>& res) const
+void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, std::vector<PixelSigned>& res) const
 {
-    Pixel rot_0 = getPixel(x, y, src, width, height);
+    Pixel rot_0 = getPixel(x, y, src, stride);
 
-    Pixel rot_0_h = getPixel(x + 1, y, src, width, height);
-    Pixel rot_0_h2 = getPixel(x + 2, y, src, width, height);
-    Pixel rot_0_d = getPixel(x + 1, y - 1, src, width, height);
-    Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, width, height);
-    Pixel rot_0_b = getPixel(x + 1, y - 2, src, width, height);
-    Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, width, height);
+    Pixel rot_0_h = getPixel(x + 1, y, src, stride);
+    Pixel rot_0_h2 = getPixel(x + 2, y, src, stride);
+    Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
+    Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, stride);
+    Pixel rot_0_b = getPixel(x + 1, y - 2, src, stride);
+    Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, stride);
 
-    Pixel rot_90_h = getPixel(x, y - 1, src, width, height);
-    Pixel rot_90_h2 = getPixel(x, y - 2, src, width, height);
-    Pixel rot_90_d = getPixel(x - 1, y - 1, src, width, height);
-    Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, width, height);
-    Pixel rot_90_b = getPixel(x - 2, y - 1, src, width, height);
-    Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, width, height);
+    Pixel rot_90_h = getPixel(x, y - 1, src, stride);
+    Pixel rot_90_h2 = getPixel(x, y - 2, src, stride);
+    Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
+    Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, stride);
+    Pixel rot_90_b = getPixel(x - 2, y - 1, src, stride);
+    Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, stride);
 
-    Pixel rot_180_h = getPixel(x - 1, y, src, width, height);
-    Pixel rot_180_h2 = getPixel(x - 2, y, src, width, height);
-    Pixel rot_180_d = getPixel(x - 1, y + 1, src, width, height);
-    Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, width, height);
-    Pixel rot_180_b = getPixel(x - 1, y + 2, src, width, height);
-    Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, width, height);
+    Pixel rot_180_h = getPixel(x - 1, y, src, stride);
+    Pixel rot_180_h2 = getPixel(x - 2, y, src, stride);
+    Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
+    Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, stride);
+    Pixel rot_180_b = getPixel(x - 1, y + 2, src, stride);
+    Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, stride);
 
-    Pixel rot_270_h = getPixel(x, y + 1, src, width, height);
-    Pixel rot_270_h2 = getPixel(x, y + 2, src, width, height);
-    Pixel rot_270_d = getPixel(x + 1, y + 1, src, width, height);
-    Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, width, height);
-    Pixel rot_270_b = getPixel(x + 1, y + 2, src, width, height);
-    Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, width, height);
+    Pixel rot_270_h = getPixel(x, y + 1, src, stride);
+    Pixel rot_270_h2 = getPixel(x, y + 2, src, stride);
+    Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
+    Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, stride);
+    Pixel rot_270_b = getPixel(x + 1, y + 2, src, stride);
+    Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
 
 
     std::vector<int16_t> vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
@@ -567,6 +562,49 @@ std::vector<uint8_t> TEXLoader::toRGB(Ogre::Image& img) const
     return ret;
 }
 
+std::vector<uint8_t> TEXLoader::AddPadding(const uint8_t * inBuf, size_t width, size_t height, size_t top, size_t bottom, size_t left, size_t right) const
+{
+
+    size_t sum_hor_pad = left + right;
+    size_t sum_vert_pad = top + bottom;
+
+    size_t stride_width = (width + sum_hor_pad) * 3;
+
+    std::vector<uint8_t> srcPadded(stride_width * (height + sum_vert_pad));
+
+    //main, left, right
+    for(size_t q = 0; q < height; ++q){
+
+        //main
+        std::memcpy(srcPadded.data() + (q + top) * stride_width + left * 3,
+            inBuf + q * width * 3, width * 3);
+
+        //left
+        std::memset(srcPadded.data() + (q + top) * stride_width,
+            inBuf[q * width * 3], left * 3);
+
+        //right
+        std::memset(srcPadded.data() + (q + top) * stride_width + left * 3 + width * 3,
+            inBuf[q * width * 3 + (width - 1) * 3], right * 3);
+    }
+
+    //top
+    for(size_t q = 0; q < top; ++q) {
+        std::memcpy(srcPadded.data() + q * stride_width,
+            srcPadded.data() + top * stride_width,
+            stride_width);
+    }
+
+    //bottom
+    for(size_t q = top + height; q < height + sum_vert_pad; ++q) {
+        std::memcpy(srcPadded.data() + q * stride_width,
+            srcPadded.data() + (top + height - 1) * stride_width,
+            stride_width);
+    }
+
+    return srcPadded;
+}
+
 void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
 {
     size_t width = img.getWidth();
@@ -583,18 +621,19 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
     Ogre::Image img2;
     img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, Ogre::PF_R8G8B8, true);
 
-    std::vector<uint8_t> rgbImg = toRGB(img);
+    std::vector<uint8_t> rgbImgPadded = AddPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
+    size_t paddedWidth = width + 4;
 
     for(size_t y = 0; y < height; ++y)
     {
         for(size_t x = 0; x < width; ++x)
         {
-            Pixel orig = getPixel(x, y, rgbImg.data(), width, height);
+            Pixel orig = getPixel(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth);
 
             std::vector<PixelSigned> resLSB(4);
             std::vector<PixelSigned> resMSB(4);
-            doLSB(x, y, rgbImg.data(), width, height, luts, resLSB);
-            doMSB(x, y, rgbImg.data(), width, height, luts, resMSB);
+            doLSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resLSB);
+            doMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resMSB);
 
             std::vector<Pixel> pixel(4, orig);
             uint8_t vals[4][3];
