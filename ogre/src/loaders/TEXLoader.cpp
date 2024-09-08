@@ -653,40 +653,63 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts) const
     std::vector<uint8_t> rgbImgPadded = AddPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
     size_t paddedWidth = width + 4;
 
-    for(size_t y = 0; y < height; ++y)
+#if defined(__ANDROID__)
+    size_t threadsAmount = 4;
+#else
+    size_t threadsAmount = 8;
+#endif
+
     {
-        for(size_t x = 0; x < width; ++x)
-        {
-            Pixel orig = getPixel(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth);
-            
-            std::vector<PixelSigned> resLSB(4);
-            std::vector<PixelSigned> resMSB(4);
-            doLSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resLSB);
-            doMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resMSB);
+        thread_pool tPool(threadsAmount);
 
-            std::vector<Pixel> pixel(4, orig);
-            uint8_t vals[4][3];
-            for(size_t q = 0; q < 4; ++q)
+        Ogre::uchar * dataRes = img2.getData();
+
+        auto upscaleLambda = [&](size_t y_start, size_t y_end){
+
+            for(size_t y = y_start; y < y_end; ++y)
             {
-                vals[q][0] = clamp(std::get<0>(pixel[q]) + std::get<0>(resLSB[q]) + std::get<0>(resMSB[q]), 0, 255);
-                vals[q][1] = clamp(std::get<1>(pixel[q]) + std::get<1>(resLSB[q]) + std::get<1>(resMSB[q]), 0, 255);
-                vals[q][2] = clamp(std::get<2>(pixel[q]) + std::get<2>(resLSB[q]) + std::get<2>(resMSB[q]), 0, 255);
+                for(size_t x = 0; x < width; ++x)
+                {
+                    Pixel orig = getPixel(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth);
+            
+                    std::vector<PixelSigned> resLSB(4);
+                    std::vector<PixelSigned> resMSB(4);
+                    doLSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resLSB);
+                    doMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, resMSB);
 
+                    std::vector<Pixel> pixel(4, orig);
+                    uint8_t vals[4][3];
+                    for(size_t q = 0; q < 4; ++q)
+                    {
+                        vals[q][0] = clamp(std::get<0>(pixel[q]) + std::get<0>(resLSB[q]) + std::get<0>(resMSB[q]), 0, 255);
+                        vals[q][1] = clamp(std::get<1>(pixel[q]) + std::get<1>(resLSB[q]) + std::get<1>(resMSB[q]), 0, 255);
+                        vals[q][2] = clamp(std::get<2>(pixel[q]) + std::get<2>(resLSB[q]) + std::get<2>(resMSB[q]), 0, 255);
+
+                    }
+
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][2];
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][0];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][2];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][0];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][2];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][0];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][2];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][0];
+                }
             }
+        };
 
-            Ogre::uchar * dataRes = img2.getData();
-            dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][2];
-            dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
-            dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][0];
-            dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][2];
-            dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
-            dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][0];
-            dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][2];
-            dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
-            dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][0];
-            dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][2];
-            dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
-            dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][0];
+        size_t batch = height / threadsAmount;
+
+        for(size_t q = 0; q < threadsAmount; ++q)
+        {
+            size_t start = q * batch;
+            size_t end = (q + 1) * batch;
+            tPool.enqueue(upscaleLambda, start, end);
         }
     }
 
