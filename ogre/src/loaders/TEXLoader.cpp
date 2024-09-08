@@ -6,6 +6,13 @@
 
 #include <algorithm>
 
+#if defined(__ANDROID__)
+#include <android/log.h>
+
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "OGRE", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "OGRE", __VA_ARGS__)) 
+#endif
+
 namespace
 {
     struct header
@@ -814,6 +821,9 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
             float ms = static_cast<float>(timeTaken) / 1000.0f;
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "] upscale time " + Conversions::DMToString(ms) + "ms");
 
+#if defined(__ANDROID__)
+            LOGI("TEXLoader[load]: %s upscale time %.2fms", texturename.c_str(), ms);
+#endif
 
             //img.save("1/x2/" + texturename + ".jpg");
         }
