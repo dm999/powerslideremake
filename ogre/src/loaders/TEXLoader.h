@@ -25,18 +25,21 @@ public:
                                     bool resize = false,
                                     size_t newSize = 64) const;
 
+    typedef std::tuple<uint8_t, uint8_t, uint8_t> Pixel;
+    typedef std::tuple<int8_t, int8_t, int8_t> PixelSigned;
+
 private:
 
     void doBicubicUpscale(Ogre::Image& img) const;
 
     //LUTs
     void doLUTUpscale(Ogre::Image& img, const LUTs& luts) const;
-    void doLSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<Ogre::ColourValue>& res) const;
-    void doMSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<Ogre::ColourValue>& res) const;
-    Ogre::ColourValue getPixel(int x, int y, const Ogre::Image& src) const;
+    void doLSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<PixelSigned>& res) const;
+    void doMSB(size_t x, size_t y, const Ogre::Image& src, const LUTs& luts, std::vector<PixelSigned>& res) const;
+    Pixel getPixel(int x, int y, const Ogre::Image& src) const;
 
-    std::vector<int16_t> getLUTValsLSB(const std::vector<int8_t>& lut, const Ogre::ColourValue& valA, const Ogre::ColourValue& valB) const;
-    std::vector<int16_t> getLUTValsMSB(const std::vector<int8_t>& lut, const Ogre::ColourValue& valA, const Ogre::ColourValue& valB, const Ogre::ColourValue& valC) const;
+    std::vector<int16_t> getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const;
+    std::vector<int16_t> getLUTValsMSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB, const Pixel& valC) const;
     void rotateBack(std::vector<int16_t>& res) const;
 };
 
