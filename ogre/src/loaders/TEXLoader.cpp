@@ -2,6 +2,7 @@
 #include "TEXLoader.h"
 
 #include "../tools/OgreTools.h"
+#include "../tools/Conversions.h"
 
 #include <algorithm>
 
@@ -321,7 +322,7 @@ void TEXLoader::doBicubicUpscale(Ogre::Image& img) const
 
 TEXLoader::Pixel TEXLoader::getPixel(int x, int y, const uint8_t* src, size_t stride) const
 {
-    return {src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]};
+    return std::make_tuple(src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]);
 }
 
 TEXLoader::Indexes TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const
@@ -338,7 +339,7 @@ TEXLoader::Indexes TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, cons
     size_t indexG = (valA_g * L + valB_g) * 4;
     size_t indexB = (valA_b * L + valB_b) * 4;
 
-    return {indexR, indexG, indexB};
+    return std::make_tuple(indexR, indexG, indexB);
 }
 
 void TEXLoader::rotateBack(std::vector<int16_t>& res) const
@@ -428,7 +429,7 @@ void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
 
     for(size_t q = 0; q < 4; ++q)
     {
-        res[q] = {static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8])};
+        res[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
     }
 }
 
@@ -450,7 +451,7 @@ TEXLoader::Indexes TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, cons
     size_t indexG = (valA_g * L * L + valB_g * L + valC_g) * 4;
     size_t indexB = (valA_b * L * L + valB_b * L + valC_b) * 4;
 
-    return {indexR, indexG, indexB};
+    return std::make_tuple(indexR, indexG, indexB);
 }
 
 void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, std::vector<PixelSigned>& res) const
@@ -560,7 +561,7 @@ void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
 
     for(size_t q = 0; q < 4; ++q)
     {
-        res[q] = {static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8])};
+        res[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
     }
 }
 
@@ -791,7 +792,7 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
 
             long long timeTaken = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timeStart).count();
             float ms = static_cast<float>(timeTaken) / 1000.0f;
-            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "] upscale time " + std::to_string(ms) + "ms");
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "[TEXLoader::load]: [" + texturename + "] upscale time " + Conversions::DMToString(ms) + "ms");
 
 
             //img.save("1/x2/" + texturename + ".jpg");
