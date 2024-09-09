@@ -37,6 +37,7 @@ private:
     void doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRGB, bool swapRGB) const;
     void doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const;
     void doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const;
+    void doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* resLSB, PixelSigned* resMSB) const;
     Pixel getPixel(int x, int y, const uint8_t* src, size_t stride) const;
 
     Indexes getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const;
