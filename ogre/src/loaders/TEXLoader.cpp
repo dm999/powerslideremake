@@ -842,6 +842,9 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
     else rgbImgPadded = AddPadding(img.getData(), width, height, 2, 2, 2, 2);
     size_t paddedWidth = width + 4;
 
+    size_t indexRGBSelection_r = 0, indexRGBSelection_g = 1, indexRGBSelection_b = 2;
+    if(swapRGB) std::swap(indexRGBSelection_r, indexRGBSelection_b);
+
 #if defined(__ANDROID__)
     size_t threadsAmount = 4;
 #else
@@ -880,36 +883,18 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
                         vals[q][2] = clamp(std::get<2>(orig) + std::get<2>(resLSB[q]) + std::get<2>(resMSB[q]), 0, 255);
                     }
 
-                    if(swapRGB)
-                    {
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][2];
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][0];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][2];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][0];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][2];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][0];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][2];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][0];
-                    }
-                    else
-                    {
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][0];
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][1];
-                        dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][2];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][0];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][1];
-                        dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][2];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][0];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][1];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][2];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][0];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][1];
-                        dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][2];
-                    }
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][indexRGBSelection_r];
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][indexRGBSelection_g];
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][indexRGBSelection_b];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][indexRGBSelection_r];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][indexRGBSelection_g];
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][indexRGBSelection_b];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][indexRGBSelection_r];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][indexRGBSelection_g];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][indexRGBSelection_b];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][indexRGBSelection_r];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][indexRGBSelection_g];
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][indexRGBSelection_b];
                 }
             }
 #if defined(LUT_THREADS)
