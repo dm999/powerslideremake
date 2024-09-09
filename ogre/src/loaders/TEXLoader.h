@@ -35,13 +35,13 @@ private:
 
     //LUTs
     void doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRGB, bool swapRGB) const;
-    void doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, std::vector<PixelSigned>& res) const;
-    void doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, std::vector<PixelSigned>& res) const;
+    void doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const;
+    void doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const;
     Pixel getPixel(int x, int y, const uint8_t* src, size_t stride) const;
 
     Indexes getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const;
     Indexes getLUTValsMSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB, const Pixel& valC) const;
-    void rotateBack(std::vector<int16_t>& res) const;
+    void rotateBack(std::array<int16_t, 12> & res) const;
 
     std::vector<uint8_t> toRGB(Ogre::Image& img) const;
     std::vector<uint8_t> AddPadding(const uint8_t * inBuf, size_t width, size_t height, size_t top, size_t bottom, size_t left, size_t right) const;
