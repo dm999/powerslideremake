@@ -333,7 +333,7 @@ TEXLoader::Pixel TEXLoader::getPixel(int x, int y, const uint8_t* src, size_t st
     return std::make_tuple(src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]);
 }
 
-TEXLoader::Indexes TEXLoader::getLUTValsLSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB) const
+TEXLoader::Indexes TEXLoader::getLUTValsLSB(const Pixel& valA, const Pixel& valB) const
 {
     uint16_t valA_r = static_cast<uint16_t>(std::get<0>(valA)) & 0xF;
     uint16_t valA_g = static_cast<uint16_t>(std::get<1>(valA)) & 0xF;
@@ -379,17 +379,17 @@ void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
     Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
 
 
-    Indexes vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
-    Indexes vals_0_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_0_d);
+    Indexes vals_0_h = getLUTValsLSB(rot_0, rot_0_h);
+    Indexes vals_0_d = getLUTValsLSB(rot_0, rot_0_d);
 
-    Indexes vals_90_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_90_h);
-    Indexes vals_90_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_90_d);
+    Indexes vals_90_h = getLUTValsLSB(rot_0, rot_90_h);
+    Indexes vals_90_d = getLUTValsLSB(rot_0, rot_90_d);
 
-    Indexes vals_180_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_180_h);
-    Indexes vals_180_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_180_d);
+    Indexes vals_180_h = getLUTValsLSB(rot_0, rot_180_h);
+    Indexes vals_180_d = getLUTValsLSB(rot_0, rot_180_d);
 
-    Indexes vals_270_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_270_h);
-    Indexes vals_270_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_270_d);
+    Indexes vals_270_h = getLUTValsLSB(rot_0, rot_270_h);
+    Indexes vals_270_d = getLUTValsLSB(rot_0, rot_270_d);
 
 
     std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -441,7 +441,7 @@ void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
     }
 }
 
-TEXLoader::Indexes TEXLoader::getLUTValsMSB(const std::vector<int8_t>& lut, const Pixel& valA, const Pixel& valB, const Pixel& valC) const
+TEXLoader::Indexes TEXLoader::getLUTValsMSB(const Pixel& valA, const Pixel& valB, const Pixel& valC) const
 {
     uint16_t valA_r = static_cast<uint16_t>(std::get<0>(valA)) >> 4;
     uint16_t valA_g = static_cast<uint16_t>(std::get<1>(valA)) >> 4;
@@ -495,21 +495,21 @@ void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, con
     Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
 
 
-    Indexes vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
-    Indexes vals_0_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_0_d, rot_0_d2);
-    Indexes vals_0_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_0_b, rot_0_b2);
+    Indexes vals_0_h = getLUTValsMSB(rot_0, rot_0_h, rot_0_h2);
+    Indexes vals_0_d = getLUTValsMSB(rot_0, rot_0_d, rot_0_d2);
+    Indexes vals_0_b = getLUTValsMSB(rot_0, rot_0_b, rot_0_b2);
 
-    Indexes vals_90_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_90_h, rot_90_h2);
-    Indexes vals_90_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_90_d, rot_90_d2);
-    Indexes vals_90_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_90_b, rot_90_b2);
+    Indexes vals_90_h = getLUTValsMSB(rot_0, rot_90_h, rot_90_h2);
+    Indexes vals_90_d = getLUTValsMSB(rot_0, rot_90_d, rot_90_d2);
+    Indexes vals_90_b = getLUTValsMSB(rot_0, rot_90_b, rot_90_b2);
 
-    Indexes vals_180_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_180_h, rot_180_h2);
-    Indexes vals_180_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_180_d, rot_180_d2);
-    Indexes vals_180_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_180_b, rot_180_b2);
+    Indexes vals_180_h = getLUTValsMSB(rot_0, rot_180_h, rot_180_h2);
+    Indexes vals_180_d = getLUTValsMSB(rot_0, rot_180_d, rot_180_d2);
+    Indexes vals_180_b = getLUTValsMSB(rot_0, rot_180_b, rot_180_b2);
 
-    Indexes vals_270_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_270_h, rot_270_h2);
-    Indexes vals_270_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_270_d, rot_270_d2);
-    Indexes vals_270_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_270_b, rot_270_b2);
+    Indexes vals_270_h = getLUTValsMSB(rot_0, rot_270_h, rot_270_h2);
+    Indexes vals_270_d = getLUTValsMSB(rot_0, rot_270_d, rot_270_d2);
+    Indexes vals_270_b = getLUTValsMSB(rot_0, rot_270_b, rot_270_b2);
 
 
     std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -578,47 +578,31 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
     Pixel rot_0 = getPixel(x, y, src, stride);
 
     Pixel rot_0_h = getPixel(x + 1, y, src, stride);
-    Pixel rot_0_h2 = getPixel(x + 2, y, src, stride);
     Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
-    Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, stride);
-    Pixel rot_0_b = getPixel(x + 1, y - 2, src, stride);
-    Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, stride);
 
     Pixel rot_90_h = getPixel(x, y - 1, src, stride);
-    Pixel rot_90_h2 = getPixel(x, y - 2, src, stride);
     Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
-    Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, stride);
-    Pixel rot_90_b = getPixel(x - 2, y - 1, src, stride);
-    Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, stride);
 
     Pixel rot_180_h = getPixel(x - 1, y, src, stride);
-    Pixel rot_180_h2 = getPixel(x - 2, y, src, stride);
     Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
-    Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, stride);
-    Pixel rot_180_b = getPixel(x - 1, y + 2, src, stride);
-    Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, stride);
 
     Pixel rot_270_h = getPixel(x, y + 1, src, stride);
-    Pixel rot_270_h2 = getPixel(x, y + 2, src, stride);
     Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
-    Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, stride);
-    Pixel rot_270_b = getPixel(x + 1, y + 2, src, stride);
-    Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
 
     //LSB
     {
 
-        Indexes vals_0_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_0_h);
-        Indexes vals_0_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_0_d);
+        Indexes vals_0_h = getLUTValsLSB(rot_0, rot_0_h);
+        Indexes vals_0_d = getLUTValsLSB(rot_0, rot_0_d);
 
-        Indexes vals_90_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_90_h);
-        Indexes vals_90_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_90_d);
+        Indexes vals_90_h = getLUTValsLSB(rot_0, rot_90_h);
+        Indexes vals_90_d = getLUTValsLSB(rot_0, rot_90_d);
 
-        Indexes vals_180_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_180_h);
-        Indexes vals_180_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_180_d);
+        Indexes vals_180_h = getLUTValsLSB(rot_0, rot_180_h);
+        Indexes vals_180_d = getLUTValsLSB(rot_0, rot_180_d);
 
-        Indexes vals_270_h = getLUTValsLSB(luts.LSB_HD_H, rot_0, rot_270_h);
-        Indexes vals_270_d = getLUTValsLSB(luts.LSB_HD_D, rot_0, rot_270_d);
+        Indexes vals_270_h = getLUTValsLSB(rot_0, rot_270_h);
+        Indexes vals_270_d = getLUTValsLSB(rot_0, rot_270_d);
 
 
         std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -672,21 +656,41 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
 
     //MSB
     {
-        Indexes vals_0_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_0_h, rot_0_h2);
-        Indexes vals_0_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_0_d, rot_0_d2);
-        Indexes vals_0_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_0_b, rot_0_b2);
+        Pixel rot_0_h2 = getPixel(x + 2, y, src, stride);
+        Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, stride);
+        Pixel rot_0_b = getPixel(x + 1, y - 2, src, stride);
+        Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, stride);
 
-        Indexes vals_90_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_90_h, rot_90_h2);
-        Indexes vals_90_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_90_d, rot_90_d2);
-        Indexes vals_90_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_90_b, rot_90_b2);
+        Pixel rot_90_h2 = getPixel(x, y - 2, src, stride);
+        Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, stride);
+        Pixel rot_90_b = getPixel(x - 2, y - 1, src, stride);
+        Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, stride);
 
-        Indexes vals_180_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_180_h, rot_180_h2);
-        Indexes vals_180_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_180_d, rot_180_d2);
-        Indexes vals_180_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_180_b, rot_180_b2);
+        Pixel rot_180_h2 = getPixel(x - 2, y, src, stride);
+        Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, stride);
+        Pixel rot_180_b = getPixel(x - 1, y + 2, src, stride);
+        Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, stride);
 
-        Indexes vals_270_h = getLUTValsMSB(luts.MSB_HDB_H, rot_0, rot_270_h, rot_270_h2);
-        Indexes vals_270_d = getLUTValsMSB(luts.MSB_HDB_D, rot_0, rot_270_d, rot_270_d2);
-        Indexes vals_270_b = getLUTValsMSB(luts.MSB_HDB_B, rot_0, rot_270_b, rot_270_b2);
+        Pixel rot_270_h2 = getPixel(x, y + 2, src, stride);
+        Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, stride);
+        Pixel rot_270_b = getPixel(x + 1, y + 2, src, stride);
+        Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
+
+        Indexes vals_0_h = getLUTValsMSB(rot_0, rot_0_h, rot_0_h2);
+        Indexes vals_0_d = getLUTValsMSB(rot_0, rot_0_d, rot_0_d2);
+        Indexes vals_0_b = getLUTValsMSB(rot_0, rot_0_b, rot_0_b2);
+
+        Indexes vals_90_h = getLUTValsMSB(rot_0, rot_90_h, rot_90_h2);
+        Indexes vals_90_d = getLUTValsMSB(rot_0, rot_90_d, rot_90_d2);
+        Indexes vals_90_b = getLUTValsMSB(rot_0, rot_90_b, rot_90_b2);
+
+        Indexes vals_180_h = getLUTValsMSB(rot_0, rot_180_h, rot_180_h2);
+        Indexes vals_180_d = getLUTValsMSB(rot_0, rot_180_d, rot_180_d2);
+        Indexes vals_180_b = getLUTValsMSB(rot_0, rot_180_b, rot_180_b2);
+
+        Indexes vals_270_h = getLUTValsMSB(rot_0, rot_270_h, rot_270_h2);
+        Indexes vals_270_d = getLUTValsMSB(rot_0, rot_270_d, rot_270_d2);
+        Indexes vals_270_b = getLUTValsMSB(rot_0, rot_270_b, rot_270_b2);
 
 
         std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
