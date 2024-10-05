@@ -26,8 +26,8 @@ public:
                                     size_t newSize = 64) const;
 
     typedef std::tuple<size_t, size_t, size_t> Indexes;
-    typedef std::tuple<uint8_t, uint8_t, uint8_t> Pixel;
-    typedef std::tuple<int8_t, int8_t, int8_t> PixelSigned;
+    typedef std::tuple<int16_t, int16_t, int16_t> Pixel;
+    typedef std::tuple<int16_t, int16_t, int16_t> PixelSigned;
 
 private:
 

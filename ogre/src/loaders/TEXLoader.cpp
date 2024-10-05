@@ -666,7 +666,7 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
 
         for(size_t q = 0; q < 4; ++q)
         {
-            resLSB[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
+            resLSB[q] = std::make_tuple(static_cast<int16_t>(vals_0[q]), static_cast<int16_t>(vals_0[q + 4]), static_cast<int16_t>(vals_0[q + 8]));
         }
     }
 
@@ -746,7 +746,7 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
 
         for(size_t q = 0; q < 4; ++q)
         {
-            resMSB[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
+            resMSB[q] = std::make_tuple(static_cast<int16_t>(vals_0[q]), static_cast<int16_t>(vals_0[q + 4]), static_cast<int16_t>(vals_0[q + 8]));
         }
     }
 }
@@ -875,7 +875,7 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
                     //doMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, &resMSB[0]);
                     doLSBMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, &resLSB[0], &resMSB[0]);
 
-                    uint8_t vals[4][3];
+                    int16_t vals[4][3];
                     for(size_t q = 0; q < 4; ++q)
                     {
                         vals[q][0] = clamp(std::get<0>(orig) + std::get<0>(resLSB[q]) + std::get<0>(resMSB[q]), 0, 255);
@@ -883,18 +883,18 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
                         vals[q][2] = clamp(std::get<2>(orig) + std::get<2>(resLSB[q]) + std::get<2>(resMSB[q]), 0, 255);
                     }
 
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = vals[0][indexRGBSelection_r];
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = vals[0][indexRGBSelection_g];
-                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = vals[0][indexRGBSelection_b];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[1][indexRGBSelection_r];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[1][indexRGBSelection_g];
-                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[1][indexRGBSelection_b];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = vals[2][indexRGBSelection_r];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = vals[2][indexRGBSelection_g];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = vals[2][indexRGBSelection_b];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = vals[3][indexRGBSelection_r];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = vals[3][indexRGBSelection_g];
-                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = vals[3][indexRGBSelection_b];
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 0] = static_cast<Ogre::uchar>(vals[0][indexRGBSelection_r]);
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 1] = static_cast<Ogre::uchar>(vals[0][indexRGBSelection_g]);
+                    dataRes[y * 2 * dest_width * 3 + x * 2 * 3 + 2] = static_cast<Ogre::uchar>(vals[0][indexRGBSelection_b]);
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 0] = static_cast<Ogre::uchar>(vals[1][indexRGBSelection_r]);
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 1] = static_cast<Ogre::uchar>(vals[1][indexRGBSelection_g]);
+                    dataRes[y * 2 * dest_width * 3 + (x * 2 + 1) * 3 + 2] = static_cast<Ogre::uchar>(vals[1][indexRGBSelection_b]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 0] = static_cast<Ogre::uchar>(vals[2][indexRGBSelection_r]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 1] = static_cast<Ogre::uchar>(vals[2][indexRGBSelection_g]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + x * 2 * 3 + 2] = static_cast<Ogre::uchar>(vals[2][indexRGBSelection_b]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 0] = static_cast<Ogre::uchar>(vals[3][indexRGBSelection_r]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 1] = static_cast<Ogre::uchar>(vals[3][indexRGBSelection_g]);
+                    dataRes[(y * 2 + 1) * dest_width * 3 + (x * 2 + 1) * 3 + 2] = static_cast<Ogre::uchar>(vals[3][indexRGBSelection_b]);
                 }
             }
 #if defined(LUT_THREADS)
