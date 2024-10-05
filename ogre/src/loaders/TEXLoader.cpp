@@ -350,97 +350,6 @@ TEXLoader::Indexes TEXLoader::getLUTValsLSB(const Pixel& valA, const Pixel& valB
     return std::make_tuple(indexR, indexG, indexB);
 }
 
-void TEXLoader::rotateBack(std::array<int16_t, 12> & res) const
-{
-    for(size_t q = 0; q < 3; ++q)
-    {
-        int16_t tmp = res[0 + q * 4];
-        res[0 + q * 4] = res[1 + q * 4];
-        res[1 + q * 4] = res[3 + q * 4];
-        res[3 + q * 4] = res[2 + q * 4];
-        res[2 + q * 4] = tmp;
-    }
-}
-
-void TEXLoader::doLSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const
-{
-    Pixel rot_0 = getPixel(x, y, src, stride);
-
-    Pixel rot_0_h = getPixel(x + 1, y, src, stride);
-    Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
-
-    Pixel rot_90_h = getPixel(x, y - 1, src, stride);
-    Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
-
-    Pixel rot_180_h = getPixel(x - 1, y, src, stride);
-    Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
-
-    Pixel rot_270_h = getPixel(x, y + 1, src, stride);
-    Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
-
-
-    Indexes vals_0_h = getLUTValsLSB(rot_0, rot_0_h);
-    Indexes vals_0_d = getLUTValsLSB(rot_0, rot_0_d);
-
-    Indexes vals_90_h = getLUTValsLSB(rot_0, rot_90_h);
-    Indexes vals_90_d = getLUTValsLSB(rot_0, rot_90_d);
-
-    Indexes vals_180_h = getLUTValsLSB(rot_0, rot_180_h);
-    Indexes vals_180_d = getLUTValsLSB(rot_0, rot_180_d);
-
-    Indexes vals_270_h = getLUTValsLSB(rot_0, rot_270_h);
-    Indexes vals_270_d = getLUTValsLSB(rot_0, rot_270_d);
-
-
-    std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.LSB_HD_H.begin() + std::get<0>(vals_0_h), luts.LSB_HD_H.begin() + std::get<0>(vals_0_h) + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<1>(vals_0_h), luts.LSB_HD_H.begin() + std::get<1>(vals_0_h) + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<2>(vals_0_h), luts.LSB_HD_H.begin() + std::get<2>(vals_0_h) + 4, vals_0.begin() + 8, vals_0.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<0>(vals_0_d), luts.LSB_HD_D.begin() + std::get<0>(vals_0_d) + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<1>(vals_0_d), luts.LSB_HD_D.begin() + std::get<1>(vals_0_d) + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<2>(vals_0_d), luts.LSB_HD_D.begin() + std::get<2>(vals_0_d) + 4, vals_0.begin() + 8, vals_0.begin() + 8, std::plus<int16_t>());
-
-    std::array<int16_t, 12> vals_90 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.LSB_HD_H.begin() + std::get<0>(vals_90_h), luts.LSB_HD_H.begin() + std::get<0>(vals_90_h) + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<1>(vals_90_h), luts.LSB_HD_H.begin() + std::get<1>(vals_90_h) + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<2>(vals_90_h), luts.LSB_HD_H.begin() + std::get<2>(vals_90_h) + 4, vals_90.begin() + 8, vals_90.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<0>(vals_90_d), luts.LSB_HD_D.begin() + std::get<0>(vals_90_d) + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<1>(vals_90_d), luts.LSB_HD_D.begin() + std::get<1>(vals_90_d) + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<2>(vals_90_d), luts.LSB_HD_D.begin() + std::get<2>(vals_90_d) + 4, vals_90.begin() + 8, vals_90.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_90);
-
-    std::array<int16_t, 12> vals_180 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.LSB_HD_H.begin() + std::get<0>(vals_180_h), luts.LSB_HD_H.begin() + std::get<0>(vals_180_h) + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<1>(vals_180_h), luts.LSB_HD_H.begin() + std::get<1>(vals_180_h) + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<2>(vals_180_h), luts.LSB_HD_H.begin() + std::get<2>(vals_180_h) + 4, vals_180.begin() + 8, vals_180.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<0>(vals_180_d), luts.LSB_HD_D.begin() + std::get<0>(vals_180_d) + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<1>(vals_180_d), luts.LSB_HD_D.begin() + std::get<1>(vals_180_d) + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<2>(vals_180_d), luts.LSB_HD_D.begin() + std::get<2>(vals_180_d) + 4, vals_180.begin() + 8, vals_180.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_180);
-    rotateBack(vals_180);
-
-    std::array<int16_t, 12> vals_270 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.LSB_HD_H.begin() + std::get<0>(vals_270_h), luts.LSB_HD_H.begin() + std::get<0>(vals_270_h) + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<1>(vals_270_h), luts.LSB_HD_H.begin() + std::get<1>(vals_270_h) + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_H.begin() + std::get<2>(vals_270_h), luts.LSB_HD_H.begin() + std::get<2>(vals_270_h) + 4, vals_270.begin() + 8, vals_270.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<0>(vals_270_d), luts.LSB_HD_D.begin() + std::get<0>(vals_270_d) + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<1>(vals_270_d), luts.LSB_HD_D.begin() + std::get<1>(vals_270_d) + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.LSB_HD_D.begin() + std::get<2>(vals_270_d), luts.LSB_HD_D.begin() + std::get<2>(vals_270_d) + 4, vals_270.begin() + 8, vals_270.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_270);
-    rotateBack(vals_270);
-    rotateBack(vals_270);
-
-    std::transform(vals_0.begin(), vals_0.end(), vals_90.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_180.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_270.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_0.begin(), [](int16_t val){return val / 2;});
-
-    for(size_t q = 0; q < 4; ++q)
-    {
-        res[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
-    }
-}
-
 TEXLoader::Indexes TEXLoader::getLUTValsMSB(const Pixel& valA, const Pixel& valB, const Pixel& valC) const
 {
     uint16_t valA_r = static_cast<uint16_t>(std::get<0>(valA)) >> 4;
@@ -462,114 +371,15 @@ TEXLoader::Indexes TEXLoader::getLUTValsMSB(const Pixel& valA, const Pixel& valB
     return std::make_tuple(indexR, indexG, indexB);
 }
 
-void TEXLoader::doMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* res) const
+void TEXLoader::rotateBack(std::array<int16_t, 12> & res) const
 {
-    Pixel rot_0 = getPixel(x, y, src, stride);
-
-    Pixel rot_0_h = getPixel(x + 1, y, src, stride);
-    Pixel rot_0_h2 = getPixel(x + 2, y, src, stride);
-    Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
-    Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, stride);
-    Pixel rot_0_b = getPixel(x + 1, y - 2, src, stride);
-    Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, stride);
-
-    Pixel rot_90_h = getPixel(x, y - 1, src, stride);
-    Pixel rot_90_h2 = getPixel(x, y - 2, src, stride);
-    Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
-    Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, stride);
-    Pixel rot_90_b = getPixel(x - 2, y - 1, src, stride);
-    Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, stride);
-
-    Pixel rot_180_h = getPixel(x - 1, y, src, stride);
-    Pixel rot_180_h2 = getPixel(x - 2, y, src, stride);
-    Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
-    Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, stride);
-    Pixel rot_180_b = getPixel(x - 1, y + 2, src, stride);
-    Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, stride);
-
-    Pixel rot_270_h = getPixel(x, y + 1, src, stride);
-    Pixel rot_270_h2 = getPixel(x, y + 2, src, stride);
-    Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
-    Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, stride);
-    Pixel rot_270_b = getPixel(x + 1, y + 2, src, stride);
-    Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
-
-
-    Indexes vals_0_h = getLUTValsMSB(rot_0, rot_0_h, rot_0_h2);
-    Indexes vals_0_d = getLUTValsMSB(rot_0, rot_0_d, rot_0_d2);
-    Indexes vals_0_b = getLUTValsMSB(rot_0, rot_0_b, rot_0_b2);
-
-    Indexes vals_90_h = getLUTValsMSB(rot_0, rot_90_h, rot_90_h2);
-    Indexes vals_90_d = getLUTValsMSB(rot_0, rot_90_d, rot_90_d2);
-    Indexes vals_90_b = getLUTValsMSB(rot_0, rot_90_b, rot_90_b2);
-
-    Indexes vals_180_h = getLUTValsMSB(rot_0, rot_180_h, rot_180_h2);
-    Indexes vals_180_d = getLUTValsMSB(rot_0, rot_180_d, rot_180_d2);
-    Indexes vals_180_b = getLUTValsMSB(rot_0, rot_180_b, rot_180_b2);
-
-    Indexes vals_270_h = getLUTValsMSB(rot_0, rot_270_h, rot_270_h2);
-    Indexes vals_270_d = getLUTValsMSB(rot_0, rot_270_d, rot_270_d2);
-    Indexes vals_270_b = getLUTValsMSB(rot_0, rot_270_b, rot_270_b2);
-
-
-    std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.MSB_HDB_H.begin() + std::get<0>(vals_0_h), luts.MSB_HDB_H.begin() + std::get<0>(vals_0_h) + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<1>(vals_0_h), luts.MSB_HDB_H.begin() + std::get<1>(vals_0_h) + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<2>(vals_0_h), luts.MSB_HDB_H.begin() + std::get<2>(vals_0_h) + 4, vals_0.begin() + 8, vals_0.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<0>(vals_0_d), luts.MSB_HDB_D.begin() + std::get<0>(vals_0_d) + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<1>(vals_0_d), luts.MSB_HDB_D.begin() + std::get<1>(vals_0_d) + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<2>(vals_0_d), luts.MSB_HDB_D.begin() + std::get<2>(vals_0_d) + 4, vals_0.begin() + 8, vals_0.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<0>(vals_0_b), luts.MSB_HDB_B.begin() + std::get<0>(vals_0_b) + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<1>(vals_0_b), luts.MSB_HDB_B.begin() + std::get<1>(vals_0_b) + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<2>(vals_0_b), luts.MSB_HDB_B.begin() + std::get<2>(vals_0_b) + 4, vals_0.begin() + 8, vals_0.begin() + 8, std::plus<int16_t>());
-
-    std::array<int16_t, 12> vals_90 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.MSB_HDB_H.begin() + std::get<0>(vals_90_h), luts.MSB_HDB_H.begin() + std::get<0>(vals_90_h) + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<1>(vals_90_h), luts.MSB_HDB_H.begin() + std::get<1>(vals_90_h) + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<2>(vals_90_h), luts.MSB_HDB_H.begin() + std::get<2>(vals_90_h) + 4, vals_90.begin() + 8, vals_90.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<0>(vals_90_d), luts.MSB_HDB_D.begin() + std::get<0>(vals_90_d) + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<1>(vals_90_d), luts.MSB_HDB_D.begin() + std::get<1>(vals_90_d) + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<2>(vals_90_d), luts.MSB_HDB_D.begin() + std::get<2>(vals_90_d) + 4, vals_90.begin() + 8, vals_90.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<0>(vals_90_b), luts.MSB_HDB_B.begin() + std::get<0>(vals_90_b) + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<1>(vals_90_b), luts.MSB_HDB_B.begin() + std::get<1>(vals_90_b) + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<2>(vals_90_b), luts.MSB_HDB_B.begin() + std::get<2>(vals_90_b) + 4, vals_90.begin() + 8, vals_90.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_90);
-
-    std::array<int16_t, 12> vals_180 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.MSB_HDB_H.begin() + std::get<0>(vals_180_h), luts.MSB_HDB_H.begin() + std::get<0>(vals_180_h) + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<1>(vals_180_h), luts.MSB_HDB_H.begin() + std::get<1>(vals_180_h) + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<2>(vals_180_h), luts.MSB_HDB_H.begin() + std::get<2>(vals_180_h) + 4, vals_180.begin() + 8, vals_180.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<0>(vals_180_d), luts.MSB_HDB_D.begin() + std::get<0>(vals_180_d) + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<1>(vals_180_d), luts.MSB_HDB_D.begin() + std::get<1>(vals_180_d) + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<2>(vals_180_d), luts.MSB_HDB_D.begin() + std::get<2>(vals_180_d) + 4, vals_180.begin() + 8, vals_180.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<0>(vals_180_b), luts.MSB_HDB_B.begin() + std::get<0>(vals_180_b) + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<1>(vals_180_b), luts.MSB_HDB_B.begin() + std::get<1>(vals_180_b) + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<2>(vals_180_b), luts.MSB_HDB_B.begin() + std::get<2>(vals_180_b) + 4, vals_180.begin() + 8, vals_180.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_180);
-    rotateBack(vals_180);
-
-    std::array<int16_t, 12> vals_270 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::transform(luts.MSB_HDB_H.begin() + std::get<0>(vals_270_h), luts.MSB_HDB_H.begin() + std::get<0>(vals_270_h) + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<1>(vals_270_h), luts.MSB_HDB_H.begin() + std::get<1>(vals_270_h) + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_H.begin() + std::get<2>(vals_270_h), luts.MSB_HDB_H.begin() + std::get<2>(vals_270_h) + 4, vals_270.begin() + 8, vals_270.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<0>(vals_270_d), luts.MSB_HDB_D.begin() + std::get<0>(vals_270_d) + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<1>(vals_270_d), luts.MSB_HDB_D.begin() + std::get<1>(vals_270_d) + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_D.begin() + std::get<2>(vals_270_d), luts.MSB_HDB_D.begin() + std::get<2>(vals_270_d) + 4, vals_270.begin() + 8, vals_270.begin() + 8, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<0>(vals_270_b), luts.MSB_HDB_B.begin() + std::get<0>(vals_270_b) + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<1>(vals_270_b), luts.MSB_HDB_B.begin() + std::get<1>(vals_270_b) + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
-    std::transform(luts.MSB_HDB_B.begin() + std::get<2>(vals_270_b), luts.MSB_HDB_B.begin() + std::get<2>(vals_270_b) + 4, vals_270.begin() + 8, vals_270.begin() + 8, std::plus<int16_t>());
-    rotateBack(vals_270);
-    rotateBack(vals_270);
-    rotateBack(vals_270);
-
-    std::transform(vals_0.begin(), vals_0.end(), vals_90.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_180.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_270.begin(), vals_0.begin(), std::plus<int16_t>());
-    std::transform(vals_0.begin(), vals_0.end(), vals_0.begin(), [](int16_t val){return val / 3; });
-
-    for(size_t q = 0; q < 4; ++q)
+    for(size_t q = 0; q < 3; ++q)
     {
-        res[q] = std::make_tuple(static_cast<int8_t>(vals_0[q]), static_cast<int8_t>(vals_0[q + 4]), static_cast<int8_t>(vals_0[q + 8]));
+        int16_t tmp = res[0 + q * 4];
+        res[0 + q * 4] = res[1 + q * 4];
+        res[1 + q * 4] = res[3 + q * 4];
+        res[3 + q * 4] = res[2 + q * 4];
+        res[2 + q * 4] = tmp;
     }
 }
 
@@ -875,8 +685,6 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
             
                     PixelSigned resLSB[4];
                     PixelSigned resMSB[4];
-                    //doLSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, &resLSB[0]);
-                    //doMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, &resMSB[0]);
                     doLSBMSB(x, y, rgbImgPadded.data() + paddedWidth * 3 * 2 + 2 * 3, paddedWidth, luts, &resLSB[0], &resMSB[0]);
 
                     int16_t vals[4][3];
