@@ -342,36 +342,27 @@ void TEXLoader::rotateBack(std::array<int16_t, 12> & res) const
 
 void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* resLSB, PixelSigned* resMSB) const
 {
-    Pixel rot_0 = getPixel(x, y, src, stride);
 
-    Pixel rot_0_h = getPixel(x + 1, y, src, stride);
-    Pixel rot_0_d = getPixel(x + 1, y - 1, src, stride);
-
-    Pixel rot_90_h = getPixel(x, y - 1, src, stride);
-    Pixel rot_90_d = getPixel(x - 1, y - 1, src, stride);
-
-    Pixel rot_180_h = getPixel(x - 1, y, src, stride);
-    Pixel rot_180_d = getPixel(x - 1, y + 1, src, stride);
-
-    Pixel rot_270_h = getPixel(x, y + 1, src, stride);
-    Pixel rot_270_d = getPixel(x + 1, y + 1, src, stride);
+    PixelsRow row1 = getRow(x - 2, y - 1, src, stride);
+    PixelsRow row2 = getRow(x - 2, y - 0, src, stride);
+    PixelsRow row3 = getRow(x - 2, y + 1, src, stride);
 
     //LSB
     {
 
-        size_t basicIndex_r = (std::get<0>(rot_0) & 0xF) << 4;
-        size_t basicIndex_g = (std::get<1>(rot_0) & 0xF) << 4;
-        size_t basicIndex_b = (std::get<2>(rot_0) & 0xF) << 4;
+        size_t basicIndex_r = (std::get<6>(row2) & 0xF) << 4;
+        size_t basicIndex_g = (std::get<7>(row2) & 0xF) << 4;
+        size_t basicIndex_b = (std::get<8>(row2) & 0xF) << 4;
 
         std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         {
-            size_t vals_0_h_r = (basicIndex_r | (std::get<0>(rot_0_h) & 0xF)) << 2;
-            size_t vals_0_h_g = (basicIndex_g | (std::get<1>(rot_0_h) & 0xF)) << 2;
-            size_t vals_0_h_b = (basicIndex_b | (std::get<2>(rot_0_h) & 0xF)) << 2;
+            size_t vals_0_h_r = (basicIndex_r | (std::get<9>(row2) & 0xF)) << 2;
+            size_t vals_0_h_g = (basicIndex_g | (std::get<10>(row2) & 0xF)) << 2;
+            size_t vals_0_h_b = (basicIndex_b | (std::get<11>(row2) & 0xF)) << 2;
 
-            size_t vals_0_d_r = (basicIndex_r | (std::get<0>(rot_0_d) & 0xF)) << 2;
-            size_t vals_0_d_g = (basicIndex_g | (std::get<1>(rot_0_d) & 0xF)) << 2;
-            size_t vals_0_d_b = (basicIndex_b | (std::get<2>(rot_0_d) & 0xF)) << 2;
+            size_t vals_0_d_r = (basicIndex_r | (std::get<9>(row1) & 0xF)) << 2;
+            size_t vals_0_d_g = (basicIndex_g | (std::get<10>(row1) & 0xF)) << 2;
+            size_t vals_0_d_b = (basicIndex_b | (std::get<11>(row1) & 0xF)) << 2;
 
             std::transform(luts.LSB_HD_H.begin() + vals_0_h_r, luts.LSB_HD_H.begin() + vals_0_h_r + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
             std::transform(luts.LSB_HD_H.begin() + vals_0_h_g, luts.LSB_HD_H.begin() + vals_0_h_g + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
@@ -384,13 +375,13 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_90 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            size_t vals_90_h_r = (basicIndex_r | (std::get<0>(rot_90_h) & 0xF)) << 2;
-            size_t vals_90_h_g = (basicIndex_g | (std::get<1>(rot_90_h) & 0xF)) << 2;
-            size_t vals_90_h_b = (basicIndex_b | (std::get<2>(rot_90_h) & 0xF)) << 2;
+            size_t vals_90_h_r = (basicIndex_r | (std::get<6>(row1) & 0xF)) << 2;
+            size_t vals_90_h_g = (basicIndex_g | (std::get<7>(row1) & 0xF)) << 2;
+            size_t vals_90_h_b = (basicIndex_b | (std::get<8>(row1) & 0xF)) << 2;
 
-            size_t vals_90_d_r = (basicIndex_r | (std::get<0>(rot_90_d) & 0xF)) << 2;
-            size_t vals_90_d_g = (basicIndex_g | (std::get<1>(rot_90_d) & 0xF)) << 2;
-            size_t vals_90_d_b = (basicIndex_b | (std::get<2>(rot_90_d) & 0xF)) << 2;
+            size_t vals_90_d_r = (basicIndex_r | (std::get<3>(row1) & 0xF)) << 2;
+            size_t vals_90_d_g = (basicIndex_g | (std::get<4>(row1) & 0xF)) << 2;
+            size_t vals_90_d_b = (basicIndex_b | (std::get<5>(row1) & 0xF)) << 2;
 
             std::transform(luts.LSB_HD_H.begin() + vals_90_h_r, luts.LSB_HD_H.begin() + vals_90_h_r + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
             std::transform(luts.LSB_HD_H.begin() + vals_90_h_g, luts.LSB_HD_H.begin() + vals_90_h_g + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
@@ -406,13 +397,13 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_180 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            size_t vals_180_h_r = (basicIndex_r | (std::get<0>(rot_180_h) & 0xF)) << 2;
-            size_t vals_180_h_g = (basicIndex_g | (std::get<1>(rot_180_h) & 0xF)) << 2;
-            size_t vals_180_h_b = (basicIndex_b | (std::get<2>(rot_180_h) & 0xF)) << 2;
+            size_t vals_180_h_r = (basicIndex_r | (std::get<3>(row2) & 0xF)) << 2;
+            size_t vals_180_h_g = (basicIndex_g | (std::get<4>(row2) & 0xF)) << 2;
+            size_t vals_180_h_b = (basicIndex_b | (std::get<5>(row2) & 0xF)) << 2;
 
-            size_t vals_180_d_r = (basicIndex_r | (std::get<0>(rot_180_d) & 0xF)) << 2;
-            size_t vals_180_d_g = (basicIndex_g | (std::get<1>(rot_180_d) & 0xF)) << 2;
-            size_t vals_180_d_b = (basicIndex_b | (std::get<2>(rot_180_d) & 0xF)) << 2;
+            size_t vals_180_d_r = (basicIndex_r | (std::get<3>(row3) & 0xF)) << 2;
+            size_t vals_180_d_g = (basicIndex_g | (std::get<4>(row3) & 0xF)) << 2;
+            size_t vals_180_d_b = (basicIndex_b | (std::get<5>(row3) & 0xF)) << 2;
 
             std::transform(luts.LSB_HD_H.begin() + vals_180_h_r, luts.LSB_HD_H.begin() + vals_180_h_r + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
             std::transform(luts.LSB_HD_H.begin() + vals_180_h_g, luts.LSB_HD_H.begin() + vals_180_h_g + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
@@ -429,13 +420,13 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_270 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            size_t vals_270_h_r = (basicIndex_r | (std::get<0>(rot_270_h) & 0xF)) << 2;
-            size_t vals_270_h_g = (basicIndex_g | (std::get<1>(rot_270_h) & 0xF)) << 2;
-            size_t vals_270_h_b = (basicIndex_b | (std::get<2>(rot_270_h) & 0xF)) << 2;
+            size_t vals_270_h_r = (basicIndex_r | (std::get<6>(row3) & 0xF)) << 2;
+            size_t vals_270_h_g = (basicIndex_g | (std::get<7>(row3) & 0xF)) << 2;
+            size_t vals_270_h_b = (basicIndex_b | (std::get<8>(row3) & 0xF)) << 2;
 
-            size_t vals_270_d_r = (basicIndex_r | (std::get<0>(rot_270_d) & 0xF)) << 2;
-            size_t vals_270_d_g = (basicIndex_g | (std::get<1>(rot_270_d) & 0xF)) << 2;
-            size_t vals_270_d_b = (basicIndex_b | (std::get<2>(rot_270_d) & 0xF)) << 2;
+            size_t vals_270_d_r = (basicIndex_r | (std::get<9>(row3) & 0xF)) << 2;
+            size_t vals_270_d_g = (basicIndex_g | (std::get<10>(row3) & 0xF)) << 2;
+            size_t vals_270_d_b = (basicIndex_b | (std::get<11>(row3) & 0xF)) << 2;
 
             std::transform(luts.LSB_HD_H.begin() + vals_270_h_r, luts.LSB_HD_H.begin() + vals_270_h_r + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
             std::transform(luts.LSB_HD_H.begin() + vals_270_h_g, luts.LSB_HD_H.begin() + vals_270_h_g + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
@@ -460,28 +451,27 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
 
     //MSB
     {
-        size_t basicIndex_r = (std::get<0>(rot_0) & 0xF0) << 4;
-        size_t basicIndex_g = (std::get<1>(rot_0) & 0xF0) << 4;
-        size_t basicIndex_b = (std::get<2>(rot_0) & 0xF0) << 4;
+
+        PixelsRow row0 = getRow(x - 2, y - 2, src, stride);
+        PixelsRow row4 = getRow(x - 2, y + 2, src, stride);
+
+        size_t basicIndex_r = (std::get<6>(row2) & 0xF0) << 4;
+        size_t basicIndex_g = (std::get<7>(row2) & 0xF0) << 4;
+        size_t basicIndex_b = (std::get<8>(row2) & 0xF0) << 4;
 
         std::array<int16_t, 12> vals_0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         {
-            Pixel rot_0_h2 = getPixel(x + 2, y, src, stride);
-            Pixel rot_0_d2 = getPixel(x + 2, y - 2, src, stride);
-            Pixel rot_0_b = getPixel(x + 1, y - 2, src, stride);
-            Pixel rot_0_b2 = getPixel(x + 2, y - 1, src, stride);
+            size_t vals_0_h_r = (basicIndex_r | (std::get<9>(row2) & 0xF0) | (std::get<12>(row2) >> 4)) << 2;
+            size_t vals_0_h_g = (basicIndex_g | (std::get<10>(row2) & 0xF0) | (std::get<13>(row2) >> 4)) << 2;
+            size_t vals_0_h_b = (basicIndex_b | (std::get<11>(row2) & 0xF0) | (std::get<14>(row2) >> 4)) << 2;
 
-            size_t vals_0_h_r = (basicIndex_r | (std::get<0>(rot_0_h) & 0xF0) | (std::get<0>(rot_0_h2) >> 4)) << 2;
-            size_t vals_0_h_g = (basicIndex_g | (std::get<1>(rot_0_h) & 0xF0) | (std::get<1>(rot_0_h2) >> 4)) << 2;
-            size_t vals_0_h_b = (basicIndex_b | (std::get<2>(rot_0_h) & 0xF0) | (std::get<2>(rot_0_h2) >> 4)) << 2;
+            size_t vals_0_d_r = (basicIndex_r | (std::get<9>(row1) & 0xF0) | (std::get<12>(row0) >> 4)) << 2;
+            size_t vals_0_d_g = (basicIndex_g | (std::get<10>(row1) & 0xF0) | (std::get<13>(row0) >> 4)) << 2;
+            size_t vals_0_d_b = (basicIndex_b | (std::get<11>(row1) & 0xF0) | (std::get<14>(row0) >> 4)) << 2;
 
-            size_t vals_0_d_r = (basicIndex_r | (std::get<0>(rot_0_d) & 0xF0) | (std::get<0>(rot_0_d2) >> 4)) << 2;
-            size_t vals_0_d_g = (basicIndex_g | (std::get<1>(rot_0_d) & 0xF0) | (std::get<1>(rot_0_d2) >> 4)) << 2;
-            size_t vals_0_d_b = (basicIndex_b | (std::get<2>(rot_0_d) & 0xF0) | (std::get<2>(rot_0_d2) >> 4)) << 2;
-
-            size_t vals_0_b_r = (basicIndex_r | (std::get<0>(rot_0_b) & 0xF0) | (std::get<0>(rot_0_b2) >> 4)) << 2;
-            size_t vals_0_b_g = (basicIndex_g | (std::get<1>(rot_0_b) & 0xF0) | (std::get<1>(rot_0_b2) >> 4)) << 2;
-            size_t vals_0_b_b = (basicIndex_b | (std::get<2>(rot_0_b) & 0xF0) | (std::get<2>(rot_0_b2) >> 4)) << 2;
+            size_t vals_0_b_r = (basicIndex_r | (std::get<9>(row0) & 0xF0) | (std::get<12>(row1) >> 4)) << 2;
+            size_t vals_0_b_g = (basicIndex_g | (std::get<10>(row0) & 0xF0) | (std::get<13>(row1) >> 4)) << 2;
+            size_t vals_0_b_b = (basicIndex_b | (std::get<11>(row0) & 0xF0) | (std::get<14>(row1) >> 4)) << 2;
 
             std::transform(luts.MSB_HDB_H.begin() + vals_0_h_r, luts.MSB_HDB_H.begin() + vals_0_h_r + 4, vals_0.begin() + 0, vals_0.begin() + 0, std::plus<int16_t>());
             std::transform(luts.MSB_HDB_H.begin() + vals_0_h_g, luts.MSB_HDB_H.begin() + vals_0_h_g + 4, vals_0.begin() + 4, vals_0.begin() + 4, std::plus<int16_t>());
@@ -497,22 +487,17 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_90 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            Pixel rot_90_h2 = getPixel(x, y - 2, src, stride);
-            Pixel rot_90_d2 = getPixel(x - 2, y - 2, src, stride);
-            Pixel rot_90_b = getPixel(x - 2, y - 1, src, stride);
-            Pixel rot_90_b2 = getPixel(x - 1, y - 2, src, stride);
+            size_t vals_90_h_r = (basicIndex_r | (std::get<6>(row1) & 0xF0) | (std::get<6>(row0) >> 4)) << 2;
+            size_t vals_90_h_g = (basicIndex_g | (std::get<7>(row1) & 0xF0) | (std::get<7>(row0) >> 4)) << 2;
+            size_t vals_90_h_b = (basicIndex_b | (std::get<8>(row1) & 0xF0) | (std::get<8>(row0) >> 4)) << 2;
 
-            size_t vals_90_h_r = (basicIndex_r | (std::get<0>(rot_90_h) & 0xF0) | (std::get<0>(rot_90_h2) >> 4)) << 2;
-            size_t vals_90_h_g = (basicIndex_g | (std::get<1>(rot_90_h) & 0xF0) | (std::get<1>(rot_90_h2) >> 4)) << 2;
-            size_t vals_90_h_b = (basicIndex_b | (std::get<2>(rot_90_h) & 0xF0) | (std::get<2>(rot_90_h2) >> 4)) << 2;
+            size_t vals_90_d_r = (basicIndex_r | (std::get<3>(row1) & 0xF0) | (std::get<0>(row0) >> 4)) << 2;
+            size_t vals_90_d_g = (basicIndex_g | (std::get<4>(row1) & 0xF0) | (std::get<1>(row0) >> 4)) << 2;
+            size_t vals_90_d_b = (basicIndex_b | (std::get<5>(row1) & 0xF0) | (std::get<2>(row0) >> 4)) << 2;
 
-            size_t vals_90_d_r = (basicIndex_r | (std::get<0>(rot_90_d) & 0xF0) | (std::get<0>(rot_90_d2) >> 4)) << 2;
-            size_t vals_90_d_g = (basicIndex_g | (std::get<1>(rot_90_d) & 0xF0) | (std::get<1>(rot_90_d2) >> 4)) << 2;
-            size_t vals_90_d_b = (basicIndex_b | (std::get<2>(rot_90_d) & 0xF0) | (std::get<2>(rot_90_d2) >> 4)) << 2;
-
-            size_t vals_90_b_r = (basicIndex_r | (std::get<0>(rot_90_b) & 0xF0) | (std::get<0>(rot_90_b2) >> 4)) << 2;
-            size_t vals_90_b_g = (basicIndex_g | (std::get<1>(rot_90_b) & 0xF0) | (std::get<1>(rot_90_b2) >> 4)) << 2;
-            size_t vals_90_b_b = (basicIndex_b | (std::get<2>(rot_90_b) & 0xF0) | (std::get<2>(rot_90_b2) >> 4)) << 2;
+            size_t vals_90_b_r = (basicIndex_r | (std::get<0>(row1) & 0xF0) | (std::get<3>(row0) >> 4)) << 2;
+            size_t vals_90_b_g = (basicIndex_g | (std::get<1>(row1) & 0xF0) | (std::get<4>(row0) >> 4)) << 2;
+            size_t vals_90_b_b = (basicIndex_b | (std::get<2>(row1) & 0xF0) | (std::get<5>(row0) >> 4)) << 2;
 
             std::transform(luts.MSB_HDB_H.begin() + vals_90_h_r, luts.MSB_HDB_H.begin() + vals_90_h_r + 4, vals_90.begin() + 0, vals_90.begin() + 0, std::plus<int16_t>());
             std::transform(luts.MSB_HDB_H.begin() + vals_90_h_g, luts.MSB_HDB_H.begin() + vals_90_h_g + 4, vals_90.begin() + 4, vals_90.begin() + 4, std::plus<int16_t>());
@@ -531,22 +516,17 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_180 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            Pixel rot_180_h2 = getPixel(x - 2, y, src, stride);
-            Pixel rot_180_d2 = getPixel(x - 2, y + 2, src, stride);
-            Pixel rot_180_b = getPixel(x - 1, y + 2, src, stride);
-            Pixel rot_180_b2 = getPixel(x - 2, y + 1, src, stride);
+            size_t vals_180_h_r = (basicIndex_r | (std::get<3>(row2) & 0xF0) | (std::get<0>(row2) >> 4)) << 2;
+            size_t vals_180_h_g = (basicIndex_g | (std::get<4>(row2) & 0xF0) | (std::get<1>(row2) >> 4)) << 2;
+            size_t vals_180_h_b = (basicIndex_b | (std::get<5>(row2) & 0xF0) | (std::get<2>(row2) >> 4)) << 2;
 
-            size_t vals_180_h_r = (basicIndex_r | (std::get<0>(rot_180_h) & 0xF0) | (std::get<0>(rot_180_h2) >> 4)) << 2;
-            size_t vals_180_h_g = (basicIndex_g | (std::get<1>(rot_180_h) & 0xF0) | (std::get<1>(rot_180_h2) >> 4)) << 2;
-            size_t vals_180_h_b = (basicIndex_b | (std::get<2>(rot_180_h) & 0xF0) | (std::get<2>(rot_180_h2) >> 4)) << 2;
+            size_t vals_180_d_r = (basicIndex_r | (std::get<3>(row3) & 0xF0) | (std::get<0>(row4) >> 4)) << 2;
+            size_t vals_180_d_g = (basicIndex_g | (std::get<4>(row3) & 0xF0) | (std::get<1>(row4) >> 4)) << 2;
+            size_t vals_180_d_b = (basicIndex_b | (std::get<5>(row3) & 0xF0) | (std::get<2>(row4) >> 4)) << 2;
 
-            size_t vals_180_d_r = (basicIndex_r | (std::get<0>(rot_180_d) & 0xF0) | (std::get<0>(rot_180_d2) >> 4)) << 2;
-            size_t vals_180_d_g = (basicIndex_g | (std::get<1>(rot_180_d) & 0xF0) | (std::get<1>(rot_180_d2) >> 4)) << 2;
-            size_t vals_180_d_b = (basicIndex_b | (std::get<2>(rot_180_d) & 0xF0) | (std::get<2>(rot_180_d2) >> 4)) << 2;
-
-            size_t vals_180_b_r = (basicIndex_r | (std::get<0>(rot_180_b) & 0xF0) | (std::get<0>(rot_180_b2) >> 4)) << 2;
-            size_t vals_180_b_g = (basicIndex_g | (std::get<1>(rot_180_b) & 0xF0) | (std::get<1>(rot_180_b2) >> 4)) << 2;
-            size_t vals_180_b_b = (basicIndex_b | (std::get<2>(rot_180_b) & 0xF0) | (std::get<2>(rot_180_b2) >> 4)) << 2;
+            size_t vals_180_b_r = (basicIndex_r | (std::get<3>(row4) & 0xF0) | (std::get<0>(row3) >> 4)) << 2;
+            size_t vals_180_b_g = (basicIndex_g | (std::get<4>(row4) & 0xF0) | (std::get<1>(row3) >> 4)) << 2;
+            size_t vals_180_b_b = (basicIndex_b | (std::get<5>(row4) & 0xF0) | (std::get<2>(row3) >> 4)) << 2;
 
             std::transform(luts.MSB_HDB_H.begin() + vals_180_h_r, luts.MSB_HDB_H.begin() + vals_180_h_r + 4, vals_180.begin() + 0, vals_180.begin() + 0, std::plus<int16_t>());
             std::transform(luts.MSB_HDB_H.begin() + vals_180_h_g, luts.MSB_HDB_H.begin() + vals_180_h_g + 4, vals_180.begin() + 4, vals_180.begin() + 4, std::plus<int16_t>());
@@ -566,22 +546,17 @@ void TEXLoader::doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, 
         {
             std::array<int16_t, 12> vals_270 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            Pixel rot_270_h2 = getPixel(x, y + 2, src, stride);
-            Pixel rot_270_d2 = getPixel(x + 2, y + 2, src, stride);
-            Pixel rot_270_b = getPixel(x + 1, y + 2, src, stride);
-            Pixel rot_270_b2 = getPixel(x + 2, y + 1, src, stride);
+            size_t vals_270_h_r = (basicIndex_r | (std::get<6>(row3) & 0xF0) | (std::get<6>(row4) >> 4)) << 2;
+            size_t vals_270_h_g = (basicIndex_g | (std::get<7>(row3) & 0xF0) | (std::get<7>(row4) >> 4)) << 2;
+            size_t vals_270_h_b = (basicIndex_b | (std::get<8>(row3) & 0xF0) | (std::get<8>(row4) >> 4)) << 2;
 
-            size_t vals_270_h_r = (basicIndex_r | (std::get<0>(rot_270_h) & 0xF0) | (std::get<0>(rot_270_h2) >> 4)) << 2;
-            size_t vals_270_h_g = (basicIndex_g | (std::get<1>(rot_270_h) & 0xF0) | (std::get<1>(rot_270_h2) >> 4)) << 2;
-            size_t vals_270_h_b = (basicIndex_b | (std::get<2>(rot_270_h) & 0xF0) | (std::get<2>(rot_270_h2) >> 4)) << 2;
+            size_t vals_270_d_r = (basicIndex_r | (std::get<9>(row3) & 0xF0) | (std::get<12>(row4) >> 4)) << 2;
+            size_t vals_270_d_g = (basicIndex_g | (std::get<10>(row3) & 0xF0) | (std::get<13>(row4) >> 4)) << 2;
+            size_t vals_270_d_b = (basicIndex_b | (std::get<11>(row3) & 0xF0) | (std::get<14>(row4) >> 4)) << 2;
 
-            size_t vals_270_d_r = (basicIndex_r | (std::get<0>(rot_270_d) & 0xF0) | (std::get<0>(rot_270_d2) >> 4)) << 2;
-            size_t vals_270_d_g = (basicIndex_g | (std::get<1>(rot_270_d) & 0xF0) | (std::get<1>(rot_270_d2) >> 4)) << 2;
-            size_t vals_270_d_b = (basicIndex_b | (std::get<2>(rot_270_d) & 0xF0) | (std::get<2>(rot_270_d2) >> 4)) << 2;
-
-            size_t vals_270_b_r = (basicIndex_r | (std::get<0>(rot_270_b) & 0xF0) | (std::get<0>(rot_270_b2) >> 4)) << 2;
-            size_t vals_270_b_g = (basicIndex_g | (std::get<1>(rot_270_b) & 0xF0) | (std::get<1>(rot_270_b2) >> 4)) << 2;
-            size_t vals_270_b_b = (basicIndex_b | (std::get<2>(rot_270_b) & 0xF0) | (std::get<2>(rot_270_b2) >> 4)) << 2;
+            size_t vals_270_b_r = (basicIndex_r | (std::get<9>(row4) & 0xF0) | (std::get<12>(row3) >> 4)) << 2;
+            size_t vals_270_b_g = (basicIndex_g | (std::get<10>(row4) & 0xF0) | (std::get<13>(row3) >> 4)) << 2;
+            size_t vals_270_b_b = (basicIndex_b | (std::get<11>(row4) & 0xF0) | (std::get<14>(row3) >> 4)) << 2;
 
             std::transform(luts.MSB_HDB_H.begin() + vals_270_h_r, luts.MSB_HDB_H.begin() + vals_270_h_r + 4, vals_270.begin() + 0, vals_270.begin() + 0, std::plus<int16_t>());
             std::transform(luts.MSB_HDB_H.begin() + vals_270_h_g, luts.MSB_HDB_H.begin() + vals_270_h_g + 4, vals_270.begin() + 4, vals_270.begin() + 4, std::plus<int16_t>());
