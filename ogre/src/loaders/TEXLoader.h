@@ -25,7 +25,6 @@ public:
                                     bool resize = false,
                                     size_t newSize = 64) const;
 
-    typedef std::tuple<size_t, size_t, size_t> Indexes;
     typedef std::tuple<int16_t, int16_t, int16_t> Pixel;
     typedef std::tuple<int16_t, int16_t, int16_t> PixelSigned;
 
@@ -36,10 +35,11 @@ private:
     //LUTs
     void doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRGB, bool swapRGB) const;
     void doLSBMSB(size_t x, size_t y, const uint8_t* src, size_t stride, const LUTs& luts, PixelSigned* resLSB, PixelSigned* resMSB) const;
-    Pixel getPixel(int x, int y, const uint8_t* src, size_t stride) const;
+    Pixel getPixel(int x, int y, const uint8_t* src, size_t stride) const
+    {
+        return std::make_tuple(src[y * stride * 3 + x * 3 + 0], src[y * stride * 3 + x * 3 + 1], src[y * stride * 3 + x * 3 + 2]);
+    }
 
-    Indexes getLUTValsLSB(const Pixel& valA, const Pixel& valB) const;
-    Indexes getLUTValsMSB(const Pixel& valA, const Pixel& valB, const Pixel& valC) const;
     void rotateBack(std::array<int16_t, 12> & res) const;
 
     std::vector<uint8_t> toRGB(Ogre::Image& img) const;
