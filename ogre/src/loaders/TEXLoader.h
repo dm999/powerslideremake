@@ -54,6 +54,7 @@ private:
 
     std::vector<uint8_t> toRGB(Ogre::Image& img) const;
     std::vector<uint8_t> AddPadding(const uint8_t * inBuf, size_t width, size_t height, size_t top, size_t bottom, size_t left, size_t right) const;
+    std::vector<uint8_t> AddMirrorPadding(const uint8_t * inBuf, size_t width, size_t height, size_t top, size_t bottom, size_t left, size_t right) const;
 };
 
 #endif

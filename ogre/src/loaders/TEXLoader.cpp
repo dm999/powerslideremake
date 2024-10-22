@@ -628,12 +628,10 @@ std::vector<uint8_t> TEXLoader::AddPadding(const uint8_t * inBuf, size_t width, 
             inBuf + q * width * 3, width * 3);
 
         //left
-        std::memset(srcPadded.data() + (q + top) * stride_width,
-            inBuf[q * width * 3], left * 3);
+        for(size_t w = 0; w < left; ++w) std::memcpy(srcPadded.data() + (q + top) * stride_width + w * 3, &inBuf[q * width * 3], 3);
 
         //right
-        std::memset(srcPadded.data() + (q + top) * stride_width + left * 3 + width * 3,
-            inBuf[q * width * 3 + (width - 1) * 3], right * 3);
+        for(size_t w = 0; w < right; ++w) std::memcpy(srcPadded.data() + (q + top) * stride_width + left * 3 + width * 3 + w * 3, &inBuf[q * width * 3 + (width - 1) * 3], 3);
     }
 
     //top
@@ -647,6 +645,47 @@ std::vector<uint8_t> TEXLoader::AddPadding(const uint8_t * inBuf, size_t width, 
     for(size_t q = top + height; q < height + sum_vert_pad; ++q) {
         std::memcpy(srcPadded.data() + q * stride_width,
             srcPadded.data() + (top + height - 1) * stride_width,
+            stride_width);
+    }
+
+    return srcPadded;
+}
+
+std::vector<uint8_t> TEXLoader::AddMirrorPadding(const uint8_t * inBuf, size_t width, size_t height, size_t top, size_t bottom, size_t left, size_t right) const
+{
+
+    size_t sum_hor_pad = left + right;
+    size_t sum_vert_pad = top + bottom;
+
+    size_t stride_width = (width + sum_hor_pad) * 3;
+
+    std::vector<uint8_t> srcPadded(stride_width * (height + sum_vert_pad));
+
+    //main, left, right
+    for(size_t q = 0; q < height; ++q){
+
+        //main
+        std::memcpy(srcPadded.data() + (q + top) * stride_width + left * 3,
+            inBuf + q * width * 3, width * 3);
+
+        //left
+        for(size_t w = 0; w < left; ++w) std::memcpy(srcPadded.data() + (q + top) * stride_width + w * 3, &inBuf[q * width * 3 + left * 3 - w * 3], 3);
+
+        //right
+        for(size_t w = 0; w < right; ++w) std::memcpy(srcPadded.data() + (q + top) * stride_width + left * 3 + width * 3 + w * 3, &inBuf[q * width * 3 + (width - 1) * 3 - w * 3], 3);
+    }
+
+    //top
+    for(size_t q = 0; q < top; ++q) {
+        std::memcpy(srcPadded.data() + q * stride_width,
+            srcPadded.data() + (2 * top - q) * stride_width,
+            stride_width);
+    }
+
+    //bottom
+    for(size_t q = top + height, w = 0; q < height + sum_vert_pad; ++q, ++w) {
+        std::memcpy(srcPadded.data() + q * stride_width,
+            srcPadded.data() + (top + height - 1 - w) * stride_width,
             stride_width);
     }
 
@@ -670,8 +709,8 @@ void TEXLoader::doLUTUpscale(Ogre::Image& img, const LUTs& luts, bool convertoRG
     img2.loadDynamicImage(pixelData, dest_width, dest_height, 1, Ogre::PF_R8G8B8, true);
 
     std::vector<uint8_t> rgbImgPadded;
-    if(convertoRGB) rgbImgPadded = AddPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
-    else rgbImgPadded = AddPadding(img.getData(), width, height, 2, 2, 2, 2);
+    if(convertoRGB) rgbImgPadded = AddMirrorPadding(toRGB(img).data(), width, height, 2, 2, 2, 2);
+    else rgbImgPadded = AddMirrorPadding(img.getData(), width, height, 2, 2, 2, 2);
     size_t paddedWidth = width + 4;
 
     size_t indexRGBSelection_r = 0, indexRGBSelection_g = 1, indexRGBSelection_b = 2;
