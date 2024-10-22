@@ -854,7 +854,7 @@ Ogre::TexturePtr TEXLoader::load(const Ogre::DataStreamPtr& fileToLoad, const st
             std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
 
             doLUTUpscale(img, lutsX2, true, true);
-            //doLUTUpscale(img, lutsX4, false, false);
+            doLUTUpscale(img, lutsX4, false, false);
 
             long long timeTaken = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timeStart).count();
             float ms = static_cast<float>(timeTaken) / 1000.0f;
