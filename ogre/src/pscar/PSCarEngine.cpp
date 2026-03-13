@@ -86,8 +86,8 @@ void PSCarEngine::process(Ogre::Real wheelsAverageVel, Ogre::Real throttle, bool
         }
     }
 
-    if(isNitro)
-        mEngineRPM *= 1.5f;
+    //if(isNitro)
+        //mEngineRPM *= 1.5f;
 
     if(mTransmissionType == trAuto || mTransmissionType == trAutoAdvanced)
     {
