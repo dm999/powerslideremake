@@ -78,9 +78,15 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                         playerMaterial = luaManager.ReadScalarString("Model.Material.SingleSubMaterialExclude", pipeline);
                     }
 
-                    newMat = CloneMaterial(  nameSub, 
-                            playerMaterial, 
-                            texturesSubMat, 
+                    //d.polubotko: reflection variant for the chassis only, not wheels
+                    if(q == 0 && gameState.getReflectionsEnabled())
+                    {
+                        playerMaterial += "Refl";
+                    }
+
+                    newMat = CloneMaterial(  nameSub,
+                            playerMaterial,
+                            texturesSubMat,
                             1.0f,
                             TEMP_RESOURCE_GROUP_NAME);
                 }
@@ -124,6 +130,15 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
 
                 Ogre::TextureUnitState * stateNewMat = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(0);
                 stateNewMat->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+
+                //d.polubotko: belt-and-braces for the reflection cubemap on unit 1.
+                //The .material script already declares it, but CloneMaterial bypasses it
+                if(q == 0 && gameState.getReflectionsEnabled())
+                {
+                    Ogre::TextureUnitState * cubemapUnit = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(1);
+                    if(cubemapUnit)
+                        cubemapUnit->setCubicTextureName("PlayerReflectionCubeTex", true);
+                }
 
                 mModelEntity[q]->getSubEntity(0)->setMaterialName(nameSub);
             }

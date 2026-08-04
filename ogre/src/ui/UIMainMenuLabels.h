@@ -170,6 +170,9 @@ private:
     UIButtonTick* mAttenuationPlayerVal;
     UIButtonTick* mAdvLightingAIVal;
     UIButtonTick* mUpscale;
+#if !defined(__ANDROID__)
+    UIButtonTick* mReflectionsVal;
+#endif
 
     UIButton* mHighScoresTrackLeft;
     UIButton* mHighScoresTrackRight;

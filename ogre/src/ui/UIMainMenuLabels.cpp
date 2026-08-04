@@ -326,6 +326,22 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         mModeContext.getGameState().savePlayerData();
     }
 
+#if !defined(__ANDROID__)
+    if(button == mReflectionsVal)
+    {
+        if(mReflectionsVal->getChecked())
+        {
+            mModeContext.getGameState().setReflectionsEnabled(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setReflectionsEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+#endif
+
 
     if(button == mHighScoresTrackLeft)
     {

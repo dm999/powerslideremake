@@ -212,6 +212,7 @@ public:
         bool adv_lightinig_player;
         bool attenuation_player;
         bool adv_lightinig_ai;
+        bool reflections;
         Ogre::Real gamma;
         bool bicubic_upscale;
         bool kmph;

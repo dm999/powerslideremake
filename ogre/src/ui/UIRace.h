@@ -66,6 +66,11 @@ public:
     void rearViewMirrorPanelTextureRemoveAllViewports();
     Ogre::Viewport * rearViewMirrorPanelTextureAddViewport(Ogre::Camera* camera);
 
+    /**
+     * NULL until createRearViewMirrorPanelTexture() has been called (mirror may be disabled)
+     */
+    Ogre::RenderTexture * getRearViewMirrorPanelTexture()const{return mRearCamTexture;}
+
     void createRearViewMirrorPanel(CustomTrayManager* trayMgr, bool isPanelEnabled);
     void setRearViewMirrorPanelMaterial(const Ogre::String& material);
     void setRearViewMirrorPanelShow(bool isShow);

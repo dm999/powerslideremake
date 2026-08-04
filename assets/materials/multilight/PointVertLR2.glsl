@@ -17,6 +17,14 @@ varying float Att[lightCount];
 varying vec3 V;
 varying vec2 T;
 
+#ifdef useReflection
+//world space chain for the cubemap - the lighting above stays in view space
+uniform mat4 worldmatrix;
+uniform mat4 worldnormalmatrix;
+uniform vec3 cameraPositionWorld;
+varying vec3 Rw;
+#endif
+
 void main()
 {
     vec4 P = modelview * position;
@@ -37,6 +45,13 @@ void main()
     
     V = -P.xyz;
     T = (texturematrix * vec4(uv0, 0.0, 1.0)).xy;
+
+#ifdef useReflection
+    vec3 Pw = (worldmatrix * position).xyz;
+    vec3 Nw = normalize(vec3(worldnormalmatrix * vec4(normal, 0.0)));
+    Rw = reflect(normalize(Pw - cameraPositionWorld), Nw);
+#endif
+
     gl_Position = modelviewproj * position;
 }
 

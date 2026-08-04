@@ -25,7 +25,7 @@
 
 UIRace::UIRace(const ModeContext& modeContext) :
     mModeContext(modeContext),
-    mLoaded(false), mRearViewMirrorPanel(NULL)
+    mLoaded(false), mRearCamTexture(NULL), mRearViewMirrorPanel(NULL)
 {
     mEngineRPMToRotation.addPoint(1000.0f, 155.0f);
     mEngineRPMToRotation.addPoint(10000.0f, -70.0f);

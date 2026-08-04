@@ -138,6 +138,22 @@ private:
 
     Ogre::Camera* mRearCamera;
 
+    //d.polubotko: player car reflection cubemap (desktop only)
+    //NOTE: no listener is ever attached to the face targets - a cubemap exposes 6
+    //separate RenderTargets, so a listener would fire 6 times per update and restore
+    //car visibility between faces. Faces are driven manually instead, see updateReflectionCube()
+    static const size_t mReflectionCubeFaces = 6;
+    static const int mReflectionCubeSize = 128;
+    Ogre::Camera* mReflectionCubeCamera;
+    Ogre::RenderTarget* mReflectionCubeRT[mReflectionCubeFaces];
+    size_t mReflectionCubeFaceIndex;
+
+    void createReflectionCube();
+    void initReflectionCubeCamera();
+    void updateReflectionCube();
+    static Ogre::Vector3 getReflectionCubeFaceDirection(size_t face);
+    static Ogre::Vector3 getReflectionCubeFaceUp(size_t face);
+
     Ogre::SceneManager* mSceneMgrCarUI;
 
     void initScene(LoaderListener* loaderListener);
