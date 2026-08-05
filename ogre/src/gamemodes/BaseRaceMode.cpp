@@ -88,6 +88,11 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
 
     initTerrain(loaderListener);
 
+    if (mModeContext.mGameState.getReflectionsEnabled())
+    {
+        createReflectionCube();
+    }
+
     if(loaderListener)
         loaderListener->loadState(0.8f, "models loading");
 
@@ -644,7 +649,7 @@ void BaseRaceMode::initMisc()
     {
         if(mIsGlobalReset)
         {
-            createReflectionCube();
+            //createReflectionCube();
         }
         else
         {

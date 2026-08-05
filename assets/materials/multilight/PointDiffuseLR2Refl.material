@@ -64,7 +64,7 @@ material Test/Multi_2/PointDiffuseLRRefl
                 //d.polubotko: dynamic reflection cubemap, created at runtime by BaseRaceMode.
                 //Declared in the script (not routed through CloneMaterial) because
                 //CloneMaterial's setTextureName() defaults to TEX_TYPE_2D
-                cubic_texture PlayerReflectionCubeTex combinedUVW
+                //cubic_texture PlayerReflectionCubeTex combinedUVW
                 tex_address_mode clamp
                 filtering linear linear none
             }
