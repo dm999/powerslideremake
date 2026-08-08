@@ -417,6 +417,10 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mGameModeSelected = ModeMenu;
         switchState(State_Difficulty);
+        //selectMode() is needed here (unlike the historic skip) so the Mode
+        //button's mirror flag is cleared when switching away from deathmatch;
+        //otherwise single race would inherit deathmatch's flipped texture.
+        selectMode();
     }
 
     if(label == mModeSingleTypeChampionship)
