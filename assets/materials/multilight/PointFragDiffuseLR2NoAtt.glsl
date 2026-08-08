@@ -44,9 +44,18 @@ void main()
     vec3 ambient = matAmbient.xyz * lightAmbient.xyz;
 
 #ifdef useReflection
+    //float F0 = 0.001;
+    //float F0 = 0.04;
+    float F0 = 0.1;
+    //float F0 = 0.4;
+    //float F0 = 1.0;
+    float NdotV = max(dot(normal, viewDir), 0.0);
+    float fresnel = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
+
     vec3 lit = texture2D(diffuseMap, T).rgb * (ambient + diffuse + specular);
     vec3 refl = textureCube(reflectionMap, normalize(Rw)).rgb;
-    gl_FragColor = vec4(mix(lit, refl, reflectionAmount), 1.0);
+    //gl_FragColor = vec4(mix(lit, refl, reflectionAmount), 1.0);
+    gl_FragColor = vec4(mix(lit, refl, fresnel), 1.0);
 #else
     gl_FragColor = vec4(texture2D(diffuseMap, T).rgb * (ambient + diffuse + specular), 1.0);
 #endif
