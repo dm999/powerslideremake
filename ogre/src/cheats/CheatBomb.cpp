@@ -165,7 +165,7 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         Ogre::Vector3 posDiff = carPos - mBombPosition;
                         if (posDiff.length() < (*i).second->getVehicleSetup().mCollisionRadius)
                         {
-                            mBlowCounter = 210;
+                            mBlowCounter = mIsDeathmatch ? 20010 : 210;;
                             break;
                         }
                     }
@@ -183,7 +183,9 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
 
                 ++mBlowCounter;
 
-                if(mBlowCounter > 200)
+                const Ogre::uint16 blowMax = mIsDeathmatch ? 20000 : 200;
+
+                if(mBlowCounter > blowMax)
                 {
                     for (vehicles::const_iterator i = vehiclesMap.begin(), j = vehiclesMap.end(); i != j; ++i)
                     {
