@@ -38,7 +38,7 @@ To run the built project you need to support original game assets (packed files 
 You need to have: data.pf, gameshell.pf, store.pf (patch.pf is optional). Put them in the folder with the built application.  
 **Important**: integrated graphics are not supported, please use discrete video card on PC.  
 For android version you need to store pf files in <powerslide> folder of External Storage Directory (where DCIM located) of smartphone.  
-Prebuilt archives for windows / linux / android available in /Downloads section ([windows](https://bitbucket.org/dm_999/powerslideremake/downloads/win.7z), [linux](https://bitbucket.org/dm_999/powerslideremake/downloads/linux_64.7z), [android](https://bitbucket.org/dm_999/powerslideremake/downloads/PowerslideRemake.apk)). To run on linux make sure openal installed.  
+Prebuilt archives for windows / linux / android (obsolete) available in files section ([ModDB](https://www.moddb.com/mods/powerslideremake/downloads)). To run on linux make sure openal installed.  
 
 ### Music ###
 There is sounds/music support available in project. To enable sounds/music the project should be built with PowerslideRemake_OPENAL.
@@ -50,7 +50,7 @@ File track_1.ogg is not used as well as track_9.ogg (extra track on original CD)
 ### Multiplayer ###
 "Powerslide remake" supports multiplayer game through web server. 
 To run multiplayer game web server should be deployed on most powerful PC of a local network or on a global virtual/physical server with public IP address.
-Prebuilt web server available in /Downloads section ([multislider-08.zip](https://bitbucket.org/dm_999/powerslideremake/downloads/multislider-0.8.zip)).  
+Prebuilt web server available in files section ([ModDB](https://www.moddb.com/mods/powerslideremake/downloads/server1)).  
 To start web server command should be executed: (windows: multislider-0.8/bin/multislider.bat 192.168.1.1, linux: ./multislider-0.8/bin/multislider 192.168.1.1) - IP should be adjusted.  
 The following ports are used by multiplayer client: TCP:8800(outbound) - lobby, UDP:8800 (outbound) - list of rooms, 8700 (outbound) - race data.
 Both TCP & UDP inbound ports are randomly set.  
