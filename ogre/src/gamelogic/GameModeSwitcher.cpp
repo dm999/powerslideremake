@@ -245,9 +245,17 @@ void GameModeSwitcher::frameEnded()
             //deathmatch race -> single main menu
             if(mGameMode == ModeRaceDeathmatch)
             {
+                //keep the deathmatch menu mode active after the race: the Mode
+                //button stays mirrored and clicking Race restarts another
+                //deathmatch. The mirror is driven by the menu's mGameModeSelected,
+                //which is set from the MenuMode constructor's gameMode param below
+                //(ModeMenuDeathmatch) — NOT from the switcher's mGameMode. The
+                //switcher's mGameMode stays ModeMenu so the existing menu-mode
+                //logic in BaseApp (Esc/exit dialog) and the race-start branches
+                //below keep matching unmodified.
                 mGameMode = ModeMenu;
 
-                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_DeathmatchStats);
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenuDeathmatch, State_DeathmatchStats);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
