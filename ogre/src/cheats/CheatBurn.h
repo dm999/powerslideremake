@@ -25,6 +25,9 @@ public:
 
     bool isInProgress() const {return mIsBurnInProgress;}
 
+    //deathmatch: when set, a direct burn hit also drains the target's life.
+    void setDeathmatch(bool v){ mIsDeathmatch = v; }
+
 private:
 
     void stopBurn();
@@ -51,6 +54,7 @@ private:
     Ogre::String mNodeName;
 
     bool mIsFog;
+    bool mIsDeathmatch;
 
     static Ogre::NameGenerator nameGenNodes;
     static Ogre::NameGenerator nameGenParticleMaterials;
@@ -68,6 +72,9 @@ public:
     void createBurnByPlayer(PhysicsVehicle * vehicle);
 
     void timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& vehiclesMap) override;
+
+    //deathmatch: propagate the damage-enabled flag to every burn instance.
+    void setDeathmatch(bool v){ for(size_t q = 0; q < mBurns.size(); ++q) mBurns[q].setDeathmatch(v); }
 
 private:
 

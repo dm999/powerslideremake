@@ -2,6 +2,7 @@
 
 #include "../listeners/LoaderListener.h"
 #include "../physics/PhysicsVehicle.h"
+#include "../cheats/Cheats.h"
 #include "../ui/UIRace.h"
 #include "../tools/Conversions.h"
 
@@ -20,6 +21,11 @@ void DeathmatchMode::initData(LoaderListener* loaderListener)
     mModeContext.getGameState().setDeathmatch(true);
 
     BaseRaceMode::initData(loaderListener);
+
+    //bomb/burn are constructed during BaseRaceMode::initData; tell them to drain
+    //life on hit so the weapons can actually eliminate cars in deathmatch.
+    if(mCheats.get())
+        mCheats->setDeathmatch(true);
 
     mAliveCars = mLapController.getTotalCars();
 }

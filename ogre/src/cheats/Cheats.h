@@ -28,6 +28,10 @@ public:
     void createBurnByPlayer(PhysicsVehicle * vehicle);
     void createBombByPlayer(PhysicsVehicle * vehicle);
 
+    //deathmatch: enable life damage on bomb/burn hits. No-op in other modes
+    //(flag stays false) so single player / championship / timetrial are unaffected.
+    void setDeathmatch(bool v);
+
 private:
 
     Physics* mWorld;

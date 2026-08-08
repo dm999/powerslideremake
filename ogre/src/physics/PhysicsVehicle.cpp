@@ -222,6 +222,9 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     //deathmatch: once life is gone, count dead ticks and apply a one-shot explosion
     //impulse. Guarded by mLife so normal modes (life stays at 1.0) never enter here.
+    //This is the single death chokepoint: any source that drains life (collision,
+    //bomb, burn) is detected here on the next step, firing the explosion impulse and
+    //the carDead listener callback exactly once via mPhysics->onCarDead.
     if(mLife <= 0.0f)
     {
         ++mDeadTicks;
@@ -231,6 +234,7 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
             Ogre::Vector3 linearImpulse(0.0f, 75.0f * 0.013333334f * 150.0f, 0.0f);
             adjustImpulseInc(Ogre::Vector3::ZERO, linearImpulse);
             mExplosionHappened = true;
+            mPhysics->onCarDead(this);
         }
     }
 }

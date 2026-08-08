@@ -25,7 +25,8 @@ CheatBomb::CheatBomb(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sce
 #endif
     mIsBombInProgress(false),
     mPlayerVehicle(NULL),
-    mSphereNode(NULL)
+    mSphereNode(NULL),
+    mIsDeathmatch(false)
 {
     mNodeName = nameGenNodes.generate();
 }
@@ -198,6 +199,13 @@ void CheatBomb::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                             Ogre::Vector3 rotImpulse(forceAmount * posDiff);
                             Ogre::Vector3 linearImpulse(0.0f, diffLenDiff * 0.013333334f * 150.0f, 0.0f);
                             (*i).second->adjustImpulseInc(rotImpulse, linearImpulse);
+
+                            //deathmatch: the blast also drains life (scaled by closeness),
+                            //skipping the player so you can't blow yourself up.
+                            if(mIsDeathmatch && (*i).second.get() != mPlayerVehicle)
+                            {
+                                (*i).second->setLife((*i).second->getLife() - 0.2f * (diffLenDiff / 75.0f));
+                            }
                         }
                     }
 

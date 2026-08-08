@@ -42,3 +42,9 @@ void Cheats::createBombByPlayer(PhysicsVehicle * vehicle)
 {
     mCheatBombs->createBombByPlayer(vehicle);
 }
+
+void Cheats::setDeathmatch(bool v)
+{
+    mCheatBurns->setDeathmatch(v);
+    mCheatBombs->setDeathmatch(v);
+}

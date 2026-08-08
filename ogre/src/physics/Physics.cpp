@@ -307,12 +307,9 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
                                 hitVehicle->setLife(hitVehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
                             }
 
-                            //fire the death event exactly once when life crosses zero.
-                            if(hitVehicle->getLife() <= 0.0f && !hitVehicle->getExplosionHappened())
-                            {
-                                hitVehicle->setExplosionHappened(true);
-                                onCarDead(hitVehicle);
-                            }
+                            //death itself (explosion impulse + carDead callback) is
+                            //handled uniformly in PhysicsVehicle::timeStep when life
+                            //first drops to/below zero, so nothing to do here.
                         }
                     }
                 }
