@@ -53,6 +53,15 @@ void Physics::internalTimeStep(GameState& gameState)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
+
+            //deathmatch: self-destruction bleed. A damaged car (life <= 0.5) keeps
+            //losing a sliver of life each step, so wrecks finish burning out rather
+            //than sitting frozen at low life. Gated on isDeathmatch(); normal modes
+            //never reduce life, so this is a no-op there. (fun-branch parity.)
+            if(gameState.isDeathmatch() && (*i).second->getLife() <= 0.5f)
+            {
+                (*i).second->setLife((*i).second->getLife() - 0.0001f);
+            }
         }
 
         //process collisions
