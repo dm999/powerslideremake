@@ -454,7 +454,8 @@ void BaseApp::switchRenderType()
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle      ||
         mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         Ogre::PolygonMode pm;
@@ -482,7 +483,8 @@ void BaseApp::createBurnByPlayer()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
+        mGameModeSwitcher->getMode() == ModeRaceMulti    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
     )
     {
         if(mGameState.getRaceStarted())
@@ -494,7 +496,8 @@ void BaseApp::createBombByPlayer()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
+        mGameModeSwitcher->getMode() == ModeRaceMulti    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
     )
     {
         if(mGameState.getRaceStarted())
@@ -506,7 +509,8 @@ void BaseApp::dropCamera()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
+        mGameModeSwitcher->getMode() == ModeRaceMulti    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
     )
     {
         if(
@@ -533,7 +537,8 @@ void BaseApp::enableNitro()
 {
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle  ||
-        mGameModeSwitcher->getMode() == ModeRaceMulti
+        mGameModeSwitcher->getMode() == ModeRaceMulti    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
     )
     {
         if(mGameState.getRaceStarted())
@@ -552,7 +557,8 @@ void BaseApp::enableNitro()
 void BaseApp::enableSticky()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -572,7 +578,8 @@ void BaseApp::enableSticky()
 void BaseApp::enableSpider()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -591,7 +598,8 @@ void BaseApp::enableSpider()
 void BaseApp::enableICBM()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -611,7 +619,8 @@ void BaseApp::enableICBM()
 void BaseApp::enableApollo()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -631,7 +640,8 @@ void BaseApp::enableApollo()
 void BaseApp::enableLunar()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -650,7 +660,8 @@ void BaseApp::enableLunar()
 void BaseApp::enableJump()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -671,7 +682,8 @@ void BaseApp::enableJump()
 void BaseApp::enableHover()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -691,7 +703,8 @@ void BaseApp::enableHover()
 void BaseApp::enableGlider()
 {
     if(
-        mGameModeSwitcher->getMode() == ModeRaceSingle
+        mGameModeSwitcher->getMode() == ModeRaceSingle  ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(mGameState.getRaceStarted())
@@ -732,7 +745,8 @@ bool BaseApp::setShutdown(bool isOnEsc)
             mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
             mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
             mGameModeSwitcher->getMode() == ModeMenuMulti           ||
-            mGameModeSwitcher->getMode() == ModeRaceMulti
+            mGameModeSwitcher->getMode() == ModeRaceMulti           ||
+            mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
         {
 
@@ -741,7 +755,8 @@ bool BaseApp::setShutdown(bool isOnEsc)
                 if(
                     mGameModeSwitcher->getMode() == ModeRaceSingle      ||
                     mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-                    mGameModeSwitcher->getMode() == ModeRaceChampionship
+                    mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+                    mGameModeSwitcher->getMode() == ModeRaceDeathmatch
                     )
                 {
                     if(getGameState().isGamePaused())
@@ -754,6 +769,9 @@ bool BaseApp::setShutdown(bool isOnEsc)
 
                         if(mGameModeSwitcher->getMode() == ModeRaceChampionship)
                             mGameModeSwitcher->switchMode(ModeMenuChampionship);
+
+                        if(mGameModeSwitcher->getMode() == ModeRaceDeathmatch)
+                            mGameModeSwitcher->switchMode(ModeMenu);
                     }
                     else
                     {
@@ -862,7 +880,8 @@ void BaseApp::keyDown(const OIS::KeyEvent &arg )
             mGameModeSwitcher->getMode() == ModeRaceSingle          ||
             mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
             mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
-            mGameModeSwitcher->getMode() == ModeRaceMulti
+            mGameModeSwitcher->getMode() == ModeRaceMulti           ||
+            mGameModeSwitcher->getMode() == ModeRaceDeathmatch
             )
         )
     {
@@ -879,7 +898,8 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
             mGameModeSwitcher->getMode() == ModeRaceSingle          ||
             mGameModeSwitcher->getMode() == ModeRaceTimetrial       ||
             mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
-            mGameModeSwitcher->getMode() == ModeRaceMulti
+            mGameModeSwitcher->getMode() == ModeRaceMulti           ||
+            mGameModeSwitcher->getMode() == ModeRaceDeathmatch
             )
         )
     {
@@ -889,7 +909,8 @@ void BaseApp::keyUp(const OIS::KeyEvent &arg )
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle      ||
         mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         if(getGameState().isGamePaused() && arg.key == OIS::KC_RETURN)
@@ -995,7 +1016,8 @@ void BaseApp::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
         if(
             mGameModeSwitcher->getMode() == ModeRaceSingle      ||
             mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-            mGameModeSwitcher->getMode() == ModeRaceChampionship
+            mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+            mGameModeSwitcher->getMode() == ModeRaceDeathmatch
             )
         {
             if(getGameState().isGamePaused())
@@ -1053,7 +1075,8 @@ void BaseApp::touchReleased(const OIS::MultiTouchEvent& arg)
         if(
             mGameModeSwitcher->getMode() == ModeRaceSingle      ||
             mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-            mGameModeSwitcher->getMode() == ModeRaceChampionship
+            mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+            mGameModeSwitcher->getMode() == ModeRaceDeathmatch
             )
         {
             if(getGameState().isGamePaused())
@@ -1548,7 +1571,8 @@ void BaseApp::androidPause(JNIEnv * env)
     if(
         mGameModeSwitcher->getMode() == ModeRaceSingle      ||
         mGameModeSwitcher->getMode() == ModeRaceTimetrial   ||
-        mGameModeSwitcher->getMode() == ModeRaceChampionship
+        mGameModeSwitcher->getMode() == ModeRaceChampionship    ||
+        mGameModeSwitcher->getMode() == ModeRaceDeathmatch
         )
     {
         mGameState.setGamePaused();

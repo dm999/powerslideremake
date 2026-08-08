@@ -108,6 +108,7 @@ private:
     UILabel* mModeSingleTypeRace;
     UILabel* mModeSingleTypeChampionship;
     UILabel* mModeSingleTypeTimetrial;
+    UILabel* mModeSingleTypeDeathmatch;
     UILabel* mModeSingleDifficultyNovice;
     UILabel* mModeSingleDifficultyAdvanced;
     UILabel* mModeSingleDifficultyExpert;

@@ -177,6 +177,20 @@ void UIMainMenuLabels::createLabelsOptionsMain(const Ogre::Matrix4& screenAdapti
     }
 
     {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 250.0f, 0.0f, 0.0f);
+        mModeSingleTypeDeathmatch = mUILabelsManager.add("mModeSingle");
+        mModeSingleTypeDeathmatch->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mModeSingleTypeDeathmatch->getTextArea()->setCaption("Deathmatch");
+        mModeSingleTypeDeathmatch->getTextArea()->setCharHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeDeathmatch->getTextArea()->setSpaceWidth(9.0f);
+        mModeSingleTypeDeathmatch->getTextArea()->setHeight(36.0f * viewportHeight / 1024.0f);
+        mModeSingleTypeDeathmatch->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mModeSingleTypeDeathmatch->getTextArea()->setColour(UILabel::mInactiveLabel);
+        mModeSingleTypeDeathmatch->setLabelOnAction(this);
+        getMainBackground()->addChild(mModeSingleTypeDeathmatch->getTextArea());
+    }
+
+    {
         Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(324.0f, 193.0f, 0.0f, 0.0f);
         mModeSingleDifficultyNovice = mUILabelsManager.add();
         mModeSingleDifficultyNovice->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);

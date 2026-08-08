@@ -15,10 +15,12 @@ enum GameMode
     ModeMenuChampionship,
     ModeMenuTimetrial,
     ModeMenuMulti,          // after connection happen
+    ModeMenuDeathmatch,
     ModeRaceSingle,
     ModeRaceChampionship,
     ModeRaceTimetrial,
     ModeRaceMulti,
+    ModeRaceDeathmatch,
 };
 
 enum SinglePlayerMenuStates // multiplayer menus too but before connection happen

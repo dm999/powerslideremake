@@ -943,7 +943,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mPanelBurn = createPanel("CheatBurn", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft, cheatButtonTop, "Test/CheatICBM");
         mPanelBurn->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBurn);
-        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceDeathmatch)
         {
             mPanelBurn->show();
         }
@@ -955,7 +955,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mPanelBomb = createPanel("CheatBomb", cheatButtonWidth, cheatButtonHeight, cheatButtonLeft + cheatButtonWidth + cheatButtonWidth / 2.0f, cheatButtonTop, "Test/CheatBlast");
         mPanelBomb->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelBomb);
-        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceDeathmatch)
         {
             mPanelBomb->show();
         }
@@ -967,7 +967,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mPanelNitro = createPanel("CheatNitro", cheatButtonWidth, cheatButtonHeight, viewportWidth - cheatButtonLeft * 2.0f, cheatButtonTop, "Test/CheatLight");
         mPanelNitro->setUV(0.0f, 0.0f, 1.0f, 1.0f);
         trayMgr->getTrayContainer(OgreBites::TL_NONE)->addChild(mPanelNitro);
-        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti)
+        if(mModeContext.getGameModeSwitcher()->getMode() == ModeRaceSingle || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceMulti || mModeContext.getGameModeSwitcher()->getMode() == ModeRaceDeathmatch)
         {
             mPanelNitro->show();
         }

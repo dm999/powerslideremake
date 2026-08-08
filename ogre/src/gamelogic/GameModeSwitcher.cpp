@@ -7,6 +7,7 @@
 #include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
 #include "../gamemodes/MultiPlayerMode.h"
+#include "../gamemodes/DeathmatchMode.h"
 
 #include "../customs/CustomTrayManager.h"
 
@@ -71,8 +72,8 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
  */
 void GameModeSwitcher::frameEnded()
 {
-    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceTimetrial ||mGameMode == ModeRaceMulti;
-    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceTimetrial || mGameModeNext == ModeRaceMulti;
+    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceTimetrial ||mGameMode == ModeRaceMulti || mGameMode == ModeRaceDeathmatch;
+    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceTimetrial || mGameModeNext == ModeRaceMulti || mGameModeNext == ModeRaceDeathmatch;
 
     if(mIsRecreate)
     {
@@ -150,6 +151,12 @@ void GameModeSwitcher::frameEnded()
                 }
             }
         }
+        //extract lap data after deathmatch race
+        if(mGameMode == ModeRaceDeathmatch && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceDeathmatch)
+        {
+            mContext.setLapController(mPlayerMode->getLapController());
+            mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
+        }
         //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
         {
@@ -220,6 +227,20 @@ void GameModeSwitcher::frameEnded()
                 mGameMode = ModeMenu;
 
                 //mContext.mTrayMgr->showCursor();
+
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Podium);
+                mIsLoadPassed = false;
+                mUIUnloader->show();
+                mMenuMode->initData(this);
+                mUIUnloader->hide();
+                mIsLoadPassed = true;
+                mMenuMode->initCamera();
+            }
+
+            //deathmatch race -> single main menu
+            if(mGameMode == ModeRaceDeathmatch)
+            {
+                mGameMode = ModeMenu;
 
                 mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Podium);
                 mIsLoadPassed = false;
@@ -341,6 +362,22 @@ void GameModeSwitcher::frameEnded()
             mPlayerMode = std::make_shared<SinglePlayerMode>(mContext);
             mIsLoadPassed = false;
             mUILoader->show(mContext, false);
+            mPlayerMode->initData(this);
+            mUILoader->hide();
+            mIsLoadPassed = true;
+            mPlayerMode->initCamera();
+        }
+
+        //main menu single (deathmatch) -> race deathmatch
+        if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceDeathmatch)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = mGameModeNext;
+
+            mPlayerMode = std::make_shared<DeathmatchMode>(mContext);
+            mIsLoadPassed = false;
+            mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;
@@ -618,7 +655,7 @@ void GameModeSwitcher::loadState(float percent, const std::string& info)
     if(mIsInitialLoadPassed)
         mContext.mInputHandler->capture();
 
-    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceTimetrial || mGameMode == ModeRaceMulti)
+    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceTimetrial || mGameMode == ModeRaceMulti || mGameMode == ModeRaceDeathmatch)
     {
         mUILoader->setPercent(percent, info);
     }

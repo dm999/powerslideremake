@@ -512,6 +512,19 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
             switchState(State_StartingGrid);
         }
 
+        if(mGameModeSelected == ModeMenuDeathmatch)
+        {
+            if(!mModeContext.getGameState().isAITrack())
+            {
+                mModeContext.getGameState().setAICountInRace(0);
+            }
+            else
+            {
+                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+            }
+            switchState(State_StartingGrid);
+        }
+
         if(mGameModeSelected == ModeMenuTimetrial)
         {
             mModeContext.getGameState().setAICountInRace(0);
@@ -577,6 +590,10 @@ void UIMainMenu::startRace()
     else if(mGameModeSelected == ModeMenuTimetrial)
     {
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceTimetrial);
+    }
+    else if(mGameModeSelected == ModeMenuDeathmatch)
+    {
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceDeathmatch);
     }
     else
     {

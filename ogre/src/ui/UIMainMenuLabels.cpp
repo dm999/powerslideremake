@@ -433,11 +433,18 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
         selectMode();
     }
 
+    if(label == mModeSingleTypeDeathmatch)
+    {
+        mGameModeSelected = ModeMenuDeathmatch;
+        switchState(State_Difficulty);
+        selectMode();
+    }
+
     if(label == mModeSingleDifficultyNovice)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
 
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -452,7 +459,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -467,7 +474,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -482,7 +489,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -497,7 +504,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), UltraInsane, mModeContext.getGameState().getLapsCount());
 
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -613,7 +620,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
     if(label == mGameExitNoLabel)
     {
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_SingleMulti);
             selectMode();
