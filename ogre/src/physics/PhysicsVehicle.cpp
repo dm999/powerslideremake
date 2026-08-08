@@ -235,6 +235,9 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
             adjustImpulseInc(Ogre::Vector3::ZERO, linearImpulse);
             mExplosionHappened = true;
             mPhysics->onCarDead(this);
+            //hide the wheels so the eliminated car reads as a wheel-less wreck
+            //rather than still rolling. (fun-branch parity.)
+            mPhysicsWheels.hideGraphicalWheels();
         }
     }
 }

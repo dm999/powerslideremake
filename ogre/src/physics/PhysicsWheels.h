@@ -42,6 +42,11 @@ public:
 
     void setSteering(Ogre::Real value);
 
+    //deathmatch: hide the graphical wheel nodes on an eliminated car so the
+    //wreck reads as wheel-less rather than still rolling. No-op elsewhere
+    //(only called from the dead block, which is gated on isDeathmatch()).
+    void hideGraphicalWheels();
+
     void setBackVelocity(Ogre::Real velocity){mVelocity[0] = mVelocity[1] = velocity;}
 
     const Ogre::Vector3& getWorldNormalWeighted(size_t wheelIndex) const{return mWorldNormalWeighted[wheelIndex];}

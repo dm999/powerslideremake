@@ -882,3 +882,12 @@ void PhysicsWheels::setSteering(Ogre::Real value)
     mSteering[2] = value;
     mSteering[3] = value;
 }
+
+void PhysicsWheels::hideGraphicalWheels()
+{
+    for(int q = 0; q < InitialVehicleSetup::mWheelsAmount; ++q)
+    {
+        if(mWheelNodes[q])
+            mWheelNodes[q]->setVisible(false);
+    }
+}
