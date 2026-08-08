@@ -196,6 +196,9 @@ public:
     void setAttenuationPlayer(bool enabled) { mAttenuationPlayer = enabled; }
     bool getAttenuationPlayer()const { return mAttenuationPlayer; }
 
+    void setReflectionsEnabled(bool enabled){mReflectionsEnabled = enabled;}
+    bool getReflectionsEnabled()const{return mReflectionsEnabled;}
+
     void setAdvancedLightingAI(bool enabled){mAdvancedLightingAI = enabled;}
     bool getAdvancedLightingAI()const{return mAdvancedLightingAI;}
 
@@ -347,6 +350,7 @@ private:
     bool mAdvancedLightingPlayer;
     bool mAttenuationPlayer;
     bool mAdvancedLightingAI;
+    bool mReflectionsEnabled;//player car cubemap reflections (desktop only)
 
     Ogre::Real mSoundsGain; //0.0 - 1.0
     Ogre::Real mMusicGain; //0.0 - 1.0

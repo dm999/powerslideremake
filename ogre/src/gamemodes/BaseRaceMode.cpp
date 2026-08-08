@@ -41,12 +41,17 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mShadowLightDistanceFromCar(40.0f),
     mIsGlobalReset(true),
     mRearCamera(0),
+    mReflectionCubeCamera(0),
+    mReflectionCubeFaceIndex(0),
     mUIRace(std::make_shared<UIRace>(modeContext)),
     mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
     ,mDetailsPanel(0)
 #endif
 {
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+        mReflectionCubeRT[q] = NULL;
+
     mFOVNitro.addPoint(0, 90.0f);
     mFOVNitro.addPoint(PhysicsVehicle::mNitroFrames / 2.0f, 120.0f);
     mFOVNitro.addPoint(PhysicsVehicle::mNitroFrames, 90.0f);
@@ -82,6 +87,11 @@ void BaseRaceMode::initData(LoaderListener* loaderListener)
         loaderListener->loadState(0.3f, "terrain loading");
 
     initTerrain(loaderListener);
+
+    if (mModeContext.mGameState.getReflectionsEnabled())
+    {
+        createReflectionCube();
+    }
 
     if(loaderListener)
         loaderListener->loadState(0.8f, "models loading");
@@ -217,6 +227,8 @@ void BaseRaceMode::initCamera()
         mRearCamera->setAspectRatio(mLuaManager.ReadScalarFloat("Scene.Mirror.Aspect", mModeContext.mPipeline));
         mRearCamera->setFOVy(Ogre::Degree(mLuaManager.ReadScalarFloat("Scene.Mirror.FOV", mModeContext.mPipeline)));
     }
+
+    initReflectionCubeCamera();
 
     mUIRace->initTachoNeedleAndPointer(mSceneMgrCarUI, mModeContext.mGameState);
 
@@ -413,6 +425,16 @@ void BaseRaceMode::clearScene()
 
     mSceneMgr->clearScene();
     mModeContext.mWindow->removeAllViewports();
+
+    //d.polubotko: the reflection cube viewports outlive the scene manager (the cubemap
+    //texture is created once) - drop them before their camera is destroyed
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+    {
+        if(mReflectionCubeRT[q])
+            mReflectionCubeRT[q]->removeAllViewports();
+    }
+    mReflectionCubeCamera = NULL;
+
     mSceneMgr->destroyAllCameras();
     mModeContext.mRoot->destroySceneManager(mSceneMgr);
     mSceneMgrCarUI->clearScene();
@@ -548,11 +570,11 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
                     }
             }
 
-            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer());
+            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer(), false);
             mGhost.setVisibility(mTrialGhost.isVisible());
             mGhostVisible = mTrialGhost.isVisible();
 
-            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer());
+            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer(), false);
             mGhostUser.setVisibility(false);
             mGhostUserVisible = false;
         }
@@ -618,6 +640,10 @@ void BaseRaceMode::initMisc()
     {
         mUIRace->setRearViewMirrorPanelShow(false);
     }
+
+    //d.polubotko: player car reflection cubemap
+    mReflectionCubeCamera = NULL;
+    mReflectionCubeFaceIndex = 0;
 
     //as long as last procedure before draw started
     mModeContext.mGameState.resetBeforeStartTimer();
@@ -762,6 +788,11 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_TRIVIAL, "[BaseRaceMode::frameRenderingQueued]: Enter");
+
+    //d.polubotko: the car transform is final for this frame (frameStarted ran the physics
+    //time step, which drives processCamera), so bracket visibility and refresh a cube face
+    //before the window renders
+    updateReflectionCube();
 
     mUIRace->setMiscTextRight(Conversions::DMToString(static_cast<size_t>(mModeContext.mWindow->getAverageFPS())));
 
@@ -1257,6 +1288,11 @@ void BaseRaceMode::unloadResources()
 
     Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+    {
+        mReflectionCubeRT[q] = NULL;
+    }
+
     //Ogre::MaterialManager::getSingleton().removeUnreferencedResources();
     //Ogre::MaterialManager::getSingleton().initialise();
 }
@@ -1345,6 +1381,109 @@ void BaseRaceMode::onLapFinished()
     }
 }
 
+Ogre::Vector3 BaseRaceMode::getReflectionCubeFaceDirection(size_t face)
+{
+    //Ogre cubemap face order: +X, -X, +Y, -Y, +Z, -Z
+    switch(face)
+    {
+    case 0: return Ogre::Vector3(-1.0f,  0.0f,  0.0f);
+    case 1: return Ogre::Vector3( 1.0f,  0.0f,  0.0f);
+    case 2: return Ogre::Vector3( 0.0f,  1.0f,  0.0f);
+    case 3: return Ogre::Vector3( 0.0f, -1.0f,  0.0f);
+    case 4: return Ogre::Vector3( 0.0f,  0.0f,  1.0f);
+    default: break;
+    }
+    return Ogre::Vector3(0.0f, 0.0f, -1.0f);
+}
+
+Ogre::Vector3 BaseRaceMode::getReflectionCubeFaceUp(size_t face)
+{
+    //+Y / -Y faces need a different up vector to stay consistent with the others
+    if(face == 2) return Ogre::Vector3(0.0f, 0.0f, -1.0f);
+    if(face == 3) return Ogre::Vector3(0.0f, 0.0f,  1.0f);
+    return Ogre::Vector3(0.0f, 1.0f, 0.0f);
+}
+
+void BaseRaceMode::createReflectionCube()
+{
+    Ogre::TexturePtr cubeTex = mModeContext.mRoot->getTextureManager()->createManual(
+        "PlayerReflectionCubeTex",
+        TEMP_RESOURCE_GROUP_NAME,
+        Ogre::TEX_TYPE_CUBE_MAP,
+        mReflectionCubeSize, mReflectionCubeSize,
+        0,
+        Ogre::PF_R8G8B8,
+        Ogre::TU_RENDERTARGET);
+
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+    {
+        mReflectionCubeRT[q] = cubeTex->getBuffer(q)->getRenderTarget();
+
+        //driven manually from updateReflectionCube() - never auto updated, and
+        //deliberately no addListener() here (see note in BaseRaceMode.h)
+        mReflectionCubeRT[q]->setAutoUpdated(false);
+    }
+}
+
+void BaseRaceMode::initReflectionCubeCamera()
+{
+    if(!mModeContext.mGameState.getReflectionsEnabled()) return;
+    if(!mReflectionCubeRT[0]) return;
+
+    mReflectionCubeCamera = mSceneMgr->createCamera("PlayerReflectionCamera");
+    mReflectionCubeCamera->setNearClipDistance(0.5f);
+    mReflectionCubeCamera->setFixedYawAxis(false);
+
+    //mandatory for cube faces
+    mReflectionCubeCamera->setAspectRatio(1.0f);
+    mReflectionCubeCamera->setFOVy(Ogre::Degree(90.0f));
+
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+    {
+        Ogre::Viewport * v = mReflectionCubeRT[q]->addViewport(mReflectionCubeCamera);
+        v->setOverlaysEnabled(false);
+        v->setClearEveryFrame(true);
+        v->setBackgroundColour(mModeContext.mGameState.getBackgroundColor());
+    }
+}
+
+void BaseRaceMode::updateReflectionCube()
+{
+    if(!mReflectionCubeCamera) return;
+    if(mModeContext.mGameState.isGamePaused()) return;
+
+    //in bumper cam the car body is not drawn, so its reflection cannot be seen
+    if(mCameraMan.get() && mCameraMan->getCameraPositionType() == CameraPosition_Bumper) return;
+
+    PSPlayerCar& playerCar = mModeContext.mGameState.getPlayerCar();
+
+    Ogre::SceneNode * carNode = playerCar.getModelNode();
+    if(!carNode) return;
+
+    //real save/restore - processCamera rewrites visibility every frame, so do not
+    //re-derive the previous value from the camera position type
+    const bool wasVisible = playerCar.getVisibility();
+
+    playerCar.setVisibility(false);
+    playerCar.setParticlesVisibility(false);
+
+    const Ogre::Vector3 carPos = carNode->_getDerivedPosition();
+
+    //up vector must be applied before aiming, otherwise lookAt uses the previous one
+    mReflectionCubeCamera->setFixedYawAxis(true, getReflectionCubeFaceUp(mReflectionCubeFaceIndex));
+    mReflectionCubeCamera->setPosition(carPos);
+    mReflectionCubeCamera->lookAt(carPos + getReflectionCubeFaceDirection(mReflectionCubeFaceIndex));
+
+    //one face per frame - a full refresh every 6 frames is imperceptible on a
+    //curved moving surface and costs a single extra scene render
+    mReflectionCubeRT[mReflectionCubeFaceIndex]->update(false);
+
+    mReflectionCubeFaceIndex = (mReflectionCubeFaceIndex + 1) % mReflectionCubeFaces;
+
+    playerCar.setVisibility(wasVisible);
+    playerCar.setParticlesVisibility(true);
+}
+
 void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     if(evt.source == mModeContext.mWindow)//for arrow
@@ -1353,7 +1492,9 @@ void BaseRaceMode::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
         mDetailsPanel->show();
 #endif
     }
-    else//rear view mirror
+    //d.polubotko: test the mirror explicitly - other render targets (reflection cubemap)
+    //must not run the mirror logic
+    else if(evt.source == mUIRace->getRearViewMirrorPanelTexture())//rear view mirror
     {
 #if SHOW_DETAILS_PANEL
         mDetailsPanel->hide();
@@ -1373,7 +1514,7 @@ void BaseRaceMode::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
     if(evt.source == mModeContext.mWindow)//for arrow
     {
     }
-    else//rear view mirror
+    else if(evt.source == mUIRace->getRearViewMirrorPanelTexture())//rear view mirror
     {
         if(mCameraMan->getCameraPositionType() != CameraPosition_Bumper)
             mModeContext.mGameState.getPlayerCar().setVisibility(true);

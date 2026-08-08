@@ -14,6 +14,12 @@ varying vec3 L[lightCount];
 varying vec3 V;
 varying vec2 T;
 
+#ifdef useReflection
+uniform samplerCube reflectionMap;
+varying vec3 Rw;
+const float reflectionAmount = 0.25;
+#endif
+
 void main()
 {
 
@@ -37,5 +43,11 @@ void main()
     
     vec3 ambient = matAmbient.xyz * lightAmbient.xyz;
 
+#ifdef useReflection
+    vec3 lit = texture2D(diffuseMap, T).rgb * (ambient + diffuse + specular);
+    vec3 refl = textureCube(reflectionMap, normalize(Rw)).rgb;
+    gl_FragColor = vec4(mix(lit, refl, reflectionAmount), 1.0);
+#else
     gl_FragColor = vec4(texture2D(diffuseMap, T).rgb * (ambient + diffuse + specular), 1.0);
+#endif
 }

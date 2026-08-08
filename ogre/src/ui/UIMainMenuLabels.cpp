@@ -274,11 +274,13 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getGameState().setAdvancedLightingPlayer(true);
             mAttenuationPlayerVal->setActive(true);
+            mReflectionsVal->setActive(true);
         }
         else
         {
             mModeContext.getGameState().setAdvancedLightingPlayer(false);
             mAttenuationPlayerVal->setActive(false);
+            mReflectionsVal->setActive(false);
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -325,6 +327,22 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
 
         mModeContext.getGameState().savePlayerData();
     }
+
+#if !defined(__ANDROID__)
+    if(button == mReflectionsVal)
+    {
+        if(mReflectionsVal->getChecked())
+        {
+            mModeContext.getGameState().setReflectionsEnabled(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setReflectionsEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+#endif
 
 
     if(button == mHighScoresTrackLeft)

@@ -49,6 +49,7 @@ GameState::GameState() :
     mAdvancedLightingPlayer(true),
     mAttenuationPlayer(false),
     mAdvancedLightingAI(false),
+    mReflectionsEnabled(false),
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
     mIsGamePaused(false),
@@ -114,6 +115,13 @@ void GameState::initOriginalData()
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
+#if defined(__ANDROID__)
+                //d.polubotko: reflections are desktop only - the GLES2 varying budget is
+                //already nearly exhausted by the per light varyings (see multilight shaders)
+                mReflectionsEnabled = false;
+#else
+                mReflectionsEnabled = mPlayerSettings.getIntValue("", "reflections", static_cast<int>(mReflectionsEnabled));
+#endif
                 mGamma = mPlayerSettings.getFloatValue("", "gamma", mGamma);
                 mDoUpscale = mPlayerSettings.getIntValue("", "bicubic upscale", static_cast<int>(mDoUpscale));
                 mIsKMPh = mPlayerSettings.getIntValue("", "speedo", static_cast<int>(mIsKMPh));
@@ -233,6 +241,7 @@ void GameState::savePlayerData()
     globalData.adv_lightinig_player = mAdvancedLightingPlayer;
     globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
+    globalData.reflections = mReflectionsEnabled;
     globalData.gamma = mGamma;
     globalData.bicubic_upscale = mDoUpscale;
     globalData.kmph = mIsKMPh;

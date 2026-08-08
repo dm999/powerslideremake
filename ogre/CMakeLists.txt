@@ -2,7 +2,7 @@
 # sample of naming
 # Ogre: OgreMainStatic_d / OgreMainStatic
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 
 #https://github.com/larsch/cmake-precompiled-header
 include(cmake/PrecompiledHeader.cmake)

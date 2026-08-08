@@ -19,6 +19,14 @@ varying vec3 V;
 varying vec2 T;
 varying vec3 C;
 
+#ifdef useReflection
+//world space chain for the cubemap - the lighting above stays in view space
+uniform mat4 modelmatrix;
+uniform mat4 modelnormalmatrix;
+uniform vec3 cameraPositionWorld;
+varying vec3 Rw;
+#endif
+
 void main()
 {
     vec4 P = modelview * position;
@@ -40,6 +48,14 @@ void main()
     V = -P.xyz;
     T = (texturematrix * vec4(uv0, 0.0, 1.0)).xy;
     C = colour.rgb;
+
+#ifdef useReflection
+    vec3 Pw = (modelmatrix * position).xyz;
+    vec3 Nw = normalize(vec3(modelnormalmatrix * vec4(normal, 0.0)));
+    Rw = reflect(normalize(Pw - cameraPositionWorld), Nw);
+    Rw = reflect(Rw, vec3(1.0, 0.0, 0.0));
+#endif
+
     gl_Position = modelviewproj * position;
 }
 

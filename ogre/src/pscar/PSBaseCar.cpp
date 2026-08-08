@@ -336,11 +336,11 @@ void PSBaseCar::initModel(  lua_State * pipeline,
 
     if(isAI)
     {
-        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingAI());
+        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingAI(), false);
     }
     else
     {
-        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingPlayer());
+        initGraphicsModel(pipeline, gameState, sceneMgr, mainNode, modelsPool, characterName, initialVehicleSetup, gameState.getAdvancedLightingPlayer(), true);
     }
     initPhysicalModel(world, mModelNode, mWheelNodes, initialVehicleSetup, gameState.getInputType(), gameState.getAIStrength() == UltraInsane);
 }
