@@ -35,6 +35,12 @@ public:
 
     virtual void processFrameBeforePhysics(const StaticMeshProcesser& processer, bool isRaceStarted);
 
+    //Called during clearScene (before the SceneManager is destroyed). The scene
+    //teardown frees the particle systems/nodes; null the pointers so the guard in
+    //processFrameBeforePhysics does not dereference them before initModel recreates
+    //(or skips, in non-deathmatch modes) them on the next race.
+    virtual void clear() override;
+
     virtual void processCamera(GameState& gameState) override;
 
     void setAcceleration(bool isEnable){mAccelEnabled = isEnable;}
@@ -82,15 +88,21 @@ protected:
 
     Ogre::ParticleSystem* mWheelBackLParticle;
     Ogre::ParticleSystem* mWheelBackRParticle;
+    Ogre::ParticleSystem* mDeadParticle;
+    Ogre::ParticleSystem* mDeadParticle2;
 
     Ogre::SceneNode* mParticleNodeWheelBackL;
     Ogre::SceneNode* mParticleNodeWheelBackR;
+    Ogre::SceneNode* mParticleDead;
+    Ogre::SceneNode* mParticleDead2;
 
 private:
 
     std::vector<Particle> mParticles;
 
     Ogre::String mParticleMaterialName;
+    Ogre::String mParticleMaterialNameDead;
+    Ogre::String mParticleMaterialNameDead2;
 
     static Ogre::NameGenerator nameGenMaterialsParticles;
 
