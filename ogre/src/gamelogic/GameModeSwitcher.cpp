@@ -155,7 +155,12 @@ void GameModeSwitcher::frameEnded()
         if(mGameMode == ModeRaceDeathmatch && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceDeathmatch)
         {
             mContext.setLapController(mPlayerMode->getLapController());
-            mContext.setFinishBoard(FinishBoard::prepareFinishBoard(mContext));
+            //deathmatch statistics (player race time + per-AI elimination times)
+            //are captured on the race mode itself; copy them into the switcher's
+            //ModeContext (each mode holds a private copy, same as lapController
+            //above) so the post-race menu can read them. No finish board is
+            //needed — the stats screen reads getDeathmatchResults().
+            mContext.setDeathmatchResults(mPlayerMode->getDeathmatchResults());
         }
         //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
@@ -242,7 +247,7 @@ void GameModeSwitcher::frameEnded()
             {
                 mGameMode = ModeMenu;
 
-                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Podium);
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_DeathmatchStats);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);

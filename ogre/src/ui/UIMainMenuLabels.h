@@ -68,6 +68,7 @@ protected:
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
     void showPodiumLabels(const finishBoardVec& finishBoard);
+    void showDeathmatchStatsLabels();
     void showLeaderboardLabels(const finishBoardVec& finishBoard);
     void showChampionshipResultsLabels();
     void showMultiIPLabels();

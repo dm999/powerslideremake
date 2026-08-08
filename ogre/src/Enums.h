@@ -46,6 +46,7 @@ enum SinglePlayerMenuStates // multiplayer menus too but before connection happe
     State_Options_Trophies_Video,
     State_StartingGrid,
     State_Podium,
+    State_DeathmatchStats,      //deathmatch post-race statistics screen
     State_Leaderboard,          //championship
     State_FinishChampionship,   //championship
     State_ExitGame

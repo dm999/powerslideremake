@@ -924,6 +924,15 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
         setWindowTitle("Podium");
         break;
 
+    case State_DeathmatchStats:
+        mIsInStartingGrid = false;
+        //no 1st/2nd/3rd podium or character portraits — just the stats table on
+        //the plain main background. Navigation back to the menu is the same Esc /
+        //continue path the podium uses.
+        showDeathmatchStatsLabels();
+        setWindowTitle("Deathmatch");
+        break;
+
     case State_Leaderboard:
         mIsInStartingGrid = false;
         {

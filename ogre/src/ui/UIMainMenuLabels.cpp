@@ -1240,6 +1240,74 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
     }
 }
 
+void UIMainMenuLabels::showDeathmatchStatsLabels()
+{
+    //reuse the podium table widgets (sized to mRaceGridCarsMax) to show
+    //deathmatch statistics: the player's total race time plus each AI's
+    //elimination time (or "Survived"). No finish board / lap times.
+    const deathmatchResultVec& results = mModeContext.getDeathmatchResults();
+
+    std::string playerName = mModeContext.getGameState().getPlayerName();
+
+    //count AI that were still alive at session end for the header banner.
+    size_t survivedAI = 0;
+    for(size_t q = 0; q < results.size(); ++q)
+    {
+        if(!results[q].mIsPlayer && results[q].mSurvived)
+            ++survivedAI;
+    }
+
+    mPodiumTableTitle1Label->setCaption("Survived");
+    mPodiumTableTitle2Label->setCaption("Car");
+    mPodiumTableTitle3Label->setCaption("Time");
+    mPodiumTableTitle4Label->setCaption("Status");
+    mPodiumTableTitle1Label->show();
+    mPodiumTableTitle2Label->show();
+    mPodiumTableTitle3Label->show();
+    mPodiumTableTitle4Label->show();
+
+    const size_t rowsToShow = results.size() < GameState::mRaceGridCarsMax
+                                ? results.size() : GameState::mRaceGridCarsMax;
+    for(size_t q = 0; q < rowsToShow; ++q)
+    {
+        const DeathmatchResultRow& row = results[q];
+
+        //mark eliminated AI rows in red so they stand out from the player
+        //(winner) and any AI still alive at session end.
+        const Ogre::ColourValue rowColour =
+            (!row.mIsPlayer && !row.mSurvived) ? Ogre::ColourValue::Red : Ogre::ColourValue::White;
+
+        mPodiumTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
+        mPodiumTable1Label[q]->setColour(rowColour);
+
+        if(row.mIsPlayer)
+            mPodiumTable2Label[q]->setCaption(playerName);
+        else
+            mPodiumTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(row.mName));
+        mPodiumTable2Label[q]->setColour(rowColour);
+
+        //player and eliminated AI show a time; AI still alive show "Survived".
+        if(row.mSurvived && !row.mIsPlayer)
+            mPodiumTable3Label[q]->setCaption("Survived");
+        else
+            mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
+        mPodiumTable3Label[q]->setColour(rowColour);
+
+        if(row.mIsPlayer)
+            mPodiumTable4Label[q]->setCaption("Winner");
+        else if(row.mSurvived)
+            mPodiumTable4Label[q]->setCaption("Survived");
+        else
+            mPodiumTable4Label[q]->setCaption("Eliminated");
+        mPodiumTable4Label[q]->setColour(rowColour);
+
+        mPodiumTable1Label[q]->show();
+        mPodiumTable2Label[q]->show();
+        mPodiumTable3Label[q]->show();
+        mPodiumTable4Label[q]->show();
+    }
+}
+
 void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
 {
     std::string playerName = mModeContext.getGameState().getPlayerName();

@@ -92,12 +92,20 @@ public:
 
     LapController getLapController() const {return mLapController;}
 
+    //deathmatch post-race statistics (empty in every mode except DeathmatchMode,
+    //which populates it as AI are eliminated). Copied into the switcher's
+    //ModeContext on teardown so the post-race menu can render it — same pattern
+    //as getLapController() above.
+    deathmatchResultVec getDeathmatchResults() const {return mDeathmatchResults;}
+
 protected:
 
     StaticMeshProcesser mStaticMeshProcesser;
     ModelsPool mModelsPool;
 
     LapController mLapController;
+
+    deathmatchResultVec mDeathmatchResults;
 
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
