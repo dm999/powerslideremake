@@ -48,6 +48,35 @@ void DeathmatchMode::carDead(PhysicsVehicle* vehicle)
 
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
         "[DeathmatchMode::carDead]: car eliminated, " + Conversions::DMToString(mAliveCars) + " cars remaining");
+
+    //all AI eliminated — only the player is left alive. End the session the same
+    //way a single race ends on the final lap: snap to the fixed finish camera
+    //(auto-tracking the player), hide the rear-view mirror, show the finish sign
+    //and start the after-finish timer. setRaceFinished(true) lets the existing
+    //GameModeSwitcher teardown (ModeRaceDeathmatch → ModeMenu / State_Podium)
+    //run after its 10s countdown, so no switcher changes are needed here.
+    //The lap-time/hiscore block from BaseRaceMode::onLapFinished is intentionally
+    //omitted — lap times aren't meaningful for deathmatch; the finish board is
+    //already prepared for deathmatch in GameModeSwitcher.
+    if(mAliveCars <= 1)
+    {
+        GameState& gameState = mModeContext.getGameState();
+        if(!gameState.getRaceFinished())
+        {
+            gameState.resetAfterFinishTimer();
+            gameState.getPlayerCar().setDisableMouse(false);
+            mCamera->setPosition(gameState.getSTRPowerslide().getFinishCameraPos(gameState.getTrackName()));
+            if(mUIRace.get())
+            {
+                mUIRace->setRearViewMirrorPanelShow(false);
+                mUIRace->setVisibleFinishSign(true, mLapController.getTotalPosition(0));
+            }
+            gameState.setRaceFinished(true);
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
+                "[DeathmatchMode::carDead]: all AI eliminated, session finishing");
+        }
+    }
 }
 
 void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
