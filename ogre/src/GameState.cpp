@@ -53,6 +53,7 @@ GameState::GameState() :
     mSoundsGain(1.0f),
     mMusicGain(1.0f),
     mIsGamePaused(false),
+    mIsDeathmatch(false),
     mInputType(itKeyboard),
     mIsGhostVisible(true),
     mIsSpeedCheatUsed(false),

@@ -214,6 +214,11 @@ public:
     void resetGamePaused();
     bool isGamePaused()const{return mIsGamePaused;}
 
+    //deathmatch: vehicles have life, collisions deal damage, dead cars explode and are removed.
+    //Inert for all existing modes (life stays at full, no damage applied) unless set by a mode.
+    void setDeathmatch(bool enabled){mIsDeathmatch = enabled;}
+    bool isDeathmatch()const{return mIsDeathmatch;}
+
     InputType getInputType() const {return mInputType;}
     void setInputType(InputType type) {mInputType = type;}
 
@@ -356,6 +361,7 @@ private:
     Ogre::Real mMusicGain; //0.0 - 1.0
 
     bool mIsGamePaused;
+    bool mIsDeathmatch;
 
     InputType mInputType;
 

@@ -23,7 +23,28 @@ PhysicsVehicleAI::PhysicsVehicleAI(Physics* physics,
 void PhysicsVehicleAI::doAIStep(const GameState& gameState)
 {
     if(mAICar)
-        mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+    {
+        //deathmatch: a dead AI (life <= 0) stops driving; a live AI's throttle is
+        //scaled by remaining life. The mLife < 1.0f guard keeps normal-mode AI
+        //(life never reduced) on the original code path.
+        if(mLife < 1.0f)
+        {
+            if(mLife > 0.0f)
+            {
+                mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+                mThrottle = std::max(mLife, 0.0f);
+            }
+            else
+            {
+                mThrottle = 0.0f;
+                mBreaks = 1.0f;
+            }
+        }
+        else
+        {
+            mAICar->performAICorrection(gameState, this, mVehicleSetup, mPhysics->getAfterStartCounter());
+        }
+    }
 }
 
 void PhysicsVehicleAI::setSteering(Ogre::Real value)

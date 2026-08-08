@@ -22,6 +22,9 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
     mPhysicsBody(initialVehicleSetup, physics, meshProesser),
     mCarEngine(initialVehicleSetup),
+    mLife(1.0f),
+    mDeadTicks(0),
+    mExplosionHappened(false),
     mVehicleType(HumanVehicle),
     mThrottle(0.0f),
     mBreaks(0.0f),
@@ -216,6 +219,20 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     reposition();
     rerotation();
+
+    //deathmatch: once life is gone, count dead ticks and apply a one-shot explosion
+    //impulse. Guarded by mLife so normal modes (life stays at 1.0) never enter here.
+    if(mLife <= 0.0f)
+    {
+        ++mDeadTicks;
+
+        if(!mExplosionHappened)
+        {
+            Ogre::Vector3 linearImpulse(0.0f, 75.0f * 0.013333334f * 150.0f, 0.0f);
+            adjustImpulseInc(Ogre::Vector3::ZERO, linearImpulse);
+            mExplosionHappened = true;
+        }
+    }
 }
 
 Ogre::Real PhysicsVehicle::adjustSteering()
@@ -695,4 +712,9 @@ void PhysicsVehicle::zeroImpulses()
     mImpulseLinearInc = Ogre::Vector3::ZERO;
     mImpulseRot = Ogre::Vector3::ZERO;
     mImpulseRotInc = Ogre::Vector3::ZERO;
+}
+
+void PhysicsVehicle::setLife(Ogre::Real life)
+{
+    mLife = life;
 }
