@@ -30,7 +30,8 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                             ModelsPool* modelsPool,
                             const std::string& characterName,
                             const InitialVehicleSetup& initialVehicleSetup,
-                            bool isAdvancedLighting)
+                            bool isAdvancedLighting,
+                            bool isUser)
 {
 
     mCharacterName = characterName;
@@ -40,6 +41,11 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
     std::string genTextureName = nameGenTextures.generate();
     std::string carName = loadTexture(gameState, genTextureName);
     modelsPool->getCopyOfVehicle(gameState, carName, mModelEntity);
+
+    //d.polubotko: debug reflections with sphere
+    //std::string tmpMatName =  mModelEntity[0]->getSubEntity(0)->getMaterialName();
+    //mModelEntity[0] = sceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
+    //mModelEntity[0]->setMaterialName(tmpMatName);
 
     bool isAttenuateExcludeBox = gameState.getAttenuationPlayer();
 
@@ -79,7 +85,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
                     }
 
                     //d.polubotko: reflection variant for the chassis only, not wheels
-                    if(q == 0 && gameState.getReflectionsEnabled())
+                    if(q == 0 && gameState.getReflectionsEnabled() && isUser)
                     {
                         playerMaterial += "Refl";
                     }
@@ -133,7 +139,7 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
 
                 //d.polubotko: belt-and-braces for the reflection cubemap on unit 1.
                 //The .material script already declares it, but CloneMaterial bypasses it
-                if(q == 0 && gameState.getReflectionsEnabled())
+                if(q == 0 && gameState.getReflectionsEnabled() && isAdvancedLighting && isUser)
                 {
                     Ogre::TextureUnitState * cubemapUnit = newMat->getTechnique(0)->getPass(0)->getTextureUnitState(1);
                     if(cubemapUnit)
@@ -148,6 +154,9 @@ void PSBaseGraphicsVehicle::initGraphicsModel(  lua_State * pipeline,
     for(int q = 0; q < InitialVehicleSetup::mWheelsAmount + 1; ++q)
     {
         Ogre::SceneNode* modelNode = mainNode->createChildSceneNode();
+
+        //d.polubotko: debug reflections with sphere
+        //if(q == 0) modelNode->setScale(0.1f, 0.1f, 0.1f);
 
         modelNode->attachObject(mModelEntity[q]);
 

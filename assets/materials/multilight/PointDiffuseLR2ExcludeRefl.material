@@ -46,8 +46,8 @@ material Test/Multi_2/PointDiffuseLRExcludeRefl
                 param_named_auto lightPosition light_position_view_space_array 5
 
                 //world space chain for the cubemap reflection
-                param_named_auto worldmatrix world_matrix
-                param_named_auto worldnormalmatrix inverse_transpose_world_matrix
+                param_named_auto modelmatrix world_matrix
+                param_named_auto modelnormalmatrix inverse_transpose_world_matrix
                 param_named_auto cameraPositionWorld camera_position
 
             }

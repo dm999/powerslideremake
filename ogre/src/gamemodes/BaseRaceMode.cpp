@@ -570,11 +570,11 @@ void BaseRaceMode::initModel(LoaderListener* loaderListener)
                     }
             }
 
-            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer());
+            mGhost.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mTrialGhost.getCharacterName(), vehSetup, mModeContext.getGameState().getAdvancedLightingPlayer(), false);
             mGhost.setVisibility(mTrialGhost.isVisible());
             mGhostVisible = mTrialGhost.isVisible();
 
-            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer());
+            mGhostUser.initGraphicsModel(mModeContext.mPipeline, mModeContext.mGameState, mSceneMgr, mMainNode, &mModelsPool, mModeContext.mGameState.getPlayerCar().getCharacterName(), mModeContext.mGameState.getInitialVehicleSetup()[0], mModeContext.getGameState().getAdvancedLightingPlayer(), false);
             mGhostUser.setVisibility(false);
             mGhostUserVisible = false;
         }
@@ -644,24 +644,6 @@ void BaseRaceMode::initMisc()
     //d.polubotko: player car reflection cubemap
     mReflectionCubeCamera = NULL;
     mReflectionCubeFaceIndex = 0;
-
-    if(mModeContext.mGameState.getReflectionsEnabled())
-    {
-        if(mIsGlobalReset)
-        {
-            //createReflectionCube();
-        }
-        else
-        {
-            //cameras are per race (destroyed with the scene manager) while the cubemap
-            //texture is created once - drop the stale viewports before adding new ones
-            for(size_t q = 0; q < mReflectionCubeFaces; ++q)
-            {
-                if(mReflectionCubeRT[q])
-                    mReflectionCubeRT[q]->removeAllViewports();
-            }
-        }
-    }
 
     //as long as last procedure before draw started
     mModeContext.mGameState.resetBeforeStartTimer();
@@ -1306,6 +1288,11 @@ void BaseRaceMode::unloadResources()
 
     Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(TEMP_RESOURCE_GROUP_NAME);
 
+    for(size_t q = 0; q < mReflectionCubeFaces; ++q)
+    {
+        mReflectionCubeRT[q] = NULL;
+    }
+
     //Ogre::MaterialManager::getSingleton().removeUnreferencedResources();
     //Ogre::MaterialManager::getSingleton().initialise();
 }
@@ -1399,8 +1386,8 @@ Ogre::Vector3 BaseRaceMode::getReflectionCubeFaceDirection(size_t face)
     //Ogre cubemap face order: +X, -X, +Y, -Y, +Z, -Z
     switch(face)
     {
-    case 0: return Ogre::Vector3( 1.0f,  0.0f,  0.0f);
-    case 1: return Ogre::Vector3(-1.0f,  0.0f,  0.0f);
+    case 0: return Ogre::Vector3(-1.0f,  0.0f,  0.0f);
+    case 1: return Ogre::Vector3( 1.0f,  0.0f,  0.0f);
     case 2: return Ogre::Vector3( 0.0f,  1.0f,  0.0f);
     case 3: return Ogre::Vector3( 0.0f, -1.0f,  0.0f);
     case 4: return Ogre::Vector3( 0.0f,  0.0f,  1.0f);
@@ -1412,9 +1399,9 @@ Ogre::Vector3 BaseRaceMode::getReflectionCubeFaceDirection(size_t face)
 Ogre::Vector3 BaseRaceMode::getReflectionCubeFaceUp(size_t face)
 {
     //+Y / -Y faces need a different up vector to stay consistent with the others
-    if(face == 2) return Ogre::Vector3(0.0f, 0.0f,  1.0f);
-    if(face == 3) return Ogre::Vector3(0.0f, 0.0f, -1.0f);
-    return Ogre::Vector3(0.0f, -1.0f, 0.0f);
+    if(face == 2) return Ogre::Vector3(0.0f, 0.0f, -1.0f);
+    if(face == 3) return Ogre::Vector3(0.0f, 0.0f,  1.0f);
+    return Ogre::Vector3(0.0f, 1.0f, 0.0f);
 }
 
 void BaseRaceMode::createReflectionCube()

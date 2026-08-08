@@ -314,7 +314,7 @@ void UIMainMenuLabels::createLabelsOptionsGraphics(const Ogre::Matrix4& screenAd
     {
         mReflectionsVal = mUIButtonTicksManager.add("mGraphics");
         mReflectionsVal->loadBackground("OriginalButtonTick");
-        mReflectionsVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 282.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getReflectionsEnabled(), true);
+        mReflectionsVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 282.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getReflectionsEnabled(), mModeContext.getGameState().getAdvancedLightingPlayer());
         mReflectionsVal->setButtonOnAction(this);
     }
 #endif
