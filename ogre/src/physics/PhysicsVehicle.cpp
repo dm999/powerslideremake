@@ -104,7 +104,12 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     doAIStep(gameState);
     mPhysicsWheels.setSteering(adjustSteering());
 
-    integrate();
+    //batched start: a car that hasn't been released (raceStarted()) stays parked
+    //on the grid — don't integrate its physics so it doesn't drift before launch.
+    if(mIsRaceStarted)
+    {
+        integrate();
+    }
 
     Ogre::Real velScale = mVehicleSetup.mVelocityScale * doGetVelocityScale();
 
@@ -161,7 +166,10 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     mImpulseLinearInc.y += mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
 
-    integrate();
+    if(mIsRaceStarted)
+    {
+        integrate();
+    }
 
     calcWheelRoofImpulses();
 

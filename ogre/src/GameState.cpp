@@ -35,7 +35,10 @@ GameState::GameState() :
     mPatchDataInited(false),
     mAiOpponentsAmount(3),
     mAiOpponentsAmountInRace(3),
+    mIsMassacreEnabled(false),
+    mRaceGridBatches(mBatchesMin),
     mAIStrength(Easy),
+    mPSCar(mAIMax),
     mLLTObject(NULL),
     mGlobalLight(NULL),
     mShadowLight(NULL),
@@ -104,6 +107,7 @@ void GameState::initOriginalData()
                 mMusicGain = static_cast<float>(mPlayerSettings.getIntValue("", "sound cd volume", 9)) / 9.0f;
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
                 setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
+                mRaceGridBatches = mPlayerSettings.getIntValue("", "race grid batches", mBatchesMin);
                 if (!mIsSafeRun)
                 {
                     mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
@@ -113,6 +117,7 @@ void GameState::initOriginalData()
                 mIsCastShadows = mPlayerSettings.getIntValue("", "shadows", static_cast<int>(mIsCastShadows));
                 mIsMirrorEnabled = mPlayerSettings.getIntValue("", "mirror", static_cast<int>(mIsMirrorEnabled));
                 mIsGhostEnabled = mPlayerSettings.getIntValue("", "ghost", static_cast<int>(mIsGhostEnabled));
+                mIsMassacreEnabled = mPlayerSettings.getIntValue("", "massacre", static_cast<int>(mIsMassacreEnabled));
                 mAdvancedLightingPlayer = mPlayerSettings.getIntValue("", "adv lighting player", static_cast<int>(mAdvancedLightingPlayer));
                 mAttenuationPlayer = mPlayerSettings.getIntValue("", "attenuation player", static_cast<int>(mAttenuationPlayer));
                 mAdvancedLightingAI = mPlayerSettings.getIntValue("", "adv lighting ai", static_cast<int>(mAdvancedLightingAI));
@@ -228,6 +233,7 @@ void GameState::savePlayerData()
     STRPlayerSettings::GlobalData globalData;
     globalData.playerName = mPlayerName;
     globalData.numOpponents = mAiOpponentsAmount;
+    globalData.raceGridBatches = mRaceGridBatches;
 
     Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
     Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
@@ -239,6 +245,7 @@ void GameState::savePlayerData()
     globalData.shadows = mIsCastShadows;
     globalData.mirror = mIsMirrorEnabled;
     globalData.ghost = mIsGhostEnabled;
+    globalData.massacre = mIsMassacreEnabled;
     globalData.adv_lightinig_player = mAdvancedLightingPlayer;
     globalData.attenuation_player = mAttenuationPlayer;
     globalData.adv_lightinig_ai = mAdvancedLightingAI;
@@ -772,12 +779,17 @@ bool GameState::loadLUTs()
 
 void GameState::setAICount(size_t opponentsAmount)
 {
-    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mAIMax);
+    mAiOpponentsAmount = Ogre::Math::Clamp<size_t>(opponentsAmount, mAIMin, mOpponentsMax);
 }
 
 void GameState::setAICountInRace(size_t opponentsAmount)
 {
     mAiOpponentsAmountInRace = Ogre::Math::Clamp<size_t>(opponentsAmount, 0, mAIMax);
+}
+
+void GameState::setRaceGridBatches(size_t batches)
+{
+    mRaceGridBatches = Ogre::Math::Clamp<size_t>(batches, mBatchesMin, mBatchesMax);
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

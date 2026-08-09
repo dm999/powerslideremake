@@ -228,7 +228,7 @@ void AIUtils::calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& game
     int closestOtherCarIndex = 0;
 
     std::vector<const PhysicsVehicle*> cars;
-    cars.reserve(GameState::mRaceGridCarsMax);
+    cars.reserve(gameState.getAICountInRace() + 1); //massacre: field can be much larger than the 12-slot grid
 
     cars.push_back(gameState.getPlayerCar().getPhysicsVehicle());
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)

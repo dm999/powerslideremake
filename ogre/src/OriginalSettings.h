@@ -203,12 +203,14 @@ public:
         std::string track;
         std::string character;
         Ogre::uint32 numOpponents;
+        Ogre::uint32 raceGridBatches;   //massacre sub-mode: number of 11-AI batches to generate (deathmatch only)
         std::string resolution;
         bool vsync;
         bool fullscreen;
         bool shadows;
         bool mirror;
         bool ghost;
+        bool massacre;                  //deathmatch sub-mode: build the field in batches of 11 AI + player
         bool adv_lightinig_player;
         bool attenuation_player;
         bool adv_lightinig_ai;

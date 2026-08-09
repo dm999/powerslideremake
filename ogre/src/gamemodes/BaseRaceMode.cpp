@@ -946,8 +946,12 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 void BaseRaceMode::beforeStartSequence()
 {
-    if( !mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f && 
+    const Ogre::Real readyTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "ready left start") * 1000.0f;
+    const Ogre::Real setTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f;
+    const Ogre::Real goTime = mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f;
+
+    if( !mModeContext.mGameState.getRaceStarted() &&
+        mModeContext.mGameState.getBeforeStartTimerTime() > readyTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->setRearViewMirrorPanelShow(false);
@@ -958,8 +962,8 @@ void BaseRaceMode::beforeStartSequence()
 #endif
     }
 
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "set left start") * 1000.0f && 
+    if(!mModeContext.mGameState.getRaceStarted() &&
+        mModeContext.mGameState.getBeforeStartTimerTime() > setTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
@@ -969,8 +973,8 @@ void BaseRaceMode::beforeStartSequence()
 #endif
     }
 
-    if(!mModeContext.mGameState.getRaceStarted() && 
-        mModeContext.mGameState.getBeforeStartTimerTime() > mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f && 
+    if(!mModeContext.mGameState.getRaceStarted() &&
+        mModeContext.mGameState.getBeforeStartTimerTime() > goTime &&
         !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
@@ -979,10 +983,25 @@ void BaseRaceMode::beforeStartSequence()
         mModeContext.mSoundsProcesser.playBeforeStart3();
 #endif
 
-        mModeContext.mGameState.getPlayerCar().raceStarted();
-        for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+        //Batched start (massacre). A normal grid (getAICountInRace() <
+        //mRaceGridCarsMax, i.e. <= 11 AI) releases everyone at GO. A massacre
+        //field (>= mRaceGridCarsMax) releases only the first batch of mBatchSize
+        //(11) AI here and defers the remaining batches + the player to the timed
+        //release below — each batch takes its turn at the 12 start slots.
+        if(mModeContext.mGameState.getAICountInRace() < GameState::mRaceGridCarsMax)
         {
-            mModeContext.mGameState.getAICar(q).raceStarted();
+            mModeContext.mGameState.getPlayerCar().raceStarted();
+            for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
+            {
+                mModeContext.mGameState.getAICar(q).raceStarted();
+            }
+        }
+        else
+        {
+            for(size_t q = 0; q < GameState::mBatchSize; ++q)
+            {
+                mModeContext.mGameState.getAICar(q).raceStarted();
+            }
         }
 
         customFrameRenderingQueuedDoRaceStarted();
@@ -1001,7 +1020,58 @@ void BaseRaceMode::beforeStartSequence()
         mModeContext.mGameState.setRaceStarted(true);
     }
 
-    if(mModeContext.mGameState.getBeforeStartTimerTime() > (mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left start") * 1000.0f + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
+    //Timed release of the remaining AI batches and the player. Cars beyond the
+    //first batch are staged behind the start grid by the PHYLoader +16 clone
+    //stagger; on release each batch is repositioned forward (pos.y -= 16*q) to
+    //the start line. The player rides in the final batch (q = batchAmount-1),
+    //i.e. at the very back, and is released last. Per-car !getRaceStarted()
+    //guards make this a no-op for batches=1 (everyone released at GO) and
+    //prevent double-release. batchTime is compressed for large fields.
+    {
+        const size_t aiCount = mModeContext.mGameState.getAICountInRace();
+        const size_t batchAmount = aiCount / GameState::mBatchSize; //number of full 11-AI batches (B)
+        const Ogre::Real posDiff = 16.0f;
+        Ogre::Real batchTime = goTime;
+        if(aiCount > 100) { batchTime /= 1.5f; if(aiCount > 200) batchTime /= 1.5f; }
+
+        //batches 1..B-1. The last of these (q = batchAmount-1) also releases the
+        //player, who sits at the very back of the field.
+        for(size_t q = 1; q < batchAmount; ++q)
+        {
+            if(mModeContext.mGameState.getRaceStarted() &&
+                mModeContext.mGameState.getBeforeStartTimerTime() > (1.0f + q) * batchTime &&
+                mModeContext.mGameState.getBeforeStartTimerTime() < (2.0f + q) * batchTime &&
+                !mModeContext.mGameState.isGamePaused())
+            {
+                const size_t batchBegin = GameState::mBatchSize * q;
+                const size_t batchEnd = GameState::mBatchSize * (q + 1);
+                for(size_t w = batchBegin; w < batchEnd && w < aiCount; ++w)
+                {
+                    if(!mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->getRaceStarted())
+                    {
+                        mModeContext.mGameState.getAICar(w).getPhysicsVehicle()->zeroImpulses();
+                        mModeContext.mGameState.getAICar(w).raceStarted();
+                        Ogre::Vector3 pos = mModeContext.mGameState.getAICar(w).getModelNode()->getPosition();
+                        pos.y -= posDiff * q;
+                        mModeContext.mGameState.getAICar(w).repositionVehicle(pos, mModeContext.mGameState.getAICar(w).getModelNode()->getOrientation());
+                    }
+                }
+
+                //the final batch releases the player too (player at the very back).
+                if(q + 1 == batchAmount &&
+                    !mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getRaceStarted())
+                {
+                    mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->zeroImpulses();
+                    mModeContext.mGameState.getPlayerCar().raceStarted();
+                    Ogre::Vector3 pos = mModeContext.mGameState.getPlayerCar().getModelNode()->getPosition();
+                    pos.y -= posDiff * q;
+                    mModeContext.mGameState.getPlayerCar().repositionVehicle(pos, mModeContext.mGameState.getPlayerCar().getModelNode()->getOrientation());
+                }
+            }
+        }
+    }
+
+    if(mModeContext.mGameState.getBeforeStartTimerTime() > (goTime + mModeContext.mGameState.getSTRRacecrud().getFloatValue("on-grid parameters", "go left length") * 1000.0f) && !mModeContext.mGameState.isGamePaused())
     {
         mUIRace->hideAllStart();
 

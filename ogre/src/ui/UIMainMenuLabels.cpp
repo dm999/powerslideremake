@@ -232,7 +232,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
         ++aiCount;
-        if(aiCount <= GameState::mAIMax)
+        if(aiCount <= GameState::mOpponentsMax)
         {
             mModeContext.getGameState().setAICount(aiCount);
             mModeContext.getGameState().setAICountInRace(aiCount);
@@ -265,6 +265,49 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         else
         {
             mModeContext.getGameState().setGhostEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mMassacreVal)
+    {
+        //massacre sub-mode (deathmatch only): toggle building the field in
+        //batches of 11 AI + player. The opponents slider is ignored while
+        //massacre is on — the field size comes from the batches slider.
+        if(mMassacreVal->getChecked())
+        {
+            mModeContext.getGameState().setMassacreEnabled(true);
+        }
+        else
+        {
+            mModeContext.getGameState().setMassacreEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mBatchesValLeft)
+    {
+        size_t batches = mModeContext.getGameState().getRaceGridBatches();
+        --batches;
+        if(batches >= GameState::mBatchesMin)
+        {
+            mModeContext.getGameState().setRaceGridBatches(batches);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mBatchesValRight)
+    {
+        size_t batches = mModeContext.getGameState().getRaceGridBatches();
+        ++batches;
+        if(batches <= GameState::mBatchesMax)
+        {
+            mModeContext.getGameState().setRaceGridBatches(batches);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -582,7 +625,15 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
             }
             else
             {
-                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+                //massacre (deathmatch only): field size comes from the batches
+                //slider, not the opponents slider. Gate on the deathmatch menu
+                //mode so a persisted massacre toggle doesn't bleed into single
+                //race / championship started from the character-select screen.
+                GameState& gameState = mModeContext.getGameState();
+                const size_t aiCount = (mGameModeSelected == ModeMenuDeathmatch && gameState.getMassacreEnabled())
+                    ? GameState::mBatchSize * gameState.getRaceGridBatches()
+                    : gameState.getAICount();
+                gameState.setAICountInRace(aiCount);
                 switchState(State_StartingGrid);
             }
         }
@@ -1173,6 +1224,18 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mUIButtonsManager.show("mOptionRace");
     mUIButtonTicksManager.show("mOptionRace");
     mUILabelsManager.show("mOptionRace");
+
+    //massacre sub-mode rows (Massacre checkbox + Racing grid batches slider)
+    //are deathmatch-only. hideAllLabels() (called on every state switch) hides
+    //everything first, so here we just additionally show the massacre group when
+    //deathmatch is the selected menu mode — it stays hidden for every other mode.
+    //Mirrors the isDeathmatch track-filter gate in showTrackLabels.
+    if(mGameModeSelected == ModeMenuDeathmatch)
+    {
+        mUIButtonsManager.show("mOptionRaceDM");
+        mUIButtonTicksManager.show("mOptionRaceDM");
+        mUILabelsManager.show("mOptionRaceDM");
+    }
 }
 
 void UIMainMenuLabels::showOptionHiscoreLabels()
@@ -1206,7 +1269,12 @@ void UIMainMenuLabels::showExitLabels(const std::string& title)
 
 void UIMainMenuLabels::showRaceGridCharactersLabels()
 {
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    //the grid number labels are a fixed mRaceGridCarsMax (12) array; a massacre
+    //field is larger, so show only the first 12 (matches the portrait strip in
+    //showBackgroundCharacterSmall).
+    const size_t totalCars = mModeContext.getGameState().getAICountInRace() + 1;
+    const size_t carsToShow = totalCars < GameState::mRaceGridCarsMax ? totalCars : GameState::mRaceGridCarsMax;
+    for(size_t q = 0; q < carsToShow; ++q)
     {
         mRaceGridCharactersLabel[q]->show();
     }

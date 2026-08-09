@@ -151,4 +151,63 @@ void UIMainMenuLabels::createLabelsOptionsRace(const Ogre::Matrix4& screenAdapti
         mGhostVal->setButtonOnAction(this);
     }
 
+    //Options Race Massacre (deathmatch-only sub-mode). Uses the "mOptionRaceDM"
+    //group so showOptionRaceLabels() can show/hide these rows only when the
+    //deathmatch menu mode is selected (see the isDeathmatch gate there).
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 162.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionRaceDM");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Massacre");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        mMassacreVal = mUIButtonTicksManager.add("mOptionRaceDM");
+        mMassacreVal->loadBackground("OriginalButtonTick");
+        mMassacreVal->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(194.0f + buttonLeftAdj, 162.0f + buttonTopAdj, buttonSize, buttonSize), mModeContext.getGameState().getMassacreEnabled(), true);
+        mMassacreVal->setButtonOnAction(this);
+    }
+
+    //Options Race Racing Grid Batches (massacre: how many 11-AI batches to generate)
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 182.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionRaceDM");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Racing grid batches");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 182.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_Batches_Val = mUILabelsManager.add("mOptionRaceDM");
+        mOptionRaceLabel_Batches_Val->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mOptionRaceLabel_Batches_Val->setFixed(true);
+        mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
+        mOptionRaceLabel_Batches_Val->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Batches_Val->getTextArea()->setSpaceWidth(9.0f);
+        mOptionRaceLabel_Batches_Val->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_Batches_Val->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mOptionRaceLabel_Batches_Val->getTextArea());
+    }
+    {
+        mBatchesValLeft = mUIButtonsManager.add("mOptionRaceDM");
+        mBatchesValLeft->setBackgroundMaterial(mInputTypeValLeft->getMaterialName());
+        mBatchesValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 182.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mBatchesValLeft->setButtonOnAction(this);
+
+        mBatchesValRight = mUIButtonsManager.add("mOptionRaceDM");
+        mBatchesValRight->setBackgroundMaterial(mInputTypeValRight->getMaterialName());
+        mBatchesValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 182.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mBatchesValRight->setButtonOnAction(this);
+    }
+
 }
