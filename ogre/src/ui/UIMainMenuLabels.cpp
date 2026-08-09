@@ -1,6 +1,8 @@
 
 #include "UIMainMenuLabels.h"
 
+#include <algorithm>
+
 #include "../tools/Conversions.h"
 
 #include "../gamelogic/GameModeSwitcher.h"
@@ -1270,11 +1272,19 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
     mPodiumTableTitle3Label->show();
     mPodiumTableTitle4Label->show();
 
-    const size_t rowsToShow = results.size() < GameState::mRaceGridCarsMax
-                                ? results.size() : GameState::mRaceGridCarsMax;
+    //order rows: survivors at the top, eliminated AI at the bottom.
+    //Among survivors the player (winner) comes first, then surviving AI.
+    //Among eliminated AI, the latest-eliminated (largest elimination time)
+    //ranks highest and the earliest-eliminated (smallest time) sinks to the
+    //bottom — so the table reads best-to-worst survival downward.
+    deathmatchResultVec sortedResults = results;
+    std::sort(sortedResults.begin(), sortedResults.end(), DeathmatchResultRow::sortByRank);
+
+    const size_t rowsToShow = sortedResults.size() < GameState::mRaceGridCarsMax
+                                ? sortedResults.size() : GameState::mRaceGridCarsMax;
     for(size_t q = 0; q < rowsToShow; ++q)
     {
-        const DeathmatchResultRow& row = results[q];
+        const DeathmatchResultRow& row = sortedResults[q];
 
         //mark eliminated AI rows in red so they stand out from the player
         //(winner) and any AI still alive at session end.

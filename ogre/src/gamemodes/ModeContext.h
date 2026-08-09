@@ -25,6 +25,27 @@ struct DeathmatchResultRow
     DeathmatchResultRow() : mIsPlayer(false), mTime(-1.0f), mSurvived(false){}
     DeathmatchResultRow(const std::string& name, bool isPlayer, Ogre::Real time, bool survived)
         : mName(name), mIsPlayer(isPlayer), mTime(time), mSurvived(survived){}
+
+    //ranking for the post-race statistics table: survivors above eliminated,
+    //the player (winner) first among survivors, and among eliminated AI the
+    //latest-eliminated (largest elimination time) above the earliest-eliminated
+    //(smallest time) — so the table reads best-to-worst survival downward.
+    static bool sortByRank(const DeathmatchResultRow& a, const DeathmatchResultRow& b)
+    {
+        //survivors rank above the eliminated.
+        if(a.mSurvived != b.mSurvived) return a.mSurvived;
+        if(a.mSurvived)
+        {
+            //both survived: the player (winner) comes first.
+            if(a.mIsPlayer != b.mIsPlayer) return a.mIsPlayer;
+            //surviving AI: deterministic order by name.
+            return a.mName < b.mName;
+        }
+        //both eliminated: later elimination (larger time) ranks higher,
+        //earlier elimination (smaller time) sinks to the bottom.
+        if(a.mTime != b.mTime) return a.mTime > b.mTime;
+        return a.mName < b.mName;
+    }
 };
 typedef std::vector<DeathmatchResultRow> deathmatchResultVec;
 
