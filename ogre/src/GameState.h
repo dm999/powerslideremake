@@ -238,7 +238,7 @@ public:
 
     //deathmatch: vehicles have life, collisions deal damage, dead cars explode and are removed.
     //Inert for all existing modes (life stays at full, no damage applied) unless set by a mode.
-    void setDeathmatch(bool enabled){mIsDeathmatch = enabled;}
+    void setDeathmatch(bool enabled){mIsDeathmatch = enabled; mLapsCount = mIsDeathmatch ? mIsMassacreEnabled ? mMassacreLapsOverride : mSTRPowerslide.getLapsCount(mTrackName) : mSTRPowerslide.getLapsCount(mTrackName);}
     bool isDeathmatch()const{return mIsDeathmatch;}
 
     InputType getInputType() const {return mInputType;}
@@ -334,6 +334,7 @@ private:
     size_t mAiOpponentsAmountInRace;
     //massacre sub-mode (deathmatch only)
     bool mIsMassacreEnabled;
+    static const size_t mMassacreLapsOverride = 99;
     size_t mRaceGridBatches;
     std::vector<std::string> mAICharacters;
     AIStrength mAIStrength;

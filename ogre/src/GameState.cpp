@@ -336,7 +336,7 @@ void GameState::setRaceParameters(const std::string& trackName, AIStrength aiStr
     mBackgroundColor.g = Ogre::Math::Pow(mBackgroundColor.g, 1.0f / mGamma);
     mBackgroundColor.b = Ogre::Math::Pow(mBackgroundColor.b, 1.0f / mGamma);
 
-    mLapsCount = lapsCount;
+    mLapsCount = mIsDeathmatch ? mIsMassacreEnabled ? mMassacreLapsOverride : lapsCount : lapsCount;
 }
 
 bool GameState::isSupercar() const
