@@ -1381,8 +1381,12 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
 
         //every row shows a time: the player's total race time, the race clock
         //at session end for survived AI, or the race clock at elimination for
-        //dead AI.
-        mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
+        //dead AI. A player who survived but didn't complete all laps (DNF —
+        //AI finished their laps first) shows "DNF" instead of a time.
+        if(row.mTime < 0.0f)
+            mPodiumTable3Label[q]->setCaption("DNF");
+        else
+            mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
         mPodiumTable3Label[q]->setColour(rowColour);
 
         //status colour: winner green, loser red, survived yellow. Eliminated

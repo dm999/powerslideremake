@@ -84,7 +84,7 @@ void DeathmatchMode::carDead(PhysicsVehicle* vehicle)
         {
             //capture the statistics from the live race clock before the finish
             //sequence freezes session state.
-            fillDeathmatchResults();
+            fillDeathmatchResults(true);
             finishDeathmatchSession();
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
@@ -93,7 +93,7 @@ void DeathmatchMode::carDead(PhysicsVehicle* vehicle)
     }
 }
 
-void DeathmatchMode::fillDeathmatchResults()
+void DeathmatchMode::fillDeathmatchResults(bool isPlayerFinished)
 {
     GameState& gameState = mModeContext.getGameState();
 
@@ -111,10 +111,28 @@ void DeathmatchMode::fillDeathmatchResults()
     //mode itself (mDeathmatchResults, inherited from BaseRaceMode);
     //GameModeSwitcher copies it into its own ModeContext on teardown, since
     //each mode holds a private copy of ModeContext.
+    //
+    //DNF: if the session ended because all alive AI finished their laps before
+    //the player crossed the final finish line, the player didn't actually
+    //complete the race — show "DNF" in the time column instead of the race
+    //clock. When all AI were eliminated (carDead path), the player wins by
+    //default regardless of lap progress, so the race clock stands.
+
+    bool anyAISurvived = false;
+    for(size_t q = 0; q < aiCount; ++q)
+    {
+        if(q >= mEliminationTimes.size() || mEliminationTimes[q] < 0.0f)
+        {
+            anyAISurvived = true;
+            break;
+        }
+    }
+    const Ogre::Real playerTime = (!isPlayerFinished && anyAISurvived) ? -1.0f : raceClock;
+
     deathmatchResultVec results;
     results.reserve(aiCount + 1);
     results.push_back(DeathmatchResultRow(
-        gameState.getPlayerName(), true, raceClock, true));
+        gameState.getPlayerName(), true, playerTime, true));
     for(size_t q = 0; q < aiCount; ++q)
     {
         const bool survived = (q >= mEliminationTimes.size() || mEliminationTimes[q] < 0.0f);
@@ -144,7 +162,7 @@ void DeathmatchMode::onLapFinished()
     //deathmatch ended by the player finishing the last lap (AI still alive)
     //would render an empty stats table.
     if(mModeContext.getGameState().getRaceFinished())
-        fillDeathmatchResults();
+        fillDeathmatchResults(true);
 }
 
 void DeathmatchMode::finishDeathmatchSession()
@@ -219,7 +237,7 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
         {
             //capture the statistics from the live race clock before the finish
             //sequence freezes session state.
-            fillDeathmatchResults();
+            fillDeathmatchResults(false);
             finishDeathmatchSession();
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,

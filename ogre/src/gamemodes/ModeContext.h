@@ -30,13 +30,20 @@ struct DeathmatchResultRow
     //the player (winner) first among survivors, and among eliminated AI the
     //latest-eliminated (largest elimination time) above the earliest-eliminated
     //(smallest time) — so the table reads best-to-worst survival downward.
+    //A survivor with a valid finish time (mTime >= 0) ranks above a DNF
+    //survivor (mTime < 0, didn't complete all laps) — so a player who DNF'd
+    //drops below any AI that actually finished.
     static bool sortByRank(const DeathmatchResultRow& a, const DeathmatchResultRow& b)
     {
         //survivors rank above the eliminated.
         if(a.mSurvived != b.mSurvived) return a.mSurvived;
         if(a.mSurvived)
         {
-            //both survived: the player (winner) comes first.
+            //a valid finish time (>= 0) ranks above a DNF (< 0).
+            const bool aHasTime = (a.mTime >= 0.0f);
+            const bool bHasTime = (b.mTime >= 0.0f);
+            if(aHasTime != bHasTime) return aHasTime;
+            //both in the same category: the player comes first.
             if(a.mIsPlayer != b.mIsPlayer) return a.mIsPlayer;
             //surviving AI: deterministic order by name.
             return a.mName < b.mName;

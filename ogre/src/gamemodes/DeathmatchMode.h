@@ -41,7 +41,7 @@ public:
     //by GameModeSwitcher at teardown when the player Esc-quits early — in that
     //case neither natural path ran, so the results would otherwise be empty and
     //the post-race statistics screen would show no table.
-    void fillDeathmatchResults();
+    void fillDeathmatchResults(bool isPlayerFinished);
 
     //Shared session-end sequence: snap to the fixed finish camera (auto-tracking
     //the player), hide the rear-view mirror, show the finish sign, and setRaceFinished(true).

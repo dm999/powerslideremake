@@ -169,7 +169,13 @@ void GameModeSwitcher::frameEnded()
             {
                 DeathmatchMode* dm = dynamic_cast<DeathmatchMode*>(mPlayerMode.get());
                 if(dm)
-                    dm->fillDeathmatchResults();
+                {
+                    //player Esc-quit before any natural finish path ran — they
+                    //didn't complete the race, so pass false for isPlayerFinished.
+                    const bool playerFinished = mContext.getGameState().getPlayerCar().getLapUtils().getCurrentLap()
+                                                >= mContext.getGameState().getLapsCount();
+                    dm->fillDeathmatchResults(playerFinished);
+                }
             }
             mContext.setDeathmatchResults(mPlayerMode->getDeathmatchResults());
         }
