@@ -43,6 +43,17 @@ public:
     //the post-race statistics screen would show no table.
     void fillDeathmatchResults();
 
+    //Shared session-end sequence: snap to the fixed finish camera (auto-tracking
+    //the player), hide the rear-view mirror, show the finish sign, and setRaceFinished(true).
+    //Called from every natural session-end path that does NOT go through the base
+    //onLapFinished — all AI eliminated (carDead), and every still-alive AI having
+    //completed all its laps (customFrameRenderingQueuedDo2DUI). The lap-time/hiscore
+    //block from BaseRaceMode::onLapFinished is intentionally omitted here — lap times
+    //aren't meaningful for deathmatch. Idempotent: no-op once getRaceFinished() is
+    //already true. Callers MUST call fillDeathmatchResults() first so the statistics
+    //are captured from the live race clock before this freezes session state.
+    void finishDeathmatchSession();
+
 protected:
 
     //BaseRaceMode custom hook: refresh the position HUD with the survivor count

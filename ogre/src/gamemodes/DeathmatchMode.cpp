@@ -72,31 +72,19 @@ void DeathmatchMode::carDead(PhysicsVehicle* vehicle)
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
         "[DeathmatchMode::carDead]: car eliminated, " + Conversions::DMToString(mAliveCars) + " cars remaining");
 
-    //all AI eliminated — only the player is left alive. End the session the same
-    //way a single race ends on the final lap: snap to the fixed finish camera
-    //(auto-tracking the player), hide the rear-view mirror, show the finish sign
-    //and start the after-finish timer. setRaceFinished(true) lets the existing
-    //GameModeSwitcher teardown (ModeRaceDeathmatch → ModeMenu / State_DeathmatchStats)
-    //run after its 10s countdown, so no switcher changes are needed here.
-    //The lap-time/hiscore block from BaseRaceMode::onLapFinished is intentionally
-    //omitted — lap times aren't meaningful for deathmatch.
+    //all AI eliminated — only the player is left alive. End the session via the
+    //shared finish sequence (finish camera, mirror, finish sign, stats, race
+    //finished). setRaceFinished(true) lets the existing GameModeSwitcher teardown
+    //(ModeRaceDeathmatch → ModeMenu / State_DeathmatchStats) run after its 10s
+    //countdown, so no switcher changes are needed here.
     if(mAliveCars <= 1)
     {
         if(!gameState.getRaceFinished())
         {
-            gameState.resetAfterFinishTimer();
-            gameState.getPlayerCar().setDisableMouse(false);
-            mCamera->setPosition(gameState.getSTRPowerslide().getFinishCameraPos(gameState.getTrackName()));
-            if(mUIRace.get())
-            {
-                mUIRace->setRearViewMirrorPanelShow(false);
-                mUIRace->setVisibleFinishSign(true, 1);
-            }
-
-            //freeze the statistics for the post-race screen.
+            //capture the statistics from the live race clock before the finish
+            //sequence freezes session state.
             fillDeathmatchResults();
-
-            gameState.setRaceFinished(true);
+            finishDeathmatchSession();
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
                 "[DeathmatchMode::carDead]: all AI eliminated, session finishing");
@@ -150,8 +138,73 @@ void DeathmatchMode::onLapFinished()
         fillDeathmatchResults();
 }
 
+void DeathmatchMode::finishDeathmatchSession()
+{
+    //see header for the contract. Idempotent — callers guard on getRaceFinished(),
+    //but the guard here keeps the helper safe to call directly too.
+    GameState& gameState = mModeContext.getGameState();
+    if(gameState.getRaceFinished())
+        return;
+
+    gameState.resetAfterFinishTimer();
+    gameState.getPlayerCar().setDisableMouse(false);
+    mCamera->setPosition(gameState.getSTRPowerslide().getFinishCameraPos(gameState.getTrackName()));
+    if(mUIRace.get())
+    {
+        mUIRace->setRearViewMirrorPanelShow(false);
+        mUIRace->setVisibleFinishSign(true, 1);
+    }
+
+    gameState.setRaceFinished(true);
+}
+
 void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
 {
+    //A deathmatch session can also end without the field being cleared: if every
+    //still-alive AI has completed all its laps, there is nothing left to race for,
+    //so end the session the same way carDead does. AI lap tracking runs every
+    //physics step (BaseRaceMode::timeStepBefore) and advances mCurrentLap past
+    //getLapsCount() once an AI crosses the line on its final lap — the same
+    //threshold the player's finish uses (lap == getLapsCount() where lap =
+    //getCurrentLap() - 1). Eliminated AI (life <= 0) are skipped so a cleared
+    //field doesn't trip this on stale lap values; the all-eliminated case is
+    //already handled in carDead.
+    GameState& gameState = mModeContext.getGameState();
+    if(gameState.getRaceStarted() && !gameState.getRaceFinished() && gameState.getAICountInRace() > 0)
+    {
+        const size_t lapsCount = gameState.getLapsCount();
+        const size_t aiCount = gameState.getAICountInRace();
+
+        bool allAliveAIFinished = true;
+        bool anyAlive = false;
+        for(size_t q = 0; q < aiCount; ++q)
+        {
+            if(mWorld->getVehicle(&gameState.getAICar(q))->getLife() <= 0.0f)
+                continue;
+
+            anyAlive = true;
+            if(gameState.getAICar(q).getLapUtils().getCurrentLap() <= lapsCount)
+            {
+                allAliveAIFinished = false;
+                break;
+            }
+        }
+
+        //only finish when at least one AI is still alive and every such AI has
+        //completed all laps — otherwise a fully-eliminated field would end here
+        //too (carDead already owns that path).
+        if(anyAlive && allAliveAIFinished)
+        {
+            //capture the statistics from the live race clock before the finish
+            //sequence freezes session state.
+            fillDeathmatchResults();
+            finishDeathmatchSession();
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
+                "[DeathmatchMode]: all alive AI finished their laps, session finishing");
+        }
+    }
+
     //base writes the original grid size into the position HUD; override the total
     //with the live survivor count so "pos / total" reflects cars still in play.
     if(mUIRace.get())
