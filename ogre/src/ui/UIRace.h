@@ -49,6 +49,11 @@ public:
     void setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName);
     void setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos);
 
+    //Current number of AI dashboard slots (equals the AI count the dashboard was
+    //sized for). In normal modes this is 11; in massacre it matches the field size
+    //so every AI gets a slot.
+    size_t getDashboardCarsCount() const { return mDashboardCars.size(); }
+
     void setRaceTime(const std::string& time);
 
     void setShowPausedPanel(bool isShow);
@@ -118,8 +123,10 @@ private:
     Ogre::PanelOverlayElement* mBeforeStartPanelGoR;
 
     Ogre::PanelOverlayElement* mPlayerDashboardCar;
-    static const int mDashboardCarsCount = 11;
-    Ogre::PanelOverlayElement* mDashboardCars[mDashboardCarsCount];
+    //Dynamic vector of AI dashboard car panels. Sized to match the AI count at
+    //load time (11 in normal modes, up to 275 in massacre). Icons shrink to fit
+    //the dashboard strip width when there are more cars than the original 11.
+    std::vector<Ogre::PanelOverlayElement*> mDashboardCars;
 
     Ogre::SceneNode * mChildNeedle;
     Ogre::ManualObject* mNeedle;

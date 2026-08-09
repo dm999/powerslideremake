@@ -436,12 +436,17 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
             state->setTextureScale(-1.0f, 1.0f);
         }
 
+        //Size the dashboard car vector to match the AI count. Normal modes have
+        //11 AI; massacre can have up to 275.
+        const size_t aiCount = gameState.getAICountInRace();
+        mDashboardCars.resize(aiCount);
+
         Ogre::Real dashCarWidth = dashWidth / 18.0f;
         Ogre::Real dashCarHeight = dashHeight / 4.0f;
 
         Ogre::Real dashCarLeft = dashWidth / 3.0f + dashCarWidth;
         Ogre::Real dashCarTop = dashPositionHeight / 20.0f;
-        
+
 
         Ogre::PanelOverlayElement* userCarPanel = createEmptyPanel("DashboardCar0_e", dashWidth, dashPositionHeight, 0.0f, 0.0f);
         mPlayerDashboardCar = createPanel("DashboardCar0", dashCarWidth, dashCarHeight, dashCarLeft, dashCarTop, "Test/car0_0s.bmp");
@@ -449,7 +454,7 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         dashboardPosition->addChild(userCarPanel);
         userCarPanel->addChild(mPlayerDashboardCar);
 
-        for(size_t q = 0; q < mDashboardCarsCount; ++q)
+        for(size_t q = 0; q < aiCount; ++q)
         {
             std::string dashCarName = "DashboardCar" + Conversions::DMToString(q + 1);
             mDashboardCars[q] = createPanel(dashCarName, dashCarWidth, dashCarHeight, dashCarLeft, dashCarTop, "Test/car0_0s.bmp");
@@ -1742,7 +1747,7 @@ void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
 
 void UIRace::hideAIDashboardCars()
 {
-    for(size_t q = 0; q < mDashboardCarsCount; ++q)
+    for(size_t q = 0; q < mDashboardCars.size(); ++q)
     {
         mDashboardCars[q]->hide();
     }
@@ -1761,7 +1766,7 @@ void UIRace::setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, 
     std::string iconName = gameState.getSTRPowerslide().getValue(characterName + " parameters", "icon", "car0_0s.bmp");
     std::string matName = "Test/" + iconName;
 
-    if(aiDashIndex < mDashboardCarsCount)
+    if(aiDashIndex < mDashboardCars.size())
     {
         if(matName != mDashboardCars[aiDashIndex]->getMaterialName())
             mDashboardCars[aiDashIndex]->setMaterialName(matName);
@@ -1770,13 +1775,13 @@ void UIRace::setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, 
 
 void UIRace::setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos)
 {
-    if(aiDashIndex < mDashboardCarsCount)
+    if(aiDashIndex < mDashboardCars.size())
     {
         //if(playerLap == 0) playerLap = 1;
         //if(aiLap == 0) aiLap = 1;
 
-        Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton(); 
-        const Ogre::Real viewportWidth = om.getViewportWidth(); 
+        Ogre::OverlayManager& om = Ogre::OverlayManager::getSingleton();
+        const Ogre::Real viewportWidth = om.getViewportWidth();
         const Ogre::Real dashWidth = viewportWidth;
         const Ogre::Real dashCarWidth = dashWidth / 18.0f;
 
