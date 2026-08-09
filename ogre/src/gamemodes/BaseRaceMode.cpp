@@ -851,6 +851,13 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mUIRace->setPlayerDashBoardSkin(mModeContext.mGameState);
         for(size_t q = 0; q < mModeContext.mGameState.getAICountInRace(); ++q)
         {
+            //skip eliminated cars on the dashboard. Life is inert at 1.0 in every
+            //normal mode (single / championship / time trial / multiplayer), so
+            //getLife() <= 0.0f is only ever true for an AI killed in deathmatch —
+            //this guard is a no-op outside deathmatch, leaving those HUDs unchanged.
+            if(mWorld->getVehicle(&mModeContext.mGameState.getAICar(q))->getLife() <= 0.0f)
+                continue;
+
             mUIRace->setAIDashBoardSkin(mModeContext.mGameState, q, mModeContext.mGameState.getAICar(q).getCharacterName());
             mUIRace->setDashCarPos(q, currentPlayerLap, currentPlayerLapPos, mModeContext.mGameState.getAICar(q).getLapUtils().getCurrentLap(), mModeContext.mGameState.getAICar(q).getLapUtils().getLapPosition());
         }
