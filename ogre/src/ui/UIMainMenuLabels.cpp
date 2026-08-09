@@ -278,10 +278,18 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         if(mMassacreVal->getChecked())
         {
             mModeContext.getGameState().setMassacreEnabled(true);
+            //show the batches slider when massacre is enabled
+            mBatchesValLeft->setActive(true);
+            mBatchesValRight->setActive(true);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(Ogre::ColourValue::White);
         }
         else
         {
             mModeContext.getGameState().setMassacreEnabled(false);
+            //hide the batches slider when massacre is disabled
+            mBatchesValLeft->setActive(false);
+            mBatchesValRight->setActive(false);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -1235,6 +1243,15 @@ void UIMainMenuLabels::showOptionRaceLabels()
         mUIButtonsManager.show("mOptionRaceDM");
         mUIButtonTicksManager.show("mOptionRaceDM");
         mUILabelsManager.show("mOptionRaceDM");
+
+        //the batches slider is only relevant when massacre is on; hide it if
+        //massacre is currently unchecked (user can toggle it on to reveal).
+        if(!mModeContext.getGameState().getMassacreEnabled())
+        {
+            mBatchesValLeft->setActive(false);
+            mBatchesValRight->setActive(false);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
+        }
     }
 }
 

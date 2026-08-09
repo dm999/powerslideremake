@@ -43,6 +43,8 @@ public:
 
     void setButtonOnAction(UIButtonOnAction* onAction) {mOnAction = onAction;}
 
+    void setActive(bool isActive);
+
 protected:
 
     bool mIsShown;
@@ -76,9 +78,9 @@ public:
     void mouseReleased(const Ogre::Vector2& pos);
     void mouseMoved(const Ogre::Vector2& pos) {}
 
-    void setActive(bool isActive);
-
     bool getChecked() const {return mIsChecked;}
+
+    void setActive(bool isActive);
 
 private:
 
