@@ -69,6 +69,11 @@ private:
     //each AI dies, so the post-race statistics screen can show survival times.
     //-1.0f means the AI was still alive at session end. Indexed by AI index.
     std::vector<Ogre::Real> mEliminationTimes;
+
+    //per-AI finish time (seconds on the race clock) captured when each AI
+    //completes all its laps. -1.0f means the AI didn't finish (still racing or
+    //eliminated). Indexed by AI index.
+    std::vector<Ogre::Real> mFinishTimes;
 };
 
 #endif

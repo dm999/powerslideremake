@@ -30,9 +30,10 @@ void DeathmatchMode::initData(LoaderListener* loaderListener)
 
     mAliveCars = mLapController.getTotalCars();
 
-    //reset per-AI elimination times for this race (-1 == still alive).
+    //reset per-AI elimination/finish times for this race (-1 == still alive/didn't finish).
     const size_t aiCount = mModeContext.getGameState().getAICountInRace();
     mEliminationTimes.assign(aiCount, -1.0f);
+    mFinishTimes.assign(aiCount, -1.0f);
 }
 
 void DeathmatchMode::clearData()
@@ -117,11 +118,17 @@ void DeathmatchMode::fillDeathmatchResults()
     for(size_t q = 0; q < aiCount; ++q)
     {
         const bool survived = (q >= mEliminationTimes.size() || mEliminationTimes[q] < 0.0f);
-        //survived AI show the race clock at session end (how long they lasted);
-        //eliminated AI show the race clock at the moment they died.
+        //survived AI show their individual finish time (when they completed all laps),
+        //or the race clock at session end if they didn't finish; eliminated AI show
+        //the race clock at the moment they died.
+        Ogre::Real aiTime = raceClock;
+        if(survived && q < mFinishTimes.size() && mFinishTimes[q] >= 0.0f)
+            aiTime = mFinishTimes[q];
+        else if(!survived)
+            aiTime = mEliminationTimes[q];
         results.push_back(DeathmatchResultRow(
             gameState.getAICar(q).getCharacterName(), false,
-            survived ? raceClock : mEliminationTimes[q], survived));
+            aiTime, survived));
     }
     mDeathmatchResults = results;
 }
@@ -185,10 +192,23 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
                 continue;
 
             anyAlive = true;
-            if(gameState.getAICar(q).getLapUtils().getCurrentLap() <= lapsCount)
+
+            //Check if this AI has finished all laps
+            if(gameState.getAICar(q).getLapUtils().getCurrentLap() > lapsCount)
             {
+                //AI finished all laps — capture its finish time if not already recorded.
+                //Each AI may finish at a different moment, so track individually.
+                if(mFinishTimes[q] < 0.0f)
+                {
+                    mFinishTimes[q] = gameState.getAICar(q).getLapUtils().getTotalTime()
+                                        + gameState.getAICar(q).getLapUtils().getLapTime();
+                }
+            }
+            else
+            {
+                //AI hasn't finished yet — session can't end, but keep checking other AI
+                //so we capture finish times for any that have already crossed the line.
                 allAliveAIFinished = false;
-                break;
             }
         }
 
