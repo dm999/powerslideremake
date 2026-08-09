@@ -1286,10 +1286,10 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
     {
         const DeathmatchResultRow& row = sortedResults[q];
 
-        //mark eliminated AI rows in red so they stand out from the player
-        //(winner) and any AI still alive at session end.
+        //mark eliminated AI rows in green so they stand out from the player
+        //and any AI still alive at session end.
         const Ogre::ColourValue rowColour =
-            (!row.mIsPlayer && !row.mSurvived) ? Ogre::ColourValue::Red : Ogre::ColourValue::White;
+            (!row.mIsPlayer && !row.mSurvived) ? Ogre::ColourValue::Green : Ogre::ColourValue::White;
 
         mPodiumTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
         mPodiumTable1Label[q]->setColour(rowColour);
@@ -1307,13 +1307,28 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
             mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
         mPodiumTable3Label[q]->setColour(rowColour);
 
+        //status colour: winner green, loser red, survived yellow. Eliminated
+        //AI inherit the green row colour, so their status reads green too.
+        Ogre::ColourValue statusColour = rowColour;
         if(row.mIsPlayer)
-            mPodiumTable4Label[q]->setCaption("Winner");
+        {
+            //the player is the winner only if no AI survived the session;
+            //if any AI were still alive at the end (e.g. the player finished
+            //the final lap before clearing the field), the player lost.
+            const bool winner = (survivedAI == 0);
+            mPodiumTable4Label[q]->setCaption(winner ? "Winner" : "Loser");
+            statusColour = winner ? Ogre::ColourValue::Green : Ogre::ColourValue::Red;
+        }
         else if(row.mSurvived)
+        {
             mPodiumTable4Label[q]->setCaption("Survived");
+            statusColour = Ogre::ColourValue(1.0f, 1.0f, 0.0f);
+        }
         else
+        {
             mPodiumTable4Label[q]->setCaption("Eliminated");
-        mPodiumTable4Label[q]->setColour(rowColour);
+        }
+        mPodiumTable4Label[q]->setColour(statusColour);
 
         mPodiumTable1Label[q]->show();
         mPodiumTable2Label[q]->show();
