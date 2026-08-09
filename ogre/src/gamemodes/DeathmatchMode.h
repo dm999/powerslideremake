@@ -35,6 +35,14 @@ public:
     //the last AI is eliminated.
     void onLapFinished()override;
 
+    //Build mDeathmatchResults from the current race clock + per-AI elimination
+    //times. Called from both natural session-end paths (carDead when the last AI
+    //dies, onLapFinished when the player completes the final lap). Also called
+    //by GameModeSwitcher at teardown when the player Esc-quits early — in that
+    //case neither natural path ran, so the results would otherwise be empty and
+    //the post-race statistics screen would show no table.
+    void fillDeathmatchResults();
+
 protected:
 
     //BaseRaceMode custom hook: refresh the position HUD with the survivor count
@@ -42,12 +50,6 @@ protected:
     void customFrameRenderingQueuedDo2DUI()override;
 
 private:
-
-    //build mDeathmatchResults from the current race clock + per-AI elimination
-    //times. Called from both session-end paths (carDead when the last AI dies,
-    //onLapFinished when the player completes the final lap) so the post-race
-    //statistics screen is populated no matter how the session ended.
-    void fillDeathmatchResults();
 
     //number of cars still alive in the field (decremented as cars die).
     size_t mAliveCars;

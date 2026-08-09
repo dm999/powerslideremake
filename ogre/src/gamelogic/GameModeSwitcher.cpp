@@ -160,6 +160,17 @@ void GameModeSwitcher::frameEnded()
             //ModeContext (each mode holds a private copy, same as lapController
             //above) so the post-race menu can read them. No finish board is
             //needed — the stats screen reads getDeathmatchResults().
+            //The results are frozen on a natural finish (carDead / onLapFinished).
+            //If the player Esc-quit early, neither ran and the results are still
+            //empty — freeze them now from the still-live race state (this runs
+            //before clear()) so the stats screen shows a table instead of an
+            //empty one.
+            if(mPlayerMode->getDeathmatchResults().empty())
+            {
+                DeathmatchMode* dm = dynamic_cast<DeathmatchMode*>(mPlayerMode.get());
+                if(dm)
+                    dm->fillDeathmatchResults();
+            }
             mContext.setDeathmatchResults(mPlayerMode->getDeathmatchResults());
         }
         //extract lap data after championship race, save progress
