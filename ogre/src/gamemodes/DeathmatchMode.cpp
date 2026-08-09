@@ -117,9 +117,11 @@ void DeathmatchMode::fillDeathmatchResults()
     for(size_t q = 0; q < aiCount; ++q)
     {
         const bool survived = (q >= mEliminationTimes.size() || mEliminationTimes[q] < 0.0f);
+        //survived AI show the race clock at session end (how long they lasted);
+        //eliminated AI show the race clock at the moment they died.
         results.push_back(DeathmatchResultRow(
             gameState.getAICar(q).getCharacterName(), false,
-            survived ? -1.0f : mEliminationTimes[q], survived));
+            survived ? raceClock : mEliminationTimes[q], survived));
     }
     mDeathmatchResults = results;
 }

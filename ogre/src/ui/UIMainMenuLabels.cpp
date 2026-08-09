@@ -1379,11 +1379,10 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
             mPodiumTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(row.mName));
         mPodiumTable2Label[q]->setColour(rowColour);
 
-        //player and eliminated AI show a time; AI still alive show "Survived".
-        if(row.mSurvived && !row.mIsPlayer)
-            mPodiumTable3Label[q]->setCaption("Survived");
-        else
-            mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
+        //every row shows a time: the player's total race time, the race clock
+        //at session end for survived AI, or the race clock at elimination for
+        //dead AI.
+        mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
         mPodiumTable3Label[q]->setColour(rowColour);
 
         //status colour: winner green, loser red, survived yellow. Eliminated
