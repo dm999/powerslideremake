@@ -1002,8 +1002,19 @@ void UIMainMenuLabels::showTrackLabels()
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
+    //deathmatch is a last-car-standing brawl; the stunt and luge tracks are
+    //gimmick courses (jumps/rails) unsuited to it, so never offer them there.
+    //Hide rather than remove: the rest of the UI assumes mTracksLabels[q] keeps
+    //the same index as availTracks[q] (e.g. the index-8 stunt special-case in
+    //setTrackBestTime and the click/over handlers), so skipping show() alone
+    //preserves that alignment.
+    const bool isDeathmatch = (mGameModeSelected == ModeMenuDeathmatch);
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
+        if(isDeathmatch && (availTracks[q] == "stunt track" || availTracks[q] == "luge track"))
+            continue;
+
         int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
 
         if(difficultyAvailable <= gameLevel)
