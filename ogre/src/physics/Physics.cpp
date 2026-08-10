@@ -206,10 +206,15 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
             Ogre::Vector3 cogBGlobal((*i).second->getVehicleSetup().mCOGGlobal);
             cogBGlobal.z = -cogBGlobal.z;//original data is left hand
 
-            Ogre::Real collisionRadiusDiff = (*i).second->getVehicleSetup().mCollisionRadius + 
+            //broad-phase: skip expensive matrix math for cars far apart.
+            //reuses the 65m radius (squared) from processCollisionsImpulseWeighter.
+            Ogre::Vector3 cogDiff(cogBGlobal - cogAGlobal);
+            if(cogDiff.squaredLength() > 4225.0f)
+                continue;
+
+            Ogre::Real collisionRadiusDiff = (*i).second->getVehicleSetup().mCollisionRadius +
                 vehicle->getVehicleSetup().mCollisionRadius - 2.0f + 1.0f;
 
-            Ogre::Vector3 cogDiff(cogBGlobal - cogAGlobal);
             Ogre::Vector3 cogDiffAbs(Ogre::Math::Abs(cogDiff.x), 
                 Ogre::Math::Abs(cogDiff.y), 
                 Ogre::Math::Abs(cogDiff.z));
