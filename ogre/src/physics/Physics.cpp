@@ -182,6 +182,7 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
 {
     const bool isDeathmatch = gameState.isDeathmatch();
     PSBaseVehicle* playerVehiclePtr = &gameState.getPlayerCar();
+    PhysicsVehicle* playerVehicle = getVehicle(playerVehiclePtr);
 
     for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
@@ -305,9 +306,9 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameStat
                         PhysicsVehicle* otherVehicle = (*i).second.get();
                         //the player is never harmed; damage is applied by the player
                         //or as mutual destruction between AI cars.
-                        if(hitVehicle != getVehicle(playerVehiclePtr))
+                        if(hitVehicle != playerVehicle)
                         {
-                            if(otherVehicle == getVehicle(playerVehiclePtr))
+                            if(otherVehicle == playerVehicle)
                             {
                                 hitVehicle->setLife(hitVehicle->getLife() - 0.2f * (finalImpulse / 100.0f));
                             }
