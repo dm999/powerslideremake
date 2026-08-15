@@ -72,7 +72,7 @@ All concrete modes derive from `BaseMode` (`ogre/src/gamemodes/`), which defines
 - **`pscar/`** — vehicle hierarchy: `PSBaseVehicle` → `PSBaseCar` → `PSControllableCar` → `PSPlayerCar`; plus `PSAICar`, `PSMultiplayerCar`, `PSBaseGraphicsVehicle`, `PSCarEngine`.
 - **`gamelogic/`** — `Championship`, `LapController`/`LapUtils`, `RacingGridGeneration`, `AIUtils`, `TrialGhost`, `FinishBoard`.
 - **`ai`** — neural-network driving AI; data loaded via `AILoader` (see `docs/ai/`). `AIUtils` also owns the **anti-stuck** subsystem (see [AI stuck detection below](#ai-stuck-detection-and-reverse-recovery)).
-- **`ui/`** — MyGUI/SdkTrays-based menus and race HUD (`UIBase` → `UIMainMenu`, `UIRace`, multiplayer variants, `UIBackground`). `ui/elements/` and `ui/routines/`.
+- **`ui/`** — MyGUI/SdkTrays-based menus and race HUD (`UIBase` → `UIMainMenu`, `UIRace`, multiplayer variants, `UIBackground`). `ui/elements/` and `ui/routines/`. The tacho dashboard (`UIRace`) supports 3-digit position/total displays for massacre (see [Race HUD 3-digit tacho below](#race-hud-3-digit-tacho-massacre)).
 - **`multiplayer/`** + top-level **`multislider/`** — networking. `MultiplayerController` splits into `Master`/`Slave`; the `multislider/client` library wraps SFML network (TCP 8800 lobby, UDP 8800 room list, 8700 race data). `multislider/server` is a separate deployable web/lobby server.
 - **`lua/`** — `DMLuaManager` binds C++ functions into the Lua state. `assets/scripts/Main.lua` is the entry script; it calls `parseFile("vehicle.lua")` / `parseFile("Scene.lua")` to configure the rendering pipeline (terrain material/shader selection, mesh options). Lua scripts are loaded as the Ogre `[Lua]` resource group (see `resources.cfg`).
 - **`cheats/`** — in-game cheats (nitro, bomb, burn, sticky, spider, etc.), triggered from `BaseApp::enable*` / `InputHandler`. `CheatBomb`/`CheatBurn` carry an `mIsDeathmatch` flag (set via `Cheats::setDeathmatch`) that switches their blast into a life-draining weapon in deathmatch (see [Deathmatch mode](#deathmatch-mode)).
@@ -106,6 +106,17 @@ All AI (every mode, not deathmatch-only) carry an anti-stuck system in `AIUtils:
 - **Use live rotation, not `getForwardAxis()`.** `PSBaseCar::getForwardAxis()` reads `PSBaseVehicle::mInitialVehicleSetup`, a by-value copy made at construction that never updates. `AIUtils` measures heading from the live `initialVehicleSetup.mCarRot` (the shared object `PhysicsVehicle` references).
 - **Gate on per-vehicle `getRaceStarted()`, not game state.** In the batched massacre start, the game-level `getRaceStarted()` turns true at GO while still-parked cars have per-vehicle `mIsRaceStarted == false`. Running the detector on a parked car (zero displacement for seconds) triggers a false stuck → it launches reversing. The whole measurement/detection block is guarded by `physicsAICar->getRaceStarted()`.
 - **Reset NN state after recovery.** Reversing walks `mPrevClosestSplineIndex` backward along the track spline and bakes the reverse heading into `mPrevRot`, so resuming forward control produces erratic steering. On recovery exit the code sets `mIsPrevClosestSplineIndexInited = false` and `mPrevRot = ZERO` to force a full spline re-scan. The RNN hidden state (`slotMatrix` recurrence terms) is deliberately not touched.
+
+### Race HUD 3-digit tacho (massacre)
+
+The tacho dashboard `pos / totalcars` display (`UIRace::setCarPos`) supports up to 300 cars. Key facts for a future editor:
+
+- **Widened params.** `setCarPos(size_t pos, size_t totalcars)` (was `unsigned char` — overflowed past 255). Callers pass `LapController`/`mAliveCars` `size_t` values directly, no truncating cast.
+- **Third digit panels.** `mTachoTotalCarsDigit3` / `mTachoPosDigit3` (hundreds) are created hidden in `UIRace::load` at base multiplier slots 28.5 / 31.5 and shown only when the value ≥ 100. `mDashDigitLeftTotalCars*` / `mDashDigitLeftPos*` members store the slot x positions.
+- **Depth-based layout.** `setCarPos` places every panel from a rightmost anchor: `left = anchor - depth * tightStep`. `shiftDepth = +1` when `totalcars ≥ 100` inserts the extra slot for the total hundreds digit (moves div + pos one step further left). Normal races never hit 99+ so the layout reduces exactly to the original 5-slot 2-digit arrangement.
+- **Two compression knobs active only when a value needs 3 digits:** a tighter `tightStep` (`0.75 × dashDigitWidth`) and a panel width scale `5/7 ≈ 0.714`. Position and total scale independently (`scaleTotal` vs `scalePos`).
+- **Offset invariants preserved by explicit compensation** (so 2→3-digit transitions don't shift the readout): the rightmost digit's *right edge* stays put via `total1RightCorr` added to the anchor; each digit's *bottom edge* stays put via `setTop(origTop + (origHeight − scaledHeight))`. Dimension/top members (`mDashDigitWidth{,Small}`, `mDashDigitHeight{,Small}`, `mDashDigitTop{,Small}`) are stored at `load` time for this.
+- `setDimensions`/`setLeft`/`setTop`/`show`/`hide` are all issued **every frame** with deterministic values — no getter-based deltas, so transitions (massacre cars dying: 300 → 3) collapse cleanly in both directions.
 
 ## Conventions
 
