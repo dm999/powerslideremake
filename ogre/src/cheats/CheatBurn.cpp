@@ -27,7 +27,8 @@ CheatBurn::CheatBurn(StaticMeshProcesser * meshProesser, Ogre::SceneManager* sce
     mIsBurnInProgress(false),
     mPlayerVehicle(NULL),
     mSphereNode(NULL),
-    mIsFog(isFog)
+    mIsFog(isFog),
+    mIsDeathmatch(false)
 {
     mNodeName = nameGenNodes.generate();
 }
@@ -145,6 +146,13 @@ void CheatBurn::timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& veh
                         {
                             mFlyPath = mFlyPathLength + 1.0f;
                             (*i).second->adjustImpulseInc(posDiff * 0.2f, mBurnVelocity * 10.0f);
+
+                            //deathmatch: a direct burn hit also drains life,
+                            //skipping the player so you can't burn yourself.
+                            if(mIsDeathmatch && (*i).second.get() != mPlayerVehicle)
+                            {
+                                (*i).second->setLife((*i).second->getLife() - 0.2f);
+                            }
                             break;
                         }
                     }

@@ -87,6 +87,16 @@ public:
     VehicleType getVehicleType() const {return mVehicleType;}
 
     void setRaceStarted(){mIsRaceStarted = true;}
+    bool getRaceStarted() const { return mIsRaceStarted; }
+
+    //deathmatch: vehicle life. Starts full; only reduced in deathmatch mode.
+    //getLife() < 1.0f is the cheap guard used to skip dead/explosion work in normal modes.
+    void setLife(Ogre::Real life);
+    Ogre::Real getLife() const { return mLife; }
+
+    Ogre::uint32 getDeadTicks() const { return mDeadTicks; }
+    bool getExplosionHappened() const { return mExplosionHappened; }
+    void setExplosionHappened(bool v){ mExplosionHappened = v; }
 
     bool getFrontCollision() const;
     bool getBackCollision() const;
@@ -159,6 +169,10 @@ protected:
 
     Physics* mPhysics;
     PSCarEngine mCarEngine;
+
+    Ogre::Real mLife;
+    Ogre::uint32 mDeadTicks;
+    bool mExplosionHappened;
 
 private:
 

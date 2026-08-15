@@ -41,6 +41,12 @@ protected:
     void setControlActive(size_t index, bool isActive);
     void setControlShow(size_t index, bool isShow);
 
+    //apply one of the four vertical UV state-rows (normal/pressed/hover/active)
+    //to a control, honoring that control's horizontal-mirror flag. Centralised
+    //so every state transition (mouse move, press, activate, selectMode) keeps a
+    //mirrored control mirrored instead of resetting U to 0..1.
+    void setControlUVState(size_t index, Ogre::Real v1, Ogre::Real v2);
+
     static const int mControlsCount = 6;
     Ogre::PanelOverlayElement* mControls[mControlsCount];
     Ogre::TextAreaOverlayElement * mControlsText[mControlsCount];
@@ -52,7 +58,7 @@ protected:
 
     static const size_t mPodiumCharacters = 3;
 
-    GameMode mGameModeSelected;//ModeMenu, ModeMenuChampionship, ModeMenuTimetrial
+    GameMode mGameModeSelected;//ModeMenu, ModeMenuChampionship, ModeMenuTimetrial, ModeMenuDeathmatch
 
 private:
 
@@ -63,6 +69,11 @@ private:
     bool mControlActivated[mControlsCount];
     bool mControlClicked[mControlsCount];
     bool mControlOver[mControlsCount];
+
+    //per-control horizontal-mirror flag. Set on mControls[0] (the Mode button)
+    //when deathmatch is selected, so the single-race texture is drawn flipped
+    //and the active mode reads as distinct from a normal single race.
+    bool mControlMirrored[mControlsCount];
 };
 
 #endif

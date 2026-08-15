@@ -53,13 +53,22 @@ void Physics::internalTimeStep(GameState& gameState)
         {
             (*i).second->timeStep(gameState);
             (*i).first->processCamera(gameState);
+
+            //deathmatch: self-destruction bleed. A damaged car (life <= 0.5) keeps
+            //losing a sliver of life each step, so wrecks finish burning out rather
+            //than sitting frozen at low life. Gated on isDeathmatch(); normal modes
+            //never reduce life, so this is a no-op there. (fun-branch parity.)
+            if(gameState.isDeathmatch() && (*i).second->getLife() <= 0.5f)
+            {
+                (*i).second->setLife((*i).second->getLife() - 0.0001f);
+            }
         }
 
         //process collisions
         for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
         {
                if(gameState.getRaceStarted())
-                    processCarsCollisions((*i).second.get());
+                    processCarsCollisions((*i).second.get(), gameState);
         }
 
         //process impulse weighter
@@ -161,8 +170,20 @@ void Physics::removeListener(PhysicsListener* listener)
         mListeners.erase(found);
 }
 
-void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
+void Physics::onCarDead(PhysicsVehicle* vehicle)
 {
+    for (physicsListener::iterator i = mListeners.begin(), j = mListeners.end(); i != j; ++i)
+    {
+        (*i)->carDead(vehicle);
+    }
+}
+
+void Physics::processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameState)
+{
+    const bool isDeathmatch = gameState.isDeathmatch();
+    PSBaseVehicle* playerVehiclePtr = &gameState.getPlayerCar();
+    PhysicsVehicle* playerVehicle = getVehicle(playerVehiclePtr);
+
     for (vehicles::iterator i = mVehicles.begin(), j = mVehicles.end(); i != j; ++i)
     {
         if((*i).second.get() != vehicle)//don`t collide with yourself
@@ -185,10 +206,15 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
             Ogre::Vector3 cogBGlobal((*i).second->getVehicleSetup().mCOGGlobal);
             cogBGlobal.z = -cogBGlobal.z;//original data is left hand
 
-            Ogre::Real collisionRadiusDiff = (*i).second->getVehicleSetup().mCollisionRadius + 
+            //broad-phase: skip expensive matrix math for cars far apart.
+            //reuses the 65m radius (squared) from processCollisionsImpulseWeighter.
+            Ogre::Vector3 cogDiff(cogBGlobal - cogAGlobal);
+            if(cogDiff.squaredLength() > 4225.0f)
+                continue;
+
+            Ogre::Real collisionRadiusDiff = (*i).second->getVehicleSetup().mCollisionRadius +
                 vehicle->getVehicleSetup().mCollisionRadius - 2.0f + 1.0f;
 
-            Ogre::Vector3 cogDiff(cogBGlobal - cogAGlobal);
             Ogre::Vector3 cogDiffAbs(Ogre::Math::Abs(cogDiff.x), 
                 Ogre::Math::Abs(cogDiff.y), 
                 Ogre::Math::Abs(cogDiff.z));
@@ -276,6 +302,31 @@ void Physics::processCarsCollisions(PhysicsVehicle* vehicle)
                     Ogre::Vector3 impulseLinear = cogDiffAdd * finalImpulse;
                     vehicle->adjustImpulseInc(cogDiffSub, impulseLinear);
                     vehicle->setCollisionSteeringAdditionalParam(carARotX.dotProduct(impulseLinear) * 0.02f);
+
+                    //deathmatch: collisions drain life from the hit vehicle.
+                    //Gated on isDeathmatch() so normal racing collisions are unchanged.
+                    if(isDeathmatch)
+                    {
+                        PhysicsVehicle* hitVehicle = vehicle;
+                        PhysicsVehicle* otherVehicle = (*i).second.get();
+                        //the player is never harmed; damage is applied by the player
+                        //or as mutual destruction between AI cars.
+                        if(hitVehicle != playerVehicle)
+                        {
+                            if(otherVehicle == playerVehicle)
+                            {
+                                hitVehicle->setLife(hitVehicle->getLife() - 0.2f * (finalImpulse / 100.0f));
+                            }
+                            else if(hitVehicle->getLife() <= 0.8f)
+                            {
+                                hitVehicle->setLife(hitVehicle->getLife() - 0.01f * (finalImpulse / 100.0f));
+                            }
+
+                            //death itself (explosion impulse + carDead callback) is
+                            //handled uniformly in PhysicsVehicle::timeStep when life
+                            //first drops to/below zero, so nothing to do here.
+                        }
+                    }
                 }
             }
 

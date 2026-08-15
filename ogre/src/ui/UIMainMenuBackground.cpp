@@ -1057,7 +1057,17 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
         aiNames.push_back(mModeContext.getGameState().getAICar(q).getCharacterName());
     }
 
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    //the portrait strip is a fixed mRaceGridCarsMax (12) slot grid. A massacre
+    //field is far larger (11*batches + player), so show only the first 12 cars
+    //in field order — the rest would overflow the array. The player only
+    //appears when it falls within the first 12 (i.e. batches == 1, the normal
+    //11-AI + player grid); for batches >= 2 the player is at the very back and
+    //is not among the first 12.
+    const size_t aiCount = mModeContext.getGameState().getAICountInRace();
+    const size_t totalCars = aiCount + 1;
+    const size_t carsToShow = totalCars < GameState::mRaceGridCarsMax ? totalCars : GameState::mRaceGridCarsMax;
+
+    for(size_t q = 0; q < carsToShow; ++q)
     {
         if(q < aiNames.size())
         {
@@ -1075,7 +1085,7 @@ void UIMainMenuBackground::showBackgroundCharacterSmall()
         mBackgroundCharacterSmall[q]->show();
     }
 
-    for(size_t q = mModeContext.getGameState().getAICountInRace() + 1; q < GameState::mRaceGridCarsMax; ++q)
+    for(size_t q = carsToShow; q < GameState::mRaceGridCarsMax; ++q)
     {
         mBackgroundCharacterSmall[q]->setMaterialName("Test/Background_Grid_" + Conversions::DMToString(q));
         mBackgroundCharacterSmall[q]->show();

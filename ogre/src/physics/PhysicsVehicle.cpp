@@ -22,6 +22,9 @@ PhysicsVehicle::PhysicsVehicle(Physics* physics,
     mPhysicsRoofs(initialVehicleSetup, physics, meshProesser),
     mPhysicsBody(initialVehicleSetup, physics, meshProesser),
     mCarEngine(initialVehicleSetup),
+    mLife(1.0f),
+    mDeadTicks(0),
+    mExplosionHappened(false),
     mVehicleType(HumanVehicle),
     mThrottle(0.0f),
     mBreaks(0.0f),
@@ -101,7 +104,12 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
     doAIStep(gameState);
     mPhysicsWheels.setSteering(adjustSteering());
 
-    integrate();
+    //batched start: a car that hasn't been released (raceStarted()) stays parked
+    //on the grid — don't integrate its physics so it doesn't drift before launch.
+    if(mIsRaceStarted)
+    {
+        integrate();
+    }
 
     Ogre::Real velScale = mVehicleSetup.mVelocityScale * doGetVelocityScale();
 
@@ -158,7 +166,10 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     mImpulseLinearInc.y += mVehicleSetup.mChassisMass * (-mVehicleSetup.mGravityVelocity);
 
-    integrate();
+    if(mIsRaceStarted)
+    {
+        integrate();
+    }
 
     calcWheelRoofImpulses();
 
@@ -216,6 +227,27 @@ void PhysicsVehicle::timeStep(const GameState& gameState)
 
     reposition();
     rerotation();
+
+    //deathmatch: once life is gone, count dead ticks and apply a one-shot explosion
+    //impulse. Guarded by mLife so normal modes (life stays at 1.0) never enter here.
+    //This is the single death chokepoint: any source that drains life (collision,
+    //bomb, burn) is detected here on the next step, firing the explosion impulse and
+    //the carDead listener callback exactly once via mPhysics->onCarDead.
+    if(mLife <= 0.0f)
+    {
+        ++mDeadTicks;
+
+        if(!mExplosionHappened)
+        {
+            Ogre::Vector3 linearImpulse(0.0f, 75.0f * 0.013333334f * 150.0f, 0.0f);
+            adjustImpulseInc(Ogre::Vector3::ZERO, linearImpulse);
+            mExplosionHappened = true;
+            mPhysics->onCarDead(this);
+            //hide the wheels so the eliminated car reads as a wheel-less wreck
+            //rather than still rolling. (fun-branch parity.)
+            mPhysicsWheels.hideGraphicalWheels();
+        }
+    }
 }
 
 Ogre::Real PhysicsVehicle::adjustSteering()
@@ -635,13 +667,17 @@ void PhysicsVehicle::gearDown()
     {
         mCarEngine.gearDown();
 
-        if(mVehicleType == HumanVehicle)
+        if(mCarEngine.getCurrentGear() == -1)
         {
-            if(mCarEngine.getCurrentGear() == -1)
+            //kick the wheels backward so the engine's torque curve at revs > 0
+            //takes over (power at idle revs is near-zero).  The human player
+            //already gets this; the AI needs it too for reverse-gear recovery.
+            mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
+
+            if(mVehicleType == HumanVehicle)
             {
                 mThrottleAdjusterCounter = 180;
                 mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
-                mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
             }
         }
     }
@@ -695,4 +731,9 @@ void PhysicsVehicle::zeroImpulses()
     mImpulseLinearInc = Ogre::Vector3::ZERO;
     mImpulseRot = Ogre::Vector3::ZERO;
     mImpulseRotInc = Ogre::Vector3::ZERO;
+}
+
+void PhysicsVehicle::setLife(Ogre::Real life)
+{
+    mLife = life;
 }

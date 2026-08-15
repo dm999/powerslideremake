@@ -834,12 +834,14 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "track choice", globalData.track.c_str());
     mSTR.SetValue("", "character choice", globalData.character.c_str());
     mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
+    mSTR.SetValue("", "race grid batches", Conversions::DMToString(globalData.raceGridBatches).c_str());
     mSTR.SetValue("", "resolution", globalData.resolution.c_str());
     mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
     mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());
     mSTR.SetValue("", "shadows", Conversions::DMToString(globalData.shadows).c_str());
     mSTR.SetValue("", "mirror", Conversions::DMToString(globalData.mirror).c_str());
     mSTR.SetValue("", "ghost", Conversions::DMToString(globalData.ghost).c_str());
+    mSTR.SetValue("", "massacre", Conversions::DMToString(globalData.massacre).c_str());
     mSTR.SetValue("", "adv lighting player", Conversions::DMToString(globalData.adv_lightinig_player).c_str());
     mSTR.SetValue("", "attenuation player", Conversions::DMToString(globalData.attenuation_player).c_str());
     mSTR.SetValue("", "adv lighting ai", Conversions::DMToString(globalData.adv_lightinig_ai).c_str());

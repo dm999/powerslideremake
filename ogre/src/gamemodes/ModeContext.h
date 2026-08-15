@@ -7,6 +7,55 @@
 
 #include "../gamelogic/LapController.h"
 
+#include <vector>
+#include <string>
+
+//Deathmatch post-race statistics: one row per car (player + each AI).
+//Carried from DeathmatchMode (destroyed by GameModeSwitcher::clear()) to the
+//post-race menu so the statistics screen can render it. mTime is seconds of
+//the race clock (player total race time, or an AI's elimination time); an AI
+//that was still alive at session end has mSurvived == true and mTime == -1.0f.
+struct DeathmatchResultRow
+{
+    std::string mName;
+    bool mIsPlayer;
+    Ogre::Real mTime;
+    bool mSurvived;
+
+    DeathmatchResultRow() : mIsPlayer(false), mTime(-1.0f), mSurvived(false){}
+    DeathmatchResultRow(const std::string& name, bool isPlayer, Ogre::Real time, bool survived)
+        : mName(name), mIsPlayer(isPlayer), mTime(time), mSurvived(survived){}
+
+    //ranking for the post-race statistics table: survivors above eliminated,
+    //the player (winner) first among survivors, and among eliminated AI the
+    //latest-eliminated (largest elimination time) above the earliest-eliminated
+    //(smallest time) — so the table reads best-to-worst survival downward.
+    //A survivor with a valid finish time (mTime >= 0) ranks above a DNF
+    //survivor (mTime < 0, didn't complete all laps) — so a player who DNF'd
+    //drops below any AI that actually finished.
+    static bool sortByRank(const DeathmatchResultRow& a, const DeathmatchResultRow& b)
+    {
+        //survivors rank above the eliminated.
+        if(a.mSurvived != b.mSurvived) return a.mSurvived;
+        if(a.mSurvived)
+        {
+            //a valid finish time (>= 0) ranks above a DNF (< 0).
+            const bool aHasTime = (a.mTime >= 0.0f);
+            const bool bHasTime = (b.mTime >= 0.0f);
+            if(aHasTime != bHasTime) return aHasTime;
+            //both in the same category: the player comes first.
+            if(a.mIsPlayer != b.mIsPlayer) return a.mIsPlayer;
+            //surviving AI: deterministic order by name.
+            return a.mName < b.mName;
+        }
+        //both eliminated: later elimination (larger time) ranks higher,
+        //earlier elimination (smaller time) sinks to the bottom.
+        if(a.mTime != b.mTime) return a.mTime > b.mTime;
+        return a.mName < b.mName;
+    }
+};
+typedef std::vector<DeathmatchResultRow> deathmatchResultVec;
+
 namespace Ogre
 {
     class Root;
@@ -66,6 +115,9 @@ public:
     void setFinishBoard(const finishBoardVec& finishBoard){mFinishBoard = finishBoard;}
     const finishBoardVec& getFinishBoard() const{return mFinishBoard;}
 
+    void setDeathmatchResults(const deathmatchResultVec& results){mDeathmatchResults = results;}
+    const deathmatchResultVec& getDeathmatchResults() const{return mDeathmatchResults;}
+
 #ifndef NO_OPENAL
     SoundsProcesser& getSoundsProcesser(){return mSoundsProcesser;}
     MusicProcessor& getMusicProcessor(){return mMusicProcessor;}
@@ -107,6 +159,8 @@ private:
     LapController mLapController;
 
     finishBoardVec mFinishBoard;
+
+    deathmatchResultVec mDeathmatchResults;
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;

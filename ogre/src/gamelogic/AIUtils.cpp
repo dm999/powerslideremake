@@ -68,64 +68,102 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
             mTimerAIStuck.reset();
         }
 
-        //steering
-        /*
-        Ogre::Vector3 carDir = aiCar->getForwardAxis();
-        Ogre::Vector3 carDirOriginal = carDir;
-        carDir.y = 0.0f;
-        
-        Ogre::Real lastDistance = carDir.dotProduct(carPos - mPrevPos);
-        mPrevPos = carPos;
-        mAIDistanceLength += Ogre::Math::Abs(lastDistance);
-*/
-        physicsAICar->setSteering(steeringVal);
-        physicsAICar->setAcceleration(accelerationVal);
-        physicsAICar->setBreaks(breaksVal);
-
-        aiCar->setAcceleration(true);//for particles
-
-        const Ogre::Real stuckDistanceLimit = 20.0f;
-        const unsigned long stuckTimeLimit = 2000; //ms
-        const unsigned long reverseTimeLimit = 2000; //ms
-#if 0
-        if(mTimerAIStuck.getMilliseconds() > stuckTimeLimit && !mIsReverseEnabled)
+        //anti-stuck (restores the original Powerslide logic that sat #if 0'd
+        //out here). Distance measurement: every AI step, project the step's
+        //displacement onto the car's live flat heading and accumulate its
+        //magnitude, so a wedged car that shoves a wall or sits in a pileup
+        //accumulates almost nothing. When a stuckTimeLimit window expires with
+        //under stuckDistanceLimit of travel, enable reverse: jam the gearbox
+        //into R (gearDown() drops any forward gear to N, then to R), wheels
+        //straight, full throttle to back out. The measurement above counts
+        //reverse travel too, so recovery ends once the car has backed up
+        //reverseDistanceLimit - or reversely times out at reverseTimeLimit -
+        //then gearUp() back to first and hand control to the NN again.
+        //aiCar->setBrake only drives particle FX in this engine - the physics
+        //brake/throttle go through physicsAICar->set*. The old
+        //aiMaxSpeed/mSpeedCoeff throttle governor is gone (undefined symbols);
+        //the modern mThrottle->engine path supersedes it.
+        //Guard: only run stuck detection for cars that have actually been
+        //released from the grid.  Batched-start (massacre) cars sit parked
+        //for seconds at zero displacement; without this guard every batch
+        //would trigger a false stuck flag and enter reverse at launch.
+        if(physicsAICar->getRaceStarted())
         {
-            if(mAIDistanceLength < stuckDistanceLimit)
+            const Ogre::Real stuckDistanceLimit = 20.0f;
+            const unsigned long stuckTimeLimit = 2000; //ms
+            const unsigned long reverseTimeLimit = 3000; //ms
+            const Ogre::Real reverseDistanceLimit = 30.0f;
+
+            //distance measurement: heading from the live rotation ...
+            Ogre::Vector3 carDir = initialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
+            carDir.y = 0.0f;
+            if(mPrevPos == Ogre::Vector3::ZERO)
+                mPrevPos = carPos;//first sample of a window - nothing to compare yet
+            mAIDistanceLength += Ogre::Math::Abs(carDir.dotProduct(carPos - mPrevPos));
+            mPrevPos = carPos;
+
+            if(mTimerAIStuck.getMilliseconds() > stuckTimeLimit && !mIsReverseEnabled)
             {
-                mIsReverseEnabled = true;
-                mTimerReverse.reset();
+                if(mAIDistanceLength < stuckDistanceLimit)
+                {
+                    mIsReverseEnabled = true;
+                    mTimerReverse.reset();
+                }
+                mTimerAIStuck.reset();
+                mAIDistanceLength = 0.0f;
             }
-            mTimerAIStuck.reset();
-            mAIDistanceLength = 0.0f;
-        }
 
-        if(!mIsReverseEnabled)
-        {
-            if(accelerationVal < 0.0f)
+            if(mIsReverseEnabled)
             {
-                aiCar->setBrake(true);
+                //reverse recovery: drive the gearbox down to -1 ...
+                physicsAICar->setSteering(0.0f);
+                physicsAICar->setAcceleration(1.0f);
+                physicsAICar->setBreaks(0.0f);
+                aiCar->setBrake(false);
+
+                if(physicsAICar->getCarEngine().getCurrentGear() > -1)
+                    physicsAICar->gearDown();
+                if(physicsAICar->getCarEngine().getCurrentGear() > -1)
+                    physicsAICar->gearDown();
+
+                if(mTimerReverse.getMilliseconds() > reverseTimeLimit ||
+                    mAIDistanceLength > reverseDistanceLimit)
+                {
+                    //back out of R into first gear ...
+                    if(physicsAICar->getCarEngine().getCurrentGear() < 1)
+                        physicsAICar->gearUp();
+                    if(physicsAICar->getCarEngine().getCurrentGear() < 1)
+                        physicsAICar->gearUp();
+
+                    mIsReverseEnabled = false;
+                    mTimerAIStuck.reset();
+                    mAIDistanceLength = 0.0f;
+
+                    //reset the NN spline search so it re-scans from actual
+                    //position on the next frame, rather than navigating from
+                    //the stale backward-track index that accumulated during
+                    //reverse motion. Clear the heading history too, so the
+                    //angular-velocity feature (slotMatrix[7]) starts fresh.
+                    mIsPrevClosestSplineIndexInited = false;
+                    mPrevRot = Ogre::Vector3::ZERO;
+                }
             }
             else
             {
-                Ogre::Real aiSpeed = aiCar->getAlignedVelocity();
-                if(aiSpeed < (aiMaxSpeed * mSpeedCoeff * accelerationVal))
-                {
-                    aiCar->setAcceleration(true);
-                }
+                physicsAICar->setSteering(steeringVal);
+                physicsAICar->setAcceleration(accelerationVal);
+                physicsAICar->setBreaks(breaksVal);
             }
         }
-
-        if(mIsReverseEnabled)
+        else
         {
-            aiCar->setBrake(true);
-
-            if(mTimerReverse.getMilliseconds() > reverseTimeLimit)
-            {
-                mIsReverseEnabled = false;
-                mTimerAIStuck.reset();
-            }
+            //parked on the grid (batched start): forward NN control only
+            physicsAICar->setSteering(steeringVal);
+            physicsAICar->setAcceleration(accelerationVal);
+            physicsAICar->setBreaks(breaksVal);
         }
-#endif
+
+        aiCar->setAcceleration(true);//for particles
     }
 }
 
@@ -228,7 +266,7 @@ void AIUtils::calcFeatures(PhysicsVehicleAI* physicsAICar, const GameState& game
     int closestOtherCarIndex = 0;
 
     std::vector<const PhysicsVehicle*> cars;
-    cars.reserve(GameState::mRaceGridCarsMax);
+    cars.reserve(gameState.getAICountInRace() + 1); //massacre: field can be much larger than the 12-slot grid
 
     cars.push_back(gameState.getPlayerCar().getPhysicsVehicle());
     for(size_t q = 0; q < gameState.getAICountInRace(); ++q)

@@ -35,6 +35,7 @@ UIBaseMenu::UIBaseMenu(const ModeContext& modeContext, const GameMode gameMode)
     memset(mControlClicked, 0, sizeof(bool) * mControlsCount);
     memset(mControlActivated, 1, sizeof(bool) * mControlsCount);
     memset(mControlOver, 0, sizeof(bool) * mControlsCount);
+    memset(mControlMirrored, 0, sizeof(bool) * mControlsCount);
 
     mRemapTrack.insert(std::make_pair<std::string, size_t>("desert track", 0));
     mRemapTrack.insert(std::make_pair<std::string, size_t>("speedway track", 1));
@@ -545,7 +546,7 @@ void UIBaseMenu::mousePressed(const Ogre::Vector2& pos)
             {
                 if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
                 {
-                    mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                    setControlUVState(q, 0.5f, 0.75f);
                     mControlClicked[q] = true;
                 }
             }
@@ -561,12 +562,12 @@ void UIBaseMenu::mouseReleased(const Ogre::Vector2& pos, OIS::MouseButtonID id)
         {
             if(mControlActivated[q] && mControls[q]->isVisible())
             {
-                mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+                setControlUVState(q, 0.0f, 0.25f);
                 mControlClicked[q] = false;
 
                 if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
                 {
-                    mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                    setControlUVState(q, 0.25f, 0.5f);
                     panelHit(mControls[q]);
 #ifndef NO_OPENAL
                     mModeContext.getSoundsProcesser().playUIDown();
@@ -588,9 +589,9 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
                 if(OgreBites::Widget::isCursorOver(mControls[q], pos, 0))
                 {
                     if(mControlClicked[q])
-                        mControls[q]->setUV(0.0f, 0.5f, 1.0f, 0.75f);
+                        setControlUVState(q, 0.5f, 0.75f);
                     else
-                        mControls[q]->setUV(0.0f, 0.25f, 1.0f, 0.5f);
+                        setControlUVState(q, 0.25f, 0.5f);
                     mControlsText[q]->show();
 
 #ifndef NO_OPENAL
@@ -604,7 +605,7 @@ void UIBaseMenu::mouseMoved(const Ogre::Vector2& pos)
                 else
                 {
                     mControlOver[q] = false;
-                    mControls[q]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+                    setControlUVState(q, 0.0f, 0.25f);
                     mControlsText[q]->hide();
                 }
             }
@@ -621,11 +622,11 @@ void UIBaseMenu::setControlActive(size_t index, bool isActive)
         if(!isActive)
         {
             mControlsText[index]->hide();
-            mControls[index]->setUV(0.0f, 0.75f, 1.0f, 1.0f);
+            setControlUVState(index, 0.75f, 1.0f);
         }
         else
         {
-            mControls[index]->setUV(0.0f, 0.0f, 1.0f, 0.25f);
+            setControlUVState(index, 0.0f, 0.25f);
         }
     }
 }
@@ -646,20 +647,51 @@ void UIBaseMenu::setControlShow(size_t index, bool isShow)
     }
 }
 
+void UIBaseMenu::setControlUVState(size_t index, Ogre::Real v1, Ogre::Real v2)
+{
+    if(index < mControlsCount && mControls[index])
+    {
+        //a mirrored control draws U from 1.0 down to 0.0 so the texture is
+        //flipped horizontally; otherwise the normal 0.0..1.0 mapping applies.
+        if(mControlMirrored[index])
+            mControls[index]->setUV(1.0f, v1, 0.0f, v2);
+        else
+            mControls[index]->setUV(0.0f, v1, 1.0f, v2);
+    }
+}
+
 void UIBaseMenu::selectMode()
 {
+    //the Mode button (mControls[0]) reflects the selected game mode. Deathmatch
+    //reuses the single-race material, so to make it visually distinct the button
+    //is drawn horizontally mirrored — set the per-control mirror flag and let the
+    //centralised setControlUVState() apply the flipped U on every state row.
     if(mGameModeSelected == ModeMenuChampionship)
     {
+        mControlMirrored[0] = false;
         mControls[0]->setMaterialName("Test/BackgroundChampionship");
     }
     else if(mGameModeSelected == ModeMenuTimetrial)
     {
+        mControlMirrored[0] = false;
         mControls[0]->setMaterialName("Test/BackgroundTimetrial");
+    }
+    else if(mGameModeSelected == ModeMenuDeathmatch)
+    {
+        mControlMirrored[0] = true;
+        mControls[0]->setMaterialName("Test/BackgroundSingle");
     }
     else
     {
+        mControlMirrored[0] = false;
         mControls[0]->setMaterialName("Test/BackgroundSingle");
     }
+
+    //re-apply the current UV row so the (possibly flipped) orientation takes
+    //effect immediately; setControlUVState honours the flag just set. Use the
+    //row matching the control's activation state (inactive == greyed bottom row).
+    setControlUVState(0, mControlActivated[0] ? 0.0f : 0.75f,
+                         mControlActivated[0] ? 0.25f : 1.0f);
 }
 
 void UIBaseMenu::selectTrack(const std::string& trackName)

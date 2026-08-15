@@ -68,6 +68,7 @@ protected:
     void showExitLabels(const std::string& title);
     void showRaceGridCharactersLabels();
     void showPodiumLabels(const finishBoardVec& finishBoard);
+    void showDeathmatchStatsLabels();
     void showLeaderboardLabels(const finishBoardVec& finishBoard);
     void showChampionshipResultsLabels();
     void showMultiIPLabels();
@@ -108,6 +109,7 @@ private:
     UILabel* mModeSingleTypeRace;
     UILabel* mModeSingleTypeChampionship;
     UILabel* mModeSingleTypeTimetrial;
+    UILabel* mModeSingleTypeDeathmatch;
     UILabel* mModeSingleDifficultyNovice;
     UILabel* mModeSingleDifficultyAdvanced;
     UILabel* mModeSingleDifficultyExpert;
@@ -156,6 +158,7 @@ private:
     UILabel* mOptionRaceLabel_Opponents_Val;
     UILabel* mOptionRaceLabel_Transmission_Val;
     UILabel* mOptionRaceLabel_KMPH_Val;
+    UILabel* mOptionRaceLabel_Batches_Val;   //massacre: racing grid batches value
     UIButtonTick* mShadowVal;
     UIButtonTick* mVSyncVal;
     UIButtonTick* mFulscreenVal;
@@ -164,8 +167,11 @@ private:
     UIButton* mGammaValRight;
     UIButton* mOpponentsValLeft;
     UIButton* mOpponentsValRight;
+    UIButton* mBatchesValLeft;                //massacre: racing grid batches -/+
+    UIButton* mBatchesValRight;
     UIButtonTick* mMirrorVal;
     UIButtonTick* mGhostVal;
+    UIButtonTick* mMassacreVal;               //massacre sub-mode (deathmatch only)
     UIButtonTick* mAdvLightingPlayerVal;
     UIButtonTick* mAttenuationPlayerVal;
     UIButtonTick* mAdvLightingAIVal;

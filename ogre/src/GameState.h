@@ -110,7 +110,22 @@ public:
 
     static const size_t mRaceGridCarsMax = 12;
     static const int mAIMin = 3;
-    static const int mAIMax = 11;
+    //opponents slider cap for normal modes (single/championship/timetrial/
+    //multiplayer/non-massacre deathmatch). The slider and setAICount clamp to
+    //this, NOT to mAIMax — mAIMax is the storage/race cap raised for massacre.
+    static const int mOpponentsMax = 11;
+    //massacre sub-mode raises the AI cap so a deathmatch field can be built in
+    //batches of 11 AI + player (see DeathmatchMode / BaseRaceMode batched start).
+    //Android stays lower (memory budget). 11*25 batches = 275 AI fits the 299 ceiling.
+#if defined(__ANDROID__)
+    static const int mAIMax = 99;
+#else
+    static const int mAIMax = 299;
+#endif
+    //massacre: number of 11-AI batches to generate (1..25).
+    static const size_t mBatchesMin = 1;
+    static const size_t mBatchesMax = 25;
+    static const size_t mBatchSize = mRaceGridCarsMax; //12 AI per batch; final batch has 11 AI + player
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
@@ -125,6 +140,13 @@ public:
 
     void setAICountInRace(size_t opponentsAmount);
     size_t getAICountInRace()const{return mAiOpponentsAmountInRace;}
+
+    //massacre sub-mode (deathmatch only): build the field in batches of 11 AI + player.
+    void setMassacreEnabled(bool enabled){mIsMassacreEnabled = enabled;}
+    bool getMassacreEnabled()const{return mIsMassacreEnabled;}
+    bool isMassacreEnabled()const{return mIsMassacreEnabled;}
+    void setRaceGridBatches(size_t batches);
+    size_t getRaceGridBatches()const{return mRaceGridBatches;}
 
     AIStrength getAIStrength()const{return mAIStrength;}
 
@@ -213,6 +235,11 @@ public:
     void setGamePaused();
     void resetGamePaused();
     bool isGamePaused()const{return mIsGamePaused;}
+
+    //deathmatch: vehicles have life, collisions deal damage, dead cars explode and are removed.
+    //Inert for all existing modes (life stays at full, no damage applied) unless set by a mode.
+    void setDeathmatch(bool enabled){mIsDeathmatch = enabled; mLapsCount = mIsDeathmatch ? mIsMassacreEnabled ? mMassacreLapsOverride : mSTRPowerslide.getLapsCount(mTrackName) : mSTRPowerslide.getLapsCount(mTrackName);}
+    bool isDeathmatch()const{return mIsDeathmatch;}
 
     InputType getInputType() const {return mInputType;}
     void setInputType(InputType type) {mInputType = type;}
@@ -305,9 +332,13 @@ private:
     PSPlayerCar mPSPlayerCar;
     size_t mAiOpponentsAmount;
     size_t mAiOpponentsAmountInRace;
+    //massacre sub-mode (deathmatch only)
+    bool mIsMassacreEnabled;
+    static const size_t mMassacreLapsOverride = 99;
+    size_t mRaceGridBatches;
     std::vector<std::string> mAICharacters;
     AIStrength mAIStrength;
-    PSAICar mPSCar[mAIMax];
+    std::vector<PSAICar> mPSCar;
     Ogre::Vector3 mPlayerCarPrevVel;
 
     Ogre::ManualObject* mLLTObject;
@@ -356,6 +387,7 @@ private:
     Ogre::Real mMusicGain; //0.0 - 1.0
 
     bool mIsGamePaused;
+    bool mIsDeathmatch;
 
     InputType mInputType;
 

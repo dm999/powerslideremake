@@ -52,11 +52,15 @@ public:
 
     Ogre::int32 getAfterStartCounter () const {return mAfterStartCounter;}
 
+    //deathmatch: broadcasts a carDead event to every listener. Only ever called
+    //when a vehicle's life is <= 0, which can only happen in deathmatch mode.
+    void onCarDead(PhysicsVehicle* vehicle);
+
 private:
 
     void internalTimeStep(GameState& gameState);
 
-    void processCarsCollisions(PhysicsVehicle* vehicle);
+    void processCarsCollisions(PhysicsVehicle* vehicle, GameState& gameState);
     void processCollisionsImpulseWeighter(PhysicsVehicle* vehicle);
 
     Ogre::Timer mTimer;

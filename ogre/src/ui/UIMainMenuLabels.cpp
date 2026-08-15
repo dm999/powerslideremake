@@ -1,6 +1,8 @@
 
 #include "UIMainMenuLabels.h"
 
+#include <algorithm>
+
 #include "../tools/Conversions.h"
 
 #include "../gamelogic/GameModeSwitcher.h"
@@ -230,7 +232,7 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
     {
         size_t aiCount = mModeContext.getGameState().getAICount();
         ++aiCount;
-        if(aiCount <= GameState::mAIMax)
+        if(aiCount <= GameState::mOpponentsMax)
         {
             mModeContext.getGameState().setAICount(aiCount);
             mModeContext.getGameState().setAICountInRace(aiCount);
@@ -263,6 +265,57 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         else
         {
             mModeContext.getGameState().setGhostEnabled(false);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mMassacreVal)
+    {
+        //massacre sub-mode (deathmatch only): toggle building the field in
+        //batches of 11 AI + player. The opponents slider is ignored while
+        //massacre is on — the field size comes from the batches slider.
+        if(mMassacreVal->getChecked())
+        {
+            mModeContext.getGameState().setMassacreEnabled(true);
+            //show the batches slider when massacre is enabled
+            mBatchesValLeft->setActive(true);
+            mBatchesValRight->setActive(true);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(Ogre::ColourValue::White);
+        }
+        else
+        {
+            mModeContext.getGameState().setMassacreEnabled(false);
+            //hide the batches slider when massacre is disabled
+            mBatchesValLeft->setActive(false);
+            mBatchesValRight->setActive(false);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mBatchesValLeft)
+    {
+        size_t batches = mModeContext.getGameState().getRaceGridBatches();
+        --batches;
+        if(batches >= GameState::mBatchesMin)
+        {
+            mModeContext.getGameState().setRaceGridBatches(batches);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mBatchesValRight)
+    {
+        size_t batches = mModeContext.getGameState().getRaceGridBatches();
+        ++batches;
+        if(batches <= GameState::mBatchesMax)
+        {
+            mModeContext.getGameState().setRaceGridBatches(batches);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -417,6 +470,10 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mGameModeSelected = ModeMenu;
         switchState(State_Difficulty);
+        //selectMode() is needed here (unlike the historic skip) so the Mode
+        //button's mirror flag is cleared when switching away from deathmatch;
+        //otherwise single race would inherit deathmatch's flipped texture.
+        selectMode();
     }
 
     if(label == mModeSingleTypeChampionship)
@@ -433,11 +490,18 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
         selectMode();
     }
 
+    if(label == mModeSingleTypeDeathmatch)
+    {
+        mGameModeSelected = ModeMenuDeathmatch;
+        switchState(State_Difficulty);
+        selectMode();
+    }
+
     if(label == mModeSingleDifficultyNovice)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Easy, mModeContext.getGameState().getLapsCount());
 
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -452,7 +516,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Medium, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -467,7 +531,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Hard, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -482,7 +546,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), Insane, mModeContext.getGameState().getLapsCount());
         
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -497,7 +561,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
     {
         mModeContext.getGameState().setRaceParameters(mModeContext.getGameState().getTrackName(), UltraInsane, mModeContext.getGameState().getLapsCount());
 
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_Track);
         }
@@ -569,7 +633,15 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
             }
             else
             {
-                mModeContext.getGameState().setAICountInRace(mModeContext.getGameState().getAICount());
+                //massacre (deathmatch only): field size comes from the batches
+                //slider, not the opponents slider. Gate on the deathmatch menu
+                //mode so a persisted massacre toggle doesn't bleed into single
+                //race / championship started from the character-select screen.
+                GameState& gameState = mModeContext.getGameState();
+                const size_t aiCount = (mGameModeSelected == ModeMenuDeathmatch && gameState.getMassacreEnabled())
+                    ? GameState::mBatchSize * gameState.getRaceGridBatches()
+                    : gameState.getAICount();
+                gameState.setAICountInRace(aiCount);
                 switchState(State_StartingGrid);
             }
         }
@@ -613,7 +685,7 @@ void UIMainMenuLabels::onLabelReleased(UILabel * label)
 
     if(label == mGameExitNoLabel)
     {
-        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial)
+        if(mGameModeSelected == ModeMenu || mGameModeSelected == ModeMenuTimetrial || mGameModeSelected == ModeMenuDeathmatch)
         {
             switchState(State_SingleMulti);
             selectMode();
@@ -989,8 +1061,19 @@ void UIMainMenuLabels::showTrackLabels()
     const STRPowerslide& strPowerslide = mModeContext.getGameState().getSTRPowerslide();
     std::vector<std::string> availTracks = strPowerslide.getArrayValue("", "available tracks");
 
+    //deathmatch is a last-car-standing brawl; the stunt and luge tracks are
+    //gimmick courses (jumps/rails) unsuited to it, so never offer them there.
+    //Hide rather than remove: the rest of the UI assumes mTracksLabels[q] keeps
+    //the same index as availTracks[q] (e.g. the index-8 stunt special-case in
+    //setTrackBestTime and the click/over handlers), so skipping show() alone
+    //preserves that alignment.
+    const bool isDeathmatch = (mGameModeSelected == ModeMenuDeathmatch);
+
     for(size_t q = 0; q < mTracksLabels.size(); ++q)
     {
+        if(isDeathmatch && (availTracks[q] == "stunt track" || availTracks[q] == "luge track"))
+            continue;
+
         int difficultyAvailable = strPowerslide.getIntValue(availTracks[q] + " parameters", "difficulty available", 0);
 
         if(difficultyAvailable <= gameLevel)
@@ -1149,6 +1232,27 @@ void UIMainMenuLabels::showOptionRaceLabels()
     mUIButtonsManager.show("mOptionRace");
     mUIButtonTicksManager.show("mOptionRace");
     mUILabelsManager.show("mOptionRace");
+
+    //massacre sub-mode rows (Massacre checkbox + Racing grid batches slider)
+    //are deathmatch-only. hideAllLabels() (called on every state switch) hides
+    //everything first, so here we just additionally show the massacre group when
+    //deathmatch is the selected menu mode — it stays hidden for every other mode.
+    //Mirrors the isDeathmatch track-filter gate in showTrackLabels.
+    if(mGameModeSelected == ModeMenuDeathmatch)
+    {
+        mUIButtonsManager.show("mOptionRaceDM");
+        mUIButtonTicksManager.show("mOptionRaceDM");
+        mUILabelsManager.show("mOptionRaceDM");
+
+        //the batches slider is only relevant when massacre is on; hide it if
+        //massacre is currently unchecked (user can toggle it on to reveal).
+        if(!mModeContext.getGameState().getMassacreEnabled())
+        {
+            mBatchesValLeft->setActive(false);
+            mBatchesValRight->setActive(false);
+            mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
+        }
+    }
 }
 
 void UIMainMenuLabels::showOptionHiscoreLabels()
@@ -1182,7 +1286,12 @@ void UIMainMenuLabels::showExitLabels(const std::string& title)
 
 void UIMainMenuLabels::showRaceGridCharactersLabels()
 {
-    for(size_t q = 0; q < mModeContext.getGameState().getAICountInRace() + 1; ++q)
+    //the grid number labels are a fixed mRaceGridCarsMax (12) array; a massacre
+    //field is larger, so show only the first 12 (matches the portrait strip in
+    //showBackgroundCharacterSmall).
+    const size_t totalCars = mModeContext.getGameState().getAICountInRace() + 1;
+    const size_t carsToShow = totalCars < GameState::mRaceGridCarsMax ? totalCars : GameState::mRaceGridCarsMax;
+    for(size_t q = 0; q < carsToShow; ++q)
     {
         mRaceGridCharactersLabel[q]->show();
     }
@@ -1225,6 +1334,100 @@ void UIMainMenuLabels::showPodiumLabels(const finishBoardVec& finishBoard)
             mPodiumTable4Label[q]->setCaption(Tools::SecondsToString(finishBoard[q].mBestLapTime));
         else
             mPodiumTable4Label[q]->setCaption("N/A");
+
+        mPodiumTable1Label[q]->show();
+        mPodiumTable2Label[q]->show();
+        mPodiumTable3Label[q]->show();
+        mPodiumTable4Label[q]->show();
+    }
+}
+
+void UIMainMenuLabels::showDeathmatchStatsLabels()
+{
+    //reuse the podium table widgets (sized to mRaceGridCarsMax) to show
+    //deathmatch statistics: the player's total race time plus each AI's
+    //elimination time (or "Survived"). No finish board / lap times.
+    const deathmatchResultVec& results = mModeContext.getDeathmatchResults();
+
+    std::string playerName = mModeContext.getGameState().getPlayerName();
+
+    //count AI that were still alive at session end for the header banner.
+    size_t survivedAI = 0;
+    for(size_t q = 0; q < results.size(); ++q)
+    {
+        if(!results[q].mIsPlayer && results[q].mSurvived)
+            ++survivedAI;
+    }
+
+    mPodiumTableTitle1Label->setCaption("Survived");
+    mPodiumTableTitle2Label->setCaption("Car");
+    mPodiumTableTitle3Label->setCaption("Time");
+    mPodiumTableTitle4Label->setCaption("Status");
+    mPodiumTableTitle1Label->show();
+    mPodiumTableTitle2Label->show();
+    mPodiumTableTitle3Label->show();
+    mPodiumTableTitle4Label->show();
+
+    //order rows: survivors at the top, eliminated AI at the bottom.
+    //Among survivors the player (winner) comes first, then surviving AI.
+    //Among eliminated AI, the latest-eliminated (largest elimination time)
+    //ranks highest and the earliest-eliminated (smallest time) sinks to the
+    //bottom — so the table reads best-to-worst survival downward.
+    deathmatchResultVec sortedResults = results;
+    std::sort(sortedResults.begin(), sortedResults.end(), DeathmatchResultRow::sortByRank);
+
+    const size_t rowsToShow = sortedResults.size() < GameState::mRaceGridCarsMax
+                                ? sortedResults.size() : GameState::mRaceGridCarsMax;
+    for(size_t q = 0; q < rowsToShow; ++q)
+    {
+        const DeathmatchResultRow& row = sortedResults[q];
+
+        //mark eliminated AI rows in green so they stand out from the player
+        //and any AI still alive at session end.
+        const Ogre::ColourValue rowColour =
+            (!row.mIsPlayer && !row.mSurvived) ? Ogre::ColourValue::Green : Ogre::ColourValue::White;
+
+        mPodiumTable1Label[q]->setCaption(Conversions::DMToString(q + 1));
+        mPodiumTable1Label[q]->setColour(rowColour);
+
+        if(row.mIsPlayer)
+            mPodiumTable2Label[q]->setCaption(playerName);
+        else
+            mPodiumTable2Label[q]->setCaption(STRPowerslide::getCharacterTitle(row.mName));
+        mPodiumTable2Label[q]->setColour(rowColour);
+
+        //every row shows a time: the player's total race time, the race clock
+        //at session end for survived AI, or the race clock at elimination for
+        //dead AI. A player who survived but didn't complete all laps (DNF —
+        //AI finished their laps first) shows "DNF" instead of a time.
+        if(row.mTime < 0.0f)
+            mPodiumTable3Label[q]->setCaption("DNF");
+        else
+            mPodiumTable3Label[q]->setCaption(Tools::SecondsToString(row.mTime));
+        mPodiumTable3Label[q]->setColour(rowColour);
+
+        //status colour: winner green, loser red, survived yellow. Eliminated
+        //AI inherit the green row colour, so their status reads green too.
+        Ogre::ColourValue statusColour = rowColour;
+        if(row.mIsPlayer)
+        {
+            //the player is the winner only if no AI survived the session;
+            //if any AI were still alive at the end (e.g. the player finished
+            //the final lap before clearing the field), the player lost.
+            const bool winner = (survivedAI == 0);
+            mPodiumTable4Label[q]->setCaption(winner ? "Winner" : "Loser");
+            statusColour = winner ? Ogre::ColourValue::Green : Ogre::ColourValue::Red;
+        }
+        else if(row.mSurvived)
+        {
+            mPodiumTable4Label[q]->setCaption("Survived");
+            statusColour = Ogre::ColourValue(1.0f, 1.0f, 0.0f);
+        }
+        else
+        {
+            mPodiumTable4Label[q]->setCaption("Eliminated");
+        }
+        mPodiumTable4Label[q]->setColour(statusColour);
 
         mPodiumTable1Label[q]->show();
         mPodiumTable2Label[q]->show();

@@ -7,6 +7,7 @@
 #include "../gamemodes/MenuMultiMode.h"
 #include "../gamemodes/SinglePlayerMode.h"
 #include "../gamemodes/MultiPlayerMode.h"
+#include "../gamemodes/DeathmatchMode.h"
 
 #include "../customs/CustomTrayManager.h"
 
@@ -71,8 +72,8 @@ void GameModeSwitcher::frameRenderingQueued(const Ogre::FrameEvent &evt)
  */
 void GameModeSwitcher::frameEnded()
 {
-    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceTimetrial ||mGameMode == ModeRaceMulti;
-    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceTimetrial || mGameModeNext == ModeRaceMulti;
+    bool modeRace = mGameMode == ModeRaceSingle || mGameMode == ModeRaceChampionship || mGameMode == ModeRaceTimetrial ||mGameMode == ModeRaceMulti || mGameMode == ModeRaceDeathmatch;
+    bool modeRaceNext = mGameModeNext == ModeRaceSingle || mGameModeNext == ModeRaceChampionship || mGameModeNext == ModeRaceTimetrial || mGameModeNext == ModeRaceMulti || mGameModeNext == ModeRaceDeathmatch;
 
     if(mIsRecreate)
     {
@@ -150,6 +151,34 @@ void GameModeSwitcher::frameEnded()
                 }
             }
         }
+        //extract lap data after deathmatch race
+        if(mGameMode == ModeRaceDeathmatch && mGameModeNext == ModeMenu || raceOverAndReadyToQuit && mGameMode == ModeRaceDeathmatch)
+        {
+            mContext.setLapController(mPlayerMode->getLapController());
+            //deathmatch statistics (player race time + per-AI elimination times)
+            //are captured on the race mode itself; copy them into the switcher's
+            //ModeContext (each mode holds a private copy, same as lapController
+            //above) so the post-race menu can read them. No finish board is
+            //needed — the stats screen reads getDeathmatchResults().
+            //The results are frozen on a natural finish (carDead / onLapFinished).
+            //If the player Esc-quit early, neither ran and the results are still
+            //empty — freeze them now from the still-live race state (this runs
+            //before clear()) so the stats screen shows a table instead of an
+            //empty one.
+            if(mPlayerMode->getDeathmatchResults().empty())
+            {
+                DeathmatchMode* dm = dynamic_cast<DeathmatchMode*>(mPlayerMode.get());
+                if(dm)
+                {
+                    //player Esc-quit before any natural finish path ran — they
+                    //didn't complete the race, so pass false for isPlayerFinished.
+                    const bool playerFinished = mContext.getGameState().getPlayerCar().getLapUtils().getCurrentLap()
+                                                >= mContext.getGameState().getLapsCount();
+                    dm->fillDeathmatchResults(playerFinished);
+                }
+            }
+            mContext.setDeathmatchResults(mPlayerMode->getDeathmatchResults());
+        }
         //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)
         {
@@ -222,6 +251,28 @@ void GameModeSwitcher::frameEnded()
                 //mContext.mTrayMgr->showCursor();
 
                 mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenu, State_Podium);
+                mIsLoadPassed = false;
+                mUIUnloader->show();
+                mMenuMode->initData(this);
+                mUIUnloader->hide();
+                mIsLoadPassed = true;
+                mMenuMode->initCamera();
+            }
+
+            //deathmatch race -> single main menu
+            if(mGameMode == ModeRaceDeathmatch)
+            {
+                //keep the deathmatch menu mode active after the race: the Mode
+                //button stays mirrored and clicking Race restarts another
+                //deathmatch. The mirror is driven by the menu's mGameModeSelected,
+                //which is set from the MenuMode constructor's gameMode param below
+                //(ModeMenuDeathmatch) — NOT from the switcher's mGameMode. The
+                //switcher's mGameMode stays ModeMenu so the existing menu-mode
+                //logic in BaseApp (Esc/exit dialog) and the race-start branches
+                //below keep matching unmodified.
+                mGameMode = ModeMenu;
+
+                mMenuMode = std::make_shared<MenuMode>(mContext, ModeMenuDeathmatch, State_DeathmatchStats);
                 mIsLoadPassed = false;
                 mUIUnloader->show();
                 mMenuMode->initData(this);
@@ -341,6 +392,22 @@ void GameModeSwitcher::frameEnded()
             mPlayerMode = std::make_shared<SinglePlayerMode>(mContext);
             mIsLoadPassed = false;
             mUILoader->show(mContext, false);
+            mPlayerMode->initData(this);
+            mUILoader->hide();
+            mIsLoadPassed = true;
+            mPlayerMode->initCamera();
+        }
+
+        //main menu single (deathmatch) -> race deathmatch
+        if(mGameMode == ModeMenu && mIsSwitchMode && mGameModeNext == ModeRaceDeathmatch)
+        {
+            mIsSwitchMode = false;
+
+            mGameMode = mGameModeNext;
+
+            mPlayerMode = std::make_shared<DeathmatchMode>(mContext);
+            mIsLoadPassed = false;
+            mUILoader->show(mContext, true);
             mPlayerMode->initData(this);
             mUILoader->hide();
             mIsLoadPassed = true;
@@ -618,7 +685,7 @@ void GameModeSwitcher::loadState(float percent, const std::string& info)
     if(mIsInitialLoadPassed)
         mContext.mInputHandler->capture();
 
-    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceTimetrial || mGameMode == ModeRaceMulti)
+    if(mGameMode == ModeRaceSingle || mGameMode == ModeRaceTimetrial || mGameMode == ModeRaceMulti || mGameMode == ModeRaceDeathmatch)
     {
         mUILoader->setPercent(percent, info);
     }

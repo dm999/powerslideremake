@@ -42,12 +42,17 @@ public:
     void setCurrentLap(unsigned short lap, unsigned short totallap);
     void setCarGear(unsigned char gear);
 
-    void setCarPos(unsigned char pos, unsigned char totalcars);
+    void setCarPos(size_t pos, size_t totalcars);
 
     void hideAIDashboardCars();
     void setPlayerDashBoardSkin(const GameState& gameState);
     void setAIDashBoardSkin(const GameState& gameState, size_t aiDashIndex, const std::string& characterName);
     void setDashCarPos(size_t aiDashIndex, size_t playerLap, Ogre::Real playerLapPos, size_t aiLap, Ogre::Real aiLapPos);
+
+    //Current number of AI dashboard slots (equals the AI count the dashboard was
+    //sized for). In normal modes this is 11; in massacre it matches the field size
+    //so every AI gets a slot.
+    size_t getDashboardCarsCount() const { return mDashboardCars.size(); }
 
     void setRaceTime(const std::string& time);
 
@@ -118,8 +123,10 @@ private:
     Ogre::PanelOverlayElement* mBeforeStartPanelGoR;
 
     Ogre::PanelOverlayElement* mPlayerDashboardCar;
-    static const int mDashboardCarsCount = 11;
-    Ogre::PanelOverlayElement* mDashboardCars[mDashboardCarsCount];
+    //Dynamic vector of AI dashboard car panels. Sized to match the AI count at
+    //load time (11 in normal modes, up to 275 in massacre). Icons shrink to fit
+    //the dashboard strip width when there are more cars than the original 11.
+    std::vector<Ogre::PanelOverlayElement*> mDashboardCars;
 
     Ogre::SceneNode * mChildNeedle;
     Ogre::ManualObject* mNeedle;
@@ -140,10 +147,24 @@ private:
 
     Ogre::PanelOverlayElement* mTachoTotalCarsDigit1;
     Ogre::PanelOverlayElement* mTachoTotalCarsDigit2;
+    Ogre::PanelOverlayElement* mTachoTotalCarsDigit3;
     Ogre::PanelOverlayElement* mTachoPosDigit1;
     Ogre::PanelOverlayElement* mTachoPosDigit2;
+    Ogre::PanelOverlayElement* mTachoPosDigit3;
     Ogre::PanelOverlayElement* mTachoTotalCarsDigitDiv;
     Ogre::Real mDashDigitLeftTotalCars1;
+    Ogre::Real mDashDigitLeftTotalCars2;
+    Ogre::Real mDashDigitLeftTotalCars3;
+    Ogre::Real mDashDigitLeftTotalCarsDiv;
+    Ogre::Real mDashDigitLeftPos1;
+    Ogre::Real mDashDigitLeftPos2;
+    Ogre::Real mDashDigitLeftPos3;
+    Ogre::Real mDashDigitWidth;
+    Ogre::Real mDashDigitWidthSmall;
+    Ogre::Real mDashDigitHeight;
+    Ogre::Real mDashDigitHeightSmall;
+    Ogre::Real mDashDigitTop;
+    Ogre::Real mDashDigitTopSmall;
 
     Ogre::PanelOverlayElement* mDashLap1;
     Ogre::PanelOverlayElement* mDashLap2;

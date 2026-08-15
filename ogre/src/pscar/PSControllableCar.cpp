@@ -34,8 +34,26 @@ PSControllableCar::PSControllableCar() :
     mIsDisableMouse(true),
     mCameraMan(NULL),
     mBrakeEnabled(false),
-    mAccelEnabled(false)
+    mAccelEnabled(false),
+    mDeadParticle(NULL),
+    mDeadParticle2(NULL),
+    mParticleDead(NULL),
+    mParticleDead2(NULL)
 {
+}
+
+void PSControllableCar::clear()
+{
+    PSBaseCar::clear();
+
+    //the SceneManager (and thus these particle systems/nodes) is destroyed right
+    //after clear() by clearScene; drop the pointers so the guard in
+    //processFrameBeforePhysics cannot dereference them between races. initModel
+    //recreates them (deathmatch) or leaves them null (other modes) on the next race.
+    mDeadParticle = NULL;
+    mDeadParticle2 = NULL;
+    mParticleDead = NULL;
+    mParticleDead2 = NULL;
 }
 
 void PSControllableCar::initModel(  lua_State * pipeline, 
@@ -169,6 +187,89 @@ void PSControllableCar::initModel(  lua_State * pipeline,
 
     mParticleNodeWheelBackR = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
     mParticleNodeWheelBackR->attachObject(mWheelBackRParticle);
+
+    //deathmatch: per-vehicle death FX (black smoke + orange embers). Gated on
+    //isDeathmatch() so single/championship/timetrial/multi pay no cost and the
+    //pointers stay NULL (guarded in processFrameBeforePhysics).
+    if(gameState.isDeathmatch())
+    {
+        mDeadParticle = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
+        mDeadParticle2 = sceneMgr->createParticleSystem(nameGenNodes.generate(), "Particle/Wheel");
+
+        mParticleMaterialNameDead = nameGenMaterialsParticles.generate();
+        mParticleMaterialNameDead2 = nameGenMaterialsParticles.generate();
+
+        if(!isFogEnabled)
+        {
+            CloneMaterial(mParticleMaterialNameDead,
+                "Test/Particle",
+                std::vector<Ogre::String>(),
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+
+            CloneMaterial(mParticleMaterialNameDead2,
+                "Test/ParticleAlpha",
+                std::vector<Ogre::String>(),
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+        else
+        {
+            CloneMaterial(mParticleMaterialNameDead,
+                "Test/ParticleFog",
+                std::vector<Ogre::String>(),
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+
+            CloneMaterial(mParticleMaterialNameDead2,
+                "Test/ParticleFogAlpha",
+                std::vector<Ogre::String>(),
+                1.0f,
+                TEMP_RESOURCE_GROUP_NAME);
+        }
+
+        mDeadParticle->setMaterialName(mParticleMaterialNameDead);
+        mDeadParticle2->setMaterialName(mParticleMaterialNameDead2);
+
+        //black smoke
+        mDeadParticle->getEmitter(0)->setColour(Ogre::ColourValue(0.0f, 0.0f, 0.0f));
+        mDeadParticle->getEmitter(0)->setDirection(Ogre::Vector3::UNIT_Y);
+        mDeadParticle->setDefaultHeight(8.0f);
+        mDeadParticle->setDefaultWidth(8.0f);
+
+        {
+            Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialNameDead);
+            Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            stateParticle->setTextureScale(8.0f, 8.0f);
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -5.0f / 16.0f);
+
+            mDeadParticle->getEmitter(0)->setMaxParticleVelocity(40.0f);
+            mDeadParticle->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
+        }
+
+        //orange embers
+        mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.3f, 0.0f));
+        mDeadParticle2->getEmitter(0)->setDirection(Ogre::Vector3::UNIT_Y);
+
+        {
+            Ogre::MaterialPtr particleMaterial = Ogre::MaterialManager::getSingleton().getByName(mParticleMaterialNameDead2);
+            Ogre::TextureUnitState * stateParticle = particleMaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+            stateParticle->setTextureScale(8.0f, 8.0f);
+            stateParticle->setTextureScroll(-7.0f / 16.0f, -7.0f / 16.0f);
+
+            mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(40.0f);
+            mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
+        }
+
+        mDeadParticle->setEmitting(false);
+        mDeadParticle2->setEmitting(false);
+
+        mParticleDead = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
+        mParticleDead->attachObject(mDeadParticle);
+
+        mParticleDead2 = sceneMgr->getRootSceneNode()->createChildSceneNode(nameGenNodes.generate());
+        mParticleDead2->attachObject(mDeadParticle2);
+    }
 }
 
 
@@ -197,6 +298,67 @@ void PSControllableCar::processFrameBeforePhysics(const StaticMeshProcesser& pro
     {
         mWheelBackLParticle->setEmitting(false);
         mWheelBackRParticle->setEmitting(false);
+    }
+
+    //deathmatch: damage smoke (life < 1.0) -> death smoke + embers (life <= 0).
+    //Null-guarded: dead FX are only created when isDeathmatch(), so this is a
+    //no-op in every other mode. Emission scales with lost life; embers intensify
+    //briefly on death then settle, and both stop after ~60s of dead ticks.
+    if(mDeadParticle && mDeadParticle2 && mParticleDead && mParticleDead2)
+    {
+        Ogre::Real life = mPhysicsVehicle->getLife();
+
+        if(life < 1.0f)
+        {
+            if(mPhysicsVehicle->getDeadTicks() > 60 * 60)
+            {
+                mDeadParticle->setEmitting(false);
+                mDeadParticle2->setEmitting(false);
+            }
+            else
+            {
+                mParticleDead->setPosition(mModelNode->getPosition());
+                mParticleDead2->setPosition(mModelNode->getPosition());
+                mDeadParticle->setEmitting(true);
+
+                const Ogre::Real emissionRateMax = 200.0f;
+                const Ogre::Real emissionRateMax2 = 100.0f;
+                Ogre::Real emissionRate = emissionRateMax * (1.0f - std::max(life, 0.0f));
+                Ogre::Real emissionRate2 = emissionRateMax2 * (1.0f - std::max(life, 0.0f));
+
+                if(life < 0.5f)
+                {
+                    mDeadParticle2->setEmitting(true);
+                    mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
+
+                    if(life <= 0.0f)
+                    {
+                        if(mPhysicsVehicle->getDeadTicks() < 30)
+                        {
+                            //blast flash
+                            mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(1.0f, 0.1f, 0.0f));
+                            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2 * 10.0f);
+                            mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(60.0f);
+                            mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(45.0f));
+                        }
+                        else
+                        {
+                            //lingering embers
+                            mDeadParticle2->getEmitter(0)->setColour(Ogre::ColourValue(0.5f, 0.1f, 0.0f));
+                            mDeadParticle2->getEmitter(0)->setEmissionRate(emissionRate2);
+                            mDeadParticle2->getEmitter(0)->setMaxParticleVelocity(40.0f);
+                            mDeadParticle2->getEmitter(0)->setAngle(Ogre::Degree(20.0f));
+                        }
+                    }
+                }
+                mDeadParticle->getEmitter(0)->setEmissionRate(emissionRate);
+            }
+        }
+        else
+        {
+            mDeadParticle->setEmitting(false);
+            mDeadParticle2->setEmitting(false);
+        }
     }
 
 }
@@ -352,6 +514,8 @@ void PSControllableCar::setParticlesVisibility(bool isVisible)
 {
     if (mWheelBackLParticle) mWheelBackLParticle->setVisible(isVisible);
     if (mWheelBackRParticle) mWheelBackRParticle->setVisible(isVisible);
+    if (mDeadParticle) mDeadParticle->setVisible(isVisible);
+    if (mDeadParticle2) mDeadParticle2->setVisible(isVisible);
 }
 
 void PSControllableCar::processSounds()

@@ -25,6 +25,9 @@ public:
 
     bool isInProgress() const {return mIsBombInProgress;}
 
+    //deathmatch: when set, the bomb explosion also drains nearby cars' life.
+    void setDeathmatch(bool v){ mIsDeathmatch = v; }
+
 private:
 
     void stopBomb();
@@ -38,7 +41,7 @@ private:
     bool mIsBombInProgress;
     bool mIsBombJumpsInProgress;
     bool mIsBombExplosionInProgress;
-    Ogre::uint8 mBlowCounter;
+    Ogre::uint16 mBlowCounter;
     Ogre::uint8 mExplosionCounter;
     PhysicsVehicle * mPlayerVehicle;
 
@@ -51,6 +54,7 @@ private:
     Ogre::String mNodeName;
 
     bool mIsFog;
+    bool mIsDeathmatch;
 
     static Ogre::NameGenerator nameGenNodes;
     static Ogre::NameGenerator nameGenParticleMaterials;
@@ -68,6 +72,9 @@ public:
     void createBombByPlayer(PhysicsVehicle * vehicle);
 
     void timeStepForVehicle(PhysicsVehicle * vehicle, const vehicles& vehiclesMap) override;
+
+    //deathmatch: propagate the damage-enabled flag to every bomb instance.
+    void setDeathmatch(bool v){ for(size_t q = 0; q < mBombs.size(); ++q) mBombs[q].setDeathmatch(v); }
 
 private:
 

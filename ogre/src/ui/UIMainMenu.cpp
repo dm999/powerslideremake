@@ -512,6 +512,26 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
             switchState(State_StartingGrid);
         }
 
+        if(mGameModeSelected == ModeMenuDeathmatch)
+        {
+            if(!mModeContext.getGameState().isAITrack())
+            {
+                mModeContext.getGameState().setAICountInRace(0);
+            }
+            else
+            {
+                //massacre sub-mode builds the field in batches of 12 AI, with the
+                //final batch holding 11 AI + player. The AI count is 12 * batches - 1
+                //(from the batches slider), not the opponents slider.
+                GameState& gameState = mModeContext.getGameState();
+                const size_t aiCount = gameState.getMassacreEnabled()
+                    ? GameState::mBatchSize * gameState.getRaceGridBatches() - 1
+                    : gameState.getAICount();
+                mModeContext.getGameState().setAICountInRace(aiCount);
+            }
+            switchState(State_StartingGrid);
+        }
+
         if(mGameModeSelected == ModeMenuTimetrial)
         {
             mModeContext.getGameState().setAICountInRace(0);
@@ -577,6 +597,10 @@ void UIMainMenu::startRace()
     else if(mGameModeSelected == ModeMenuTimetrial)
     {
         mModeContext.getGameModeSwitcher()->switchMode(ModeRaceTimetrial);
+    }
+    else if(mGameModeSelected == ModeMenuDeathmatch)
+    {
+        mModeContext.getGameModeSwitcher()->switchMode(ModeRaceDeathmatch);
     }
     else
     {
@@ -905,6 +929,15 @@ void UIMainMenu::switchState(const SinglePlayerMenuStates& state)
             showPodiumLabels(finishBoard);
         }
         setWindowTitle("Podium");
+        break;
+
+    case State_DeathmatchStats:
+        mIsInStartingGrid = false;
+        //no 1st/2nd/3rd podium or character portraits — just the stats table on
+        //the plain main background. Navigation back to the menu is the same Esc /
+        //continue path the podium uses.
+        showDeathmatchStatsLabels();
+        setWindowTitle("Deathmatch");
         break;
 
     case State_Leaderboard:
