@@ -121,9 +121,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
             physicsAICar->setBreaks(0.0f);
             aiCar->setBrake(false);
 
-            if(physicsAICar->getCarEngine().getCurrentGear() > -1)
-                physicsAICar->gearDown();
-            if(physicsAICar->getCarEngine().getCurrentGear() > -1)
+            while(physicsAICar->getCarEngine().getCurrentGear() > -1)
                 physicsAICar->gearDown();
 
             if(mTimerReverse.getMilliseconds() > reverseTimeLimit ||
@@ -131,9 +129,7 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
             {
                 //back out of R into first gear (R gearUp -> N, N -> 1), then let
                 //the auto gearbox take over from the next forward attempt.
-                if(physicsAICar->getCarEngine().getCurrentGear() < 1)
-                    physicsAICar->gearUp();
-                if(physicsAICar->getCarEngine().getCurrentGear() < 1)
+                while(physicsAICar->getCarEngine().getCurrentGear() < 1)
                     physicsAICar->gearUp();
 
                 mIsReverseEnabled = false;

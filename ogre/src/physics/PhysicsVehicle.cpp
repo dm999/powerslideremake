@@ -667,13 +667,17 @@ void PhysicsVehicle::gearDown()
     {
         mCarEngine.gearDown();
 
-        if(mVehicleType == HumanVehicle)
+        if(mCarEngine.getCurrentGear() == -1)
         {
-            if(mCarEngine.getCurrentGear() == -1)
+            //kick the wheels backward so the engine's torque curve at revs > 0
+            //takes over (power at idle revs is near-zero).  The human player
+            //already gets this; the AI needs it too for reverse-gear recovery.
+            mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
+
+            if(mVehicleType == HumanVehicle)
             {
                 mThrottleAdjusterCounter = 180;
                 mThrottleAdjuster = (mCarEngine.getEngineRPM() - 6200.0f) * 0.00025f;
-                mPhysicsWheels.setBackVelocity(-mCarEngine.getEngineRPM() * mVehicleSetup.mGearRatioMain * mVehicleSetup.mGearRatio[0]);
             }
         }
     }
