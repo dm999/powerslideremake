@@ -520,12 +520,12 @@ void UIMainMenu::panelHit(Ogre::PanelOverlayElement* panel)
             }
             else
             {
-                //massacre sub-mode builds the field in batches of 11 AI + player,
-                //so the AI count comes from the batches slider, not the opponents
-                //slider (which is ignored here). Otherwise use the normal count.
+                //massacre sub-mode builds the field in batches of 12 AI, with the
+                //final batch holding 11 AI + player. The AI count is 12 * batches - 1
+                //(from the batches slider), not the opponents slider.
                 GameState& gameState = mModeContext.getGameState();
                 const size_t aiCount = gameState.getMassacreEnabled()
-                    ? GameState::mBatchSize * gameState.getRaceGridBatches()
+                    ? GameState::mBatchSize * gameState.getRaceGridBatches() - 1
                     : gameState.getAICount();
                 mModeContext.getGameState().setAICountInRace(aiCount);
             }

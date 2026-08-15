@@ -125,7 +125,7 @@ public:
     //massacre: number of 11-AI batches to generate (1..25).
     static const size_t mBatchesMin = 1;
     static const size_t mBatchesMax = 25;
-    static const size_t mBatchSize = mRaceGridCarsMax - 1; //11 AI per batch, 12th slot is the player
+    static const size_t mBatchSize = mRaceGridCarsMax; //12 AI per batch; final batch has 11 AI + player
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;

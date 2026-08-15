@@ -986,7 +986,7 @@ void BaseRaceMode::beforeStartSequence()
         //Batched start (massacre). A normal grid (getAICountInRace() <
         //mRaceGridCarsMax, i.e. <= 11 AI) releases everyone at GO. A massacre
         //field (>= mRaceGridCarsMax) releases only the first batch of mBatchSize
-        //(11) AI here and defers the remaining batches + the player to the timed
+        //(12) AI here and defers the remaining batches + the player to the timed
         //release below — each batch takes its turn at the 12 start slots.
         if(mModeContext.mGameState.getAICountInRace() < GameState::mRaceGridCarsMax)
         {
@@ -1029,7 +1029,7 @@ void BaseRaceMode::beforeStartSequence()
     //prevent double-release. batchTime is compressed for large fields.
     {
         const size_t aiCount = mModeContext.mGameState.getAICountInRace();
-        const size_t batchAmount = aiCount / GameState::mBatchSize; //number of full 11-AI batches (B)
+        const size_t batchAmount = (aiCount + 1) / GameState::mBatchSize; //number of batches (B), each 12 AI except the last which is 11 AI + player
         const Ogre::Real posDiff = 16.0f;
         Ogre::Real batchTime = goTime;
         if(aiCount > 100) { batchTime /= 1.5f; if(aiCount > 200) batchTime /= 1.5f; }
