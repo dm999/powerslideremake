@@ -272,16 +272,23 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
         }
     }
 
-    //massacre mode: check the 10-minute countdown timer. The countdown is derived
-    //from the player's race clock (elapsed seconds from GO). When it hits 0,
+    //massacre mode: check the configurable countdown timer. The countdown is derived
+    //from the player's race clock (elapsed seconds since the player car was
+    //released into the race — per-vehicle getRaceStarted()). When it hits 0,
     //end the session the same way as the other end conditions, computing stats
     //from the live field. Only applies to massacre; regular deathmatch has no
-    //time limit.
-    if(!gameState.getRaceFinished() && gameState.isMassacreEnabled())
+    //time limit. The gate on getRaceStarted() ensures the countdown doesn't tick
+    //while the player is still parked on the grid waiting for their batch release.
+    //mMassacrePlayerStartClock (captured lazily on the first frame the player is
+    //in race) subtracts the parked wait so the countdown ticks from the full
+    //limit once released.
+    if(!gameState.getRaceFinished() && gameState.isMassacreEnabled()
+        && gameState.getPlayerCar().getPhysicsVehicle()->getRaceStarted())
     {
-        const Ogre::Real raceClock = gameState.getPlayerCar().getLapUtils().getTotalTime()
-                                        + gameState.getPlayerCar().getLapUtils().getLapTime();
-        if(raceClock >= gameState.getMassacreTimeLimitSec())
+        if(mMassacrePlayerStartClock < 0.0f)
+            mMassacrePlayerStartClock = getPlayerRaceClock();
+        const Ogre::Real elapsedSinceStart = getPlayerRaceClock() - mMassacrePlayerStartClock;
+        if(elapsedSinceStart >= gameState.getMassacreTimeLimitSec())
         {
             fillDeathmatchResults(false);
             finishDeathmatchSession();

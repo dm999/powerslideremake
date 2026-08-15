@@ -46,6 +46,7 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mDeathmatchEliminatedCount(0),
     mDeathmatchInjuredCount(0),
     mDeathmatchScore(0),
+    mMassacrePlayerStartClock(-1.0f),
     mUIRace(std::make_shared<UIRace>(modeContext)),
     mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
@@ -63,6 +64,20 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
 BaseRaceMode::~BaseRaceMode()
 {
     mModeContext.mWindow->removeListener(this);//for arrow
+}
+
+Ogre::Real BaseRaceMode::getPlayerRaceClock() const
+{
+    //totalTime + current in-progress lap, but the lap component reads the raw
+    //lap timer (mLapTimer.getMilliseconds()) instead of the physics-cached
+    //mLapTime member. mLapTime is only refreshed inside calcLapTime during a
+    //physics step, so on the GO frame it still holds the pre-race value while
+    //the timer has already been reset — a one-frame-late value that would make
+    //the massacre countdown base capture a wrong offset. The raw timer is
+    //accurate at the instant the player is released, which is exactly when the
+    //countdown base must be captured.
+    return mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime()
+            + mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTimer().getMilliseconds() / 1000.0f;
 }
 
 void BaseRaceMode::initData(LoaderListener* loaderListener)
@@ -870,14 +885,27 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         //massacre mode: show countdown timer on the dash panels (reusing the lap
         //time display) instead of the normal per-lap timer. When time runs out
         //the DeathmatchMode session-end check in customFrameRenderingQueuedDo2DUI
-        //handles termination. Regular deathmatch and all other modes show the
-        //normal lap time below.
-        if(mModeContext.mGameState.isMassacreEnabled() && mModeContext.mGameState.getRaceStarted()
-            && !mModeContext.mGameState.getRaceFinished())
+        //handles termination. The countdown only starts ticking once the player
+        //car is released from the grid (per-vehicle getRaceStarted()); before
+        //that the full time limit is shown so parked players aren't penalized.
+        //The race clock starts at GO, but the player rides in the final batch and
+        //may sit parked for several seconds; the captured mMassacrePlayerStartClock
+        //subtracts the parked time so the countdown at release equals the full
+        //limit and only ticks forward from there. The race clock freezes at the
+        //finish moment (checkCheckPoints is guarded on !getRaceFinished()), so
+        //the same branch also covers the finished state: the dash keeps showing
+        //the final remaining time through the finish sequence. Regular deathmatch
+        //and all other modes show the normal lap time below.
+        if(mModeContext.mGameState.isMassacreEnabled())
         {
-            Ogre::Real elapsed = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime()
-                                    + mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
-            Ogre::Real remaining = std::max(0.0f, mModeContext.mGameState.getMassacreTimeLimitSec() - elapsed);
+            Ogre::Real remaining = mModeContext.mGameState.getMassacreTimeLimitSec();
+            if(mModeContext.mGameState.getPlayerCar().getPhysicsVehicle()->getRaceStarted())
+            {
+                if(mMassacrePlayerStartClock < 0.0f)
+                    mMassacrePlayerStartClock = getPlayerRaceClock();
+                const Ogre::Real elapsedSinceStart = getPlayerRaceClock() - mMassacrePlayerStartClock;
+                remaining = std::max(0.0f, remaining - elapsedSinceStart);
+            }
             mUIRace->setRaceTime(Tools::SecondsToString(remaining));
         }
         else if(mModeContext.mGameState.getRaceStarted())

@@ -118,6 +118,18 @@ protected:
     size_t mDeathmatchInjuredCount;
     size_t mDeathmatchScore;
 
+    //massacre countdown base: the player's race clock (totalTime + lapTime) value
+    //captured at the instant the player's car is released from the grid. The race
+    //clock starts at GO, but the player rides in the final batch and can sit
+    //parked for several seconds; subtracting this base keeps the countdown at the
+    //full time limit until the player actually starts. -1.0f == not captured yet.
+    Ogre::Real mMassacrePlayerStartClock;
+
+    //accurate race clock for the player, reading the raw lap timer directly
+    //instead of the physics-cached mLapTime (which can be stale by one frame
+    //at GO, causing a wrong countdown offset). See BaseRaceMode.cpp.
+    Ogre::Real getPlayerRaceClock() const;
+
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 
     CommonIncludes::shared_ptr<Physics> mWorld;
