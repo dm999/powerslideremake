@@ -250,7 +250,7 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
     if(mUIRace.get())
     {
         mUIRace->setCarPos(
-            static_cast<unsigned char>(mLapController.getTotalPosition(0)),
-            static_cast<unsigned char>(mAliveCars));
+            mLapController.getTotalPosition(0),
+            mAliveCars);
     }
 }

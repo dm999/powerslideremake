@@ -843,7 +843,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         {
             mUIRace->setCarGear(1);
         }
-        mUIRace->setCarPos(static_cast<unsigned char>(mLapController.getTotalPosition(0)), static_cast<unsigned char>(mLapController.getTotalCars()));
+        mUIRace->setCarPos(mLapController.getTotalPosition(0), mLapController.getTotalCars());
 
         mUIRace->hideAIDashboardCars();
         size_t currentPlayerLap = mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap();

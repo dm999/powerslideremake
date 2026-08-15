@@ -612,15 +612,21 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         std::pair<Ogre::Real, Ogre::Real> texCoordsDivY = getDashDigitOffsetY('/');
 
         Ogre::Real dashDigitWidth = tachoWidth * 0.14f;
+        mDashDigitWidth = dashDigitWidth;
         Ogre::Real dashDigitHeight = tachoHeight * 0.25f;
+        mDashDigitHeight = dashDigitHeight;
         Ogre::Real dashDigitWidthSmall = dashDigitWidth * 0.8f;
+        mDashDigitWidthSmall = dashDigitWidthSmall;
         Ogre::Real dashDigitHeightSmall = dashDigitHeight * 0.8f;
+        mDashDigitHeightSmall = dashDigitHeightSmall;
         Ogre::Real dashDigitLeftGear = viewportWidth - tachoWidth - dashDigitWidth;
         Ogre::Real dashDigitTop = dashTop + dashDigitHeight * 1.1f;
         Ogre::Real dashDigitTopSmall = dashTop + dashDigitHeightSmall * 1.45f;
 
         dashDigitTop -= dashTop;
+        mDashDigitTop = dashDigitTop;
         dashDigitTopSmall -= dashTop;
+        mDashDigitTopSmall = dashDigitTopSmall;
 
         mDashGear = createPanel("DashDigitGear", dashDigitWidth, dashDigitHeight, dashDigitLeftGear, dashDigitTop, "Test/DashFont");
         std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(0);
@@ -669,17 +675,25 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         mTachoTotalCarsDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
         dashboard->addChild(mTachoTotalCarsDigit1);
 
-        Ogre::Real dashDigitLeftTotalCars2 = viewportWidth - tachoWidth - dashDigitWidth * 27.5f;
-        mTachoTotalCarsDigit2 = createPanel("DashDigitTotalCars2", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCars2, dashDigitTopSmall, "Test/DashFont");
+        //hundreds digit for total cars (massacre fields up to 300). Hidden by
+        //default; revealed by setCarPos only when the total needs three digits.
+        mDashDigitLeftTotalCars2 = viewportWidth - tachoWidth - dashDigitWidth * 27.5f;
+        mTachoTotalCarsDigit2 = createPanel("DashDigitTotalCars2", dashDigitWidthSmall, dashDigitHeightSmall, mDashDigitLeftTotalCars2, dashDigitTopSmall, "Test/DashFont");
         mTachoTotalCarsDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
         dashboard->addChild(mTachoTotalCarsDigit2);
 
+        mDashDigitLeftTotalCars3 = viewportWidth - tachoWidth - dashDigitWidth * 28.5f;
+        mTachoTotalCarsDigit3 = createPanel("DashDigitTotalCars3", dashDigitWidthSmall, dashDigitHeightSmall, mDashDigitLeftTotalCars3, dashDigitTopSmall, "Test/DashFont");
+        mTachoTotalCarsDigit3->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+        dashboard->addChild(mTachoTotalCarsDigit3);
+
         mTachoTotalCarsDigit2->hide();
+        mTachoTotalCarsDigit3->hide();
 
 
         {
-            Ogre::Real dashDigitLeftTotalCarsDiv = viewportWidth - tachoWidth - dashDigitWidth * 28.5f;
-            mTachoTotalCarsDigitDiv = createPanel("DashDigitTotalCarsDiv", dashDigitWidthSmall, dashDigitHeightSmall, dashDigitLeftTotalCarsDiv, dashDigitTopSmall, "Test/DashFont");
+            mDashDigitLeftTotalCarsDiv = viewportWidth - tachoWidth - dashDigitWidth * 28.5f;
+            mTachoTotalCarsDigitDiv = createPanel("DashDigitTotalCarsDiv", dashDigitWidthSmall, dashDigitHeightSmall, mDashDigitLeftTotalCarsDiv, dashDigitTopSmall, "Test/DashFont");
             mTachoTotalCarsDigitDiv->setUV(texCoordsDivX.first, texCoordsDivY.first, texCoordsDivX.second, texCoordsDivY.second);
             dashboard->addChild(mTachoTotalCarsDigitDiv);
 
@@ -688,17 +702,25 @@ void UIRace::load(  CustomTrayManager* trayMgr, const GameState& gameState)
         }
 
 
-        Ogre::Real dashDigitLeftPos1 = viewportWidth - tachoWidth - dashDigitWidth * 29.5f;
-        mTachoPosDigit1 = createPanel("DashDigitPos1", dashDigitWidth, dashDigitHeight, dashDigitLeftPos1, dashDigitTop, "Test/DashFont");
+        mDashDigitLeftPos1 = viewportWidth - tachoWidth - dashDigitWidth * 29.5f;
+        mTachoPosDigit1 = createPanel("DashDigitPos1", dashDigitWidth, dashDigitHeight, mDashDigitLeftPos1, dashDigitTop, "Test/DashFont");
         mTachoPosDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
         dashboard->addChild(mTachoPosDigit1);
 
-        Ogre::Real dashDigitLeftPos2 = viewportWidth - tachoWidth - dashDigitWidth * 30.5f;
-        mTachoPosDigit2 = createPanel("DashDigitPos2", dashDigitWidth, dashDigitHeight, dashDigitLeftPos2, dashDigitTop, "Test/DashFont");
+        mDashDigitLeftPos2 = viewportWidth - tachoWidth - dashDigitWidth * 30.5f;
+        mTachoPosDigit2 = createPanel("DashDigitPos2", dashDigitWidth, dashDigitHeight, mDashDigitLeftPos2, dashDigitTop, "Test/DashFont");
         mTachoPosDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
         dashboard->addChild(mTachoPosDigit2);
 
+        //hundreds digit for position (massacre fields up to 300). Hidden by
+        //default; revealed by setCarPos when the player position needs three digits.
+        mDashDigitLeftPos3 = viewportWidth - tachoWidth - dashDigitWidth * 31.5f;
+        mTachoPosDigit3 = createPanel("DashDigitPos3", dashDigitWidth, dashDigitHeight, mDashDigitLeftPos3, dashDigitTop, "Test/DashFont");
+        mTachoPosDigit3->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+        dashboard->addChild(mTachoPosDigit3);
+
         mTachoPosDigit2->hide();
+        mTachoPosDigit3->hide();
 
 
 
@@ -1690,18 +1712,39 @@ void UIRace::setCarGear(unsigned char gear)
     mDashGear->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
 }
 
-void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
+void UIRace::setCarPos(size_t pos, size_t totalcars)
 {
     if(mModeContext.getGameModeSwitcher()->getMode() != ModeRaceTimetrial)
     {
+        mTachoTotalCarsDigit3->hide();
         mTachoTotalCarsDigit2->hide();
+        mTachoPosDigit3->hide();
         mTachoPosDigit2->hide();
 
         unsigned char digitpos1 = pos % 10;
         unsigned char digitpos2 = pos / 10 % 10;
+        unsigned char digitpos3 = pos / 100 % 10;
 
         unsigned char digittotal1 = totalcars % 10;
         unsigned char digittotal2 = totalcars / 10 % 10;
+        unsigned char digittotal3 = totalcars / 100 % 10;
+
+        //three-digit mode tightens spacing and scales panel widths so the 7-slot
+        //display fits roughly the same footprint as the normal 5-slot layout.
+        //Total and position scales are independent so one group can be compact
+        //without affecting the other. The rightmost digit (total1) shifts right
+        //when its panel is scaled to keep its right edge at the same x; scaled
+        //digit heights are compensated via their top position so the bottom edge
+        //stays consistent between 2-digit and 3-digit layouts.
+        const bool scaleTotal = (totalcars >= 100);
+        const bool scalePos   = (pos >= 100);
+        const bool threeDigit = scaleTotal || scalePos;
+        const Ogre::Real tightStep = threeDigit ? mDashDigitWidth * 0.75f : mDashDigitWidth;
+        const Ogre::Real totalDigitScale = scaleTotal ? 5.0f / 7.0f : 1.0f;
+        const Ogre::Real posDigitScale   = scalePos   ? 5.0f / 7.0f : 1.0f;
+        const Ogre::Real total1RightCorr = scaleTotal ? mDashDigitWidthSmall * (1.0f - totalDigitScale) : 0.0f;
+        const Ogre::Real anchor = mDashDigitLeftTotalCars1 + total1RightCorr;
+        const Ogre::Real shiftDepth = scaleTotal ? 1 : 0;
 
         std::pair<Ogre::Real, Ogre::Real> texCoordsX = getDashDigitOffsetX(digitpos1);
         std::pair<Ogre::Real, Ogre::Real> texCoordsY = getDashDigitOffsetY(digitpos1);
@@ -1718,11 +1761,21 @@ void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
             mTachoPosDigit2->show();
         }
 
+        if(pos >= 100)
+        {
+            texCoordsX = getDashDigitOffsetX(digitpos3);
+            texCoordsY = getDashDigitOffsetY(digitpos3);
+
+            mTachoPosDigit3->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+
+            mTachoPosDigit3->show();
+        }
+
         texCoordsX = getDashDigitOffsetX(digittotal1);
         texCoordsY = getDashDigitOffsetY(digittotal1);
 
         mTachoTotalCarsDigit1->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
-        mTachoTotalCarsDigit1->setLeft(mTachoTotalCarsDigit2->getLeft());
+        mTachoTotalCarsDigit1->setLeft((totalcars >= 10) ? anchor : anchor - tightStep);
 
         if(totalcars >= 10)
         {
@@ -1732,14 +1785,56 @@ void UIRace::setCarPos(unsigned char pos, unsigned char totalcars)
             mTachoTotalCarsDigit2->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
 
             mTachoTotalCarsDigit2->show();
+        }
 
-            mTachoTotalCarsDigit1->setLeft(mDashDigitLeftTotalCars1);
+        if(totalcars >= 100)
+        {
+            texCoordsX = getDashDigitOffsetX(digittotal3);
+            texCoordsY = getDashDigitOffsetY(digittotal3);
+
+            mTachoTotalCarsDigit3->setUV(texCoordsX.first, texCoordsY.first, texCoordsX.second, texCoordsY.second);
+
+            mTachoTotalCarsDigit3->show();
+        }
+
+        //unified depth-based layout: anchor (= the rightmost digit's left) is
+        //the rightmost position; each panel steps left by tightStep per depth.
+        //total >= 100 inserts an extra depth step for the divider + pos block.
+        mTachoTotalCarsDigit2->setLeft(anchor - tightStep);
+        mTachoTotalCarsDigit3->setLeft(anchor - 2.0f * tightStep);
+        mTachoTotalCarsDigitDiv->setLeft(anchor - (2.0f + shiftDepth) * tightStep);
+        mTachoPosDigit1->setLeft(anchor - (3.0f + shiftDepth) * tightStep);
+        mTachoPosDigit2->setLeft(anchor - (4.0f + shiftDepth) * tightStep);
+        mTachoPosDigit3->setLeft(anchor - (5.0f + shiftDepth) * tightStep);
+
+        //scale panel dimensions and adjust the top so the bottom edge stays at
+        //the same screen y between 2-digit and 3-digit layouts.
+        {
+            const Ogre::Real posH = mDashDigitHeight * posDigitScale;
+            mTachoPosDigit1->setDimensions(mDashDigitWidth * posDigitScale, posH);
+            mTachoPosDigit1->setTop(mDashDigitTop + (mDashDigitHeight - posH));
+            mTachoPosDigit2->setDimensions(mDashDigitWidth * posDigitScale, posH);
+            mTachoPosDigit2->setTop(mDashDigitTop + (mDashDigitHeight - posH));
+            mTachoPosDigit3->setDimensions(mDashDigitWidth * posDigitScale, posH);
+            mTachoPosDigit3->setTop(mDashDigitTop + (mDashDigitHeight - posH));
+
+            const Ogre::Real totalH = mDashDigitHeightSmall * totalDigitScale;
+            mTachoTotalCarsDigit1->setDimensions(mDashDigitWidthSmall * totalDigitScale, totalH);
+            mTachoTotalCarsDigit1->setTop(mDashDigitTopSmall + (mDashDigitHeightSmall - totalH));
+            mTachoTotalCarsDigit2->setDimensions(mDashDigitWidthSmall * totalDigitScale, totalH);
+            mTachoTotalCarsDigit2->setTop(mDashDigitTopSmall + (mDashDigitHeightSmall - totalH));
+            mTachoTotalCarsDigit3->setDimensions(mDashDigitWidthSmall * totalDigitScale, totalH);
+            mTachoTotalCarsDigit3->setTop(mDashDigitTopSmall + (mDashDigitHeightSmall - totalH));
+            mTachoTotalCarsDigitDiv->setDimensions(mDashDigitWidthSmall * totalDigitScale, totalH);
+            mTachoTotalCarsDigitDiv->setTop(mDashDigitTopSmall + (mDashDigitHeightSmall - totalH));
         }
     }
     else
     {
+        mTachoTotalCarsDigit3->hide();
         mTachoTotalCarsDigit2->hide();
         mTachoTotalCarsDigit1->hide();
+        mTachoPosDigit3->hide();
         mTachoPosDigit2->hide();
         mTachoPosDigit1->hide();
     }

@@ -42,7 +42,7 @@ public:
     void setCurrentLap(unsigned short lap, unsigned short totallap);
     void setCarGear(unsigned char gear);
 
-    void setCarPos(unsigned char pos, unsigned char totalcars);
+    void setCarPos(size_t pos, size_t totalcars);
 
     void hideAIDashboardCars();
     void setPlayerDashBoardSkin(const GameState& gameState);
@@ -147,10 +147,24 @@ private:
 
     Ogre::PanelOverlayElement* mTachoTotalCarsDigit1;
     Ogre::PanelOverlayElement* mTachoTotalCarsDigit2;
+    Ogre::PanelOverlayElement* mTachoTotalCarsDigit3;
     Ogre::PanelOverlayElement* mTachoPosDigit1;
     Ogre::PanelOverlayElement* mTachoPosDigit2;
+    Ogre::PanelOverlayElement* mTachoPosDigit3;
     Ogre::PanelOverlayElement* mTachoTotalCarsDigitDiv;
     Ogre::Real mDashDigitLeftTotalCars1;
+    Ogre::Real mDashDigitLeftTotalCars2;
+    Ogre::Real mDashDigitLeftTotalCars3;
+    Ogre::Real mDashDigitLeftTotalCarsDiv;
+    Ogre::Real mDashDigitLeftPos1;
+    Ogre::Real mDashDigitLeftPos2;
+    Ogre::Real mDashDigitLeftPos3;
+    Ogre::Real mDashDigitWidth;
+    Ogre::Real mDashDigitWidthSmall;
+    Ogre::Real mDashDigitHeight;
+    Ogre::Real mDashDigitHeightSmall;
+    Ogre::Real mDashDigitTop;
+    Ogre::Real mDashDigitTopSmall;
 
     Ogre::PanelOverlayElement* mDashLap1;
     Ogre::PanelOverlayElement* mDashLap2;
