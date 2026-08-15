@@ -138,6 +138,14 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
                     mIsReverseEnabled = false;
                     mTimerAIStuck.reset();
                     mAIDistanceLength = 0.0f;
+
+                    //reset the NN spline search so it re-scans from actual
+                    //position on the next frame, rather than navigating from
+                    //the stale backward-track index that accumulated during
+                    //reverse motion. Clear the heading history too, so the
+                    //angular-velocity feature (slotMatrix[7]) starts fresh.
+                    mIsPrevClosestSplineIndexInited = false;
+                    mPrevRot = Ogre::Vector3::ZERO;
                 }
             }
             else
