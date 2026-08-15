@@ -278,18 +278,24 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         if(mMassacreVal->getChecked())
         {
             mModeContext.getGameState().setMassacreEnabled(true);
-            //show the batches slider when massacre is enabled
+            //show the batches and time limit sliders when massacre is enabled
             mBatchesValLeft->setActive(true);
             mBatchesValRight->setActive(true);
             mOptionRaceLabel_Batches_Val->getTextArea()->setColour(Ogre::ColourValue::White);
+            mTimeLimitValLeft->setActive(true);
+            mTimeLimitValRight->setActive(true);
+            mOptionRaceLabel_TimeLimit_Val->getTextArea()->setColour(Ogre::ColourValue::White);
         }
         else
         {
             mModeContext.getGameState().setMassacreEnabled(false);
-            //hide the batches slider when massacre is disabled
+            //hide the batches and time limit sliders when massacre is disabled
             mBatchesValLeft->setActive(false);
             mBatchesValRight->setActive(false);
             mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
+            mTimeLimitValLeft->setActive(false);
+            mTimeLimitValRight->setActive(false);
+            mOptionRaceLabel_TimeLimit_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -316,6 +322,32 @@ void UIMainMenuLabels::onButtonReleased(UIButton * button)
         {
             mModeContext.getGameState().setRaceGridBatches(batches);
             mOptionRaceLabel_Batches_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getRaceGridBatches()));
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mTimeLimitValLeft)
+    {
+        size_t minutes = mModeContext.getGameState().getMassacreTimeLimitMinute();
+        minutes -= GameState::mMassacreTimeLimitStep;
+        if(minutes >= GameState::mMassacreTimeLimitMin)
+        {
+            mModeContext.getGameState().setMassacreTimeLimitMinute(minutes);
+            mOptionRaceLabel_TimeLimit_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getMassacreTimeLimitMinute()));
+        }
+
+        mModeContext.getGameState().savePlayerData();
+    }
+
+    if(button == mTimeLimitValRight)
+    {
+        size_t minutes = mModeContext.getGameState().getMassacreTimeLimitMinute();
+        minutes += GameState::mMassacreTimeLimitStep;
+        if(minutes <= GameState::mMassacreTimeLimitMax)
+        {
+            mModeContext.getGameState().setMassacreTimeLimitMinute(minutes);
+            mOptionRaceLabel_TimeLimit_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getMassacreTimeLimitMinute()));
         }
 
         mModeContext.getGameState().savePlayerData();
@@ -1244,13 +1276,17 @@ void UIMainMenuLabels::showOptionRaceLabels()
         mUIButtonTicksManager.show("mOptionRaceDM");
         mUILabelsManager.show("mOptionRaceDM");
 
-        //the batches slider is only relevant when massacre is on; hide it if
-        //massacre is currently unchecked (user can toggle it on to reveal).
+        //the batches and time limit sliders are only relevant when massacre is
+        //on; disable them if massacre is currently unchecked (user can toggle
+        //it on to reveal).
         if(!mModeContext.getGameState().getMassacreEnabled())
         {
             mBatchesValLeft->setActive(false);
             mBatchesValRight->setActive(false);
             mOptionRaceLabel_Batches_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
+            mTimeLimitValLeft->setActive(false);
+            mTimeLimitValRight->setActive(false);
+            mOptionRaceLabel_TimeLimit_Val->getTextArea()->setColour(UILabel::mDisabledLabel);
         }
     }
 }

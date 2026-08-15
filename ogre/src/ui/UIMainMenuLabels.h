@@ -169,6 +169,9 @@ private:
     UIButton* mOpponentsValRight;
     UIButton* mBatchesValLeft;                //massacre: racing grid batches -/+
     UIButton* mBatchesValRight;
+    UILabel* mOptionRaceLabel_TimeLimit_Val;      //massacre: time limit value (minutes)
+    UIButton* mTimeLimitValLeft;                   //massacre: time limit -/+
+    UIButton* mTimeLimitValRight;
     UIButtonTick* mMirrorVal;
     UIButtonTick* mGhostVal;
     UIButtonTick* mMassacreVal;               //massacre sub-mode (deathmatch only)

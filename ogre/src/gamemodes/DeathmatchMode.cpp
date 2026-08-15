@@ -281,7 +281,7 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
     {
         const Ogre::Real raceClock = gameState.getPlayerCar().getLapUtils().getTotalTime()
                                         + gameState.getPlayerCar().getLapUtils().getLapTime();
-        if(raceClock >= GameState::mMassacreTimeLimit)
+        if(raceClock >= gameState.getMassacreTimeLimitSec())
         {
             fillDeathmatchResults(false);
             finishDeathmatchSession();

@@ -10,8 +10,6 @@
 #pragma warning(disable: 4800)
 #endif
 
-const Ogre::Real GameState::mMassacreTimeLimit = 600.0f;
-
 GameState::GameState() :
     mVersion(GAMEVERSION),
     mBuildDate(GAMEBUILDDATE),
@@ -39,6 +37,7 @@ GameState::GameState() :
     mAiOpponentsAmountInRace(3),
     mIsMassacreEnabled(false),
     mRaceGridBatches(mBatchesMin),
+    mMassacreTimeLimitMinute(10),
     mAIStrength(Easy),
     mPSCar(mAIMax),
     mLLTObject(NULL),
@@ -110,6 +109,7 @@ void GameState::initOriginalData()
                 mPlayerName = mPlayerSettings.getValue("", "player name", mPlayerName.c_str());
                 setAICount(mPlayerSettings.getIntValue("", "num opponents", mAIMin));
                 mRaceGridBatches = mPlayerSettings.getIntValue("", "race grid batches", mBatchesMin);
+                mMassacreTimeLimitMinute = mPlayerSettings.getIntValue("", "massacre time limit", 10);
                 if (!mIsSafeRun)
                 {
                     mResolution = mPlayerSettings.getValue("", "resolution", mResolution);
@@ -236,6 +236,7 @@ void GameState::savePlayerData()
     globalData.playerName = mPlayerName;
     globalData.numOpponents = mAiOpponentsAmount;
     globalData.raceGridBatches = mRaceGridBatches;
+    globalData.massacreTimeLimit = mMassacreTimeLimitMinute;
 
     Ogre::RenderSystem * rs = Ogre::Root::getSingletonPtr()->getRenderSystem();
     Ogre::ConfigOptionMap configOpts = rs->getConfigOptions();
@@ -792,6 +793,15 @@ void GameState::setAICountInRace(size_t opponentsAmount)
 void GameState::setRaceGridBatches(size_t batches)
 {
     mRaceGridBatches = Ogre::Math::Clamp<size_t>(batches, mBatchesMin, mBatchesMax);
+}
+
+void GameState::setMassacreTimeLimitMinute(size_t minutes)
+{
+    //clamp to [min, max] first, then round to the nearest step value.
+    minutes = Ogre::Math::Clamp<size_t>(minutes, mMassacreTimeLimitMin, mMassacreTimeLimitMax);
+    minutes = ((minutes + mMassacreTimeLimitStep / 2) / mMassacreTimeLimitStep) * mMassacreTimeLimitStep;
+    minutes = Ogre::Math::Clamp<size_t>(minutes, mMassacreTimeLimitMin, mMassacreTimeLimitMax);
+    mMassacreTimeLimitMinute = minutes;
 }
 
 void GameState::setGlobalLight(Ogre::Light* light)

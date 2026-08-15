@@ -210,4 +210,41 @@ void UIMainMenuLabels::createLabelsOptionsRace(const Ogre::Matrix4& screenAdapti
         mBatchesValRight->setButtonOnAction(this);
     }
 
+    //Options Race Massacre Time Limit (5-30 minutes, step 5, massacre only)
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(181.0f, 202.0f, 0.0f, 0.0f);;
+        UILabel* label = mUILabelsManager.add("mOptionRaceDM");
+        label->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        label->setFixed(true);
+        label->getTextArea()->setCaption("Time limit (min)");
+        label->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setSpaceWidth(9.0f);
+        label->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        label->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Right);
+        getMainBackground()->addChild(label->getTextArea());
+    }
+    {
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(194.0f, 202.0f, 0.0f, 0.0f);;
+        mOptionRaceLabel_TimeLimit_Val = mUILabelsManager.add("mOptionRaceDM");
+        mOptionRaceLabel_TimeLimit_Val->init(0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mOptionRaceLabel_TimeLimit_Val->setFixed(true);
+        mOptionRaceLabel_TimeLimit_Val->getTextArea()->setCaption(Conversions::DMToString(mModeContext.getGameState().getMassacreTimeLimitMinute()));
+        mOptionRaceLabel_TimeLimit_Val->getTextArea()->setCharHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_TimeLimit_Val->getTextArea()->setSpaceWidth(9.0f);
+        mOptionRaceLabel_TimeLimit_Val->getTextArea()->setHeight(26.0f * viewportHeight / 1024.0f);
+        mOptionRaceLabel_TimeLimit_Val->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        getMainBackground()->addChild(mOptionRaceLabel_TimeLimit_Val->getTextArea());
+    }
+    {
+        mTimeLimitValLeft = mUIButtonsManager.add("mOptionRaceDM");
+        mTimeLimitValLeft->setBackgroundMaterial(mInputTypeValLeft->getMaterialName());
+        mTimeLimitValLeft->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(250.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mTimeLimitValLeft->setButtonOnAction(this);
+
+        mTimeLimitValRight = mUIButtonsManager.add("mOptionRaceDM");
+        mTimeLimitValRight->setBackgroundMaterial(mInputTypeValRight->getMaterialName());
+        mTimeLimitValRight->init(screenAdaptionRelative, getMainBackground(), Ogre::Vector4(280.0f + buttonLeftAdj, 202.0f + buttonTopAdj, buttonSize, buttonSize), true);
+        mTimeLimitValRight->setButtonOnAction(this);
+    }
+
 }

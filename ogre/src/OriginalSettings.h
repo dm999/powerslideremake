@@ -204,6 +204,7 @@ public:
         std::string character;
         Ogre::uint32 numOpponents;
         Ogre::uint32 raceGridBatches;   //massacre sub-mode: number of 11-AI batches to generate (deathmatch only)
+        Ogre::uint32 massacreTimeLimit; //massacre: countdown duration in minutes (5-30, step 5)
         std::string resolution;
         bool vsync;
         bool fullscreen;

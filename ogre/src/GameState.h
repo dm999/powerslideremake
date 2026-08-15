@@ -127,10 +127,13 @@ public:
     static const size_t mBatchesMax = 25;
     static const size_t mBatchSize = mRaceGridCarsMax; //12 AI per batch; final batch has 11 AI + player
 
-    //massacre: countdown time limit in seconds (10 minutes). Player race clock
-    //is subtracted from this; when it hits 0 the massacre session ends and
-    //score/eliminated/injured stats are computed. Only applies to massacre mode.
-    static const Ogre::Real mMassacreTimeLimit;
+    //massacre: countdown time limit range (5-30 minutes, step 5).
+    static const size_t mMassacreTimeLimitMin = 5;
+    static const size_t mMassacreTimeLimitMax = 30;
+    static const size_t mMassacreTimeLimitStep = 5;
+    //default time limit in minutes (displayed value). Converted to seconds
+    //for the race countdown via getMassacreTimeLimitSec().
+    size_t mMassacreTimeLimitMinute;
 
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
@@ -152,6 +155,12 @@ public:
     bool isMassacreEnabled()const{return mIsMassacreEnabled;}
     void setRaceGridBatches(size_t batches);
     size_t getRaceGridBatches()const{return mRaceGridBatches;}
+
+    //massacre: time limit in minutes (5-30, step 5). getMassacreTimeLimitSec()
+    //returns the value converted to seconds for the countdown timer.
+    void setMassacreTimeLimitMinute(size_t minutes);
+    size_t getMassacreTimeLimitMinute()const{return mMassacreTimeLimitMinute;}
+    Ogre::Real getMassacreTimeLimitSec()const{return mMassacreTimeLimitMinute * 60.0f;}
 
     AIStrength getAIStrength()const{return mAIStrength;}
 

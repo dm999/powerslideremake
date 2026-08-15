@@ -835,6 +835,7 @@ void STRPlayerSettings::save(const std::string& dataDir, const GlobalData& globa
     mSTR.SetValue("", "character choice", globalData.character.c_str());
     mSTR.SetValue("", "num opponents", Conversions::DMToString(globalData.numOpponents).c_str());
     mSTR.SetValue("", "race grid batches", Conversions::DMToString(globalData.raceGridBatches).c_str());
+    mSTR.SetValue("", "massacre time limit", Conversions::DMToString(globalData.massacreTimeLimit).c_str());
     mSTR.SetValue("", "resolution", globalData.resolution.c_str());
     mSTR.SetValue("", "vsync", Conversions::DMToString(globalData.vsync).c_str());
     mSTR.SetValue("", "fullscreen", Conversions::DMToString(globalData.fullscreen).c_str());

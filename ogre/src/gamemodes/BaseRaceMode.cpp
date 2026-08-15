@@ -877,7 +877,7 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
         {
             Ogre::Real elapsed = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime()
                                     + mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
-            Ogre::Real remaining = std::max(0.0f, GameState::mMassacreTimeLimit - elapsed);
+            Ogre::Real remaining = std::max(0.0f, mModeContext.mGameState.getMassacreTimeLimitSec() - elapsed);
             mUIRace->setRaceTime(Tools::SecondsToString(remaining));
         }
         else if(mModeContext.mGameState.getRaceStarted())
