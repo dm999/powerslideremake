@@ -68,26 +68,32 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
             mTimerAIStuck.reset();
         }
 
-        //steering
-        /*
-        Ogre::Vector3 carDir = aiCar->getForwardAxis();
-        Ogre::Vector3 carDirOriginal = carDir;
-        carDir.y = 0.0f;
-        
-        Ogre::Real lastDistance = carDir.dotProduct(carPos - mPrevPos);
-        mPrevPos = carPos;
-        mAIDistanceLength += Ogre::Math::Abs(lastDistance);
-*/
-        physicsAICar->setSteering(steeringVal);
-        physicsAICar->setAcceleration(accelerationVal);
-        physicsAICar->setBreaks(breaksVal);
-
-        aiCar->setAcceleration(true);//for particles
-
+        //anti-stuck (restores the original Powerslide logic that sat #if 0'd
+        //out here). Distance measurement: every AI step, project the step's
+        //displacement onto the car's live flat heading and accumulate its
+        //magnitude, so a wedged car that shoves a wall or sits in a pileup
+        //accumulates almost nothing. When a stuckTimeLimit window expires with
+        //under stuckDistanceLimit of travel, enable reverse: full physics brake
+        //for reverseTimeLimit while keeping the NN steering (wheels stay aimed
+        //at the racing line), then retry forward. aiCar->setBrake only drives
+        //particle FX in this engine - the physics brake goes through
+        //physicsAICar->setBreaks. The old aiMaxSpeed/mSpeedCoeff throttle
+        //governor is gone (undefined symbols); the modern mThrottle->engine
+        //path supersedes it.
         const Ogre::Real stuckDistanceLimit = 20.0f;
         const unsigned long stuckTimeLimit = 2000; //ms
         const unsigned long reverseTimeLimit = 2000; //ms
-#if 0
+
+        //distance measurement: heading from the live rotation (aiCar->getForwardAxis()
+        //would read PSBaseCar's stale by-value copy of mCarRot), y zeroed - flat
+        //progress only, so dropping off terrain isn't counted as driving.
+        Ogre::Vector3 carDir = initialVehicleSetup.mCarRot * Ogre::Vector3::NEGATIVE_UNIT_Z;
+        carDir.y = 0.0f;
+        if(mPrevPos == Ogre::Vector3::ZERO)
+            mPrevPos = carPos;//first sample of a window - nothing to compare yet
+        mAIDistanceLength += Ogre::Math::Abs(carDir.dotProduct(carPos - mPrevPos));
+        mPrevPos = carPos;
+
         if(mTimerAIStuck.getMilliseconds() > stuckTimeLimit && !mIsReverseEnabled)
         {
             if(mAIDistanceLength < stuckDistanceLimit)
@@ -99,25 +105,11 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
             mAIDistanceLength = 0.0f;
         }
 
-        if(!mIsReverseEnabled)
-        {
-            if(accelerationVal < 0.0f)
-            {
-                aiCar->setBrake(true);
-            }
-            else
-            {
-                Ogre::Real aiSpeed = aiCar->getAlignedVelocity();
-                if(aiSpeed < (aiMaxSpeed * mSpeedCoeff * accelerationVal))
-                {
-                    aiCar->setAcceleration(true);
-                }
-            }
-        }
-
         if(mIsReverseEnabled)
         {
-            aiCar->setBrake(true);
+            physicsAICar->setAcceleration(0.0f);
+            physicsAICar->setBreaks(1.0f);
+            aiCar->setBrake(true);//particle FX (brake light / dust)
 
             if(mTimerReverse.getMilliseconds() > reverseTimeLimit)
             {
@@ -125,7 +117,14 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
                 mTimerAIStuck.reset();
             }
         }
-#endif
+        else
+        {
+            physicsAICar->setAcceleration(accelerationVal);
+            physicsAICar->setBreaks(breaksVal);
+        }
+
+        physicsAICar->setSteering(steeringVal);
+        aiCar->setAcceleration(true);//for particles
     }
 }
 
