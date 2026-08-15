@@ -93,8 +93,35 @@ void DeathmatchMode::carDead(PhysicsVehicle* vehicle)
     }
 }
 
+void DeathmatchMode::computeDeathmatchScore()
+{
+    GameState& gameState = mModeContext.getGameState();
+    const size_t aiCount = gameState.getAICountInRace();
+
+    size_t eliminated = 0;
+    size_t injured = 0;
+
+    for(size_t q = 0; q < aiCount; ++q)
+    {
+        const Ogre::Real life = mWorld->getVehicle(&gameState.getAICar(q))->getLife();
+        if(life <= 0.0f)
+            ++eliminated;
+        else if(life < 1.0f)
+            ++injured;
+    }
+
+    mDeathmatchEliminatedCount = eliminated;
+    mDeathmatchInjuredCount = injured;
+    mDeathmatchScore = eliminated * 100 + injured * 25;
+}
+
 void DeathmatchMode::fillDeathmatchResults(bool isPlayerFinished)
 {
+    //compute massacre score/statistics (eliminated/injured counts, score)
+    //before freezing the result rows. Safe to call in all deathmatch modes
+    //(the counts stay 0 in non-massacre where the base members are ignored).
+    computeDeathmatchScore();
+
     GameState& gameState = mModeContext.getGameState();
 
     //race clock = seconds since race start. At an AI death (mid-lap) this is
@@ -242,6 +269,25 @@ void DeathmatchMode::customFrameRenderingQueuedDo2DUI()
 
             Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
                 "[DeathmatchMode]: all alive AI finished their laps, session finishing");
+        }
+    }
+
+    //massacre mode: check the 10-minute countdown timer. The countdown is derived
+    //from the player's race clock (elapsed seconds from GO). When it hits 0,
+    //end the session the same way as the other end conditions, computing stats
+    //from the live field. Only applies to massacre; regular deathmatch has no
+    //time limit.
+    if(!gameState.getRaceFinished() && gameState.isMassacreEnabled())
+    {
+        const Ogre::Real raceClock = gameState.getPlayerCar().getLapUtils().getTotalTime()
+                                        + gameState.getPlayerCar().getLapUtils().getLapTime();
+        if(raceClock >= GameState::mMassacreTimeLimit)
+        {
+            fillDeathmatchResults(false);
+            finishDeathmatchSession();
+
+            Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL,
+                "[DeathmatchMode]: massacre time limit expired, session finishing");
         }
     }
 

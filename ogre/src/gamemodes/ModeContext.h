@@ -118,6 +118,14 @@ public:
     void setDeathmatchResults(const deathmatchResultVec& results){mDeathmatchResults = results;}
     const deathmatchResultVec& getDeathmatchResults() const{return mDeathmatchResults;}
 
+    //massacre mode score/statistics (copied from BaseRaceMode on deathmatch teardown).
+    void setDeathmatchEliminatedCount(size_t count){mDeathmatchEliminatedCount = count;}
+    size_t getDeathmatchEliminatedCount() const{return mDeathmatchEliminatedCount;}
+    void setDeathmatchInjuredCount(size_t count){mDeathmatchInjuredCount = count;}
+    size_t getDeathmatchInjuredCount() const{return mDeathmatchInjuredCount;}
+    void setDeathmatchScore(size_t score){mDeathmatchScore = score;}
+    size_t getDeathmatchScore() const{return mDeathmatchScore;}
+
 #ifndef NO_OPENAL
     SoundsProcesser& getSoundsProcesser(){return mSoundsProcesser;}
     MusicProcessor& getMusicProcessor(){return mMusicProcessor;}
@@ -161,6 +169,11 @@ private:
     finishBoardVec mFinishBoard;
 
     deathmatchResultVec mDeathmatchResults;
+
+    //massacre stats (copied from BaseRaceMode on deathmatch teardown).
+    size_t mDeathmatchEliminatedCount;
+    size_t mDeathmatchInjuredCount;
+    size_t mDeathmatchScore;
 
 #ifndef NO_OPENAL
     SoundsProcesser& mSoundsProcesser;

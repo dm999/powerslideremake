@@ -127,6 +127,11 @@ public:
     static const size_t mBatchesMax = 25;
     static const size_t mBatchSize = mRaceGridCarsMax; //12 AI per batch; final batch has 11 AI + player
 
+    //massacre: countdown time limit in seconds (10 minutes). Player race clock
+    //is subtracted from this; when it hits 0 the massacre session ends and
+    //score/eliminated/injured stats are computed. Only applies to massacre mode.
+    static const Ogre::Real mMassacreTimeLimit;
+
     bool checkKeyCode(OIS::KeyCode code, InputKeyMapping index) const;
     bool checkKeyCode(OIS::MouseButtonID id, InputKeyMapping index) const;
     OIS::KeyCode getKeyCode(InputKeyMapping index) const;

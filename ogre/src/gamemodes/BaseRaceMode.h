@@ -98,6 +98,12 @@ public:
     //as getLapController() above.
     deathmatchResultVec getDeathmatchResults() const {return mDeathmatchResults;}
 
+    //massacre score/statistics (computed at session end in DeathmatchMode).
+    //Copied into ModeContext on teardown alongside the deathmatch results.
+    size_t getDeathmatchEliminatedCount() const {return mDeathmatchEliminatedCount;}
+    size_t getDeathmatchInjuredCount() const {return mDeathmatchInjuredCount;}
+    size_t getDeathmatchScore() const {return mDeathmatchScore;}
+
 protected:
 
     StaticMeshProcesser mStaticMeshProcesser;
@@ -106,6 +112,11 @@ protected:
     LapController mLapController;
 
     deathmatchResultVec mDeathmatchResults;
+
+    //score/statistics for massacre mode: computed at session end.
+    size_t mDeathmatchEliminatedCount;
+    size_t mDeathmatchInjuredCount;
+    size_t mDeathmatchScore;
 
     CommonIncludes::shared_ptr<CameraMan> mCameraMan;       // basic camera controller
 

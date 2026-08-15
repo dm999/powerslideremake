@@ -10,6 +10,8 @@
 #pragma warning(disable: 4800)
 #endif
 
+const Ogre::Real GameState::mMassacreTimeLimit = 600.0f;
+
 GameState::GameState() :
     mVersion(GAMEVERSION),
     mBuildDate(GAMEBUILDDATE),

@@ -178,6 +178,10 @@ void GameModeSwitcher::frameEnded()
                 }
             }
             mContext.setDeathmatchResults(mPlayerMode->getDeathmatchResults());
+            //massacre score/statistics (copied alongside the results above).
+            mContext.setDeathmatchEliminatedCount(mPlayerMode->getDeathmatchEliminatedCount());
+            mContext.setDeathmatchInjuredCount(mPlayerMode->getDeathmatchInjuredCount());
+            mContext.setDeathmatchScore(mPlayerMode->getDeathmatchScore());
         }
         //extract lap data after championship race, save progress
         if(mGameMode == ModeRaceChampionship && mGameModeNext == ModeMenuChampionship || raceOverAndReadyToQuit && mGameMode == ModeRaceChampionship)

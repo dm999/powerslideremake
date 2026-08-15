@@ -1434,6 +1434,24 @@ void UIMainMenuLabels::showDeathmatchStatsLabels()
         mPodiumTable3Label[q]->show();
         mPodiumTable4Label[q]->show();
     }
+
+    //show massacre score/statistics below the results table
+    //(only populated in massacre mode; regular deathmatch shows empty).
+    {
+        std::string elim = "Eliminated: " + Conversions::DMToString(mModeContext.getDeathmatchEliminatedCount());
+        mDeathmatchEliminatedLabel->setCaption(elim);
+        mDeathmatchEliminatedLabel->show();
+    }
+    {
+        std::string inj = "Injured: " + Conversions::DMToString(mModeContext.getDeathmatchInjuredCount());
+        mDeathmatchInjuredLabel->setCaption(inj);
+        mDeathmatchInjuredLabel->show();
+    }
+    {
+        std::string score = "Score: " + Conversions::DMToString(mModeContext.getDeathmatchScore());
+        mDeathmatchScoreLabel->setCaption(score);
+        mDeathmatchScoreLabel->show();
+    }
 }
 
 void UIMainMenuLabels::showLeaderboardLabels(const finishBoardVec& finishBoard)
@@ -1529,6 +1547,11 @@ void UIMainMenuLabels::hideAllLabels()
     mPodiumTableTitle2Label->hide();
     mPodiumTableTitle3Label->hide();
     mPodiumTableTitle4Label->hide();
+
+    //massacre score/statistics labels (hidden by default, shown by showDeathmatchStatsLabels)
+    mDeathmatchEliminatedLabel->hide();
+    mDeathmatchInjuredLabel->hide();
+    mDeathmatchScoreLabel->hide();
 
     mLeaderboardTableTitle1Label->hide();
     mLeaderboardTableTitle2Label->hide();

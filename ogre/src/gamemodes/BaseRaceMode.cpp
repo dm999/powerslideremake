@@ -43,6 +43,9 @@ BaseRaceMode::BaseRaceMode(const ModeContext& modeContext) :
     mRearCamera(0),
     mReflectionCubeCamera(0),
     mReflectionCubeFaceIndex(0),
+    mDeathmatchEliminatedCount(0),
+    mDeathmatchInjuredCount(0),
+    mDeathmatchScore(0),
     mUIRace(std::make_shared<UIRace>(modeContext)),
     mLoaderListener(NULL)
 #if SHOW_DETAILS_PANEL
@@ -864,7 +867,20 @@ void BaseRaceMode::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
         customFrameRenderingQueuedDo2DUI();
 
-        if(mModeContext.mGameState.getRaceStarted())
+        //massacre mode: show countdown timer on the dash panels (reusing the lap
+        //time display) instead of the normal per-lap timer. When time runs out
+        //the DeathmatchMode session-end check in customFrameRenderingQueuedDo2DUI
+        //handles termination. Regular deathmatch and all other modes show the
+        //normal lap time below.
+        if(mModeContext.mGameState.isMassacreEnabled() && mModeContext.mGameState.getRaceStarted()
+            && !mModeContext.mGameState.getRaceFinished())
+        {
+            Ogre::Real elapsed = mModeContext.mGameState.getPlayerCar().getLapUtils().getTotalTime()
+                                    + mModeContext.mGameState.getPlayerCar().getLapUtils().getLapTime();
+            Ogre::Real remaining = std::max(0.0f, GameState::mMassacreTimeLimit - elapsed);
+            mUIRace->setRaceTime(Tools::SecondsToString(remaining));
+        }
+        else if(mModeContext.mGameState.getRaceStarted())
         {
             if(mModeContext.mGameState.getPlayerCar().getLapUtils().getAfterFinishLinePassTime() < 3.0f && mModeContext.mGameState.getPlayerCar().getLapUtils().getCurrentLap() > 1)
             {

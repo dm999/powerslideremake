@@ -35,7 +35,10 @@ ModeContext::ModeContext(const ModeContext& other)
         mBaseApp(other.mBaseApp),
         mLapController(other.mLapController),
         mFinishBoard(other.mFinishBoard),
-        mDeathmatchResults(other.mDeathmatchResults)
+        mDeathmatchResults(other.mDeathmatchResults),
+        mDeathmatchEliminatedCount(other.mDeathmatchEliminatedCount),
+        mDeathmatchInjuredCount(other.mDeathmatchInjuredCount),
+        mDeathmatchScore(other.mDeathmatchScore)
 #ifndef NO_OPENAL
         ,mSoundsProcesser(other.mSoundsProcesser),
         mMusicProcessor(other.mMusicProcessor)

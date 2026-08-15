@@ -304,8 +304,7 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
             mPodiumTable4Label[q]->setFontName("SdkTrays/Caption");
             mPodiumTable4Label[q]->setColour(Ogre::ColourValue::White);
             getMainBackground()->addChild(mPodiumTable4Label[q]);
-        }
-
+        } //end for mRaceGridCarsMax (podium + deathmatch table rows)
 
         {
             Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, 22.0f * q + 80.0f, 0.0f, 0.0f);
@@ -355,6 +354,49 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
             getMainBackground()->addChild(mLeaderboardTable4Label[q]);
         }
     }
+
+    //massacre stats labels (shown below the deathmatch results table).
+    //Positioned at x=360, below the last table row (y=22*12+80=344).
+    {
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 1) + 80.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        mDeathmatchEliminatedLabel = createTextArea("MainWindowDMStatsEliminated", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mDeathmatchEliminatedLabel->setCaption("");
+        mDeathmatchEliminatedLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchEliminatedLabel->setSpaceWidth(9.0f);
+        mDeathmatchEliminatedLabel->setHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchEliminatedLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mDeathmatchEliminatedLabel->setFontName("SdkTrays/Caption");
+        mDeathmatchEliminatedLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mDeathmatchEliminatedLabel);
+    }
+    {
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 2) + 80.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        mDeathmatchInjuredLabel = createTextArea("MainWindowDMStatsInjured", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mDeathmatchInjuredLabel->setCaption("");
+        mDeathmatchInjuredLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchInjuredLabel->setSpaceWidth(9.0f);
+        mDeathmatchInjuredLabel->setHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchInjuredLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mDeathmatchInjuredLabel->setFontName("SdkTrays/Caption");
+        mDeathmatchInjuredLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mDeathmatchInjuredLabel);
+    }
+    {
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 3) + 80.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        mDeathmatchScoreLabel = createTextArea("MainWindowDMStatsScore", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
+        mDeathmatchScoreLabel->setCaption("");
+        mDeathmatchScoreLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchScoreLabel->setSpaceWidth(9.0f);
+        mDeathmatchScoreLabel->setHeight(20.0f * viewportHeight / 1024.0f);
+        mDeathmatchScoreLabel->setAlignment(Ogre::TextAreaOverlayElement::Left);
+        mDeathmatchScoreLabel->setFontName("SdkTrays/Caption");
+        mDeathmatchScoreLabel->setColour(Ogre::ColourValue::White);
+        getMainBackground()->addChild(mDeathmatchScoreLabel);
+    }
+
 
     //championship results
     for (size_t q = 0; q < mChampionshipResultsLabelsAmountMax; ++q)

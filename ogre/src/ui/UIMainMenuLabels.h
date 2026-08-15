@@ -215,6 +215,12 @@ private:
     Ogre::TextAreaOverlayElement * mPodiumTable3Label[GameState::mRaceGridCarsMax];
     Ogre::TextAreaOverlayElement * mPodiumTable4Label[GameState::mRaceGridCarsMax];
 
+    //massacre stats labels (displayed below the podium table on the deathmatch
+    //results screen)
+    Ogre::TextAreaOverlayElement * mDeathmatchEliminatedLabel;
+    Ogre::TextAreaOverlayElement * mDeathmatchInjuredLabel;
+    Ogre::TextAreaOverlayElement * mDeathmatchScoreLabel;
+
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle1Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle2Label;
     Ogre::TextAreaOverlayElement * mLeaderboardTableTitle3Label;

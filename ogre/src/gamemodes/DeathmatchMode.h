@@ -43,6 +43,12 @@ public:
     //the post-race statistics screen would show no table.
     void fillDeathmatchResults(bool isPlayerFinished);
 
+    //Compute massacre score/statistics by scanning all AI vehicles:
+    //eliminated (life <= 0), injured (0 < life < 1.0), and score
+    //(= eliminated * 100 + injured * 25). Stores results on the
+    //BaseRaceMode members (mDeathmatchEliminatedCount etc).
+    void computeDeathmatchScore();
+
     //Shared session-end sequence: snap to the fixed finish camera (auto-tracking
     //the player), hide the rear-view mirror, show the finish sign, and setRaceFinished(true).
     //Called from every natural session-end path that does NOT go through the base
