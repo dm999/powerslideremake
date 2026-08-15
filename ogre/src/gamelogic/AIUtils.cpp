@@ -73,16 +73,20 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
         //displacement onto the car's live flat heading and accumulate its
         //magnitude, so a wedged car that shoves a wall or sits in a pileup
         //accumulates almost nothing. When a stuckTimeLimit window expires with
-        //under stuckDistanceLimit of travel, enable reverse: full physics brake
-        //for reverseTimeLimit while keeping the NN steering (wheels stay aimed
-        //at the racing line), then retry forward. aiCar->setBrake only drives
-        //particle FX in this engine - the physics brake goes through
-        //physicsAICar->setBreaks. The old aiMaxSpeed/mSpeedCoeff throttle
-        //governor is gone (undefined symbols); the modern mThrottle->engine
-        //path supersedes it.
+        //under stuckDistanceLimit of travel, enable reverse: jam the gearbox
+        //into R (gearDown() drops any forward gear to N, then to R), wheels
+        //straight, full throttle to back out. The measurement above counts
+        //reverse travel too, so recovery ends once the car has backed up
+        //reverseDistanceLimit - or reversely times out at reverseTimeLimit -
+        //then gearUp() back to first and hand control to the NN again.
+        //aiCar->setBrake only drives particle FX in this engine - the physics
+        //brake/throttle go through physicsAICar->set*. The old
+        //aiMaxSpeed/mSpeedCoeff throttle governor is gone (undefined symbols);
+        //the modern mThrottle->engine path supersedes it.
         const Ogre::Real stuckDistanceLimit = 20.0f;
         const unsigned long stuckTimeLimit = 2000; //ms
         const unsigned long reverseTimeLimit = 2000; //ms
+        const Ogre::Real reverseDistanceLimit = 15.0f;
 
         //distance measurement: heading from the live rotation (aiCar->getForwardAxis()
         //would read PSBaseCar's stale by-value copy of mCarRot), y zeroed - flat
@@ -107,23 +111,43 @@ void AIUtils::performAICorrection(PSAICar* aiCar, PhysicsVehicleAI* physicsAICar
 
         if(mIsReverseEnabled)
         {
-            physicsAICar->setAcceleration(0.0f);
-            physicsAICar->setBreaks(1.0f);
-            aiCar->setBrake(true);//particle FX (brake light / dust)
+            //reverse recovery: drive the gearbox down to -1 (gearDown() from any
+            //forward gear jumps to N, then R; the auto gearbox leaves R alone).
+            //Wheels straight, full throttle (R gear power in PSCarEngine::getPower),
+            //no brake. Exit when the car has backed out reverseDistanceLimit of
+            //heading-travel or the window expires, whichever comes first.
+            physicsAICar->setSteering(0.0f);
+            physicsAICar->setAcceleration(1.0f);
+            physicsAICar->setBreaks(0.0f);
+            aiCar->setBrake(false);
 
-            if(mTimerReverse.getMilliseconds() > reverseTimeLimit)
+            if(physicsAICar->getCarEngine().getCurrentGear() > -1)
+                physicsAICar->gearDown();
+            if(physicsAICar->getCarEngine().getCurrentGear() > -1)
+                physicsAICar->gearDown();
+
+            if(mTimerReverse.getMilliseconds() > reverseTimeLimit ||
+                mAIDistanceLength > reverseDistanceLimit)
             {
+                //back out of R into first gear (R gearUp -> N, N -> 1), then let
+                //the auto gearbox take over from the next forward attempt.
+                if(physicsAICar->getCarEngine().getCurrentGear() < 1)
+                    physicsAICar->gearUp();
+                if(physicsAICar->getCarEngine().getCurrentGear() < 1)
+                    physicsAICar->gearUp();
+
                 mIsReverseEnabled = false;
                 mTimerAIStuck.reset();
+                mAIDistanceLength = 0.0f;
             }
         }
         else
         {
+            physicsAICar->setSteering(steeringVal);
             physicsAICar->setAcceleration(accelerationVal);
             physicsAICar->setBreaks(breaksVal);
         }
 
-        physicsAICar->setSteering(steeringVal);
         aiCar->setAcceleration(true);//for particles
     }
 }
