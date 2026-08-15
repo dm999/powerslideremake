@@ -358,8 +358,8 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
     //massacre stats labels (shown below the deathmatch results table).
     //Positioned at x=360, below the last table row (y=22*12+80=344).
     {
-        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 1) + 80.0f;
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 1) + 60.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, yPos, 0.0f, 0.0f);
         mDeathmatchEliminatedLabel = createTextArea("MainWindowDMStatsEliminated", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         mDeathmatchEliminatedLabel->setCaption("");
         mDeathmatchEliminatedLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
@@ -371,8 +371,8 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
         getMainBackground()->addChild(mDeathmatchEliminatedLabel);
     }
     {
-        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 2) + 80.0f;
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 1) + 70.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, yPos, 0.0f, 0.0f);
         mDeathmatchInjuredLabel = createTextArea("MainWindowDMStatsInjured", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         mDeathmatchInjuredLabel->setCaption("");
         mDeathmatchInjuredLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
@@ -384,8 +384,8 @@ void UIMainMenuLabels::createLabelsOptionsOther(const Ogre::Matrix4& screenAdapt
         getMainBackground()->addChild(mDeathmatchInjuredLabel);
     }
     {
-        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 3) + 80.0f;
-        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(360.0f, yPos, 0.0f, 0.0f);
+        Ogre::Real yPos = 22.0f * (GameState::mRaceGridCarsMax + 1) + 80.0f;
+        Ogre::Vector4 textBoxPos = screenAdaptionRelative * Ogre::Vector4(335.0f, yPos, 0.0f, 0.0f);
         mDeathmatchScoreLabel = createTextArea("MainWindowDMStatsScore", 0.0f, 0.0f, textBoxPos.x, textBoxPos.y);
         mDeathmatchScoreLabel->setCaption("");
         mDeathmatchScoreLabel->setCharHeight(20.0f * viewportHeight / 1024.0f);
