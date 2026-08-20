@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Powerslide Remake — Main Features</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: #0e0e0c;
+  font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2c2c2a;
+}
+
+#deck { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slide.active { opacity: 1; visibility: visible; }
+
+.slide-svg {
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #fbf6ee 0%, transparent 55%),
+    radial-gradient(1000px 500px at 100% 110%, #eef3f0 0%, transparent 50%),
+    #f6f4ef;
+}
+.svg-host { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.svg-host > svg { width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: block; }
+
+.slide svg text, .slide svg tspan {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* ══════════════════ Deck navigation ══════════════════ */
+.deck-nav {
+  position: fixed;
+  bottom: 18px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 999px;
+  box-shadow: 0 6px 24px -6px rgba(20,20,15,0.18);
+}
+.deck-nav button {
+  font-family: inherit;
+  border: none; background: transparent;
+  color: #1e5f8f;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 15px; font-weight: 600; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, opacity .15s;
+  min-width: 38px;
+}
+.deck-nav button:hover { background: #eaf1f6; }
+.deck-nav button:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+.deck-nav .counter {
+  font-size: 13px; font-weight: 600;
+  color: #5c5c55;
+  padding: 0 10px;
+  letter-spacing: 0.04em;
+  min-width: 54px; text-align: center;
+  user-select: none;
+}
+.deck-nav .arrow svg {
+  width: 16px; height: 16px;
+  stroke: currentColor; stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round;
+  fill: none;
+}
+
+#fs-btn {
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 100;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #1e5f8f;
+  transition: background .15s;
+}
+#fs-btn:hover { background: #fff; }
+#fs-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 640px) {
+  .deck-nav button { padding: 6px 10px; font-size: 14px; }
+  .deck-nav .counter { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ══════════════ SLIDE 1 — TITLE ══════════════ -->
+<section class="slide slide-svg active" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroBg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101d2b"/>
+      <stop offset="0.5" stop-color="#1d2f42"/>
+      <stop offset="1" stop-color="#3d2a1e"/>
+    </linearGradient>
+    <linearGradient id="trailG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E8853A" stop-opacity="0"/>
+      <stop offset="1" stop-color="#E8853A" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1280" height="720" fill="url(#heroBg)"/>
+
+  <!-- abstract drift arc -->
+  <g opacity="0.5">
+    <path d="M 60 600 C 320 600 520 540 700 430 C 860 332 980 268 1240 210"
+          fill="none" stroke="url(#trailG)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 60 640 C 340 640 560 574 740 462 C 900 362 1010 300 1240 250"
+          fill="none" stroke="url(#trailG)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <g fill="#ffffff" opacity="0.05">
+    <rect x="1010" y="90" width="180" height="180" rx="40"/>
+  </g>
+
+  <text x="90" y="300" font-size="17" font-weight="700" fill="#E8853A" letter-spacing="3">OPEN-SOURCE GAME ENGINE · C++ · OGRE 1.9</text>
+
+  <text x="90" y="400" font-size="76" font-weight="800" letter-spacing="-2" fill="#ffffff">Powerslide Remake</text>
+
+  <text x="92" y="456" font-size="25" font-weight="500" fill="#a8bfd0">A faithful remake of the 1998 arcade racer — neural-network AI,</text>
+  <text x="92" y="492" font-size="25" font-weight="500" fill="#a8bfd0">custom vehicle physics, and original binary assets read directly.</text>
+
+  <g>
+    <rect x="90" y="556" width="252" height="62" rx="12" fill="#ffffff" opacity="0.10"/>
+    <text x="112" y="583" font-size="14" font-weight="600" fill="#8fa8bb" letter-spacing="1">CODEBASE</text>
+    <text x="112" y="606" font-size="19" font-weight="700" fill="#ffffff">~53k lines · 224 files</text>
+
+    <rect x="360" y="556" width="252" height="62" rx="12" fill="#ffffff" opacity="0.10"/>
+    <text x="382" y="583" font-size="14" font-weight="600" fill="#8fa8bb" letter-spacing="1">PLATFORMS</text>
+    <text x="382" y="606" font-size="19" font-weight="700" fill="#ffffff">Win · Linux · Android</text>
+
+    <rect x="630" y="556" width="252" height="62" rx="12" fill="#ffffff" opacity="0.10"/>
+    <text x="652" y="583" font-size="14" font-weight="600" fill="#8fa8bb" letter-spacing="1">LICENSE</text>
+    <text x="652" y="606" font-size="19" font-weight="700" fill="#ffffff">MIT</text>
+  </g>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 2 — WHAT IT IS ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs><radialGradient id="mc2" cx="1" cy="0" r="0.5">
+    <stop offset="0" stop-color="#2f8fd4" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#2f8fd4" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#mc2)"/>
+
+  <text x="90" y="150" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Not a port — a re-implementation</text>
+  <text x="90" y="200" font-size="22" font-weight="500" fill="#1a3a1a">The engine is new code. The content is the original 1998 game, read as-is.</text>
+
+  <!-- LEFT: original assets -->
+  <rect x="90" y="256" width="500" height="300" rx="16" fill="#fef3c7" stroke="#D97706" stroke-width="1.5"/>
+  <rect x="90" y="256" width="6" height="300" rx="3" fill="#D97706"/>
+  <text x="122" y="300" font-size="22" font-weight="800" fill="#92400e">Original game data</text>
+
+  <text x="122" y="340" font-size="18" font-weight="500" fill="#1a3a1a">Packed <tspan font-weight="700">.pf</tspan> archives are mounted as a virtual</text>
+  <text x="122" y="366" font-size="18" font-weight="500" fill="#1a3a1a">filesystem and parsed at runtime — no asset</text>
+  <text x="122" y="392" font-size="18" font-weight="500" fill="#1a3a1a">conversion step, no repacking.</text>
+
+  <rect x="122" y="416" width="436" height="52" rx="10" fill="#ffffff" stroke="#e6cf8f" stroke-width="1"/>
+  <text x="140" y="448" font-size="17" font-weight="700" fill="#92400e">data.pf · gameshell.pf · store.pf · patch.pf</text>
+
+  <text x="122" y="502" font-size="17" font-weight="500" fill="#4d4d46">14 binary format loaders: terrain, meshes, physics,</text>
+  <text x="122" y="526" font-size="17" font-weight="500" fill="#4d4d46">AI data, textures, particles, strings.</text>
+
+  <!-- RIGHT: new engine -->
+  <rect x="620" y="256" width="570" height="300" rx="16" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <rect x="620" y="256" width="6" height="300" rx="3" fill="#2f8fd4"/>
+  <text x="652" y="300" font-size="22" font-weight="800" fill="#1e40af">New engine</text>
+
+  <g font-size="18" font-weight="500" fill="#1a3a1a">
+    <circle cx="662" cy="334" r="4" fill="#2f8fd4"/>
+    <text x="680" y="340">Ogre 1.9, static, programmable pipeline (GLSL)</text>
+    <circle cx="662" cy="370" r="4" fill="#2f8fd4"/>
+    <text x="680" y="376">Custom vehicle physics — not a physics library</text>
+    <circle cx="662" cy="406" r="4" fill="#2f8fd4"/>
+    <text x="680" y="412">Neural-network AI driving, data from the original</text>
+    <circle cx="662" cy="442" r="4" fill="#2f8fd4"/>
+    <text x="680" y="448">LAN / internet multiplayer via a lobby server</text>
+    <circle cx="662" cy="478" r="4" fill="#2f8fd4"/>
+    <text x="680" y="484">Lua-driven rendering configuration</text>
+    <circle cx="662" cy="514" r="4" fill="#2f8fd4"/>
+    <text x="680" y="520">GLES2 Android build from the same sources</text>
+  </g>
+
+  <rect x="90" y="600" width="1100" height="58" rx="12" fill="#12314a"/>
+  <text x="118" y="637" font-size="20" font-weight="700" fill="#ffffff">The original game is the content pipeline — the remake supplies everything that runs it.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 3 — ARCHITECTURE ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs>
+    <radialGradient id="mc3" cx="1" cy="0" r="0.5">
+      <stop offset="0" stop-color="#2f8fd4" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#2f8fd4" stop-opacity="0"/></radialGradient>
+    <marker id="ar3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9Z" fill="#9aa39a"/></marker>
+  </defs>
+  <rect width="1280" height="720" fill="url(#mc3)"/>
+
+  <text x="90" y="140" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Architecture</text>
+  <text x="90" y="186" font-size="21" font-weight="500" fill="#1a3a1a">One application object; a mode switcher owns whatever is currently running.</text>
+
+  <!-- BaseApp -->
+  <rect x="90" y="224" width="290" height="86" rx="14" fill="#12314a"/>
+  <text x="114" y="258" font-size="23" font-weight="800" fill="#ffffff">BaseApp</text>
+  <text x="114" y="288" font-size="14" font-weight="500" fill="#a8bfd0">Ogre root · frame listener · window</text>
+
+  <!-- shared services -->
+  <rect x="90" y="336" width="290" height="252" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="114" y="370" font-size="16" font-weight="700" fill="#4d4d46" letter-spacing="1">SHARED SERVICES</text>
+
+  <rect x="114" y="386" width="242" height="42" rx="9" fill="#fef3c7"/>
+  <text x="130" y="406" font-size="16" font-weight="700" fill="#92400e">GameState</text>
+  <text x="130" y="424" font-size="13" font-weight="500" fill="#7c5310">single source of truth</text>
+
+  <rect x="114" y="436" width="242" height="36" rx="9" fill="#eceae3"/>
+  <text x="130" y="460" font-size="16" font-weight="600" fill="#4d4d46">InputHandler</text>
+
+  <rect x="114" y="480" width="242" height="36" rx="9" fill="#eceae3"/>
+  <text x="130" y="504" font-size="16" font-weight="600" fill="#4d4d46">DMLuaManager</text>
+
+  <rect x="114" y="524" width="242" height="36" rx="9" fill="#eceae3"/>
+  <text x="130" y="548" font-size="16" font-weight="600" fill="#4d4d46">Sounds / Music (OpenAL)</text>
+
+  <line x1="235" y1="316" x2="235" y2="330" stroke="#9aa39a" stroke-width="2.4" marker-end="url(#ar3)"/>
+  <line x1="388" y1="267" x2="424" y2="267" stroke="#9aa39a" stroke-width="2.4" marker-end="url(#ar3)"/>
+
+  <!-- GameModeSwitcher -->
+  <rect x="432" y="224" width="758" height="86" rx="14" fill="#1D7A5E"/>
+  <text x="458" y="258" font-size="23" font-weight="800" fill="#ffffff">GameModeSwitcher</text>
+  <text x="458" y="288" font-size="15" font-weight="500" fill="#b6e3d2">Constructs the active mode and forwards every frame event to it</text>
+
+  <line x1="811" y1="316" x2="811" y2="342" stroke="#9aa39a" stroke-width="2.4" marker-end="url(#ar3)"/>
+
+  <!-- Menu modes -->
+  <rect x="432" y="348" width="360" height="112" rx="14" fill="#f3e8ff" stroke="#c4a8e6" stroke-width="1.5"/>
+  <text x="456" y="382" font-size="19" font-weight="800" fill="#7c3aed">BaseMenuMode</text>
+  <rect x="456" y="398" width="150" height="34" rx="8" fill="#ffffff"/>
+  <text x="531" y="421" font-size="15" font-weight="600" fill="#6b21a8" text-anchor="middle">MenuMode</text>
+  <rect x="618" y="398" width="150" height="34" rx="8" fill="#ffffff"/>
+  <text x="693" y="421" font-size="15" font-weight="600" fill="#6b21a8" text-anchor="middle">MenuMultiMode</text>
+
+  <!-- Race modes -->
+  <rect x="830" y="348" width="360" height="112" rx="14" fill="#d1fae5" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="854" y="382" font-size="19" font-weight="800" fill="#065f46">BaseRaceMode</text>
+  <text x="854" y="410" font-size="15" font-weight="500" fill="#1a3a1a">SinglePlayer · Deathmatch · Multiplayer</text>
+  <text x="854" y="434" font-size="15" font-weight="500" fill="#1a3a1a">Championship · Time trial</text>
+
+  <!-- Subsystems row -->
+  <text x="432" y="504" font-size="16" font-weight="700" fill="#4d4d46" letter-spacing="1">SUBSYSTEMS</text>
+
+  <g>
+    <rect x="432" y="518" width="176" height="70" rx="12" fill="#dbeafe"/>
+    <text x="520" y="546" font-size="17" font-weight="700" fill="#1e40af" text-anchor="middle">physics</text>
+    <text x="520" y="568" font-size="14" font-weight="500" fill="#4d4d46" text-anchor="middle">3.1k lines</text>
+
+    <rect x="620" y="518" width="176" height="70" rx="12" fill="#dbeafe"/>
+    <text x="708" y="546" font-size="17" font-weight="700" fill="#1e40af" text-anchor="middle">pscar</text>
+    <text x="708" y="568" font-size="14" font-weight="500" fill="#4d4d46" text-anchor="middle">2.7k lines</text>
+
+    <rect x="808" y="518" width="176" height="70" rx="12" fill="#dbeafe"/>
+    <text x="896" y="546" font-size="17" font-weight="700" fill="#1e40af" text-anchor="middle">loaders</text>
+    <text x="896" y="568" font-size="14" font-weight="500" fill="#4d4d46" text-anchor="middle">4.0k lines</text>
+
+    <rect x="996" y="518" width="194" height="70" rx="12" fill="#dbeafe"/>
+    <text x="1093" y="546" font-size="17" font-weight="700" fill="#1e40af" text-anchor="middle">ui</text>
+    <text x="1093" y="568" font-size="14" font-weight="500" fill="#4d4d46" text-anchor="middle">14.8k lines</text>
+  </g>
+
+  <rect x="90" y="618" width="1100" height="52" rx="12" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="118" y="650" font-size="18" font-weight="600" fill="#1a3a1a">Modes are rebuilt per race — <tspan font-weight="700">ModeContext</tspan> threads the shared services into each one.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 4 — PHYSICS ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs><radialGradient id="mc4" cx="1" cy="0" r="0.5">
+    <stop offset="0" stop-color="#2f8fd4" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#2f8fd4" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#mc4)"/>
+
+  <text x="90" y="144" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Custom vehicle physics</text>
+  <text x="90" y="192" font-size="21" font-weight="500" fill="#1a3a1a">Purpose-built for arcade drift handling — no third-party physics library.</text>
+
+  <!-- Fixed timestep highlight -->
+  <rect x="90" y="232" width="340" height="180" rx="16" fill="#d1fae5" stroke="#1D9E75" stroke-width="2"/>
+  <text x="118" y="272" font-size="16" font-weight="700" fill="#065f46" letter-spacing="1.5">FIXED TIMESTEP</text>
+  <text x="118" y="330" font-size="46" font-weight="800" fill="#1D9E75">1000 Hz</text>
+  <text x="118" y="364" font-size="16" font-weight="500" fill="#1a3a1a">1 ms substeps, decoupled from</text>
+  <text x="118" y="386" font-size="16" font-weight="500" fill="#1a3a1a">framerate; max 15 ms catch-up</text>
+
+  <!-- Model components -->
+  <rect x="454" y="232" width="736" height="180" rx="16" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="482" y="268" font-size="16" font-weight="700" fill="#4d4d46" letter-spacing="1.5">THE CAR MODEL</text>
+
+  <rect x="482" y="286" width="160" height="46" rx="10" fill="#dbeafe"/>
+  <text x="562" y="315" font-size="16" font-weight="700" fill="#1e40af" text-anchor="middle">PhysicsBody</text>
+  <rect x="654" y="286" width="160" height="46" rx="10" fill="#dbeafe"/>
+  <text x="734" y="315" font-size="16" font-weight="700" fill="#1e40af" text-anchor="middle">PhysicsWheels</text>
+  <rect x="826" y="286" width="160" height="46" rx="10" fill="#dbeafe"/>
+  <text x="906" y="315" font-size="16" font-weight="700" fill="#1e40af" text-anchor="middle">PhysicsRoofs</text>
+  <rect x="998" y="286" width="164" height="46" rx="10" fill="#dbeafe"/>
+  <text x="1080" y="315" font-size="16" font-weight="700" fill="#1e40af" text-anchor="middle">TerrainData</text>
+
+  <text x="482" y="360" font-size="17" font-weight="500" fill="#4d4d46">Per-vehicle setup is loaded from the original <tspan font-weight="700">.phy</tspan> files —</text>
+  <text x="482" y="386" font-size="17" font-weight="500" fill="#4d4d46">suspension geometry, mass distribution, engine torque curve.</text>
+
+  <!-- Feature cards -->
+  <rect x="90" y="440" width="352" height="164" rx="14" fill="#fef3c7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="118" y="478" font-size="20" font-weight="800" fill="#92400e">Engine &amp; gearbox</text>
+  <text x="118" y="512" font-size="16" font-weight="500" fill="#1a3a1a">RPM-driven torque curve with</text>
+  <text x="118" y="536" font-size="16" font-weight="500" fill="#1a3a1a">automatic shifting. Near-zero torque</text>
+  <text x="118" y="560" font-size="16" font-weight="500" fill="#1a3a1a">at idle means a standing car needs</text>
+  <text x="118" y="584" font-size="16" font-weight="500" fill="#1a3a1a">a wheel impulse to start reversing.</text>
+
+  <rect x="464" y="440" width="352" height="164" rx="14" fill="#fef3c7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="492" y="478" font-size="20" font-weight="800" fill="#92400e">Terrain interaction</text>
+  <text x="492" y="512" font-size="16" font-weight="500" fill="#1a3a1a">Per-wheel surface sampling against</text>
+  <text x="492" y="536" font-size="16" font-weight="500" fill="#1a3a1a">the track mesh drives traction and</text>
+  <text x="492" y="560" font-size="16" font-weight="500" fill="#1a3a1a">suspension travel — dirt, tarmac and</text>
+  <text x="492" y="584" font-size="16" font-weight="500" fill="#1a3a1a">ice behave differently.</text>
+
+  <rect x="838" y="440" width="352" height="164" rx="14" fill="#fef3c7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="866" y="478" font-size="20" font-weight="800" fill="#92400e">Car-to-car collisions</text>
+  <text x="866" y="512" font-size="16" font-weight="500" fill="#1a3a1a">Impulse-based resolution between</text>
+  <text x="866" y="536" font-size="16" font-weight="500" fill="#1a3a1a">all vehicles in the field, feeding</text>
+  <text x="866" y="560" font-size="16" font-weight="500" fill="#1a3a1a">the damage model that deathmatch</text>
+  <text x="866" y="584" font-size="16" font-weight="500" fill="#1a3a1a">mode builds on.</text>
+
+  <text x="90" y="666" font-size="19" font-weight="700" fill="#1a3a1a">Reference papers for the model are kept in <tspan font-weight="800">docs/physics/</tspan>.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 5 — AI ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs>
+    <radialGradient id="mc5" cx="1" cy="0" r="0.5">
+      <stop offset="0" stop-color="#8B5CF6" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/></radialGradient>
+    <marker id="ar5" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9Z" fill="#8B5CF6"/></marker>
+  </defs>
+  <rect width="1280" height="720" fill="url(#mc5)"/>
+
+  <text x="90" y="144" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Neural-network driving AI</text>
+  <text x="90" y="192" font-size="21" font-weight="500" fill="#1a3a1a">The original game's trained network weights are loaded and evaluated — not scripted waypoints.</text>
+
+  <!-- Pipeline -->
+  <rect x="90" y="234" width="234" height="140" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="114" y="270" font-size="18" font-weight="800" fill="#4d4d46">Track spline</text>
+  <text x="114" y="302" font-size="15" font-weight="500" fill="#4d4d46">Racing line sampled</text>
+  <text x="114" y="324" font-size="15" font-weight="500" fill="#4d4d46">from AI data; car</text>
+  <text x="114" y="346" font-size="15" font-weight="500" fill="#4d4d46">locates its position</text>
+
+  <line x1="332" y1="304" x2="360" y2="304" stroke="#8B5CF6" stroke-width="2.5" marker-end="url(#ar5)"/>
+
+  <rect x="368" y="234" width="234" height="140" rx="14" fill="#f3e8ff" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="392" y="270" font-size="18" font-weight="800" fill="#7c3aed">Feature vector</text>
+  <text x="392" y="302" font-size="15" font-weight="500" fill="#1a3a1a">Heading error, lateral</text>
+  <text x="392" y="324" font-size="15" font-weight="500" fill="#1a3a1a">offset, velocity, and</text>
+  <text x="392" y="346" font-size="15" font-weight="500" fill="#1a3a1a">upcoming curvature</text>
+
+  <line x1="610" y1="304" x2="638" y2="304" stroke="#8B5CF6" stroke-width="2.5" marker-end="url(#ar5)"/>
+
+  <rect x="646" y="222" width="266" height="164" rx="14" fill="#ede9fe" stroke="#8B5CF6" stroke-width="2.2"/>
+  <text x="670" y="258" font-size="18" font-weight="800" fill="#6b21a8">Recurrent network</text>
+  <!-- mini net -->
+  <g>
+    <circle cx="700" cy="298" r="7" fill="#8B5CF6"/>
+    <circle cx="700" cy="330" r="7" fill="#8B5CF6"/>
+    <circle cx="700" cy="362" r="7" fill="#8B5CF6"/>
+    <circle cx="778" cy="282" r="7" fill="#a78bfa"/>
+    <circle cx="778" cy="314" r="7" fill="#a78bfa"/>
+    <circle cx="778" cy="346" r="7" fill="#a78bfa"/>
+    <circle cx="856" cy="314" r="7" fill="#6b21a8"/>
+    <g stroke="#c4b5fd" stroke-width="1.2">
+      <line x1="707" y1="298" x2="771" y2="282"/><line x1="707" y1="298" x2="771" y2="314"/><line x1="707" y1="298" x2="771" y2="346"/>
+      <line x1="707" y1="330" x2="771" y2="282"/><line x1="707" y1="330" x2="771" y2="314"/><line x1="707" y1="330" x2="771" y2="346"/>
+      <line x1="707" y1="362" x2="771" y2="282"/><line x1="707" y1="362" x2="771" y2="314"/><line x1="707" y1="362" x2="771" y2="346"/>
+      <line x1="785" y1="282" x2="849" y2="314"/><line x1="785" y1="314" x2="849" y2="314"/><line x1="785" y1="346" x2="849" y2="314"/>
+    </g>
+    <path d="M 786 346 C 800 380 756 384 772 354" fill="none" stroke="#8B5CF6" stroke-width="1.6" marker-end="url(#ar5)"/>
+  </g>
+
+  <line x1="920" y1="304" x2="948" y2="304" stroke="#8B5CF6" stroke-width="2.5" marker-end="url(#ar5)"/>
+
+  <rect x="956" y="234" width="234" height="140" rx="14" fill="#d1fae5" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="980" y="270" font-size="18" font-weight="800" fill="#065f46">Controls</text>
+  <text x="980" y="302" font-size="15" font-weight="500" fill="#1a3a1a">Steering, throttle</text>
+  <text x="980" y="324" font-size="15" font-weight="500" fill="#1a3a1a">and brake fed to the</text>
+  <text x="980" y="346" font-size="15" font-weight="500" fill="#1a3a1a">same physics as the player</text>
+
+  <!-- Detail cards -->
+  <rect x="90" y="410" width="534" height="184" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="118" y="448" font-size="20" font-weight="800" fill="#1a3a1a">Per-track, per-slot weights</text>
+  <text x="118" y="482" font-size="16" font-weight="500" fill="#4d4d46">The original ships a dataset for each of the 12 grid slots,</text>
+  <text x="118" y="506" font-size="16" font-weight="500" fill="#4d4d46">so opponents have distinct driving personalities. Track-</text>
+  <text x="118" y="530" font-size="16" font-weight="500" fill="#4d4d46">specific tuning coefficients handle special cases —</text>
+  <text x="118" y="554" font-size="16" font-weight="500" fill="#4d4d46">Mineshafted and Speedway each get their own handling.</text>
+  <text x="118" y="580" font-size="15" font-weight="600" fill="#7c3aed">AIWhole: slot matrix · activation · remapper · spline data</text>
+
+  <rect x="656" y="410" width="534" height="184" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="684" y="448" font-size="20" font-weight="800" fill="#991b1b">Anti-stuck recovery</text>
+  <text x="684" y="482" font-size="16" font-weight="500" fill="#1a3a1a">Original logic that had been disabled for years, restored</text>
+  <text x="684" y="506" font-size="16" font-weight="500" fill="#1a3a1a">and modernized. A car that travels under 20 units in a</text>
+  <text x="684" y="530" font-size="16" font-weight="500" fill="#1a3a1a">2-second window is wedged: shift to reverse, kick the</text>
+  <text x="684" y="554" font-size="16" font-weight="500" fill="#1a3a1a">wheels, back out, then resume — with the network's</text>
+  <text x="684" y="578" font-size="16" font-weight="500" fill="#1a3a1a">spline tracking reset so steering doesn't go erratic.</text>
+
+  <text x="90" y="660" font-size="19" font-weight="700" fill="#1a3a1a">AI cars run the identical physics path as the player — no rubber-banding, no cheating.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 6 — GAME MODES ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs><radialGradient id="mc6" cx="1" cy="0" r="0.5">
+    <stop offset="0" stop-color="#1D9E75" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#1D9E75" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#mc6)"/>
+
+  <text x="90" y="144" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Game modes</text>
+  <text x="90" y="192" font-size="21" font-weight="500" fill="#1a3a1a">Five ways to race, all sharing one pipeline.</text>
+
+  <!-- Row 1 -->
+  <rect x="90" y="232" width="352" height="152" rx="14" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <rect x="114" y="256" width="128" height="30" rx="15" fill="#2f8fd4"/>
+  <text x="178" y="277" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Single race</text>
+  <text x="114" y="318" font-size="16" font-weight="500" fill="#1a3a1a">Pick a track, car and difficulty.</text>
+  <text x="114" y="342" font-size="16" font-weight="500" fill="#1a3a1a">Up to 11 AI opponents on the grid,</text>
+  <text x="114" y="366" font-size="16" font-weight="500" fill="#1a3a1a">configurable lap count.</text>
+
+  <rect x="464" y="232" width="352" height="152" rx="14" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <rect x="488" y="256" width="132" height="30" rx="15" fill="#2f8fd4"/>
+  <text x="554" y="277" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Championship</text>
+  <text x="488" y="318" font-size="16" font-weight="500" fill="#1a3a1a">A season across tracks with points</text>
+  <text x="488" y="342" font-size="16" font-weight="500" fill="#1a3a1a">carried between races, unlocking</text>
+  <text x="488" y="366" font-size="16" font-weight="500" fill="#1a3a1a">further tracks and cars.</text>
+
+  <rect x="838" y="232" width="352" height="152" rx="14" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <rect x="862" y="256" width="112" height="30" rx="15" fill="#2f8fd4"/>
+  <text x="918" y="277" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Time trial</text>
+  <text x="862" y="318" font-size="16" font-weight="500" fill="#1a3a1a">Solo laps against the clock with a</text>
+  <text x="862" y="342" font-size="16" font-weight="500" fill="#1a3a1a">replay ghost of your best run and</text>
+  <text x="862" y="366" font-size="16" font-weight="500" fill="#1a3a1a">persistent high scores.</text>
+
+  <!-- Row 2 -->
+  <rect x="90" y="404" width="538" height="196" rx="14" fill="#d1fae5" stroke="#1D9E75" stroke-width="2"/>
+  <rect x="114" y="428" width="130" height="30" rx="15" fill="#1D9E75"/>
+  <text x="179" y="449" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Multiplayer</text>
+  <text x="256" y="449" font-size="14" font-weight="600" fill="#065f46">LAN or internet</text>
+
+  <text x="114" y="490" font-size="16" font-weight="500" fill="#1a3a1a">A lobby server hosts rooms; one client acts as race master</text>
+  <text x="114" y="514" font-size="16" font-weight="500" fill="#1a3a1a">and the rest as slaves, exchanging car state over UDP.</text>
+
+  <rect x="114" y="534" width="152" height="44" rx="9" fill="#ffffff" stroke="#a7e8d4" stroke-width="1"/>
+  <text x="190" y="551" font-size="13" font-weight="600" fill="#4d4d46" text-anchor="middle">TCP 8800</text>
+  <text x="190" y="569" font-size="13" font-weight="500" fill="#4d4d46" text-anchor="middle">lobby</text>
+
+  <rect x="278" y="534" width="152" height="44" rx="9" fill="#ffffff" stroke="#a7e8d4" stroke-width="1"/>
+  <text x="354" y="551" font-size="13" font-weight="600" fill="#4d4d46" text-anchor="middle">UDP 8800</text>
+  <text x="354" y="569" font-size="13" font-weight="500" fill="#4d4d46" text-anchor="middle">room list</text>
+
+  <rect x="442" y="534" width="162" height="44" rx="9" fill="#ffffff" stroke="#a7e8d4" stroke-width="1"/>
+  <text x="523" y="551" font-size="13" font-weight="600" fill="#4d4d46" text-anchor="middle">8700</text>
+  <text x="523" y="569" font-size="13" font-weight="500" fill="#4d4d46" text-anchor="middle">race data</text>
+
+  <rect x="652" y="404" width="538" height="196" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  <rect x="676" y="428" width="128" height="30" rx="15" fill="#ef4444"/>
+  <text x="740" y="449" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Deathmatch</text>
+  <text x="816" y="449" font-size="14" font-weight="600" fill="#991b1b">new to the remake</text>
+
+  <text x="676" y="490" font-size="16" font-weight="500" fill="#1a3a1a">Last car standing. Every vehicle carries a life value</text>
+  <text x="676" y="514" font-size="16" font-weight="500" fill="#1a3a1a">drained by collisions and weapons; at zero it explodes</text>
+  <text x="676" y="538" font-size="16" font-weight="500" fill="#1a3a1a">and is out. Scored on eliminations and cars wounded.</text>
+  <text x="676" y="574" font-size="16" font-weight="700" fill="#991b1b">Detailed on the next slide →</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 7 — DEATHMATCH / MASSACRE ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs>
+    <radialGradient id="mc7" cx="1" cy="0" r="0.5">
+      <stop offset="0" stop-color="#ef4444" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#ef4444" stop-opacity="0"/></radialGradient>
+    <marker id="ar7" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9Z" fill="#ef4444"/></marker>
+  </defs>
+  <rect width="1280" height="720" fill="url(#mc7)"/>
+
+  <text x="90" y="140" font-size="52" font-weight="800" fill="#222222" letter-spacing="-1">Deathmatch &amp; Massacre</text>
+  <text x="90" y="186" font-size="21" font-weight="500" fill="#1a3a1a">The largest remake-only addition — and a stress test for the whole engine.</text>
+
+  <!-- Life model -->
+  <rect x="90" y="220" width="560" height="252" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="118" y="258" font-size="21" font-weight="800" fill="#991b1b">One life value, many sources of damage</text>
+
+  <!-- life bar -->
+  <rect x="118" y="278" width="504" height="26" rx="13" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+  <rect x="118" y="278" width="290" height="26" rx="13" fill="#ef4444"/>
+  <text x="126" y="296" font-size="13" font-weight="700" fill="#ffffff">LIFE</text>
+  <text x="614" y="296" font-size="13" font-weight="600" fill="#991b1b" text-anchor="end">1.0 → 0.0</text>
+
+  <g font-size="16" font-weight="500" fill="#1a3a1a">
+    <circle cx="128" cy="334" r="4" fill="#ef4444"/><text x="146" y="340">Collision impulse between cars</text>
+    <circle cx="128" cy="364" r="4" fill="#ef4444"/><text x="146" y="370">Bomb and burn weapons</text>
+    <circle cx="128" cy="394" r="4" fill="#ef4444"/><text x="146" y="400">Self-destruction bleed below half life</text>
+  </g>
+  <text x="118" y="424" font-size="15" font-weight="600" fill="#991b1b">Death is handled at a single chokepoint —</text>
+  <text x="118" y="444" font-size="15" font-weight="600" fill="#991b1b">new damage sources just drain the value.</text>
+
+  <!-- Massacre -->
+  <rect x="674" y="220" width="516" height="252" rx="14" fill="#12314a"/>
+  <text x="702" y="258" font-size="21" font-weight="800" fill="#ffffff">Massacre sub-mode</text>
+  <text x="702" y="290" font-size="16" font-weight="500" fill="#a8bfd0">The field is built in batches of 12 and released on a</text>
+  <text x="702" y="314" font-size="16" font-weight="500" fill="#a8bfd0">timer, so the grid fills far past the original 12 slots.</text>
+
+  <rect x="702" y="334" width="146" height="72" rx="10" fill="#ffffff" opacity="0.12"/>
+  <text x="775" y="366" font-size="30" font-weight="800" fill="#E8853A" text-anchor="middle">300</text>
+  <text x="775" y="390" font-size="13" font-weight="500" fill="#a8bfd0" text-anchor="middle">cars maximum</text>
+
+  <rect x="862" y="334" width="146" height="72" rx="10" fill="#ffffff" opacity="0.12"/>
+  <text x="935" y="366" font-size="30" font-weight="800" fill="#E8853A" text-anchor="middle">25</text>
+  <text x="935" y="390" font-size="13" font-weight="500" fill="#a8bfd0" text-anchor="middle">batches</text>
+
+  <rect x="1022" y="334" width="146" height="72" rx="10" fill="#ffffff" opacity="0.12"/>
+  <text x="1095" y="366" font-size="30" font-weight="800" fill="#E8853A" text-anchor="middle">5–30</text>
+  <text x="1095" y="390" font-size="13" font-weight="500" fill="#a8bfd0" text-anchor="middle">minute limit</text>
+
+  <!-- Engineering consequences -->
+  <text x="90" y="496" font-size="17" font-weight="700" fill="#4d4d46" letter-spacing="1.5">WHAT SCALING TO 300 CARS REQUIRED</text>
+
+  <rect x="90" y="512" width="352" height="128" rx="12" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="114" y="546" font-size="18" font-weight="800" fill="#1a3a1a">Grid generation</text>
+  <text x="114" y="576" font-size="15" font-weight="500" fill="#4d4d46">Only 12 starting positions exist in</text>
+  <text x="114" y="598" font-size="15" font-weight="500" fill="#4d4d46">the original data, so slots beyond</text>
+  <text x="114" y="620" font-size="15" font-weight="500" fill="#4d4d46">that are cloned with a stagger.</text>
+
+  <rect x="464" y="512" width="352" height="128" rx="12" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="488" y="546" font-size="18" font-weight="800" fill="#1a3a1a">HUD rework</text>
+  <text x="488" y="576" font-size="15" font-weight="500" fill="#4d4d46">The tacho position readout was two</text>
+  <text x="488" y="598" font-size="15" font-weight="500" fill="#4d4d46">digits wide; it now compresses to</text>
+  <text x="488" y="620" font-size="15" font-weight="500" fill="#4d4d46">three without shifting the layout.</text>
+
+  <rect x="838" y="512" width="352" height="128" rx="12" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="862" y="546" font-size="18" font-weight="800" fill="#1a3a1a">Start gating</text>
+  <text x="862" y="576" font-size="15" font-weight="500" fill="#4d4d46">Cars waiting in later batches are</text>
+  <text x="862" y="598" font-size="15" font-weight="500" fill="#4d4d46">parked, so anti-stuck detection and</text>
+  <text x="862" y="620" font-size="15" font-weight="500" fill="#4d4d46">the timer key off per-car state.</text>
+
+  <text x="90" y="682" font-size="17" font-weight="600" fill="#1a3a1a">Every difference is behind one flag — the classic modes are byte-for-byte unaffected.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 8 — RENDERING ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs><radialGradient id="mc8" cx="1" cy="0" r="0.5">
+    <stop offset="0" stop-color="#2f8fd4" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#2f8fd4" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#mc8)"/>
+
+  <text x="90" y="140" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Rendering</text>
+  <text x="90" y="186" font-size="21" font-weight="500" fill="#1a3a1a">A programmable GLSL pipeline, configured from Lua rather than hardcoded.</text>
+
+  <!-- Lua config -->
+  <rect x="90" y="222" width="352" height="196" rx="14" fill="#f3e8ff" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="118" y="260" font-size="20" font-weight="800" fill="#7c3aed">Data-driven setup</text>
+  <text x="118" y="294" font-size="16" font-weight="500" fill="#1a3a1a">Lua scripts choose terrain materials,</text>
+  <text x="118" y="318" font-size="16" font-weight="500" fill="#1a3a1a">shader variants and mesh options at</text>
+  <text x="118" y="342" font-size="16" font-weight="500" fill="#1a3a1a">load time.</text>
+  <rect x="118" y="360" width="296" height="38" rx="9" fill="#ffffff"/>
+  <text x="134" y="385" font-size="15" font-weight="600" fill="#6b21a8">Main.lua · vehicle.lua · Scene.lua</text>
+
+  <!-- Shaders -->
+  <rect x="464" y="222" width="352" height="196" rx="14" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <text x="492" y="260" font-size="20" font-weight="800" fill="#1e40af">Shader library</text>
+  <text x="492" y="298" font-size="34" font-weight="800" fill="#2f8fd4">48 GLSL</text>
+  <text x="492" y="326" font-size="16" font-weight="500" fill="#1a3a1a">shaders across 29 material scripts.</text>
+  <text x="492" y="356" font-size="16" font-weight="500" fill="#1a3a1a">Variants are generated from shared</text>
+  <text x="492" y="380" font-size="16" font-weight="500" fill="#1a3a1a">sources via preprocessor defines, so</text>
+  <text x="492" y="404" font-size="16" font-weight="500" fill="#1a3a1a">paths cannot drift apart.</text>
+
+  <!-- Features -->
+  <rect x="838" y="222" width="352" height="196" rx="14" fill="#d1fae5" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="866" y="260" font-size="20" font-weight="800" fill="#065f46">Per-pixel lighting</text>
+  <text x="866" y="294" font-size="16" font-weight="500" fill="#1a3a1a">Multi-light diffuse and specular with</text>
+  <text x="866" y="318" font-size="16" font-weight="500" fill="#1a3a1a">attenuation, normal mapping and</text>
+  <text x="866" y="342" font-size="16" font-weight="500" fill="#1a3a1a">parallax occlusion variants for</text>
+  <text x="866" y="366" font-size="16" font-weight="500" fill="#1a3a1a">terrain surfaces.</text>
+
+  <!-- Bottom row: three techniques -->
+  <rect x="90" y="444" width="352" height="176" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="114" y="482" font-size="19" font-weight="800" fill="#1a3a1a">Dynamic shadows</text>
+  <text x="114" y="514" font-size="15" font-weight="500" fill="#4d4d46">A single depth map follows the player</text>
+  <text x="114" y="536" font-size="15" font-weight="500" fill="#4d4d46">car. Terrain samples it manually with</text>
+  <text x="114" y="558" font-size="15" font-weight="500" fill="#4d4d46">4×4 filtering and distance fade,</text>
+  <text x="114" y="580" font-size="15" font-weight="500" fill="#4d4d46">giving soft edges cheaply.</text>
+  <text x="114" y="606" font-size="14" font-weight="600" fill="#2f8fd4">1024² · float depth</text>
+
+  <rect x="464" y="444" width="352" height="176" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="488" y="482" font-size="19" font-weight="800" fill="#1a3a1a">Car reflections</text>
+  <text x="488" y="514" font-size="15" font-weight="500" fill="#4d4d46">An environment cubemap is rendered</text>
+  <text x="488" y="536" font-size="15" font-weight="500" fill="#4d4d46">from the player car, one face per</text>
+  <text x="488" y="558" font-size="15" font-weight="500" fill="#4d4d46">frame, and sampled by the chassis</text>
+  <text x="488" y="580" font-size="15" font-weight="500" fill="#4d4d46">shader — so it reflects real geometry.</text>
+  <text x="488" y="606" font-size="14" font-weight="600" fill="#2f8fd4">optional · desktop only</text>
+
+  <rect x="838" y="444" width="352" height="176" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="862" y="482" font-size="19" font-weight="800" fill="#1a3a1a">Texture upscaling</text>
+  <text x="862" y="514" font-size="15" font-weight="500" fill="#4d4d46">Original textures are low resolution.</text>
+  <text x="862" y="536" font-size="15" font-weight="500" fill="#4d4d46">Lookup-table upscaling reconstructs</text>
+  <text x="862" y="558" font-size="15" font-weight="500" fill="#4d4d46">detail at load time without shipping</text>
+  <text x="862" y="580" font-size="15" font-weight="500" fill="#4d4d46">any replacement art.</text>
+  <text x="862" y="606" font-size="14" font-weight="600" fill="#2f8fd4">HKLUT</text>
+
+  <text x="90" y="678" font-size="18" font-weight="600" fill="#1a3a1a">A rear-view mirror renders the scene a second time; the dashboard lives in its own scene manager.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 9 — PLATFORMS & TECH ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <defs><radialGradient id="mc9" cx="1" cy="0" r="0.5">
+    <stop offset="0" stop-color="#2f8fd4" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#2f8fd4" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#mc9)"/>
+
+  <text x="90" y="140" font-size="54" font-weight="800" fill="#222222" letter-spacing="-1">Portability &amp; engineering</text>
+  <text x="90" y="186" font-size="21" font-weight="500" fill="#1a3a1a">One codebase, three platforms, conservative C++ for wide compiler support.</text>
+
+  <!-- Platforms -->
+  <rect x="90" y="224" width="352" height="150" rx="14" fill="#dbeafe" stroke="#2f8fd4" stroke-width="1.5"/>
+  <text x="266" y="264" font-size="22" font-weight="800" fill="#1e40af" text-anchor="middle">Windows &amp; Linux</text>
+  <text x="266" y="300" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Desktop OpenGL</text>
+  <text x="266" y="326" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">MSVC and MinGW / GCC</text>
+  <text x="266" y="352" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Static Ogre build</text>
+
+  <rect x="464" y="224" width="352" height="150" rx="14" fill="#d1fae5" stroke="#1D9E75" stroke-width="1.5"/>
+  <text x="640" y="264" font-size="22" font-weight="800" fill="#065f46" text-anchor="middle">Android</text>
+  <text x="640" y="300" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">GLES2 via a JNI wrapper</text>
+  <text x="640" y="326" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Touch input, parallel shader set</text>
+  <text x="640" y="352" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Assets read from storage</text>
+
+  <rect x="838" y="224" width="352" height="150" rx="14" fill="#fef3c7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="1014" y="264" font-size="22" font-weight="800" fill="#92400e" text-anchor="middle">Build system</text>
+  <text x="1014" y="300" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">CMake, sources auto-globbed</text>
+  <text x="1014" y="326" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Dependencies vendored in-tree</text>
+  <text x="1014" y="352" font-size="16" font-weight="500" fill="#1a3a1a" text-anchor="middle">Audio can be compiled out</text>
+
+  <!-- Dependencies strip -->
+  <text x="90" y="424" font-size="16" font-weight="700" fill="#4d4d46" letter-spacing="1.5">VENDORED DEPENDENCIES</text>
+  <g>
+    <rect x="90" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="155" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">SFML</text>
+    <rect x="232" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="297" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">Lua</text>
+    <rect x="374" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="439" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">SimpleINI</text>
+    <rect x="516" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="581" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">JSON++</text>
+    <rect x="658" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="723" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">ogg / vorbis</text>
+    <rect x="800" y="440" width="130" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="865" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">multislider</text>
+    <rect x="942" y="440" width="120" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="1002" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">Yato</text>
+    <rect x="1074" y="440" width="116" height="42" rx="9" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1"/>
+    <text x="1132" y="467" font-size="15" font-weight="600" fill="#4d4d46" text-anchor="middle">HKLUT</text>
+  </g>
+
+  <!-- Extras -->
+  <rect x="90" y="516" width="538" height="140" rx="14" fill="#f6f5f1" stroke="#dcd8ce" stroke-width="1.5"/>
+  <text x="114" y="552" font-size="19" font-weight="800" fill="#1a3a1a">Beyond the track</text>
+  <text x="114" y="584" font-size="16" font-weight="500" fill="#4d4d46">In-game cheats (nitro, bomb, burn, spider), an</text>
+  <text x="114" y="608" font-size="16" font-weight="500" fill="#4d4d46">original-format video player for cutscenes, music</text>
+  <text x="114" y="632" font-size="16" font-weight="500" fill="#4d4d46">playback, and persistent scores and settings.</text>
+
+  <rect x="652" y="516" width="538" height="140" rx="14" fill="#12314a"/>
+  <text x="676" y="552" font-size="19" font-weight="800" fill="#ffffff">Left-handed to right-handed</text>
+  <text x="676" y="584" font-size="16" font-weight="500" fill="#a8bfd0">The original data uses the opposite coordinate</text>
+  <text x="676" y="608" font-size="16" font-weight="500" fill="#a8bfd0">convention to Ogre. Each class declares which one</text>
+  <text x="676" y="632" font-size="16" font-weight="500" fill="#a8bfd0">it works in, and every conversion is marked inline.</text>
+</svg>
+</div></section>
+
+<!-- ══════════════ SLIDE 10 — CLOSING ══════════════ -->
+<section class="slide slide-svg" data-type="svg"><div class="svg-host">
+<svg version="1.1" viewBox="0.0 0.0 1280.0 720.0" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="endBg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101d2b"/>
+      <stop offset="0.55" stop-color="#1d2f42"/>
+      <stop offset="1" stop-color="#3d2a1e"/>
+    </linearGradient>
+    <linearGradient id="trailG2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E8853A" stop-opacity="0"/>
+      <stop offset="1" stop-color="#E8853A" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1280" height="720" fill="url(#endBg)"/>
+  <path d="M 40 250 C 300 250 520 196 700 132" fill="none" stroke="url(#trailG2)" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+
+  <text x="90" y="180" font-size="52" font-weight="800" fill="#ffffff" letter-spacing="-1">In summary</text>
+
+  <!-- Four pillars -->
+  <g>
+    <rect x="90" y="240" width="262" height="200" rx="14" fill="#ffffff" opacity="0.10"/>
+    <text x="118" y="284" font-size="30" font-weight="800" fill="#E8853A">01</text>
+    <text x="118" y="322" font-size="21" font-weight="700" fill="#ffffff">Authentic</text>
+    <text x="118" y="356" font-size="15" font-weight="500" fill="#a8bfd0">Reads the 1998 game's</text>
+    <text x="118" y="378" font-size="15" font-weight="500" fill="#a8bfd0">own binary assets, with</text>
+    <text x="118" y="400" font-size="15" font-weight="500" fill="#a8bfd0">its physics and AI data</text>
+    <text x="118" y="422" font-size="15" font-weight="500" fill="#a8bfd0">intact.</text>
+
+    <rect x="368" y="240" width="262" height="200" rx="14" fill="#ffffff" opacity="0.10"/>
+    <text x="396" y="284" font-size="30" font-weight="800" fill="#E8853A">02</text>
+    <text x="396" y="322" font-size="21" font-weight="700" fill="#ffffff">Modernized</text>
+    <text x="396" y="356" font-size="15" font-weight="500" fill="#a8bfd0">Programmable shading,</text>
+    <text x="396" y="378" font-size="15" font-weight="500" fill="#a8bfd0">dynamic shadows and</text>
+    <text x="396" y="400" font-size="15" font-weight="500" fill="#a8bfd0">reflections on top of the</text>
+    <text x="396" y="422" font-size="15" font-weight="500" fill="#a8bfd0">original content.</text>
+
+    <rect x="646" y="240" width="262" height="200" rx="14" fill="#ffffff" opacity="0.10"/>
+    <text x="674" y="284" font-size="30" font-weight="800" fill="#E8853A">03</text>
+    <text x="674" y="322" font-size="21" font-weight="700" fill="#ffffff">Extended</text>
+    <text x="674" y="356" font-size="15" font-weight="500" fill="#a8bfd0">Online multiplayer and</text>
+    <text x="674" y="378" font-size="15" font-weight="500" fill="#a8bfd0">a deathmatch mode that</text>
+    <text x="674" y="400" font-size="15" font-weight="500" fill="#a8bfd0">scales to 300 cars on</text>
+    <text x="674" y="422" font-size="15" font-weight="500" fill="#a8bfd0">one track.</text>
+
+    <rect x="924" y="240" width="266" height="200" rx="14" fill="#ffffff" opacity="0.10"/>
+    <text x="952" y="284" font-size="30" font-weight="800" fill="#E8853A">04</text>
+    <text x="952" y="322" font-size="21" font-weight="700" fill="#ffffff">Portable</text>
+    <text x="952" y="356" font-size="15" font-weight="500" fill="#a8bfd0">Desktop and mobile from</text>
+    <text x="952" y="378" font-size="15" font-weight="500" fill="#a8bfd0">a single conservative</text>
+    <text x="952" y="400" font-size="15" font-weight="500" fill="#a8bfd0">C++ codebase under the</text>
+    <text x="952" y="422" font-size="15" font-weight="500" fill="#a8bfd0">MIT license.</text>
+  </g>
+
+  <rect x="90" y="486" width="1100" height="2" fill="#ffffff" opacity="0.15"/>
+
+  <text x="90" y="546" font-size="20" font-weight="600" fill="#ffffff">Requires the original game assets — available from the retail CD or GOG.</text>
+  <text x="90" y="590" font-size="17" font-weight="500" fill="#8fa8bb">Class diagram: docs/ClassDiagram.graphml &#160;·&#160; AI notes: docs/ai/ &#160;·&#160; Physics papers: docs/physics/</text>
+
+  <text x="90" y="656" font-size="15" font-weight="500" fill="#6b8299">Powerslide Remake &#160;·&#160; MIT License</text>
+</svg>
+</div></section>
+
+</div>
+
+<button id="fs-btn" title="Fullscreen (F)" aria-label="Fullscreen">
+  <svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
+</button>
+
+<nav class="deck-nav" role="navigation" aria-label="Slide navigation">
+  <button id="deck-prev" class="arrow" title="Previous slide (←)" aria-label="Previous">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <span class="counter" id="deck-counter">1 / 10</span>
+  <button id="deck-next" class="arrow" title="Next slide (→)" aria-label="Next">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</nav>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('#deck .slide'));
+  const total = slides.length;
+  const counter = document.getElementById('deck-counter');
+  const prevBtn = document.getElementById('deck-prev');
+  const nextBtn = document.getElementById('deck-next');
+  const fsBtn = document.getElementById('fs-btn');
+
+  let current = 0;
+
+  function showSlide(n) {
+    n = Math.max(0, Math.min(total - 1, n));
+    current = n;
+    slides.forEach((s, i) => s.classList.toggle('active', i === n));
+    counter.textContent = `${n + 1} / ${total}`;
+    prevBtn.disabled = n === 0;
+    nextBtn.disabled = n === total - 1;
+  }
+
+  function next() { if (current < total - 1) showSlide(current + 1); }
+  function prev() { if (current > 0) showSlide(current - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    else if (e.key === 'Home') { showSlide(0); }
+    else if (e.key === 'End') { showSlide(total - 1); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+  fsBtn.addEventListener('click', toggleFullscreen);
+
+  showSlide(0);
+})();
+</script>
+
+</body>
+</html>
